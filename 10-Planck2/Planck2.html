@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planck2 – Help File | GFtGU Programs</title>
+
+  <!-- MathJax 3 -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams'
+      },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+          id="MathJax-script" async></script>
+
+  <style>
+    /* ── Reset & custom properties ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #fdf5e6;
+      --surface:  #ffffff;
+      --border:   #c8bfa0;
+      --accent:   #7b2d00;
+      --accent2:  #a04010;
+      --gold:     #b5811a;
+      --text:     #1c1c1c;
+      --muted:    #5a4a3a;
+      --code-bg:  #f0ede4;
+      --note-bg:  #f4f0e8;
+      --eq-bg:    #f7f2e8;
+      --radius:   5px;
+      --shadow:   0 2px 8px rgba(0,0,0,0.10);
+      --mono:     "Courier New", Courier, monospace;
+      --sans:     "Helvetica Neue", Arial, sans-serif;
+      --serif:    Georgia, "Times New Roman", Times, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Page grid ── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.95rem;
+      font-weight: normal;
+      letter-spacing: -.02em;
+    }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub {
+      margin-top: 6px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: #f0d0b8;
+      line-height: 1.55;
+    }
+    header .sub a {
+      color: #ffd8b8;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,200,150,.4);
+    }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+
+    /* ── Sidebar ── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding: 14px 18px 4px;
+    }
+    nav a {
+      display: block;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 5px 18px 5px 22px;
+      border-left: 3px solid transparent;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    nav a:hover {
+      color: var(--accent);
+      background: #fdf0e0;
+      border-left-color: var(--gold);
+    }
+    nav a.active {
+      color: var(--accent);
+      font-weight: 600;
+      border-left-color: var(--accent);
+      background: #fdecd8;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 38px 52px 60px;
+      max-width: 860px;
+    }
+
+    /* ── Section headings ── */
+    h2 {
+      font-size: 1.40rem;
+      font-weight: normal;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 6px;
+      margin: 2.2rem 0 1.0rem;
+    }
+    h3 {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--accent2);
+      margin: 1.6rem 0 .5rem;
+    }
+    h4 {
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin: 1.2rem 0 .35rem;
+    }
+    p { margin-bottom: .85rem; }
+    ul, ol { margin: .4rem 0 .85rem 1.5rem; }
+    li { margin-bottom: .28rem; }
+
+    /* ── Equation blocks ── */
+    .eq-block {
+      background: var(--eq-bg);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 22px 10px;
+      margin: 1.1rem 0 1.3rem;
+      overflow-x: auto;
+    }
+    .eq-label {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    /* ── Code / monospace ── */
+    code {
+      font-family: var(--mono);
+      font-size: 0.865em;
+      background: var(--code-bg);
+      border: 1px solid #ddd8cc;
+      border-radius: 3px;
+      padding: 1px 5px;
+    }
+    pre {
+      font-family: var(--mono);
+      font-size: 0.855em;
+      background: var(--code-bg);
+      border: 1px solid #ddd8cc;
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      overflow-x: auto;
+      margin: .8rem 0 1.1rem;
+      line-height: 1.55;
+    }
+
+    /* ── Note / callout ── */
+    .note {
+      background: var(--note-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent2);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 11px 16px;
+      margin: 1.0rem 0 1.2rem;
+      font-size: 0.93rem;
+      color: var(--muted);
+    }
+    .note strong { color: var(--accent2); }
+
+    /* ── Module cards ── */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      margin: 1.1rem 0 1.4rem;
+    }
+    .module-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+    .module-card .mc-name {
+      font-family: var(--mono);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .module-card .mc-role {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .module-card p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+    .module-card .sig {
+      font-family: var(--mono);
+      font-size: 0.80rem;
+      background: var(--code-bg);
+      border: 1px solid #ddd8cc;
+      border-radius: 3px;
+      padding: 7px 10px;
+      color: var(--text);
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* ── Parameter table ── */
+    .param-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      margin: 1.0rem 0 1.4rem;
+    }
+    .param-table th {
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    .param-table td {
+      padding: 7px 12px;
+      border-bottom: 1px solid #e0d8c8;
+      vertical-align: top;
+    }
+    .param-table tr:nth-child(even) td { background: #faf5ec; }
+    .param-table tr:hover td { background: #f3ecdf; }
+    .param-table .pname { font-family: var(--mono); font-size: 0.83rem; color: var(--accent2); }
+    .param-table .pdefault { font-family: var(--mono); font-size: 0.83rem; }
+
+    /* ── Experiment cards ── */
+    .exp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 14px;
+      margin: 1.0rem 0 1.4rem;
+    }
+    .exp-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px 17px;
+      box-shadow: var(--shadow);
+    }
+    .exp-card .ec-num {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 11px;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-bottom: 7px;
+    }
+    .exp-card h4 {
+      font-size: 0.94rem;
+      color: var(--accent2);
+      margin: 0 0 5px;
+    }
+    .exp-card p {
+      font-size: 0.855rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* ── Output mode table ── */
+    .out-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      margin: 1.0rem 0 1.4rem;
+    }
+    .out-table th {
+      background: var(--accent2);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 7px 12px;
+      text-align: left;
+    }
+    .out-table td {
+      padding: 7px 12px;
+      border-bottom: 1px solid #e0d8c8;
+      vertical-align: top;
+    }
+    .out-table tr:nth-child(even) td { background: #faf5ec; }
+    .out-table .oname { font-family: var(--mono); font-size: 0.83rem; color: var(--accent2); }
+
+    /* ── Related programs ── */
+    .related-list {
+      list-style: none;
+      margin: .6rem 0 1.2rem;
+      padding: 0;
+    }
+    .related-list li {
+      padding: 8px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 7px;
+      font-size: 0.90rem;
+    }
+    .related-list li strong {
+      font-family: var(--mono);
+      color: var(--accent2);
+    }
+
+    /* ── Footer ── */
+    footer {
+      grid-column: 1 / -1;
+      background: #2c1a0e;
+      color: #c8b090;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
+    }
+    footer a { color: #e0c090; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 740px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: static; height: auto; }
+      main { padding: 24px 20px 48px; }
+      header { padding: 20px 20px 16px; }
+      .module-grid, .exp-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="page-wrap">
+
+<!-- ══════════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════════ -->
+<header>
+  <div class="badge">Chapter 10 · Gravity from the Ground Up · Proposed extension</div>
+  <h1><em>Planck2</em> — Three Forms of Planck's Law</h1>
+  <div class="sub">
+    An independent, from-scratch reimplementation inspired by Bernard Schutz's <em>Planck</em>
+    program (Cambridge, 2003) and by Investigations 10.2 and 10.3 of
+    <em>Gravity from the Ground Up</em>. Not a port of <code>Planck.java</code> — a proposed
+    replacement, drafted for review by Prof. Schutz. ·
+    Predecessor: <a href="Planck.html">Planck</a>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+     SIDEBAR NAV
+═══════════════════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="nav-label">Overview</div>
+  <a href="#description">Description</a>
+  <a href="#background">Physical Background</a>
+
+  <div class="nav-label">Mathematics</div>
+  <a href="#equations">Governing Equations</a>
+  <a href="#algorithm">Algorithm</a>
+
+  <div class="nav-label">Code</div>
+  <a href="#modules">Module Overview</a>
+  <a href="#parameters">Parameters</a>
+  <a href="#quantities">Quantity Modes</a>
+
+  <div class="nav-label">Experiments</div>
+  <a href="#experiments">Suggested Experiments</a>
+  <a href="#comparison">Comparison with Planck</a>
+  <a href="#related">Related Programs</a>
+
+  <div class="nav-label">Legal</div>
+  <a href="#license">License</a>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════════ -->
+<main>
+
+  <!-- ── Description ── -->
+  <section id="description">
+    <h2>Description</h2>
+    <p>
+      <strong>Planck2</strong> plots black-body radiation according to Planck's law, in the
+      user's choice of three physically distinct forms: spectral radiance
+      <em>per unit wavelength</em>, spectral radiance <em>per unit frequency</em>, or spectral
+      <em>energy density</em> per unit frequency. All three curves are drawn against
+      <strong>physical</strong> wavelength or frequency (not the dimensionless variable
+      \(x\) used internally), and the peak location, peak value, and area under the
+      dimensionless shape curve are printed directly on the graph — by default in the
+      upper-right corner, where the falling tail of the curve is least likely to be present.
+    </p>
+    <p>
+      The original <strong>Planck</strong> program (see Investigations 10.2 and 10.3) computes
+      only a single dimensionless quantity, \(f(x) = x^5/(e^x-1)\), and reports only its
+      peak location \(x_\text{peak}\) or the area beneath it — useful for confirming Wien's
+      law and the Stefan–Boltzmann constant numerically, but not directly comparable to an
+      observed spectrum, since real instruments and textbooks quote intensity per unit
+      wavelength, per unit frequency, or (for radiative-transfer and cosmology work) as an
+      energy density — three quantities that are <em>not</em> simple rescalings of one
+      another and, notably, do not even peak at the same photon energy.
+    </p>
+    <p>
+      This project is offered as a proposed successor to <strong>Planck</strong>, addressing
+      that limitation plus a numerical shortcoming found while validating the original port
+      (see <a href="#comparison">Comparison with Planck</a>).
+    </p>
+  </section>
+
+  <!-- ── Physical Background ── -->
+  <section id="background">
+    <h2>Physical Background</h2>
+
+    <h3>The Dimensionless Variable x</h3>
+    <p>
+      Following Investigation 10.2 (Eq. 10.5), define
+    </p>
+    <div class="eq-block">
+      <div class="eq-label">Eq. 10.5 — dimensionless variable</div>
+      \[
+        x = \frac{hc}{\lambda k T}
+      \]
+    </div>
+    <p>
+      where \(h\) is the Planck constant, \(c\) the speed of light, \(k\) the Boltzmann
+      constant, \(\lambda\) the wavelength, and \(T\) the black-body temperature in kelvin.
+      As explained in the text, \(x\) is a genuinely dimensionless number because it is the
+      exponent of \(e\) in the Planck function, and exponents cannot carry units.
+    </p>
+
+    <h3>Spectral Radiance per Unit Wavelength</h3>
+    <p>
+      Substituting Eq. 10.6 (\(\lambda = hc/xkT\)) into the Planck function (Eq. 10.1) gives
+      Eq. 10.7 of the text:
+    </p>
+    <div class="eq-block">
+      <div class="eq-label">Eq. 10.7 — spectral radiance, per unit wavelength</div>
+      \[
+        B_\lambda = \frac{2\pi k^5 T^5}{h^4 c^3}\, f(x), \qquad
+        f(x) = \frac{x^5}{e^x - 1}
+      \]
+    </div>
+
+    <h3>Spectral Radiance and Energy Density per Unit Frequency</h3>
+    <p>
+      Converting instead to frequency (\(\nu = c/\lambda\), so \(x = h\nu/kT\)) changes the
+      power of \(x\) in the shape function from 5 to 3, because the Jacobian
+      \(|d\lambda/d\nu| = c/\nu^2\) introduces two extra inverse powers of \(x\):
+    </p>
+    <div class="eq-block">
+      <div class="eq-label">Spectral radiance, per unit frequency</div>
+      \[
+        B_\nu = \frac{2 k^3 T^3}{h^2 c^2}\, g(x), \qquad
+        g(x) = \frac{x^3}{e^x - 1}
+      \]
+    </div>
+    <p>
+      The spectral energy density (energy per unit volume per unit frequency, as used in
+      Investigation 10.3's discussion of the Stefan–Boltzmann law) is related to \(B_\nu\) by
+      a factor of \(4\pi/c\) (integrating specific intensity over solid angle, then dividing
+      by \(c\) to convert flux to density), giving the same shape function \(g(x)\) but a
+      different physical prefactor and different (volumetric) units:
+    </p>
+    <div class="eq-block">
+      <div class="eq-label">Spectral energy density, per unit frequency</div>
+      \[
+        u_\nu = \frac{4\pi}{c} B_\nu = \frac{8\pi k^3 T^3}{h^2 c^3}\, g(x)
+      \]
+    </div>
+
+    <h3>Why the Peaks Differ</h3>
+    <p>
+      Because \(f(x) = x^5/(e^x-1)\) and \(g(x) = x^3/(e^x-1)\) are <em>different</em>
+      functions of \(x\), they peak at different \(x_\text{peak}\) — approximately
+      \(4.9651\) for \(f(x)\) and \(2.8214\) for \(g(x)\). This is the origin of a classic
+      subtlety: the wavelength at which a black-body spectrum peaks (Wien's law,
+      \(\lambda_\text{max} T = 0.29\) cm, Eq. 10.9) does <em>not</em> correspond to the same
+      photon as the frequency at which the spectrum peaks. Reporting only one dimensionless
+      \(x_\text{peak}\), as the original Planck program does, obscures this — one of the
+      motivations for Planck2 offering all three quantities directly.
+    </p>
+  </section>
+
+  <!-- ── Governing Equations ── -->
+  <section id="equations">
+    <h2>Governing Equations</h2>
+
+    <h3>Shape Function and Its Logarithm</h3>
+    <p>
+      Both dimensionless shape functions above are special cases of
+      \(f(x) = x^p/(e^x-1)\), with \(p=5\) for the wavelength form and \(p=3\) for the
+      frequency and energy-density forms. Following Investigation 10.3's discussion of
+      overflow in \(e^x\) for \(x \gtrsim 200\), Planck2 evaluates the function via its
+      natural log, generalizing Eq. 10.12:
+    </p>
+    <div class="eq-block">
+      <div class="eq-label">Eq. 10.12 (generalized) — log of the shape function</div>
+      \[
+        \ln[f(x)] = p\ln x - \ln(e^x - 1)
+      \]
+    </div>
+    <p>
+      and then exponentiates only the final result. Three regimes are used for
+      \(\ln(e^x-1)\) itself, matching the text exactly:
+    </p>
+    <ul>
+      <li><strong>\(x > x_\text{high}\):</strong> \(e^x \gg 1\), so \(\ln(e^x-1)\approx x\).</li>
+      <li><strong>\(x < x_\text{low}\):</strong> \(e^x - 1 \approx x\) (Eq. 10.13), so
+          \(\ln(e^x-1)\approx \ln x\).</li>
+      <li><strong>otherwise:</strong> no approximation is needed;
+          \(\ln(e^x - 1)\) is evaluated directly.</li>
+    </ul>
+    <div class="note">
+      <strong>Note:</strong> Schutz's defaults use \(x_\text{low}=x_\text{high}=0.01\) and
+      \(100\) implicitly via the hardcoded thresholds in <code>Planck.java</code>. Planck2
+      exposes both as explicit parameters of a <code>PlanckDomain</code> object, so a user can
+      directly see how moving the approximation boundaries affects accuracy.
+    </div>
+
+    <h3>Peak Finding</h3>
+    <p>
+      As in the original program, the peak is found by direct comparison while stepping
+      through \(x\): each new value of \(f(x)\) is compared with the largest value seen so
+      far, and if larger, both the value and its \(x\) are recorded. No calculus or root-
+      finding is used — consistent with the pedagogical spirit of the text ("we did not have
+      to use any advanced mathematical techniques").
+    </p>
+
+    <h3>Area Under the Curve</h3>
+    <p>
+      The area under the dimensionless curve is accumulated by the trapezoidal rule
+      (Figure 10.5 of the text), summing over each step of width \(\Delta x\):
+    </p>
+    <div class="eq-block">
+      <div class="eq-label">Trapezoidal area accumulation</div>
+      \[
+        \text{area} \;+\!= \; \tfrac{1}{2}\bigl(f(x) + f_\text{last}\bigr)\, \Delta x
+      \]
+    </div>
+    <p>
+      Exact closed-form values exist for both cases used here, since
+      \(\int_0^\infty x^p/(e^x-1)\,dx = p!\,\zeta(p+1)\):
+      \(\int_0^\infty x^3/(e^x-1)\,dx = \pi^4/15 \approx 6.493939\) (Investigation 10.3's own
+      check) and \(\int_0^\infty x^5/(e^x-1)\,dx = 8\pi^6/63 \approx 122.081167\). Planck2's
+      <code>main.py</code> prints both the numerical and exact values so the accuracy of the
+      chosen <code>n_steps</code> is immediately visible.
+    </p>
+  </section>
+
+  <!-- ── Algorithm ── -->
+  <section id="algorithm">
+    <h2>Algorithm</h2>
+
+    <h3>Overview</h3>
+    <p>
+      For a given temperature \(T\), quantity, and number of steps, the driver:
+    </p>
+    <ol>
+      <li>Divides \([x_\text{min}, x_\text{max}]\) into <code>n_steps</code> equal intervals.</li>
+      <li>At each sample \(x\), computes \(\ln[f(x)]\) using the three-regime approximation
+          above, then exponentiates to get the dimensionless shape value.</li>
+      <li>Multiplies by the quantity-specific physical prefactor (Physical Background) to get
+          the physical spectral radiance or energy density.</li>
+      <li>Converts \(x\) to physical wavelength or frequency (Eq. 10.6, or its frequency
+          analogue) for plotting.</li>
+      <li>Updates the running peak and accumulates the trapezoidal area.</li>
+    </ol>
+
+    <h3>Plot Windowing</h3>
+    <p>
+      The domain \([0.01, 100]\) in \(x\) is needed for area-integration accuracy, but maps to
+      an enormous range in physical wavelength or frequency — far wider than where the curve
+      is visually distinguishable from zero. The plotting routine therefore auto-windows the
+      displayed axis range to where the curve exceeds a small fraction (default 0.3%) of its
+      peak value, leaving the underlying data and area computation untouched. This window is
+      computed in physical <em>coordinate</em> space, not sample-index space — because
+      wavelength is a reciprocal (and therefore highly non-uniform) function of \(x\), an
+      index-based margin was found during development to jump unpredictably far in coordinate
+      space; see the code comments in <code>planck2_plot.py</code> for the specific case that
+      motivated this.
+    </p>
+
+    <div class="note">
+      <strong>Tip:</strong> Pass <code>y_frac_window=0</code> to <code>plot_planck2()</code> to
+      see the full computed domain instead of the auto-windowed view.
+    </div>
+  </section>
+
+  <!-- ── Modules ── -->
+  <section id="modules">
+    <h2>Module Overview</h2>
+    <div class="module-grid">
+
+      <div class="module-card">
+        <div class="mc-role">Physics Layer</div>
+        <div class="mc-name">planck2_physics.py</div>
+        <p>
+          Physical constants, the three-regime log-shape-function evaluator, the
+          quantity-specific physical prefactors, and the \(x\)-to-wavelength/frequency
+          conversions. The only file that needs touching to add a fourth quantity.
+        </p>
+        <div class="sig">def shape_function(x, quantity, domain)
+  -> f(x)  (dimensionless)
+
+def prefactor(quantity, T)
+  -> physical scale factor</div>
+      </div>
+
+      <div class="module-card">
+        <div class="mc-role">Driver Layer</div>
+        <div class="mc-name">planck2_driver.py</div>
+        <p>
+          Samples the domain, evaluates the shape function and physical quantity at each
+          point, tracks the peak, and accumulates the area. Returns a structured
+          <code>Planck2Result</code> ready for plotting.
+        </p>
+        <div class="sig">def run_planck2(
+  T, quantity,
+  n_steps=2000,
+  domain=None
+) -> Planck2Result</div>
+      </div>
+
+      <div class="module-card">
+        <div class="mc-role">Plot Layer</div>
+        <div class="mc-name">planck2_plot.py</div>
+        <p>
+          Renders the curve against physical units, auto-windows the displayed range around
+          the peak, and annotates peak location/value and area in a corner text box.
+        </p>
+        <div class="sig">def plot_planck2(
+  result,
+  corner="upper right",
+  y_frac_window=0.003
+) -> None (displays figure)</div>
+      </div>
+
+      <div class="module-card">
+        <div class="mc-role">Entry Point</div>
+        <div class="mc-name">main.py</div>
+        <p>
+          User-editable entry point. Set temperature, quantity, resolution, and annotation
+          corner here, then run this file to compute and display the plot.
+        </p>
+        <div class="sig">from planck2_driver import run_planck2
+from planck2_plot  import plot_planck2
+
+result = run_planck2(T=..., quantity=...)
+plot_planck2(result)</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Parameters ── -->
+  <section id="parameters">
+    <h2>Parameters</h2>
+    <p>
+      All parameters are set in <code>main.py</code> as arguments to
+      <code>run_planck2()</code> and <code>plot_planck2()</code>. Defaults reproduce the
+      Sun's spectrum (\(T=5900\) K, as used in the worked example on p.117 of the text).
+    </p>
+
+    <table class="param-table">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Default</th>
+          <th>Units</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="pname">T</td>
+          <td class="pdefault">5900.0</td>
+          <td>K</td>
+          <td>Black-body temperature</td>
+        </tr>
+        <tr>
+          <td class="pname">quantity</td>
+          <td class="pdefault">"wavelength"</td>
+          <td>—</td>
+          <td>Which form of Planck's law to compute; see Quantity Modes</td>
+        </tr>
+        <tr>
+          <td class="pname">n_steps</td>
+          <td class="pdefault">2000</td>
+          <td>—</td>
+          <td>Number of divisions of the dimensionless domain. Unlike the original Planck
+              program, this genuinely controls resolution (see Comparison with Planck)</td>
+        </tr>
+        <tr>
+          <td class="pname">domain.x_min</td>
+          <td class="pdefault">0.01</td>
+          <td>—</td>
+          <td>Lower bound of the dimensionless domain</td>
+        </tr>
+        <tr>
+          <td class="pname">domain.x_max</td>
+          <td class="pdefault">100.0</td>
+          <td>—</td>
+          <td>Upper bound of the dimensionless domain</td>
+        </tr>
+        <tr>
+          <td class="pname">domain.x_low</td>
+          <td class="pdefault">0.01</td>
+          <td>—</td>
+          <td>Below this, the small-x approximation to \(\ln(e^x-1)\) is used</td>
+        </tr>
+        <tr>
+          <td class="pname">domain.x_high</td>
+          <td class="pdefault">100.0</td>
+          <td>—</td>
+          <td>Above this, the large-x approximation to \(\ln(e^x-1)\) is used</td>
+        </tr>
+        <tr>
+          <td class="pname">corner</td>
+          <td class="pdefault">"upper right"</td>
+          <td>—</td>
+          <td>Where the peak/area annotation box is placed; also accepts "upper left",
+              "lower right", "lower left"</td>
+        </tr>
+        <tr>
+          <td class="pname">y_frac_window</td>
+          <td class="pdefault">0.003</td>
+          <td>—</td>
+          <td>Fraction of peak value used to auto-window the displayed axis range;
+              0 shows the full domain</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>Common substitutions:</strong> Room temperature black body: <code>T=300</code>.
+      A red dwarf star: <code>T=3200</code>. Cosmic microwave background:
+      <code>T=2.725</code>. The tungsten filament of an incandescent bulb: <code>T=2800</code>.
+    </div>
+  </section>
+
+  <!-- ── Quantity Modes ── -->
+  <section id="quantities">
+    <h2>Quantity Modes</h2>
+    <p>
+      The <code>quantity</code> parameter passed to <code>run_planck2()</code> selects which
+      physical form of Planck's law is computed and plotted.
+    </p>
+
+    <table class="out-table">
+      <thead>
+        <tr>
+          <th>Mode string</th>
+          <th>Physical quantity</th>
+          <th>Shape function</th>
+          <th>x-axis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="oname">"wavelength"</td>
+          <td>Spectral radiance \(B_\lambda\) (W m⁻³ sr⁻¹)</td>
+          <td>\(x^5/(e^x-1)\), peaks at \(x\approx4.9651\)</td>
+          <td>Wavelength (m)</td>
+        </tr>
+        <tr>
+          <td class="oname">"frequency"</td>
+          <td>Spectral radiance \(B_\nu\) (W m⁻² sr⁻¹ Hz⁻¹)</td>
+          <td>\(x^3/(e^x-1)\), peaks at \(x\approx2.8214\)</td>
+          <td>Frequency (Hz)</td>
+        </tr>
+        <tr>
+          <td class="oname">"energy_density"</td>
+          <td>Spectral energy density \(u_\nu\) (J m⁻³ Hz⁻¹)</td>
+          <td>\(x^3/(e^x-1)\), peaks at \(x\approx2.8214\)</td>
+          <td>Frequency (Hz)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>Verification tip:</strong> Run <code>"frequency"</code> and
+      <code>"energy_density"</code> side by side. Both peak at the same \(x\) (and hence the
+      same frequency) since they share the same shape function \(g(x)\) — only the physical
+      prefactor and y-axis units differ. Compare either against <code>"wavelength"</code> and
+      note the peak lands at a <em>different</em> \(x\), and therefore corresponds to a
+      different photon, per the discussion in Physical Background.
+    </div>
+  </section>
+
+  <!-- ── Suggested Experiments ── -->
+  <section id="experiments">
+    <h2>Suggested Experiments</h2>
+
+    <div class="exp-grid">
+
+      <div class="exp-card">
+        <div class="ec-num">EXP-1</div>
+        <h4>Reproduce the Sun's Spectrum</h4>
+        <p>
+          With the default <code>T=5900</code> and <code>quantity="wavelength"</code>, confirm
+          the peak wavelength printed matches Wien's law (\(\lambda_\text{max} =
+          0.29/T\) cm \(\approx 4.92\times10^{-7}\) m), in the visible range as the text
+          notes for the Sun.
+        </p>
+      </div>
+
+      <div class="exp-card">
+        <div class="ec-num">EXP-2</div>
+        <h4>The Wavelength/Frequency Peak Discrepancy</h4>
+        <p>
+          Run the same temperature with all three quantities. Convert the frequency-mode peak
+          back to a wavelength via \(\lambda = c/\nu\) and compare it to the wavelength-mode
+          peak directly. They will not match — a concrete demonstration of the subtlety
+          described in Physical Background.
+        </p>
+      </div>
+
+      <div class="exp-card">
+        <div class="ec-num">EXP-3</div>
+        <h4>Stefan–Boltzmann Scaling</h4>
+        <p>
+          Compute the area for <code>quantity="energy_density"</code> at several temperatures.
+          Because the dimensionless area is temperature-independent (it is the same
+          \(\pi^4/15\) regardless of \(T\)), all of the \(T^4\) scaling of total radiated
+          energy comes from the physical prefactor alone — confirm this by checking that
+          <code>result.y_peak / T**3</code> is constant across temperatures.
+        </p>
+      </div>
+
+      <div class="exp-card">
+        <div class="ec-num">EXP-4</div>
+        <h4>Resolution Sensitivity</h4>
+        <p>
+          Run <code>n_steps</code> at 10, 100, 1000, and 20000 and compare each computed
+          area against the exact closed-form value <code>main.py</code> prints. Unlike the
+          original Planck program (see Comparison with Planck), this will show a genuine,
+          visible improvement in accuracy as <code>n_steps</code> increases.
+        </p>
+      </div>
+
+      <div class="exp-card">
+        <div class="ec-num">EXP-5</div>
+        <h4>Moving the Approximation Boundaries</h4>
+        <p>
+          Construct a <code>PlanckDomain</code> with <code>x_low</code> and
+          <code>x_high</code> moved much closer together (e.g. \(x_\text{low}=1\),
+          \(x_\text{high}=3\)), forcing more of the domain through the exact
+          \(\ln(e^x-1)\) branch. Confirm the result is unchanged to within numerical
+          precision — the three regimes of Eq. 10.12/10.13 are approximations chosen for
+          speed and overflow-safety, not for accuracy.
+        </p>
+      </div>
+
+      <div class="exp-card">
+        <div class="ec-num">EXP-6</div>
+        <h4>Cosmic Microwave Background</h4>
+        <p>
+          Set <code>T=2.725</code> (the CMB temperature) and <code>quantity="frequency"</code>.
+          Confirm the peak frequency falls in the microwave band (order 10¹¹ Hz), consistent
+          with the name.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Comparison with Planck ── -->
+  <section id="comparison">
+    <h2>Comparison with Planck</h2>
+    <p>
+      Before designing Planck2, the existing Python port of Schutz's <em>Planck</em> program
+      was validated directly against the Java listing in <code>Planck.html</code>. Two things
+      came out of that review that Planck2 addresses:
+    </p>
+    <h3>The Dead nSteps Parameter</h3>
+    <p>
+      In the original Java, <code>double dx = 0.01;</code> is hardcoded, and the main loop
+      (<code>for (x = xMin; x &lt;= xMax; x += dx)</code>) never references
+      <code>nSteps</code> anywhere — despite the GUI parameter dialog presenting "number of
+      steps" as a user-adjustable accuracy control. This was confirmed by direct
+      experiment: running the literal Java algorithm at <code>nSteps</code> = 10, 1000, and
+      20000 produced <em>identical</em> output (\(x_\text{peak}=4.970\),
+      area\(=6.493940\)) every time. In Planck2,
+      <code>n_steps</code> genuinely controls <code>dx = (x_max - x_min) / n_steps</code>
+      (see Suggested Experiments, EXP-4).
+    </p>
+    <h3>Single Quantity, No Physical Units</h3>
+    <p>
+      The original program reports only \(x_\text{peak}\) or the dimensionless area — useful
+      for confirming Wien's law and the Stefan–Boltzmann coefficient numerically (as
+      Investigation 10.3 does), but it does not plot a spectrum in physical units, and offers
+      no choice between the wavelength-, frequency-, or energy-density forms of Planck's law.
+      Planck2 is built around exactly that choice.
+    </p>
+  </section>
+
+  <!-- ── Related Programs ── -->
+  <section id="related">
+    <h2>Related Programs</h2>
+    <ul class="related-list">
+      <li>
+        <strong>Planck</strong> —
+        The direct predecessor. Computes only the dimensionless peak location or area for a
+        single shape function; see Comparison with Planck above.
+      </li>
+      <li>
+        <strong>Neutron</strong> —
+        Another program in this series involving a physically motivated equation-of-state
+        constant; Planck2's quantity-specific prefactors are derived the same way, from first
+        principles rather than assumed.
+      </li>
+      <li>
+        <strong>Atmosphere</strong> —
+        Shares Planck2's general design pattern of a small physics module, a driver that
+        samples a domain and stores full result arrays, and a plotting layer that consumes a
+        structured result object.
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── License ── -->
+  <section id="license">
+    <h2>License</h2>
+    <p>
+      Planck2 is an independent design, not a derivative of any specific Java source file,
+      though it is directly inspired by Bernard Schutz's <em>Planck</em> program and by
+      Investigations 10.2 and 10.3 of <em>Gravity from the Ground Up</em>
+      (Cambridge University Press, 2003). It is offered for Prof. Schutz's consideration as a
+      potential addition to the GFtGU program suite.
+    </p>
+    <p>
+      Pending any different guidance from Prof. Schutz, this material is distributed under
+      the same
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license used elsewhere in this series.
+    </p>
+  </section>
+
+</main><!-- /main -->
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════ -->
+<footer>
+  <em>Gravity from the Ground Up</em> — Python Programs ·
+  Planck2 is an independent design proposed for Prof. Bernard Schutz's review ·
+  Inspired by <em>Gravity from the Ground Up</em>, © 2003 Bernard Schutz (Cambridge University Press) ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
+</footer>
+
+</div><!-- /page-wrap -->
+
+<!-- ── Sidebar active-link tracking ── -->
+<script>
+  (function () {
+    const links = document.querySelectorAll('nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector(`nav a[href="#${e.target.id}"]`);
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('main section[id]').forEach(s => observer.observe(s));
+  })();
+</script>
+
+</body>
+</html>
