@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random2 – Help File | GFtGU Programs</title>
+
+  <!-- MathJax 3 -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams'
+      },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+          id="MathJax-script" async></script>
+
+  <style>
+    /* ── Reset & custom properties ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #fdf5e6;
+      --surface:  #ffffff;
+      --border:   #c8bfa0;
+      --accent:   #7b2d00;
+      --accent2:  #a04010;
+      --gold:     #b5811a;
+      --text:     #1c1c1c;
+      --muted:    #5a4a3a;
+      --code-bg:  #f0ede4;
+      --note-bg:  #f4f0e8;
+      --eq-bg:    #f7f2e8;
+      --radius:   5px;
+      --shadow:   0 2px 8px rgba(0,0,0,0.10);
+      --mono:     "Courier New", Courier, monospace;
+      --sans:     "Helvetica Neue", Arial, sans-serif;
+      --serif:    Georgia, "Times New Roman", Times, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Page grid ── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.95rem;
+      font-weight: normal;
+      letter-spacing: -.02em;
+    }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub {
+      margin-top: 6px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: #f0d0b8;
+      line-height: 1.55;
+    }
+    header .sub a {
+      color: #ffd8b8;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,200,150,.4);
+    }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+
+    /* ── Sidebar ── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 18px 6px;
+      margin-top: 18px;
+    }
+    nav a {
+      display: block;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      padding: 5px 18px 5px 22px;
+      border-left: 3px solid transparent;
+      transition: background .15s, border-color .15s;
+    }
+    nav a:hover {
+      background: var(--bg);
+      border-left-color: var(--gold);
+      color: var(--accent);
+    }
+    nav a.active {
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 42px 52px 60px;
+      max-width: 900px;
+    }
+
+    /* ── Sections ── */
+    section { margin-bottom: 52px; }
+    h2 {
+      font-size: 1.35rem;
+      font-weight: normal;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 6px;
+      margin-bottom: 18px;
+      letter-spacing: -.01em;
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--accent2);
+      margin: 22px 0 8px;
+    }
+    p { margin-bottom: 14px; }
+    ul, ol { padding-left: 22px; margin-bottom: 14px; }
+    li { margin-bottom: 4px; }
+
+    /* ── Equation blocks ── */
+    .eq-block {
+      background: var(--eq-bg);
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 14px 20px 14px 18px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    .eq-block .eq-label {
+      float: right;
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: 12px;
+    }
+
+    /* ── Note boxes ── */
+    .note {
+      background: var(--note-bg);
+      border-left: 4px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      font-family: var(--sans);
+      font-size: 0.90rem;
+      color: var(--muted);
+      margin: 16px 0;
+    }
+    .note strong { color: var(--accent); }
+
+    /* ── Parameter table ── */
+    .param-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--sans);
+      font-size: 0.875rem;
+      margin: 18px 0;
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .param-table thead tr {
+      background: var(--accent);
+      color: #fff;
+    }
+    .param-table thead th {
+      text-align: left;
+      padding: 10px 14px;
+      font-weight: 600;
+      letter-spacing: .04em;
+    }
+    .param-table tbody tr:nth-child(even) { background: var(--bg); }
+    .param-table tbody tr:nth-child(odd)  { background: var(--surface); }
+    .param-table tbody td {
+      padding: 9px 14px;
+      border-top: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .param-table code {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent2);
+    }
+
+    /* ── Module cards ── */
+    .module-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin: 20px 0;
+    }
+    .module-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+    .module-card h4 {
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .module-card p {
+      font-family: var(--sans);
+      font-size: 0.855rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .module-card .sig {
+      font-family: var(--mono);
+      font-size: 0.80rem;
+      background: var(--code-bg);
+      border-radius: 3px;
+      padding: 6px 10px;
+      color: var(--accent2);
+      line-height: 1.55;
+      white-space: pre;
+    }
+
+    /* ── Scenario cards ── */
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .scenario-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+    .scenario-card h4 {
+      font-family: var(--sans);
+      font-size: 0.90rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 7px;
+    }
+    .scenario-card p {
+      font-family: var(--sans);
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-bottom: 0;
+    }
+    .scenario-card .params {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      background: var(--code-bg);
+      border-radius: 3px;
+      padding: 5px 8px;
+      margin-top: 9px;
+      color: var(--accent2);
+      line-height: 1.55;
+    }
+
+    /* ── Related programs ── */
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 13px;
+      margin: 18px 0;
+    }
+    .related-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 15px;
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      transition: border-color .18s, box-shadow .18s;
+      display: block;
+    }
+    .related-card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+    }
+    .related-card .rc-name {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .related-card .rc-desc {
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      grid-column: 1 / -1;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 22px 38px;
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    footer img { height: 28px; }
+    footer a { color: var(--accent2); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 780px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 12px 0 16px;
+      }
+      main { padding: 28px 22px 44px; }
+      .module-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="page-wrap">
+
+<!-- ═══════════════════════════════════ HEADER ══════════════════════════════════ -->
+<header>
+  <div class="badge">CHAPTER 8 &middot; EXTENDED FROM INVESTIGATION 8.7</div>
+  <h1><em>Random2</em> &mdash; Random Walk Simulation with 2D Star Visualization</h1>
+  <div class="sub">
+    Extends <a href="Random.html">Random</a> &nbsp;&bull;&nbsp;
+    Based on Bernard Schutz, <em>Gravity from the Ground Up</em> (Cambridge, 2003)
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════ SIDEBAR ═════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="nav-label">On This Page</div>
+  <a href="#description">Program Description</a>
+  <a href="#physics">Physics &amp; Equations</a>
+  <a href="#algorithm">Algorithm Overview</a>
+  <a href="#starwalk">2D Star Visualization</a>
+  <a href="#modules">Module Structure</a>
+  <a href="#parameters">Parameters</a>
+  <a href="#output">Program Output</a>
+  <a href="#experiments">Suggested Experiments</a>
+  <a href="#related">Related Programs</a>
+</nav>
+
+<!-- ═══════════════════════════════════ MAIN ════════════════════════════════════ -->
+<main>
+
+<!-- ─── Description ─── -->
+<section id="description">
+  <h2>Program Description</h2>
+
+  <p>
+    Random2 keeps everything <a href="Random.html">Random</a> demonstrates about
+    diffusive transport &mdash; the extraordinarily slow, drunkard's-walk journey of a
+    photon from the Sun's fusing core to its radiating surface &mdash; and adds a second,
+    directly visual way of seeing the same physics. Where the original program only ever
+    produces one figure (a log-log plot of scaled distance versus step count), Random2
+    offers a choice between that plot and a new display: a handful of individual 2D
+    random walks, drawn from the center of a circular "star" outward, colored
+    distinctly, with any walk that reaches the surface continuing on as a straight
+    escaping ray.
+  </p>
+  <div class="note">
+    <strong>Two independent displays, one shared walk engine:</strong> both of Random2's
+    display modes are built on the same 2D step-generation physics (see
+    <a href="#physics">Physics &amp; Equations</a>). The scaled-distance experiment and
+    the star visualization can be run independently; neither depends on the other.
+  </div>
+</section>
+
+
+<!-- ─── Physics ─── -->
+<section id="physics">
+  <h2>Physics &amp; Equations</h2>
+
+  <h3>The Random Step</h3>
+  <p>
+    At each step \(i\), two displacements are drawn independently and uniformly from
+    \([-1, +1]\):
+  </p>
+  <div class="eq-block">
+    <span class="eq-label">(1)</span>
+    \[
+      \Delta x_i = 2 U_i^{(x)} - 1, \quad
+      \Delta y_i = 2 U_i^{(y)} - 1,
+      \qquad U \sim \mathrm{Uniform}(0,1).
+    \]
+  </div>
+  <div class="note">
+    <strong>Why 2D, not 3D:</strong> the original Random program's walk is
+    three-dimensional. Random2 uses a 2D walk throughout &mdash; for both display modes
+    &mdash; since the star visualization is inherently planar, and Random's own
+    Suggested Experiments already note that the \(\sqrt{N}\) diffusion law is
+    dimension-independent, so nothing about the underlying physics demonstration is lost.
+  </div>
+
+  <h3>Individual Step Length</h3>
+  <p>
+    The Euclidean length of step \(i\) is:
+  </p>
+  <div class="eq-block">
+    <span class="eq-label">(2)</span>
+    \[
+      \ell_i = \sqrt{\Delta x_i^2 + \Delta y_i^2}.
+    \]
+  </div>
+  <p>
+    For components uniform on \([-1,1]\), the expected 2D step length has the closed
+    form
+  </p>
+  <div class="eq-block">
+    <span class="eq-label">(3)</span>
+    \[
+      \langle \ell \rangle = \frac{\sqrt{2} + \ln(1+\sqrt{2})}{3} \approx 0.7652,
+    \]
+  </div>
+  <p>
+    confirmed numerically by direct simulation (20 million samples agree with this value
+    to five significant figures). Individual step lengths range from \(0\) to
+    \(\sqrt{2}\).
+  </p>
+
+  <h3>Accumulated Position and Net Displacement</h3>
+  <p>
+    After \(N\) steps the walker's position is:
+  </p>
+  <div class="eq-block">
+    <span class="eq-label">(4)</span>
+    \[
+      X = \sum_{i=1}^{N} \Delta x_i, \quad
+      Y = \sum_{i=1}^{N} \Delta y_i.
+    \]
+  </div>
+  <div class="eq-block">
+    <span class="eq-label">(5)</span>
+    \[
+      D = \sqrt{X^2 + Y^2}.
+    \]
+  </div>
+
+  <h3>Average Step Length and Scaled Distance</h3>
+  <div class="eq-block">
+    <span class="eq-label">(6)</span>
+    \[
+      \bar{\ell} = \frac{1}{N} \sum_{i=1}^{N} \ell_i,
+      \qquad
+      d = \frac{D}{\bar{\ell}}.
+    \]
+  </div>
+
+  <h3>Diffusion Scaling Law</h3>
+  <p>
+    As in the original program, the expected scaled distance grows as the square root
+    of the number of steps, appearing as a line of slope \(\tfrac{1}{2}\) on log-log
+    axes:
+  </p>
+  <div class="eq-block">
+    <span class="eq-label">(7)</span>
+    \[
+      \langle d \rangle \propto \sqrt{N}, \qquad
+      \log \langle d \rangle = \tfrac{1}{2}\log N + \mathrm{const}.
+    \]
+  </div>
+</section>
+
+<!-- ─── Algorithm ─── -->
+<section id="algorithm">
+  <h2>Algorithm Overview</h2>
+
+  <p>
+    The scaled-distance experiment mirrors Random's own structure exactly, just with
+    the 2D step of Eq. 1&ndash;2 in place of the original 3D step:
+  </p>
+  <ul>
+    <li><strong>Outer loop &mdash; experiment suite:</strong> Index \(j\) runs from
+        \(n_{\mathrm{walks}}-1\) down to \(0\); the step count starts at
+        <code>maxSteps</code> and is integer-halved after each experiment, exiting early
+        if it drops to \(\le 1\).</li>
+    <li><strong>Middle loop &mdash; trial averaging:</strong> <code>nTrials</code>
+        independent walks are performed per step count and their scaled distances
+        averaged.</li>
+    <li><strong>Inner loop &mdash; single walk:</strong> steps through \(n_{\mathrm{steps}}\)
+        iterations, accumulating position and total step length.</li>
+  </ul>
+  <p>
+    As before, filling <code>lengths[j]</code>/<code>avg_dist[j]</code> from high \(j\)
+    to low leaves both arrays in ascending step-count order on return, with no sorting
+    needed before plotting.
+  </p>
+</section>
+
+<!-- ─── 2D Star Visualization (NEW) ─── -->
+<section id="starwalk">
+  <h2>2D Star Visualization</h2>
+
+  <p>
+    This display draws <code>n_walks</code> independent 2D walks starting at the
+    origin ("the star's center"), each continuing until it crosses a circular boundary
+    ("the surface") of a given or default radius &mdash; at which point a straight ray
+    is drawn onward from the crossing point, in the walk's final direction of travel,
+    representing the photon escaping into space.
+  </p>
+
+  <h3>Default Radius</h3>
+  <p>
+    The default radius is a small multiple of a walk's characteristic (RMS) diffusion
+    distance for a nominal step count:
+  </p>
+  <div class="eq-block">
+    <span class="eq-label">(8)</span>
+    \[
+      R = f \sqrt{N_{\mathrm{ref}} \, \lambda}, \qquad f = 2,\ \ N_{\mathrm{ref}} = 2000,
+      \ \ \lambda = 1
+    \]
+  </div>
+  <p>
+    where \(f\) is <code>radius_factor</code>, \(N_{\mathrm{ref}}\) is
+    <code>reference_steps</code>, and \(\lambda\) is <code>mean_free_path</code>.
+  </p>
+  <div class="note">
+    <strong>reference_steps sizes the star, not the walk:</strong> it only feeds Eq. 8
+    above. Each walk keeps going &mdash; however many steps that takes &mdash; until it
+    actually reaches the boundary; it typically takes several thousand steps to do so,
+    well beyond <code>reference_steps</code> itself. That's expected, not a malfunction.
+  </div>
+
+  <h3>Exact Boundary Crossing</h3>
+  <p>
+    Rather than simply stopping a walk at the first step that lands outside the circle
+    (which would leave a visible, unphysical jump past the boundary), the exact crossing
+    point is found by solving for where the straight segment from the last inside point
+    \(\mathbf{p}_0\) to the first outside point \(\mathbf{p}_1\) meets the circle
+    \(|\mathbf{p}(t)| = R\), with \(\mathbf{p}(t) = \mathbf{p}_0 + t(\mathbf{p}_1 -
+    \mathbf{p}_0)\):
+  </p>
+  <div class="eq-block">
+    <span class="eq-label">(9)</span>
+    \[
+      a t^2 + b t + c = 0, \quad
+      a = |\mathbf{p}_1-\mathbf{p}_0|^2,\ \,
+      b = 2\mathbf{p}_0\cdot(\mathbf{p}_1-\mathbf{p}_0),\ \,
+      c = |\mathbf{p}_0|^2 - R^2,
+    \]
+  </div>
+  <p>
+    taking the root \(t \in (0,1]\). The escaping ray then continues from this exact
+    point in the direction of the walk's final step, extended an additional
+    <code>ray_length_factor</code> \(\times\, R\) beyond it.
+  </p>
+
+  <h3>Number of Walks</h3>
+  <p>
+    <code>n_walks</code> defaults to <strong>4</strong>. With more walks drawn
+    simultaneously, paths overlap heavily near the center and individual character is
+    lost; with four, each walk's full, often dramatically convoluted shape stays legible
+    &mdash; including cases where a walk wanders out toward one side of the star, nearly
+    reaching the surface, then backtracks across almost the entire interior before
+    finally escaping somewhere else altogether.
+  </p>
+</section>
+
+<!-- ─── Modules ─── -->
+<section id="modules">
+  <h2>Module Structure</h2>
+
+  <p>
+    Random2 follows the standard GFtGU physics/driver/plot/main pattern.
+  </p>
+
+  <div class="module-grid">
+
+    <div class="module-card">
+      <h4>random2_physics.py</h4>
+      <p>
+        2D step generation, the default-radius formula (Eq. 8), and the exact
+        circle-crossing geometry (Eq. 9). No plotting, no driver-loop logic.
+      </p>
+      <div class="sig">generate_2d_step()
+  → (dx, dy)
+
+default_radius(n_steps, mfp, f)
+  → radius
+
+circle_crossing_fraction(p0, p1, r)
+  → t in (0, 1] or None</div>
+    </div>
+
+    <div class="module-card">
+      <h4>random2_driver.py</h4>
+      <p>
+        Both experiments live here: <code>run_scaled_distance_experiment</code>
+        (Random's original suite, in 2D) and <code>run_walk2d</code> (the new star
+        visualization, running each walk until it escapes).
+      </p>
+      <div class="sig">run_scaled_distance_experiment(
+    max_steps, n_trials)
+  → (lengths, avg_dist)
+
+run_walk2d(
+    reference_steps=2000,
+    n_walks=4, ...)
+  → Walk2DResult</div>
+    </div>
+
+    <div class="module-card">
+      <h4>random2_plot.py</h4>
+      <p>
+        <code>plot_scaled_distance</code> reproduces the original log-log figure.
+        <code>plot_walk2d</code> draws the star and its walks.
+      </p>
+      <div class="sig">plot_scaled_distance(lengths, avg_dist)
+plot_walk2d(result, corner="upper right")</div>
+    </div>
+
+  </div><!-- /module-grid -->
+
+  <div class="note">
+    <strong>main.py:</strong> chooses between <code>display = "scaled_distance"</code>
+    or <code>"walk2d"</code>. All editable parameters for whichever mode is selected are
+    set at the top of the function, following the same single-entry-point convention as
+    every other GFtGU program.
+  </div>
+</section>
+
+<!-- ─── Parameters ─── -->
+<section id="parameters">
+  <h2>Parameters</h2>
+
+  <p>
+    All parameters are set at the top of <code>main.py</code>, split by which
+    <code>display</code> is selected.
+  </p>
+
+  <h3>Scaled-Distance Mode</h3>
+  <table class="param-table">
+    <thead>
+      <tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>maxSteps</code></td><td><code>4096</code></td>
+        <td>Maximum walk length; experiments run at <code>maxSteps</code>,
+            <code>maxSteps/2</code>, &hellip; down to 2.</td>
+      </tr>
+      <tr>
+        <td><code>nTrials</code></td><td><code>100</code></td>
+        <td>Independent walks averaged per step count.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>2D Star Visualization Mode</h3>
+  <table class="param-table">
+    <thead>
+      <tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>reference_steps</code></td><td><code>2000</code></td>
+        <td>The \(N_{\mathrm{ref}}\) of Eq. 8 &mdash; sizes the default radius only, not
+            a per-walk step budget (see the note in
+            <a href="#starwalk">2D Star Visualization</a>).</td>
+      </tr>
+      <tr>
+        <td><code>n_walks</code></td><td><code>4</code></td>
+        <td>Number of simultaneous walks. Kept small so each one's full, individually
+            convoluted path stays visible.</td>
+      </tr>
+      <tr>
+        <td><code>radius_factor</code></td><td><code>2.0</code></td>
+        <td>\(f\) in Eq. 8.</td>
+      </tr>
+      <tr>
+        <td><code>mean_free_path</code></td><td><code>1.0</code></td>
+        <td>\(\lambda\) in Eq. 8.</td>
+      </tr>
+      <tr>
+        <td><code>radius</code></td><td><code>None</code></td>
+        <td>Explicit override for Eq. 8's computed default.</td>
+      </tr>
+      <tr>
+        <td><code>ray_length_factor</code></td><td><code>0.6</code></td>
+        <td>Escaping-ray length beyond the boundary, as a fraction of the radius.</td>
+      </tr>
+      <tr>
+        <td><code>step_cap</code></td><td><code>200000</code></td>
+        <td>Safety limit only; essentially never reached at the default
+            <code>radius_factor</code>.</td>
+      </tr>
+      <tr>
+        <td><code>corner</code></td><td><code>"upper right"</code></td>
+        <td>Placement of the results annotation box.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ─── Output ─── -->
+<section id="output">
+  <h2>Program Output</h2>
+
+  <p>
+    <strong>Scaled-distance mode</strong> produces the same kind of figure as the
+    original Random program: a log-log plot of average scaled distance versus number of
+    steps, expected to lie close to a line of slope \(\tfrac{1}{2}\).
+  </p>
+  <p>
+    <strong>2D star-visualization mode</strong> produces a single square figure showing
+    the star as a filled circle, each walk in its own color, and an escaping ray
+    wherever a walk reached the boundary. A small annotation box (placed in the corner
+    given by <code>corner</code>, upper right by default) reports the radius, the
+    reference step count, and how many of the walks escaped.
+  </p>
+</section>
+
+<!-- ─── Suggested Experiments ─── -->
+<section id="experiments">
+  <h2>Suggested Experiments</h2>
+
+  <div class="scenario-grid">
+
+    <div class="scenario-card">
+      <h4>Verify the &radic;N Law (2D)</h4>
+      <p>Run the scaled-distance mode with defaults and confirm the log-log slope is
+         still \(\tfrac{1}{2}\) in 2D, matching Random's 3D result.</p>
+      <div class="params">display = "scaled_distance"</div>
+    </div>
+
+    <div class="scenario-card">
+      <h4>Escape-Time Distribution</h4>
+      <p>Record how many steps each walk actually takes to escape at the default
+         radius. Histogram the results across many runs &mdash; the tail is
+         considerably longer than the median.</p>
+      <div class="params">reference_steps = 2000
+radius_factor = 2.0</div>
+    </div>
+
+    <div class="scenario-card">
+      <h4>Radius Factor vs. Escape Time</h4>
+      <p>Increase <code>radius_factor</code> from 0.5 up to 2.0 or higher and watch how
+         much longer a walk typically takes to escape as the star grows.</p>
+      <div class="params">radius_factor = 0.5 # then 1.0, 1.5, 2.0</div>
+    </div>
+
+    <div class="scenario-card">
+      <h4>Number of Walks vs. Legibility</h4>
+      <p>Compare <code>n_walks = 4</code> against <code>n_walks = 10</code> or more.
+         At what point do individual convoluted paths become impossible to follow?</p>
+      <div class="params">n_walks = 4 # then 6, 10</div>
+    </div>
+
+    <div class="scenario-card">
+      <h4>A Custom Radius</h4>
+      <p>Override the default entirely with an explicit <code>radius</code>, and observe
+         how a small radius produces short, direct-looking rays while a large one
+         produces long, tangled interior paths before escape.</p>
+      <div class="params">radius = 40.0  # override Eq. 8</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── Related Programs ─── -->
+<section id="related">
+  <h2>Related Programs</h2>
+  <div class="related-grid">
+
+    <a class="related-card" href="Random.html">
+      <div class="rc-name">Random</div>
+      <div class="rc-desc">The original 3D diffusion demonstration this program extends</div>
+    </a>
+
+    <a class="related-card"
+       href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/08-Star"
+       target="_blank">
+      <div class="rc-name">Star</div>
+      <div class="rc-desc">Polytropic stellar structure (Newtonian)</div>
+    </a>
+
+    <a class="related-card"
+       href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/08-Neutron"
+       target="_blank">
+      <div class="rc-name">Neutron</div>
+      <div class="rc-desc">Neutron star structure (TOV equation)</div>
+    </a>
+
+  </div>
+</section>
+
+</main><!-- /main -->
+
+<!-- ═══════════════════════════════════ FOOTER ══════════════════════════════════ -->
+<footer>
+  <img src="https://github.com/tomyee3/GFTGU-Documentation/blob/main/00-License/license_files/LicenseBanner.png"
+       alt="Creative Commons BY-NC-SA 4.0" />
+  <span>
+    &copy; 2024 Thomas Yee &mdash; released under the
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+    Based on Bernard Schutz,
+    <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+  </span>
+</footer>
+
+</div><!-- /page-wrap -->
+
+<!-- ── Active-link tracker ── -->
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const links    = document.querySelectorAll('nav a[href^="#"]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
