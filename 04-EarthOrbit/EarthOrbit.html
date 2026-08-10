@@ -416,12 +416,9 @@
   <div class="badge">Chapter 4 · Gravity from the Ground Up</div>
   <h1><em>EarthOrbit</em> — Newton's Cannon</h1>
   <div class="sub">
-    Python port of Bernard Schutz's <em>Gravity from the Ground Up</em> (Cambridge, 2003) Java program ·
-    Source:
-    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/EarthOrbit"
-       target="_blank">github.com/tomyee3/GFTGU-Programs/EarthOrbit</a> ·
-    <a href="https://www.gravityfromthegroundup.org/programs/EarthOrbit.html"
-       target="_blank">Schutz's original</a>
+    Source Code:
+    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/"
+       target="_blank">https://github.com/tomyee3/GFTGU-Programs/tree/main/</a>·
   </div>
 </header>
 
@@ -473,11 +470,6 @@
       showing Earth's surface. All the parameters — altitude, launch velocity, timestep, and
       step count — are set in <code>main.py</code>.
     </p>
-    <div class="note">
-      <strong>Textbook reference:</strong>
-      Bernard Schutz, <em>Gravity from the Ground Up</em>, Cambridge University Press (2003),
-      Chapter 4.
-    </div>
   </section>
 
   <!-- ── Physical Background ── -->
@@ -509,6 +501,25 @@
       </li>
     </ul>
 
+    <div class="warn">
+      <strong>Force-law correctness:</strong>  To emulate as closely as possible what was used in the 
+      CannonTrajectory module, the default setup of this program
+      is to use a <em>constant</em> magnitude \(|\mathbf{a}| = g\) (magnitude
+      fixed at 9.8 m s<sup>−2</sup>), only directed toward the centre.  For unrealistically low
+      orbits (less than a few kilometers) constant magnitude acceleration provides an adequate approximation.
+      <br>
+      However, by <strong>Bertrand's
+      theorem</strong>, only two central force laws produce closed orbits:
+      \(F \propto r^{-2}\) (Newtonian gravity) and \(F \propto r\) (harmonic oscillator).
+      A constant-magnitude force (\(F \propto r^0\)) causes the orbit to
+      <em>precess</em> — it produces a rosette pattern instead of a closed ellipse for any
+      eccentricity \(e > 0\). 
+      <br>
+      For more realistic orbits, and to allow completion of the Suggested Experiments past the first two,
+      the program provides the option to change the force law to "inverse_square".
+  
+    </div>
+
     <h3>The Inverse-Square Force Law</h3>
     <p>
       At any distance \(r\) from Earth's centre the gravitational acceleration has magnitude
@@ -527,19 +538,6 @@
       \(k \equiv g\,R_\oplus^2 \approx 3.987\times10^{14}\) m³ s<sup>−2</sup> is numerically
       equal to \(GM_\oplus\). The direction is always toward the centre.
     </p>
-
-    <div class="warn">
-      <strong>Force-law correctness:</strong> A common porting error is to use a
-      <em>constant</em> magnitude \(|\mathbf{a}| = g\) (direction toward the centre, magnitude
-      fixed at 9.8 m s<sup>−2</sup>). This is not Newton's law. By <strong>Bertrand's
-      theorem</strong>, only two central force laws produce closed orbits:
-      \(F \propto r^{-2}\) (Newtonian gravity) and \(F \propto r\) (harmonic oscillator).
-      A constant-magnitude force (\(F \propto r^0\)) causes the orbit to
-      <em>precess</em> — it produces a rosette pattern instead of a closed ellipse for any
-      eccentricity \(e > 0\). This precession is genuine physics of the wrong equation;
-      reducing the timestep makes no difference. The corrected code uses
-      <code>r³</code> in the denominator and defines <code>_K = G_SURFACE * R_EARTH**2</code>.
-    </div>
 
     <h3>Circular and Escape Speeds</h3>
     <p>
@@ -600,11 +598,26 @@
       \[
         \dot{x} = u, \quad \dot{y} = v,
         \qquad
-        \dot{u} = a_x = -\frac{k\,x}{r^3}, \quad
-        \dot{v} = a_y = -\frac{k\,y}{r^3}
+        \dot{u} = a_x, \quad
+        \dot{v} = a_y,
+        \qquad
+        r = \sqrt{x^2 + y^2}
       \]
+    </div>
+    <p>
+      where \((a_x, a_y)\) depend on the chosen <code>force_law</code>
+      (see <a href="#background">Physical Background</a>):
+    </p>
+    <div class="eq-block">
+      <div class="eq-label">"simplified" (default)</div>
       \[
-        r = \sqrt{x^2 + y^2}, \qquad k = g\,R_\oplus^2
+        a_x = -\frac{g\,x}{r}, \qquad a_y = -\frac{g\,y}{r} \qquad (|\mathbf{a}| = g \text{ always})
+      \]
+    </div>
+    <div class="eq-block">
+      <div class="eq-label">"inverse_square"</div>
+      \[
+        a_x = -\frac{k\,x}{r^3}, \qquad a_y = -\frac{k\,y}{r^3}, \qquad k = g\,R_\oplus^2
       \]
     </div>
 
@@ -622,13 +635,17 @@
       \]
     </div>
     <p>
-      A purely horizontal launch is achieved by setting \(u_\text{init} = 0\) and
-      \(v_\text{init} \neq 0\). This places the launch point at an apsis (periapsis or
-      apoapsis, depending on whether \(v_\text{init}\) is below or above \(v_c\)).
-      Setting \(u_\text{init} \neq 0\) adds a radial velocity component and rotates the
+      Because the launch point sits on the \(y\)-axis, \(u\) (the \(x\)-velocity) is the
+      <strong>tangential</strong> component and \(v\) (the \(y\)-velocity) is the
+      <strong>radial</strong> component at launch. A purely horizontal (tangential) launch
+      is achieved by setting \(v_\text{init} = 0\) and \(u_\text{init} \neq 0\) — this is
+      what <code>main.py</code> uses, and places the launch point at an apsis (periapsis or
+      apoapsis, depending on whether \(u_\text{init}\) is below or above \(v_c\)).
+      Setting \(v_\text{init} \neq 0\) adds a radial velocity component and rotates the
       orbit's orientation.
     </p>
   </section>
+
 
   <!-- ── Integration Algorithm ── -->
   <section id="algorithm">
@@ -693,17 +710,23 @@
         <div class="mc-role">Physics Layer</div>
         <div class="mc-name">physics_earthorbit.py</div>
         <p>
-          Defines Earth's physical constants and the inverse-square gravitational acceleration.
-          The only literal numbers in this module are the two measured surface parameters
-          \(g\) and \(R_\oplus\); the composite constant <code>_K</code> is derived from them.
-          No integration logic appears here.
+          Defines Earth's physical constants and <strong>two</strong> selectable gravitational
+          force laws via the <code>force_law</code> argument to
+          <code>compute_acceleration()</code>: Schutz's original constant-magnitude
+          <code>"simplified"</code> approximation (the default) and the physically accurate
+          <code>"inverse_square"</code> law, kept available for direct comparison. The only
+          literal numbers in this module are the two measured surface parameters \(g\) and
+          \(R_\oplus\); the composite constant <code>_K</code> is derived from them.
         </p>
         <div class="sig">G_SURFACE = 9.8            # m/s²  (surface gravity)
 R_EARTH   = 6_378_200.0   # m     (Earth's mean radius)
 _K = G_SURFACE * R_EARTH**2  # m³/s² (= GM_Earth)
 
-def compute_acceleration(x, y) -> (ax, ay)
-    # ax = -_K * x / r³,  ay = -_K * y / r³</div>
+ForceLaw = Literal["simplified", "inverse_square"]
+
+def compute_acceleration(x, y, force_law="simplified") -> (ax, ay)
+    # "simplified":      ax = -G_SURFACE * x / r,  ay = -G_SURFACE * y / r
+    # "inverse_square":  ax = -_K * x / r³,         ay = -_K * y / r³</div>
       </div>
 
       <!-- driver -->
@@ -712,18 +735,21 @@ def compute_acceleration(x, y) -> (ax, ay)
         <div class="mc-name">driver_earthorbit.py</div>
         <p>
           Implements the fixed-step symplectic integration loop. Imports
-          <code>compute_acceleration</code> and <code>R_EARTH</code> from the physics module.
+          <code>compute_acceleration</code>, <code>R_EARTH</code>, and <code>ForceLaw</code>
+          from the physics module, and forwards its own <code>force_law</code> argument
+          through to <code>compute_acceleration()</code> at every step.
           Builds the 401-point Earth-surface reference circle and advances the projectile until
           surface impact or <code>maxSteps</code> is reached.
         </p>
-        <div class="sig">from physics_earthorbit import compute_acceleration, R_EARTH
+        <div class="sig">from physics_earthorbit import compute_acceleration, R_EARTH, ForceLaw
 
 def run_earth_orbit(
-    h0       = 300.0,    # initial altitude (m)
-    uInit    = 0.0,      # initial x-velocity (m/s)
-    vInit    = 7900.0,   # initial y-velocity (m/s)
-    dt       = 0.4,      # timestep (s)
-    maxSteps = 15000     # max integration steps
+    h0        = 300.0,        # initial altitude (m)
+    uInit     = 0.0,          # initial x-velocity (m/s) -- tangential at launch
+    vInit     = 7900.0,       # initial y-velocity (m/s) -- radial at launch
+    dt        = 0.4,          # timestep (s)
+    maxSteps  = 15000,        # max integration steps
+    force_law: ForceLaw = "simplified"
 ) -> (xs, ys, xEarth, yEarth)</div>
       </div>
 
@@ -747,15 +773,25 @@ def run_earth_orbit(
         <div class="mc-role">Entry Point</div>
         <div class="mc-name">main.py</div>
         <p>
-          The only file the user needs to edit. Set the launch parameters here, then run
-          <code>python main.py</code>. The plot appears immediately.
+          The only file the user needs to edit. Set the launch parameters and
+          <code>force_law</code> here, then run <code>python main.py</code>. The plot appears
+          immediately. Note that <code>uInit</code> and <code>vInit</code> are swapped relative
+          to <code>run_earth_orbit()</code>'s own bare defaults, since a purely tangential
+          launch (the actual "attempt orbit" scenario) needs <code>uInit</code> nonzero and
+          <code>vInit</code> zero, not the other way around.
         </p>
         <div class="sig">from driver_earthorbit import run_earth_orbit
 from plot_earthorbit  import plot_earth_orbit
 
+force_law = "simplified"
+
 xs, ys, xEarth, yEarth = run_earth_orbit(
-    h0=300.0, uInit=0.0, vInit=7900.0,
-    dt=0.4, maxSteps=15000)
+    h0=300.0,
+    uInit=7900.0,  # tangential -- not quite enough to complete an orbit at 300 m
+    vInit=0.0,
+    dt=0.4, maxSteps=15000,
+    force_law=force_law,
+)
 
 plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
       </div>
@@ -769,8 +805,10 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
 
     <p>
       All parameters are set as arguments to <code>run_earth_orbit()</code> in
-      <code>main.py</code>. The defaults produce a nearly circular orbit just 300 m
-      above Earth's surface — the idealised Newton's Cannon scenario.
+      <code>main.py</code>. As actually called in <code>main.py</code> (which overrides
+      two of <code>run_earth_orbit()</code>'s own bare defaults, see the table below), the
+      defaults produce a nearly circular orbit just 300 m above Earth's surface — the
+      idealised Newton's Cannon scenario.
     </p>
 
     <table class="param-table">
@@ -800,9 +838,15 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
           <td class="pdefault">0.0</td>
           <td>m s<sup>−1</sup></td>
           <td>
-            Initial x-velocity (radial component at launch). Zero gives a purely
-            tangential launch, placing the start point at an apsis of the orbit.
-            A non-zero value adds a radial component and rotates the orbit orientation.
+            Initial x-velocity (<strong>tangential</strong> component at launch, since the
+            launch point sits on the \(y\)-axis). This is the component that must be
+            nonzero to attempt an orbit — <code>main.py</code> overrides this default to
+            <code>7900.0</code>. The circular speed at 300 m altitude is
+            \(v_c \approx 7\,906\) m s<sup>−1</sup>; 7 900 m s<sup>−1</sup> is marginally
+            below circular, producing a very slightly sub-circular orbit that grazes the
+            surface. Increase to ~7 910 m s<sup>−1</sup> for a clean circular orbit at this
+            altitude. Zero here (the bare function default) instead gives a purely radial
+            (straight up) launch.
           </td>
         </tr>
         <tr>
@@ -810,11 +854,11 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
           <td class="pdefault">7900.0</td>
           <td>m s<sup>−1</sup></td>
           <td>
-            Initial y-velocity (tangential component at launch). The circular speed at
-            300 m altitude is \(v_c \approx 7\,906\) m s<sup>−1</sup>; the default
-            7 900 m s<sup>−1</sup> is marginally below circular, producing a very slightly
-            sub-circular orbit that grazes the surface. Increase to ~7 910 m s<sup>−1</sup>
-            for a clean circular orbit at this altitude.
+            Initial y-velocity (<strong>radial</strong> component at launch). Zero gives a
+            purely tangential launch, placing the start point at an apsis of the orbit —
+            <code>main.py</code> overrides this default to <code>0.0</code> for exactly
+            that reason. A non-zero value adds a radial component and rotates the orbit's
+            orientation.
           </td>
         </tr>
         <tr>
@@ -839,6 +883,18 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
             higher orbits with longer periods.
           </td>
         </tr>
+        <tr>
+          <td class="pname">force_law</td>
+          <td class="pdefault">"simplified"</td>
+          <td>—</td>
+          <td>
+            <code>"simplified"</code> (default) keeps Schutz's original constant-magnitude
+            approximation; <code>"inverse_square"</code> switches to the physically accurate
+            law. Several of the Suggested Experiments below (closed elliptical orbits,
+            Kepler's third law) require <code>"inverse_square"</code> explicitly, since
+            under the default law only <em>circular</em> orbits stay closed.
+          </td>
+        </tr>
       </tbody>
     </table>
 
@@ -847,7 +903,7 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
       <code>h0</code> is in <em>metres</em>. Setting <code>h0 = 300</code> gives an altitude
       of 300 m (just above the surface), not 300 km. To simulate a realistic low-Earth orbit
       at the altitude of the International Space Station, use <code>h0 = 408_000</code>
-      (408 km = 408 000 m) with <code>vInit ≈ 7\,670</code> m s<sup>−1</sup>.
+      (408 km = 408 000 m) with <code>uInit ≈ 7\,670</code> m s<sup>−1</sup> (tangential).
     </div>
   </section>
 
@@ -894,13 +950,14 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
         <div class="ec-num">EXP-1</div>
         <h4>Find the Circular Speed</h4>
         <p>
-          With a purely tangential launch at 300 m altitude, scan <code>vInit</code>
+          With a purely tangential launch at 300 m altitude, scan <code>uInit</code>
           until the red trajectory closes into a circle exactly matching the blue Earth
           circle. Compare your empirical value with the theoretical prediction
-          \(v_c = \sqrt{k/r}\).
+          \(v_c = \sqrt{k/r}\) — at this altitude the <code>"simplified"</code> and
+          <code>"inverse_square"</code> laws agree to within 0.01%, so either works here.
         </p>
-        <div class="ep">h0=300.0, uInit=0.0
-vInit=7906.0  (scan from 7900)</div>
+        <div class="ep">h0=300.0, vInit=0.0
+uInit=7906.0  (scan from 7900)</div>
       </div>
 
       <div class="exp-card">
@@ -912,8 +969,8 @@ vInit=7906.0  (scan from 7900)</div>
           the range increases — a numerical demonstration of Newton's Cannon at low
           powder charges.
         </p>
-        <div class="ep">h0=300.0, uInit=0.0
-vInit=5000.0</div>
+        <div class="ep">h0=300.0, vInit=0.0
+uInit=5000.0</div>
       </div>
 
       <div class="exp-card">
@@ -923,9 +980,14 @@ vInit=5000.0</div>
           Switch to a realistic 300 km altitude. Set the launch speed above the circular
           value to produce an ellipse with 300 km perigee and a higher apogee. Increase
           <code>maxSteps</code> to capture the full orbit.
+          <strong>Requires <code>force_law="inverse_square"</code></strong> — under the
+          default <code>"simplified"</code> law this does not stay a closed ellipse (see
+          <a href="#background">Physical Background</a>); it precesses into a rosette, and
+          the two laws' circular speeds already differ by ~4.7% at this altitude.
         </p>
-        <div class="ep">h0=300_000.0, uInit=0.0
-vInit=9000.0, maxSteps=50000</div>
+        <div class="ep">h0=300_000.0, vInit=0.0
+uInit=9000.0, maxSteps=50000
+force_law="inverse_square"</div>
       </div>
 
       <div class="exp-card">
@@ -933,11 +995,16 @@ vInit=9000.0, maxSteps=50000</div>
         <h4>Approach the Escape Speed</h4>
         <p>
           At 300 km altitude, \(v_e \approx 10\,931\) m s<sup>−1</sup>. Set
-          <code>vInit</code> just below this value and watch the orbit open to a very
+          <code>uInit</code> just below this value and watch the orbit open to a very
           elongated ellipse. At or above \(v_e\) the trajectory never returns.
+          <strong>Requires <code>force_law="inverse_square"</code></strong> — escape
+          speed is itself a property of the \(1/r^2\) law (its potential vanishes at
+          infinity); under the default constant-\(g\) law the effective potential grows
+          without bound, so nothing ever truly escapes regardless of launch speed.
         </p>
-        <div class="ep">h0=300_000.0, uInit=0.0
-vInit=10900.0, maxSteps=100000</div>
+        <div class="ep">h0=300_000.0, vInit=0.0
+uInit=10900.0, maxSteps=100000
+force_law="inverse_square"</div>
       </div>
 
       <div class="exp-card">
@@ -945,9 +1012,10 @@ vInit=10900.0, maxSteps=100000</div>
         <h4>Radial Launch Component</h4>
         <p>
           Keep the total launch speed fixed at \(v_c\) but split it between
-          <code>uInit</code> (radial) and <code>vInit</code> (tangential). The orbit
+          <code>uInit</code> (tangential) and <code>vInit</code> (radial). The orbit
           is no longer circular — its orientation rotates and its eccentricity depends
-          on the fraction of radial velocity.
+          on the fraction of radial velocity. (Under the default force law the resulting
+          orbit will also precess turn to turn, on top of this eccentricity effect.)
         </p>
         <div class="ep">h0=300.0, vInit=6000.0
 uInit=5000.0  # |v|≈7810 ≈ v_c</div>
@@ -960,10 +1028,14 @@ uInit=5000.0  # |v|≈7810 ≈ v_c</div>
           A geostationary orbit sits at 35 786 km altitude where \(v_c \approx 3\,075\)
           m s<sup>−1</sup>. Simulate this orbit and compare the orbital period with the
           expected 24 hours. You will need a much smaller timestep and many more steps.
+          <strong>Requires <code>force_law="inverse_square"</code></strong> — at this
+          altitude the two laws disagree enormously (the default law gives a ~3.6 hour
+          period at the same radius, not 24 hours).
         </p>
-        <div class="ep">h0=35_786_000.0, uInit=0.0
-vInit=3075.0
-dt=10.0, maxSteps=10000</div>
+        <div class="ep">h0=35_786_000.0, vInit=0.0
+uInit=3075.0
+dt=10.0, maxSteps=10000
+force_law="inverse_square"</div>
       </div>
 
       <div class="exp-card">
@@ -973,22 +1045,35 @@ dt=10.0, maxSteps=10000</div>
           Run circular orbits at several altitudes and record the simulated period
           (step count × dt) each time. Confirm that \(T^2 \propto r^3\) — Kepler's third
           law — holds numerically across the full range from 300 m to 35 786 km.
+          <strong>Requires <code>force_law="inverse_square"</code></strong> — Kepler's
+          third law is a direct consequence of the \(1/r^2\) force law. Under the default
+          constant-\(g\) law, circular-orbit periods instead obey \(T^2 \propto r\), a
+          completely different scaling, so this check would otherwise appear to fail.
         </p>
         <div class="ep">h0 = 300, 300_000, 35_786_000
-vInit = v_c at each altitude</div>
+uInit = v_c at each altitude
+force_law="inverse_square"</div>
       </div>
 
       <div class="exp-card">
         <div class="ec-num">EXP-8</div>
         <h4>Energy Conservation Check</h4>
         <p>
-          Add a post-processing step in <code>main.py</code> to compute the specific
-          energy \(\mathcal{E} = \tfrac{1}{2}(u^2+v^2) - k/r\) at every step and plot
-          it vs. time. Confirm that the symplectic integrator keeps \(\mathcal{E}\)
-          bounded without secular drift over many orbits.
+          Add a post-processing step in <code>main.py</code> to compute a specific-energy
+          quantity at every step and plot it vs. time, confirming the symplectic
+          integrator keeps it bounded without secular drift over many orbits. The correct
+          expression depends on which force law you're running:
+          under <code>force_law="inverse_square"</code>, use
+          \(\mathcal{E} = \tfrac{1}{2}(u^2+v^2) - k/r\) (the familiar \(-k/r\)
+          potential); under the default <code>"simplified"</code> law, the constant-\(g\)
+          acceleration instead corresponds to a <em>linear</em> potential, so use
+          \(\mathcal{E} = \tfrac{1}{2}(u^2+v^2) + g\,r\) instead — using the \(-k/r\) form
+          under the default law will show a small but real spurious drift, since it isn't
+          the quantity this force law actually conserves.
         </p>
         <div class="ep">Compute from xs, ys returned by driver
-# save velocities in driver first</div>
+# save velocities in driver first
+# pick the E formula matching your force_law</div>
       </div>
 
     </div><!-- /exp-grid -->

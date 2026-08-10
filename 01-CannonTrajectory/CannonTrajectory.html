@@ -412,11 +412,11 @@
   <header>
     <div class="badge">CHAPTER 1 · INVESTIGATION 1.3</div>
     <h1><em>CannonTrajectory</em> — Newtonian Projectile Motion</h1>
-    <div class="sub">
-      Python port of Bernard Schutz, <em>Gravity from the Ground Up</em> (Cambridge, 2003) &nbsp;·&nbsp;
-      <a href="https://www.gravityfromthegroundup.org/programs/CannonTrajectory.html" target="_blank">Original help file</a> &nbsp;·&nbsp;
-      <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/CannonTrajectory" target="_blank">Source code on GitHub</a>
-    </div>
+	  <div class="sub">
+		Source Code:
+		<a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/"
+		   target="_blank">https://github.com/tomyee3/GFTGU-Programs/tree/main/</a>·
+	  </div>	
   </header>
 
   <!-- ═══════════════════════════════════════════════════════ SIDEBAR NAV -->
@@ -459,12 +459,6 @@
         <strong>improved Euler (Heun) method</strong>. Comparing their outputs at different
         timesteps gives immediate, visual intuition for the meaning of numerical accuracy and
         convergence — essential preparation for the more demanding integrators used in later chapters.
-      </p>
-      <p>
-        The original Triana Java program on which this port is based is called
-        <code>CannonTrajectory</code>. The Python port preserves the same physics, loop termination
-        logic, and array-trimming behaviour, while reorganising the code into the standard
-        four-module structure used throughout this repository.
       </p>
     </section>
 
@@ -540,7 +534,7 @@
       <div class="eq-block">
         <div class="eq-label">Eq. 3 — Launch conditions</div>
         \[
-          x_0 = 0, \quad h_0 = 0, \quad u_0 = v_0 \cos\theta, \quad v_0^{(v)} = v_0 \sin\theta.
+          x_0 = 0, \quad h_0 = 0, \quad u_0 = v_0 \cos\theta, \quad v_{0y} = v_0 \sin\theta.
         \]
       </div>
 
@@ -552,7 +546,7 @@
       <div class="eq-block">
         <div class="eq-label">Eq. 4 — Analytic trajectory</div>
         \[
-          x(t) = u_0\, t, \qquad h(t) = v_{0}^{(v)}\, t - \tfrac{1}{2} g\, t^2.
+          x(t) = u_0\, t, \qquad h(t) = v_{0y}\, t - \tfrac{1}{2} g\, t^2.
         \]
       </div>
 
@@ -576,7 +570,7 @@
       <div class="eq-block">
         <div class="eq-label">Eq. 6 — Forward Euler step</div>
         \[
-          \mathbf{s}^{n+1} = \mathbf{s}^{n} + \Delta t\; \mathbf{f}(\mathbf{s}^{n}),
+          \mathbf{s}_{n+1} = \mathbf{s}_{n} + \Delta t\; \mathbf{f}(\mathbf{s}_{n}),
         \]
       </div>
       <p>
@@ -593,33 +587,26 @@
       <div class="eq-block">
         <div class="eq-label">Eq. 7 — Heun predictor</div>
         \[
-          \mathbf{s}^* = \mathbf{s}^{n} + \Delta t\; \mathbf{f}(\mathbf{s}^{n}).
+          \mathbf{s}^* = \mathbf{s}_{n} + \Delta t\; \mathbf{f}(\mathbf{s}_{n}).
         \]
       </div>
 
       <div class="eq-block">
         <div class="eq-label">Eq. 8 — Heun corrector</div>
         \[
-          \mathbf{s}^{n+1} = \mathbf{s}^{n} + \frac{\Delta t}{2}\bigl[\mathbf{f}(\mathbf{s}^{n}) + \mathbf{f}(\mathbf{s}^*)\bigr].
+          \mathbf{s}_{n+1} = \mathbf{s}_{n} + \frac{\Delta t}{2}\bigl[\mathbf{f}(\mathbf{s}_{n}) + \mathbf{f}(\mathbf{s}^*)\bigr].
         \]
       </div>
 
       <p>
         Because the derivatives are linear in this problem
-        (\(\mathbf{f}(\mathbf{s}^*) = \mathbf{f}(\mathbf{s}^n) + [-g\,\Delta t,\; 0,\; 0,\; 0]^T\)
+        (\(\mathbf{f}(\mathbf{s}^*) = \mathbf{f}(\mathbf{s}_n) + [-g\,\Delta t,\; 0,\; 0,\; 0]^T\)
         for the vertical component), the corrector averages the initial and final vertical
-        velocities — identical to the update used in Schutz's original Java code.
+        velocities.
         For horizontal motion, where the derivative is constant, both methods give the same
         result; the improvement appears only in the vertical (height) update.
       </p>
 
-      <div class="note-box">
-        <strong>Schutz's Java equivalent:</strong> In the original Triana code, the improved
-        Euler step is written as <code>w = v − g·dt</code> (predictor vertical velocity),
-        then <code>h = h + (v + w)/2 · dt</code>. This is algebraically identical to
-        Eq.&thinsp;8 for height, since
-        \(\frac{v + (v - g\,\Delta t)}{2} = v - \tfrac{1}{2}g\,\Delta t\).
-      </div>
     </section>
 
     <!-- ── Algorithm ───────────────────────────────────────────── -->
@@ -651,8 +638,7 @@
       <p>
         The loop exits as soon as the projectile's height becomes negative (first step that
         crosses the ground). The pre-allocated arrays are then trimmed to the actual number of
-        used steps before being returned: <code>xs[:j], hs[:j]</code>. This avoids trailing
-        zeros in the plot, matching the behaviour of the original Triana program.
+        used steps before being returned: <code>xs[:j], hs[:j]</code>.
       </p>
 
       <div class="warn-box">
@@ -734,20 +720,20 @@ def improved_euler_step(state, dt):
           <p>
             Plots the projectile trajectory as a line, marks the launch point as an orange
             scatter point, enforces equal horizontal and vertical scales
-            (<code>plt.axis("equal")</code> — equivalent to Triana's forced-equal-ranges mode),
+            (<code>ax.set_aspect("equal", "box")</code>),
             and displays a grid and legend.
           </p>
           <div class="sig">def plot_cannon(xs, hs):
-    # plt.figure(figsize=(8, 6))
-    # plt.plot(xs, hs, label="Projectile trajectory")
-    # plt.scatter([0],[0], color="orange",
-    #             label="Launch point")
-    # plt.xlabel("Horizontal distance (m)")
-    # plt.ylabel("Vertical distance (m)")
-    # plt.title("CannonTrajectory — Newtonian
-    #            Projectile Motion")
-    # plt.axis("equal")
-    # plt.grid(True); plt.legend(); plt.show()</div>
+    # fig, ax = plt.subplots(figsize=(8, 6))
+    # ax.plot(xs, hs, label="Projectile trajectory")
+    # ax.scatter([0],[0], color="orange",
+    #            label="Launch point")
+    # ax.set_xlabel("Horizontal distance (m)")
+    # ax.set_ylabel("Vertical distance (m)")
+    # ax.set_title("CannonTrajectory — Newtonian
+    #               Projectile Motion")
+    # ax.set_aspect("equal", "box")
+    # ax.grid(True); ax.legend(); plt.show()</div>
         </div>
 
         <!-- main.py -->
@@ -853,9 +839,8 @@ plot_cannon(xs, hs)</div>
       <ul style="margin-left:1.5em; font-size:0.92rem; line-height:2.0;">
         <li>A blue line tracing the parabolic trajectory from launch to just below ground level.</li>
         <li>An orange dot marking the launch point at the origin.</li>
-        <li>Equal horizontal and vertical scales (<code>plt.axis("equal")</code>) so the
-            parabola's true aspect ratio is preserved — this faithfully reproduces Triana's
-            forced-equal-ranges display mode.</li>
+        <li>Equal horizontal and vertical scales (<code>ax.set_aspect("equal", "box")</code>) so the
+            parabola's true aspect ratio is preserved.</li>
         <li>Grid lines and a legend.</li>
       </ul>
       <p>
@@ -929,8 +914,11 @@ plot_cannon(xs, hs)</div>
           Fix the angle at 45° and vary <code>speed</code> from 50 to 500 m/s.
           The range should scale as \(v_0^2\). Plot range vs. \(v_0^2\) on a linear scale
           and verify the slope equals \(\sin 90° / g = 1/g\). At very high speeds the
-          flat-Earth, constant-\(g\) approximation breaks down — note that EarthOrbit
-          (Chapter 4) treats this regime properly.
+          flat-Earth, constant-\(g\) approximation breaks down — EarthOrbit (Chapter 4)
+          picks up exactly here: it keeps the same constant-\(g\) approximation by default
+          and shows directly that it only holds for low, nearly-circular orbits, failing
+          (a precessing, non-closing path) otherwise, with the true inverse-square law
+          available for comparison.
         </p>
       </div>
 
@@ -958,9 +946,13 @@ plot_cannon(xs, hs)</div>
           <div class="rc-name">EarthOrbit</div>
           <div class="rc-ch">Chapter 4</div>
           <p>
-            The natural successor: replaces constant \(g\) with the inverse-square law and
-            places the cannon in orbit around a full-sized Earth. Implements Newton's Cannon
-            thought experiment.
+            The natural successor: launches the same cannon fast enough to attempt orbit
+            around a full-sized Earth. By default it keeps Schutz's original constant-\(g\)
+            approximation, which is the whole point of the exercise: it gives accurate,
+            closed orbits only when they stay low and nearly circular, and visibly fails
+            (a precessing, non-closing path) otherwise. The true inverse-square law is
+            available as a selectable alternative for comparison. Implements Newton's
+            Cannon thought experiment.
           </p>
         </a>
 
@@ -1007,9 +999,6 @@ plot_cannon(xs, hs)</div>
 
   <!-- ═══════════════════════════════════════════════════════ FOOTER -->
   <footer>
-    <span>
-      <strong>GFtGU Programs</strong> — Python ports of Schutz (2003) Triana simulations
-    </span>
     <span>·</span>
     <a href="https://github.com/tomyee3/GFTGU-Programs" target="_blank">GitHub: GFTGU-Programs</a>
     <span>·</span>
