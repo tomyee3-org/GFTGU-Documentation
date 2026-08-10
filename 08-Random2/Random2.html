@@ -196,6 +196,7 @@
       margin: 16px 0;
     }
     .note strong { color: var(--accent); }
+    p strong { color: var(--accent2); }
 
     /* ── Parameter table ── */
     .param-table {
@@ -344,19 +345,15 @@
     /* ── Footer ── */
     footer {
       grid-column: 1 / -1;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      padding: 22px 38px;
+      background: #2c1a0e;
+      color: #c8b090;
       font-family: var(--sans);
-      font-size: 0.82rem;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
     }
-    footer img { height: 28px; }
-    footer a { color: var(--accent2); text-decoration: none; }
+    footer a { color: #e0c090; text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
     /* ── Responsive ── */
@@ -383,8 +380,9 @@
   <div class="badge">CHAPTER 8 &middot; EXTENDED FROM INVESTIGATION 8.7</div>
   <h1><em>Random2</em> &mdash; Random Walk Simulation with 2D Star Visualization</h1>
   <div class="sub">
-    Extends <a href="Random.html">Random</a> &nbsp;&bull;&nbsp;
-    Based on Bernard Schutz, <em>Gravity from the Ground Up</em> (Cambridge, 2003)
+    Source Code:
+    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/"
+       target="_blank">https://github.com/tomyee3/GFTGU-Programs/tree/main/</a>·
   </div>
 </header>
 
@@ -408,23 +406,70 @@
 <!-- ─── Description ─── -->
 <section id="description">
   <h2>Program Description</h2>
+  <p>
+    <strong>Random2</strong> simulates how randomly wandering particles travel from their 
+    starting point as a function of the
+    number of steps taken. The simulation is motivated by one of astrophysics' most
+    striking transport phenomena: the extraordinarily slow journey of a photon from the
+    core of the Sun to its surface.
+  </p>
 
   <p>
-    Random2 keeps everything <a href="Random.html">Random</a> demonstrates about
-    diffusive transport &mdash; the extraordinarily slow, drunkard's-walk journey of a
-    photon from the Sun's fusing core to its radiating surface &mdash; and adds a second,
-    directly visual way of seeing the same physics. Where the original program only ever
-    produces one figure (a log-log plot of scaled distance versus step count), Random2
-    offers a choice between that plot and a new display: a handful of individual 2D
-    random walks, drawn from the center of a circular "star" outward, colored
-    distinctly, with any walk that reaches the surface continuing on as a straight
-    escaping ray.
+    A photon produced by nuclear fusion at the Sun's center does not travel outward in a
+    straight line. Instead, it is absorbed and re-emitted by the dense solar plasma
+    billions of times, changing direction randomly at each interaction. The net outward
+    displacement after \(N\) such steps is not proportional to \(N\) — as it would be
+    for directed motion — but rather to \(\sqrt{N}\). This square-root scaling is the
+    hallmark of <em>diffusion</em>, and it means that a photon requires roughly 10,000
+    to 170,000 years to traverse the 700,000 km from core to surface, even though light
+    itself crosses that distance in about 2.3 seconds if unobstructed.
   </p>
-  <div class="note">
-    <strong>Two independent displays, one shared walk engine:</strong> both of Random2's
-    display modes are built on the same 2D step-generation physics (see
+
+    
+  <h3>Two Modes of Operation</h3>
+
+  <p>
+    <strong>In the "scaled_distance" mode of operation</strong>, this program performs a systematic suite of experiments. 
+    Starting with a maximum walk length of <code>maxSteps</code>, 
+    it halves the number of steps repeatedly, running
+    <code>nTrials</code> independent random walks at each step-count to obtain a
+    statistically reliable average. The result is a table — and a log-log plot —
+    of average scaled net displacement versus number of steps. On log-log axes a
+    diffusive process appears as a straight line with slope exactly
+    \(\tfrac{1}{2}\), confirming the \(\langle d \rangle \propto \sqrt{N}\) scaling law.
+  </p>
+  <p>
+    Each step in a single walk has <strong>two</strong> components drawn independently and
+    uniformly from the interval \([-1, +1]\) — see
+    <a href="#physics">Physics &amp; Equations</a> for the full derivation. This mimics an
+    isotropic scattering event where direction is equally likely in any direction within
+    the plane. Because the step lengths vary (a step drawn near a corner of the unit
+    square is longer than one drawn near an edge), the raw displacement is normalized by
+    the average step length before averaging across trials, producing a dimensionless
+    <em>scaled distance</em> that cleanly reveals the diffusive scaling.
+  </p>
+
+  <p>
+    <strong>The "walk2d" mode of operation</strong> adds a directly visual way of seeing the same physics. 
+    Instead of generating a log-log plot of scaled distance versus step count that
+    provides a quantitative view of the statistics, this second mode provides
+    an intuitive view of how a handful of individual photons might follow a meandering
+    path from the center of a circular "star" outward towards the surface before
+    eventually escaping.
+  </p>
+  
+  <p>
+    These two separate displays are built on the same 2D step-generation physics (see
     <a href="#physics">Physics &amp; Equations</a>). The scaled-distance experiment and
     the star visualization can be run independently; neither depends on the other.
+  </p>
+  
+  <div class="note">
+    <strong>Astrophysical context:</strong> The random walk is the simplest model of
+    radiative diffusion in stellar interiors. More realistic models account for the
+    frequency-dependent mean free path of photons and the temperature gradient driving
+    a net outward energy flux, but the \(\sqrt{N}\) scaling persists and governs the
+    overall timescale of energy transport.
   </div>
 </section>
 
@@ -447,11 +492,10 @@
     \]
   </div>
   <div class="note">
-    <strong>Why 2D, not 3D:</strong> the original Random program's walk is
-    three-dimensional. Random2 uses a 2D walk throughout &mdash; for both display modes
-    &mdash; since the star visualization is inherently planar, and Random's own
-    Suggested Experiments already note that the \(\sqrt{N}\) diffusion law is
-    dimension-independent, so nothing about the underlying physics demonstration is lost.
+    <strong>Why 2D:</strong> Random2 uses a 2D walk throughout, for both display modes,
+    since the star visualization is inherently planar, and the \(\sqrt{N}\) diffusion law
+    (see <a href="#physics">Diffusion Scaling Law</a> below) is dimension-independent, so
+    nothing about the underlying physics demonstration is lost by working in a plane.
   </div>
 
   <h3>Individual Step Length</h3>
@@ -528,8 +572,7 @@
   <h2>Algorithm Overview</h2>
 
   <p>
-    The scaled-distance experiment mirrors Random's own structure exactly, just with
-    the 2D step of Eq. 1&ndash;2 in place of the original 3D step:
+    The scaled-distance experiment uses the following loop structure:
   </p>
   <ul>
     <li><strong>Outer loop &mdash; experiment suite:</strong> Index \(j\) runs from
@@ -649,7 +692,7 @@ circle_crossing_fraction(p0, p1, r)
       <h4>random2_driver.py</h4>
       <p>
         Both experiments live here: <code>run_scaled_distance_experiment</code>
-        (Random's original suite, in 2D) and <code>run_walk2d</code> (the new star
+        (the scaled-distance suite) and <code>run_walk2d</code> (the star
         visualization, running each walk until it escapes).
       </p>
       <div class="sig">run_scaled_distance_experiment(
@@ -760,9 +803,8 @@ plot_walk2d(result, corner="upper right")</div>
   <h2>Program Output</h2>
 
   <p>
-    <strong>Scaled-distance mode</strong> produces the same kind of figure as the
-    original Random program: a log-log plot of average scaled distance versus number of
-    steps, expected to lie close to a line of slope \(\tfrac{1}{2}\).
+    <strong>Scaled-distance mode</strong> produces a log-log plot of average scaled distance
+    versus number of steps, expected to lie close to a line of slope \(\tfrac{1}{2}\).
   </p>
   <p>
     <strong>2D star-visualization mode</strong> produces a single square figure showing
@@ -780,9 +822,9 @@ plot_walk2d(result, corner="upper right")</div>
   <div class="scenario-grid">
 
     <div class="scenario-card">
-      <h4>Verify the &radic;N Law (2D)</h4>
+      <h4>Verify the &radic;N Law</h4>
       <p>Run the scaled-distance mode with defaults and confirm the log-log slope is
-         still \(\tfrac{1}{2}\) in 2D, matching Random's 3D result.</p>
+         \(\tfrac{1}{2}\).</p>
       <div class="params">display = "scaled_distance"</div>
     </div>
 
@@ -825,11 +867,6 @@ radius_factor = 2.0</div>
   <h2>Related Programs</h2>
   <div class="related-grid">
 
-    <a class="related-card" href="Random.html">
-      <div class="rc-name">Random</div>
-      <div class="rc-desc">The original 3D diffusion demonstration this program extends</div>
-    </a>
-
     <a class="related-card"
        href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/08-Star"
        target="_blank">
@@ -847,19 +884,33 @@ radius_factor = 2.0</div>
   </div>
 </section>
 
+  <!-- ── License ── -->
+  <section id="license">
+    <h2>License</h2>
+    <p>
+      This Python port is derived from the original Java programs by
+      <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+    <p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
+    </p>
+  </section>
+
 </main><!-- /main -->
 
 <!-- ═══════════════════════════════════ FOOTER ══════════════════════════════════ -->
 <footer>
-  <img src="https://github.com/tomyee3/GFTGU-Documentation/blob/main/00-License/license_files/LicenseBanner.png"
-       alt="Creative Commons BY-NC-SA 4.0" />
-  <span>
-    &copy; 2024 Thomas Yee &mdash; released under the
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
-      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
-    Based on Bernard Schutz,
-    <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
-  </span>
+  <em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+  <a href="https://github.com/tomyee3/GFTGU-Programs" target="_blank">GitHub Repository</a>
 </footer>
 
 </div><!-- /page-wrap -->

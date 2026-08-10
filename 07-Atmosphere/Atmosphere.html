@@ -420,11 +420,9 @@
     <div class="badge">Chapter 7 &middot; Atmospheres</div>
     <h1><em>Atmosphere</em> – Planetary Atmosphere Structure</h1>
     <div class="sub">
-      Part of the <em>Gravity from the Ground Up</em> Python program suite &nbsp;&bull;&nbsp;
-      Ported from Bernard Schutz's original Java programs &nbsp;&bull;&nbsp;
-      <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/Atmosphere" target="_blank">Source on GitHub</a>
-      &nbsp;&bull;&nbsp;
-      <a href="https://www.gravityfromthegroundup.org/programs/Atmosphere.html" target="_blank">Schutz's original</a>
+      Source Code:
+      <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/"
+         target="_blank">https://github.com/tomyee3/GFTGU-Programs/tree/main/</a>·
     </div>
   </header>
 
@@ -465,9 +463,6 @@
         atmospheric quantities the user selects.
       </p>
       <p>
-        The program is a direct Python port of Schutz's Java <em>Atmosphere</em> program
-        described in Investigations 7.1 and 7.3 of
-        <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
         It is suitable for modeling Earth's atmosphere, comparing planetary atmospheres across the
         Solar System, and exploring how scale height depends on gravity and molecular weight.
       </p>
@@ -575,9 +570,17 @@
       </div>
       <p>
         The exponent \(\alpha = 0.5\) (the default <code>power</code> attribute) means that
-        temperature falls as the square root of pressure. This is a simple empirical model
-        that gives a monotonically decreasing temperature as the atmosphere thins, matching
-        observations reasonably well for Earth above 50 km.
+        temperature falls as the square root of pressure. This closure was chosen for
+        mathematical convenience — it is continuous with the last measured point and keeps
+        the integration well-behaved — not because it is physically realistic. In reality
+        the thermosphere <em>rises</em> in temperature with altitude, due to solar UV/X-ray
+        absorption (as the default Earth profile's own measured points show, climbing to
+        423&nbsp;K by 500&nbsp;km — see <a href="#parameters">Parameters</a>). Because this
+        power law only takes over <em>above</em> the highest measured breakpoint, it
+        inevitably diverges from reality there: as the integration proceeds far enough that
+        pressure approaches zero, \(T = \beta\,p^{0.5}\) forces the temperature toward zero
+        as well, which is not a real physical effect — it is an artifact of extrapolating a
+        simple closure to its own breaking point.
       </p>
     </section>
 
@@ -613,18 +616,21 @@
 scale = p0 / (g * rho0)                    # scale height H
 dh    = scale / 200.0                      # initial step
 
-while True:
-    for j in range(1, 1001):
+last_step = 0
+while last_step == 0:
+    for j in range(1, max_steps):          # max_steps = 1000
+        alt[j] = alt[j-1] + dh
         p[j] = hydrostatic_step(p[j-1], rho[j-1], g, dh)
-        T[j] = profile.get_temp(h[j], p[j])
-        rho[j] = ideal_gas_density(p[j], mu, T[j])
-        if p[j] < 0:
+        if p[j] < 0.0:
             last_step = j
-            break                          # atmosphere top reached
-    else:
-        dh *= 2.0                          # double step, restart
-        continue
-    break                                  # done</code></pre>
+            break                          # atmosphere top reached;
+                                            # T[j], rho[j] never computed
+                                            # for this (discarded) point
+        T[j] = profile.get_temp(alt[j], p[j])
+        rho[j] = ideal_gas_density(p[j], mu, T[j])
+    dh *= 2.0                              # only matters if last_step
+                                            # is still 0 -- loop then
+                                            # retries with a larger step</code></pre>
 
       <h3>Output Arrays</h3>
       <p>
@@ -710,8 +716,9 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
         <h3>driver_atmosphere.py</h3>
         <p>
           Owns all integration logic: builds the temperature profile, computes the initial
-          scale height, runs the while/for adaptive loop, and packages results into a
-          structured output dictionary ready for the plotter.
+          scale height, runs the while/for adaptive loop, and packages results into
+          structured dataclasses (<code>AtmosphereResult</code>, then <code>CurveData</code>
+          via <code>extract_output()</code>) ready for the plotter.
         </p>
 
         <h3>Type Alias</h3>
@@ -755,12 +762,27 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
           an <code>AtmosphereResult</code> with arrays sliced to <code>[:last_step]</code>.
         </p>
 
-        <h3>Function</h3>
-        <span class="func-sig">extract_output(result: AtmosphereResult) -&gt; Dict</span>
+        <h3>Data Class</h3>
+        <pre><code>@dataclass
+class CurveData:
+    x:       List[float]  # altitudes (m)
+    y:       List[float]  # selected quantity
+    y_unit:  str
+    x_label: str
+    y_label: str
+    title:   str</code></pre>
         <p class="func-desc">
-          Converts an <code>AtmosphereResult</code> into a plot-ready dictionary with keys
-          <code>x</code>, <code>y</code>, <code>y_unit</code>, <code>x_label</code>,
-          <code>y_label</code>, and <code>title</code>.
+          Structured, uniformly-typed plot-ready result. Replaced an earlier
+          <code>Dict[str, List[float]]</code> design: since <code>y_unit</code>,
+          <code>x_label</code>, <code>y_label</code>, and <code>title</code> are strings, not
+          <code>List[float]</code>, that dict's declared value type was never actually
+          honest about its own contents.
+        </p>
+
+        <h3>Function</h3>
+        <span class="func-sig">extract_output(result: AtmosphereResult) -&gt; CurveData</span>
+        <p class="func-desc">
+          Converts an <code>AtmosphereResult</code> into a plot-ready <code>CurveData</code>.
           The <code>y</code> array and label depend on <code>result.output_type</code>:
           pressures (Pa), densities (kg m<sup>−3</sup>), or temperatures (K).
           The <code>x</code> array is always the altitude in meters.
@@ -775,26 +797,26 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
         <span class="role-tag">Visualization</span>
         <h3>plot_atmosphere.py</h3>
         <p>
-          Accepts the structured output dictionary from <code>extract_output()</code> and
+          Accepts the structured <code>CurveData</code> from <code>extract_output()</code> and
           produces a matplotlib line graph. The module is intentionally minimal: all axis
-          labels, units, and the title are already embedded in the dictionary, so the plotter
-          needs no knowledge of the underlying physics.
+          labels, units, and the title are already embedded in <code>CurveData</code>, so the
+          plotter needs no knowledge of the underlying physics.
         </p>
 
         <h3>Function</h3>
-        <span class="func-sig">plot_atmosphere(curve_data: Dict[str, object]) -&gt; None</span>
+        <span class="func-sig">plot_atmosphere(curve_data: CurveData) -&gt; None</span>
         <p class="func-desc">
-          Reads <code>x</code> (altitudes, m), <code>y</code> (selected quantity),
-          <code>x_label</code>, <code>y_label</code>, and <code>title</code> from
-          <code>curve_data</code>. Creates a single-axes figure with
+          Reads <code>curve_data.x</code> (altitudes, m), <code>curve_data.y</code> (selected
+          quantity), <code>curve_data.x_label</code>, <code>curve_data.y_label</code>, and
+          <code>curve_data.title</code>. Creates a single-axes figure with
           <code>ax.plot(x, y)</code>, applies labels and a grid, then calls
           <code>plt.tight_layout()</code> and <code>plt.show()</code>.
         </p>
 
-        <h3>Expected dict keys</h3>
+        <h3>CurveData fields used here</h3>
         <table>
           <thead>
-            <tr><th>Key</th><th>Type</th><th>Content</th></tr>
+            <tr><th>Field</th><th>Type</th><th>Content</th></tr>
           </thead>
           <tbody>
             <tr><td><code>x</code></td><td>List[float]</td><td>Altitudes (m)</td></tr>
@@ -819,23 +841,33 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
           the driver and plotter. Edit the parameters in this file to model a different planet
           or atmospheric scenario; the other three modules never need to be modified.
         </p>
-        <pre><code>from driver_atmosphere import AtmosphereParameters, AtmosphereModel, extract_output
+        <pre><code>from driver_atmosphere import AtmosphereParameters, AtmosphereModel, OutputType, extract_output
 from plot_atmosphere  import plot_atmosphere
 
 planet_name = "Earth"
 g_accel     = 9.81          # m s⁻²
 mu          = 28.97         # mean molecular weight (dry air)
 p0          = 1.013e5       # Pa  (1 atm)
-h_points    = [0.0, 2000.0, 6000.0, 12000.0, 25000.0, 50000.0]   # m
-T_points    = [288.0, 275.0, 250.0, 225.0, 220.0, 270.0]          # K
-output_type = "Pressure"    # "Pressure" | "Density" | "Temperature"
+
+# 13-point profile spanning troposphere through thermosphere;
+# see Parameters below for the full table and altitude labels.
+h_points = [
+    0.0, 5_000.0, 10_000.0, 11_000.0, 20_000.0, 30_000.0, 47_000.0,
+    50_000.0, 60_000.0, 85_000.0, 100_000.0, 200_000.0, 500_000.0,
+]
+T_points = [
+    288.0, 281.5, 275.0, 217.0, 227.0, 237.0, 271.0,
+    258.0, 248.0, 263.0, 273.0, 373.0, 423.0,
+]
+output_type: OutputType = "Pressure"    # "Pressure" | "Density" | "Temperature"
 
 params = AtmosphereParameters(
     planet_name=planet_name, g_accel=g_accel, mu=mu, p0=p0,
     h_points=h_points, T_points=T_points, output_type=output_type
 )
 
-result     = AtmosphereModel(params).run()
+model      = AtmosphereModel(params)
+result     = model.run()
 curve_data = extract_output(result)
 plot_atmosphere(curve_data)</code></pre>
       </div>
@@ -846,7 +878,8 @@ plot_atmosphere(curve_data)</code></pre>
       <h2>Parameters</h2>
       <p>
         All parameters are set in <code>main.py</code>. The defaults model Earth's atmosphere
-        using a six-point temperature profile drawn from the U.S. Standard Atmosphere.
+        using a 13-point temperature profile spanning the troposphere through the
+        thermosphere (500 km).
       </p>
       <table>
         <thead>
@@ -884,13 +917,16 @@ plot_atmosphere(curve_data)</code></pre>
           </tr>
           <tr>
             <td><code>h_points</code></td>
-            <td><code>[0, 2000, 6000, 12000, 25000, 50000]</code></td>
+            <td><code>[0, 5000, 10000, 11000, 20000, 30000, 47000,<br>
+                50000, 60000, 85000, 100000, 200000, 500000]</code></td>
             <td>m</td>
-            <td>Altitude breakpoints of the temperature profile</td>
+            <td>Altitude breakpoints of the temperature profile (13 points, sea level to
+                500 km)</td>
           </tr>
           <tr>
             <td><code>T_points</code></td>
-            <td><code>[288, 275, 250, 225, 220, 270]</code></td>
+            <td><code>[288, 281.5, 275, 217, 227, 237, 271,<br>
+                258, 248, 263, 273, 373, 423]</code></td>
             <td>K</td>
             <td>Temperature at each altitude breakpoint</td>
           </tr>
@@ -905,9 +941,14 @@ plot_atmosphere(curve_data)</code></pre>
 
       <div class="note">
         <strong>Temperature profile note:</strong>
-        The Earth defaults approximate the U.S. Standard Atmosphere 1976 — a troposphere
-        that cools from 288 K at sea level to 225 K at 12 km (the tropopause), a stratosphere
-        that warms to 270 K by 50 km, and a power-law extrapolation above that.
+        The Earth defaults are drawn from the U.S. Standard Atmosphere (1976) and trace its
+        full named layer structure: a troposphere cooling from 288 K at sea level to 217 K
+        at 11 km (the tropopause); a stratosphere warming back to 271 K at 47 km (the
+        stratopause); a mesosphere cooling again to 248 K at 85 km (the mesopause); then a
+        thermosphere that <em>rises</em> sharply, to 373 K at 200 km and 423 K at 500 km,
+        driven by solar UV/X-ray absorption. Only altitudes above this last point (500 km)
+        fall back on the power-law extrapolation of <a href="#physics">Eq. 7.6</a> — see the
+        note there about where that model does and does not resemble reality.
         The <code>h_points</code> and <code>T_points</code> lists must have the same length
         and must be in ascending altitude order.
       </div>
@@ -943,9 +984,10 @@ plot_atmosphere(curve_data)</code></pre>
           <div class="out-name">"Temperature"</div>
           <div class="out-unit">y-axis unit: K</div>
           <p>
-            Temperature vs. altitude. Directly shows the user-supplied profile in
-            the troposphere/stratosphere, and the \(T = \beta\,p^{0.5}\) power-law
-            extension above the highest breakpoint.
+            Temperature vs. altitude. Directly shows the user-supplied profile up through
+            its highest measured breakpoint (troposphere, stratosphere, mesosphere, and — with
+            the default Earth data — the rising thermosphere), and the
+            \(T = \beta\,p^{0.5}\) power-law extension above that.
           </p>
         </div>
       </div>
@@ -962,8 +1004,7 @@ plot_atmosphere(curve_data)</code></pre>
     <section id="experiments">
       <h2>Suggested Experiments</h2>
       <p>
-        These investigations mirror those suggested by Schutz for the original Java program.
-        Each can be run by editing only <code>main.py</code>.
+        Settings for these experiments require editing only <code>main.py</code>.
       </p>
 
       <div class="scenario-card">
@@ -1053,7 +1094,7 @@ T_points    = [165.0, 130.0, 110.0, 150.0]        # K</div>
       <div class="scenario-card">
         <h4>7 · Effect of Temperature Profile Shape</h4>
         <p>
-          Replace the six-point Earth profile with a simple two-point isothermal profile
+          Replace the 13-point Earth profile with a simple two-point isothermal profile
           (<code>h_points=[0, 100000]</code>, <code>T_points=[288, 288]</code>).
           The output should be very close to the barometric exponential.
           Then add a temperature inversion (warm layer aloft) and observe how it
@@ -1095,23 +1136,17 @@ T_points = [288.0, 200.0, 350.0]   # inversion above 50 km</div>
     <section id="license">
       <h2>License</h2>
       <p>
-        This help file and the associated Python source code are released under the
-        <strong>Creative Commons Attribution–NonCommercial–ShareAlike 4.0 International</strong>
-        (CC BY-NC-SA 4.0) license.
+        This Python port is derived from the original Java programs by
+        <strong>Bernard Schutz</strong> accompanying
+        <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+        The port is distributed under the
+        <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+           target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+           International (CC BY-NC-SA 4.0)</a> license.
       </p>
       <p>
-        You are free to share and adapt the material for non-commercial purposes, provided you
-        give appropriate credit and distribute any derivative works under the same license.
-      </p>
-      <p>
-        <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
-          https://creativecommons.org/licenses/by-nc-sa/4.0/
-        </a>
-      </p>
-      <p style="margin-top:10px;">
-        The physics and program concept are drawn from:<br>
-        Bernard Schutz, <em>Gravity from the Ground Up</em>,
-        Cambridge University Press, 2003.
+        You are free to share and adapt the material for non-commercial purposes, provided
+        you give appropriate credit and distribute any adaptations under the same license.
       </p>
     </section>
 
@@ -1119,16 +1154,11 @@ T_points = [288.0, 200.0, 350.0]   # inversion above 50 km</div>
 
   <!-- ══════════════════════ FOOTER ══════════════════════ -->
   <footer>
-    <img class="license-banner"
-         src="https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png"
-         alt="CC BY-NC-SA 4.0" />
-    <span>
-      &copy; 2024 Thomas Yee &nbsp;&bull;&nbsp;
-      Released under
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
-      &nbsp;&bull;&nbsp;
-      Based on Schutz, <em>Gravity from the Ground Up</em>, Cambridge University Press (2003)
-    </span>
+    <em>Gravity from the Ground Up</em> — Python Programs ·
+    Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+    Python port © 2024–2026 Thomas Yee ·
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+    <a href="https://github.com/tomyee3/GFTGU-Programs" target="_blank">GitHub Repository</a>
   </footer>
 
 </div><!-- /.page-wrap -->
