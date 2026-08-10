@@ -434,13 +434,9 @@
   <div class="badge">CHAPTER 4 · INVESTIGATION 4.3</div>
   <h1>Sphere<em>Gravity</em></h1>
   <div class="sub">
-    Numerical verification of Newton's shell theorem for spherical mass distributions
-    &nbsp;·&nbsp;
-    <a href="https://www.gravityfromthegroundup.org/programs/SphereGravity.html"
-       target="_blank" rel="noopener">Schutz's original Java help file</a>
-    &nbsp;·&nbsp;
-    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/SphereGravity"
-       target="_blank" rel="noopener">Python source on GitHub</a>
+    Source Code:
+    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/"
+       target="_blank">https://github.com/tomyee3/GFTGU-Programs/tree/main/</a>·
   </div>
 </header>
 
@@ -688,18 +684,15 @@
     of the 1 000 radii, so the total work scales as \(\mathcal{O}(1000 \times n_\text{div})\).
     The mass-summation loop adds another \(\mathcal{O}(n_\text{div})\). For
     \(n_\text{div} = 10\,000\) this is \(10^7\) floating-point operations — fast on modern
-    hardware but noticeable. Note that this is different from Schutz's Java description, which
-    quotes \(n_\text{div}^2\) tiles; here each latitude ring contributes \(n_\text{div}\) tiles
-    but they are accounted for analytically (all tiles in a ring are identical), so the actual
-    loop count is \(n_\text{div}\), not \(n_\text{div}^2\).
+    hardware but noticeable. 
   </div>
 
   <!-- ── Accuracy ── -->
   <h2 id="accuracy">Accuracy and Convergence</h2>
   <p>
     The key parameter controlling accuracy is <code>nDiv</code>. As it increases the tiles become
-    smaller and their point-mass approximation improves. Schutz's Java program shows the following
-    convergence behaviour in the relative-difference output, which the Python port reproduces:
+    smaller and their point-mass approximation improves. The table below shows the following
+    convergence behaviour in the relative-difference output:
   </p>
 
   <table class="param-table">
@@ -711,9 +704,9 @@
       </tr>
     </thead>
     <tbody>
-      <tr><td>100</td><td>≈ 3 × 10<sup>−2</sup></td><td>baseline</td></tr>
-      <tr><td>1 000</td><td>≈ 10<sup>−5</sup></td><td>10×</td></tr>
-      <tr><td>10 000</td><td>≈ 10<sup>−7</sup></td><td>100×</td></tr>
+      <tr><td>100</td><td>≈ 2.5 × 10<sup>−3</sup></td><td>baseline</td></tr>
+      <tr><td>1 000</td><td>≈ 2.5 × 10<sup>−5</sup></td><td>10×</td></tr>
+      <tr><td>10 000</td><td>≈ 2.5 × 10<sup>−7</sup></td><td>100×</td></tr>
     </tbody>
   </table>
 
@@ -742,7 +735,7 @@
       </p>
       <div class="sig">compute_shell_mass(nDiv, epsilon=0.001) → float</div>
       <div class="sig" style="margin-top:6px">compute_acceleration_profile(nDiv,
-        outputType='acceleration', epsilon=0.001) → (list, list)</div>
+        outputType='acceleration', epsilon=0.001) → (ndarray, ndarray)</div>
     </div>
 
     <div class="module-card">
@@ -754,7 +747,7 @@
         <code>main.py</code> and the plot module are decoupled from the physics internals.
       </p>
       <div class="sig">run_spheregravity(nDiv=100,
-        outputType='acceleration') → (list, list)</div>
+        outputType='acceleration') → (ndarray, ndarray)</div>
     </div>
 
     <div class="module-card">
@@ -778,7 +771,7 @@
         <code>run_spheregravity()</code> and passes the result to
         <code>plot_spheregravity()</code>.
       </p>
-      <div class="sig">nDiv = 500<br>outputType = 'relative difference'</div>
+      <div class="sig">nDiv = 100<br>outputType = 'relative difference'</div>
     </div>
 
   </div>
@@ -803,7 +796,7 @@
     <tbody>
       <tr>
         <td>nDiv</td>
-        <td>500</td>
+        <td>100</td>
         <td>int</td>
         <td>
           Number of angular divisions per coordinate. The shell is divided into
@@ -815,7 +808,7 @@
       <tr>
         <td>outputType</td>
         <td>'relative difference'</td>
-        <td>str</td>
+        <td>OutputType (Literal['acceleration', 'relative difference'])</td>
         <td>
           Selects what the plot displays. Either <code>'acceleration'</code> (raw
           \(g(r)\)) or <code>'relative difference'</code> (fractional error from
@@ -829,8 +822,7 @@
         <td>
           Fractional thickness of the shell (\(\varepsilon = \text{thickness}/R\)). Does not
           affect the accuracy of the point-mass approximation, but does scale the total mass
-          \(M = 4\pi\varepsilon\). Fixed in the original Java; exposed as a keyword argument
-          in the Python port.
+          \(M = 4\pi\varepsilon\). 
         </td>
       </tr>
     </tbody>
@@ -869,15 +861,15 @@
 python main.py</pre>
 
   <p>
-    With the default settings (<code>nDiv = 500</code>, <code>outputType = 'relative
+    With the default settings (<code>nDiv = 100</code>, <code>outputType = 'relative
     difference'</code>) the program computes the acceleration profile over 1 000 radii and
     opens a matplotlib window. The plot shows the fractional error in the shell-theorem
-    computation, which should be on the order of \(10^{-6}\) at its worst.
+    computation, which is about \(2.5\times10^{-3}\) (0.25%) at its worst, just outside the
+    shell.
   </p>
 
   <h3>Switching output mode</h3>
   <pre># In main.py — show raw acceleration instead of relative difference
-nDiv       = 100
 outputType = 'acceleration'</pre>
 
   <h3>Running programmatically</h3>
@@ -904,7 +896,7 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
         \(r > 1\). The discontinuity at \(r = 1\) (the shell surface, skipped by the program)
         should be apparent.
       </p>
-      <div class="sc-params">nDiv=500 · outputType='acceleration'</div>
+      <div class="sc-params">nDiv=100 · outputType='acceleration'</div>
     </div>
 
     <div class="scenario-card">
@@ -912,8 +904,11 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
       <p>
         Switch to <code>outputType = 'relative difference'</code> and run with
         <code>nDiv = 10, 100, 1000, 10000</code> in succession. Observe the maximum relative
-        error decrease from roughly 30% down to \(\sim 10^{-7}\), confirming
-        \(\delta \propto n_\text{div}^{-2}\).
+        error (just outside the shell) decrease from about 2.3% at <code>nDiv=10</code>, to
+        about 0.25% at <code>nDiv=100</code>, to \(\sim 2.5\times10^{-5}\) at
+        <code>nDiv=1000</code>, to \(\sim 2.5\times10^{-7}\) at <code>nDiv=10000</code> —
+        each tenfold increase in <code>nDiv</code> reduces the error almost exactly
+        a hundredfold, confirming \(\delta \propto n_\text{div}^{-2}\).
       </p>
       <div class="sc-params">nDiv=10 / 100 / 1000 / 10000 · outputType='relative difference'</div>
     </div>
@@ -984,6 +979,24 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
     B. F. Schutz, <em>Gravity from the Ground Up</em>, Cambridge University Press, 2003.
     Chapter 4, Investigation 4.3 ("Newton's shell theorem").
   </p>
+
+  <!-- ── License ── -->
+  <section id="license">
+    <h2>License</h2>
+    <p>
+      This Python port is derived from the original Java programs by
+      <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+    <p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
+    </p>
+  </section>
 
 </main>
 
