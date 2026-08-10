@@ -414,10 +414,9 @@
   <div class="badge">Chapter 4 · Gravity from the Ground Up</div>
   <h1><em>Orbit</em> — Newtonian Planetary Orbits</h1>
   <div class="sub">
-    Python port of Bernard Schutz's <em>Gravity from the Ground Up</em> (Cambridge, 2003) Java program. ·
-    Source:
-    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/Orbit"
-       target="_blank">github.com/tomyee3/GFTGU-Programs/Orbit</a>
+    Source Code:
+    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/"
+       target="_blank">https://github.com/tomyee3/GFTGU-Programs/tree/main/</a>·
   </div>
 </header>
 
@@ -669,27 +668,56 @@
 
     <h3>Orbit-Closure Detection</h3>
     <p>
-      Closure detection uses the polar angle \(\theta = \mathrm{atan2}(y, x)\).  After the first
-      step the algorithm tracks the sign of \(\theta\):
+      Closure detection tracks the polar angle \(\theta = \mathrm{atan2}(y, x)\) relative to
+      where the orbit <em>started</em>, not relative to zero — this matters because the
+      starting point can be anywhere, not just on the positive \(x\)-axis. Two reference
+      angles are computed once, before the integration loop begins:
     </p>
     <ul>
-      <li>A flag <code>halfOrbit</code> is set once \(\theta\) goes negative (the orbit has passed through
-          the lower half-plane).</li>
-      <li>A flag <code>fullOrbit</code> is set once \(\theta\) returns positive after <code>halfOrbit</code>
-          is true — i.e., the orbit has come back around.</li>
-      <li>When <code>fullOrbit</code> fires, the orbit counter <code>nOrbits</code> increments; the
-          simulation stops when <code>nOrbits ≥ 1</code>.</li>
+      <li><code>angleInitPos</code> \(= \mathrm{atan2}(\texttt{yInit}, \texttt{xInit})\) —
+          the angular position of the starting point.</li>
+      <li><code>angleInitVel</code> \(= \mathrm{atan2}(\texttt{vyInit}, \texttt{vxInit})\) —
+          the angular direction of the starting velocity.</li>
     </ul>
     <p>
-      This two-flag scheme handles both clockwise and counter-clockwise motion and avoids false
-      closure at the very first step.
+      The difference between these two (wrapped into \([-\pi, \pi]\)) determines whether the
+      orbit runs clockwise or counter-clockwise — a positive difference means
+      <code>counterclockwise = True</code>. This is determined once, from the initial data,
+      not assumed.
+    </p>
+    <p>
+      At every subsequent step, <code>anglediff</code> \(= \theta_{\text{now}} -
+      \texttt{angleInitPos}\) (also wrapped into \([-\pi, \pi]\)) measures how far around the
+      orbit has come relative to its own start:
+    </p>
+    <ul>
+      <li>A flag <code>halfOrbit</code> is set once <code>anglediff</code> crosses zero in the
+          direction consistent with the orbit's own travel direction (negative for
+          counter-clockwise orbits, positive for clockwise) — i.e. once the orbit has passed
+          the point diametrically opposite its start.</li>
+      <li>A flag <code>fullOrbit</code> is set once <code>anglediff</code> crosses zero
+          <em>again</em>, in the opposite sense, but only after <code>halfOrbit</code> is
+          already true — i.e. the orbit has come back around to its starting angle.</li>
+      <li>The integration loop's own condition is <code>not fullOrbit</code>: as soon as
+          <code>fullOrbit</code> becomes true, the loop simply stops (there is no separate
+          orbit counter to reach a target count — one full orbit is always the stopping
+          condition for a bound orbit).</li>
+    </ul>
+    <p>
+      Requiring the half-orbit crossing before arming the full-orbit test is what prevents
+      the very first step (which is trivially "at" the starting angle) from being mistaken
+      for closure. Referencing everything to <code>angleInitPos</code> and computing
+      <code>counterclockwise</code> from the actual initial velocity — rather than assuming
+      the orbit starts on the \(x\)-axis moving counter-clockwise — is what makes this test
+      correct for <em>any</em> starting position and direction.
     </p>
 
     <div class="note">
       <strong>Tip:</strong> The program stops naturally after <em>one</em> complete orbit of a
-      bound trajectory.  For unbound (hyperbolic) orbits it runs until <code>maxSteps</code> is
-      exhausted.  You can simulate multiple orbits by increasing <code>maxSteps</code> and leaving
-      the orbit counter inactive, or by running successive calls from <code>main.py</code>.
+      bound trajectory — <code>fullOrbit</code> is a hard stop, not a counter you can set to a
+      target number of orbits.  For unbound (hyperbolic) orbits, where the orbit never closes,
+      it instead runs until <code>maxSteps</code> is exhausted.  To see more than one orbit
+      you would need to modify <code>driver_orbit.py</code>'s loop condition directly.
     </div>
 
     <h3>Accuracy Notes</h3>
@@ -729,8 +757,9 @@
         <div class="mc-name">driver_orbit.py</div>
         <p>
           Implements the full predictor-corrector integration loop with adaptive timestep
-          and orbit-closure detection.  Returns structured NumPy arrays appropriate for the
-          selected output mode.
+          and orbit-closure detection.  Always computes and returns the complete position,
+          velocity, time, and energy history as a single <code>OrbitResult</code> — which
+          output mode to display is decided later, by <code>plot_orbit()</code>, not here.
         </p>
         <div class="sig">def run_orbit(
   xInit=4.6e10, yInit=0.0,
@@ -740,17 +769,18 @@
   maxSteps=20000,
   eps1=0.05,
   eps2=1e-4,
-  output="orbit"
-) -> arrays (mode-dependent)</div>
+) -> OrbitResult</div>
       </div>
 
       <div class="module-card">
         <div class="mc-role">Plot Layer</div>
         <div class="mc-name">plot_orbit.py</div>
         <p>
-          Receives the structured arrays from the driver and produces matplotlib figures.
-          Dispatches on the output mode string to select the appropriate plot type
-          (orbit trace, hodograph, time series, or energy curves).
+          Receives the full <code>OrbitResult</code> from the driver and produces matplotlib
+          figures.  Dispatches on the <code>output</code> mode string to select the
+          appropriate plot type (orbit trace, hodograph, time series, or energy curves) and
+          axis labels/units for each — none of the non-"orbit"/"velocity" modes share axis
+          units, so only those two use equal-aspect scaling.
         </p>
         <div class="sig">def plot_orbit(result, output="orbit")
   -> matplotlib figure (displayed)</div>
@@ -778,7 +808,11 @@ plot_orbit(result, output=...)</div>
   <section id="parameters">
     <h2>Parameters</h2>
     <p>
-      All parameters are set in <code>main.py</code> as arguments to <code>run_orbit()</code>.
+      Almost all parameters are set in <code>main.py</code> as arguments to
+      <code>run_orbit()</code>; the exception is <code>output</code>, which is a
+      <code>plot_orbit()</code> argument instead, since it only affects how the
+      already-computed result is displayed, not the computation itself — see the table
+      below and <a href="#output">Output Modes</a>.
       Defaults reproduce Mercury's orbit around the Sun.
     </p>
 
@@ -814,13 +848,24 @@ plot_orbit(result, output=...)</div>
           <td class="pname">vyInit</td>
           <td class="pdefault">58980.0</td>
           <td>m s⁻¹</td>
-          <td>Initial y-velocity; Mercury's maximum orbital speed at perihelion</td>
+          <td>
+            Initial y-velocity; Mercury's perihelion speed. Schutz's own documentation uses
+            59&thinsp;220 m s⁻¹ instead — 58&thinsp;980 m s⁻¹ is closer to the modern
+            accepted value.
+          </td>
         </tr>
         <tr>
           <td class="pname">k</td>
           <td class="pdefault">1.327e20</td>
           <td>m³ s⁻²</td>
-          <td>Gravitational parameter \(GM\) for the central body (default: Sun)</td>
+          <td>
+            Gravitational parameter \(GM\) for the central body (default: Sun). This is the
+            directly-measured value of \(GM_\odot\), known far more precisely than \(G\) and
+            \(M_\odot\) individually. Schutz's documentation instead gives \(M_\odot=2\times
+            10^{30}\) kg to be multiplied by \(G\) — that product is about 0.5% too high,
+            since multiplying two independently-rounded constants compounds their rounding
+            error.
+          </td>
         </tr>
         <tr>
           <td class="pname">dt0</td>
@@ -846,14 +891,14 @@ plot_orbit(result, output=...)</div>
           <td>—</td>
           <td>Convergence threshold for predictor-corrector iteration</td>
         </tr>
-        <tr>
-          <td class="pname">output</td>
-          <td class="pdefault">"orbit"</td>
-          <td>—</td>
-          <td>Output mode; see Output Modes section for all choices</td>
-        </tr>
       </tbody>
     </table>
+
+    <p>
+      One further parameter, <code>output</code> (default <code>"orbit"</code>), is passed
+      to <code>plot_orbit()</code> instead of <code>run_orbit()</code> — see
+      <a href="#output">Output Modes</a> for all five choices.
+    </p>
 
     <div class="note">
       <strong>Common substitutions:</strong>
@@ -868,50 +913,53 @@ plot_orbit(result, output=...)</div>
   <section id="output">
     <h2>Output Modes</h2>
     <p>
-      The <code>output</code> parameter passed to <code>run_orbit()</code> selects what arrays
-      are returned and how <code>plot_orbit()</code> renders them.
+      The <code>output</code> parameter, passed to <code>plot_orbit()</code> (not
+      <code>run_orbit()</code>, which always computes the full history regardless of which
+      mode you want — see <a href="#modules">Module Overview</a>), selects which fields of
+      the returned <code>OrbitResult</code> get plotted, and how.
     </p>
 
     <table class="out-table">
       <thead>
         <tr>
           <th>Mode string</th>
-          <th>Returns</th>
+          <th>Fields plotted</th>
           <th>Plot produced</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td class="oname">"orbit"</td>
-          <td><code>xs, ys</code></td>
+          <td><code>result.xs, result.ys</code></td>
           <td>Trajectory in the x-y orbital plane; displays as an ellipse for bound orbits</td>
         </tr>
         <tr>
           <td class="oname">"velocity"</td>
-          <td><code>vx, vy</code></td>
+          <td><code>result.vxs, result.vys</code></td>
           <td>Velocity hodograph — the curve traced by \((v_x, v_y)\) through the orbit; always a circle for Newtonian gravity</td>
         </tr>
         <tr>
           <td class="oname">"position_time"</td>
-          <td><code>ts, xs, ys</code></td>
+          <td><code>result.ts, result.xs, result.ys</code></td>
           <td>x-position and y-position vs. time; period readable from the repeating pattern</td>
         </tr>
         <tr>
           <td class="oname">"velocity_time"</td>
-          <td><code>ts, vx, vy</code></td>
+          <td><code>result.ts, result.vxs, result.vys</code></td>
           <td>x-velocity and y-velocity vs. time; confirms the orbit is periodic in velocity too</td>
         </tr>
         <tr>
           <td class="oname">"energy"</td>
-          <td><code>ts, KE, PE, TE</code></td>
+          <td><code>result.ts, result.KEs, result.PEs</code></td>
           <td>Specific kinetic (\(\mathcal{K}\)), potential (\(\mathcal{U}\)), and total (\(\mathcal{E}\)) energy vs. time; total should be constant — deviations reveal numerical error</td>
         </tr>
       </tbody>
     </table>
 
     <div class="note">
-      <strong>Verification tip:</strong> Run with <code>output="energy"</code> and examine how
-      flat the total energy curve is.  Tighten <code>eps1</code> and note the improvement; this
+      <strong>Verification tip:</strong> Call <code>plot_orbit(result, output="energy")</code>
+      and examine how flat the total energy curve is.  Tighten <code>eps1</code> (a
+      <code>run_orbit()</code> argument) and re-plot to see the improvement; this
       is a direct measure of numerical energy conservation.
     </div>
   </section>
@@ -937,8 +985,9 @@ plot_orbit(result, output=...)</div>
         <div class="ec-num">EXP-2</div>
         <h4>Measure Orbital Periods</h4>
         <p>
-          Switch to <code>output="position_time"</code>.  Read the period from the x-position
-          time series.  Verify Kepler's third law \(T^2 \propto a^3\) across multiple planets.
+          Switch to <code>plot_orbit(result, output="position_time")</code>.  Read the period
+          from the x-position time series.  Verify Kepler's third law \(T^2 \propto a^3\)
+          across multiple planets.
         </p>
       </div>
 
@@ -946,7 +995,8 @@ plot_orbit(result, output=...)</div>
         <div class="ec-num">EXP-3</div>
         <h4>Velocity Hodograph</h4>
         <p>
-          Set <code>output="velocity"</code> and plot the velocity-space curve.  For a
+          Call <code>plot_orbit(result, output="velocity")</code> to plot the velocity-space
+          curve.  For a
           Newtonian \(1/r^2\) force, the hodograph is a <em>perfect circle</em>—one of the
           elegant consequences of the inverse-square law discovered by Hamilton.
         </p>
@@ -977,8 +1027,10 @@ plot_orbit(result, output=...)</div>
         <div class="ec-num">EXP-6</div>
         <h4>Energy Conservation Accuracy</h4>
         <p>
-          Run with <code>output="energy"</code> and progressively tighten <code>eps1</code>
-          from <code>0.5</code> to <code>0.001</code>.  Plot how the total-energy drift scales
+          Run with <code>eps1</code> (a <code>run_orbit()</code> argument) progressively
+          tightened from <code>0.5</code> to <code>0.001</code>, re-plotting each result with
+          <code>plot_orbit(result, output="energy")</code>.  Plot how the total-energy drift
+          scales
           with <code>eps1</code>; this demonstrates that accuracy improves systematically with
           the control parameter.
         </p>
