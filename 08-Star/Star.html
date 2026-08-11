@@ -333,22 +333,16 @@
     /* ── Footer ── */
     footer {
       grid-column: 1 / -1;
-      background: var(--surface);
-      border-top: 2px solid var(--border);
-      padding: 24px 38px;
+      background: #2c1a0e;
+      color: #c8b090;
       font-family: var(--sans);
-      font-size: 0.82rem;
-      color: var(--muted);
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
     }
-    footer a { color: var(--accent2); text-decoration: none; }
+    footer a { color: #e0c090; text-decoration: none; }
     footer a:hover { text-decoration: underline; }
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-    .footer-inner img { height: 28px; }
 
     /* ── Responsive ── */
     @media (max-width: 720px) {
@@ -370,9 +364,9 @@
   <div class="badge">Chapter 8 · Newtonian Stellar Structure</div>
   <h1>Star &nbsp;—&nbsp; <em>Polytropic Stellar Structure</em></h1>
   <div class="sub">
-    Part of <em>Gravity from the Ground Up</em> · Bernard Schutz (Cambridge, 2003) ·
-    Python programs at
-    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/Star">github.com/tomyee3/GFTGU-Programs/Star</a>
+    Source Code:
+    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/"
+       target="_blank">https://github.com/tomyee3/GFTGU-Programs/tree/main/</a>·
   </div>
 </header>
 
@@ -436,11 +430,16 @@
       outward from the center.
     </p>
     <p>
-      The default parameters in <code>main.py</code> are calibrated to give a rough solar model:
-      a central pressure \(p_c = 2.5 \times 10^{16}\) Pa, a central temperature
-      \(T_c = 1.5 \times 10^7\) K, a mean molecular weight \(\mu = 0.61\) appropriate for a
-      fully ionized hydrogen–helium plasma, and a polytropic index \(\gamma = 5/3\)
-      corresponding to a non-relativistic ideal monatomic gas.
+      The default parameters in <code>main.py</code> are calibrated to give a solar model
+      accurate to a fraction of a percent in both radius and mass (see
+      <a href="#adaptive">Adaptive Step Size</a>): a central pressure
+      \(p_c = 7.158 \times 10^{15}\) Pa, a central temperature \(T_c = 2.263 \times 10^7\)
+      K, a mean molecular weight \(\mu = 1.285\), and a polytropic index \(\gamma = 1.36\).
+      Unlike the textbook value \(\gamma = 5/3\) for a non-relativistic ideal monatomic
+      gas, this \(\mu\) and \(\gamma\) pair was tuned together specifically to reproduce
+      the Sun's known radius and mass within the polytropic approximation, rather than
+      derived purely from an idealized plasma composition — see the note on \(\mu\) in
+      <a href="#parameters">Input Parameters</a>.
     </p>
   </section>
 
@@ -637,6 +636,23 @@
       \end{equation}\]
     </div>
 
+    <h3>Surface Detection</h3>
+    <p>
+      Immediately after computing \(p_j\) — <strong>before</strong> Steps 2 and 3 below —
+      the loop checks whether the pressure has turned negative, signaling that the
+      integration has passed through the stellar surface:
+    </p>
+    <pre>if p[j] &lt; 0:
+    last_index = j
+    break          # Steps 2 and 3 are skipped entirely for this j</pre>
+    <p>
+      The stellar radius is \(r_{j-1}\) (the last step with positive pressure) and the total
+      stellar mass is \(m_{j-1}\). All arrays are trimmed to <code>last_index</code> before
+      being returned to the plotting module. Because the check happens right after the
+      pressure update, \(\rho_j\), \(T_j\), and \(m_j\) are never computed for the discarded,
+      negative-pressure point — Steps 2 and 3 only execute when this check passes.
+    </p>
+
     <h3>Step 2 — Mass Update</h3>
     <p>
       The enclosed mass grows by the shell mass between \(r_{j-1}\) and \(r_j\):
@@ -651,8 +667,8 @@
 
     <h3>Step 3 — Density and Temperature</h3>
     <p>
-      Once the new pressure \(p_j\) is known, density is recovered from the polytropic
-      relation (3) and temperature from the ideal gas law:
+      Density is recovered from the polytropic relation (3) and temperature from the ideal
+      gas law:
     </p>
     <div class="eq-block">
       <div class="eq-label">Density and Temperature Update &nbsp;(13)</div>
@@ -662,20 +678,6 @@
         \label{eq:rho-T-update}
       \end{equation}\]
     </div>
-
-    <h3>Surface Detection</h3>
-    <p>
-      The integration loop runs until the pressure turns negative, signaling that the
-      integration has passed through the stellar surface:
-    </p>
-    <pre>if p[j] &lt; 0:
-    last_index = j
-    break</pre>
-    <p>
-      The stellar radius is \(r_{j-1}\) (the last step with positive pressure) and the total
-      stellar mass is \(m_{j-1}\). All arrays are trimmed to <code>last_index</code> before
-      being returned to the plotting module.
-    </p>
   </section>
 
   <!-- ── Adaptive Step Size ── -->
@@ -704,7 +706,8 @@
     <div class="note">
       <strong>Note on accuracy:</strong> The forward Euler method accumulates truncation error of
       order \(O(dr)\) per step. For the default parameters the step is fine enough that the
-      resulting stellar radius and mass are realistic to within a few percent. Changing to a
+      resulting stellar radius and mass agree with the Sun's actual values to well under
+      1% — 0.11% in radius and 0.33% in mass. Changing to a
       dramatically different parameter regime may require experimenting with
       <code>max_points</code> to balance resolution against computation time.
     </div>
@@ -758,7 +761,7 @@
           conditions and the initial step size, runs the forward-Euler loop calling
           <code>physics_star</code> functions at each step, applies step doubling if the surface
           is not reached within <code>max_points</code> steps, and returns all profiles in a
-          structured dictionary.
+          structured <code>StarResult</code> dataclass.
         </p>
         <div class="mc-sig">
           integrate_star(<br>
@@ -768,12 +771,17 @@
           &nbsp;&nbsp;gamma,<br>
           &nbsp;&nbsp;max_points = 2000,<br>
           &nbsp;&nbsp;output_type = "pressure"<br>
-          ) -&gt; dict<br>
+          ) -&gt; StarResult<br>
           <br>
-          Returns keys:<br>
-          &nbsp;&nbsp;"radius", "pressure", "density",<br>
-          &nbsp;&nbsp;"temperature", "mass",<br>
-          &nbsp;&nbsp;"last_index", "output_type"
+          @dataclass<br>
+          class StarResult:<br>
+          &nbsp;&nbsp;radius: List[float]<br>
+          &nbsp;&nbsp;pressure: List[float]<br>
+          &nbsp;&nbsp;density: List[float]<br>
+          &nbsp;&nbsp;temperature: List[float]<br>
+          &nbsp;&nbsp;mass: List[float]<br>
+          &nbsp;&nbsp;last_index: int<br>
+          &nbsp;&nbsp;output_type: OutputType
         </div>
       </div>
 
@@ -782,13 +790,13 @@
         <div class="mc-name">plot_star.py</div>
         <div class="mc-role">Plot</div>
         <p>
-          Receives the result dictionary from the driver and produces a labelled matplotlib
+          Receives the <code>StarResult</code> from the driver and produces a labelled matplotlib
           graph of the chosen quantity versus radius. Selects axis labels and title automatically
           from <code>output_type</code>. Raises <code>ValueError</code> for any unrecognized
           output type string.
         </p>
         <div class="mc-sig">
-          plot_star_structure(result: Dict)<br>
+          plot_star_structure(result: StarResult)<br>
           <br>
           output_type  →  y-axis label<br>
           "pressure"   →  "Pressure [Pa]"<br>
@@ -811,10 +819,10 @@
           stellar model, edit the parameter values here; no other file needs to change.
         </p>
         <div class="mc-sig">
-          p_c         = 2.5e16   # central pressure [Pa]<br>
-          T_c         = 1.5e7    # central temperature [K]<br>
-          mu          = 0.61     # mean molecular weight<br>
-          gamma       = 5.0/3.0  # polytropic exponent<br>
+          p_c         = 7.158e15  # central pressure [Pa]<br>
+          T_c         = 2.263e7   # central temperature [K]<br>
+          mu          = 1.285     # mean molecular weight<br>
+          gamma       = 1.36      # polytropic exponent<br>
           output_type = "pressure"<br>
           <br>
           result = integrate_star(<br>
@@ -834,8 +842,9 @@
     <h2>Input Parameters</h2>
 
     <p>
-      All parameters are set in <code>main.py</code>. The defaults produce a rough model of
-      the Sun. Change only the values in <code>main.py</code>; the physics, driver, and plot
+      All parameters are set in <code>main.py</code>. The defaults produce a solar model
+      accurate to a fraction of a percent (see <a href="#adaptive">Adaptive Step Size</a>).
+      Change only the values in <code>main.py</code>; the physics, driver, and plot
       modules require no modification.
     </p>
 
@@ -851,7 +860,7 @@
       <tbody>
         <tr>
           <td><code>p_c</code></td>
-          <td><code>2.5e16</code></td>
+          <td><code>7.158e15</code></td>
           <td>Pa</td>
           <td>
             Central pressure. Sets the overall energy scale of the stellar model. Higher \(p_c\)
@@ -860,7 +869,7 @@
         </tr>
         <tr>
           <td><code>T_c</code></td>
-          <td><code>1.5e7</code></td>
+          <td><code>2.263e7</code></td>
           <td>K</td>
           <td>
             Central temperature. Combined with \(p_c\) and \(\mu\) via the ideal gas law to
@@ -870,24 +879,27 @@
         </tr>
         <tr>
           <td><code>mu</code></td>
-          <td><code>0.61</code></td>
+          <td><code>1.285</code></td>
           <td>dimensionless</td>
           <td>
-            Mean molecular weight in units of the proton mass. For a fully ionized
-            hydrogen–helium solar plasma, \(\mu \approx 0.61\). For a pure neutron fluid,
-            \(\mu = 1\). Smaller \(\mu\) means lighter particles and higher pressure per unit
-            density.
+            Mean molecular weight in units of the proton mass. This value, together with
+            <code>gamma</code> below, was tuned to reproduce the Sun's actual radius and mass
+            (see <a href="#physics">Physical Background</a>) — it is not simply the
+            textbook fully-ionized-plasma figure (\(\mu \approx 0.61\)); see the note below
+            the table. For a pure neutron fluid, \(\mu = 1\). Smaller \(\mu\) means lighter
+            particles and higher pressure per unit density.
           </td>
         </tr>
         <tr>
           <td><code>gamma</code></td>
-          <td><code>5.0/3.0</code></td>
+          <td><code>1.36</code></td>
           <td>dimensionless</td>
           <td>
-            Polytropic exponent \(\gamma\). The value \(5/3\) corresponds to a non-relativistic
-            ideal monatomic gas. Red giants require \(\gamma\) closer to \(4/3\); neutron stars
-            modeled with a stiff EOS use \(\gamma \approx 2\). Values near \(1\) produce very
-            extended, low-density stars.
+            Polytropic exponent \(\gamma\). Tuned together with <code>mu</code> to fit the
+            Sun (see above); the textbook value \(5/3\) corresponds to a non-relativistic
+            ideal monatomic gas. Red giants require \(\gamma\) closer to \(4/3\); neutron
+            stars modeled with a stiff EOS use \(\gamma \approx 2\). Values near \(1\)
+            produce very extended, low-density stars.
           </td>
         </tr>
         <tr>
@@ -918,7 +930,11 @@
       each proton contributes one proton mass and one electron mass to the mean, but the electron
       mass is negligible, so \(\mu \approx 0.5\). For a solar-composition hydrogen–helium mixture
       (roughly 75% H, 25% He by mass, both fully ionized), \(\mu \approx 0.61\). For a pure
-      neutron star modeled in Newtonian gravity, \(\mu = 1\) (no free electrons).
+      neutron star modeled in Newtonian gravity, \(\mu = 1\) (no free electrons). The program's
+      default, \(\mu = 1.285\), is higher than any of these idealized-composition figures — it
+      was not derived from a specific plasma composition, but fitted together with
+      \(\gamma = 1.36\) so the resulting model reproduces the Sun's actual radius and mass (see
+      <a href="#physics">Physical Background</a>).
     </div>
   </section>
 
@@ -1007,8 +1023,8 @@
           \(2 \times 10^{30}\) kg.
         </p>
         <div class="sc-params">
-          p_c = 2.5e16, T_c = 1.5e7<br>
-          mu = 0.61, gamma = 5.0/3.0<br>
+          p_c = 7.158e15, T_c = 2.263e7<br>
+          mu = 1.285, gamma = 1.36<br>
           output_type = "mass"
         </div>
       </div>
@@ -1021,8 +1037,8 @@
           Observe how sensitively the stellar radius and total mass respond to this small change.
         </p>
         <div class="sc-params">
-          T_c = 1.35e7  # −10%<br>
-          T_c = 1.65e7  # +10%<br>
+          T_c = 2.037e7  # −10%<br>
+          T_c = 2.489e7  # +10%<br>
           output_type = "mass"
         </div>
       </div>
@@ -1074,13 +1090,15 @@
       <div class="scenario-card">
         <h4>6 · Effect of Composition (\(\mu\))</h4>
         <p>
-          Compare models with \(\mu = 0.5\) (pure hydrogen plasma), \(\mu = 0.61\) (solar),
-          and \(\mu = 1.0\) (pure protons or neutrons). Higher \(\mu\) means heavier particles,
+          Compare models with \(\mu = 0.5\) (idealized pure hydrogen plasma), \(\mu = 0.61\)
+          (idealized fully-ionized solar mix), \(\mu = 1.0\) (pure protons or neutrons), and
+          \(\mu = 1.285\) (this program's actual fitted default — see the note in
+          <a href="#parameters">Input Parameters</a>). Higher \(\mu\) means heavier particles,
           higher central density at the same pressure and temperature, and a more compact star.
         </p>
         <div class="sc-params">
-          mu in [0.5, 0.61, 1.0]<br>
-          p_c = 2.5e16, T_c = 1.5e7<br>
+          mu in [0.5, 0.61, 1.0, 1.285]<br>
+          p_c = 7.158e15, T_c = 2.263e7<br>
           output_type = "mass"
         </div>
       </div>
@@ -1165,19 +1183,18 @@
   <section id="license">
     <h2>License</h2>
     <p>
-      These programs and documentation are released under the
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons
-      Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
-      You are free to share and adapt the material for non-commercial purposes, provided
-      appropriate credit is given and any derivative works are distributed under the same license.
+      This Python port is derived from the original Java programs by
+      <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
     </p>
-    <div style="margin-top: 14px;">
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
-        <img src="https://github.com/tomyee3/GFTGU-Documentation/blob/main/00-License/license_files/LicenseBanner.png"
-             alt="CC BY-NC-SA 4.0 License Banner"
-             style="max-width: 300px; height: auto; border: 1px solid var(--border); border-radius: 4px;" />
-      </a>
-    </div>
+    <p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
+    </p>
   </section>
 
 </main>
@@ -1186,24 +1203,11 @@
      FOOTER
 ════════════════════════════════════════════ -->
 <footer>
-  <div class="footer-inner">
-    <div>
-      <strong>Star</strong> &mdash; Polytropic Stellar Structure &nbsp;|&nbsp;
-      <em>Gravity from the Ground Up</em>, Chapter 8 &nbsp;|&nbsp;
-      Bernard Schutz (Cambridge, 2003)
-    </div>
-    <div>
-      Python source:
-      <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/Star">GFTGU-Programs / Star</a>
-      &nbsp;&middot;&nbsp;
-      Documentation:
-      <a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/08-Star">GFTGU-Documentation / 08-Star</a>
-    </div>
-    <div>
-      &copy; Thomas Yee &nbsp;&middot;&nbsp;
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
-    </div>
-  </div>
+  <em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+  <a href="https://github.com/tomyee3/GFTGU-Programs" target="_blank">GitHub Repository</a>
 </footer>
 
 </div><!-- /page-wrap -->
