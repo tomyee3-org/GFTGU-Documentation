@@ -470,7 +470,7 @@
       another and, notably, do not even peak at the same photon energy.
     </p>    
     <p>
-      From these curves, the student may numerically confirm Wien's law amd the Stefan–Boltzmann
+      From these curves, the student may numerically confirm Wien's law and the Stefan–Boltzmann
       constant. The student may also explore such aspects as the
       discrepancy between the peaks in wavelength-mode versus frequency-mode, compare the Sun's
       peak wavelength against the theoretical peak given by Wien's law, and can confirm the 
@@ -582,9 +582,10 @@
           \(\ln(e^x - 1)\) is evaluated directly.</li>
     </ul>
     <div class="note">
-      <strong>Note:</strong> The program's defaults use \(x_\text{low}=x_\text{high}=0.01\) and
-      \(100\) exposed as explicit parameters of a <code>PlanckDomain</code> object, so a user can
-      directly see how moving the approximation boundaries affects accuracy.
+      <strong>Note:</strong> The program's defaults use \(x_\text{low}=0.01\) and
+      \(x_\text{high}=100\), exposed as explicit parameters of a <code>PlanckDomain</code>
+      object, so a user can directly see how moving the approximation boundaries affects
+      accuracy.
     </div>
 
     <h3>Peak Finding</h3>
@@ -925,8 +926,10 @@ plot_planck2(result)</div>
           Confirm the peak frequency falls in the microwave band (order 10¹¹ Hz), consistent
           with the name. The student is invited to perform Internet research to understand why the
           near-perfect correspondence of the CMB spectrum with that of an ideal black body is
-          considered powerful evidence in favor of the Big Bang theory as being the correct explanation
-          of cosmological redshift.
+          considered powerful evidence for the hot Big Bang model of the early universe — and, in
+          particular, why it was one of the decisive observations that ruled out competing
+          cosmological models (such as the historical Steady State theory), which had no natural
+          mechanism to produce such a spectrum.
         </p>
       </div>
 
@@ -956,10 +959,10 @@ plot_planck2(result)</div>
   <section id="license">
     <h2>License</h2>
     <p>
-      This Python port is derived from the original Java programs by
-      <strong>Bernard Schutz</strong> accompanying
-      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
-      The port is distributed under the
+      Planck2 is an independent implementation inspired by the physics of
+      <strong>Bernard Schutz</strong>'s <em>Gravity from the Ground Up</em>
+      (Cambridge University Press, 2003), Investigations 10.2 and 10.3, rather than a
+      translation of any specific Java source file. It is distributed under the
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
          target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
          International (CC BY-NC-SA 4.0)</a> license.
