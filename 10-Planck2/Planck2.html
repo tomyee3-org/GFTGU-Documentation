@@ -412,13 +412,11 @@
 ═══════════════════════════════════════════════ -->
 <header>
   <div class="badge">Chapter 10 · Gravity from the Ground Up · Proposed extension</div>
-  <h1><em>Planck2</em> — Three Forms of Planck's Law</h1>
+  <h1><em>Planck2</em> — Black-Body Radiation</h1>
   <div class="sub">
-    An independent, from-scratch reimplementation inspired by Bernard Schutz's <em>Planck</em>
-    program (Cambridge, 2003) and by Investigations 10.2 and 10.3 of
-    <em>Gravity from the Ground Up</em>. Not a port of <code>Planck.java</code> — a proposed
-    replacement, drafted for review by Prof. Schutz. ·
-    Predecessor: <a href="Planck.html">Planck</a>
+    Source Code:
+    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/"
+       target="_blank">https://github.com/tomyee3/GFTGU-Programs/tree/main/</a>·
   </div>
 </header>
 
@@ -441,7 +439,6 @@
 
   <div class="nav-label">Experiments</div>
   <a href="#experiments">Suggested Experiments</a>
-  <a href="#comparison">Comparison with Planck</a>
   <a href="#related">Related Programs</a>
 
   <div class="nav-label">Legal</div>
@@ -466,21 +463,21 @@
       dimensionless shape curve are printed directly on the graph — by default in the
       upper-right corner, where the falling tail of the curve is least likely to be present.
     </p>
-    <p>
-      The original <strong>Planck</strong> program (see Investigations 10.2 and 10.3) computes
-      only a single dimensionless quantity, \(f(x) = x^5/(e^x-1)\), and reports only its
-      peak location \(x_\text{peak}\) or the area beneath it — useful for confirming Wien's
-      law and the Stefan–Boltzmann constant numerically, but not directly comparable to an
-      observed spectrum, since real instruments and textbooks quote intensity per unit
+    <p>These distinct renderings of the black-body radiation curve are offered since instruments 
+      and textbooks quote intensity per unit
       wavelength, per unit frequency, or (for radiative-transfer and cosmology work) as an
       energy density — three quantities that are <em>not</em> simple rescalings of one
       another and, notably, do not even peak at the same photon energy.
-    </p>
+    </p>    
     <p>
-      This project is offered as a proposed successor to <strong>Planck</strong>, addressing
-      that limitation plus a numerical shortcoming found while validating the original port
-      (see <a href="#comparison">Comparison with Planck</a>).
+      From these curves, the student may numerically confirm Wien's law amd the Stefan–Boltzmann
+      constant. The student may also explore such aspects as the
+      discrepancy between the peaks in wavelength-mode versus frequency-mode, compare the Sun's
+      peak wavelength against the theoretical peak given by Wien's law, and can confirm the 
+      remarkable near-identity of published Cosmic Microwave Background curves with the ideal
+      black-body curve.
     </p>
+
   </section>
 
   <!-- ── Physical Background ── -->
@@ -551,9 +548,7 @@
       \(4.9651\) for \(f(x)\) and \(2.8214\) for \(g(x)\). This is the origin of a classic
       subtlety: the wavelength at which a black-body spectrum peaks (Wien's law,
       \(\lambda_\text{max} T = 0.29\) cm, Eq. 10.9) does <em>not</em> correspond to the same
-      photon as the frequency at which the spectrum peaks. Reporting only one dimensionless
-      \(x_\text{peak}\), as the original Planck program does, obscures this — one of the
-      motivations for Planck2 offering all three quantities directly.
+      photon as the frequency at which the spectrum peaks. 
     </p>
   </section>
 
@@ -587,19 +582,17 @@
           \(\ln(e^x - 1)\) is evaluated directly.</li>
     </ul>
     <div class="note">
-      <strong>Note:</strong> Schutz's defaults use \(x_\text{low}=x_\text{high}=0.01\) and
-      \(100\) implicitly via the hardcoded thresholds in <code>Planck.java</code>. Planck2
-      exposes both as explicit parameters of a <code>PlanckDomain</code> object, so a user can
+      <strong>Note:</strong> The program's defaults use \(x_\text{low}=x_\text{high}=0.01\) and
+      \(100\) exposed as explicit parameters of a <code>PlanckDomain</code> object, so a user can
       directly see how moving the approximation boundaries affects accuracy.
     </div>
 
     <h3>Peak Finding</h3>
     <p>
-      As in the original program, the peak is found by direct comparison while stepping
+      The peak is found by direct comparison while stepping
       through \(x\): each new value of \(f(x)\) is compared with the largest value seen so
       far, and if larger, both the value and its \(x\) are recorded. No calculus or root-
-      finding is used — consistent with the pedagogical spirit of the text ("we did not have
-      to use any advanced mathematical techniques").
+      finding is used.
     </p>
 
     <h3>Area Under the Curve</h3>
@@ -652,8 +645,7 @@
       computed in physical <em>coordinate</em> space, not sample-index space — because
       wavelength is a reciprocal (and therefore highly non-uniform) function of \(x\), an
       index-based margin was found during development to jump unpredictably far in coordinate
-      space; see the code comments in <code>planck2_plot.py</code> for the specific case that
-      motivated this.
+      space.
     </p>
 
     <div class="note">
@@ -763,8 +755,7 @@ plot_planck2(result)</div>
           <td class="pname">n_steps</td>
           <td class="pdefault">2000</td>
           <td>—</td>
-          <td>Number of divisions of the dimensionless domain. Unlike the original Planck
-              program, this genuinely controls resolution (see Comparison with Planck)</td>
+          <td>Number of divisions of the dimensionless domain.</td>
         </tr>
         <tr>
           <td class="pname">domain.x_min</td>
@@ -908,9 +899,8 @@ plot_planck2(result)</div>
         <h4>Resolution Sensitivity</h4>
         <p>
           Run <code>n_steps</code> at 10, 100, 1000, and 20000 and compare each computed
-          area against the exact closed-form value <code>main.py</code> prints. Unlike the
-          original Planck program (see Comparison with Planck), this will show a genuine,
-          visible improvement in accuracy as <code>n_steps</code> increases.
+          area against the exact closed-form value <code>main.py</code> prints. This procedure
+          should show a visible improvement in accuracy as <code>n_steps</code> increases.
         </p>
       </div>
 
@@ -933,52 +923,20 @@ plot_planck2(result)</div>
         <p>
           Set <code>T=2.725</code> (the CMB temperature) and <code>quantity="frequency"</code>.
           Confirm the peak frequency falls in the microwave band (order 10¹¹ Hz), consistent
-          with the name.
+          with the name. The student is invited to perform Internet research to understand why the
+          near-perfect correspondence of the CMB spectrum with that of an ideal black body is
+          considered powerful evidence in favor of the Big Bang theory as being the correct explanation
+          of cosmological redshift.
         </p>
       </div>
 
     </div>
   </section>
 
-  <!-- ── Comparison with Planck ── -->
-  <section id="comparison">
-    <h2>Comparison with Planck</h2>
-    <p>
-      Before designing Planck2, the existing Python port of Schutz's <em>Planck</em> program
-      was validated directly against the Java listing in <code>Planck.html</code>. Two things
-      came out of that review that Planck2 addresses:
-    </p>
-    <h3>The Dead nSteps Parameter</h3>
-    <p>
-      In the original Java, <code>double dx = 0.01;</code> is hardcoded, and the main loop
-      (<code>for (x = xMin; x &lt;= xMax; x += dx)</code>) never references
-      <code>nSteps</code> anywhere — despite the GUI parameter dialog presenting "number of
-      steps" as a user-adjustable accuracy control. This was confirmed by direct
-      experiment: running the literal Java algorithm at <code>nSteps</code> = 10, 1000, and
-      20000 produced <em>identical</em> output (\(x_\text{peak}=4.970\),
-      area\(=6.493940\)) every time. In Planck2,
-      <code>n_steps</code> genuinely controls <code>dx = (x_max - x_min) / n_steps</code>
-      (see Suggested Experiments, EXP-4).
-    </p>
-    <h3>Single Quantity, No Physical Units</h3>
-    <p>
-      The original program reports only \(x_\text{peak}\) or the dimensionless area — useful
-      for confirming Wien's law and the Stefan–Boltzmann coefficient numerically (as
-      Investigation 10.3 does), but it does not plot a spectrum in physical units, and offers
-      no choice between the wavelength-, frequency-, or energy-density forms of Planck's law.
-      Planck2 is built around exactly that choice.
-    </p>
-  </section>
-
   <!-- ── Related Programs ── -->
   <section id="related">
     <h2>Related Programs</h2>
     <ul class="related-list">
-      <li>
-        <strong>Planck</strong> —
-        The direct predecessor. Computes only the dimensionless peak location or area for a
-        single shape function; see Comparison with Planck above.
-      </li>
       <li>
         <strong>Neutron</strong> —
         Another program in this series involving a physically motivated equation-of-state
@@ -998,18 +956,17 @@ plot_planck2(result)</div>
   <section id="license">
     <h2>License</h2>
     <p>
-      Planck2 is an independent design, not a derivative of any specific Java source file,
-      though it is directly inspired by Bernard Schutz's <em>Planck</em> program and by
-      Investigations 10.2 and 10.3 of <em>Gravity from the Ground Up</em>
-      (Cambridge University Press, 2003). It is offered for Prof. Schutz's consideration as a
-      potential addition to the GFtGU program suite.
-    </p>
-    <p>
-      Pending any different guidance from Prof. Schutz, this material is distributed under
-      the same
+      This Python port is derived from the original Java programs by
+      <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
          target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
-         International (CC BY-NC-SA 4.0)</a> license used elsewhere in this series.
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+    <p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
     </p>
   </section>
 
@@ -1020,9 +977,10 @@ plot_planck2(result)</div>
 ═══════════════════════════════════════════════ -->
 <footer>
   <em>Gravity from the Ground Up</em> — Python Programs ·
-  Planck2 is an independent design proposed for Prof. Bernard Schutz's review ·
-  Inspired by <em>Gravity from the Ground Up</em>, © 2003 Bernard Schutz (Cambridge University Press) ·
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+  <a href="https://github.com/tomyee3/GFTGU-Programs" target="_blank">GitHub Repository</a>
 </footer>
 
 </div><!-- /page-wrap -->
