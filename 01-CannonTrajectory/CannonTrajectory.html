@@ -704,7 +704,7 @@ def improved_euler_step(state, dt):
     speed    = 100.0,   # muzzle speed (m/s)
     angle_deg= 45.0,    # firing angle (degrees)
     dt       = 0.1,     # timestep (s)
-    max_steps= 1000,    # safety ceiling
+    max_steps= 100_000,    # safety ceiling
     method   = "improved"  # "euler" or "improved"
 ) -> (xs, hs):          # trimmed arrays (m)</div>
         </div>
@@ -757,7 +757,8 @@ xs, hs = run_cannon_trajectory(
     speed     = 100,
     angle_deg = 45,
     dt        = 0.1,
-    method    = "improved"
+    method    = "improved",
+    max_steps = 100_000
 )
 
 plot_cannon(xs, hs)</div>
@@ -800,7 +801,7 @@ plot_cannon(xs, hs)</div>
           </tr>
           <tr>
             <td><code>max_steps</code></td>
-            <td>1000</td>
+            <td>100_000</td>
             <td>—</td>
             <td>Safety ceiling on loop iterations; prevents runaway for very small <code>dt</code></td>
           </tr>
