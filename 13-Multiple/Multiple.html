@@ -332,19 +332,15 @@
     /* ── Footer ── */
     footer {
       grid-column: 1 / -1;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      padding: 18px 38px;
+      background: var(--accent);
+      color: #fff;
       font-family: var(--sans);
-      font-size: 12px;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
     }
-    footer a { color: var(--accent2); text-decoration: none; }
+    footer a { color: #e0c090; text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
     /* ── Responsive ── */
@@ -361,13 +357,15 @@
 <!-- ═══════════════════ HEADER ═══════════════════ -->
 <header>
   <div class="badge">GFtGU Programs</div>
-  <h1>Multiple &nbsp;—&nbsp; <em>Help File</em></h1>
+  <h1>Multiple &nbsp;—&nbsp; <em>N-Body Gravitational Simulation in Three Dimensions</em></h1>
   <div class="sub">
-    N-Body Gravitational Simulation in Three Dimensions &nbsp;·&nbsp;
-    Newtonian Gravity &nbsp;·&nbsp; Predictor–Corrector Integration<br>
-    Source:
-    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/Multiple"
-       target="_blank">github.com/tomyee3/GFTGU-Programs / Multiple</a>
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs"
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
+    <br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
   </div>
 </header>
 
@@ -429,19 +427,23 @@
     </p>
     <p>
       The default configuration demonstrates a classic three-body interaction:
-      three equal-mass stars approach one another, two form a gravitationally
-      bound binary pair, and the third is ejected — a common outcome of stellar
-      encounters that Multiple makes easy to reproduce and explore.
+      three equal-mass stars begin in a symmetric arrangement and undergo a
+      chaotic close encounter, with all three pairwise separations swinging
+      unpredictably as the bodies repeatedly pass close to one another. This
+      kind of encounter is famous for typically resolving into a bound binary
+      pair plus one ejected star, given enough time — but reaching that clean
+      resolution reliably takes substantially longer than the default
+      40,000-step run; within the shipped default the system is still in the
+      midst of its chaotic phase. Extend <code>max_steps</code> well beyond
+      the default to watch a resolution emerge (see
+      <a href="#scenarios">Binary Hardening</a> below).
     </p>
     <div class="note">
       <strong>Scope:</strong> Multiple uses Newtonian gravity only. No
-      relativistic corrections are applied. For two-body simulations with
-      higher numerical accuracy, see
-      <a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-Binary_RK45">Binary_RK45</a>.
+      relativistic corrections are applied. 
       Like Binary, Multiple is vulnerable to timestep collapse near close
       encounters; see the <a href="#timestep">Adaptive Timestep</a> section
-      for guidance. An RK45-based version of Multiple is available at
-      <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/Multiple_RK45">Multiple_RK45</a>.
+      for guidance.
     </div>
   </section>
 
@@ -464,8 +466,11 @@ python main.py</pre>
       \((-4.6\times10^{10}, 0, 0)\,\mathrm{m}\), and
       \((0, 4.6\times10^{10}, 0)\,\mathrm{m}\),
       with initial velocities chosen to produce a close three-body encounter.
-      The run lasts 600,000 steps of \(\Delta t = 2{,}000\,\mathrm{s}\),
-      with trajectory output sampled every 1,000 steps.
+      The run lasts 40,000 steps of \(\Delta t = 2{,}000\,\mathrm{s}\), with
+      the position of every body recorded at every accepted step (the
+      default output mode is <code>'trajectories'</code>, where
+      <code>out_steps</code> has no effect — see
+      <a href="#output-modes">Output Modes</a>).
     </p>
 
     <h3>Customising the Simulation</h3>
@@ -481,7 +486,7 @@ python main.py</pre>
       <li><code>dt</code> — maximum timestep in seconds</li>
       <li><code>max_steps</code> — total number of accepted integration steps</li>
       <li><code>out_steps</code> — interval between output events (steps)</li>
-      <li><code>output_type</code> — <code>'trajectories'</code> or <code>'current_positions'</code></li>
+      <li><code>output_type</code> — <code>'trajectories'</code> or <code>'current positions'</code></li>
       <li><code>eps1</code> — adaptive timestep tolerance</li>
       <li><code>eps2</code> — corrector convergence tolerance</li>
     </ul>
@@ -494,7 +499,7 @@ python main.py</pre>
       <strong>Memory usage:</strong> In <code>'trajectories'</code> mode, positions
       are stored at every accepted step, which requires memory proportional to
       <code>max_steps × n_bodies × 3</code> floating-point numbers. For large runs
-      with many bodies, use <code>'current_positions'</code> mode and set
+      with many bodies, use <code>'current positions'</code> mode and set
       <code>out_steps</code> small enough to visualise the evolution without
       exhausting available memory.
     </div>
@@ -527,8 +532,7 @@ python main.py</pre>
           Defines the physical constants
           \(G = 6.67430\times10^{-11}\,\mathrm{N\,m^2\,kg^{-2}}\),
           \(M_\odot = 1.98847\times10^{30}\,\mathrm{kg}\), and
-          \(k = G\,M_\odot\) (matching Schutz's <code>kGravity</code>
-          convention). Provides the single function
+          \(k = G\,M_\odot\). Provides the single function
           <code>compute_accelerations(positions, masses_solar)</code>,
           which accepts the \(N\times3\) position array and the
           \(N\)-element mass array (in solar-mass units) and returns the
@@ -550,9 +554,10 @@ python main.py</pre>
           timestep halving controlled by <code>eps1</code> (on predicted
           accelerations) and <code>eps2</code> (on corrected positions).
           In <code>'trajectories'</code> mode it accumulates all positions
-          into a NumPy array of shape <code>(max_steps, n_bodies, 3)</code>
+          into a NumPy array of shape <code>(max_steps + 1, n_bodies, 3)</code>
+          (the initial state plus one entry per accepted step)
           and returns it together with the time array. In
-          <code>'current_positions'</code> mode it stores only a positional
+          <code>'current positions'</code> mode it stores only a positional
           snapshot every <code>out_steps</code> accepted steps, keeping
           memory use bounded regardless of run length.
         </p>
@@ -593,8 +598,8 @@ python main.py</pre>
     <p>
       The motion is fully three-dimensional. Each body's state is described
       by its position vector \(\mathbf{r}_A = (x_A, y_A, z_A)\) and velocity
-      vector \(\dot{\mathbf{r}}_A = (v_A, u_A, w_A)\), where following
-      Schutz's convention \(v\), \(u\), \(w\) denote the \(x\)-, \(y\)-,
+      vector \(\dot{\mathbf{r}}_A = (v_A, u_A, w_A)\), where \(v\), \(u\), \(w\) 
+      denote the \(x\)-, \(y\)-,
       and \(z\)-components of velocity respectively.
     </p>
     <div class="note">
@@ -651,8 +656,7 @@ python main.py</pre>
     </div>
     <p>
       where \(\tilde{m}_B\) is the mass of body \(B\) in solar-mass units
-      and \(k = G\,M_\odot = 1.327\times10^{20}\,\mathrm{m^3\,s^{-2}}\)
-      (matching Schutz's <code>kGravity</code> convention).
+      and \(k = G\,M_\odot = 1.327\times10^{20}\,\mathrm{m^3\,s^{-2}}\) .
     </p>
   </section>
 
@@ -868,27 +872,35 @@ python main.py</pre>
   <section id="timestep">
     <h2>Adaptive Timestep</h2>
     <p>
-      Two separate timestep-halving checks are performed at each step. Both
-      compare fractional changes relative to the post-corrector values.
+      Two separate timestep-halving checks are performed at each step, at two
+      different points in the predictor–corrector cycle: the acceleration
+      check is evaluated immediately after the cheap Euler predictor, before
+      the corrector runs at all; the position check is evaluated afterward,
+      once the corrector has produced its single refined estimate.
     </p>
 
     <h3>Acceleration Check (eps1)</h3>
     <p>
-      The maximum component-wise fractional change in acceleration between the
-      Euler predictor and the corrector is computed across all bodies:
+      Immediately after the Euler predictor, before spending any effort on
+      the corrector, the fractional change between the predicted acceleration
+      and the acceleration at the start of the step is computed as a single
+      global ratio over the entire \(N\times3\) array (not a per-component
+      maximum):
     </p>
     <div class="eq">
       <span class="eq-label">(15)</span>
       \[
-        \delta_{\mathbf{a}} \;=\; \max_{A,\,i}
-          \frac{\bigl|\tilde{a}_{A,i} - a_{A,i}^{n+1}\bigr|}
-               {\bigl|a_{A,i}^{n+1}\bigr|}
+        \delta_{\mathbf{a}} \;=\;
+          \frac{\bigl\lVert\tilde{\mathbf{a}} - \mathbf{a}^{n}\bigr\rVert}
+               {\bigl\lVert\mathbf{a}^{n}\bigr\rVert}
       \]
     </div>
     <p>
-      If \(\delta_{\mathbf{a}} > \varepsilon_1\), the step is <em>rejected</em>,
-      the working timestep is halved, and the entire predictor–corrector cycle
-      is retried:
+      where \(\lVert\cdot\rVert\) is the Frobenius norm over all bodies and
+      components at once. If \(\delta_{\mathbf{a}} > \varepsilon_1\), the step
+      is <em>rejected</em>: the working timestep is halved and the predictor
+      is retried from scratch, without the corrector ever running for this
+      attempt:
     </p>
     <div class="eq">
       <span class="eq-label">(16)</span>
@@ -900,21 +912,28 @@ python main.py</pre>
 
     <h3>Position Check (eps2)</h3>
     <p>
-      The maximum component-wise fractional change in position over the
-      accepted step is also tested:
+      Only once the acceleration check passes does the corrector run. The
+      second check then compares the corrector's refined position estimate
+      against the predictor's original guess — again as a single global norm
+      ratio, not a per-component maximum:
     </p>
     <div class="eq">
       <span class="eq-label">(17)</span>
       \[
-        \delta_{\mathbf{r}} \;=\; \max_{A,\,i}
-          \frac{\bigl|r_{A,i}^{n+1} - r_{A,i}^n\bigr|}
-               {\bigl|r_{A,i}^{n+1}\bigr|}
+        \delta_{\mathbf{r}} \;=\;
+          \frac{\bigl\lVert\mathbf{r}^{\,\text{corr}} - \tilde{\mathbf{r}}\bigr\rVert}
+               {\bigl\lVert\tilde{\mathbf{r}}\bigr\rVert}
       \]
     </div>
     <p>
       If \(\delta_{\mathbf{r}} > \varepsilon_2\), the timestep is again halved
-      and the step retried. This second check catches situations where positions
-      are changing rapidly even if accelerations appear converged.
+      and the whole step retried from the predictor stage. Because this
+      implementation runs the corrector only once per attempt (there is no
+      inner iteration loop refining it further), this check is really asking
+      whether one corrector pass was enough to meaningfully revise the
+      predictor's linear extrapolation — a large discrepancy signals that the
+      acceleration is varying too quickly over this timestep for the
+      single-pass correction to be trusted.
     </p>
 
     <div class="note">
@@ -923,11 +942,7 @@ python main.py</pre>
       step. Close encounters between bodies force the timestep to very small
       values and, because the timestep does not recover, can stall the
       simulation before <code>max_steps</code> is reached. If this occurs,
-      loosen <code>eps1</code> (at the cost of accuracy) or use the RK45
-      version of the program
-      (<a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/Multiple_RK45">Multiple_RK45</a>),
-      which replaces the predictor–corrector with a modern adaptive integrator
-      that recovers the timestep after a close encounter.
+      loosen <code>eps1</code> (at the cost of accuracy).
     </div>
   </section>
 
@@ -947,33 +962,39 @@ python main.py</pre>
         <tr>
           <td><code>eps1</code></td>
           <td>\(\varepsilon_1\)</td>
-          <td>\(10^{-2}\)</td>
+          <td>\(0.05\)</td>
           <td>
-            Acceleration-change gate. If the maximum fractional change in any
-            acceleration component between the Euler predictor and the corrector
-            exceeds this value, the step is rejected and \(\Delta t\) is halved.
+            Acceleration-change gate, checked against the cheap Euler
+            predictor before the corrector runs. If the global fractional
+            change in acceleration (Eq. 15) exceeds this value, the step is
+            rejected and \(\Delta t\) is halved.
           </td>
         </tr>
         <tr>
           <td><code>eps2</code></td>
           <td>\(\varepsilon_2\)</td>
-          <td>\(10^{-3}\)</td>
+          <td>\(0.0001\)</td>
           <td>
-            Position-change gate. If the maximum fractional change in any
-            position component over the accepted step exceeds this value, the
-            step is rejected and \(\Delta t\) is halved. Should be smaller than
+            Corrector-agreement gate, checked only for steps that already
+            passed the <code>eps1</code> gate. If the global fractional
+            change between the corrector's and predictor's position
+            estimates (Eq. 17) exceeds this value, the step is rejected and
+            \(\Delta t\) is halved. Should be smaller than
             \(\varepsilon_1\).
           </td>
         </tr>
       </tbody>
     </table>
     <div class="note">
-      <strong>Design relationship:</strong> Setting \(\varepsilon_2 &lt; \varepsilon_1\)
-      ensures that the position check is the tighter constraint, consistent with
-      the defaults \(\varepsilon_1 = 10^{-2}\), \(\varepsilon_2 = 10^{-3}\).
-      Tightening both by a factor of ten typically reduces accumulated energy
-      drift by one to two orders of magnitude at the cost of more step halvings
-      near close encounters.
+      <strong>Design relationship:</strong> \(\varepsilon_2\) should be
+      smaller than \(\varepsilon_1\), since it governs a finer-grained test
+      (does the single-pass corrector agree with the predictor) than
+      \(\varepsilon_1\)'s coarser, one-shot gate on whether the predictor's
+      acceleration was even stable enough to bother refining. The defaults
+      \(\varepsilon_1 = 0.05\), \(\varepsilon_2 = 0.0001\) satisfy this
+      comfortably. Tightening both by a factor of ten typically reduces
+      accumulated energy drift by one to two orders of magnitude at the cost
+      of more step halvings near close encounters.
     </div>
   </section>
 
@@ -1013,7 +1034,7 @@ python main.py</pre>
         </tr>
         <tr>
           <td><code>velocities_init</code></td>
-          <td>[[0,−1e4,0], [0,1e4,0], [1e4,0,0]]</td>
+          <td>[[0,0,−3e4], [0,−3e4,0], [−3e4,0,0]]</td>
           <td>m s<sup>−1</sup></td>
           <td>List of [vx, vy, vz] initial velocities, one per body.</td>
         </tr>
@@ -1025,7 +1046,7 @@ python main.py</pre>
         </tr>
         <tr>
           <td><code>max_steps</code></td>
-          <td>600000</td>
+          <td>40000</td>
           <td>—</td>
           <td>Total number of accepted integration steps before the run terminates.</td>
         </tr>
@@ -1034,7 +1055,7 @@ python main.py</pre>
           <td>1000</td>
           <td>—</td>
           <td>
-            Steps between output events. In <code>'current_positions'</code>
+            Steps between output events. In <code>'current positions'</code>
             mode, a snapshot is stored every <code>out_steps</code> accepted
             steps. In <code>'trajectories'</code> mode this parameter has
             no effect — all steps are stored.
@@ -1045,19 +1066,19 @@ python main.py</pre>
           <td>'trajectories'</td>
           <td>—</td>
           <td>
-            <code>'trajectories'</code> or <code>'current_positions'</code>.
+            <code>'trajectories'</code> or <code>'current positions'</code>.
             See <a href="#output-modes">Output Modes</a>.
           </td>
         </tr>
         <tr>
           <td><code>eps1</code></td>
-          <td>\(10^{-2}\)</td>
+          <td>\(0.05\)</td>
           <td>—</td>
           <td>Adaptive timestep tolerance on fractional acceleration change.</td>
         </tr>
         <tr>
           <td><code>eps2</code></td>
-          <td>\(10^{-3}\)</td>
+          <td>\(0.0001\)</td>
           <td>—</td>
           <td>Adaptive timestep tolerance on fractional position change.</td>
         </tr>
@@ -1082,12 +1103,13 @@ python main.py</pre>
           of each body's path as a continuous curve. This mode is ideal for
           visualising the shape of orbits and interaction sequences, but
           requires memory proportional to <code>max_steps × n_bodies × 3</code>
-          floating-point numbers. For 3 bodies and 600,000 steps this is
-          approximately 14 MB — manageable on any modern computer.
+          floating-point numbers. For 3 bodies and the default 40,000 steps
+          this is approximately 2.9 MB — manageable on any modern computer,
+          and would remain so even at 600,000 steps (~43 MB).
         </span>
       </li>
       <li>
-        <span class="tag">'current_positions'</span>
+        <span class="tag">'current positions'</span>
         <span>
           A positional snapshot of all bodies is recorded every
           <code>out_steps</code> accepted steps. After the run completes,
@@ -1103,7 +1125,7 @@ python main.py</pre>
       <strong>Choosing between modes:</strong> Use <code>'trajectories'</code>
       when you want to see the full orbital paths — for example, to identify
       bound pairs or trace ejection trajectories. Use
-      <code>'current_positions'</code> when the number of steps is so large
+      <code>'current positions'</code> when the number of steps is so large
       that storing all positions would require too much memory, or when you
       want a movie-like visualisation of the system evolving in real time.
     </div>
@@ -1113,23 +1135,34 @@ python main.py</pre>
   <section id="scenarios">
     <h2>Suggested Scenarios</h2>
     <p>
-      The following scenarios are drawn from Schutz's original suggestions
-      and are all reproducible by editing parameters in <code>main.py</code>.
+      The following scenarios all reproducible by editing parameters in <code>main.py</code>.
     </p>
     <div class="scenario-grid">
 
       <div class="scenario-card">
         <div class="sc-title">Default three-body encounter</div>
-        Three equal-mass stars (\(1\,M_\odot\) each) interact. Two form a bound
-        binary and the third is ejected with high speed. Try reassigning the
-        masses and observe how the outcome changes.
+        Three equal-mass stars (\(1\,M_\odot\) each) undergo a chaotic close
+        encounter. Extend <code>max_steps</code> well beyond the default
+        (try several hundred thousand) and watch the three pairwise
+        separations for signs of two bodies settling into a tighter, more
+        stable pair while the third drifts away — the statistically favoured
+        long-term outcome of this kind of encounter, though not a foregone
+        conclusion for any particular run. Try reassigning the masses and
+        observe how the outcome changes.
       </div>
 
       <div class="scenario-card">
         <div class="sc-title">Binary hardening</div>
-        Extend the default run to 6,000,000 steps. The ejected star remains
-        bound and returns, colliding again. Each collision transfers energy to
-        the binary (hardening it) while the outer orbit widens.
+        Once a bound pair has emerged (see above), keep extending the run —
+        this can take several million steps and a fair amount of patience.
+        Repeated 3-body scattering theory predicts that if the receding
+        third star remains only marginally unbound, it tends to fall back
+        for further close encounters with the pair, and each such encounter
+        statistically tends to shrink the binary's orbit further while
+        carrying more energy away with it (an effect well known in the
+        dynamics literature as binary "hardening"). Watch the inner pair's
+        separation for a decreasing trend, and the third star's distance for
+        increasingly wide excursions, across repeated encounters.
       </div>
 
       <div class="scenario-card">
@@ -1187,72 +1220,42 @@ python main.py</pre>
           <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-Binary">13-Binary</a></td>
         </tr>
         <tr>
-          <td><a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/Binary_RK45">Binary_RK45</a></td>
-          <td>Two-body orbital motion; scipy RK45 adaptive integrator; 2D</td>
-          <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-Binary_RK45">13-Binary_RK45</a></td>
-        </tr>
-        <tr>
           <td><a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/MercPert">MercPert</a></td>
           <td>Mercury test particle in Sun+Planet binary; predictor–corrector; 2D</td>
           <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-MercPert">13-MercPert</a></td>
-        </tr>
-        <tr>
-          <td><a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/MercPert_RK45">MercPert_RK45</a></td>
-          <td>Mercury test particle in Sun+Planet binary; scipy RK45; 2D</td>
-          <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-MercPert_RK45">13-MercPert_RK45</a></td>
-        </tr>
-        <tr>
-          <td><a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/Multiple_RK45">Multiple_RK45</a></td>
-          <td>N-body gravitational simulation; scipy RK45 adaptive integrator; 3D</td>
-          <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-Multiple_RK45">13-Multiple_RK45</a></td>
         </tr>
       </tbody>
     </table>
   </section>
 
-  <!-- ─── License ─── -->
+  <!-- ── License ── -->
   <section id="license">
     <h2>License</h2>
-    <div style="margin-bottom:14px;">
-      <a href="https://github.com/tomyee3/GFTGU-Documentation/blob/main/00-License/license_files/LicenseBanner.png"
-         target="_blank">
-        <img src="https://github.com/tomyee3/GFTGU-Documentation/blob/main/00-License/license_files/LicenseBanner.png"
-             alt="Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License"
-             style="max-width:300px; border:1px solid var(--border); border-radius:var(--radius);" />
-      </a>
-    </div>
     <p>
-      This program and its documentation are licensed under the
+      This Python port is derived from the original Java programs by
+      <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike
-      4.0 International License</a> (CC BY-NC-SA 4.0).
+         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
     </p>
     <p>
-      You are free to share and adapt this material for non-commercial purposes,
-      provided that you give appropriate credit and distribute any derivative
-      works under the same license.
-    </p>
-    <p style="font-size:0.88rem; color:var(--muted);">
-      License version 1.0 © 2003 Bernard Schutz.<br>
-      Python port and documentation ©
-      <a href="https://github.com/tomyee3/GFTGU-Programs" target="_blank">GFTGU-Programs contributors</a>.
-      Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
     </p>
   </section>
 
 </main>
 
-<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<!-- ══════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════ -->
 <footer>
-  <span>
-    <strong>Multiple</strong> &nbsp;·&nbsp; GFtGU Programs &nbsp;·&nbsp;
-    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/Multiple"
-       target="_blank">Source on GitHub</a>
-  </span>
-  <span>
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
-    &nbsp;·&nbsp; © 2003 Bernard Schutz
-  </span>
+  <em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
 </footer>
 
 </div><!-- .page-wrap -->
