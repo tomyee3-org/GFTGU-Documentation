@@ -311,19 +311,15 @@
     /* ── Footer ── */
     footer {
       grid-column: 1 / -1;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      padding: 18px 38px;
+      background: var(--accent);
+      color: #fff;
       font-family: var(--sans);
-      font-size: 12px;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
     }
-    footer a { color: var(--accent2); text-decoration: none; }
+    footer a { color: #e0c090; text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
     /* ── Responsive ── */
@@ -340,13 +336,15 @@
 <!-- ═══════════════════ HEADER ═══════════════════ -->
 <header>
   <div class="badge">GFtGU Programs</div>
-  <h1>RelativisticOrbit &nbsp;—&nbsp; <em>Help File</em></h1>
+  <h1>RelativisticOrbit &nbsp;—&nbsp; <em>Orbital Precession in Schwarzschild Geometry</em></h1>
   <div class="sub">
-    Orbital Precession in Schwarzschild Geometry &nbsp;·&nbsp;
-    General-Relativistic Test-Particle Orbit &nbsp;·&nbsp; Predictor–Corrector Integration<br>
-    Source:
-    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/RelativisticOrbit"
-       target="_blank">github.com/tomyee3/GFTGU-Programs / RelativisticOrbit</a>
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs"
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
+    <br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
   </div>
 </header>
 
@@ -400,9 +398,9 @@
     </p>
     <p>
       Unlike the purely Newtonian
-      <a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-Binary">Binary</a>
+      <a href="https://github.com/tomyee3-org/GFTGU-Documentation/tree/main/13-Binary">Binary</a>
       and
-      <a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-MercPert">MercPert</a>
+      <a href="https://github.com/tomyee3-org/GFTGU-Documentation/tree/main/13-MercPert">MercPert</a>
       programs, RelativisticOrbit incorporates the leading post-Newtonian
       correction to the radial force — a term proportional to \(1/r^4\) —
       which causes an otherwise elliptical orbit to precess. This precession
@@ -438,20 +436,20 @@
     <h3>Running the Program</h3>
     <p>
     </p>
-    <pre>from driver_relativistic_orbit import run_relativistic_orbit, RelativisticOrbitParams
+    <pre>from driver_relativistic_orbit import integrate_relativistic_orbit, RelativisticOrbitParams
 from plot_relativistic_orbit import plot_relativistic_orbit
 
 params = RelativisticOrbitParams(
-    x_init     = 1.0e11,    # initial x-position (m);  start on the x-axis
-    u_init     = 8862.0,    # initial y-velocity  (m/s); > 0 → counter-clockwise
-    dt         = 500.0,     # initial time-step   (s)
-    max_steps  = 2_000_000, # safety cap on total integration steps
-    max_orbits = 5,         # stop after this many complete orbits
-    eps1       = 1.0e-3,    # fractional acceleration change allowed per step
+    x_init     = 1.5e4,     # initial x-position (m);  start on the x-axis
+    u_init     = 1.2e8,     # initial y-velocity  (m/s); > 0 → counter-clockwise
+    dt         = 2.0e-6,    # initial time-step   (s)
+    max_steps  = 6_000,     # safety cap on total integration steps
+    max_orbits = 10,        # stop after this many complete orbits
+    eps1       = 0.05,      # fractional acceleration change allowed per step
     eps2       = 1.0e-4,    # corrector-loop convergence tolerance
 )
 
-result = run_relativistic_orbit(params)
+result = integrate_relativistic_orbit(params)
 if result.fell_into_hole:
     print(f"Particle crossed the Schwarzschild horizon after "
           f"{result.final_step} steps.")
@@ -465,14 +463,17 @@ plot_relativistic_orbit(result)</pre>
 python main.py</pre>
 
     <p>
-      The default configuration places the test particle at
-      \(4 \times 10^{10}\,\mathrm{m}\) from the central mass
-      (\(M = M_\odot\)) with a transverse velocity of
-      \(3 \times 10^4\,\mathrm{m\,s^{-1}}\) and integrates for 5 complete
-      orbits. The Schwarzschild radius for one solar mass is
-      \(r_g = 2GM_\odot/c^2 \approx 2{,}953\,\mathrm{m}\), far inside the
-      orbit, so the particle is safely in the weak-field regime where
-      precession is small but measurable.
+      The Schwarzschild radius for one solar mass is
+      \(r_g = 2GM_\odot/c^2 \approx 2{,}953\,\mathrm{m}\). The default
+      configuration places the test particle at only
+      \(1.5\times10^{4}\,\mathrm{m}\) from the central mass
+      (\(M = M_\odot\)) — about \(5\,r_g\), deep in the strong-field
+      regime, orbiting between roughly \(5\,r_g\) and \(8\,r_g\) over the
+      run. This is deliberately chosen to make the precession dramatic and
+      immediately visible (a tightly wound, rosette-like path) rather than
+      the small, Mercury-scale precession a weak-field orbit would show;
+      see <a href="#scenarios">Suggested Scenarios</a> below for a
+      weak-field comparison case.
     </p>
 
     <h3>Adjusting the Simulation</h3>
@@ -533,7 +534,7 @@ python main.py</pre>
         <p>
           Defines the <code>RelativisticOrbitParams</code> and
           <code>RelativisticOrbitResult</code> dataclasses and the function
-          <code>run_relativistic_orbit(params)</code>. The driver integrates
+          <code>integrate_relativistic_orbit(params)</code>. The driver integrates
           the orbit using the same predictor–corrector scheme as Binary and
           MercPert, with adaptive timestep halving on the acceleration-change
           test (\(\varepsilon_1\)) and corrector convergence on the
@@ -654,8 +655,9 @@ python main.py</pre>
       <code>schwarzschild_acceleration(x, y, K, Q)</code> in
       <code>physics_relativistic_orbit.py</code> as:
     </p>
-    <pre>r2     = x**2 + y**2
-r3     = r2 ** 1.5
+    <pre>r2     = x * x + y * y
+r      = math.sqrt(r2)
+r3     = r * r2
 factor = -GMSOLAR / r3 * (1.0 + Q / r2)
 ax     = factor * x
 ay     = factor * y</pre>
@@ -701,8 +703,11 @@ ay     = factor * y</pre>
       The characteristic length scale \(\sqrt{Q} = \sqrt{12}\,K/c\)
       is the radius at which the GR correction term \(Q/r^2\) becomes
       comparable to unity. Inside this radius the orbit deviates strongly
-      from a Keplerian ellipse. For a Mercury-like orbit,
-      \(\sqrt{Q} \approx 3{,}500\,\mathrm{m}\) — much smaller than
+      from a Keplerian ellipse. For a Mercury-like orbit
+      (\(x_0 \approx 4.6\times10^{10}\,\mathrm{m}\),
+      \(v_y \approx 5.90\times10^{4}\,\mathrm{m\,s^{-1}}\) at perihelion),
+      \(\sqrt{Q} \approx 1.57\times10^{7}\,\mathrm{m}\) — still over three
+      thousand times smaller than
       Mercury's orbital radius of \(5.8\times10^{10}\,\mathrm{m}\) —
       confirming that GR effects on Mercury are a small but measurable
       perturbation.
@@ -796,16 +801,16 @@ ay     = factor * y</pre>
   <section id="predictor-corrector">
     <h2>Predictor–Corrector</h2>
     <p>
-      RelativisticOrbit uses the same two-stage predictor–corrector as Binary
-      and MercPert. Let superscript \(n\) denote values at time \(t\) and
-      \(n+1\) values at \(t + \Delta t\). The current GR acceleration is
+      Let superscript \(n\) denote values at time \(t\) and a tilde denote the
+      cheap Euler predictor's estimate. The current GR acceleration is
       \(\mathbf{a}^n = \texttt{schwarzschild\_acceleration}(x^n, y^n, K, Q)\).
     </p>
 
-    <h3>Stage 1 — Euler Predictor</h3>
+    <h3>Stage 1 — Kinematic Predictor</h3>
     <p>
       First estimates of the state at \(t + \Delta t\) are obtained by a
-      simple Euler step:
+      kinematic (constant-acceleration) step, using the acceleration at the
+      <em>start</em> of the step throughout:
     </p>
     <div class="eq">
       <span class="eq-label">(9)</span>
@@ -813,36 +818,58 @@ ay     = factor * y</pre>
         \tilde{\mathbf{v}} \;=\; \mathbf{v}^n + \mathbf{a}^n\,\Delta t,
         \qquad
         \tilde{\mathbf{r}} \;=\; \mathbf{r}^n + \mathbf{v}^n\,\Delta t
+          + \tfrac{1}{2}\,\mathbf{a}^n\,\Delta t^2
       \]
     </div>
     <p>
       The predicted acceleration is then evaluated:
       \(\tilde{\mathbf{a}} = \texttt{schwarzschild\_acceleration}(\tilde x, \tilde y, K, Q)\).
+      Immediately after this — before any corrector work — the timestep is
+      gated by the acceleration check; see
+      <a href="#timestep">Adaptive Timestep</a> below. A step that fails
+      this gate is abandoned here, with \(\Delta t\) halved and Stage 1
+      retried, so the corrector below never runs for a rejected step.
     </p>
 
-    <h3>Stage 2 — Averaged-Acceleration Corrector</h3>
+    <h3>Stage 2 — Iterative Corrector</h3>
     <p>
-      The corrected velocity and position average the start-of-step and
-      predicted accelerations or velocities:
+      Once the acceleration check passes, the corrector refines the position
+      by <em>fixed-point iteration</em>, not a single averaging pass: at each
+      iteration \(k\), it re-evaluates the acceleration at the current
+      position estimate and uses it to refine the extra (non-Euler)
+      displacement \(\Delta\mathbf{r}^{(k)}\):
     </p>
     <div class="eq">
       <span class="eq-label">(10)</span>
       \[
-        \mathbf{v}^{n+1} \;=\; \mathbf{v}^n
-          + \tfrac{1}{2}\!\left(\mathbf{a}^n + \tilde{\mathbf{a}}\right)\Delta t
-      \]
-    </div>
-    <div class="eq">
-      <span class="eq-label">(11)</span>
-      \[
-        \mathbf{r}^{n+1} \;=\; \mathbf{r}^n
-          + \tfrac{1}{2}\!\left(\mathbf{v}^n + \mathbf{v}^{n+1}\right)\Delta t
+        \Delta\mathbf{r}^{(k+1)} \;=\; \tfrac{1}{4}\bigl(\mathbf{a}^n + \mathbf{a}^{(k)}\bigr)\Delta t^2,
+        \qquad
+        \mathbf{r}^{(k+1)} \;=\; \mathbf{r}^n + \mathbf{v}^n\Delta t + \Delta\mathbf{r}^{(k+1)}
       \]
     </div>
     <p>
-      The corrector is applied once per accepted step. The GR acceleration
+      where \(\mathbf{a}^{(k)}\) is the acceleration evaluated at the
+      <em>previous</em> iteration's position estimate (\(\mathbf{a}^{(0)} =
+      \tilde{\mathbf{a}}\), the predictor's own acceleration). This repeats
+      for up to 10 iterations or until successive \(\Delta\mathbf{r}^{(k)}\)
+      agree to within \(\varepsilon_2\) — see
+      <a href="#timestep">Adaptive Timestep</a>. Once the loop exits, the
+      final position \(\mathbf{r}^{n+1}\) is simply the last
+      \(\mathbf{r}^{(k+1)}\) computed, and the velocity is updated using the
+      final, converged acceleration \(\mathbf{a}^{n+1}\) averaged with the
+      start-of-step value:
+    </p>
+    <div class="eq">
+      <span class="eq-label">(11)</span>
+      \[
+        \mathbf{v}^{n+1} \;=\; \mathbf{v}^n
+          + \tfrac{1}{2}\!\left(\mathbf{a}^n + \mathbf{a}^{n+1}\right)\Delta t
+      \]
+    </div>
+    <p>
+      The GR acceleration
       is an autonomous function of position only (no explicit time
-      dependence), so the predictor and corrector evaluations differ only
+      dependence), so the predictor and every corrector iteration differ only
       in their spatial argument.
     </p>
   </section>
@@ -851,27 +878,32 @@ ay     = factor * y</pre>
   <section id="timestep">
     <h2>Adaptive Timestep</h2>
     <p>
-      Two sequential checks govern the timestep. Both test the maximum
-      fractional change in the relevant quantity across the step.
+      Two checks govern the timestep, at two different points in the cycle:
+      the acceleration check runs once, immediately after the Euler
+      predictor and before any corrector iteration; the position check runs
+      inside the corrector's own iteration loop, comparing successive
+      iterations against each other. Both use a single global ratio summed
+      over both components — not a per-component maximum.
     </p>
 
     <h3>Acceleration Check (eps1)</h3>
     <p>
-      The fractional change in acceleration magnitude between the predictor
-      and the corrector is tested component-wise:
+      Immediately after Stage 1, the fractional change between the
+      predictor's acceleration and the acceleration at the start of the
+      step is tested as a single summed ratio:
     </p>
     <div class="eq">
       <span class="eq-label">(12)</span>
       \[
-        \delta_a \;=\; \max\!\left(
-          \frac{|\tilde a_x - a_x^{n+1}|}{|a_x^{n+1}|},\;
-          \frac{|\tilde a_y - a_y^{n+1}|}{|a_y^{n+1}|}
-        \right)
+        \delta_a \;=\;
+          \frac{|\tilde a_x - a_x^{n}| + |\tilde a_y - a_y^{n}|}
+               {|a_x^{n}| + |a_y^{n}|}
       \]
     </div>
     <p>
-      If \(\delta_a > \varepsilon_1\) the step is rejected, the timestep
-      is halved, and the predictor–corrector is retried:
+      If \(\delta_a > \varepsilon_1\) the step is rejected before the
+      corrector ever runs: the timestep is halved and Stage 1 is retried
+      from scratch:
     </p>
     <div class="eq">
       <span class="eq-label">(13)</span>
@@ -881,25 +913,36 @@ ay     = factor * y</pre>
       \]
     </div>
 
-    <h3>Position Corrector Check (eps2)</h3>
+    <h3>Corrector Convergence Check (eps2)</h3>
     <p>
-      If the acceleration check passes, the fractional change in position
-      between the predictor and the corrector is compared with
-      \(\varepsilon_2\):
+      Only once the acceleration check passes does the corrector loop (Eq. 10)
+      run. At each iteration \(k\), the change in the extra displacement
+      \(\Delta\mathbf{r}\) from the previous iteration is compared with a
+      reference fixed once, before the loop begins: the same second-order
+      displacement \(\Delta\mathbf{r}^{(0)} = \tfrac{1}{2}\mathbf{a}^n\,\Delta t^2\)
+      used to build the predictor's own position \(\tilde{\mathbf{r}}\) in
+      Eq. 9 — note this uses the start-of-step acceleration \(\mathbf{a}^n\),
+      not the predictor's own \(\tilde{\mathbf{a}}\):
     </p>
     <div class="eq">
       <span class="eq-label">(14)</span>
       \[
-        \delta_r \;=\; \max\!\left(
-          \frac{|\tilde x - x^{n+1}|}{|x^{n+1}|},\;
-          \frac{|\tilde y - y^{n+1}|}{|y^{n+1}|}
-        \right)
+        \delta_r \;=\;
+          \frac{\bigl|\Delta x^{(k+1)} - \Delta x^{(k)}\bigr| +
+                \bigl|\Delta y^{(k+1)} - \Delta y^{(k)}\bigr|}
+               {\bigl|\Delta x^{(0)}\bigr| + \bigl|\Delta y^{(0)}\bigr|}
       \]
     </div>
     <p>
-      If \(\delta_r > \varepsilon_2\) the timestep is again halved and the
-      step retried. If both checks pass the step is accepted and \(t\) is
-      advanced by \(\Delta t\).
+      Once \(\delta_r < \varepsilon_2\), the corrector loop exits early
+      (or after 10 iterations regardless). This is a convergence check on
+      the iteration itself, not a comparison against the predictor's
+      position — it asks whether the fixed-point iteration in Eq. 10 has
+      settled down, not whether the corrector agrees with Stage 1.
+      Unlike the acceleration check, a slow-converging position does
+      <em>not</em> reject and retry the step at a smaller \(\Delta t\); it
+      simply accepts whatever the loop produced after its 10th iteration,
+      converged or not.
     </p>
     <div class="note">
       <strong>Timestep collapse near the horizon:</strong> As the test
@@ -908,8 +951,7 @@ ay     = factor * y</pre>
       This forces repeated halving of the timestep, which can stall the
       integration before the horizon is actually reached. If this occurs,
       loosen <code>eps1</code> or reduce <code>x_init</code> to start
-      further from the horizon. The RK45-based version of this program
-      (when available) will handle this automatically.
+      further from the horizon.
     </div>
   </section>
 
@@ -917,16 +959,20 @@ ay     = factor * y</pre>
   <section id="orbit-count">
     <h2>Orbit Counting</h2>
     <p>
-      The driver counts completed orbits by monitoring the sign of the
-      \(y\)-coordinate. Each time the particle crosses the positive
-      \(x\)-axis (i.e., \(y\) changes sign from negative to positive while
-      \(x &gt; 0\)) one complete orbit has been executed and the orbit
-      counter is incremented. Integration terminates when the counter
-      reaches <code>max_orbits</code>.
+      The driver counts completed orbits with a two-stage detector on the
+      sign of \(y\) alone (the sign of \(x\) is never checked). For a
+      counter-clockwise orbit (\(u_\text{init} > 0\)): the first time \(y\)
+      becomes positive, a <em>half</em> orbit is registered; the next time
+      \(y\) becomes negative again, a <em>full</em> orbit is registered and
+      the counter increments (the logic is mirrored for clockwise orbits).
+      Completing one orbit therefore requires crossing \(y = 0\)
+      <em>twice</em> — once heading each way — not once. Integration
+      terminates when the counter reaches <code>max_orbits</code>.
     </p>
     <p>
-      This simple criterion assumes the orbit is prograde and does not cross
-      the origin. For highly eccentric or near-plunge orbits the sign-change
+      This criterion assumes the orbit is prograde in a consistent sense
+      (it does not re-detect direction reversals) and does not cross the
+      origin. For highly eccentric or near-plunge orbits the crossing
       detector may fire more or fewer times than expected — in those cases,
       monitor the plotted trajectory directly rather than relying on the
       orbit count.
@@ -934,10 +980,12 @@ ay     = factor * y</pre>
     <div class="note">
       <strong>Precessing orbits and orbit counting:</strong> Because the
       orbit precesses, the particle does not return to exactly the same
-      \(\phi = 0\) line each time. The sign-change criterion still works
-      because the orbit remains topologically closed on each pass —
-      the particle crosses \(y = 0\) with \(x &gt; 0\) once per revolution
-      regardless of how much the perihelion has rotated.
+      \(\phi = 0\) line each time. The crossing criterion still works
+      because it only depends on the sign of \(y\), not on any particular
+      value of \(x\) or \(\phi\) — the particle crosses \(y = 0\) twice
+      per revolution (once each direction) regardless of how much the
+      perihelion has rotated, or which side of the central mass those
+      crossings happen to fall on.
     </div>
   </section>
 
@@ -957,11 +1005,13 @@ ay     = factor * y</pre>
         <tr>
           <td><code>eps1</code> (vector-norm)</td>
           <td>\(\varepsilon_1\)</td>
-          <td>\(10^{-3}\)</td>
+          <td>\(0.05\)</td>
           <td>
-            Timestep gate. Steps where the fractional change in acceleration
-            between predictor and corrector exceeds this value are rejected
-            and retried at half the timestep.
+            Timestep gate, checked once against the cheap predictor before
+            the corrector runs. Steps where the fractional change in
+            acceleration between predictor and the start-of-step value
+            (Eq. 12) exceeds this value are rejected and retried at half
+            the timestep — the corrector never runs for a rejected step.
           </td>
         </tr>
         <tr>
@@ -969,20 +1019,26 @@ ay     = factor * y</pre>
           <td>\(\varepsilon_2\)</td>
           <td>\(10^{-4}\)</td>
           <td>
-            Corrector position test. Steps where the fractional positional
-            difference between predictor and corrector exceeds this value are
-            rejected. Should be strictly less than \(\varepsilon_1\).
+            Corrector convergence tolerance, checked only for steps that
+            already passed the <code>eps1</code> gate. Governs how tightly
+            the iterative corrector (Eq. 10) converges before its loop
+            exits early — it is not a step-rejection test: an
+            unconverged corrector after 10 iterations is still accepted
+            as-is, not retried at a smaller timestep. Should be strictly
+            less than \(\varepsilon_1\).
           </td>
         </tr>
       </tbody>
     </table>
     <div class="note">
-      <strong>Accuracy vs. speed:</strong> Tightening both tolerances by a
+      <strong>Accuracy vs. speed:</strong> Tightening <code>eps1</code> by a
       factor of 10 significantly increases the number of accepted steps but
-      produces a more accurate precession rate. For a quick qualitative
+      produces a more accurate precession rate; tightening <code>eps2</code>
+      makes the corrector iterate more before accepting its result, at
+      modest extra cost per step. For a quick qualitative
       view of the precessing orbit the defaults are adequate; for measuring
       the precession angle to compare with equation (7), use
-      \(\varepsilon_1 = 10^{-4}\) and \(\varepsilon_2 = 10^{-5}\).
+      \(\varepsilon_1 = 5\times10^{-3}\) and \(\varepsilon_2 = 10^{-5}\).
     </div>
   </section>
 
@@ -1002,44 +1058,44 @@ ay     = factor * y</pre>
       </thead>
       <tbody>
         <tr>
-          <td><code>x_init</code> (m)</td>
-          <td>4.0 × 10<sup>10</sup></td>
+          <td><code>x_init</code></td>
+          <td>1.5 × 10<sup>4</sup></td>
           <td>m</td>
-          <td>Initial \(x\)-position; sets the orbital radius when \(y_0 = 0\)</td>
+          <td>Initial \(x\)-position (the particle always starts on the
+              \(x\)-axis with \(y_0 = 0\) fixed inside the driver — there
+              is no separate <code>y_init</code> parameter to set)</td>
         </tr>
         <tr>
-          <td><code>y_init</code></td>
-          <td>0.0</td>
-          <td>m</td>
-          <td>Initial \(y\)-position; set to 0 to start on the \(x\)-axis</td>
-        </tr>
-        <tr>
-          <td><code>max_steps</code></td>
-          <td>0.0</td>
+          <td><code>u_init</code></td>
+          <td>1.2 × 10<sup>8</sup></td>
           <td>m s<sup>−1</sup></td>
-          <td>Initial radial velocity; set to 0 for a purely transverse start</td>
-        </tr>
-        <tr>
-          <td><code>u_init</code> (m/s)</td>
-          <td>3.0 × 10<sup>4</sup></td>
-          <td>m s<sup>−1</sup></td>
-          <td>Initial transverse velocity; primary control of eccentricity</td>
+          <td>Initial transverse (\(y\)-direction) velocity; positive gives
+              a counter-clockwise orbit. There is no separate radial-velocity
+              parameter — the initial velocity is purely transverse by
+              construction</td>
         </tr>
         <tr>
           <td><code>dt</code></td>
-          <td>50.0</td>
+          <td>2.0 × 10<sup>−6</sup></td>
           <td>s</td>
           <td>Initial timestep; halved as needed by the adaptive controller</td>
         </tr>
         <tr>
+          <td><code>max_steps</code></td>
+          <td>6,000</td>
+          <td>—</td>
+          <td>Safety cap on total integration steps, regardless of how many
+              orbits have completed</td>
+        </tr>
+        <tr>
           <td><code>max_orbits</code></td>
-          <td>5</td>
+          <td>10</td>
           <td>—</td>
           <td>Number of complete orbit crossings before the run ends</td>
         </tr>
         <tr>
-          <td><code>eps1</code> (vector-norm)</td>
-          <td>1 × 10<sup>−3</sup></td>
+          <td><code>eps1</code></td>
+          <td>0.05</td>
           <td>—</td>
           <td>Relative acceleration-change tolerance for timestep control</td>
         </tr>
@@ -1047,7 +1103,7 @@ ay     = factor * y</pre>
           <td><code>eps2</code></td>
           <td>1 × 10<sup>−4</sup></td>
           <td>—</td>
-          <td>Relative position-change tolerance for corrector acceptance</td>
+          <td>Relative convergence tolerance for the iterative corrector</td>
         </tr>
       </tbody>
     </table>
@@ -1107,7 +1163,7 @@ ay     = factor * y</pre>
 
       <div class="scenario-card">
         <div class="sc-title">Approaching the ISCO</div>
-        Set <code>x_init</code> to \(6\,r_g \approx 17{,}700\,\mathrm{m}\)
+        Set <code>x_init</code> to \(3\,r_g \approx 8{,}860\,\mathrm{m}\)
         (the ISCO radius) and explore velocities near the circular speed.
         The orbit becomes unstable and spirals inward, terminating at the
         horizon.
@@ -1171,7 +1227,7 @@ ay     = factor * y</pre>
         </tr>
         <tr>
           <td>Termination criterion</td>
-          <td>Orbit closure or max_steps</td>
+          <td>Always runs the full <code>max_steps</code> (no closure detection)</td>
           <td>max_orbits or horizon crossing</td>
         </tr>
       </tbody>
@@ -1183,76 +1239,51 @@ ay     = factor * y</pre>
     <h2>Related Programs</h2>
     <ul style="margin: 0 0 14px 28px; line-height: 2.2;">
       <li>
-        <a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-Binary">Binary</a>
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation/tree/main/13-Binary">Binary</a>
         — Two-body Newtonian orbit (predictor–corrector); the Newtonian
         counterpart of this program.
       </li>
       <li>
-        <a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-Binary_RK45">Binary_RK45</a>
-        — Two-body Newtonian orbit with scipy RK45 adaptive integration;
-        eliminates timestep-collapse issues.
-      </li>
-      <li>
-        <a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-MercPert">MercPert</a>
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation/tree/main/13-MercPert">MercPert</a>
         — Mercury-like orbit perturbed by a binary companion; Newtonian
         three-body problem for comparison with GR precession.
       </li>
       <li>
-        <a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-MercPert_RK45">MercPert_RK45</a>
-        — RK45-based version of MercPert.
-      </li>
-      <li>
-        <a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/20-Neutron">Neutron</a>
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation/tree/main/20-Neutron">Neutron</a>
         — Tolman–Oppenheimer–Volkoff stellar structure; another GR program
         in this collection.
       </li>
     </ul>
   </section>
 
-  <!-- ─── License ─── -->
+  <!-- ── License ── -->
   <section id="license">
     <h2>License</h2>
-    <div class="note">
-      <strong>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International</strong><br>
-      This help file and the associated Python programs are licensed under the
+    <p>
+      This Python port is derived from the original Java programs by
+      <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-         target="_blank">CC BY-NC-SA 4.0</a> license.
-      You are free to share and adapt the material for non-commercial purposes,
-      provided you give appropriate credit and distribute any derivative works
-      under the same license.<br><br>
-      <a href="https://github.com/tomyee3/GFTGU-Documentation/blob/main/00-License/license_files/LicenseBanner.png"
-         target="_blank">
-        <img src="https://github.com/tomyee3/GFTGU-Documentation/blob/main/00-License/license_files/LicenseBanner.png"
-             alt="CC BY-NC-SA 4.0 License Banner"
-             style="max-width:300px; margin-top:10px; display:block;" />
-      </a>
-    </div>
-    <p style="margin-top:14px; font-size:0.88rem; color:var(--muted);">
-      License version 1.0 &copy; 2003 Bernard Schutz. Python port and help
-      file revisions &copy; 2024–2026. All programs in this collection are
-      derived from the Java originals distributed with
-      <em>Gravity From the Ground Up</em> (Cambridge University Press, 2003).
+         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+    <p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
     </p>
   </section>
 
 </main>
 
-<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<!-- ══════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════ -->
 <footer>
-  <span>
-    <strong>RelativisticOrbit</strong> &nbsp;·&nbsp; GFtGU Programs &nbsp;·&nbsp;
-    Python port of Schutz's Java original
-  </span>
-  <span>
-    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/RelativisticOrbit"
-       target="_blank">Source on GitHub</a>
-    &nbsp;|&nbsp;
-    <a href="https://github.com/tomyee3/GFTGU-Documentation"
-       target="_blank">Documentation Repository</a>
-    &nbsp;|&nbsp;
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-       target="_blank">CC BY-NC-SA 4.0</a>
-  </span>
+  <em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
 </footer>
 
 </div><!-- .page-wrap -->
