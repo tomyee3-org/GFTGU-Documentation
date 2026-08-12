@@ -308,19 +308,15 @@
     /* ── Footer ── */
     footer {
       grid-column: 1 / -1;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      padding: 18px 38px;
+      background: var(--accent);
+      color: #fff;
       font-family: var(--sans);
-      font-size: 12px;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
     }
-    footer a { color: var(--accent2); text-decoration: none; }
+    footer a { color: #e0c090; text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
     /* ── Responsive ── */
@@ -337,12 +333,15 @@
 <!-- ═══════════════════ HEADER ═══════════════════ -->
 <header>
   <div class="badge">GFtGU Programs</div>
-  <h1>Binary &nbsp;—&nbsp; <em>Help File</em></h1>
+  <h1><em>Binary</em> —  Orbital Motion of a Binary System</h1>
   <div class="sub">
-    Orbital Motion of a Binary System &nbsp;·&nbsp;
-    Newtonian Gravity &nbsp;·&nbsp; Predictor–Corrector Integration<br>
-    Source: <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/Binary"
-               target="_blank">github.com/tomyee3/GFTGU-Programs / Binary</a>
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs"
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
+    <br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
   </div>
 </header>
 
@@ -359,7 +358,7 @@
   <a href="#two-body">Two-Body Problem</a>
   <a href="#eom">Equations of Motion</a>
   <a href="#energy">Energy Conservation</a>
-  <a href="#closure">Orbit Closure</a>
+  <a href="#closure">Termination Condition</a>
 
   <hr>
   <div class="nav-label">Numerical Methods</div>
@@ -392,9 +391,9 @@
       The simulation records the position, velocity, and total mechanical energy
       of each body at every accepted step, and produces seven distinct plot types —
       from orbital trajectories and velocity-space diagrams to time-series of
-      position, velocity, and energy. Integration stops when the orbit closes
-      (the bodies return to within a threshold of their initial separation) or
-      when the maximum step count is reached.
+      position, velocity, and energy. Integration always runs for exactly
+      <code>max_steps</code> accepted steps; there is no early-termination
+      condition based on orbit closure.
     </p>
     <div class="note">
       <strong>Scope:</strong> Binary is a purely Newtonian simulation.
@@ -420,10 +419,11 @@ python main.py</pre>
     <p>
       The default configuration uses two equal-mass bodies,
       \(M_A = M_B = 2\times10^{30}\,\mathrm{kg}\) (approximately one solar mass
-      each), placed symmetrically at \(x = \pm\,1\times10^{11}\,\mathrm{m}\)
+      each), placed symmetrically at \(x = \pm\,4.6\times10^{10}\,\mathrm{m}\)
       with equal and opposite transverse velocities of
-      \(\pm\,1.5\times10^{4}\,\mathrm{m\,s^{-1}}\). This produces a nearly
-      circular mutual orbit.
+      \(\pm\,1.3\times10^{4}\,\mathrm{m\,s^{-1}}\). This produces a visibly
+      eccentric elliptical orbit — the two bodies' separation varies by nearly
+      a factor of 8 between periapsis and apoapsis.
     </p>
 
     <h3>Choosing Output</h3>
@@ -481,8 +481,8 @@ python main.py</pre>
           <code>integrate_binary()</code>. The driver advances the system step
           by step using the Euler predictor followed by the averaged-acceleration
           corrector, with fractional-change convergence testing and adaptive
-          timestep control. It monitors the inter-body separation at every step
-          and terminates early when orbit closure is detected. All numerical
+          timestep control. It runs for exactly <code>max_steps</code> accepted
+          steps; there is no orbit-closure detection. All numerical
           method logic lives in this module.
         </p>
       </div>
@@ -539,7 +539,7 @@ python main.py</pre>
     <div class="note">
       <strong>Coordinate convention:</strong> The code stores each body's
       state as \((x,\,y,\,v,\,u)\) — that is, \(v = \dot x\) and
-      \(u = \dot y\) — following the original Schutz Java convention.
+      \(u = \dot y\) .
     </div>
     <p>
       With equal masses and symmetric initial conditions the centre of mass
@@ -638,27 +638,24 @@ python main.py</pre>
     </div>
   </section>
 
-  <!-- ─── Orbit Closure ─── -->
+  <!-- ─── Termination Condition ─── -->
   <section id="closure">
-    <h2>Orbit Closure</h2>
+    <h2>Termination Condition</h2>
     <p>
-      The driver monitors the inter-body separation \(r\) at every accepted
-      step. Once a sufficient fraction of the first orbit has elapsed the driver
-      tests whether the bodies have returned close to their starting
-      configuration. Let \(r_0\) be the initial separation. The closure
-      condition is:
+      Integration always runs for exactly <code>max_steps</code> accepted steps —
+      there is no orbit-closure detection, and no early termination based on the
+      inter-body separation \(r\) returning close to its initial value.
+      (Contrast this with the <code>Orbit</code> program elsewhere in this
+      collection, which does implement closure detection for a single orbiting
+      body around a fixed center; <code>Binary</code>'s two-body geometry does
+      not use the same approach.)
     </p>
-    <div class="eq">
-      <span class="eq-label">(8)</span>
-      \[
-        \bigl|\, r - r_0 \,\bigr| \;<\; \delta\, r_0
-      \]
-    </div>
     <p>
-      When this is satisfied, integration terminates early, capturing
-      essentially one complete orbit without unnecessary additional steps. If
-      no closure is detected before <code>max_steps</code> steps have been
-      taken, integration stops at that limit instead.
+      In practice this means <code>max_steps</code> should be chosen large enough
+      to cover as much of the orbit as you want to see. If you increase
+      <code>dt</code> or decrease <code>max_steps</code> and the plotted
+      trajectory stops partway around, that simply means the run ended before
+      completing a full orbit — not that anything went wrong.
     </p>
     <div class="note">
       <strong>Eccentric orbits:</strong> For highly elliptical orbits the
@@ -706,6 +703,13 @@ python main.py</pre>
       are then evaluated at the predicted positions
       \((\tilde x_A,\,\tilde y_A,\,\tilde x_B,\,\tilde y_B)\).
     </p>
+    <div class="note">
+      Before proceeding to Stage 2, the driver first checks whether this
+      predictor estimate is even good enough to be worth refining — see
+      <a href="#timestep">Adaptive Timestep</a>. A step that fails this cheap
+      check is abandoned here, with the timestep halved and Stage 1 retried,
+      so the corrector below never runs for a rejected step.
+    </div>
 
     <h3>Stage 2 — Averaged-Acceleration Corrector</h3>
     <p>
@@ -761,26 +765,32 @@ python main.py</pre>
   <section id="timestep">
     <h2>Adaptive Timestep</h2>
     <p>
-      Once the corrector loop has converged, the driver assesses step quality
-      by computing the maximum fractional change in the gravitational
-      accelerations between the initial Euler predictor estimate and the final
-      corrected state. Denoting this quantity \(\Delta_a\):
+      Before running the corrector loop at all, the driver first assesses
+      whether the current timestep is even worth the effort: it computes the
+      fractional change in body A's acceleration between the start of the
+      step and the cheap Euler predictor's estimate (Eq. 9), using only body
+      A — by Newton's third law, body B's acceleration is always proportional
+      to body A's for this two-body system, so checking one body is
+      sufficient. Denoting this quantity \(\Delta_a\):
     </p>
     <div class="eq">
       <span class="eq-label">(15)</span>
       \[
-        \Delta_a \;=\; \max\!\left(
-          \frac{\bigl|\tilde a_{x,A} - a_{x,A}^{\,n+1}\bigr|}
-               {\bigl|a_{x,A}^{\,n+1}\bigr|},\;
-          \frac{\bigl|\tilde a_{y,A} - a_{y,A}^{\,n+1}\bigr|}
-               {\bigl|a_{y,A}^{\,n+1}\bigr|},\;
-          \frac{\bigl|\tilde a_{x,B} - a_{x,B}^{\,n+1}\bigr|}
-               {\bigl|a_{x,B}^{\,n+1}\bigr|},\;
-          \frac{\bigl|\tilde a_{y,B} - a_{y,B}^{\,n+1}\bigr|}
-               {\bigl|a_{y,B}^{\,n+1}\bigr|}
-        \right)
+        \Delta_a \;=\;
+          \frac{\bigl|\tilde a_{x,A} - a_{x,A}^{\,n}\bigr| +
+                \bigl|\tilde a_{y,A} - a_{y,A}^{\,n}\bigr|}
+               {\bigl|a_{x,A}^{\,n}\bigr| + \bigl|a_{y,A}^{\,n}\bigr|}
       \]
     </div>
+    <p>
+      where \(a_{x,A}^{\,n}, a_{y,A}^{\,n}\) are body A's accelerations at the
+      <em>start</em> of the step and \(\tilde a_{x,A}, \tilde a_{y,A}\) are its
+      accelerations at the Euler-predicted position. If this check fails, the
+      timestep is halved and retried (Eq. 16 below) — the corrector loop
+      never runs for a rejected step, saving up to 10 wasted iterations. Only
+      once this cheap check passes does the driver proceed to the corrector
+      loop described above.
+    </p>
 
     <h3>Step Rejection</h3>
     <p>
@@ -800,7 +810,7 @@ python main.py</pre>
     <p>
       If the step is accepted (\(\Delta_a \le \varepsilon_1\)), the working
       timestep grows by 10% toward the user-specified ceiling
-      \(\Delta t_{\max}\):
+      \(\Delta t_{\max}\) <em>after</em> the corrector loop has converged:
     </p>
     <div class="eq">
       <span class="eq-label">(17)</span>
@@ -838,17 +848,21 @@ python main.py</pre>
         <tr>
           <td><code>eps1</code></td>
           <td>\(\varepsilon_1\)</td>
-          <td>\(10^{-2}\)</td>
-          <td>Adaptive timestep gate. Steps whose maximum fractional
-              acceleration change \(\Delta_a\) exceeds this value are rejected
-              and retried at half the timestep.</td>
+          <td>\(0.05\)</td>
+          <td>Adaptive timestep gate, checked against the cheap Euler
+              predictor before the corrector loop runs (Eq. 15). Steps whose
+              fractional acceleration change \(\Delta_a\) exceeds this value
+              are rejected and retried at half the timestep, without ever
+              running the corrector.</td>
         </tr>
         <tr>
           <td><code>eps2</code></td>
           <td>\(\varepsilon_2\)</td>
-          <td>\(10^{-3}\)</td>
-          <td>Corrector convergence test. The corrector loop exits when the
-              fractional change in every acceleration component between
+          <td>\(10^{-4}\)</td>
+          <td>Corrector convergence test, checked only for steps that already
+              passed the <code>eps1</code> gate. The corrector loop exits when
+              the largest fractional change in any of the four
+              <em>velocity</em> components (\(v_A, u_A, v_B, u_B\)) between
               successive iterations falls below this value (or after 10
               iterations).</td>
         </tr>
@@ -856,12 +870,14 @@ python main.py</pre>
     </table>
     <div class="note">
       <strong>Design relationship:</strong> \(\varepsilon_2\) should be
-      strictly smaller than \(\varepsilon_1\) so that the corrector fully
-      converges before the timestep controller evaluates \(\Delta_a\).
-      The defaults \(\varepsilon_1 = 10^{-2}\), \(\varepsilon_2 = 10^{-3}\)
-      satisfy this. Tightening both tolerances by a factor of ten typically
-      reduces energy drift by roughly two orders of magnitude at the cost of
-      additional step halvings near periapsis.
+      strictly smaller than \(\varepsilon_1\), since it governs a finer-grained
+      test (convergence of the iterative corrector) than \(\varepsilon_1\)'s
+      coarser, one-shot gate on whether the predictor was good enough to
+      bother refining at all. The defaults \(\varepsilon_1 = 0.05\),
+      \(\varepsilon_2 = 10^{-4}\) satisfy this comfortably. Tightening both
+      tolerances by a factor of ten typically reduces energy drift by roughly
+      two orders of magnitude at the cost of additional step halvings near
+      periapsis.
     </div>
   </section>
 
@@ -895,13 +911,13 @@ python main.py</pre>
         </tr>
         <tr>
           <td><code>xInitA</code></td>
-          <td>\(-1\times10^{11}\)</td>
+          <td>\(+4.6\times10^{10}\)</td>
           <td>m</td>
           <td>Initial \(x\)-position of body A</td>
         </tr>
         <tr>
           <td><code>xInitB</code></td>
-          <td>\(+1\times10^{11}\)</td>
+          <td>\(-4.6\times10^{10}\)</td>
           <td>m</td>
           <td>Initial \(x\)-position of body B</td>
         </tr>
@@ -919,37 +935,38 @@ python main.py</pre>
         </tr>
         <tr>
           <td><code>uInitA</code></td>
-          <td>\(+1.5\times10^{4}\)</td>
+          <td>\(+1.3\times10^{4}\)</td>
           <td>m s<sup>−1</sup></td>
           <td>Initial \(y\)-velocity of body A (transverse)</td>
         </tr>
         <tr>
           <td><code>uInitB</code></td>
-          <td>\(-1.5\times10^{4}\)</td>
+          <td>\(-1.3\times10^{4}\)</td>
           <td>m s<sup>−1</sup></td>
           <td>Initial \(y\)-velocity of body B (transverse, opposite)</td>
         </tr>
         <tr>
           <td><code>dt</code></td>
-          <td>\(1\times10^{4}\)</td>
+          <td>\(2\times10^{3}\)</td>
           <td>s</td>
           <td>Maximum timestep; the adaptive scheme may use smaller values</td>
         </tr>
         <tr>
           <td><code>max_steps</code></td>
-          <td>\(5000\)</td>
+          <td>\(10\,000\)</td>
           <td>—</td>
-          <td>Maximum integration steps before forced termination</td>
+          <td>Number of accepted integration steps (always runs to
+              completion — see <a href="#closure">Termination Condition</a>)</td>
         </tr>
         <tr>
           <td><code>eps1</code></td>
-          <td>\(10^{-2}\)</td>
+          <td>\(0.05\)</td>
           <td>—</td>
           <td>Adaptive timestep tolerance \(\varepsilon_1\)</td>
         </tr>
         <tr>
           <td><code>eps2</code></td>
-          <td>\(10^{-3}\)</td>
+          <td>\(10^{-4}\)</td>
           <td>—</td>
           <td>Corrector convergence tolerance \(\varepsilon_2\)</td>
         </tr>
@@ -967,26 +984,26 @@ python main.py</pre>
     <ul class="output-list">
       <li>
         <span class="tag">"orbits"</span>
-        <span>Orbital trajectories of both bodies in the \(xy\)-plane. The axes are set to equal aspect ratio so that circular orbits appear circular.</span>
+        <span>Orbital trajectories of both bodies in the \(xy\)-plane. The axes are set to equal aspect ratio so that circular orbits appear circular and shapes are not visually distorted.</span>
       </li>
       <li>
         <span class="tag">"velocity space"</span>
-        <span>Velocity-space trajectories — \(u\) vs. \(v\) for each body. For circular orbits these traces are circles; elliptical orbits produce ellipses.</span>
+        <span>Velocity-space trajectories — \(v_x\) vs. \(v_y\) for each body, also on equal-aspect axes since both are in the same units. For Newtonian (inverse-square) gravity this "hodograph" is <em>always a circle</em>, regardless of how eccentric the corresponding position-space orbit is — a distinctive, easy-to-miss feature of the \(1/r^2\) force law.</span>
       </li>
       <li>
-        <span class="tag">"position vs. time body A"</span>
+        <span class="tag">"position vs. time, body A"</span>
         <span>\(x_A(t)\) and \(y_A(t)\) as functions of time for body A.</span>
       </li>
       <li>
-        <span class="tag">"position vs. time body B"</span>
+        <span class="tag">"position vs. time, body B"</span>
         <span>\(x_B(t)\) and \(y_B(t)\) as functions of time for body B.</span>
       </li>
       <li>
-        <span class="tag">"velocity vs. time body A"</span>
+        <span class="tag">"velocity vs. time, body A"</span>
         <span>\(v_A(t)\) and \(u_A(t)\) as functions of time for body A.</span>
       </li>
       <li>
-        <span class="tag">"velocity vs. time body B"</span>
+        <span class="tag">"velocity vs. time, body B"</span>
         <span>\(v_B(t)\) and \(u_B(t)\) as functions of time for body B.</span>
       </li>
       <li>
@@ -996,30 +1013,21 @@ python main.py</pre>
     </ul>
   </section>
 
-  <!-- ─── License ─── -->
+  <!-- ── License ── -->
   <section id="license">
     <h2>License</h2>
     <p>
-      This program and help file are released under the
+      This Python port is derived from the original Java programs by
+      <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-         target="_blank">Creative Commons Attribution–NonCommercial–ShareAlike
-      4.0 International (CC BY-NC-SA 4.0)</a> license. You are free to share
-      and adapt the material for non-commercial purposes, provided you give
-      appropriate credit and distribute any derivative works under the same
-      license.
+         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
     </p>
     <p>
-      The Python source is adapted from the original Java program
-      <em>Binary.java</em> by Bernard Schutz, used with permission under the
-      same Creative Commons license.
-    </p>
-    <p>
-      Source repository:
-      <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/Binary"
-         target="_blank">github.com/tomyee3/GFTGU-Programs / Binary</a><br>
-      Documentation repository:
-      <a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-Binary"
-         target="_blank">github.com/tomyee3/GFTGU-Documentation / 13-Binary</a>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
     </p>
   </section>
 
@@ -1027,15 +1035,10 @@ python main.py</pre>
 
 <!-- ═══════════════════ FOOTER ═══════════════════ -->
 <footer>
-  <span>
-    Binary – Help File &nbsp;·&nbsp; GFtGU Programs &nbsp;·&nbsp;
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-       target="_blank">CC BY-NC-SA 4.0</a>
-  </span>
-  <span>
-    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/Binary"
-       target="_blank">Source on GitHub</a>
-  </span>
+  <em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
 </footer>
 
 </div><!-- .page-wrap -->

@@ -382,18 +382,15 @@
     /* ── Footer ── */
     footer {
       grid-column: 1 / -1;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      padding: 20px 38px;
+      background: var(--accent);
+      color: #fff;
       font-family: var(--sans);
-      font-size: 0.80rem;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
     }
-    footer a { color: var(--accent2); text-decoration: none; }
+    footer a { color: #e0c090; text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
     /* ── Scrollspy highlight ── */
@@ -412,11 +409,15 @@
   <header>
     <div class="badge">CHAPTER 1 · INVESTIGATION 1.3</div>
     <h1><em>CannonTrajectory</em> — Newtonian Projectile Motion</h1>
-	  <div class="sub">
-		Source Code:
-		<a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/"
-		   target="_blank">https://github.com/tomyee3/GFTGU-Programs/tree/main/</a>·
-	  </div>	
+      <div class="sub">
+        Source Code:
+        <a href="https://github.com/tomyee3-org/GFTGU-Programs"
+           target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
+        <br/>
+        Documentation:
+            <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
+           target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
+      </div>
   </header>
 
   <!-- ═══════════════════════════════════════════════════════ SIDEBAR NAV -->
@@ -980,32 +981,32 @@ plot_cannon(xs, hs)</div>
     </section>
 
     <!-- ── License ────────────────────────────────────────────── -->
-    <section id="license">
-      <h2>License</h2>
-      <p>
-        Python source code in this repository is released under the
-        <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
-          Creative Commons Attribution–NonCommercial–ShareAlike 4.0 International
-          (CC BY-NC-SA 4.0)</a> licence, consistent with the terms under which
-        Schutz's original Triana programs were distributed.
-      </p>
-      <p>
-        The underlying physics and textbook content are from:
-        B. F. Schutz, <em>Gravity from the Ground Up</em>, Cambridge University Press, 2003.
-      </p>
-    </section>
+  <section id="license">
+    <h2>License</h2>
+    <p>
+      This Python port is derived from the original Java programs by
+      <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+    <p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
+    </p>
+  </section>
 
   </main><!-- /main -->
 
   <!-- ═══════════════════════════════════════════════════════ FOOTER -->
-  <footer>
-    <span>·</span>
-    <a href="https://github.com/tomyee3/GFTGU-Programs" target="_blank">GitHub: GFTGU-Programs</a>
-    <span>·</span>
-    <a href="https://github.com/tomyee3/GFTGU-Documentation" target="_blank">GitHub: GFTGU-Documentation</a>
-    <span>·</span>
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
-  </footer>
+<footer>
+  <em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
+</footer>
 
 </div><!-- /page-wrap -->
 

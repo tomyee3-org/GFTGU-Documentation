@@ -415,14 +415,15 @@
     footer {
       grid-column: 1 / -1;
       background: var(--accent);
-      color: rgba(255,255,255,0.70);
+      color: #fff;
       font-family: var(--sans);
-      font-size: 0.80rem;
+      font-size: 12.5px;
       text-align: center;
-      padding: 16px 24px;
-      border-top: 3px solid var(--gold);
+      padding: 18px 24px;
+      line-height: 1.7;
     }
-    footer a { color: #ffd8b8; text-decoration: none; }
+    footer a { color: #e0c090; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 
@@ -435,9 +436,14 @@
   <h1>Sphere<em>Gravity</em></h1>
   <div class="sub">
     Source Code:
-    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/"
-       target="_blank">https://github.com/tomyee3/GFTGU-Programs/tree/main/</a>·
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs"
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
+    <br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
   </div>
+</header>
 </header>
 
 <!-- ══════════════════════ SIDEBAR ══════════════════════ -->
@@ -1002,11 +1008,10 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
 
 <!-- ══════════════════════ FOOTER ══════════════════════ -->
 <footer>
-  GFtGU Programs &mdash; Python ports of Bernard Schutz's
-  <em>Gravity from the Ground Up</em> (Cambridge, 2003) &mdash;
-  Documentation by Thomas Yee &mdash;
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"
-     rel="noopener">CC BY-NC-SA 4.0</a>
+  <em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
 </footer>
 
 </div><!-- .page-wrap -->

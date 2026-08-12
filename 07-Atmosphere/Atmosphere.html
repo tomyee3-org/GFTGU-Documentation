@@ -388,20 +388,15 @@
     footer {
       grid-column: 1 / -1;
       background: var(--accent);
-      color: #f0d0b8;
+      color: #fff;
       font-family: var(--sans);
-      font-size: 0.82rem;
-      padding: 22px 38px;
-      border-top: 3px solid var(--gold);
-      display: flex;
-      align-items: center;
-      gap: 22px;
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
     }
-    footer a { color: #ffd8b8; }
-    .license-banner {
-      height: 22px;
-      opacity: .85;
-    }
+    footer a { color: #e0c090; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
 
     /* ── Responsive ── */
     @media (max-width: 720px) {
@@ -421,8 +416,12 @@
     <h1><em>Atmosphere</em> – Planetary Atmosphere Structure</h1>
     <div class="sub">
       Source Code:
-      <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/"
-         target="_blank">https://github.com/tomyee3/GFTGU-Programs/tree/main/</a>·
+      <a href="https://github.com/tomyee3-org/GFTGU-Programs"
+         target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
+      <br/>
+      Documentation:
+      <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
     </div>
   </header>
 
@@ -1132,34 +1131,33 @@ T_points = [288.0, 200.0, 350.0]   # inversion above 50 km</div>
       </ul>
     </section>
 
-    <!-- ── License ── -->
-    <section id="license">
-      <h2>License</h2>
-      <p>
-        This Python port is derived from the original Java programs by
-        <strong>Bernard Schutz</strong> accompanying
-        <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
-        The port is distributed under the
-        <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-           target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
-           International (CC BY-NC-SA 4.0)</a> license.
-      </p>
-      <p>
-        You are free to share and adapt the material for non-commercial purposes, provided
-        you give appropriate credit and distribute any adaptations under the same license.
-      </p>
-    </section>
+  <!-- ── License ── -->
+  <section id="license">
+    <h2>License</h2>
+    <p>
+      This Python port is derived from the original Java programs by
+      <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+    <p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
+    </p>
+  </section>
 
   </main>
 
   <!-- ══════════════════════ FOOTER ══════════════════════ -->
-  <footer>
-    <em>Gravity from the Ground Up</em> — Python Programs ·
-    Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
-    Python port © 2024–2026 Thomas Yee ·
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
-    <a href="https://github.com/tomyee3/GFTGU-Programs" target="_blank">GitHub Repository</a>
-  </footer>
+    <footer>
+      <em>Gravity from the Ground Up</em> — Python Programs ·
+      Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+      Python port © 2024–2026 Thomas Yee ·
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
+    </footer>
 
 </div><!-- /.page-wrap -->
 
