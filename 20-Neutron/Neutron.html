@@ -303,20 +303,17 @@
     /* ── Footer ── */
     footer {
       grid-column: 1 / -1;
-      background: #f0e8d8;
-      border-top: 1px solid var(--border);
-      padding: 22px 38px;
+      background: var(--accent);
+      color: #fff;
       font-family: var(--sans);
-      font-size: 0.82rem;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      flex-wrap: wrap;
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
     }
-    footer img { height: 30px; opacity: 0.88; }
-    footer a { color: var(--accent2); text-decoration: none; }
+    footer a { color: #e0c090; text-decoration: none; }
     footer a:hover { text-decoration: underline; }
+
   </style>
 </head>
 
@@ -330,14 +327,13 @@
   <div class="badge">GFtGU Programs &nbsp;·&nbsp; Python Port</div>
   <h1>Neutron &mdash; <em>Neutron Star Structure</em></h1>
   <div class="sub">
-    General-relativistic stellar structure &nbsp;|&nbsp;
-    Tolman–Oppenheimer–Volkoff equation &nbsp;|&nbsp;
-    Polytropic equation of state<br>
-    Source:
-    <a href="https://github.com/tomyee3/GFTGU-Programs/tree/main/Neutron"
-       target="_blank">github.com/tomyee3/GFTGU-Programs/tree/main/Neutron</a>
-    &nbsp;&nbsp;Based on original Java programs by Bernard Schutz,
-    <em>Gravity From the Ground Up</em> (Cambridge, 2003).
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs"
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
+    <br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
   </div>
 </header>
 
@@ -408,7 +404,7 @@
 <div class="note tip">
   <strong>How this program differs from the others in this collection</strong>
   Neutron is a <em>radial structure solver</em>, not a time-domain ODE integrator.
-  There is no predictor–corrector loop, no RK45 adaptive stepper, and no orbit to complete.
+  There is no predictor–corrector loop and no orbit to complete.
   The independent variable is radius \(r\) (not time), and the integration marches outward
   from \(r = 0\) until pressure first becomes negative — that point is the stellar surface.
 </div>
@@ -445,22 +441,30 @@
     </tr>
     <tr>
       <td>pC</td>
-      <td>1e34</td>
+      <td>1.26e35</td>
       <td>Pa</td>
       <td>
         Central pressure \(p_C\) (pressure at \(r = 0\)).  This is the
         primary free parameter determining the star's mass and radius.
-        Larger \(p_C\) gives a more massive, more compact star.
+        Larger \(p_C\) gives a more massive, more compact star. Together
+        with the default \(K\) below, this produces a star of radius
+        \(\approx 7.1\) km and mass \(\approx 1.1\,M_\odot\) — consistent
+        with observed neutron stars.
       </td>
     </tr>
     <tr>
       <td>K</td>
-      <td>1e-15</td>
+      <td>5.3802e3</td>
       <td>SI (Pa&nbsp;·&nbsp;m<sup>3γ</sup>&nbsp;kg<sup>&minus;γ</sup>)</td>
       <td>
         Polytropic proportionality constant.  Together with \(\gamma\) it
         determines how stiff the equation of state is.  Larger \(K\) produces
-        larger, less dense stars at the same central pressure.
+        larger, less dense stars at the same central pressure. The default
+        value corresponds to a central density of
+        \(\approx 6.6\times10^{18}\,\mathrm{kg\,m^{-3}}\)
+        (\(\approx 29\times\) nuclear density), and independently matches
+        (to 4 significant figures) the value derivable from the physical
+        equation of state of a non-relativistic degenerate neutron gas.
       </td>
     </tr>
     <tr>
@@ -481,7 +485,6 @@
     <li>\(G = 6.672 \times 10^{-11}\) N&nbsp;m<sup>2</sup>&nbsp;kg<sup>&minus;2</sup> — Newton's gravitational constant</li>
     <li>\(c^2 = 8.98755 \times 10^{16}\) m<sup>2</sup>&nbsp;s<sup>&minus;2</sup> — speed of light squared</li>
   </ul>
-  These match the values used in Schutz's original Java program and in the textbook examples.
 </div>
 
 
@@ -676,12 +679,11 @@
 </ol>
 
 <div class="note">
-  <strong>Implementation note — Schutz's simplified form</strong>
+  <strong>Implementation note</strong>
   The denominator \(r(r - 2Gm/c^2)\) in equation (2) is algebraically equivalent to
   \(r^2(1 - 2Gm/rc^2)\), the standard form found in many GR texts.
-  Schutz factors the \(r^2\) into the numerator to give the compact form used in the
-  Java original, and the Python port faithfully reproduces this factored expression
-  in <code>tov_pressure_step()</code>.
+  This implementation factors the \(r^2\) into the numerator to give the compact form
+  in the <code>tov_pressure_step()</code>.
 </div>
 
 <p>
@@ -764,8 +766,8 @@
   <span class="eq-label">(5)</span>
 </div>
 <p>
-  (In full GR the right-hand side carries a metric factor, but for the purpose of this
-  program Schutz uses the flat-space approximation for the mass increment, consistent
+  (In full GR the right-hand side carries a metric factor, but 
+  this program uses the flat-space approximation for the mass increment, consistent
   with the level of the textbook.)
   One radial step gives:
 </p>
@@ -824,7 +826,7 @@
   peak is unstable against radial perturbations and will collapse to a black hole.
 </p>
 <p>
-  For the default polytrope (\(\gamma = 5/3\), \(K = 10^{-15}\)) this maximum can be
+  For the default polytrope (\(\gamma = 5/3\), \(K = 5.3802\times10^3\)) this maximum can be
   found by running a sequence of models with increasing \(p_C\) and plotting total mass
   versus central pressure.  For realistic nuclear equations of state the maximum is
   typically in the range \(1.5\)–\(3\,M_\odot\), depending on the stiffness.
@@ -954,7 +956,7 @@ while lastStep == 0:
 
 <p>
   This doubling continues until the surface is found, at the cost of reduced radial resolution.
-  It is <em>not</em> an adaptive accuracy control (as in RK45 or similar schemes) — it simply
+  It is <em>not</em> an adaptive accuracy control — it simply
   ensures the integration range is wide enough to encompass the whole star.  If you find that
   your chosen parameters require many doublings, the resulting coarse grid may not resolve
   the stellar structure well, and you should consider whether the parameters describe a
@@ -966,7 +968,7 @@ while lastStep == 0:
   Step doubling is triggered when the star is much larger than the estimated scale height \(\ell\).
   This can happen when \(K\) is very large (very stiff EOS), \(\gamma\) is very close to 1
   (nearly incompressible), or \(p_C\) is unusually low.  The default parameters (\(\gamma = 5/3\),
-  \(p_C = 10^{34}\) Pa, \(K = 10^{-15}\)) do not require doubling.
+  \(p_C = 1.26\times10^{35}\) Pa, \(K = 5.3802\times10^3\)) do not require doubling.
 </div>
 
 
@@ -1035,35 +1037,14 @@ while lastStep == 0:
 
 <ul>
   <li>
-    <strong><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/04-SphereGravity"
+    <strong><a href="https://github.com/tomyee3-org/GFTGU-Documentation/tree/main/04-SphereGravity"
               target="_blank">Star / SphereGravity</a></strong> —
     Newtonian stellar structure (companion program; compare directly with Neutron).
   </li>
   <li>
-    <strong><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-Binary"
+    <strong><a href="https://github.com/tomyee3-org/GFTGU-Documentation/tree/main/13-Binary"
               target="_blank">Binary</a></strong> —
     Two-body gravitational orbit (predictor–corrector integrator).
-  </li>
-  <li>
-    <strong><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-Binary"
-              target="_blank">Binary_RK45</a></strong> —
-    Two-body orbit using scipy's RK45 adaptive integrator.
-  </li>
-  <li>
-    <strong><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/13-MercPert"
-              target="_blank">MercPert / MercPert_RK45</a></strong> —
-    GR perihelion precession of Mercury.
-  </li>
-  <li>
-    <strong><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/14-Multiple"
-              target="_blank">Multiple / Multiple_RK45</a></strong> —
-    N-body gravitational simulation in 3D.
-  </li>
-  <li>
-    Bernard Schutz, <em>Gravity from the Ground Up</em>, Cambridge University Press, 2003.
-    Original Java program and help file:
-    <a href="https://www.gravityfromthegroundup.org/programs/Neutron.html"
-       target="_blank">gravityfromthegroundup.org/programs/Neutron.html</a>.
   </li>
   <li>
     R.C. Tolman (1939); J.R. Oppenheimer &amp; G.M. Volkoff (1939) — original derivations
@@ -1075,25 +1056,34 @@ while lastStep == 0:
   </li>
 </ul>
 
+  <!-- ── License ── -->
+  <section id="license">
+    <h2>License</h2>
+    <p>
+      This Python port is derived from the original Java programs by
+      <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+    <p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
+    </p>
+  </section>
+
 </main><!-- end main -->
 
-<!-- ════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════
      FOOTER
-════════════════════════════════════════════ -->
+═══════════════════════════════════════════════ -->
 <footer>
-  <img
-    src="https://github.com/tomyee3/GFTGU-Documentation/blob/main/00-License/license_files/LicenseBanner.png"
-    alt="Creative Commons Attribution-NonCommercial-ShareAlike License banner" />
-  <span>
-    Python port documentation &copy; 2025 Thomas Yee &mdash;
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
-      CC BY-NC-SA 4.0</a>
-    (Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International).
-    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.<br />
-    License version 1.0 &copy; 2003 Bernard Schutz.
-    Based on Java programs from <em>Gravity From the Ground Up</em>,
-    Cambridge University Press, 2003.
-  </span>
+  <em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
 </footer>
 
 </div><!-- end page-wrap -->
