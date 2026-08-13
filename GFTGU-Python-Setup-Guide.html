@@ -177,6 +177,17 @@
         display: flex; align-items: center; justify-content: center;
       }
 
+      /* Method badge styles */
+      .method-badge {
+        display: inline-flex; align-items: center; gap: 4px;
+        font-size: 11px; font-weight: 700; padding: 3px 10px;
+        border-radius: 9999px; line-height: 1.4;
+      }
+      .badge-green { background: #d1fae5; color: #047857; }
+      .badge-blue { background: #dbeafe; color: #1d4ed8; }
+      .badge-amber { background: #fef3c7; color: #92400e; }
+      .badge-red { background: #ffe4e6; color: #be123c; }
+
       @media (max-width: 1023px) {
         html { scroll-padding-top: 140px; }
       }
@@ -203,7 +214,7 @@
                 </div>
                 <button data-id="11" id="checklist-header-btn-j4f2" class="flex items-center gap-2 bg-navy-700 hover:bg-navy-600 text-sm font-medium px-3 py-1.5 rounded-lg transition-colors">
                     <i data-id="12" data-lucide="list-checks" class="w-4 h-4"></i>
-                    <span data-id="13" id="progress-text-r8w1" class="hidden sm:inline">0/8</span>
+                    <span data-id="13" id="progress-text-r8w1" class="hidden sm:inline">0/9</span>
                 </button>
             </div>
         </div>
@@ -247,209 +258,214 @@
             <a data-id="37" href="#section-7" class="sidebar-link block px-3 py-2 text-sm rounded-lg text-warm-700" data-section="section-7">7. Run a Program</a>
             <a data-id="38" href="#section-8" class="sidebar-link block px-3 py-2 text-sm rounded-lg text-warm-700" data-section="section-8">8. Reading the Docs</a>
             <a data-id="39" href="#section-9" class="sidebar-link block px-3 py-2 text-sm rounded-lg text-warm-700" data-section="section-9">9. Quick Reference</a>
+            <a data-id="40" href="#section-10" class="sidebar-link block px-3 py-2 text-sm rounded-lg text-warm-700" data-section="section-10">10. Restoring to Defaults</a>
         </nav>
     </aside>
 
     <!-- CHECKLIST PANEL -->
-    <div data-id="40" id="checklist-panel-w2x4" class="checklist-panel fixed top-[104px] right-0 w-80 max-h-[calc(100vh-120px)] bg-white z-30 border-l border-warm-200 overflow-y-auto transform translate-x-full opacity-0" style="box-shadow: -4px 0 20px rgba(0,0,0,0.06);">
-        <div data-id="41" class="p-5">
-            <div data-id="42" class="flex items-center justify-between mb-4">
-                <h3 data-id="43" class="font-bold text-navy-850 text-base">Your Progress</h3>
-                <button data-id="44" id="checklist-close-btn-y6z8" class="p-1 rounded-lg hover:bg-warm-100 text-warm-400">
-                    <i data-id="45" data-lucide="x" class="w-4 h-4"></i>
+    <div data-id="41" id="checklist-panel-w2x4" class="checklist-panel fixed top-[104px] right-0 w-80 max-h-[calc(100vh-120px)] bg-white z-30 border-l border-warm-200 overflow-y-auto transform translate-x-full opacity-0" style="box-shadow: -4px 0 20px rgba(0,0,0,0.06);">
+        <div data-id="42" class="p-5">
+            <div data-id="43" class="flex items-center justify-between mb-4">
+                <h3 data-id="44" class="font-bold text-navy-850 text-base">Your Progress</h3>
+                <button data-id="45" id="checklist-close-btn-y6z8" class="p-1 rounded-lg hover:bg-warm-100 text-warm-400">
+                    <i data-id="46" data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
-            <div data-id="46" class="space-y-2">
-                <div data-id="47" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
-                    <input data-id="48" type="checkbox" id="chk-1-s8t0" class="mt-0.5" data-check-index="0" />
-                    <label data-id="49" for="chk-1-s8t0" class="text-sm text-warm-700">Python installed</label>
+            <div data-id="47" class="space-y-2">
+                <div data-id="48" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
+                    <input data-id="49" type="checkbox" id="chk-1-s8t0" class="mt-0.5" data-check-index="0" />
+                    <label data-id="50" for="chk-1-s8t0" class="text-sm text-warm-700">Python installed</label>
                 </div>
-                <div data-id="50" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
-                    <input data-id="51" type="checkbox" id="chk-2-u2v4" class="mt-0.5" data-check-index="1" />
-                    <label data-id="52" for="chk-2-u2v4" class="text-sm text-warm-700">Packages installed (NumPy, Matplotlib)</label>
+                <div data-id="51" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
+                    <input data-id="52" type="checkbox" id="chk-2-u2v4" class="mt-0.5" data-check-index="1" />
+                    <label data-id="53" for="chk-2-u2v4" class="text-sm text-warm-700">Packages installed (NumPy, Matplotlib)</label>
                 </div>
-                <div data-id="53" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
-                    <input data-id="54" type="checkbox" id="chk-3-w6x8" class="mt-0.5" data-check-index="2" />
-                    <label data-id="55" for="chk-3-w6x8" class="text-sm text-warm-700">PyCharm installed</label>
+                <div data-id="54" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
+                    <input data-id="55" type="checkbox" id="chk-3-w6x8" class="mt-0.5" data-check-index="2" />
+                    <label data-id="56" for="chk-3-w6x8" class="text-sm text-warm-700">PyCharm installed</label>
                 </div>
-                <div data-id="56" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
-                    <input data-id="57" type="checkbox" id="chk-4-y0z2" class="mt-0.5" data-check-index="3" />
-                    <label data-id="58" for="chk-4-y0z2" class="text-sm text-warm-700">Programs downloaded &amp; extracted</label>
+                <div data-id="57" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
+                    <input data-id="58" type="checkbox" id="chk-4-y0z2" class="mt-0.5" data-check-index="3" />
+                    <label data-id="59" for="chk-4-y0z2" class="text-sm text-warm-700">Programs downloaded &amp; extracted</label>
                 </div>
-                <div data-id="59" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
-                    <input data-id="60" type="checkbox" id="chk-5-a4b6" class="mt-0.5" data-check-index="4" />
-                    <label data-id="61" for="chk-5-a4b6" class="text-sm text-warm-700">Documentation downloaded &amp; extracted</label>
+                <div data-id="60" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
+                    <input data-id="61" type="checkbox" id="chk-5-a4b6" class="mt-0.5" data-check-index="4" />
+                    <label data-id="62" for="chk-5-a4b6" class="text-sm text-warm-700">Documentation downloaded &amp; extracted</label>
                 </div>
-                <div data-id="62" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
-                    <input data-id="63" type="checkbox" id="chk-6-c8d0" class="mt-0.5" data-check-index="5" />
-                    <label data-id="64" for="chk-6-c8d0" class="text-sm text-warm-700">Opened first program in PyCharm</label>
+                <div data-id="63" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
+                    <input data-id="64" type="checkbox" id="chk-6-c8d0" class="mt-0.5" data-check-index="5" />
+                    <label data-id="65" for="chk-6-c8d0" class="text-sm text-warm-700">Opened first program in PyCharm</label>
                 </div>
-                <div data-id="65" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
-                    <input data-id="66" type="checkbox" id="chk-7-e2f4" class="mt-0.5" data-check-index="6" />
-                    <label data-id="67" for="chk-7-e2f4" class="text-sm text-warm-700">Interpreter configured</label>
+                <div data-id="66" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
+                    <input data-id="67" type="checkbox" id="chk-7-e2f4" class="mt-0.5" data-check-index="6" />
+                    <label data-id="68" for="chk-7-e2f4" class="text-sm text-warm-700">Interpreter configured</label>
                 </div>
-                <div data-id="68" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
-                    <input data-id="69" type="checkbox" id="chk-8-g6h8" class="mt-0.5" data-check-index="7" />
-                    <label data-id="70" for="chk-8-g6h8" class="text-sm text-warm-700">Successfully ran first program</label>
+                <div data-id="69" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
+                    <input data-id="70" type="checkbox" id="chk-8-g6h8" class="mt-0.5" data-check-index="7" />
+                    <label data-id="71" for="chk-8-g6h8" class="text-sm text-warm-700">Successfully ran first program</label>
+                </div>
+                <div data-id="72" class="check-item flex items-start gap-3 p-2 rounded-lg hover:bg-warm-50">
+                    <input data-id="73" type="checkbox" id="chk-9-r3s5" class="mt-0.5" data-check-index="8" />
+                    <label data-id="74" for="chk-9-r3s5" class="text-sm text-warm-700">Know how to restore default settings <span data-id="75" class="text-xs text-warm-400">(optional)</span></label>
                 </div>
             </div>
-            <div data-id="71" class="mt-5 pt-4 border-t border-warm-200 text-center">
-                <p data-id="72" id="checklist-summary-i0j2" class="text-xs text-warm-400">0 of 8 steps completed</p>
+            <div data-id="76" class="mt-5 pt-4 border-t border-warm-200 text-center">
+                <p data-id="77" id="checklist-summary-i0j2" class="text-xs text-warm-400">0 of 9 steps completed</p>
             </div>
         </div>
     </div>
 
     <!-- FLOATING CHECKLIST BUTTON (mobile) -->
-    <button data-id="73" id="checklist-fab-k4l6" class="checklist-fab lg:hidden">
-        <i data-id="74" data-lucide="list-checks" class="w-6 h-6"></i>
-        <span data-id="75" id="fab-badge-m8n0" class="badge">0</span>
+    <button data-id="78" id="checklist-fab-k4l6" class="checklist-fab lg:hidden">
+        <i data-id="79" data-lucide="list-checks" class="w-6 h-6"></i>
+        <span data-id="80" id="fab-badge-m8n0" class="badge">0</span>
     </button>
 
     <!-- MAIN CONTENT -->
-    <main data-id="76" class="pt-[104px] md:pt-[108px] lg:ml-72">
-        <div data-id="77" class="max-w-3xl mx-auto px-4 md:px-8 py-8 md:py-12">
+    <main data-id="81" class="pt-[104px] md:pt-[108px] lg:ml-72">
+        <div data-id="82" class="max-w-3xl mx-auto px-4 md:px-8 py-8 md:py-12">
 
             <!-- ==================== SECTION 0: INTRODUCTION ==================== -->
-            <section data-id="78" id="section-0" class="mb-16">
-                <div data-id="79" class="section-heading mb-6">
-                    <span data-id="80" class="text-3xl">🔭</span>
-                    <h2 data-id="81" class="text-2xl md:text-3xl font-extrabold text-navy-850">Welcome to the GFTGU Setup Guide</h2>
+            <section data-id="83" id="section-0" class="mb-16">
+                <div data-id="84" class="section-heading mb-6">
+                    <span data-id="85" class="text-3xl">🔭</span>
+                    <h2 data-id="86" class="text-2xl md:text-3xl font-extrabold text-navy-850">Welcome to the GFTGU Setup Guide</h2>
                 </div>
 
-                <div data-id="82" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                    <p data-id="83" class="text-warm-700 leading-relaxed mb-4">
-                        This guide will walk you through everything you need to run the Python physics simulation programs from the textbook <strong data-id="84" class="text-navy-850">"Gravity From the Ground Up"</strong> by Bernard Schutz. These programs bring the physics from the book to life — they simulate orbits, stellar structures, gravitational fields, and more, right on your own computer.
+                <div data-id="87" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                    <p data-id="88" class="text-warm-700 leading-relaxed mb-4">
+                        This guide will walk you through everything you need to run the Python physics simulation programs from the textbook <strong data-id="89" class="text-navy-850">"Gravity From the Ground Up"</strong> by Bernard Schutz. These programs bring the physics from the book to life — they simulate orbits, stellar structures, gravitational fields, and more, right on your own computer.
                     </p>
-                    <p data-id="85" class="text-warm-700 leading-relaxed mb-4">
-                        <strong data-id="86" class="text-navy-850">No programming experience is required.</strong> This guide assumes you've never written a line of code. Every step is explained in plain language, and you'll be running your first simulation in about 30–45 minutes.
+                    <p data-id="90" class="text-warm-700 leading-relaxed mb-4">
+                        <strong data-id="91" class="text-navy-850">No programming experience is required.</strong> This guide assumes you've never written a line of code. Every step is explained in plain language, and you'll be running your first simulation in about 30–45 minutes.
                     </p>
-                    <p data-id="87" class="text-warm-600 leading-relaxed">
+                    <p data-id="92" class="text-warm-600 leading-relaxed">
                         Here's the plan: you'll install Python (the engine), install a few add-on packages (the tools), install PyCharm (a comfortable workspace), download the programs from the internet, and then open and run them.
                     </p>
                 </div>
 
                 <!-- Programs list -->
-                <div data-id="88" class="bg-sky-50 rounded-2xl p-6 md:p-8 mb-6 border border-sky-100">
-                    <h3 data-id="89" class="font-bold text-navy-850 text-lg mb-3 flex items-center gap-2">
-                        <i data-id="90" data-lucide="code-2" class="w-5 h-5 text-sky-500"></i>
+                <div data-id="93" class="bg-sky-50 rounded-2xl p-6 md:p-8 mb-6 border border-sky-100">
+                    <h3 data-id="94" class="font-bold text-navy-850 text-lg mb-3 flex items-center gap-2">
+                        <i data-id="95" data-lucide="code-2" class="w-5 h-5 text-sky-500"></i>
                         The 13 Programs Available
                     </h3>
-                    <div data-id="91" class="flex flex-wrap gap-2">
-                        <span data-id="92" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Atmosphere</span>
-                        <span data-id="93" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Binary</span>
-                         <span data-id="95" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">CannonTrajectory</span>
-                        <span data-id="96" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">EarthOrbit</span>
-                        <span data-id="97" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">MercPert</span>
-                        <span data-id="99" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Multiple</span>
-                        <span data-id="101" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Neutron</span>
-                        <span data-id="102" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Orbit</span>
-                        <span data-id="103" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Planck2</span>
-                        <span data-id="104" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Random2</span>
-                        <span data-id="105" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">RelativisticOrbit</span>
-                        <span data-id="106" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">SphereGravity</span>
-                        <span data-id="107" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Star</span>
+                    <div data-id="96" class="flex flex-wrap gap-2">
+                        <span data-id="97" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Atmosphere</span>
+                        <span data-id="98" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Binary</span>
+                        <span data-id="99" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">CannonTrajectory</span>
+                        <span data-id="100" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">EarthOrbit</span>
+                        <span data-id="101" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">MercPert</span>
+                        <span data-id="102" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Multiple</span>
+                        <span data-id="103" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Neutron</span>
+                        <span data-id="104" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Orbit</span>
+                        <span data-id="105" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Planck2</span>
+                        <span data-id="106" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Random2</span>
+                        <span data-id="107" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">RelativisticOrbit</span>
+                        <span data-id="108" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">SphereGravity</span>
+                        <span data-id="109" class="bg-white text-navy-850 text-xs font-mono font-medium px-3 py-1.5 rounded-lg border border-sky-100">Star</span>
                     </div>
-                    <p data-id="108" class="text-sm text-warm-500 mt-3">These programs require two Python packages: <strong data-id="109">NumPy</strong> and <strong data-id="110">Matplotlib</strong>.</p>
+                    <p data-id="110" class="text-sm text-warm-500 mt-3">These programs require two Python packages: <strong data-id="111">NumPy</strong> and <strong data-id="112">Matplotlib</strong>.</p>
                 </div>
 
                 <!-- You will need card -->
-                <div data-id="112" class="bg-white rounded-2xl p-6 border-2 border-sky-200" style="box-shadow: 0 2px 12px rgba(59,130,246,0.06);">
-                    <h3 data-id="113" class="font-bold text-navy-850 text-base mb-4 flex items-center gap-2">
-                        <i data-id="114" data-lucide="clipboard-check" class="w-5 h-5 text-sky-500"></i>
+                <div data-id="113" class="bg-white rounded-2xl p-6 border-2 border-sky-200" style="box-shadow: 0 2px 12px rgba(59,130,246,0.06);">
+                    <h3 data-id="114" class="font-bold text-navy-850 text-base mb-4 flex items-center gap-2">
+                        <i data-id="115" data-lucide="clipboard-check" class="w-5 h-5 text-sky-500"></i>
                         You Will Need
                     </h3>
-                    <ul data-id="115" class="space-y-3">
-                        <li data-id="116" class="flex items-start gap-3">
-                            <i data-id="117" data-lucide="monitor" class="w-5 h-5 text-sky-500 mt-0.5 flex-shrink-0"></i>
-                            <span data-id="118" class="text-warm-700 text-sm">A computer running <strong data-id="119" class="text-navy-850">Windows</strong> or <strong data-id="120" class="text-navy-850">macOS</strong></span>
+                    <ul data-id="116" class="space-y-3">
+                        <li data-id="117" class="flex items-start gap-3">
+                            <i data-id="118" data-lucide="monitor" class="w-5 h-5 text-sky-500 mt-0.5 flex-shrink-0"></i>
+                            <span data-id="119" class="text-warm-700 text-sm">A computer running <strong data-id="120" class="text-navy-850">Windows</strong> or <strong data-id="121" class="text-navy-850">macOS</strong></span>
                         </li>
-                        <li data-id="121" class="flex items-start gap-3">
-                            <i data-id="122" data-lucide="wifi" class="w-5 h-5 text-sky-500 mt-0.5 flex-shrink-0"></i>
-                            <span data-id="123" class="text-warm-700 text-sm">An internet connection (for downloading software)</span>
+                        <li data-id="122" class="flex items-start gap-3">
+                            <i data-id="123" data-lucide="wifi" class="w-5 h-5 text-sky-500 mt-0.5 flex-shrink-0"></i>
+                            <span data-id="124" class="text-warm-700 text-sm">An internet connection (for downloading software)</span>
                         </li>
-                        <li data-id="124" class="flex items-start gap-3">
-                            <i data-id="125" data-lucide="clock" class="w-5 h-5 text-sky-500 mt-0.5 flex-shrink-0"></i>
-                            <span data-id="126" class="text-warm-700 text-sm">About <strong data-id="127" class="text-navy-850">30–45 minutes</strong> of your time</span>
+                        <li data-id="125" class="flex items-start gap-3">
+                            <i data-id="126" data-lucide="clock" class="w-5 h-5 text-sky-500 mt-0.5 flex-shrink-0"></i>
+                            <span data-id="127" class="text-warm-700 text-sm">About <strong data-id="128" class="text-navy-850">30–45 minutes</strong> of your time</span>
                         </li>
                     </ul>
                 </div>
             </section>
 
             <!-- ==================== SECTION 1: INSTALL PYTHON ==================== -->
-            <section data-id="128" id="section-1" class="mb-16">
-                <div data-id="129" class="section-heading mb-6">
-                    <span data-id="130" class="text-3xl">🐍</span>
-                    <h2 data-id="131" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 1: Install Python</h2>
+            <section data-id="129" id="section-1" class="mb-16">
+                <div data-id="130" class="section-heading mb-6">
+                    <span data-id="131" class="text-3xl">🐍</span>
+                    <h2 data-id="132" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 1: Install Python</h2>
                 </div>
 
-                <div data-id="132" class="callout callout-tip mb-6">
-                    <span data-id="133" class="callout-icon">💡</span>
-                    <div data-id="134">
-                        <p data-id="135" class="font-semibold text-emerald-700 text-sm mb-1">What is Python?</p>
-                        <p data-id="136" class="text-sm text-warm-700">Python is a free programming language that the GFTGU simulation programs are written in. Think of it as the engine that makes the programs run. You won't need to learn Python yourself — you just need it installed so the programs can use it.</p>
+                <div data-id="133" class="callout callout-tip mb-6">
+                    <span data-id="134" class="callout-icon">💡</span>
+                    <div data-id="135">
+                        <p data-id="136" class="font-semibold text-emerald-700 text-sm mb-1">What is Python?</p>
+                        <p data-id="137" class="text-sm text-warm-700">Python is a free programming language that the GFTGU simulation programs are written in. Think of it as the engine that makes the programs run. You won't need to learn Python yourself — you just need it installed so the programs can use it.</p>
                     </div>
                 </div>
 
                 <!-- WINDOWS -->
-                <div data-id="137" class="os-win">
-                    <div data-id="138" class="bg-white rounded-2xl p-6 md:p-8" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                        <h3 data-id="139" class="text-base font-bold text-navy-850 mb-5 flex items-center gap-2">
-                            <i data-id="140" data-lucide="layout-grid" class="w-5 h-5 text-sky-500"></i>
+                <div data-id="138" class="os-win">
+                    <div data-id="139" class="bg-white rounded-2xl p-6 md:p-8" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                        <h3 data-id="140" class="text-base font-bold text-navy-850 mb-5 flex items-center gap-2">
+                            <i data-id="141" data-lucide="layout-grid" class="w-5 h-5 text-sky-500"></i>
                             Windows Instructions
                         </h3>
-                        <ol data-id="141" class="space-y-5">
-                            <li data-id="142" class="flex items-start gap-4">
-                                <span data-id="143" class="step-bubble">1</span>
-                                <div data-id="144">
-                                    <p data-id="145" class="text-warm-700 text-sm leading-relaxed">Open your web browser and go to <strong data-id="146" class="text-sky-600">python.org/downloads</strong>. The site will automatically show the latest version for Windows.</p>
+                        <ol data-id="142" class="space-y-5">
+                            <li data-id="143" class="flex items-start gap-4">
+                                <span data-id="144" class="step-bubble">1</span>
+                                <div data-id="145">
+                                    <p data-id="146" class="text-warm-700 text-sm leading-relaxed">Open your web browser and go to <strong data-id="147" class="text-sky-600">python.org/downloads</strong>. The site will automatically show the latest version for Windows.</p>
                                 </div>
                             </li>
-                            <li data-id="147" class="flex items-start gap-4">
-                                <span data-id="148" class="step-bubble">2</span>
-                                <div data-id="149">
-                                    <p data-id="150" class="text-warm-700 text-sm leading-relaxed">Click the large yellow <strong data-id="151">"Download Python 3.x.x"</strong> button at the top of the page.</p>
+                            <li data-id="148" class="flex items-start gap-4">
+                                <span data-id="149" class="step-bubble">2</span>
+                                <div data-id="150">
+                                    <p data-id="151" class="text-warm-700 text-sm leading-relaxed">Click the large yellow <strong data-id="152">"Download Python 3.x.x"</strong> button at the top of the page.</p>
                                 </div>
                             </li>
-                            <li data-id="152" class="flex items-start gap-4">
-                                <span data-id="153" class="step-bubble">3</span>
-                                <div data-id="154">
-                                    <p data-id="155" class="text-warm-700 text-sm leading-relaxed">Once downloaded, run the installer by double-clicking the file (usually in your Downloads folder).</p>
+                            <li data-id="153" class="flex items-start gap-4">
+                                <span data-id="154" class="step-bubble">3</span>
+                                <div data-id="155">
+                                    <p data-id="156" class="text-warm-700 text-sm leading-relaxed">Once downloaded, run the installer by double-clicking the file (usually in your Downloads folder).</p>
                                 </div>
                             </li>
-                            <li data-id="156" class="flex items-start gap-4">
-                                <span data-id="157" class="step-bubble">4</span>
-                                <div data-id="158">
-                                    <p data-id="159" class="text-warm-700 text-sm leading-relaxed mb-2"><strong data-id="160" class="text-navy-850">CRITICAL — do not skip this:</strong> On the very first screen of the installer, you'll see a checkbox near the bottom labeled <strong data-id="161">"Add Python to PATH"</strong>.</p>
-                                    <div data-id="162" class="callout callout-warning mt-2 mb-0">
-                                        <span data-id="163" class="callout-icon">⚠️</span>
-                                        <div data-id="164">
-                                            <p data-id="165" class="font-semibold text-amber-800 text-sm mb-1">You MUST check this box!</p>
-                                            <p data-id="166" class="text-sm text-warm-700">Check the <strong data-id="167">"Add Python to PATH"</strong> box before doing anything else. This allows your computer to find Python when you need it later. If you forget this step, the rest of the guide won't work properly — you'd have to uninstall and reinstall Python.</p>
+                            <li data-id="157" class="flex items-start gap-4">
+                                <span data-id="158" class="step-bubble">4</span>
+                                <div data-id="159">
+                                    <p data-id="160" class="text-warm-700 text-sm leading-relaxed mb-2"><strong data-id="161" class="text-navy-850">CRITICAL — do not skip this:</strong> On the very first screen of the installer, you'll see a checkbox near the bottom labeled <strong data-id="162">"Add Python to PATH"</strong>.</p>
+                                    <div data-id="163" class="callout callout-warning mt-2 mb-0">
+                                        <span data-id="164" class="callout-icon">⚠️</span>
+                                        <div data-id="165">
+                                            <p data-id="166" class="font-semibold text-amber-800 text-sm mb-1">You MUST check this box!</p>
+                                            <p data-id="167" class="text-sm text-warm-700">Check the <strong data-id="168">"Add Python to PATH"</strong> box before doing anything else. This allows your computer to find Python when you need it later. If you forget this step, the rest of the guide won't work properly — you'd have to uninstall and reinstall Python.</p>
                                         </div>
                                     </div>
                                 </div>
                             </li>
-                            <li data-id="168" class="flex items-start gap-4">
-                                <span data-id="169" class="step-bubble">5</span>
-                                <div data-id="170">
-                                    <p data-id="171" class="text-warm-700 text-sm leading-relaxed">After checking the box, click <strong data-id="172">"Install Now"</strong>.</p>
+                            <li data-id="169" class="flex items-start gap-4">
+                                <span data-id="170" class="step-bubble">5</span>
+                                <div data-id="171">
+                                    <p data-id="172" class="text-warm-700 text-sm leading-relaxed">After checking the box, click <strong data-id="173">"Install Now"</strong>.</p>
                                 </div>
                             </li>
-                            <li data-id="173" class="flex items-start gap-4">
-                                <span data-id="174" class="step-bubble">6</span>
-                                <div data-id="175">
-                                    <p data-id="176" class="text-warm-700 text-sm leading-relaxed">Wait for the installation to complete (usually 1–2 minutes), then click <strong data-id="177">Close</strong>.</p>
+                            <li data-id="174" class="flex items-start gap-4">
+                                <span data-id="175" class="step-bubble">6</span>
+                                <div data-id="176">
+                                    <p data-id="177" class="text-warm-700 text-sm leading-relaxed">Wait for the installation to complete (usually 1–2 minutes), then click <strong data-id="178">Close</strong>.</p>
                                 </div>
                             </li>
-                            <li data-id="178" class="flex items-start gap-4">
-                                <span data-id="179" class="step-bubble">7</span>
-                                <div data-id="180">
-                                    <p data-id="181" class="text-warm-700 text-sm leading-relaxed mb-2"><strong data-id="182">Verify it works:</strong> Open the Start menu, search for <strong data-id="183">"Command Prompt"</strong>, and open it. Type the following command and press Enter:</p>
-                                    <div data-id="184" class="code-block">
-                                        <code data-id="185">python --version</code>
-                                        <button data-id="186" class="copy-btn" data-copy="python --version" aria-label="Copy command"><i data-id="187" data-lucide="clipboard" class="w-4 h-4"></i></button>
+                            <li data-id="179" class="flex items-start gap-4">
+                                <span data-id="180" class="step-bubble">7</span>
+                                <div data-id="181">
+                                    <p data-id="182" class="text-warm-700 text-sm leading-relaxed mb-2"><strong data-id="183">Verify it works:</strong> Open the Start menu, search for <strong data-id="184">"Command Prompt"</strong>, and open it. Type the following command and press Enter:</p>
+                                    <div data-id="185" class="code-block">
+                                        <code data-id="186">python --version</code>
+                                        <button data-id="187" class="copy-btn" data-copy="python --version" aria-label="Copy command"><i data-id="188" data-lucide="clipboard" class="w-4 h-4"></i></button>
                                     </div>
-                                    <p data-id="188" class="text-warm-500 text-xs mt-2">You should see something like <code data-id="189" class="bg-warm-100 px-1.5 py-0.5 rounded text-navy-850 font-mono text-xs">Python 3.12.x</code> — the exact number doesn't matter.</p>
+                                    <p data-id="189" class="text-warm-500 text-xs mt-2">You should see something like <code data-id="190" class="bg-warm-100 px-1.5 py-0.5 rounded text-navy-850 font-mono text-xs">Python 3.12.x</code> — the exact number doesn't matter.</p>
                                 </div>
                             </li>
                         </ol>
@@ -457,52 +473,52 @@
                 </div>
 
                 <!-- macOS -->
-                <div data-id="190" class="os-mac">
-                    <div data-id="191" class="bg-white rounded-2xl p-6 md:p-8" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                        <h3 data-id="192" class="text-base font-bold text-navy-850 mb-5 flex items-center gap-2">
-                            <i data-id="193" data-lucide="apple" class="w-5 h-5 text-sky-500"></i>
+                <div data-id="191" class="os-mac">
+                    <div data-id="192" class="bg-white rounded-2xl p-6 md:p-8" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                        <h3 data-id="193" class="text-base font-bold text-navy-850 mb-5 flex items-center gap-2">
+                            <i data-id="194" data-lucide="apple" class="w-5 h-5 text-sky-500"></i>
                             macOS Instructions
                         </h3>
-                        <ol data-id="194" class="space-y-5">
-                            <li data-id="195" class="flex items-start gap-4">
-                                <span data-id="196" class="step-bubble">1</span>
-                                <div data-id="197">
-                                    <p data-id="198" class="text-warm-700 text-sm leading-relaxed">Open your web browser and go to <strong data-id="199" class="text-sky-600">python.org/downloads</strong>. The site will automatically show the latest version for macOS.</p>
+                        <ol data-id="195" class="space-y-5">
+                            <li data-id="196" class="flex items-start gap-4">
+                                <span data-id="197" class="step-bubble">1</span>
+                                <div data-id="198">
+                                    <p data-id="199" class="text-warm-700 text-sm leading-relaxed">Open your web browser and go to <strong data-id="200" class="text-sky-600">python.org/downloads</strong>. The site will automatically show the latest version for macOS.</p>
                                 </div>
                             </li>
-                            <li data-id="200" class="flex items-start gap-4">
-                                <span data-id="201" class="step-bubble">2</span>
-                                <div data-id="202">
-                                    <p data-id="203" class="text-warm-700 text-sm leading-relaxed">Click the large yellow <strong data-id="204">"Download Python 3.x.x"</strong> button at the top of the page.</p>
+                            <li data-id="201" class="flex items-start gap-4">
+                                <span data-id="202" class="step-bubble">2</span>
+                                <div data-id="203">
+                                    <p data-id="204" class="text-warm-700 text-sm leading-relaxed">Click the large yellow <strong data-id="205">"Download Python 3.x.x"</strong> button at the top of the page.</p>
                                 </div>
                             </li>
-                            <li data-id="205" class="flex items-start gap-4">
-                                <span data-id="206" class="step-bubble">3</span>
-                                <div data-id="207">
-                                    <p data-id="208" class="text-warm-700 text-sm leading-relaxed">Open the downloaded <strong data-id="209">.pkg</strong> file from your Downloads folder.</p>
+                            <li data-id="206" class="flex items-start gap-4">
+                                <span data-id="207" class="step-bubble">3</span>
+                                <div data-id="208">
+                                    <p data-id="209" class="text-warm-700 text-sm leading-relaxed">Open the downloaded <strong data-id="210">.pkg</strong> file from your Downloads folder.</p>
                                 </div>
                             </li>
-                            <li data-id="210" class="flex items-start gap-4">
-                                <span data-id="211" class="step-bubble">4</span>
-                                <div data-id="212">
-                                    <p data-id="213" class="text-warm-700 text-sm leading-relaxed">Follow the installer steps — click <strong data-id="214">Continue</strong>, <strong data-id="215">Agree</strong> to the license, then <strong data-id="216">Install</strong>. macOS may ask for your password — this is normal.</p>
+                            <li data-id="211" class="flex items-start gap-4">
+                                <span data-id="212" class="step-bubble">4</span>
+                                <div data-id="213">
+                                    <p data-id="214" class="text-warm-700 text-sm leading-relaxed">Follow the installer steps — click <strong data-id="215">Continue</strong>, <strong data-id="216">Agree</strong> to the license, then <strong data-id="217">Install</strong>. macOS may ask for your password — this is normal.</p>
                                 </div>
                             </li>
-                            <li data-id="217" class="flex items-start gap-4">
-                                <span data-id="218" class="step-bubble">5</span>
-                                <div data-id="219">
-                                    <p data-id="220" class="text-warm-700 text-sm leading-relaxed">When installation finishes, click <strong data-id="221">Close</strong>.</p>
+                            <li data-id="218" class="flex items-start gap-4">
+                                <span data-id="219" class="step-bubble">5</span>
+                                <div data-id="220">
+                                    <p data-id="221" class="text-warm-700 text-sm leading-relaxed">When installation finishes, click <strong data-id="222">Close</strong>.</p>
                                 </div>
                             </li>
-                            <li data-id="222" class="flex items-start gap-4">
-                                <span data-id="223" class="step-bubble">6</span>
-                                <div data-id="224">
-                                    <p data-id="225" class="text-warm-700 text-sm leading-relaxed mb-2"><strong data-id="226">Verify it works:</strong> Open Terminal by pressing <strong data-id="227">Cmd+Space</strong>, typing <strong data-id="228">"Terminal"</strong>, and pressing Enter. Then type the following command and press Enter:</p>
-                                    <div data-id="229" class="code-block">
-                                        <code data-id="230">python3 --version</code>
-                                        <button data-id="231" class="copy-btn" data-copy="python3 --version" aria-label="Copy command"><i data-id="232" data-lucide="clipboard" class="w-4 h-4"></i></button>
+                            <li data-id="223" class="flex items-start gap-4">
+                                <span data-id="224" class="step-bubble">6</span>
+                                <div data-id="225">
+                                    <p data-id="226" class="text-warm-700 text-sm leading-relaxed mb-2"><strong data-id="227">Verify it works:</strong> Open Terminal by pressing <strong data-id="228">Cmd+Space</strong>, typing <strong data-id="229">"Terminal"</strong>, and pressing Enter. Then type the following command and press Enter:</p>
+                                    <div data-id="230" class="code-block">
+                                        <code data-id="231">python3 --version</code>
+                                        <button data-id="232" class="copy-btn" data-copy="python3 --version" aria-label="Copy command"><i data-id="233" data-lucide="clipboard" class="w-4 h-4"></i></button>
                                     </div>
-                                    <p data-id="233" class="text-warm-500 text-xs mt-2">You should see something like <code data-id="234" class="bg-warm-100 px-1.5 py-0.5 rounded text-navy-850 font-mono text-xs">Python 3.12.x</code> — the exact number doesn't matter.</p>
+                                    <p data-id="234" class="text-warm-500 text-xs mt-2">You should see something like <code data-id="235" class="bg-warm-100 px-1.5 py-0.5 rounded text-navy-850 font-mono text-xs">Python 3.12.x</code> — the exact number doesn't matter.</p>
                                 </div>
                             </li>
                         </ol>
@@ -511,62 +527,62 @@
             </section>
 
             <!-- ==================== SECTION 2: INSTALL PACKAGES ==================== -->
-            <section data-id="235" id="section-2" class="mb-16">
-                <div data-id="236" class="section-heading mb-6">
-                    <span data-id="237" class="text-3xl">📦</span>
-                    <h2 data-id="238" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 2: Install Required Python Packages</h2>
+            <section data-id="236" id="section-2" class="mb-16">
+                <div data-id="237" class="section-heading mb-6">
+                    <span data-id="238" class="text-3xl">📦</span>
+                    <h2 data-id="239" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 2: Install Required Python Packages</h2>
                 </div>
 
-                <div data-id="239" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                    <p data-id="240" class="text-warm-700 leading-relaxed mb-4">
-                        Python by itself is like a bare-bones workshop. <strong data-id="241" class="text-navy-850">Packages</strong> are free add-ons that give Python extra abilities — in this case, the ability to do advanced mathematics and draw graphs. You need to install two packages:
+                <div data-id="240" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                    <p data-id="241" class="text-warm-700 leading-relaxed mb-4">
+                        Python by itself is like a bare-bones workshop. <strong data-id="242" class="text-navy-850">Packages</strong> are free add-ons that give Python extra abilities — in this case, the ability to do advanced mathematics and draw graphs. You need to install two packages:
                     </p>
-                    <div data-id="242" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                        <div data-id="243" class="bg-sky-50 rounded-xl p-4 border border-sky-100">
-                            <p data-id="244" class="font-bold text-navy-850 text-sm mb-1">NumPy</p>
-                            <p data-id="245" class="text-xs text-warm-600">Handles the complex mathematical calculations the simulations rely on</p>
+                    <div data-id="243" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div data-id="244" class="bg-sky-50 rounded-xl p-4 border border-sky-100">
+                            <p data-id="245" class="font-bold text-navy-850 text-sm mb-1">NumPy</p>
+                            <p data-id="246" class="text-xs text-warm-600">Handles the complex mathematical calculations the simulations rely on</p>
                         </div>
-                        <div data-id="246" class="bg-sky-50 rounded-xl p-4 border border-sky-100">
-                            <p data-id="247" class="font-bold text-navy-850 text-sm mb-1">Matplotlib</p>
-                            <p data-id="248" class="text-xs text-warm-600">Draws the graphs and plots you'll see when you run the programs</p>
+                        <div data-id="247" class="bg-sky-50 rounded-xl p-4 border border-sky-100">
+                            <p data-id="248" class="font-bold text-navy-850 text-sm mb-1">Matplotlib</p>
+                            <p data-id="249" class="text-xs text-warm-600">Draws the graphs and plots you'll see when you run the programs</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- WINDOWS -->
-                <div data-id="252" class="os-win">
-                    <div data-id="253" class="bg-white rounded-2xl p-6 md:p-8" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                        <h3 data-id="254" class="text-base font-bold text-navy-850 mb-5 flex items-center gap-2">
-                            <i data-id="255" data-lucide="layout-grid" class="w-5 h-5 text-sky-500"></i>
+                <div data-id="250" class="os-win">
+                    <div data-id="251" class="bg-white rounded-2xl p-6 md:p-8" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                        <h3 data-id="252" class="text-base font-bold text-navy-850 mb-5 flex items-center gap-2">
+                            <i data-id="253" data-lucide="layout-grid" class="w-5 h-5 text-sky-500"></i>
                             Windows Instructions
                         </h3>
-                        <ol data-id="256" class="space-y-5">
-                            <li data-id="257" class="flex items-start gap-4">
-                                <span data-id="258" class="step-bubble">1</span>
-                                <div data-id="259">
-                                    <p data-id="260" class="text-warm-700 text-sm leading-relaxed">Open <strong data-id="261">Command Prompt</strong> (open the Start menu, search for "Command Prompt", and click it).</p>
+                        <ol data-id="254" class="space-y-5">
+                            <li data-id="255" class="flex items-start gap-4">
+                                <span data-id="256" class="step-bubble">1</span>
+                                <div data-id="257">
+                                    <p data-id="258" class="text-warm-700 text-sm leading-relaxed">Open <strong data-id="259">Command Prompt</strong> (open the Start menu, search for "Command Prompt", and click it).</p>
                                 </div>
                             </li>
-                            <li data-id="262" class="flex items-start gap-4">
-                                <span data-id="263" class="step-bubble">2</span>
-                                <div data-id="264">
-                                    <p data-id="265" class="text-warm-700 text-sm leading-relaxed mb-2">Type (or copy-paste) the following command and press <strong data-id="266">Enter</strong>:</p>
-                                    <div data-id="267" class="code-block">
-                                        <code data-id="268">pip install numpy matplotlib</code>
-                                        <button data-id="269" class="copy-btn" data-copy="pip install numpy matplotlib" aria-label="Copy command"><i data-id="270" data-lucide="clipboard" class="w-4 h-4"></i></button>
+                            <li data-id="260" class="flex items-start gap-4">
+                                <span data-id="261" class="step-bubble">2</span>
+                                <div data-id="262">
+                                    <p data-id="263" class="text-warm-700 text-sm leading-relaxed mb-2">Type (or copy-paste) the following command and press <strong data-id="264">Enter</strong>:</p>
+                                    <div data-id="265" class="code-block">
+                                        <code data-id="266">pip install numpy matplotlib</code>
+                                        <button data-id="267" class="copy-btn" data-copy="pip install numpy matplotlib" aria-label="Copy command"><i data-id="268" data-lucide="clipboard" class="w-4 h-4"></i></button>
                                     </div>
                                 </div>
                             </li>
-                            <li data-id="271" class="flex items-start gap-4">
-                                <span data-id="272" class="step-bubble">3</span>
-                                <div data-id="273">
-                                    <p data-id="274" class="text-warm-700 text-sm leading-relaxed">You'll see text scrolling by — this is normal. Wait until you see <strong data-id="275">"Successfully installed"</strong> messages. This may take a minute or two.</p>
+                            <li data-id="269" class="flex items-start gap-4">
+                                <span data-id="270" class="step-bubble">3</span>
+                                <div data-id="271">
+                                    <p data-id="272" class="text-warm-700 text-sm leading-relaxed">You'll see text scrolling by — this is normal. Wait until you see <strong data-id="273">"Successfully installed"</strong> messages. This may take a minute or two.</p>
                                 </div>
                             </li>
-                            <li data-id="276" class="flex items-start gap-4">
-                                <span data-id="277" class="step-bubble">4</span>
-                                <div data-id="278">
-                                    <p data-id="279" class="text-warm-700 text-sm leading-relaxed">That's it — the packages are now installed!</p>
+                            <li data-id="274" class="flex items-start gap-4">
+                                <span data-id="275" class="step-bubble">4</span>
+                                <div data-id="276">
+                                    <p data-id="277" class="text-warm-700 text-sm leading-relaxed">That's it — the packages are now installed!</p>
                                 </div>
                             </li>
                         </ol>
@@ -574,612 +590,822 @@
                 </div>
 
                 <!-- macOS -->
-                <div data-id="280" class="os-mac">
-                    <div data-id="281" class="bg-white rounded-2xl p-6 md:p-8" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                        <h3 data-id="282" class="text-base font-bold text-navy-850 mb-5 flex items-center gap-2">
-                            <i data-id="283" data-lucide="apple" class="w-5 h-5 text-sky-500"></i>
+                <div data-id="278" class="os-mac">
+                    <div data-id="279" class="bg-white rounded-2xl p-6 md:p-8" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                        <h3 data-id="280" class="text-base font-bold text-navy-850 mb-5 flex items-center gap-2">
+                            <i data-id="281" data-lucide="apple" class="w-5 h-5 text-sky-500"></i>
                             macOS Instructions
                         </h3>
-                        <ol data-id="284" class="space-y-5">
-                            <li data-id="285" class="flex items-start gap-4">
-                                <span data-id="286" class="step-bubble">1</span>
-                                <div data-id="287">
-                                    <p data-id="288" class="text-warm-700 text-sm leading-relaxed">Open <strong data-id="289">Terminal</strong> (press <strong data-id="290">Cmd+Space</strong>, type "Terminal", press Enter).</p>
+                        <ol data-id="282" class="space-y-5">
+                            <li data-id="283" class="flex items-start gap-4">
+                                <span data-id="284" class="step-bubble">1</span>
+                                <div data-id="285">
+                                    <p data-id="286" class="text-warm-700 text-sm leading-relaxed">Open <strong data-id="287">Terminal</strong> (press <strong data-id="288">Cmd+Space</strong>, type "Terminal", press Enter).</p>
                                 </div>
                             </li>
-                            <li data-id="291" class="flex items-start gap-4">
-                                <span data-id="292" class="step-bubble">2</span>
-                                <div data-id="293">
-                                    <p data-id="294" class="text-warm-700 text-sm leading-relaxed mb-2">Type (or copy-paste) the following command and press <strong data-id="295">Enter</strong>:</p>
-                                    <div data-id="296" class="code-block">
-                                        <code data-id="297">pip3 install numpy matplotlib</code>
-                                        <button data-id="298" class="copy-btn" data-copy="pip3 install numpy matplotlib" aria-label="Copy command"><i data-id="299" data-lucide="clipboard" class="w-4 h-4"></i></button>
+                            <li data-id="289" class="flex items-start gap-4">
+                                <span data-id="290" class="step-bubble">2</span>
+                                <div data-id="291">
+                                    <p data-id="292" class="text-warm-700 text-sm leading-relaxed mb-2">Type (or copy-paste) the following command and press <strong data-id="293">Enter</strong>:</p>
+                                    <div data-id="294" class="code-block">
+                                        <code data-id="295">pip3 install numpy matplotlib</code>
+                                        <button data-id="296" class="copy-btn" data-copy="pip3 install numpy matplotlib" aria-label="Copy command"><i data-id="297" data-lucide="clipboard" class="w-4 h-4"></i></button>
                                     </div>
                                 </div>
                             </li>
-                            <li data-id="300" class="flex items-start gap-4">
-                                <span data-id="301" class="step-bubble">3</span>
-                                <div data-id="302">
-                                    <p data-id="303" class="text-warm-700 text-sm leading-relaxed">You'll see text scrolling by — this is normal. Wait until you see <strong data-id="304">"Successfully installed"</strong> messages. This may take a minute or two.</p>
+                            <li data-id="298" class="flex items-start gap-4">
+                                <span data-id="299" class="step-bubble">3</span>
+                                <div data-id="300">
+                                    <p data-id="301" class="text-warm-700 text-sm leading-relaxed">You'll see text scrolling by — this is normal. Wait until you see <strong data-id="302">"Successfully installed"</strong> messages. This may take a minute or two.</p>
                                 </div>
                             </li>
-                            <li data-id="305" class="flex items-start gap-4">
-                                <span data-id="306" class="step-bubble">4</span>
-                                <div data-id="307">
-                                    <p data-id="308" class="text-warm-700 text-sm leading-relaxed">That's it — the packages are now installed!</p>
+                            <li data-id="303" class="flex items-start gap-4">
+                                <span data-id="304" class="step-bubble">4</span>
+                                <div data-id="305">
+                                    <p data-id="306" class="text-warm-700 text-sm leading-relaxed">That's it — the packages are now installed!</p>
                                 </div>
                             </li>
                         </ol>
                     </div>
                 </div>
 
-                <div data-id="309" class="callout callout-trouble mt-4">
-                    <span data-id="310" class="callout-icon">🔧</span>
-                    <div data-id="311">
-                        <p data-id="312" class="font-semibold text-rose-700 text-sm mb-1">Troubleshooting</p>
-                        <p data-id="313" class="text-sm text-warm-700">If you see an error saying <strong data-id="314">"pip is not recognized"</strong> (Windows) or <strong data-id="315">"command not found: pip3"</strong> (macOS), try restarting your computer and opening a new Command Prompt / Terminal window. This usually fixes the problem.</p>
+                <div data-id="307" class="callout callout-trouble mt-4">
+                    <span data-id="308" class="callout-icon">🔧</span>
+                    <div data-id="309">
+                        <p data-id="310" class="font-semibold text-rose-700 text-sm mb-1">Troubleshooting</p>
+                        <p data-id="311" class="text-sm text-warm-700">If you see an error saying <strong data-id="312">"pip is not recognized"</strong> (Windows) or <strong data-id="313">"command not found: pip3"</strong> (macOS), try restarting your computer and opening a new Command Prompt / Terminal window. This usually fixes the problem.</p>
                     </div>
                 </div>
             </section>
 
             <!-- ==================== SECTION 3: INSTALL PYCHARM ==================== -->
-            <section data-id="316" id="section-3" class="mb-16">
-                <div data-id="317" class="section-heading mb-6">
-                    <span data-id="318" class="text-3xl">🛠️</span>
-                    <h2 data-id="319" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 3: Install PyCharm Community Edition</h2>
+            <section data-id="314" id="section-3" class="mb-16">
+                <div data-id="315" class="section-heading mb-6">
+                    <span data-id="316" class="text-3xl">🛠️</span>
+                    <h2 data-id="317" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 3: Install PyCharm Community Edition</h2>
                 </div>
 
-                <div data-id="320" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                    <p data-id="321" class="text-warm-700 leading-relaxed">
-                        <strong data-id="322" class="text-navy-850">PyCharm</strong> is a free application designed specifically for working with Python programs. It gives you a comfortable environment to open, read, and run the GFTGU programs without needing to learn command-line tools. Think of it as a word processor, but for code.
+                <div data-id="318" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                    <p data-id="319" class="text-warm-700 leading-relaxed">
+                        <strong data-id="320" class="text-navy-850">PyCharm</strong> is a free application designed specifically for working with Python programs. It gives you a comfortable environment to open, read, and run the GFTGU programs without needing to learn command-line tools. Think of it as a word processor, but for code.
                     </p>
                 </div>
 
                 <!-- WINDOWS -->
-                <div data-id="323" class="os-win">
-                    <div data-id="324" class="bg-white rounded-2xl p-6 md:p-8" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                        <h3 data-id="325" class="text-base font-bold text-navy-850 mb-5 flex items-center gap-2">
-                            <i data-id="326" data-lucide="layout-grid" class="w-5 h-5 text-sky-500"></i>
+                <div data-id="321" class="os-win">
+                    <div data-id="322" class="bg-white rounded-2xl p-6 md:p-8" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                        <h3 data-id="323" class="text-base font-bold text-navy-850 mb-5 flex items-center gap-2">
+                            <i data-id="324" data-lucide="layout-grid" class="w-5 h-5 text-sky-500"></i>
                             Windows Instructions
                         </h3>
-                        <ol data-id="327" class="space-y-5">
-                            <li data-id="328" class="flex items-start gap-4">
-                                <span data-id="329" class="step-bubble">1</span>
-                                <div data-id="330"><p data-id="331" class="text-warm-700 text-sm leading-relaxed">Open your web browser and go to <strong data-id="332" class="text-sky-600">jetbrains.com/pycharm/download/</strong></p></div>
+                        <ol data-id="325" class="space-y-5">
+                            <li data-id="326" class="flex items-start gap-4">
+                                <span data-id="327" class="step-bubble">1</span>
+                                <div data-id="328"><p data-id="329" class="text-warm-700 text-sm leading-relaxed">Open your web browser and go to <strong data-id="330" class="text-sky-600">jetbrains.com/pycharm/download/</strong></p></div>
                             </li>
-                            <li data-id="333" class="flex items-start gap-4">
-                                <span data-id="334" class="step-bubble">2</span>
-                                <div data-id="335"><p data-id="336" class="text-warm-700 text-sm leading-relaxed">Scroll down to find <strong data-id="337">"PyCharm Community Edition"</strong>. Make sure it says <strong data-id="338">Community</strong> (the free version), not "Professional".</p></div>
+                            <li data-id="331" class="flex items-start gap-4">
+                                <span data-id="332" class="step-bubble">2</span>
+                                <div data-id="333"><p data-id="334" class="text-warm-700 text-sm leading-relaxed">Scroll down to find <strong data-id="335">"PyCharm Community Edition"</strong>. Make sure it says <strong data-id="336">Community</strong> (the free version), not "Professional".</p></div>
                             </li>
-                            <li data-id="339" class="flex items-start gap-4">
-                                <span data-id="340" class="step-bubble">3</span>
-                                <div data-id="341"><p data-id="342" class="text-warm-700 text-sm leading-relaxed">Click the <strong data-id="343">"Download"</strong> button under Community.</p></div>
+                            <li data-id="337" class="flex items-start gap-4">
+                                <span data-id="338" class="step-bubble">3</span>
+                                <div data-id="339"><p data-id="340" class="text-warm-700 text-sm leading-relaxed">Click the <strong data-id="341">"Download"</strong> button under Community.</p></div>
                             </li>
-                            <li data-id="344" class="flex items-start gap-4">
-                                <span data-id="345" class="step-bubble">4</span>
-                                <div data-id="346"><p data-id="347" class="text-warm-700 text-sm leading-relaxed">Run the downloaded <strong data-id="348">.exe</strong> installer.</p></div>
+                            <li data-id="342" class="flex items-start gap-4">
+                                <span data-id="343" class="step-bubble">4</span>
+                                <div data-id="344"><p data-id="345" class="text-warm-700 text-sm leading-relaxed">Run the downloaded <strong data-id="346">.exe</strong> installer.</p></div>
                             </li>
-                            <li data-id="349" class="flex items-start gap-4">
-                                <span data-id="350" class="step-bubble">5</span>
-                                <div data-id="351"><p data-id="352" class="text-warm-700 text-sm leading-relaxed">Follow the setup wizard: click <strong data-id="353">Next</strong>, accept defaults, check <strong data-id="354">"Add 'Open Folder as Project'"</strong> on the Installation Options screen, click Next, then <strong data-id="355">Install</strong>.</p></div>
+                            <li data-id="347" class="flex items-start gap-4">
+                                <span data-id="348" class="step-bubble">5</span>
+                                <div data-id="349"><p data-id="350" class="text-warm-700 text-sm leading-relaxed">Follow the setup wizard: click <strong data-id="351">Next</strong>, accept defaults, check <strong data-id="352">"Add 'Open Folder as Project'"</strong> on the Installation Options screen, click Next, then <strong data-id="353">Install</strong>.</p></div>
                             </li>
-                            <li data-id="356" class="flex items-start gap-4">
-                                <span data-id="357" class="step-bubble">6</span>
-                                <div data-id="358"><p data-id="359" class="text-warm-700 text-sm leading-relaxed">When finished, click <strong data-id="360">Finish</strong> (you can choose to restart now or later).</p></div>
+                            <li data-id="354" class="flex items-start gap-4">
+                                <span data-id="355" class="step-bubble">6</span>
+                                <div data-id="356"><p data-id="357" class="text-warm-700 text-sm leading-relaxed">When finished, click <strong data-id="358">Finish</strong> (you can choose to restart now or later).</p></div>
                             </li>
-                            <li data-id="361" class="flex items-start gap-4">
-                                <span data-id="362" class="step-bubble">7</span>
-                                <div data-id="363"><p data-id="364" class="text-warm-700 text-sm leading-relaxed">Launch PyCharm from the <strong data-id="365">Start menu</strong>.</p></div>
+                            <li data-id="359" class="flex items-start gap-4">
+                                <span data-id="360" class="step-bubble">7</span>
+                                <div data-id="361"><p data-id="362" class="text-warm-700 text-sm leading-relaxed">Launch PyCharm from the <strong data-id="363">Start menu</strong>.</p></div>
                             </li>
                         </ol>
                     </div>
                 </div>
 
                 <!-- macOS -->
-                <div data-id="366" class="os-mac">
-                    <div data-id="367" class="bg-white rounded-2xl p-6 md:p-8" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                        <h3 data-id="368" class="text-base font-bold text-navy-850 mb-5 flex items-center gap-2">
-                            <i data-id="369" data-lucide="apple" class="w-5 h-5 text-sky-500"></i>
+                <div data-id="364" class="os-mac">
+                    <div data-id="365" class="bg-white rounded-2xl p-6 md:p-8" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                        <h3 data-id="366" class="text-base font-bold text-navy-850 mb-5 flex items-center gap-2">
+                            <i data-id="367" data-lucide="apple" class="w-5 h-5 text-sky-500"></i>
                             macOS Instructions
                         </h3>
-                        <ol data-id="370" class="space-y-5">
-                            <li data-id="371" class="flex items-start gap-4">
-                                <span data-id="372" class="step-bubble">1</span>
-                                <div data-id="373"><p data-id="374" class="text-warm-700 text-sm leading-relaxed">Open your web browser and go to <strong data-id="375" class="text-sky-600">jetbrains.com/pycharm/download/</strong></p></div>
+                        <ol data-id="368" class="space-y-5">
+                            <li data-id="369" class="flex items-start gap-4">
+                                <span data-id="370" class="step-bubble">1</span>
+                                <div data-id="371"><p data-id="372" class="text-warm-700 text-sm leading-relaxed">Open your web browser and go to <strong data-id="373" class="text-sky-600">jetbrains.com/pycharm/download/</strong></p></div>
                             </li>
-                            <li data-id="376" class="flex items-start gap-4">
-                                <span data-id="377" class="step-bubble">2</span>
-                                <div data-id="378"><p data-id="379" class="text-warm-700 text-sm leading-relaxed">Scroll down to find <strong data-id="380">"PyCharm Community Edition"</strong>. Make sure it says <strong data-id="381">Community</strong> (the free version), not "Professional".</p></div>
+                            <li data-id="374" class="flex items-start gap-4">
+                                <span data-id="375" class="step-bubble">2</span>
+                                <div data-id="376"><p data-id="377" class="text-warm-700 text-sm leading-relaxed">Scroll down to find <strong data-id="378">"PyCharm Community Edition"</strong>. Make sure it says <strong data-id="379">Community</strong> (the free version), not "Professional".</p></div>
                             </li>
-                            <li data-id="382" class="flex items-start gap-4">
-                                <span data-id="383" class="step-bubble">3</span>
-                                <div data-id="384"><p data-id="385" class="text-warm-700 text-sm leading-relaxed">Click the <strong data-id="386">"Download"</strong> button under Community — choose the <strong data-id="387">.dmg</strong> appropriate for your Mac. If you have an M1, M2, M3, or M4 Mac, choose <strong data-id="388">Apple Silicon</strong>. For older Macs, choose <strong data-id="389">Intel</strong>. (If you're not sure, Apple Silicon is likely correct for any Mac purchased since late 2020.)</p></div>
+                            <li data-id="380" class="flex items-start gap-4">
+                                <span data-id="381" class="step-bubble">3</span>
+                                <div data-id="382"><p data-id="383" class="text-warm-700 text-sm leading-relaxed">Click the <strong data-id="384">"Download"</strong> button under Community — choose the <strong data-id="385">.dmg</strong> appropriate for your Mac. If you have an M1, M2, M3, or M4 Mac, choose <strong data-id="386">Apple Silicon</strong>. For older Macs, choose <strong data-id="387">Intel</strong>. (If you're not sure, Apple Silicon is likely correct for any Mac purchased since late 2020.)</p></div>
                             </li>
-                            <li data-id="390" class="flex items-start gap-4">
-                                <span data-id="391" class="step-bubble">4</span>
-                                <div data-id="392"><p data-id="393" class="text-warm-700 text-sm leading-relaxed">Open the downloaded <strong data-id="394">.dmg</strong> file.</p></div>
+                            <li data-id="388" class="flex items-start gap-4">
+                                <span data-id="389" class="step-bubble">4</span>
+                                <div data-id="390"><p data-id="391" class="text-warm-700 text-sm leading-relaxed">Open the downloaded <strong data-id="392">.dmg</strong> file.</p></div>
                             </li>
-                            <li data-id="395" class="flex items-start gap-4">
-                                <span data-id="396" class="step-bubble">5</span>
-                                <div data-id="397"><p data-id="398" class="text-warm-700 text-sm leading-relaxed">Drag the <strong data-id="399">PyCharm icon</strong> into the <strong data-id="400">Applications</strong> folder.</p></div>
+                            <li data-id="393" class="flex items-start gap-4">
+                                <span data-id="394" class="step-bubble">5</span>
+                                <div data-id="395"><p data-id="396" class="text-warm-700 text-sm leading-relaxed">Drag the <strong data-id="397">PyCharm icon</strong> into the <strong data-id="398">Applications</strong> folder.</p></div>
                             </li>
-                            <li data-id="401" class="flex items-start gap-4">
-                                <span data-id="402" class="step-bubble">6</span>
-                                <div data-id="403"><p data-id="404" class="text-warm-700 text-sm leading-relaxed">Open PyCharm from your <strong data-id="405">Applications</strong> folder or <strong data-id="406">Launchpad</strong>.</p></div>
+                            <li data-id="399" class="flex items-start gap-4">
+                                <span data-id="400" class="step-bubble">6</span>
+                                <div data-id="401"><p data-id="402" class="text-warm-700 text-sm leading-relaxed">Open PyCharm from your <strong data-id="403">Applications</strong> folder or <strong data-id="404">Launchpad</strong>.</p></div>
                             </li>
-                            <li data-id="407" class="flex items-start gap-4">
-                                <span data-id="408" class="step-bubble">7</span>
-                                <div data-id="409"><p data-id="410" class="text-warm-700 text-sm leading-relaxed">macOS may warn <strong data-id="411">"PyCharm is from the internet"</strong> — click <strong data-id="412">Open</strong>.</p></div>
+                            <li data-id="405" class="flex items-start gap-4">
+                                <span data-id="406" class="step-bubble">7</span>
+                                <div data-id="407"><p data-id="408" class="text-warm-700 text-sm leading-relaxed">macOS may warn <strong data-id="409">"PyCharm is from the internet"</strong> — click <strong data-id="410">Open</strong>.</p></div>
                             </li>
                         </ol>
                     </div>
                 </div>
 
-                <div data-id="413" class="callout callout-info mt-4">
-                    <span data-id="414" class="callout-icon">ℹ️</span>
-                    <div data-id="415">
-                        <p data-id="416" class="font-semibold text-sky-700 text-sm mb-1">First launch</p>
-                        <p data-id="417" class="text-sm text-warm-700">PyCharm may ask you to choose a UI theme (Light or Dark) and import settings. Choose whichever theme you like — it doesn't affect how programs run. Click <strong data-id="418">"Don't import settings"</strong> if asked.</p>
+                <div data-id="411" class="callout callout-info mt-4">
+                    <span data-id="412" class="callout-icon">ℹ️</span>
+                    <div data-id="413">
+                        <p data-id="414" class="font-semibold text-sky-700 text-sm mb-1">First launch</p>
+                        <p data-id="415" class="text-sm text-warm-700">PyCharm may ask you to choose a UI theme (Light or Dark) and import settings. Choose whichever theme you like — it doesn't affect how programs run. Click <strong data-id="416">"Don't import settings"</strong> if asked.</p>
                     </div>
                 </div>
             </section>
 
             <!-- ==================== SECTION 4: DOWNLOAD PROGRAMS ==================== -->
-            <section data-id="419" id="section-4" class="mb-16">
-                <div data-id="420" class="section-heading mb-6">
-                    <span data-id="421" class="text-3xl">⬇️</span>
-                    <h2 data-id="422" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 4: Download the GFTGU Programs from GitHub</h2>
+            <section data-id="417" id="section-4" class="mb-16">
+                <div data-id="418" class="section-heading mb-6">
+                    <span data-id="419" class="text-3xl">⬇️</span>
+                    <h2 data-id="420" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 4: Download the GFTGU Programs from GitHub</h2>
                 </div>
 
-                <div data-id="423" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                    <p data-id="424" class="text-warm-700 leading-relaxed mb-6">
-                        <strong data-id="425" class="text-navy-850">GitHub</strong> is a free website where programmers share their code — think of it as a library where you can download the GFTGU programs for free.
+                <div data-id="421" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                    <p data-id="422" class="text-warm-700 leading-relaxed mb-6">
+                        <strong data-id="423" class="text-navy-850">GitHub</strong> is a free website where programmers share their code — think of it as a library where you can download the GFTGU programs for free.
                     </p>
 
                     <!-- Step 4A -->
-                    <h3 data-id="426" class="text-base font-bold text-navy-850 mb-4 flex items-center gap-2">
-                        <span data-id="427" class="bg-sky-500 text-white text-xs font-bold px-2.5 py-1 rounded-lg">4A</span>
+                    <h3 data-id="424" class="text-base font-bold text-navy-850 mb-4 flex items-center gap-2">
+                        <span data-id="425" class="bg-sky-500 text-white text-xs font-bold px-2.5 py-1 rounded-lg">4A</span>
                         Download GFTGU-Programs
                     </h3>
-                    <ol data-id="428" class="space-y-4 mb-6">
-                        <li data-id="429" class="flex items-start gap-4">
-                            <span data-id="430" class="step-bubble">1</span>
-                            <div data-id="431">
-                                <p data-id="432" class="text-warm-700 text-sm leading-relaxed mb-2">Open your web browser and go to:</p>
-                                <a data-id="433" href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank" rel="noopener" class="block bg-sky-50 rounded-xl p-4 border border-sky-200 hover:bg-sky-100 transition-colors group">
-                                    <div data-id="434" class="flex items-center gap-3">
-                                        <i data-id="435" data-lucide="github" class="w-5 h-5 text-sky-600 flex-shrink-0"></i>
-                                        <div data-id="436">
-                                            <p data-id="437" class="text-sm font-semibold text-sky-700 group-hover:text-sky-800">github.com/tomyee3-org/GFTGU-Programs</p>
-                                            <p data-id="438" class="text-xs text-warm-500">Click to open in a new tab</p>
+                    <ol data-id="426" class="space-y-4 mb-6">
+                        <li data-id="427" class="flex items-start gap-4">
+                            <span data-id="428" class="step-bubble">1</span>
+                            <div data-id="429">
+                                <p data-id="430" class="text-warm-700 text-sm leading-relaxed mb-2">Open your web browser and go to:</p>
+                                <a data-id="431" href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank" rel="noopener" class="block bg-sky-50 rounded-xl p-4 border border-sky-200 hover:bg-sky-100 transition-colors group">
+                                    <div data-id="432" class="flex items-center gap-3">
+                                        <i data-id="433" data-lucide="github" class="w-5 h-5 text-sky-600 flex-shrink-0"></i>
+                                        <div data-id="434">
+                                            <p data-id="435" class="text-sm font-semibold text-sky-700 group-hover:text-sky-800">github.com/tomyee3-org/GFTGU-Programs</p>
+                                            <p data-id="436" class="text-xs text-warm-500">Click to open in a new tab</p>
                                         </div>
-                                        <i data-id="439" data-lucide="external-link" class="w-4 h-4 text-sky-400 ml-auto flex-shrink-0"></i>
+                                        <i data-id="437" data-lucide="external-link" class="w-4 h-4 text-sky-400 ml-auto flex-shrink-0"></i>
                                     </div>
                                 </a>
                             </div>
                         </li>
-                        <li data-id="440" class="flex items-start gap-4">
-                            <span data-id="441" class="step-bubble">2</span>
-                            <div data-id="442"><p data-id="443" class="text-warm-700 text-sm leading-relaxed">Click the green <strong data-id="444">"&lt; &gt; Code"</strong> button near the top right of the file list.</p></div>
+                        <li data-id="438" class="flex items-start gap-4">
+                            <span data-id="439" class="step-bubble">2</span>
+                            <div data-id="440"><p data-id="441" class="text-warm-700 text-sm leading-relaxed">Click the green <strong data-id="442">"&lt; &gt; Code"</strong> button near the top right of the file list.</p></div>
                         </li>
-                        <li data-id="445" class="flex items-start gap-4">
-                            <span data-id="446" class="step-bubble">3</span>
-                            <div data-id="447"><p data-id="448" class="text-warm-700 text-sm leading-relaxed">A small menu will drop down — click <strong data-id="449">"Download ZIP"</strong>.</p></div>
+                        <li data-id="443" class="flex items-start gap-4">
+                            <span data-id="444" class="step-bubble">3</span>
+                            <div data-id="445"><p data-id="446" class="text-warm-700 text-sm leading-relaxed">A small menu will drop down — click <strong data-id="447">"Download ZIP"</strong>.</p></div>
                         </li>
-                        <li data-id="450" class="flex items-start gap-4">
-                            <span data-id="451" class="step-bubble">4</span>
-                            <div data-id="452"><p data-id="453" class="text-warm-700 text-sm leading-relaxed">The file <strong data-id="454">"GFTGU-Programs-main.zip"</strong> will download to your Downloads folder.</p></div>
+                        <li data-id="448" class="flex items-start gap-4">
+                            <span data-id="449" class="step-bubble">4</span>
+                            <div data-id="450"><p data-id="451" class="text-warm-700 text-sm leading-relaxed">The file <strong data-id="452">"GFTGU-Programs-main.zip"</strong> will download to your Downloads folder.</p></div>
                         </li>
                     </ol>
 
                     <!-- Step 4B -->
-                    <h3 data-id="455" class="text-base font-bold text-navy-850 mb-4 flex items-center gap-2">
-                        <span data-id="456" class="bg-sky-500 text-white text-xs font-bold px-2.5 py-1 rounded-lg">4B</span>
+                    <h3 data-id="453" class="text-base font-bold text-navy-850 mb-4 flex items-center gap-2">
+                        <span data-id="454" class="bg-sky-500 text-white text-xs font-bold px-2.5 py-1 rounded-lg">4B</span>
                         Download GFTGU-Documentation
-                        <span data-id="457" class="text-xs font-normal text-warm-400 bg-warm-100 px-2 py-0.5 rounded-full ml-1">optional but recommended</span>
+                        <span data-id="455" class="text-xs font-normal text-warm-400 bg-warm-100 px-2 py-0.5 rounded-full ml-1">optional but recommended</span>
                     </h3>
-                    <ol data-id="458" class="space-y-4 mb-8">
-                        <li data-id="459" class="flex items-start gap-4">
-                            <span data-id="460" class="step-bubble">1</span>
-                            <div data-id="461">
-                                <p data-id="462" class="text-warm-700 text-sm leading-relaxed mb-2">Go to:</p>
-                                <a data-id="463" href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank" rel="noopener" class="block bg-sky-50 rounded-xl p-4 border border-sky-200 hover:bg-sky-100 transition-colors group">
-                                    <div data-id="464" class="flex items-center gap-3">
-                                        <i data-id="465" data-lucide="github" class="w-5 h-5 text-sky-600 flex-shrink-0"></i>
-                                        <div data-id="466">
-                                            <p data-id="467" class="text-sm font-semibold text-sky-700 group-hover:text-sky-800">github.com/tomyee3-org/GFTGU-Documentation</p>
-                                            <p data-id="468" class="text-xs text-warm-500">Click to open in a new tab</p>
+                    <ol data-id="456" class="space-y-4 mb-8">
+                        <li data-id="457" class="flex items-start gap-4">
+                            <span data-id="458" class="step-bubble">1</span>
+                            <div data-id="459">
+                                <p data-id="460" class="text-warm-700 text-sm leading-relaxed mb-2">Go to:</p>
+                                <a data-id="461" href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank" rel="noopener" class="block bg-sky-50 rounded-xl p-4 border border-sky-200 hover:bg-sky-100 transition-colors group">
+                                    <div data-id="462" class="flex items-center gap-3">
+                                        <i data-id="463" data-lucide="github" class="w-5 h-5 text-sky-600 flex-shrink-0"></i>
+                                        <div data-id="464">
+                                            <p data-id="465" class="text-sm font-semibold text-sky-700 group-hover:text-sky-800">github.com/tomyee3-org/GFTGU-Documentation</p>
+                                            <p data-id="466" class="text-xs text-warm-500">Click to open in a new tab</p>
                                         </div>
-                                        <i data-id="469" data-lucide="external-link" class="w-4 h-4 text-sky-400 ml-auto flex-shrink-0"></i>
+                                        <i data-id="467" data-lucide="external-link" class="w-4 h-4 text-sky-400 ml-auto flex-shrink-0"></i>
                                     </div>
                                 </a>
                             </div>
                         </li>
-                        <li data-id="470" class="flex items-start gap-4">
-                            <span data-id="471" class="step-bubble">2</span>
-                            <div data-id="472"><p data-id="473" class="text-warm-700 text-sm leading-relaxed">Click the green <strong data-id="474">"&lt; &gt; Code"</strong> button, then click <strong data-id="475">"Download ZIP"</strong>.</p></div>
+                        <li data-id="468" class="flex items-start gap-4">
+                            <span data-id="469" class="step-bubble">2</span>
+                            <div data-id="470"><p data-id="471" class="text-warm-700 text-sm leading-relaxed">Click the green <strong data-id="472">"&lt; &gt; Code"</strong> button, then click <strong data-id="473">"Download ZIP"</strong>.</p></div>
                         </li>
-                        <li data-id="476" class="flex items-start gap-4">
-                            <span data-id="477" class="step-bubble">3</span>
-                            <div data-id="478"><p data-id="479" class="text-warm-700 text-sm leading-relaxed">The file <strong data-id="480">"GFTGU-Documentation-main.zip"</strong> will download.</p></div>
+                        <li data-id="474" class="flex items-start gap-4">
+                            <span data-id="475" class="step-bubble">3</span>
+                            <div data-id="476"><p data-id="477" class="text-warm-700 text-sm leading-relaxed">The file <strong data-id="478">"GFTGU-Documentation-main.zip"</strong> will download.</p></div>
                         </li>
                     </ol>
 
                     <!-- Step 4C -->
-                    <h3 data-id="481" class="text-base font-bold text-navy-850 mb-4 flex items-center gap-2">
-                        <span data-id="482" class="bg-sky-500 text-white text-xs font-bold px-2.5 py-1 rounded-lg">4C</span>
+                    <h3 data-id="479" class="text-base font-bold text-navy-850 mb-4 flex items-center gap-2">
+                        <span data-id="480" class="bg-sky-500 text-white text-xs font-bold px-2.5 py-1 rounded-lg">4C</span>
                         Extract the ZIP Files
                     </h3>
 
                     <!-- WINDOWS -->
-                    <div data-id="483" class="os-win">
-                        <ol data-id="484" class="space-y-4">
-                            <li data-id="485" class="flex items-start gap-4">
-                                <span data-id="486" class="step-bubble">1</span>
-                                <div data-id="487"><p data-id="488" class="text-warm-700 text-sm leading-relaxed">Open <strong data-id="489">File Explorer</strong> and go to your <strong data-id="490">Downloads</strong> folder.</p></div>
+                    <div data-id="481" class="os-win">
+                        <ol data-id="482" class="space-y-4">
+                            <li data-id="483" class="flex items-start gap-4">
+                                <span data-id="484" class="step-bubble">1</span>
+                                <div data-id="485"><p data-id="486" class="text-warm-700 text-sm leading-relaxed">Open <strong data-id="487">File Explorer</strong> and go to your <strong data-id="488">Downloads</strong> folder.</p></div>
                             </li>
-                            <li data-id="491" class="flex items-start gap-4">
-                                <span data-id="492" class="step-bubble">2</span>
-                                <div data-id="493"><p data-id="494" class="text-warm-700 text-sm leading-relaxed">Right-click on <strong data-id="495">"GFTGU-Programs-main.zip"</strong>.</p></div>
+                            <li data-id="489" class="flex items-start gap-4">
+                                <span data-id="490" class="step-bubble">2</span>
+                                <div data-id="491"><p data-id="492" class="text-warm-700 text-sm leading-relaxed">Right-click on <strong data-id="493">"GFTGU-Programs-main.zip"</strong>.</p></div>
                             </li>
-                            <li data-id="496" class="flex items-start gap-4">
-                                <span data-id="497" class="step-bubble">3</span>
-                                <div data-id="498"><p data-id="499" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="500">"Extract All…"</strong></p></div>
+                            <li data-id="494" class="flex items-start gap-4">
+                                <span data-id="495" class="step-bubble">3</span>
+                                <div data-id="496"><p data-id="497" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="498">"Extract All…"</strong></p></div>
                             </li>
-                            <li data-id="501" class="flex items-start gap-4">
-                                <span data-id="502" class="step-bubble">4</span>
-                                <div data-id="503"><p data-id="504" class="text-warm-700 text-sm leading-relaxed">In the dialog that appears, note where the files will be extracted (e.g., <code data-id="505" class="bg-warm-100 px-1.5 py-0.5 rounded text-navy-850 font-mono text-xs">C:\Users\YourName\Downloads\GFTGU-Programs-main</code>). You can change this if you like.</p></div>
+                            <li data-id="499" class="flex items-start gap-4">
+                                <span data-id="500" class="step-bubble">4</span>
+                                <div data-id="501"><p data-id="502" class="text-warm-700 text-sm leading-relaxed">In the dialog that appears, note where the files will be extracted (e.g., <code data-id="503" class="bg-warm-100 px-1.5 py-0.5 rounded text-navy-850 font-mono text-xs">C:\Users\YourName\Downloads\GFTGU-Programs-main</code>). You can change this if you like.</p></div>
                             </li>
-                            <li data-id="506" class="flex items-start gap-4">
-                                <span data-id="507" class="step-bubble">5</span>
-                                <div data-id="508"><p data-id="509" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="510">"Extract"</strong>.</p></div>
+                            <li data-id="504" class="flex items-start gap-4">
+                                <span data-id="505" class="step-bubble">5</span>
+                                <div data-id="506"><p data-id="507" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="508">"Extract"</strong>.</p></div>
                             </li>
-                            <li data-id="511" class="flex items-start gap-4">
-                                <span data-id="512" class="step-bubble">6</span>
-                                <div data-id="513"><p data-id="514" class="text-warm-700 text-sm leading-relaxed">A new folder called <strong data-id="515">"GFTGU-Programs-main"</strong> will appear — this contains all the programs.</p></div>
+                            <li data-id="509" class="flex items-start gap-4">
+                                <span data-id="510" class="step-bubble">6</span>
+                                <div data-id="511"><p data-id="512" class="text-warm-700 text-sm leading-relaxed">A new folder called <strong data-id="513">"GFTGU-Programs-main"</strong> will appear — this contains all the programs.</p></div>
                             </li>
-                            <li data-id="516" class="flex items-start gap-4">
-                                <span data-id="517" class="step-bubble">7</span>
-                                <div data-id="518"><p data-id="519" class="text-warm-700 text-sm leading-relaxed">Repeat for <strong data-id="520">"GFTGU-Documentation-main.zip"</strong> if you downloaded it.</p></div>
+                            <li data-id="514" class="flex items-start gap-4">
+                                <span data-id="515" class="step-bubble">7</span>
+                                <div data-id="516"><p data-id="517" class="text-warm-700 text-sm leading-relaxed">Repeat for <strong data-id="518">"GFTGU-Documentation-main.zip"</strong> if you downloaded it.</p></div>
                             </li>
                         </ol>
                     </div>
 
                     <!-- macOS -->
-                    <div data-id="521" class="os-mac">
-                        <ol data-id="522" class="space-y-4">
-                            <li data-id="523" class="flex items-start gap-4">
-                                <span data-id="524" class="step-bubble">1</span>
-                                <div data-id="525"><p data-id="526" class="text-warm-700 text-sm leading-relaxed">Open <strong data-id="527">Finder</strong> and go to your <strong data-id="528">Downloads</strong> folder.</p></div>
+                    <div data-id="519" class="os-mac">
+                        <ol data-id="520" class="space-y-4">
+                            <li data-id="521" class="flex items-start gap-4">
+                                <span data-id="522" class="step-bubble">1</span>
+                                <div data-id="523"><p data-id="524" class="text-warm-700 text-sm leading-relaxed">Open <strong data-id="525">Finder</strong> and go to your <strong data-id="526">Downloads</strong> folder.</p></div>
                             </li>
-                            <li data-id="529" class="flex items-start gap-4">
-                                <span data-id="530" class="step-bubble">2</span>
-                                <div data-id="531"><p data-id="532" class="text-warm-700 text-sm leading-relaxed">Double-click <strong data-id="533">"GFTGU-Programs-main.zip"</strong> — macOS will automatically extract it.</p></div>
+                            <li data-id="527" class="flex items-start gap-4">
+                                <span data-id="528" class="step-bubble">2</span>
+                                <div data-id="529"><p data-id="530" class="text-warm-700 text-sm leading-relaxed">Double-click <strong data-id="531">"GFTGU-Programs-main.zip"</strong> — macOS will automatically extract it.</p></div>
                             </li>
-                            <li data-id="534" class="flex items-start gap-4">
-                                <span data-id="535" class="step-bubble">3</span>
-                                <div data-id="536"><p data-id="537" class="text-warm-700 text-sm leading-relaxed">A new folder called <strong data-id="538">"GFTGU-Programs-main"</strong> will appear in your Downloads folder — this contains all the programs.</p></div>
+                            <li data-id="532" class="flex items-start gap-4">
+                                <span data-id="533" class="step-bubble">3</span>
+                                <div data-id="534"><p data-id="535" class="text-warm-700 text-sm leading-relaxed">A new folder called <strong data-id="536">"GFTGU-Programs-main"</strong> will appear in your Downloads folder — this contains all the programs.</p></div>
                             </li>
-                            <li data-id="539" class="flex items-start gap-4">
-                                <span data-id="540" class="step-bubble">4</span>
-                                <div data-id="541"><p data-id="542" class="text-warm-700 text-sm leading-relaxed">Repeat for <strong data-id="543">"GFTGU-Documentation-main.zip"</strong> if you downloaded it.</p></div>
+                            <li data-id="537" class="flex items-start gap-4">
+                                <span data-id="538" class="step-bubble">4</span>
+                                <div data-id="539"><p data-id="540" class="text-warm-700 text-sm leading-relaxed">Repeat for <strong data-id="541">"GFTGU-Documentation-main.zip"</strong> if you downloaded it.</p></div>
                             </li>
                         </ol>
                     </div>
                 </div>
 
-                <div data-id="544" class="callout callout-tip">
-                    <span data-id="545" class="callout-icon">💡</span>
-                    <div data-id="546">
-                        <p data-id="547" class="font-semibold text-emerald-700 text-sm mb-1">Tip</p>
-                        <p data-id="548" class="text-sm text-warm-700">We recommend moving the <strong data-id="549">GFTGU-Programs-main</strong> folder somewhere easy to find, like your <strong data-id="550">Desktop</strong> or <strong data-id="551">Documents</strong> folder.</p>
+                <div data-id="542" class="callout callout-tip">
+                    <span data-id="543" class="callout-icon">💡</span>
+                    <div data-id="544">
+                        <p data-id="545" class="font-semibold text-emerald-700 text-sm mb-1">Tip</p>
+                        <p data-id="546" class="text-sm text-warm-700">We recommend moving the <strong data-id="547">GFTGU-Programs-main</strong> folder somewhere easy to find, like your <strong data-id="548">Desktop</strong> or <strong data-id="549">Documents</strong> folder.</p>
                     </div>
                 </div>
             </section>
 
             <!-- ==================== SECTION 5: OPEN IN PYCHARM ==================== -->
-            <section data-id="552" id="section-5" class="mb-16">
-                <div data-id="553" class="section-heading mb-6">
-                    <span data-id="554" class="text-3xl">📂</span>
-                    <h2 data-id="555" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 5: Open a Program in PyCharm</h2>
+            <section data-id="550" id="section-5" class="mb-16">
+                <div data-id="551" class="section-heading mb-6">
+                    <span data-id="552" class="text-3xl">📂</span>
+                    <h2 data-id="553" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 5: Open a Program in PyCharm</h2>
                 </div>
 
-                <div data-id="556" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                    <p data-id="557" class="text-warm-700 leading-relaxed mb-6">
-                        Each program lives in its own subfolder. For example, the EarthOrbit program is inside the <strong data-id="558" class="text-navy-850">"EarthOrbit"</strong> folder within GFTGU-Programs-main.
+                <div data-id="554" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                    <p data-id="555" class="text-warm-700 leading-relaxed mb-6">
+                        Each program lives in its own subfolder. For example, the EarthOrbit program is inside the <strong data-id="556" class="text-navy-850">"EarthOrbit"</strong> folder within GFTGU-Programs-main.
                     </p>
 
                     <!-- WINDOWS -->
-                    <div data-id="559" class="os-win">
-                        <ol data-id="560" class="space-y-5">
-                            <li data-id="561" class="flex items-start gap-4">
-                                <span data-id="562" class="step-bubble">1</span>
-                                <div data-id="563"><p data-id="564" class="text-warm-700 text-sm leading-relaxed">Open <strong data-id="565">PyCharm</strong> (from the Start menu).</p></div>
+                    <div data-id="557" class="os-win">
+                        <ol data-id="558" class="space-y-5">
+                            <li data-id="559" class="flex items-start gap-4">
+                                <span data-id="560" class="step-bubble">1</span>
+                                <div data-id="561"><p data-id="562" class="text-warm-700 text-sm leading-relaxed">Open <strong data-id="563">PyCharm</strong> (from the Start menu).</p></div>
                             </li>
-                            <li data-id="566" class="flex items-start gap-4">
-                                <span data-id="567" class="step-bubble">2</span>
-                                <div data-id="568"><p data-id="569" class="text-warm-700 text-sm leading-relaxed">On the Welcome screen, click <strong data-id="570">"Open"</strong>.</p></div>
+                            <li data-id="564" class="flex items-start gap-4">
+                                <span data-id="565" class="step-bubble">2</span>
+                                <div data-id="566"><p data-id="567" class="text-warm-700 text-sm leading-relaxed">On the Welcome screen, click <strong data-id="568">"Open"</strong>.</p></div>
                             </li>
-                            <li data-id="571" class="flex items-start gap-4">
-                                <span data-id="572" class="step-bubble">3</span>
-                                <div data-id="573"><p data-id="574" class="text-warm-700 text-sm leading-relaxed">Navigate to your <strong data-id="575">GFTGU-Programs-main</strong> folder (e.g., Downloads → GFTGU-Programs-main).</p></div>
+                            <li data-id="569" class="flex items-start gap-4">
+                                <span data-id="570" class="step-bubble">3</span>
+                                <div data-id="571"><p data-id="572" class="text-warm-700 text-sm leading-relaxed">Navigate to your <strong data-id="573">GFTGU-Programs-main</strong> folder (e.g., Downloads → GFTGU-Programs-main).</p></div>
                             </li>
-                            <li data-id="576" class="flex items-start gap-4">
-                                <span data-id="577" class="step-bubble">4</span>
-                                <div data-id="578"><p data-id="579" class="text-warm-700 text-sm leading-relaxed">Click on a program folder — for example, click <strong data-id="580">"EarthOrbit"</strong>.</p></div>
+                            <li data-id="574" class="flex items-start gap-4">
+                                <span data-id="575" class="step-bubble">4</span>
+                                <div data-id="576"><p data-id="577" class="text-warm-700 text-sm leading-relaxed">Click on a program folder — for example, click <strong data-id="578">"EarthOrbit"</strong>.</p></div>
                             </li>
-                            <li data-id="581" class="flex items-start gap-4">
-                                <span data-id="582" class="step-bubble">5</span>
-                                <div data-id="583"><p data-id="584" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="585">"OK"</strong>.</p></div>
+                            <li data-id="579" class="flex items-start gap-4">
+                                <span data-id="580" class="step-bubble">5</span>
+                                <div data-id="581"><p data-id="582" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="583">"OK"</strong>.</p></div>
                             </li>
-                            <li data-id="586" class="flex items-start gap-4">
-                                <span data-id="587" class="step-bubble">6</span>
-                                <div data-id="588"><p data-id="589" class="text-warm-700 text-sm leading-relaxed">PyCharm may ask <strong data-id="590">"Trust and Open Project?"</strong> — click <strong data-id="591">"Trust Project"</strong>.</p></div>
+                            <li data-id="584" class="flex items-start gap-4">
+                                <span data-id="585" class="step-bubble">6</span>
+                                <div data-id="586"><p data-id="587" class="text-warm-700 text-sm leading-relaxed">PyCharm may ask <strong data-id="588">"Trust and Open Project?"</strong> — click <strong data-id="589">"Trust Project"</strong>.</p></div>
                             </li>
-                            <li data-id="592" class="flex items-start gap-4">
-                                <span data-id="593" class="step-bubble">7</span>
-                                <div data-id="594"><p data-id="595" class="text-warm-700 text-sm leading-relaxed">The program files will appear in the left panel (the Project panel). You'll see several files ending in <strong data-id="596">.py</strong> — that's normal, each program is split into a few files. The one you actually run is always called <strong data-id="596b">main.py</strong>, regardless of which program folder you're in.</p></div>
+                            <li data-id="590" class="flex items-start gap-4">
+                                <span data-id="591" class="step-bubble">7</span>
+                                <div data-id="592"><p data-id="593" class="text-warm-700 text-sm leading-relaxed">The program files will appear in the left panel (the Project panel). Look for the file ending in <strong data-id="594">.py</strong> — that's the Python program file.</p></div>
                             </li>
                         </ol>
                     </div>
 
                     <!-- macOS -->
-                    <div data-id="597" class="os-mac">
-                        <ol data-id="598" class="space-y-5">
-                            <li data-id="599" class="flex items-start gap-4">
-                                <span data-id="600" class="step-bubble">1</span>
-                                <div data-id="601"><p data-id="602" class="text-warm-700 text-sm leading-relaxed">Open <strong data-id="603">PyCharm</strong> (from Applications or Launchpad).</p></div>
+                    <div data-id="595" class="os-mac">
+                        <ol data-id="596" class="space-y-5">
+                            <li data-id="597" class="flex items-start gap-4">
+                                <span data-id="598" class="step-bubble">1</span>
+                                <div data-id="599"><p data-id="600" class="text-warm-700 text-sm leading-relaxed">Open <strong data-id="601">PyCharm</strong> (from Applications or Launchpad).</p></div>
                             </li>
-                            <li data-id="604" class="flex items-start gap-4">
-                                <span data-id="605" class="step-bubble">2</span>
-                                <div data-id="606"><p data-id="607" class="text-warm-700 text-sm leading-relaxed">On the Welcome screen, click <strong data-id="608">"Open"</strong>.</p></div>
+                            <li data-id="602" class="flex items-start gap-4">
+                                <span data-id="603" class="step-bubble">2</span>
+                                <div data-id="604"><p data-id="605" class="text-warm-700 text-sm leading-relaxed">On the Welcome screen, click <strong data-id="606">"Open"</strong>.</p></div>
                             </li>
-                            <li data-id="609" class="flex items-start gap-4">
-                                <span data-id="610" class="step-bubble">3</span>
-                                <div data-id="611"><p data-id="612" class="text-warm-700 text-sm leading-relaxed">Navigate to your <strong data-id="613">GFTGU-Programs-main</strong> folder (e.g., Downloads → GFTGU-Programs-main).</p></div>
+                            <li data-id="607" class="flex items-start gap-4">
+                                <span data-id="608" class="step-bubble">3</span>
+                                <div data-id="609"><p data-id="610" class="text-warm-700 text-sm leading-relaxed">Navigate to your <strong data-id="611">GFTGU-Programs-main</strong> folder (e.g., Downloads → GFTGU-Programs-main).</p></div>
                             </li>
-                            <li data-id="614" class="flex items-start gap-4">
-                                <span data-id="615" class="step-bubble">4</span>
-                                <div data-id="616"><p data-id="617" class="text-warm-700 text-sm leading-relaxed">Click on a program folder — for example, click <strong data-id="618">"EarthOrbit"</strong>.</p></div>
+                            <li data-id="612" class="flex items-start gap-4">
+                                <span data-id="613" class="step-bubble">4</span>
+                                <div data-id="614"><p data-id="615" class="text-warm-700 text-sm leading-relaxed">Click on a program folder — for example, click <strong data-id="616">"EarthOrbit"</strong>.</p></div>
                             </li>
-                            <li data-id="619" class="flex items-start gap-4">
-                                <span data-id="620" class="step-bubble">5</span>
-                                <div data-id="621"><p data-id="622" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="623">"OK"</strong>.</p></div>
+                            <li data-id="617" class="flex items-start gap-4">
+                                <span data-id="618" class="step-bubble">5</span>
+                                <div data-id="619"><p data-id="620" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="621">"OK"</strong>.</p></div>
                             </li>
-                            <li data-id="624" class="flex items-start gap-4">
-                                <span data-id="625" class="step-bubble">6</span>
-                                <div data-id="626"><p data-id="627" class="text-warm-700 text-sm leading-relaxed">PyCharm may ask <strong data-id="628">"Trust and Open Project?"</strong> — click <strong data-id="629">"Trust Project"</strong>.</p></div>
+                            <li data-id="622" class="flex items-start gap-4">
+                                <span data-id="623" class="step-bubble">6</span>
+                                <div data-id="624"><p data-id="625" class="text-warm-700 text-sm leading-relaxed">PyCharm may ask <strong data-id="626">"Trust and Open Project?"</strong> — click <strong data-id="627">"Trust Project"</strong>.</p></div>
                             </li>
-                            <li data-id="630" class="flex items-start gap-4">
-                                <span data-id="631" class="step-bubble">7</span>
-                                <div data-id="632"><p data-id="633" class="text-warm-700 text-sm leading-relaxed">The program files will appear in the left panel (the Project panel). You'll see several files ending in <strong data-id="634">.py</strong> — that's normal, each program is split into a few files. The one you actually run is always called <strong data-id="634b">main.py</strong>, regardless of which program folder you're in.</p></div>
+                            <li data-id="628" class="flex items-start gap-4">
+                                <span data-id="629" class="step-bubble">7</span>
+                                <div data-id="630"><p data-id="631" class="text-warm-700 text-sm leading-relaxed">The program files will appear in the left panel (the Project panel). Look for the file ending in <strong data-id="632">.py</strong> — that's the Python program file.</p></div>
                             </li>
                         </ol>
                     </div>
                 </div>
 
-                <div data-id="635" class="callout callout-tip">
-                    <span data-id="636" class="callout-icon">💡</span>
-                    <div data-id="637">
-                        <p data-id="638" class="font-semibold text-emerald-700 text-sm mb-1">Tip</p>
-                        <p data-id="639" class="text-sm text-warm-700">You only need to open one program folder at a time. Each program is self-contained in its own folder.</p>
+                <div data-id="633" class="callout callout-tip">
+                    <span data-id="634" class="callout-icon">💡</span>
+                    <div data-id="635">
+                        <p data-id="636" class="font-semibold text-emerald-700 text-sm mb-1">Tip</p>
+                        <p data-id="637" class="text-sm text-warm-700">You only need to open one program folder at a time. Each program is self-contained in its own folder.</p>
                     </div>
                 </div>
             </section>
 
             <!-- ==================== SECTION 6: SET UP INTERPRETER ==================== -->
-            <section data-id="640" id="section-6" class="mb-16">
-                <div data-id="641" class="section-heading mb-6">
-                    <span data-id="642" class="text-3xl">⚙️</span>
-                    <h2 data-id="643" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 6: Set Up the Python Interpreter in PyCharm</h2>
+            <section data-id="638" id="section-6" class="mb-16">
+                <div data-id="639" class="section-heading mb-6">
+                    <span data-id="640" class="text-3xl">⚙️</span>
+                    <h2 data-id="641" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 6: Set Up the Python Interpreter in PyCharm</h2>
                 </div>
 
-                <div data-id="644" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                    <p data-id="645" class="text-warm-700 leading-relaxed mb-6">
+                <div data-id="642" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                    <p data-id="643" class="text-warm-700 leading-relaxed mb-6">
                         This is a one-time setup. PyCharm needs to know which Python installation to use. Think of it as introducing PyCharm to the Python engine you installed in Step 1.
                     </p>
 
                     <!-- WINDOWS -->
-                    <div data-id="646" class="os-win">
-                        <ol data-id="647" class="space-y-5">
-                            <li data-id="648" class="flex items-start gap-4">
-                                <span data-id="649" class="step-bubble">1</span>
-                                <div data-id="650"><p data-id="651" class="text-warm-700 text-sm leading-relaxed">In PyCharm, go to <strong data-id="652">File → Settings</strong> (or press <strong data-id="653">Ctrl+Alt+S</strong>).</p></div>
+                    <div data-id="644" class="os-win">
+                        <ol data-id="645" class="space-y-5">
+                            <li data-id="646" class="flex items-start gap-4">
+                                <span data-id="647" class="step-bubble">1</span>
+                                <div data-id="648"><p data-id="649" class="text-warm-700 text-sm leading-relaxed">In PyCharm, go to <strong data-id="650">File → Settings</strong> (or press <strong data-id="651">Ctrl+Alt+S</strong>).</p></div>
                             </li>
-                            <li data-id="654" class="flex items-start gap-4">
-                                <span data-id="655" class="step-bubble">2</span>
-                                <div data-id="656"><p data-id="657" class="text-warm-700 text-sm leading-relaxed">In the left panel, click <strong data-id="658">"Project: [folder name]"</strong> → <strong data-id="659">"Python Interpreter"</strong>.</p></div>
+                            <li data-id="652" class="flex items-start gap-4">
+                                <span data-id="653" class="step-bubble">2</span>
+                                <div data-id="654"><p data-id="655" class="text-warm-700 text-sm leading-relaxed">In the left panel, click <strong data-id="656">"Project: [folder name]"</strong> → <strong data-id="657">"Python Interpreter"</strong>.</p></div>
                             </li>
-                            <li data-id="660" class="flex items-start gap-4">
-                                <span data-id="661" class="step-bubble">3</span>
-                                <div data-id="662"><p data-id="663" class="text-warm-700 text-sm leading-relaxed">Click the gear icon ⚙ at the top right → <strong data-id="664">"Add Interpreter"</strong> → <strong data-id="665">"Add Local Interpreter…"</strong></p></div>
+                            <li data-id="658" class="flex items-start gap-4">
+                                <span data-id="659" class="step-bubble">3</span>
+                                <div data-id="660"><p data-id="661" class="text-warm-700 text-sm leading-relaxed">Click the gear icon ⚙ at the top right → <strong data-id="662">"Add Interpreter"</strong> → <strong data-id="663">"Add Local Interpreter…"</strong></p></div>
                             </li>
-                            <li data-id="666" class="flex items-start gap-4">
-                                <span data-id="667" class="step-bubble">4</span>
-                                <div data-id="668"><p data-id="669" class="text-warm-700 text-sm leading-relaxed">Choose <strong data-id="670">"System Interpreter"</strong> on the left.</p></div>
+                            <li data-id="664" class="flex items-start gap-4">
+                                <span data-id="665" class="step-bubble">4</span>
+                                <div data-id="666"><p data-id="667" class="text-warm-700 text-sm leading-relaxed">Choose <strong data-id="668">"System Interpreter"</strong> on the left.</p></div>
                             </li>
-                            <li data-id="671" class="flex items-start gap-4">
-                                <span data-id="672" class="step-bubble">5</span>
-                                <div data-id="673"><p data-id="674" class="text-warm-700 text-sm leading-relaxed">PyCharm should automatically find your Python installation. If you see a path ending in <strong data-id="675">"python.exe"</strong>, that's correct.</p></div>
+                            <li data-id="669" class="flex items-start gap-4">
+                                <span data-id="670" class="step-bubble">5</span>
+                                <div data-id="671"><p data-id="672" class="text-warm-700 text-sm leading-relaxed">PyCharm should automatically find your Python installation. If you see a path ending in <strong data-id="673">"python.exe"</strong>, that's correct.</p></div>
                             </li>
-                            <li data-id="676" class="flex items-start gap-4">
-                                <span data-id="677" class="step-bubble">6</span>
-                                <div data-id="678"><p data-id="679" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="680">OK</strong>, then <strong data-id="681">OK</strong> again.</p></div>
+                            <li data-id="674" class="flex items-start gap-4">
+                                <span data-id="675" class="step-bubble">6</span>
+                                <div data-id="676"><p data-id="677" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="678">OK</strong>, then <strong data-id="679">OK</strong> again.</p></div>
                             </li>
                         </ol>
                     </div>
 
                     <!-- macOS -->
-                    <div data-id="682" class="os-mac">
-                        <ol data-id="683" class="space-y-5">
-                            <li data-id="684" class="flex items-start gap-4">
-                                <span data-id="685" class="step-bubble">1</span>
-                                <div data-id="686"><p data-id="687" class="text-warm-700 text-sm leading-relaxed">In PyCharm, go to <strong data-id="688">PyCharm → Settings</strong> (or press <strong data-id="689">Cmd+,</strong>).</p></div>
+                    <div data-id="680" class="os-mac">
+                        <ol data-id="681" class="space-y-5">
+                            <li data-id="682" class="flex items-start gap-4">
+                                <span data-id="683" class="step-bubble">1</span>
+                                <div data-id="684"><p data-id="685" class="text-warm-700 text-sm leading-relaxed">In PyCharm, go to <strong data-id="686">PyCharm → Settings</strong> (or press <strong data-id="687">Cmd+,</strong>).</p></div>
                             </li>
-                            <li data-id="690" class="flex items-start gap-4">
-                                <span data-id="691" class="step-bubble">2</span>
-                                <div data-id="692"><p data-id="693" class="text-warm-700 text-sm leading-relaxed">In the left panel, click <strong data-id="694">"Project: [folder name]"</strong> → <strong data-id="695">"Python Interpreter"</strong>.</p></div>
+                            <li data-id="688" class="flex items-start gap-4">
+                                <span data-id="689" class="step-bubble">2</span>
+                                <div data-id="690"><p data-id="691" class="text-warm-700 text-sm leading-relaxed">In the left panel, click <strong data-id="692">"Project: [folder name]"</strong> → <strong data-id="693">"Python Interpreter"</strong>.</p></div>
                             </li>
-                            <li data-id="696" class="flex items-start gap-4">
-                                <span data-id="697" class="step-bubble">3</span>
-                                <div data-id="698"><p data-id="699" class="text-warm-700 text-sm leading-relaxed">Click the gear icon ⚙ at the top right → <strong data-id="700">"Add Interpreter"</strong> → <strong data-id="701">"Add Local Interpreter…"</strong></p></div>
+                            <li data-id="694" class="flex items-start gap-4">
+                                <span data-id="695" class="step-bubble">3</span>
+                                <div data-id="696"><p data-id="697" class="text-warm-700 text-sm leading-relaxed">Click the gear icon ⚙ at the top right → <strong data-id="698">"Add Interpreter"</strong> → <strong data-id="699">"Add Local Interpreter…"</strong></p></div>
                             </li>
-                            <li data-id="702" class="flex items-start gap-4">
-                                <span data-id="703" class="step-bubble">4</span>
-                                <div data-id="704"><p data-id="705" class="text-warm-700 text-sm leading-relaxed">Choose <strong data-id="706">"System Interpreter"</strong> on the left.</p></div>
+                            <li data-id="700" class="flex items-start gap-4">
+                                <span data-id="701" class="step-bubble">4</span>
+                                <div data-id="702"><p data-id="703" class="text-warm-700 text-sm leading-relaxed">Choose <strong data-id="704">"System Interpreter"</strong> on the left.</p></div>
                             </li>
-                            <li data-id="707" class="flex items-start gap-4">
-                                <span data-id="708" class="step-bubble">5</span>
-                                <div data-id="709"><p data-id="710" class="text-warm-700 text-sm leading-relaxed">PyCharm should automatically find your Python installation. If you see a path ending in <strong data-id="711">"python3"</strong>, that's correct.</p></div>
+                            <li data-id="705" class="flex items-start gap-4">
+                                <span data-id="706" class="step-bubble">5</span>
+                                <div data-id="707"><p data-id="708" class="text-warm-700 text-sm leading-relaxed">PyCharm should automatically find your Python installation. If you see a path ending in <strong data-id="709">"python3"</strong>, that's correct.</p></div>
                             </li>
-                            <li data-id="712" class="flex items-start gap-4">
-                                <span data-id="713" class="step-bubble">6</span>
-                                <div data-id="714"><p data-id="715" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="716">OK</strong>, then <strong data-id="717">OK</strong> again.</p></div>
+                            <li data-id="710" class="flex items-start gap-4">
+                                <span data-id="711" class="step-bubble">6</span>
+                                <div data-id="712"><p data-id="713" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="714">OK</strong>, then <strong data-id="715">OK</strong> again.</p></div>
                             </li>
                         </ol>
                     </div>
                 </div>
 
-                <div data-id="718" class="callout callout-info">
-                    <span data-id="719" class="callout-icon">ℹ️</span>
-                    <div data-id="720">
-                        <p data-id="721" class="font-semibold text-sky-700 text-sm mb-1">Note</p>
-                        <p data-id="722" class="text-sm text-warm-700">You may need to repeat this step the first time you open a new program folder. After the first time, PyCharm usually remembers your interpreter settings.</p>
+                <div data-id="716" class="callout callout-info">
+                    <span data-id="717" class="callout-icon">ℹ️</span>
+                    <div data-id="718">
+                        <p data-id="719" class="font-semibold text-sky-700 text-sm mb-1">Note</p>
+                        <p data-id="720" class="text-sm text-warm-700">You may need to repeat this step the first time you open a new program folder. After the first time, PyCharm usually remembers your interpreter settings.</p>
                     </div>
                 </div>
             </section>
 
             <!-- ==================== SECTION 7: RUN A PROGRAM ==================== -->
-            <section data-id="723" id="section-7" class="mb-16">
-                <div data-id="724" class="section-heading mb-6">
-                    <span data-id="725" class="text-3xl">▶️</span>
-                    <h2 data-id="726" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 7: Run a Program</h2>
+            <section data-id="721" id="section-7" class="mb-16">
+                <div data-id="722" class="section-heading mb-6">
+                    <span data-id="723" class="text-3xl">▶️</span>
+                    <h2 data-id="724" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 7: Run a Program</h2>
                 </div>
 
-                <div data-id="727" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                    <ol data-id="728" class="space-y-5">
-                        <li data-id="729" class="flex items-start gap-4">
-                            <span data-id="730" class="step-bubble">1</span>
-                            <div data-id="731"><p data-id="732" class="text-warm-700 text-sm leading-relaxed">In PyCharm's Project panel (the left side), find <strong data-id="733">main.py</strong> — this is always the file to run, no matter which program folder you're in. (You'll see other <strong data-id="733b">.py</strong> files alongside it, like <strong data-id="733c">driver_*.py</strong> or <strong data-id="733d">physics_*.py</strong> — those are supporting files that <strong data-id="733e">main.py</strong> uses automatically; you never need to open or run them directly.)</p></div>
+                <div data-id="725" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                    <ol data-id="726" class="space-y-5">
+                        <li data-id="727" class="flex items-start gap-4">
+                            <span data-id="728" class="step-bubble">1</span>
+                            <div data-id="729"><p data-id="730" class="text-warm-700 text-sm leading-relaxed">In PyCharm's Project panel (the left side), find the <strong data-id="731">.py</strong> file (for example, <strong data-id="732">"EarthOrbit.py"</strong>).</p></div>
                         </li>
-                        <li data-id="735" class="flex items-start gap-4">
-                            <span data-id="736" class="step-bubble">2</span>
-                            <div data-id="737"><p data-id="738" class="text-warm-700 text-sm leading-relaxed">Double-click it to open it in the editor — you'll see the program code displayed. You don't need to understand the code; you just need to run it.</p></div>
+                        <li data-id="733" class="flex items-start gap-4">
+                            <span data-id="734" class="step-bubble">2</span>
+                            <div data-id="735"><p data-id="736" class="text-warm-700 text-sm leading-relaxed">Double-click it to open it in the editor — you'll see the program code displayed. You don't need to understand the code; you just need to run it.</p></div>
                         </li>
-                        <li data-id="739" class="flex items-start gap-4">
-                            <span data-id="740" class="step-bubble">3</span>
-                            <div data-id="741"><p data-id="742" class="text-warm-700 text-sm leading-relaxed">To run the program, do <strong data-id="743">either</strong> of these:
-                                <br data-id="744"/><strong data-id="745">Option A:</strong> Click the green <strong data-id="746">▶ Play</strong> button in the top-right toolbar.
-                                <br data-id="747"/><strong data-id="748">Option B:</strong> Right-click <strong data-id="749b">main.py</strong> in the Project panel and choose <strong data-id="749">"Run 'main'"</strong>.</p></div>
+                        <li data-id="737" class="flex items-start gap-4">
+                            <span data-id="738" class="step-bubble">3</span>
+                            <div data-id="739"><p data-id="740" class="text-warm-700 text-sm leading-relaxed">To run the program, do <strong data-id="741">either</strong> of these:
+                                <br data-id="742"/><strong data-id="743">Option A:</strong> Click the green <strong data-id="744">▶ Play</strong> button in the top-right toolbar.
+                                <br data-id="745"/><strong data-id="746">Option B:</strong> Right-click the .py file in the Project panel and choose <strong data-id="747">"Run 'EarthOrbit'"</strong>.</p></div>
                         </li>
-                        <li data-id="750" class="flex items-start gap-4">
-                            <span data-id="751" class="step-bubble">4</span>
-                            <div data-id="752"><p data-id="753" class="text-warm-700 text-sm leading-relaxed">A panel will open at the bottom of PyCharm — this is the <strong data-id="754">"Run"</strong> panel where the program's output appears.</p></div>
+                        <li data-id="748" class="flex items-start gap-4">
+                            <span data-id="749" class="step-bubble">4</span>
+                            <div data-id="750"><p data-id="751" class="text-warm-700 text-sm leading-relaxed">A panel will open at the bottom of PyCharm — this is the <strong data-id="752">"Run"</strong> panel where the program's output appears.</p></div>
                         </li>
-                        <li data-id="755" class="flex items-start gap-4">
-                            <span data-id="756" class="step-bubble">5</span>
-                            <div data-id="757"><p data-id="758" class="text-warm-700 text-sm leading-relaxed">Many programs will open a <strong data-id="759">separate graph window</strong> showing the simulation results — this is normal and expected!</p></div>
+                        <li data-id="753" class="flex items-start gap-4">
+                            <span data-id="754" class="step-bubble">5</span>
+                            <div data-id="755"><p data-id="756" class="text-warm-700 text-sm leading-relaxed">Many programs will open a <strong data-id="757">separate graph window</strong> showing the simulation results — this is normal and expected!</p></div>
                         </li>
-                        <li data-id="760" class="flex items-start gap-4">
-                            <span data-id="761" class="step-bubble">6</span>
-                            <div data-id="762"><p data-id="763" class="text-warm-700 text-sm leading-relaxed">To stop a program: click the red <strong data-id="764">■ Stop</strong> button in the Run panel.</p></div>
+                        <li data-id="758" class="flex items-start gap-4">
+                            <span data-id="759" class="step-bubble">6</span>
+                            <div data-id="760"><p data-id="761" class="text-warm-700 text-sm leading-relaxed">To stop a program: click the red <strong data-id="762">■ Stop</strong> button in the Run panel.</p></div>
                         </li>
                     </ol>
                 </div>
 
-                <div data-id="765" class="callout callout-success mb-4">
-                    <span data-id="766" class="callout-icon">✅</span>
-                    <div data-id="767">
-                        <p data-id="768" class="font-semibold text-emerald-700 text-sm mb-1">🎉 Success!</p>
-                        <p data-id="769" class="text-sm text-warm-700">If a graph window pops up — <strong data-id="770">congratulations!</strong> The program is running successfully. You're now exploring physics simulations from <em data-id="771">Gravity From the Ground Up</em>.</p>
+                <div data-id="763" class="callout callout-success mb-4">
+                    <span data-id="764" class="callout-icon">✅</span>
+                    <div data-id="765">
+                        <p data-id="766" class="font-semibold text-emerald-700 text-sm mb-1">🎉 Success!</p>
+                        <p data-id="767" class="text-sm text-warm-700">If a graph window pops up — <strong data-id="768">congratulations!</strong> The program is running successfully. You're now exploring physics simulations from <em data-id="769">Gravity From the Ground Up</em>.</p>
                     </div>
                 </div>
 
-                <div data-id="772" class="callout callout-trouble">
-                    <span data-id="773" class="callout-icon">🔧</span>
-                    <div data-id="774">
-                        <p data-id="775" class="font-semibold text-rose-700 text-sm mb-1">Troubleshooting</p>
-                        <p data-id="776" class="text-sm text-warm-700">If you see an error in red text in the Run panel mentioning <strong data-id="777">"ModuleNotFoundError: No module named 'numpy'"</strong> (or matplotlib), that means the packages weren't installed correctly. Go back to <strong data-id="778">Section 2</strong> and follow those steps again. Make sure you're using the same Python installation that PyCharm is configured to use.</p>
+                <div data-id="770" class="callout callout-trouble">
+                    <span data-id="771" class="callout-icon">🔧</span>
+                    <div data-id="772">
+                        <p data-id="773" class="font-semibold text-rose-700 text-sm mb-1">Troubleshooting</p>
+                        <p data-id="774" class="text-sm text-warm-700">If you see an error in red text in the Run panel mentioning <strong data-id="775">"ModuleNotFoundError: No module named 'numpy'"</strong> (or matplotlib), that means the packages weren't installed correctly. Go back to <strong data-id="776">Section 2</strong> and follow those steps again. Make sure you're using the same Python installation that PyCharm is configured to use.</p>
                     </div>
                 </div>
             </section>
 
             <!-- ==================== SECTION 8: READING THE DOCS ==================== -->
-            <section data-id="779" id="section-8" class="mb-16">
-                <div data-id="780" class="section-heading mb-6">
-                    <span data-id="781" class="text-3xl">📖</span>
-                    <h2 data-id="782" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 8: Reading the Documentation</h2>
+            <section data-id="777" id="section-8" class="mb-16">
+                <div data-id="778" class="section-heading mb-6">
+                    <span data-id="779" class="text-3xl">📖</span>
+                    <h2 data-id="780" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 8: Reading the Documentation</h2>
                 </div>
 
-                <div data-id="783" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                    <p data-id="784" class="text-warm-700 leading-relaxed mb-4">
-                        If you downloaded the GFTGU-Documentation folder (Step 4B), you have detailed help files for each program. Each subfolder contains an HTML file that explains the physics, the math, and the inputs/outputs of the program. To read it, simply navigate to the matching folder and <strong data-id="785">double-click the .html file</strong> — it will open in your web browser.
+                <div data-id="781" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                    <p data-id="782" class="text-warm-700 leading-relaxed mb-4">
+                        If you downloaded the GFTGU-Documentation folder (Step 4B), you have detailed help files for each program. Each subfolder contains an HTML file that explains the physics, the math, and the inputs/outputs of the program. To read it, simply navigate to the matching folder and <strong data-id="783">double-click the .html file</strong> — it will open in your web browser.
                     </p>
 
-                    <h3 data-id="786" class="text-base font-bold text-navy-850 mb-3 mt-6">Documentation Folders → Programs</h3>
-                    <div data-id="787" class="overflow-x-auto">
-                        <table data-id="788" class="ref-table w-full text-sm rounded-xl overflow-hidden">
-                            <thead data-id="789">
-                                <tr data-id="790">
-                                    <th data-id="791" class="text-left px-4 py-3 font-semibold text-sm">Documentation Folder</th>
-                                    <th data-id="792" class="text-left px-4 py-3 font-semibold text-sm">Program</th>
+                    <h3 data-id="784" class="text-base font-bold text-navy-850 mb-3 mt-6">Documentation Folders → Programs</h3>
+                    <div data-id="785" class="overflow-x-auto">
+                        <table data-id="786" class="ref-table w-full text-sm rounded-xl overflow-hidden">
+                            <thead data-id="787">
+                                <tr data-id="788">
+                                    <th data-id="789" class="text-left px-4 py-3 font-semibold text-sm">Documentation Folder</th>
+                                    <th data-id="790" class="text-left px-4 py-3 font-semibold text-sm">Program</th>
                                 </tr>
                             </thead>
-                            <tbody data-id="793">
-                                <tr data-id="794"><td data-id="795" class="px-4 py-2.5 font-mono text-xs text-warm-600">01-Atmosphere</td><td data-id="796" class="px-4 py-2.5 text-warm-700">Atmosphere</td></tr>
-                                <tr data-id="797"><td data-id="798" class="px-4 py-2.5 font-mono text-xs text-warm-600">02-Binary</td><td data-id="799" class="px-4 py-2.5 text-warm-700">Binary</td></tr>
-                                <tr data-id="800"><td data-id="801" class="px-4 py-2.5 font-mono text-xs text-warm-600">03-CannonTrajectory</td><td data-id="802" class="px-4 py-2.5 text-warm-700">CannonTrajectory</td></tr>
-                                <tr data-id="803"><td data-id="804" class="px-4 py-2.5 font-mono text-xs text-warm-600">04-EarthOrbit</td><td data-id="805" class="px-4 py-2.5 text-warm-700">EarthOrbit</td></tr>
-                                <tr data-id="806"><td data-id="807" class="px-4 py-2.5 font-mono text-xs text-warm-600">05-MercPert</td><td data-id="808" class="px-4 py-2.5 text-warm-700">MercPert</td></tr>
-                                <tr data-id="809"><td data-id="810" class="px-4 py-2.5 font-mono text-xs text-warm-600">06-Multiple</td><td data-id="811" class="px-4 py-2.5 text-warm-700">Multiple</td></tr>
-                                <tr data-id="812"><td data-id="813" class="px-4 py-2.5 font-mono text-xs text-warm-600">07-Neutron</td><td data-id="814" class="px-4 py-2.5 text-warm-700">Neutron</td></tr>
-                                <tr data-id="815"><td data-id="816" class="px-4 py-2.5 font-mono text-xs text-warm-600">08-Orbit</td><td data-id="817" class="px-4 py-2.5 text-warm-700">Orbit</td></tr>
-                                <tr data-id="818"><td data-id="819" class="px-4 py-2.5 font-mono text-xs text-warm-600">09-Planck2</td><td data-id="820" class="px-4 py-2.5 text-warm-700">Planck2</td></tr>
-                                <tr data-id="821"><td data-id="822" class="px-4 py-2.5 font-mono text-xs text-warm-600">10-Random2</td><td data-id="823" class="px-4 py-2.5 text-warm-700">Random2</td></tr>
-                                <tr data-id="824"><td data-id="825" class="px-4 py-2.5 font-mono text-xs text-warm-600">11-RelativisticOrbit</td><td data-id="826" class="px-4 py-2.5 text-warm-700">RelativisticOrbit</td></tr>
-                                <tr data-id="827"><td data-id="828" class="px-4 py-2.5 font-mono text-xs text-warm-600">12-SphereGravity</td><td data-id="829" class="px-4 py-2.5 text-warm-700">SphereGravity</td></tr>
-                                <tr data-id="830"><td data-id="831" class="px-4 py-2.5 font-mono text-xs text-warm-600">13-Star</td><td data-id="832" class="px-4 py-2.5 text-warm-700">Star</td></tr>
+                            <tbody data-id="791">
+                                <tr data-id="792"><td data-id="793" class="px-4 py-2.5 font-mono text-xs text-warm-600">01-Atmosphere</td><td data-id="794" class="px-4 py-2.5 text-warm-700">Atmosphere</td></tr>
+                                <tr data-id="795"><td data-id="796" class="px-4 py-2.5 font-mono text-xs text-warm-600">02-Binary</td><td data-id="797" class="px-4 py-2.5 text-warm-700">Binary</td></tr>
+                                <tr data-id="798"><td data-id="799" class="px-4 py-2.5 font-mono text-xs text-warm-600">03-CannonTrajectory</td><td data-id="800" class="px-4 py-2.5 text-warm-700">CannonTrajectory</td></tr>
+                                <tr data-id="801"><td data-id="802" class="px-4 py-2.5 font-mono text-xs text-warm-600">04-EarthOrbit</td><td data-id="803" class="px-4 py-2.5 text-warm-700">EarthOrbit</td></tr>
+                                <tr data-id="804"><td data-id="805" class="px-4 py-2.5 font-mono text-xs text-warm-600">05-MercPert</td><td data-id="806" class="px-4 py-2.5 text-warm-700">MercPert</td></tr>
+                                <tr data-id="807"><td data-id="808" class="px-4 py-2.5 font-mono text-xs text-warm-600">06-Multiple</td><td data-id="809" class="px-4 py-2.5 text-warm-700">Multiple</td></tr>
+                                <tr data-id="810"><td data-id="811" class="px-4 py-2.5 font-mono text-xs text-warm-600">07-Neutron</td><td data-id="812" class="px-4 py-2.5 text-warm-700">Neutron</td></tr>
+                                <tr data-id="813"><td data-id="814" class="px-4 py-2.5 font-mono text-xs text-warm-600">08-Orbit</td><td data-id="815" class="px-4 py-2.5 text-warm-700">Orbit</td></tr>
+                                <tr data-id="816"><td data-id="817" class="px-4 py-2.5 font-mono text-xs text-warm-600">09-Planck2</td><td data-id="818" class="px-4 py-2.5 text-warm-700">Planck2</td></tr>
+                                <tr data-id="819"><td data-id="820" class="px-4 py-2.5 font-mono text-xs text-warm-600">10-Random2</td><td data-id="821" class="px-4 py-2.5 text-warm-700">Random2</td></tr>
+                                <tr data-id="822"><td data-id="823" class="px-4 py-2.5 font-mono text-xs text-warm-600">11-RelativisticOrbit</td><td data-id="824" class="px-4 py-2.5 text-warm-700">RelativisticOrbit</td></tr>
+                                <tr data-id="825"><td data-id="826" class="px-4 py-2.5 font-mono text-xs text-warm-600">12-SphereGravity</td><td data-id="827" class="px-4 py-2.5 text-warm-700">SphereGravity</td></tr>
+                                <tr data-id="828"><td data-id="829" class="px-4 py-2.5 font-mono text-xs text-warm-600">13-Star</td><td data-id="830" class="px-4 py-2.5 text-warm-700">Star</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div data-id="831" class="callout callout-tip">
+                    <span data-id="832" class="callout-icon">💡</span>
+                    <div data-id="833">
+                        <p data-id="834" class="text-sm text-warm-700">If you have modified a program's parameters and want to restore them to their original values, see <a data-id="835" href="#section-10" class="font-semibold text-sky-600 hover:text-sky-700 underline">Section 10</a>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== SECTION 9: QUICK REFERENCE ==================== -->
+            <section data-id="836" id="section-9" class="mb-16">
+                <div data-id="837" class="section-heading mb-6">
+                    <span data-id="838" class="text-3xl">🗂️</span>
+                    <h2 data-id="839" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 9: Quick Reference — All Programs</h2>
+                </div>
+
+                <div data-id="840" class="bg-white rounded-2xl p-6 md:p-8" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                    <p data-id="841" class="text-warm-700 leading-relaxed mb-5">
+                        Here's a handy reference card for all 13 programs and what they simulate.
+                    </p>
+                    <div data-id="842" class="overflow-x-auto">
+                        <table data-id="843" class="ref-table w-full text-sm rounded-xl overflow-hidden">
+                            <thead data-id="844">
+                                <tr data-id="845">
+                                    <th data-id="846" class="text-left px-4 py-3 font-semibold text-sm">Program</th>
+                                    <th data-id="847" class="text-left px-4 py-3 font-semibold text-sm">What It Simulates</th>
+                                </tr>
+                            </thead>
+                            <tbody data-id="848">
+                                <tr data-id="849"><td data-id="850" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Atmosphere</td><td data-id="851" class="px-4 py-2.5 text-warm-700">Models the structure of a planetary atmosphere</td></tr>
+                                <tr data-id="852"><td data-id="853" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Binary</td><td data-id="854" class="px-4 py-2.5 text-warm-700">Simulates two stars orbiting each other</td></tr>
+                                <tr data-id="855"><td data-id="856" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">CannonTrajectory</td><td data-id="857" class="px-4 py-2.5 text-warm-700">Computes the trajectory of a projectile</td></tr>
+                                <tr data-id="858"><td data-id="859" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">EarthOrbit</td><td data-id="860" class="px-4 py-2.5 text-warm-700">Simulates a satellite or object orbiting Earth</td></tr>
+                                <tr data-id="861"><td data-id="862" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">MercPert</td><td data-id="863" class="px-4 py-2.5 text-warm-700">Models Mercury's orbital precession (a relativistic effect)</td></tr>
+                                <tr data-id="864"><td data-id="865" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Multiple</td><td data-id="866" class="px-4 py-2.5 text-warm-700">Simulates gravitational interactions among multiple bodies</td></tr>
+                                <tr data-id="867"><td data-id="868" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Neutron</td><td data-id="869" class="px-4 py-2.5 text-warm-700">Models the internal structure of a neutron star</td></tr>
+                                <tr data-id="870"><td data-id="871" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Orbit</td><td data-id="872" class="px-4 py-2.5 text-warm-700">General-purpose orbital simulation</td></tr>
+                                <tr data-id="873"><td data-id="874" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Planck2</td><td data-id="875" class="px-4 py-2.5 text-warm-700">Plots the Planck blackbody radiation spectrum</td></tr>
+                                <tr data-id="876"><td data-id="877" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Random2</td><td data-id="878" class="px-4 py-2.5 text-warm-700">Demonstrates random statistical processes in astrophysics</td></tr>
+                                <tr data-id="879"><td data-id="880" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">RelativisticOrbit</td><td data-id="881" class="px-4 py-2.5 text-warm-700">Simulates orbital motion with relativistic corrections</td></tr>
+                                <tr data-id="882"><td data-id="883" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">SphereGravity</td><td data-id="884" class="px-4 py-2.5 text-warm-700">Computes gravity at various points in or around a spherical mass</td></tr>
+                                <tr data-id="885"><td data-id="886" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Star</td><td data-id="887" class="px-4 py-2.5 text-warm-700">Models the internal structure of a star</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- ==================== SECTION 9: QUICK REFERENCE ==================== -->
-            <section data-id="833" id="section-9" class="mb-16">
-                <div data-id="834" class="section-heading mb-6">
-                    <span data-id="835" class="text-3xl">🗂️</span>
-                    <h2 data-id="836" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 9: Quick Reference — All Programs</h2>
+            <!-- ==================== SECTION 10: RESTORING DEFAULTS ==================== -->
+            <section data-id="888" id="section-10" class="mb-16">
+                <div data-id="889" class="section-heading mb-6">
+                    <i data-id="890" data-lucide="rotate-ccw" class="w-8 h-8 text-navy-850"></i>
+                    <h2 data-id="891" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 10: Restoring a Program to Its Default Settings</h2>
                 </div>
 
-                <div data-id="837" class="bg-white rounded-2xl p-6 md:p-8" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
-                    <p data-id="838" class="text-warm-700 leading-relaxed mb-5">
-                        Here's a handy reference card for all 13 programs and what they simulate.
+                <div data-id="892" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                    <p data-id="893" class="text-warm-700 leading-relaxed">
+                        When experimenting with the programs, you will inevitably change parameter values in <strong data-id="894" class="text-navy-850">main.py</strong> that you want to undo. Here are four methods, listed from quickest to most thorough — use whichever suits your situation.
                     </p>
-                    <div data-id="839" class="overflow-x-auto">
-                        <table data-id="840" class="ref-table w-full text-sm rounded-xl overflow-hidden">
-                            <thead data-id="841">
-                                <tr data-id="842">
-                                    <th data-id="843" class="text-left px-4 py-3 font-semibold text-sm">Program</th>
-                                    <th data-id="844" class="text-left px-4 py-3 font-semibold text-sm">What It Simulates</th>
-                                </tr>
-                            </thead>
-                            <tbody data-id="845">
-                                <tr data-id="846"><td data-id="847" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Atmosphere</td><td data-id="848" class="px-4 py-2.5 text-warm-700">Models the structure of a planetary atmosphere</td></tr>
-                                <tr data-id="849"><td data-id="850" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Binary</td><td data-id="851" class="px-4 py-2.5 text-warm-700">Simulates two stars orbiting each other (adaptive-timestep predictor–corrector)</td></tr>                              
-                                <tr data-id="855"><td data-id="856" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">CannonTrajectory</td><td data-id="857" class="px-4 py-2.5 text-warm-700">Computes the trajectory of a projectile</td></tr>
-                                <tr data-id="858"><td data-id="859" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">EarthOrbit</td><td data-id="860" class="px-4 py-2.5 text-warm-700">Simulates a satellite or object orbiting Earth</td></tr>
-                                <tr data-id="861"><td data-id="862" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">MercPert</td><td data-id="863" class="px-4 py-2.5 text-warm-700">Models Mercury's orbital precession (a relativistic effect)</td></tr>
-                                <tr data-id="867"><td data-id="868" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Multiple</td><td data-id="869" class="px-4 py-2.5 text-warm-700">Simulates gravitational interactions among multiple bodies</td></tr>
-                                <tr data-id="873"><td data-id="874" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Neutron</td><td data-id="875" class="px-4 py-2.5 text-warm-700">Models the internal structure of a neutron star</td></tr>
-                                <tr data-id="876"><td data-id="877" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Orbit</td><td data-id="878" class="px-4 py-2.5 text-warm-700">General-purpose orbital simulation</td></tr>
-                                <tr data-id="879"><td data-id="880" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Planck2</td><td data-id="881" class="px-4 py-2.5 text-warm-700">Plots the Planck blackbody radiation spectrum</td></tr>
-                                <tr data-id="882"><td data-id="883" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Random2</td><td data-id="884" class="px-4 py-2.5 text-warm-700">Demonstrates random statistical processes in astrophysics</td></tr>
-                                <tr data-id="885"><td data-id="886" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">RelativisticOrbit</td><td data-id="887" class="px-4 py-2.5 text-warm-700">Simulates orbital motion with relativistic corrections</td></tr>
-                                <tr data-id="888"><td data-id="889" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">SphereGravity</td><td data-id="890" class="px-4 py-2.5 text-warm-700">Computes gravity at various points in or around a spherical mass</td></tr>
-                                <tr data-id="891"><td data-id="892" class="px-4 py-2.5 font-mono text-xs font-medium text-navy-850">Star</td><td data-id="893" class="px-4 py-2.5 text-warm-700">Models the internal structure of a star</td></tr>
-                            </tbody>
-                        </table>
+                </div>
+
+                <!-- METHOD 1 -->
+                <div data-id="895" class="bg-white rounded-2xl p-6 md:p-8 mb-5" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                    <div data-id="896" class="flex items-start gap-4 mb-5">
+                        <span data-id="897" class="step-bubble">1</span>
+                        <div data-id="898" class="flex-1 min-w-0">
+                            <div data-id="899" class="flex flex-wrap items-center gap-2 mb-1">
+                                <h3 data-id="900" class="text-base font-bold text-navy-850">Undo in PyCharm (same session only)</h3>
+                                <span data-id="901" class="method-badge badge-green">✓ Quickest</span>
+                            </div>
+                            <p data-id="902" class="text-warm-500 text-xs">Works only if you have not closed PyCharm since making the change.</p>
+                        </div>
+                    </div>
+                    <ul data-id="903" class="space-y-3 ml-12">
+                        <li data-id="904" class="flex items-start gap-3">
+                            <i data-id="905" data-lucide="corner-down-right" class="w-4 h-4 text-warm-400 mt-0.5 flex-shrink-0"></i>
+                            <p data-id="906" class="text-warm-700 text-sm leading-relaxed">In PyCharm, press <strong data-id="907">Ctrl+Z</strong> (Windows) or <strong data-id="908">Cmd+Z</strong> (macOS) repeatedly to step back through your edits.</p>
+                        </li>
+                        <li data-id="909" class="flex items-start gap-3">
+                            <i data-id="910" data-lucide="corner-down-right" class="w-4 h-4 text-warm-400 mt-0.5 flex-shrink-0"></i>
+                            <p data-id="911" class="text-warm-700 text-sm leading-relaxed">You can undo all the way back to the original file state.</p>
+                        </li>
+                        <li data-id="912" class="flex items-start gap-3">
+                            <i data-id="913" data-lucide="alert-circle" class="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0"></i>
+                            <p data-id="914" class="text-warm-700 text-sm leading-relaxed"><strong data-id="915" class="text-navy-850">Limitation:</strong> Undo history is lost when PyCharm closes. This method does not work across sessions.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- METHOD 2 -->
+                <div data-id="916" class="bg-white rounded-2xl p-6 md:p-8 mb-5" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                    <div data-id="917" class="flex items-start gap-4 mb-5">
+                        <span data-id="918" class="step-bubble">2</span>
+                        <div data-id="919" class="flex-1 min-w-0">
+                            <div data-id="920" class="flex flex-wrap items-center gap-2 mb-1">
+                                <h3 data-id="921" class="text-base font-bold text-navy-850">PyCharm Local History</h3>
+                                <span data-id="922" class="method-badge badge-blue">⭐ Recommended</span>
+                            </div>
+                            <p data-id="923" class="text-warm-500 text-xs">PyCharm automatically saves a private history of every file you edit — no setup required. This works even after closing and reopening PyCharm.</p>
+                        </div>
+                    </div>
+                    <ol data-id="924" class="space-y-4 ml-12">
+                        <li data-id="925" class="flex items-start gap-4">
+                            <span data-id="926" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">1</span>
+                            <p data-id="927" class="text-warm-700 text-sm leading-relaxed">In the Project panel (left side of PyCharm), right-click the file you changed (e.g., <strong data-id="928">main.py</strong>).</p>
+                        </li>
+                        <li data-id="929" class="flex items-start gap-4">
+                            <span data-id="930" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">2</span>
+                            <p data-id="931" class="text-warm-700 text-sm leading-relaxed">In the menu that appears, choose <strong data-id="932">Local History → Show History</strong>.</p>
+                        </li>
+                        <li data-id="933" class="flex items-start gap-4">
+                            <span data-id="934" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">3</span>
+                            <p data-id="935" class="text-warm-700 text-sm leading-relaxed">A panel opens showing a timeline of every version PyCharm has saved.</p>
+                        </li>
+                        <li data-id="936" class="flex items-start gap-4">
+                            <span data-id="937" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">4</span>
+                            <p data-id="938" class="text-warm-700 text-sm leading-relaxed">Click on an entry from before you made your changes — the old content appears on the right.</p>
+                        </li>
+                        <li data-id="939" class="flex items-start gap-4">
+                            <span data-id="940" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">5</span>
+                            <p data-id="941" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="942">Revert</strong> to restore that version.</p>
+                        </li>
+                    </ol>
+                    <div data-id="943" class="callout callout-tip mt-4 mb-0 ml-12">
+                        <span data-id="944" class="callout-icon">💡</span>
+                        <div data-id="945">
+                            <p data-id="946" class="text-sm text-warm-700">Local History is PyCharm's built-in time machine. It keeps versions for several days automatically and is the easiest restore method for most users.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- METHOD 3 -->
+                <div data-id="947" class="bg-white rounded-2xl p-6 md:p-8 mb-5" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                    <div data-id="948" class="flex items-start gap-4 mb-5">
+                        <span data-id="949" class="step-bubble">3</span>
+                        <div data-id="950" class="flex-1 min-w-0">
+                            <div data-id="951" class="flex flex-wrap items-center gap-2 mb-1">
+                                <h3 data-id="952" class="text-base font-bold text-navy-850">Keep a backup copy before experimenting</h3>
+                                <span data-id="953" class="method-badge badge-amber">🛡 Most reliable</span>
+                            </div>
+                            <p data-id="954" class="text-warm-500 text-xs">A proactive habit: before changing any parameters for a new experiment, make a copy of main.py first.</p>
+                        </div>
+                    </div>
+                    <ol data-id="955" class="space-y-4 ml-12">
+                        <li data-id="956" class="flex items-start gap-4">
+                            <span data-id="957" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">1</span>
+                            <p data-id="958" class="text-warm-700 text-sm leading-relaxed">In the Project panel, right-click <strong data-id="959">main.py</strong>.</p>
+                        </li>
+                        <li data-id="960" class="flex items-start gap-4">
+                            <span data-id="961" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">2</span>
+                            <p data-id="962" class="text-warm-700 text-sm leading-relaxed">Choose <strong data-id="963">Copy</strong>.</p>
+                        </li>
+                        <li data-id="964" class="flex items-start gap-4">
+                            <span data-id="965" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">3</span>
+                            <p data-id="966" class="text-warm-700 text-sm leading-relaxed">Right-click the same folder and choose <strong data-id="967">Paste</strong> — PyCharm will create <strong data-id="968">main copy.py</strong> or similar.</p>
+                        </li>
+                        <li data-id="969" class="flex items-start gap-4">
+                            <span data-id="970" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">4</span>
+                            <p data-id="971" class="text-warm-700 text-sm leading-relaxed">Rename it something meaningful, like <strong data-id="972">main_defaults.py</strong>.</p>
+                        </li>
+                        <li data-id="973" class="flex items-start gap-4">
+                            <span data-id="974" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">5</span>
+                            <p data-id="975" class="text-warm-700 text-sm leading-relaxed">Now you can freely edit main.py — your original is safe in main_defaults.py.</p>
+                        </li>
+                        <li data-id="976" class="flex items-start gap-4">
+                            <span data-id="977" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">6</span>
+                            <p data-id="978" class="text-warm-700 text-sm leading-relaxed">To restore: open main_defaults.py, select all (<strong data-id="979">Ctrl+A</strong> / <strong data-id="980">Cmd+A</strong>), copy (<strong data-id="981">Ctrl+C</strong> / <strong data-id="982">Cmd+C</strong>), then open main.py, select all, and paste.</p>
+                        </li>
+                    </ol>
+                    <div data-id="983" class="callout callout-info mt-4 mb-0 ml-12">
+                        <span data-id="984" class="callout-icon">ℹ️</span>
+                        <div data-id="985">
+                            <p data-id="986" class="text-sm text-warm-700">This is the most reliable long-term strategy. PyCharm Local History eventually expires; a backup copy lasts as long as you keep the file.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- METHOD 4 -->
+                <div data-id="987" class="bg-white rounded-2xl p-6 md:p-8 mb-5" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
+                    <div data-id="988" class="flex items-start gap-4 mb-5">
+                        <span data-id="989" class="step-bubble">4</span>
+                        <div data-id="990" class="flex-1 min-w-0">
+                            <div data-id="991" class="flex flex-wrap items-center gap-2 mb-1">
+                                <h3 data-id="992" class="text-base font-bold text-navy-850">Re-download the ZIP from GitHub</h3>
+                                <span data-id="993" class="method-badge badge-red">🔄 Full reset</span>
+                            </div>
+                            <p data-id="994" class="text-warm-500 text-xs">The nuclear option: always works, restores everything to factory defaults. Use this if multiple files have been changed or you want a completely fresh start.</p>
+                        </div>
+                    </div>
+
+                    <!-- Windows sub-steps -->
+                    <div data-id="995" class="ml-12 mb-5">
+                        <h4 data-id="996" class="text-sm font-bold text-navy-850 mb-3 flex items-center gap-2">
+                            <i data-id="997" data-lucide="layout-grid" class="w-4 h-4 text-sky-500"></i>
+                            Windows
+                        </h4>
+                        <ol data-id="998" class="space-y-3">
+                            <li data-id="999" class="flex items-start gap-4">
+                                <span data-id="1000" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">1</span>
+                                <p data-id="1001" class="text-warm-700 text-sm leading-relaxed">Go to <strong data-id="1002" class="text-sky-600">github.com/tomyee3-org/GFTGU-Programs</strong> in your browser.</p>
+                            </li>
+                            <li data-id="1003" class="flex items-start gap-4">
+                                <span data-id="1004" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">2</span>
+                                <p data-id="1005" class="text-warm-700 text-sm leading-relaxed">Click the green <strong data-id="1006">"&lt; &gt; Code"</strong> button → <strong data-id="1007">"Download ZIP"</strong>.</p>
+                            </li>
+                            <li data-id="1008" class="flex items-start gap-4">
+                                <span data-id="1009" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">3</span>
+                                <p data-id="1010" class="text-warm-700 text-sm leading-relaxed">Extract the ZIP to a new folder (e.g., <strong data-id="1011">GFTGU-Programs-fresh</strong>).</p>
+                            </li>
+                            <li data-id="1012" class="flex items-start gap-4">
+                                <span data-id="1013" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">4</span>
+                                <p data-id="1014" class="text-warm-700 text-sm leading-relaxed">Copy just the program folder you need (e.g., <strong data-id="1015">EarthOrbit</strong>) from the fresh download into your working location, replacing the modified version.</p>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <!-- macOS sub-steps -->
+                    <div data-id="1016" class="ml-12">
+                        <h4 data-id="1017" class="text-sm font-bold text-navy-850 mb-3 flex items-center gap-2">
+                            <i data-id="1018" data-lucide="apple" class="w-4 h-4 text-sky-500"></i>
+                            macOS
+                        </h4>
+                        <ol data-id="1019" class="space-y-3">
+                            <li data-id="1020" class="flex items-start gap-4">
+                                <span data-id="1021" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">1</span>
+                                <p data-id="1022" class="text-warm-700 text-sm leading-relaxed">Go to <strong data-id="1023" class="text-sky-600">github.com/tomyee3-org/GFTGU-Programs</strong> in your browser.</p>
+                            </li>
+                            <li data-id="1024" class="flex items-start gap-4">
+                                <span data-id="1025" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">2</span>
+                                <p data-id="1026" class="text-warm-700 text-sm leading-relaxed">Click the green <strong data-id="1027">"&lt; &gt; Code"</strong> button → <strong data-id="1028">"Download ZIP"</strong>.</p>
+                            </li>
+                            <li data-id="1029" class="flex items-start gap-4">
+                                <span data-id="1030" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">3</span>
+                                <p data-id="1031" class="text-warm-700 text-sm leading-relaxed">Double-click the ZIP to extract it to a new folder.</p>
+                            </li>
+                            <li data-id="1032" class="flex items-start gap-4">
+                                <span data-id="1033" class="step-bubble text-xs" style="width:26px;height:26px;min-width:26px;font-size:12px;">4</span>
+                                <p data-id="1034" class="text-warm-700 text-sm leading-relaxed">Copy just the program folder you need from the fresh download into your working location, replacing the modified version.</p>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div data-id="1035" class="callout callout-warning mt-4 mb-0 ml-12">
+                        <span data-id="1036" class="callout-icon">⚠️</span>
+                        <div data-id="1037">
+                            <p data-id="1038" class="text-sm text-warm-700">Re-downloading replaces all files in the folder. If you have any experiment notes or modified files you want to keep, save copies elsewhere first.</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1188,9 +1414,9 @@
     </main>
 
     <!-- FOOTER -->
-    <footer data-id="894" class="lg:ml-72 border-t border-warm-200 bg-white">
-        <div data-id="895" class="max-w-3xl mx-auto px-4 md:px-8 py-8 text-center">
-            <p data-id="896" class="text-xs text-warm-400">GFTGU Python Setup Guide &middot; &copy; 2024&ndash;2026 Thomas Yee &middot; Released under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" class="underline hover:text-warm-600">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license.</p>
+    <footer data-id="1039" class="lg:ml-72 border-t border-warm-200 bg-white">
+        <div data-id="1040" class="max-w-3xl mx-auto px-4 md:px-8 py-8 text-center">
+            <p data-id="1041" class="text-xs text-warm-400">Made by Copilot</p>
         </div>
     </footer>
 
