@@ -1104,6 +1104,77 @@ T_points = [288.0, 200.0, 350.0]   # inversion above 50 km</div>
       </div>
     </section>
 
+    <!-- ============================================================
+     RESTORE TO DEFAULTS CALLOUT
+     ============================================================ -->
+
+<section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
+  <div style="
+    border: 1.5px solid #b5811a;
+    border-left: 5px solid #b5811a;
+    border-radius: 6px;
+    background: #fffbeb;
+    padding: 1.1em 1.4em;
+    display: flex;
+    gap: 1em;
+    align-items: flex-start;
+  ">
+    <!-- Icon -->
+    <div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
+
+    <!-- Content -->
+    <div>
+      <div style="
+        font-weight: 700;
+        font-size: 0.95em;
+        color: #7b2d00;
+        margin-bottom: 0.35em;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      ">Restoring Default Parameter Values</div>
+
+      <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
+        After experimenting with parameter values in <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>,
+        you can restore the originals using any of the following methods:
+      </p>
+
+      <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
+        <li>
+          <strong>Same session:</strong>
+          Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
+          (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
+          (macOS) repeatedly in PyCharm to undo your edits.
+        </li>
+        <li>
+          <strong>After reopening PyCharm:</strong>
+          Right-click <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
+          in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+        </li>
+        <li>
+          <strong>Full reset:</strong>
+          Re-download the ZIP from
+          <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank"
+             style="color:#7b2d00; text-decoration:underline;">
+            github.com/tomyee3-org/GFTGU-Programs
+          </a>
+          and replace this program's folder with the fresh copy.
+        </li>
+      </ul>
+
+      <p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
+        For step-by-step instructions on all four restore methods, see
+        <strong>Section&nbsp;10</strong> of the
+        <em>GFTGU Python Setup Guide</em>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     END RESTORE TO DEFAULTS CALLOUT
+     ============================================================ -->
+
+    
     <!-- ── Related Programs ── -->
     <section id="related">
       <h2>Related Programs</h2>
