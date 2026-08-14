@@ -473,7 +473,7 @@
         \( g \approx 9.8 \;\text{m s}^{-2} \) directed downward. This approximation is excellent
         for trajectories whose horizontal range is small compared to Earth's radius
         (\(R_\oplus \approx 6.4 \times 10^6\) m). A cannonball fired at 100 m/s travels at most
-        a few hundred metres — comfortably within this regime.
+        about one kilometre — comfortably within this regime.
       </p>
 
       <h3>No air resistance</h3>
@@ -481,8 +481,8 @@
         The program models vacuum flight. In reality, air drag would substantially reduce the
         range at even moderate speeds. Neglecting drag keeps the equations analytically tractable
         and lets the focus remain on the numerical method itself. At the muzzle velocities
-        considered here (\(\lesssim\) a few hundred m/s), drag is important but the qualitative
-        shape of the parabola is preserved.
+        considered here (\(\lesssim\) a few hundred m/s), drag is important, although the
+        trajectory retains the familiar rising-and-falling projectile arc.
       </p>
 
       <h3>Horizontal and vertical independence</h3>
@@ -600,12 +600,16 @@
       </div>
 
       <p>
-        Because the derivatives are linear in this problem
-        (\(\mathbf{f}(\mathbf{s}^*) = \mathbf{f}(\mathbf{s}_n) + [-g\,\Delta t,\; 0,\; 0,\; 0]^T\)
-        for the vertical component), the corrector averages the initial and final vertical
-        velocities.
+        Because the derivatives are linear in this problem,
+        \(\mathbf{f}(\mathbf{s}^*) = \mathbf{f}(\mathbf{s}_n)
+        + [0,\; -g\,\Delta t,\; 0,\; 0]^T\): only the derivative of height changes
+        during the predictor step. The corrector therefore averages the initial and final
+        vertical velocities.
         For horizontal motion, where the derivative is constant, both methods give the same
-        result; the improvement appears only in the vertical (height) update.
+        result. In fact, for constant gravitational acceleration Heun's method reproduces the
+        exact analytic position and velocity at the sampled times (apart from roundoff);
+        the apparent error in the final plotted range is dominated by locating the ground
+        crossing only at discrete timesteps.
       </p>
 
     </section>
@@ -644,10 +648,11 @@
 
       <div class="warn-box">
         <strong>Note on landing interpolation:</strong> The termination height is the first
-        <em>negative</em> value, not zero, so the reported range is the horizontal position at
-        the step <em>after</em> the projectile crosses the ground. For small \(\Delta t\) the
-        error is negligible. Schutz's suggested Experiment 2 (below) describes how to correct
-        this by linear interpolation to find the exact zero crossing.
+        <em>negative</em> value, not zero, so the last element of <code>xs</code> is the
+        horizontal position at the step <em>after</em> the projectile crosses the ground.
+        This introduces an endpoint-location error of order \(\Delta t\), independent of the
+        order of the trajectory integrator. Experiment 3 (below) describes how to reduce this
+        error by linear interpolation to estimate the zero crossing.
       </div>
     </section>
 
@@ -826,7 +831,7 @@ plot_cannon(xs, hs)</div>
         \(R = v_0^2 \sin 90° / g = 10000/9.8 \approx 1020\) m and the
         time of flight is \(T = 2 v_{0y}/g = 2 \times 70.71 / 9.8 \approx 14.4\) s,
         requiring \(\lceil T/\Delta t \rceil = 144\) steps — well within
-        <code>max_steps = 1000</code>.
+        <code>max_steps = 100_000</code>.
       </div>
     </section>
 
@@ -862,11 +867,15 @@ plot_cannon(xs, hs)</div>
         <p>
           Run the simulation twice with the same parameters, once with
           <code>method="euler"</code> and once with <code>method="improved"</code>.
-          Compare the final range (last element of <code>xs</code>) against the analytic
-          value \(R = v_0^2 \sin 2\theta / g\). Then repeat with <code>dt</code> halved
-          and quartered. You should find that the Euler error halves each time you halve
-          <code>dt</code> (first-order), while the improved Euler error quarters
-          (second-order). This is the numerical signature of convergence order.
+          First estimate the landing point by the interpolation procedure in Experiment 3;
+          do not use the last element of <code>xs</code> directly, because it is the first
+          sampled point after the projectile has crossed the ground. Compare the interpolated
+          range against the analytic value \(R = v_0^2 \sin 2\theta / g\), then repeat
+          with <code>dt</code> halved and quartered. The Euler trajectory has first-order
+          global error. For this special constant-acceleration problem, however, Heun's method
+          gives the exact analytic state at each sampled time (apart from roundoff), so it is
+          better regarded here as a demonstration of why the improved method is more accurate
+          than as a generic measurement of second-order convergence.
         </p>
       </div>
 
@@ -878,9 +887,10 @@ plot_cannon(xs, hs)</div>
           plain Euler update: use <code>state[1] + dt * ds1[1]</code> instead of the
           averaged value. This is the "less accurate" variant Schutz describes: the height
           uses only the initial vertical velocity, while horizontal distance still uses the
-          averaged value. Compare the resulting range error against the standard improved
-          Euler result at the same timestep — and verify that the degraded version's error
-          scales as \(\mathcal{O}(\Delta t)\) rather than \(\mathcal{O}(\Delta t^2)\).
+          averaged value. Use the interpolated landing point from Experiment 3 when comparing
+          ranges; otherwise the first sampled point below ground introduces its own
+          \(\mathcal{O}(\Delta t)\) error. With that endpoint effect reduced, verify that
+          the deliberately degraded height update shows first-order convergence.
         </p>
       </div>
 
@@ -904,8 +914,11 @@ plot_cannon(xs, hs)</div>
           Loop over firing angles from 1° to 89° in 1° steps and record the range for each.
           Plot range vs. angle. Confirm that the maximum occurs at 45° and that the range
           curve is symmetric about 45° (i.e., complementary angles give the same range).
-          Try this with both the Euler and improved Euler methods — does the choice of
-          integrator shift the numerically optimal angle?
+          Use the interpolated landing point from Experiment 3 for the cleanest comparison;
+          raw final <code>xs</code> values can differ slightly because each trajectory crosses
+          the ground at a different phase within a timestep. Try this with both the Euler and
+          improved Euler methods — does the choice of integrator shift the numerically optimal
+          angle?
         </p>
       </div>
 
@@ -914,8 +927,9 @@ plot_cannon(xs, hs)</div>
         <div class="exp-title">Effect of muzzle speed</div>
         <p>
           Fix the angle at 45° and vary <code>speed</code> from 50 to 500 m/s.
-          The range should scale as \(v_0^2\). Plot range vs. \(v_0^2\) on a linear scale
-          and verify the slope equals \(\sin 90° / g = 1/g\). At very high speeds the
+          The range should scale as \(v_0^2\). Use the interpolated landing point from
+          Experiment 3, plot range vs. \(v_0^2\) on a linear scale, and verify that the slope
+          approaches \(\sin 90° / g = 1/g\). At very high speeds the
           flat-Earth, constant-\(g\) approximation breaks down — EarthOrbit (Chapter 4)
           picks up exactly here: it keeps the same constant-\(g\) approximation by default
           and shows directly that it only holds for low, nearly-circular orbits, failing
@@ -931,8 +945,10 @@ plot_cannon(xs, hs)</div>
           Call <code>run_cannon_trajectory</code> for angles of 15°, 30°, 45°, 60°, and 75°
           at <code>speed = 100</code> m/s and overlay all five trajectories on a single
           matplotlib figure. Observe that the 15°/75° pair and the 30°/60° pair each share
-          the same range (as the analytic formula predicts). Add a horizontal line at the
-          maximum range for reference.
+          the same analytic range. Small differences in their raw endpoints can result
+          from timestep sampling; use the interpolation method of Experiment 3 if you want to
+          compare the landing ranges quantitatively. Add a horizontal line at the maximum
+          range for reference.
         </p>
       </div>
 
@@ -1015,7 +1031,7 @@ plot_cannon(xs, hs)</div>
 
       <div class="related-grid">
 
-        <a href="EarthOrbit_Help.html" class="related-card">
+        <a href="../04-EarthOrbit/EarthOrbit.html" class="related-card">
           <div class="rc-name">EarthOrbit</div>
           <div class="rc-ch">Chapter 4</div>
           <p>
@@ -1029,7 +1045,7 @@ plot_cannon(xs, hs)</div>
           </p>
         </a>
 
-        <a href="Orbit_Help.html" class="related-card">
+        <a href="../04-Orbit/Orbit.html" class="related-card">
           <div class="rc-name">Orbit</div>
           <div class="rc-ch">Chapter 4</div>
           <p>
@@ -1039,9 +1055,9 @@ plot_cannon(xs, hs)</div>
           </p>
         </a>
 
-        <a href="RelativisticOrbit_Help.html" class="related-card">
+        <a href="../21-RelativisticOrbit/RelativisticOrbit.html" class="related-card">
           <div class="rc-name">RelativisticOrbit</div>
-          <div class="rc-ch">Chapter 8</div>
+          <div class="rc-ch">Chapter 21</div>
           <p>
             Extends the Newtonian orbit integrator to geodesic motion in the Schwarzschild
             metric, introducing the general-relativistic corrections responsible for Mercury's
