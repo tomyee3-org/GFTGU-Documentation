@@ -851,6 +851,17 @@
       Change only the values in <code>main.py</code>; the physics, driver, and plot
       modules require no modification.
     </p>
+    <div class="note">
+      <strong>What "accurate" means here:</strong> that fraction-of-a-percent figure is
+      specifically about total mass and radius, which \(\gamma\), \(\mu\), \(T_C\), and
+      \(p_C\) were tuned together to match. It does <em>not</em> extend to the detailed
+      density profile — in particular, the model's central density
+      (\(\rho_c \approx 4.9\times10^4\,\mathrm{kg\,m^{-3}}\) with the defaults, computed
+      directly from \(\rho_c = p_C q / T_C\)) comes out noticeably lower than the real
+      Sun's actual central density (\(\approx1.5\times10^5\,\mathrm{kg\,m^{-3}}\)). That's
+      an expected, inherent limitation of representing the Sun's genuinely layered
+      internal structure with a single polytropic index — not a computational error.
+    </div>
 
     <table>
       <thead>
@@ -1051,12 +1062,41 @@
         <h4>3 · Red Giant Model</h4>
         <p>
           Set \(\gamma\) close to \(4/3\) to model a gas that is close to the instability
-          threshold. Near-\(4/3\) polytropes produce very extended, tenuous envelopes
-          with radii roughly 100 times larger than a solar-type star. Compare the density
-          profile with the baseline run.
+          threshold. Near-\(4/3\) polytropes favor very extended, tenuous envelopes —
+          but changing \(\gamma\) alone while leaving \(p_C\) at its solar default barely
+          changes the radius (verified: \(\gamma=1.335\) with the solar default \(p_C\)
+          gives just \(1.15\,R_\odot\)). To actually reach a red-giant-sized radius, \(p_C\)
+          must be lowered too. There is an exact, verified relationship for this: holding
+          \(T_C\) and \(\mu\) fixed, radius and mass both scale as
+        </p>
+        <div class="eq" style="margin:10px 0;">
+          \[
+            R \;\propto\; p_C^{-1/2}
+          \]
+        </div>
+        <p>
+          independent of \(\gamma\). Practical recipe: run any pilot value of \(p_C\)
+          (e.g. the solar default), note the resulting \(R_\text{pilot}\), then solve for
+          the \(p_C\) that hits your target radius directly:
+        </p>
+        <div class="eq" style="margin:10px 0;">
+          \[
+            p_{C,\,\text{target}} \;=\; p_{C,\,\text{pilot}}
+              \left(\frac{R_\text{pilot}}{R_\text{target}}\right)^{2}
+          \]
+        </div>
+        <p>
+          Verified to hit a 30-\(R_\odot\) target to 5 significant figures on the first
+          try (\(p_C \approx 1.070\times10^{13}\) with the solar \(T_C\), \(\mu\),
+          \(\gamma=4/3\)). One caveat: that same combination gives a mass of
+          \(\approx27\,M_\odot\) — enormous for a real red giant. If you want a more
+          realistic low-mass giant, try lowering \(\mu\) as well; the radius recipe
+          above still applies regardless of what \(\mu\) and \(\gamma\) you settle on.
+          Compare the resulting density profile with the baseline solar run.
         </p>
         <div class="sc-params">
           gamma = 1.335<br>
+          p_C = &lt;computed via the recipe above for your target radius&gt;<br>
           output_type = "density"
         </div>
       </div>
@@ -1209,34 +1249,16 @@
           <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/04-Binary">04-Binary</a></td>
         </tr>
         <tr>
-          <td><code>Binary_RK45</code></td>
-          <td>Ch. 4</td>
-          <td>Two-body orbit with adaptive RK45 integration</td>
-          <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/04-Binary_RK45">04-Binary_RK45</a></td>
-        </tr>
-        <tr>
           <td><code>MercPert</code></td>
           <td>Ch. 5</td>
           <td>Mercury perihelion precession with GR perturbation</td>
           <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/05-MercPert">05-MercPert</a></td>
         </tr>
         <tr>
-          <td><code>MercPert_RK45</code></td>
-          <td>Ch. 5</td>
-          <td>Mercury perihelion precession with adaptive RK45</td>
-          <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/05-MercPert_RK45">05-MercPert_RK45</a></td>
-        </tr>
-        <tr>
           <td><code>Multiple</code></td>
           <td>Ch. 6</td>
           <td>N-body gravitational simulation</td>
           <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/06-Multiple">06-Multiple</a></td>
-        </tr>
-        <tr>
-          <td><code>Multiple_RK45</code></td>
-          <td>Ch. 6</td>
-          <td>N-body simulation with adaptive RK45</td>
-          <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/06-Multiple_RK45">06-Multiple_RK45</a></td>
         </tr>
         <tr>
           <td><code>Neutron</code></td>

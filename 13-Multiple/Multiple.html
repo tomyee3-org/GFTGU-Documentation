@@ -1129,6 +1129,21 @@ python main.py</pre>
       that storing all positions would require too much memory, or when you
       want a movie-like visualisation of the system evolving in real time.
     </div>
+    <div class="note">
+      <strong>If this mode doesn't seem useful when you first try it:</strong>
+      that's expected at small scale. Running it once for 3 bodies over
+      40,000 steps just gives you one static scatter plot of the final
+      positions — not obviously more informative than the last frame of a
+      trajectories-mode plot. Its actual value only shows up in two
+      situations: (1) a system large or long enough that a full trajectory
+      array genuinely wouldn't fit in memory (hundreds of bodies, or
+      millions of steps), where this is the only mode that works at all;
+      and (2) building your own animation by calling the driver repeatedly
+      with different starting snapshots and stitching the frames together
+      yourself — something the shipped <code>main.py</code> doesn't do, but
+      that this mode's per-snapshot memory efficiency is specifically
+      designed to support.
+    </div>
   </section>
 
   <!-- ─── Suggested Scenarios ─── -->

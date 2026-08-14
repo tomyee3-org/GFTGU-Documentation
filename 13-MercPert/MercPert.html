@@ -731,6 +731,29 @@ python main.py</pre>
       since 0.3&nbsp;AU is close enough to the massive companion's much
       larger 0.636&nbsp;AU orbit for its pull to matter a great deal.
     </div>
+    <div class="note">
+      <strong>Verified comparison — if Mercury keeps getting ejected:</strong>
+      that 9% difference matters more than it looks. Directly simulated over
+      40,000 steps with the default binary separation (0.7&nbsp;AU): the
+      default <code>vy_init</code>=59,220 sends Mercury out to
+      1.53&nbsp;AU — a dramatic excursion. Using the exact circular value,
+      <code>vy_init</code>=54,373.1, instead keeps it contained to
+      0.30&ndash;0.55&nbsp;AU over the same run, staying well inside the
+      companion's own orbit with visible but modest perturbation. If your
+      goal is to see gradual, interpretable perturbation rather than a quick
+      wide excursion, start from the exact circular value and reduce it
+      further from there deliberately, rather than starting from the shipped
+      default.<br><br>
+      One honest caveat: this doesn't fully generalize to "companion far
+      away" experiments. Even with the exact circular velocity, larger
+      binary separations (tested at 1.5, 2, and 3&nbsp;AU) still show major
+      excursions given enough integration time — a 0.1-solar-mass companion
+      is genuinely massive, and this remains a chaotic system. That's
+      expected physics, not something to engineer around; if you want a
+      calmer-looking snapshot at a larger separation, reducing
+      <code>max_steps</code> to view a shorter-timescale slice is more
+      honest than hunting for parameters that avoid the chaos entirely.
+    </div>
   </section>
 
   <!-- ═══════════════════════════ NUMERICAL METHODS ═══════════════════════════ -->

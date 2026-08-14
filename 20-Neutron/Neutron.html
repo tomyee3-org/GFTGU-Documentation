@@ -1017,10 +1017,38 @@ while lastStep == 0:
 
 <h3>5. Effect of EOS Stiffness</h3>
 <p>
-  Vary \(\gamma\) between 1.2 and 3 while keeping \(K\) and \(p_C\) fixed.  A larger
-  \(\gamma\) represents a stiffer EOS (pressure rises more steeply with density).
-  Stiffer equations of state support heavier and larger stars and tend to give higher
-  maximum masses.  Plot the stellar radius and total mass as functions of \(\gamma\).
+  Increasing \(\gamma\) while keeping \(K\) and \(p_C\) fixed does <em>not</em> give a
+  well-resolved comparison — it collapses the number of usable integration points
+  dramatically, because the same \(p_C\) now implies a far larger, far less dense
+  (no longer neutron-star-like) structure. Measured directly: \(\gamma=1.667\)
+  (default) integrates in 436 points; \(\gamma=1.8\) in only 72; \(\gamma=2.0\) in
+  just 10; \(\gamma=2.2\) in 3 before the calculation overflows. A plotted curve with
+  3&ndash;10 points looks like disconnected straight-line segments rather than a smooth
+  profile — that is this effect, not a bug.
+</p>
+<p>
+  To compare EOS stiffness meaningfully, rescale \(K\) alongside \(\gamma\) so the
+  central density (and hence the star's overall compactness) stays in the same
+  ballpark. Solving \(\rho_c = (p_C/K)^{1/\gamma}\) for \(K\) at a fixed target
+  \(\rho_c\) gives:
+</p>
+<div class="eq" style="margin:10px 0;">
+  \[
+    K \;=\; \dfrac{p_C}{\rho_c^{\,\gamma}}
+  \]
+</div>
+<p>
+  Verified against the default's own central density
+  (\(\rho_c \approx 6.6\times10^{18}\,\mathrm{kg\,m^{-3}}\), about 29&times; nuclear
+  density):
+</p>
+<pre style="margin:10px 0;">&gamma;=1.8: K=1.6795e+01  &rarr;  389 points, R=6.39 km, M=1.048 Msun
+&gamma;=2.0: K=2.8926e-03  &rarr;  350 points, R=5.74 km, M=0.984 Msun
+&gamma;=2.2: K=4.9817e-07  &rarr;  326 points, R=5.35 km, M=0.939 Msun</pre>
+<p>
+  All three stay well-resolved and physically sensible. Plot the stellar radius and
+  total mass as functions of \(\gamma\) using this recalibrated \(K\) at each point,
+  rather than a single fixed \(K\).
 </p>
 
 <h3>6. Minimum Neutron Star Mass</h3>

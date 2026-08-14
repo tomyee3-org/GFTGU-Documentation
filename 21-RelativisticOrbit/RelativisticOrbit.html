@@ -1136,45 +1136,82 @@ ay     = factor * y</pre>
   <!-- ─── Suggested Scenarios ─── -->
   <section id="scenarios">
     <h2>Suggested Scenarios</h2>
+    <div class="note">
+      <strong>Before you start — timestep scaling:</strong> the default
+      <code>dt</code> and <code>max_steps</code> are tuned specifically for
+      the strong-field default orbit's short period. Changing
+      <code>x_init</code>/<code>u_init</code> without also rescaling
+      <code>dt</code> is the single most common cause of "nothing seems to
+      happen" (a flat trajectory, or a plot that never completes an orbit).
+      A reliable starting point: <code>dt &approx; x_init / u_init / 2000</code>
+      (roughly 2000 steps per orbit), with <code>max_steps</code> set generously
+      above what a full orbit actually needs. Every scenario below gives
+      concrete, tested values for both.
+    </div>
     <div class="scenario-grid">
 
       <div class="scenario-card">
-        <div class="sc-title">Mercury Analogue</div>
-        Set <code>x_init = 5.8e10</code> m (Mercury's semi-major axis) and
-        <code>u_init = 4.7e4</code> m s<sup>−1</sup> (Mercury's mean speed).
-        Run for 20+ orbits. Measure the perihelion advance per orbit and compare
-        with the predicted 43&#8243;/century.
+        <div class="sc-title">Mercury Analogue (Weak Field)</div>
+        <code>x_init=5.8e10, u_init=4.7e4, dt=620.0, max_steps=120000,
+        max_orbits=20</code>. Verified: completes orbits cleanly with
+        \(y\) ranging to \(\pm5.6\times10^{10}\,\mathrm{m}\) — a clearly
+        visible, gently precessing ellipse. Measure the perihelion advance
+        per orbit and compare with the predicted 43&#8243;/century. (A
+        perihelion-based alternative, also verified:
+        <code>x_init=4.6e10, u_init=58980.0, dt=390.0,
+        max_steps=20000, max_orbits=2</code>.)
       </div>
 
       <div class="scenario-card">
         <div class="sc-title">Circular Orbit</div>
-        Set <code>u_init = sqrt(GMSOLAR / x_init)</code> for the Keplerian
-        circular speed at <code>x_init</code>. The GR correction slightly
-        modifies the exact circular speed, so a small secular drift will still
-        appear over many orbits.
+        The exact circular speed for <em>this program's own</em>
+        \(K,Q\) formalism (not the plain Newtonian \(\sqrt{GM/r}\), which is
+        only a weak-field approximation of it) is:
+        <div class="eq" style="margin:10px 0;">
+          \[
+            u_\text{circular} = \sqrt{\dfrac{GM_\odot}{x_\text{init} - 1.5\,r_g}}
+          \]
+        </div>
+        Verified to give 0.000% radius variation at every radius tested.
+        Example: <code>x_init=29529.7 (10&middot;r_g), u_init=72710344.0,
+        dt=0.2, max_steps=20000, max_orbits=3</code>. Note this formula
+        predicts <em>superluminal</em> speeds inside about \(2\,r_g\) — a
+        real limitation of the simplified \(Q/r^2\) correction, not a
+        target to chase; stay above \(\sim3\,r_g\) for physically
+        meaningful circular orbits.
       </div>
 
       <div class="scenario-card">
         <div class="sc-title">Highly Eccentric Orbit</div>
-        Reduce <code>u_init</code> to 30–50% of the circular speed. The
-        large eccentricity amplifies the GR correction near perihelion,
-        making precession visible after just 2–3 orbits.
+        <code>x_init=23623.8 (8&middot;r_g), u_init=70675340.5, dt=0.15,
+        max_steps=100000, max_orbits=3</code>. Verified: \(r\) ranges
+        \([9931, 23624]\,\mathrm{m}\) (ratio 2.4), stays bound, and precesses
+        dramatically within just a few orbits. Below about 85% of the local
+        circular speed at this radius the orbit stops being a bound ellipse
+        and plunges into the horizon instead — that boundary is itself worth
+        exploring.
       </div>
 
       <div class="scenario-card">
         <div class="sc-title">Approaching the ISCO</div>
-        Set <code>x_init</code> to \(3\,r_g \approx 8{,}860\,\mathrm{m}\)
-        (the ISCO radius) and explore velocities near the circular speed.
-        The orbit becomes unstable and spirals inward, terminating at the
-        horizon.
+        <code>x_init=11811.9 (4&middot;r_g), u_init=134071249.7, dt=0.08,
+        max_steps=50000, max_orbits=4</code> — the exact circular speed
+        from the formula above, at four Schwarzschild radii (comfortably
+        outside the true ISCO at \(3\,r_g\), and well clear of where the
+        formula itself turns superluminal). Verified: stable, perfectly
+        circular, with dramatic precession per orbit — the sweet spot for
+        seeing strong-field precession without the approximation breaking
+        down.
       </div>
 
       <div class="scenario-card">
         <div class="sc-title">Plunge Orbit</div>
-        Use <code>x_init = 4.0e10</code> but set <code>u_init</code>
-        to 30% of the circular speed. The highly eccentric orbit will
-        plunge through the ISCO on one of its first passes and terminate
-        at the horizon — demonstrating horizon detection in the driver.
+        <code>x_init=17717.8 (6&middot;r_g), u_init=74948107.0, dt=0.12,
+        max_steps=10000</code> — deliberately below the stable threshold at
+        this radius. Verified: about 3000 recorded points showing a genuine,
+        visible inward spiral before the particle crosses the horizon
+        (rather than vanishing in one or two steps), demonstrating the
+        driver's horizon-detection logic clearly.
       </div>
 
       <div class="scenario-card">

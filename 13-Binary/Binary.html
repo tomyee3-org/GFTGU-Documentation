@@ -1001,6 +1001,20 @@ python main.py</pre>
       <li>
         <span class="tag">"velocity space"</span>
         <span>Velocity-space trajectories — \(v_x\) vs. \(v_y\) for each body, also on equal-aspect axes since both are in the same units. For Newtonian (inverse-square) gravity this "hodograph" is <em>always a circle</em>, regardless of how eccentric the corresponding position-space orbit is — a distinctive, easy-to-miss feature of the \(1/r^2\) force law.</span>
+        <div class="note" style="margin-top:8px;">
+          <strong>Equal masses:</strong> when \(M_A = M_B\), momentum
+          conservation forces \(v_A = -v_B\) exactly at every instant (this
+          holds to machine precision, not just approximately). That makes
+          body B's hodograph the exact point-reflection of body A's through
+          the origin — same radius, but generally a different center, since
+          in general the Kepler hodograph circle is offset from the origin
+          rather than centered on it. For a <em>near-circular</em> orbit
+          that offset is small, so the two circles nearly coincide on the
+          plot; they do not shrink to a point, and they are not expected
+          to — that would require zero velocity, not equal masses. For a
+          more eccentric equal-mass orbit the two circles are more visibly
+          separated (same radius, offset centers).
+        </div>
       </li>
       <li>
         <span class="tag">"position vs. time, body A"</span>
