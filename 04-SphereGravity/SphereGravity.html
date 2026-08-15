@@ -444,7 +444,6 @@
        target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
   </div>
 </header>
-</header>
 
 <!-- ══════════════════════ SIDEBAR ══════════════════════ -->
 <nav>
@@ -505,8 +504,9 @@
   <p>
     These results have profound consequences throughout physics and astronomy. They allow us to
     treat the Earth, Sun, and any other spherically symmetric body as point masses when computing
-    orbits. They also underlie the equivalence principle arguments used in cosmology, where matter
-    enclosed within a sphere of radius \(r\) is the only matter relevant for dynamics at that radius.
+    exterior gravitational fields. The theorem is also important in Newtonian cosmology: for a
+    spherically symmetric mass distribution, matter in shells outside a chosen radius makes no net
+    contribution to the gravitational acceleration at that radius.
   </p>
   <p>
     Newton proved the theorem analytically. Here we verify it numerically: because any spherically
@@ -533,9 +533,11 @@
 
   <p>
     The program uses <em>dimensionless</em> units throughout: the shell radius is set to
-    \(R = 1\), the shell's surface density \(\rho = 1\), and \(G = 1\). The shell's relative
-    thickness (ratio of physical thickness to radius) is \(\varepsilon = 0.001\), small enough
-    that the thin-shell approximation is excellent.
+    \(R = 1\), the volume-density scale is \(\rho = 1\), and \(G = 1\). The parameter
+    \(\varepsilon = 0.001\) supplies a nominal thickness factor when assigning mass to each
+    surface tile. Geometrically, however, all tile masses lie on the radius-\(1\) surface, so
+    the calculation is a thin-shell model; changing \(\varepsilon\) changes the mass scale,
+    not the shell geometry.
   </p>
 
   <!-- ── Governing Equations ── -->
@@ -574,8 +576,9 @@
 
   <p>
     All \(n_\text{div}\) tiles in a ring of constant latitude are identical, so the ring's
-    contribution to the total mass is \(n_\text{div}\,\delta m\). The total shell mass, computed
-    by summing all rings, evaluates analytically to \(M = 4\pi\varepsilon\).
+    contribution to the total mass is \(n_\text{div}\,\delta m\). In the continuum limit the
+    shell mass is \(M = 4\pi\varepsilon\). The program uses the finite midpoint sum produced by
+    the same latitude tiling, which approaches this value as <code>nDiv</code> increases.
   </p>
 
   <h3>Distance from tile to observer</h3>
@@ -663,14 +666,16 @@
     </li>
     <li>
       <strong>Outer loop: radial positions.</strong>
-      Step through 1 000 observation radii \(r_j = 0.1\,j\) for \(j = 0, 1, \ldots, 999\)
-      (the range \(r \in [0, 99.9]\), with the shell at \(r = 1\)).
+      Step through 1 000 observation radii \(r_j = 0.005\,j\) for
+      \(j = 0, 1, \ldots, 999\), giving \(r \in [0, 4.995]\). Restricting the plot to about
+      five shell radii leaves enough horizontal space to see the behaviour throughout the
+      interior \(r &lt; 1\), while still showing the exterior \(1/r^2\) falloff.
     </li>
     <li>
       <strong>Skip the shell surface.</strong>
-      The step at \(j = 10\) (i.e., \(r = 1.0\)) falls exactly on the shell. Newtonian gravity
-      is not well-defined there (it depends on shell thickness and the exact location within the
-      shell), so this point is skipped and its acceleration is set to zero.
+      The step at \(j = 200\) (i.e., \(r = 1.0\)) falls exactly on the idealized thin shell.
+      The field has a discontinuity across the surface, so this point is skipped and its plotted
+      value is set to zero.
     </li>
     <li>
       <strong>Inner loop: tile summation.</strong>
@@ -696,30 +701,33 @@
   <!-- ── Accuracy ── -->
   <h2 id="accuracy">Accuracy and Convergence</h2>
   <p>
-    The key parameter controlling accuracy is <code>nDiv</code>. As it increases the tiles become
-    smaller and their point-mass approximation improves. The table below shows the following
-    convergence behaviour in the relative-difference output:
+    The key parameter controlling angular resolution is <code>nDiv</code>. As it increases,
+    the latitude rings become narrower and the numerical sum approaches the exact shell-theorem
+    result. Away from the shell surface, the midpoint-style angular discretisation converges
+    approximately as \(n_\text{div}^{-2}\).
   </p>
 
   <table class="param-table">
     <thead>
       <tr>
         <th>nDiv</th>
-        <th>Max relative error (just outside shell)</th>
-        <th>Run-time scaling</th>
+        <th>Relative error at \(r=1.1\)</th>
+        <th>Expected trend</th>
       </tr>
     </thead>
     <tbody>
       <tr><td>100</td><td>≈ 2.5 × 10<sup>−3</sup></td><td>baseline</td></tr>
-      <tr><td>1 000</td><td>≈ 2.5 × 10<sup>−5</sup></td><td>10×</td></tr>
-      <tr><td>10 000</td><td>≈ 2.5 × 10<sup>−7</sup></td><td>100×</td></tr>
+      <tr><td>1 000</td><td>≈ 2.5 × 10<sup>−5</sup></td><td>about 100× smaller</td></tr>
+      <tr><td>10 000</td><td>≈ 2.5 × 10<sup>−7</sup></td><td>about 100× smaller again</td></tr>
     </tbody>
   </table>
 
   <p>
-    Because the error arises from approximating smooth integrals by a finite Riemann sum, the
-    convergence rate is approximately \(\delta \sim n_\text{div}^{-2}\): doubling the number of
-    divisions roughly quarters the error.
+    It is important to compare the error at a <em>fixed radius</em>. Very close to the shell,
+    the contribution from nearby tiles becomes sharply concentrated and is much harder to
+    resolve with a coarse angular grid. With the present fine radial sampling, the first point
+    outside the shell is \(r=1.005\), where the error can be much larger than it is at
+    \(r=1.1\). This near-surface behaviour is itself a useful numerical effect to investigate.
   </p>
 
   <!-- ── Modules ── -->
@@ -735,9 +743,9 @@
       <div class="mod-role">Physics</div>
       <h4>physics_spheregravity.py</h4>
       <p>
-        Encodes the shell-tiling algorithm and the gravitational summation. All physical
-        formulas (Eqs. 2–7) live here. The only literal numbers in this module are
-        physical constants: \(\pi\) and the conversion factor \(\pi/180\).
+        Encodes the shell-tiling algorithm, shell-mass calculation, gravitational summation,
+        and the conversion to relative-difference output. The formulas described in Eqs. 2–7
+        are implemented here.
       </p>
       <div class="sig">compute_shell_mass(nDiv, epsilon=0.001) → float</div>
       <div class="sig" style="margin-top:6px">compute_acceleration_profile(nDiv,
@@ -806,9 +814,9 @@
         <td>int</td>
         <td>
           Number of angular divisions per coordinate. The shell is divided into
-          <em>n</em><sub>div</sub> latitude rings, each containing
-          <em>n</em><sub>div</sub> tiles. Larger values give higher accuracy at the cost of
-          longer computation time. Slider maximum in Schutz's original GUI was 10 000.
+          <em>n</em><sub>div</sub> latitude rings, each representing
+          <em>n</em><sub>div</sub> identical azimuthal tiles. Larger values give higher
+          angular resolution at the cost of longer computation time.
         </td>
       </tr>
       <tr>
@@ -826,9 +834,10 @@
         <td>0.001</td>
         <td>float</td>
         <td>
-          Fractional thickness of the shell (\(\varepsilon = \text{thickness}/R\)). Does not
-          affect the accuracy of the point-mass approximation, but does scale the total mass
-          \(M = 4\pi\varepsilon\). 
+          Mass-scale factor corresponding to nominal shell thickness divided by radius.
+          Because every tile mass is placed on the same spherical surface, changing
+          \(\varepsilon\) scales the raw acceleration and total mass but does not make the
+          modeled shell geometrically thicker.
         </td>
       </tr>
     </tbody>
@@ -868,10 +877,11 @@ python main.py</pre>
 
   <p>
     With the default settings (<code>nDiv = 100</code>, <code>outputType = 'relative
-    difference'</code>) the program computes the acceleration profile over 1 000 radii and
-    opens a matplotlib window. The plot shows the fractional error in the shell-theorem
-    computation, which is about \(2.5\times10^{-3}\) (0.25%) at its worst, just outside the
-    shell.
+    difference'</code>) the program computes the acceleration profile over 1 000 radii from
+    \(r=0\) to \(r=4.995\) and opens a matplotlib window. Away from the shell surface the
+    numerical result is already close to Newton's theorem—for example, the relative error at
+    \(r=1.1\) is about \(2.5\times10^{-3}\) (0.25%). Much closer to \(r=1\), the finite angular
+    tiling is harder to resolve and the error is larger.
   </p>
 
   <h3>Switching output mode</h3>
@@ -906,62 +916,43 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
     </div>
 
     <div class="scenario-card">
-      <h4>2 · Convergence Study: Powers of Ten</h4>
+      <h4>2 · Convergence at a Fixed Radius</h4>
       <p>
         Switch to <code>outputType = 'relative difference'</code> and run with
-        <code>nDiv = 10, 100, 1000, 10000</code> in succession. Observe the maximum relative
-        error (just outside the shell) decrease from about 2.3% at <code>nDiv=10</code>, to
-        about 0.25% at <code>nDiv=100</code>, to \(\sim 2.5\times10^{-5}\) at
-        <code>nDiv=1000</code>, to \(\sim 2.5\times10^{-7}\) at <code>nDiv=10000</code> —
-        each tenfold increase in <code>nDiv</code> reduces the error almost exactly
-        a hundredfold, confirming \(\delta \propto n_\text{div}^{-2}\).
+        <code>nDiv = 100, 1000, 10000</code>. Compare the plotted value at the same exterior
+        radius, \(r=1.1\), in each run. The relative error should fall from about
+        \(2.5\times10^{-3}\) to \(2.5\times10^{-5}\) and then to
+        \(2.5\times10^{-7}\). Thus each tenfold increase in <code>nDiv</code> reduces the
+        error at this fixed radius by about a factor of 100, consistent with approximate
+        \(n_\text{div}^{-2}\) convergence.
       </p>
-      <div class="sc-params">nDiv=10 / 100 / 1000 / 10000 · outputType='relative difference'</div>
+      <div class="sc-params">nDiv=100 / 1000 / 10000 · compare at r=1.1</div>
     </div>
 
     <div class="scenario-card">
-      <h4>3 · Worst-Case Error Location</h4>
+      <h4>3 · Why the Surface Is Numerically Difficult</h4>
       <p>
-        At low accuracy (small <code>nDiv</code>) the relative error peaks just outside the
-        shell at \(r \approx 1.1\). Verify this by plotting with <code>nDiv = 100</code> and
-        locating the maximum of \(|\delta(r)|\). As <code>nDiv</code> grows the peak migrates
-        and shrinks.
+        Keep <code>outputType = 'relative difference'</code> and examine exterior points
+        progressively closer to the shell, such as \(r=1.1,\ 1.05,\ 1.01,\ 1.005\).
+        At a fixed <code>nDiv</code>, the error grows as \(r\) approaches 1 because nearby
+        surface tiles make an increasingly sharp contribution that a coarse angular grid
+        resolves poorly. Repeat with a larger <code>nDiv</code> and observe how the
+        near-surface region improves.
       </p>
-      <div class="sc-params">nDiv=100 · outputType='relative difference'</div>
+      <div class="sc-params">nDiv=100, then 1000 · compare r=1.1, 1.05, 1.01, 1.005</div>
     </div>
 
     <div class="scenario-card">
-      <h4>4 · Inside the Shell: Residual Acceleration</h4>
+      <h4>4 · Interior Convergence</h4>
       <p>
-        With <code>outputType = 'relative difference'</code>, examine the values for
-        \(r &lt; 1\). These should be very small (ideally zero), but numerical discretisation
-        gives a non-zero residual. Watch how this residual shrinks as <code>nDiv</code>
-        increases, providing a second convergence indicator.
+        Newton's theorem predicts zero acceleration everywhere inside the shell. In
+        <code>relative difference</code> mode the program therefore plots the residual
+        numerical acceleration divided by the shell mass. Compare a fixed interior point
+        such as \(r=0.5\) or \(r=0.9\) as <code>nDiv</code> increases. The residual should
+        approach zero. Points extremely close to the inner surface are again more difficult
+        numerically and can be compared separately with Experiment 3.
       </p>
-      <div class="sc-params">nDiv=100 / 1000 · focus on r &lt; 1</div>
-    </div>
-
-    <div class="scenario-card">
-      <h4>5 · Effect of Shell Thickness</h4>
-      <p>
-        Vary the optional <code>epsilon</code> parameter in <code>physics_spheregravity.py</code>
-        (e.g., 0.1, 0.01, 0.001). Note that <code>epsilon</code> scales the total mass \(M\)
-        but should not affect the <em>relative difference</em> output, confirming that the
-        shell-theorem result is independent of thickness.
-      </p>
-      <div class="sc-params">epsilon=0.1 / 0.01 / 0.001 · outputType='relative difference'</div>
-    </div>
-
-    <div class="scenario-card">
-      <h4>6 · Ellipsoidal Shell (Advanced)</h4>
-      <p>
-        Replace the spherical shell with an
-        axially-symmetric ellipsoidal shell. The shell-theorem result (zero interior
-        acceleration) still holds for ellipsoids, but the exterior field differs from a point
-        mass. Modify <code>physics_spheregravity.py</code> to parameterise the shell by an
-        axis ratio \(a/b\) and verify the interior result.
-      </p>
-      <div class="sc-params">custom: replace r=1 shell with r=sqrt(cos²θ + (a/b)²sin²θ)</div>
+      <div class="sc-params">nDiv=100 / 1000 / 10000 · compare at r=0.5 or r=0.9</div>
     </div>
 
   </div>
@@ -1040,14 +1031,14 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
   <!-- ── Related programs ── -->
   <h2 id="related">Related Programs</h2>
   <p>
-    <strong>SphereGravity</strong> is the first gravitational computation in the book, establishing
-    the numerical foundations used by later programs:
+    <strong>SphereGravity</strong> provides a numerical demonstration of Newton's shell theorem,
+    a result used throughout later gravitational calculations:
   </p>
   <div class="related-list">
-    <a class="related-tag" href="../Star/Star_Help.html">Star (Ch. 8)</a>
-    <a class="related-tag" href="../Neutron/Neutron_Help.html">Neutron (Ch. 8)</a>
-    <a class="related-tag" href="../RelativisticOrbit/RelativisticOrbit_Help.html">RelativisticOrbit (Ch. 8)</a>
-    <a class="related-tag" href="../Atmosphere/Atmosphere_Help.html">Atmosphere (Ch. 7)</a>
+    <a class="related-tag" href="../07-Atmosphere/Atmosphere.html">Atmosphere (Ch. 7)</a>
+    <a class="related-tag" href="../08-Star/Star.html">Star (Ch. 8)</a>
+    <a class="related-tag" href="../20-Neutron/Neutron.html">Neutron (Ch. 20)</a>
+    <a class="related-tag" href="../21-RelativisticOrbit/RelativisticOrbit.html">RelativisticOrbit (Ch. 21)</a>
   </div>
 
   <p style="margin-top:18px; font-family:var(--sans); font-size:0.875rem; color:var(--muted);">
