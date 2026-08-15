@@ -1064,17 +1064,33 @@ force_law="inverse_square"</div>
         <h4>Verify Kepler's Third Law</h4>
         <p>
           Run nearly circular inverse-square orbits at several altitudes with
-          <code>return_diagnostics=True</code>. Estimate one revolution by unwrapping
-          \(\theta=\operatorname{atan2}(y,x)\) and finding when its change first reaches
-          \(2\pi\); interpolate between the two surrounding time samples for a better period
-          estimate. Confirm that \(T^2/r^3\) is approximately constant and repeat with smaller
-          <code>dt</code> to check convergence. Under the constant-\(g\) model, circular
+          <code>return_diagnostics=True</code>. In this mode, <code>run_earth_orbit()</code>
+          returns seven arrays rather than the usual four:
+          <code>xs</code> and <code>ys</code> are the projectile's x- and y-coordinates;
+          <code>xEarth</code> and <code>yEarth</code> contain the points used only to draw Earth's
+          surface; <code>ts</code> contains the elapsed times; and <code>us</code> and
+          <code>vs</code> are the x- and y-components of the projectile's velocity.
+          For this experiment you need only <code>xs</code>, <code>ys</code>, and <code>ts</code>.
+        </p>
+        <p>
+          The code below calculates the projectile's angular position around Earth at each
+          timestep. <code>np.unwrap()</code> removes the jump in <code>atan2</code> from
+          +&pi; to &minus;&pi;, so the accumulated change in angle can be followed continuously.
+          One complete revolution corresponds to an angular change of 2&pi;. Estimate the period
+          <em>T</em> from <code>ts</code> when that change first reaches 2&pi;; interpolating between
+          the two surrounding time samples gives a better estimate. Compare several orbital radii
+          and confirm that \(T^2/r^3\) is approximately constant. Repeat with smaller
+          <code>dt</code> to check convergence. Under the constant-<em>g</em> model, circular
           periods instead obey \(T^2\propto r\).
         </p>
         <div class="ep">result = run_earth_orbit(..., return_diagnostics=True)
-xs, ys, xE, yE, ts, us, vs = result
+xs, ys, xEarth, yEarth, ts, us, vs = result
+
+# xEarth and yEarth are only for drawing Earth; us and vs are not needed here.
 theta = np.unwrap(np.arctan2(ys, xs))
-# find first |theta-theta[0]| >= 2*pi and interpolate
+angle_travelled = np.abs(theta - theta[0])
+# Find the first point at which angle_travelled reaches 2*pi.
+# Use the corresponding values in ts to estimate the orbital period.
 force_law="inverse_square"</div>
       </div>
 
@@ -1082,20 +1098,37 @@ force_law="inverse_square"</div>
         <div class="ec-num">EXP-8</div>
         <h4>Energy Conservation Check</h4>
         <p>
-          Use <code>return_diagnostics=True</code> to compute the mechanical specific energy
-          at every stored point. For <code>"inverse_square"</code>, use
-          \(\mathcal{E}=\tfrac12(u^2+v^2)-k/r\); for <code>"simplified"</code>, use
-          \(\mathcal{E}=\tfrac12(u^2+v^2)+gr\). The continuous equations conserve these
-          quantities, but the algorithm employed here is not symplectic and does not conserve them exactly.
-          Plot \(\mathcal{E}(t)-\mathcal{E}(0)\), then repeat with <code>dt</code> halved
-          while increasing <code>maxSteps</code> to keep the same duration. The energy error
-          should decrease as the timestep is reduced.
+          Again use <code>return_diagnostics=True</code>. Here <code>xs</code> and <code>ys</code>
+          give the projectile's position, <code>ts</code> gives the elapsed time, and
+          <code>us</code> and <code>vs</code> give the two components of its velocity.
+          The arrays <code>xEarth</code> and <code>yEarth</code> are used only to draw Earth's
+          surface and are not needed for the energy calculation.
         </p>
-        <div class="ep">xs, ys, xE, yE, ts, us, vs = run_earth_orbit(
+        <p>
+          At each stored point, <code>np.hypot(xs, ys)</code> calculates the projectile's distance
+          \(r=\sqrt{x^2+y^2}\) from Earth's centre, while <code>us**2 + vs**2</code> is the
+          square of its speed, \(u^2+v^2\). For <code>"inverse_square"</code>, calculate the
+          mechanical specific energy from
+          \(\mathcal{E}=\tfrac12(u^2+v^2)-k/r\); for <code>"simplified"</code>, use
+          \(\mathcal{E}=\tfrac12(u^2+v^2)+gr\). "Specific" energy means energy per unit mass,
+          so no projectile mass is required.
+        </p>
+        <p>
+          The continuous equations conserve these quantities, but the numerical algorithm does
+          not conserve them exactly. Plot \(\mathcal{E}(t)-\mathcal{E}(0)\), which shows how
+          far the calculated energy has drifted from its initial value. Then halve
+          <code>dt</code> and increase <code>maxSteps</code> enough to keep the same simulated
+          duration. The energy error should decrease as the timestep is reduced.
+        </p>
+        <div class="ep">xs, ys, xEarth, yEarth, ts, us, vs = run_earth_orbit(
     ..., return_diagnostics=True)
+
+# xEarth and yEarth are not needed for this calculation.
 r = np.hypot(xs, ys)
-# inverse_square: E = 0.5*(us**2+vs**2) - K_APPROX/r
-# simplified:     E = 0.5*(us**2+vs**2) + G_SURFACE*r</div>
+speed_squared = us**2 + vs**2
+# inverse_square: E = 0.5*speed_squared - K_APPROX/r
+# simplified:     E = 0.5*speed_squared + G_SURFACE*r
+# Plot E - E[0] against ts.</div>
       </div>
 
     </div><!-- /exp-grid -->
