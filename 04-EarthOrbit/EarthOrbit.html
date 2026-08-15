@@ -470,9 +470,11 @@
     </p>
     <p>
       The program integrates the projectile's two-dimensional trajectory using a
-      fixed-timestep symplectic integrator, plotting the result against a reference circle
-      showing Earth's surface. All the parameters — altitude, launch velocity, timestep, and
-      step count — are set in <code>main.py</code>.
+      fixed-timestep, averaged-velocity algorithm, plotting
+      the result against a reference circle showing Earth's surface. The default force law also
+      uses a constant-magnitude-\(g\) model; an optional
+      <code>"inverse_square"</code> extension is provided for comparison. All the usual launch
+      parameters are set in <code>main.py</code>.
     </p>
   </section>
 
@@ -483,8 +485,8 @@
     <h3>Newton's Cannon Thought Experiment</h3>
     <p>
       Newton imagined a cannon mounted on a mountain so high it clears the atmosphere, firing
-      horizontally with increasing powder charges. The sequence of outcomes illustrates a
-      continuous family of trajectories:
+      horizontally with increasing powder charges. For the physical inverse-square law, the
+      sequence of outcomes illustrates a continuous family of trajectories:
     </p>
     <ul>
       <li>
@@ -500,28 +502,27 @@
         orbit is a closed ellipse with the launch point as one of the apsides.
       </li>
       <li>
-        <strong>Escape trajectory:</strong> at or above the escape speed \(v_e = \sqrt{2}\,v_c\)
-        the projectile leaves Earth and does not return.
+        <strong>Escape trajectory:</strong> for inverse-square gravity, at or above the escape
+        speed \(v_e = \sqrt{2}\,v_c\), the projectile leaves Earth and does not return.
       </li>
     </ul>
 
     <div class="warn">
-      <strong>Force-law correctness:</strong>  To emulate as closely as possible what was used in the 
-      CannonTrajectory module, the default setup of this program
-      is to use a <em>constant</em> magnitude \(|\mathbf{a}| = g\) (magnitude
-      fixed at 9.8 m s<sup>−2</sup>), only directed toward the centre.  For unrealistically low
-      orbits (less than a few kilometers) constant magnitude acceleration provides an adequate approximation.
-      <br>
-      However, by <strong>Bertrand's
-      theorem</strong>, only two central force laws produce closed orbits:
-      \(F \propto r^{-2}\) (Newtonian gravity) and \(F \propto r\) (harmonic oscillator).
-      A constant-magnitude force (\(F \propto r^0\)) causes the orbit to
-      <em>precess</em> — it produces a rosette pattern instead of a closed ellipse for any
-      eccentricity \(e > 0\). 
-      <br>
-      For more realistic orbits, and to allow completion of the Suggested Experiments past the first two,
-      the program provides the option to change the force law to "inverse_square".
-  
+      <strong>Constant magnitude central force versus inverse-square:</strong>
+      The default force model used by this program holds the magnitude of the acceleration fixed at
+      \(g = 9.8\) m s<sup>−2</sup> while continually redirecting it toward Earth's centre.
+      Near the surface this is a useful pedagogical approximation, but it is not the
+      inverse-square law and becomes increasingly unrealistic as the orbit ranges far from
+      Earth's surface.
+      <br><br>
+      Bertrand's theorem states that the inverse-square and isotropic harmonic-oscillator
+      central forces are the only such force laws for which <em>all</em> bounded orbits are
+      closed. Under constant-magnitude central force, non-circular bounded trajectories
+      generally precess and form rosette patterns rather than Keplerian ellipses. The circular
+      orbit remains a special closed case.
+      <br><br>
+      Use <code>"inverse_square"</code> for realistic higher-altitude, Kepler-law,
+      and escape-orbit experiments.
     </div>
 
     <h3>The Inverse-Square Force Law</h3>
@@ -537,10 +538,12 @@
       \]
     </div>
     <p>
-      where \(g = 9.8\) m s<sup>−2</sup> is the measured surface value,
-      \(R_\oplus = 6\,378\,200\) m is Earth's mean radius, and the composite constant
-      \(k \equiv g\,R_\oplus^2 \approx 3.987\times10^{14}\) m³ s<sup>−2</sup> is numerically
-      equal to \(GM_\oplus\). The direction is always toward the centre.
+      where \(g = 9.8\) m s<sup>−2</sup> and
+      \(R_\oplus = 6\,378\,200\) m is a
+      reference radius close to Earth's equatorial radius, not the modern mean radius.
+      Their product \(k \equiv gR_\oplus^2 \approx 3.987\times10^{14}\) m³ s<sup>−2</sup>
+      is close to, but not exactly equal to, the accepted value of \(GM_\oplus\).
+      The acceleration direction is always toward the centre.
     </p>
 
     <h3>Circular and Escape Speeds</h3>
@@ -593,8 +596,8 @@
 
     <h3>Equations of Motion</h3>
     <p>
-      The state vector is \((x,\,y,\,u,\,v)\) where \((x, y)\) is the projectile position
-      in the equatorial plane (origin at Earth's centre) and \((u, v)\) the velocity.
+      The state vector is \((x,\,y,\,u,\,v)\), where \((x, y)\) is the projectile position
+      in the equatorial plane (with the origin at Earth's centre) and \((u, v)\) is the velocity.
       Newton's second law gives four coupled ODEs:
     </p>
     <div class="eq-block">
@@ -655,11 +658,12 @@
   <section id="algorithm">
     <h2>Integration Algorithm</h2>
 
-    <h3>Averaged-Velocity Euler (Symplectic Leapfrog)</h3>
+    <h3>The Averaged-Velocity Fixed-Step Method</h3>
     <p>
-      The driver uses a <em>fixed-timestep</em> integrator. At each step the velocity at the
-      end of the interval is estimated first, and the position is then advanced using the
-      average of the old and new velocities:
+      In the integration algorithm employed by this program,
+      the acceleration is evaluated at the <em>beginning</em> of each interval,
+      the velocity is advanced using that one acceleration value, and the position is then
+      advanced using the average of the old and new velocities:
     </p>
     <div class="eq-block">
       <div class="eq-label">Integration step — Eq. 5</div>
@@ -673,10 +677,9 @@
       \]
     </div>
     <p>
-      This scheme is equivalent to the velocity Verlet / leapfrog method and is
-      <em>symplectic</em>: it conserves a slightly modified energy exactly, so orbits neither
-      spiral inward nor outward over arbitrarily long integrations. Unlike the plain (forward)
-      Euler method it does not accumulate a secular energy drift.
+      This simple algorithm has limitations. For constant acceleration it gives the exact
+      kinematic position update; for position-dependent gravity it accumulates numerical error. Quantitative orbital tests
+      should therefore be repeated with smaller <code>dt</code> to check convergence.
     </p>
 
     <h3>Termination Conditions</h3>
@@ -695,11 +698,11 @@
     <div class="note">
       <strong>Choosing dt and maxSteps:</strong>
       At the default <code>dt = 0.4</code> s and launch speed ≈ 7 900 m s<sup>−1</sup>,
-      one orbital period at 300 m altitude is roughly 5 060 s, requiring about 12 650 steps.
-      The default <code>maxSteps = 15 000</code> therefore covers slightly more than one orbit.
-      For higher altitudes (larger radii) the period is longer; increase
-      <code>maxSteps</code> proportionally, or shrink <code>dt</code> if higher positional
-      accuracy is needed.
+      one near-surface revolution takes roughly 5 060 s, requiring about 12 650 steps.
+      The default <code>maxSteps = 15 000</code> therefore covers slightly more than one
+      revolution if the projectile does not hit Earth first. For longer-period orbits increase
+      <code>maxSteps</code>; for better numerical accuracy decrease <code>dt</code> and increase
+      <code>maxSteps</code> so the desired simulated duration is retained.
     </div>
   </section>
 
@@ -716,21 +719,22 @@
         <p>
           Defines Earth's physical constants and <strong>two</strong> selectable gravitational
           force laws via the <code>force_law</code> argument to
-          <code>compute_acceleration()</code>: Schutz's original constant-magnitude
-          <code>"simplified"</code> approximation (the default) and the physically accurate
-          <code>"inverse_square"</code> law, kept available for direct comparison. The only
-          literal numbers in this module are the two measured surface parameters \(g\) and
-          \(R_\oplus\); the composite constant <code>_K</code> is derived from them.
+          <code>compute_acceleration()</code>: the constant-magnitude <code>"simplified"</code>
+          approximation (the default) and the physically accurate <code>"inverse_square"</code>
+          law. The only
+          literal physical inputs are rounded values for \(g\) and \(R_\oplus\);
+          <code>K_APPROX</code> is derived from them and is only approximately
+          \(GM_\oplus\).
         </p>
-        <div class="sig">G_SURFACE = 9.8            # m/s²  (surface gravity)
-R_EARTH   = 6_378_200.0   # m     (Earth's mean radius)
-_K = G_SURFACE * R_EARTH**2  # m³/s² (= GM_Earth)
+        <div class="sig">G_SURFACE = 9.8
+R_EARTH   = 6_378_200.0   # m; reference radius
+K_APPROX = G_SURFACE * R_EARTH**2  # close to GM_Earth
 
 ForceLaw = Literal["simplified", "inverse_square"]
 
 def compute_acceleration(x, y, force_law="simplified") -> (ax, ay)
     # "simplified":      ax = -G_SURFACE * x / r,  ay = -G_SURFACE * y / r
-    # "inverse_square":  ax = -_K * x / r³,         ay = -_K * y / r³</div>
+    # "inverse_square":  ax = -K_APPROX * x / r³,   ay = -K_APPROX * y / r³</div>
       </div>
 
       <!-- driver -->
@@ -738,23 +742,25 @@ def compute_acceleration(x, y, force_law="simplified") -> (ax, ay)
         <div class="mc-role">Driver Layer</div>
         <div class="mc-name">driver_earthorbit.py</div>
         <p>
-          Implements the fixed-step symplectic integration loop. Imports
+          Implements the fixed-step averaged-velocity integration loop. Imports
           <code>compute_acceleration</code>, <code>R_EARTH</code>, and <code>ForceLaw</code>
-          from the physics module, and forwards its own <code>force_law</code> argument
-          through to <code>compute_acceleration()</code> at every step.
-          Builds the 401-point Earth-surface reference circle and advances the projectile until
-          surface impact or <code>maxSteps</code> is reached.
+          from the physics module, and forwards <code>force_law</code> to
+          <code>compute_acceleration()</code> at every step. Builds the 401-point Earth-surface
+          reference circle and advances the projectile until surface impact or
+          <code>maxSteps</code> is reached. With <code>return_diagnostics=True</code>, it also
+          returns time and velocity arrays for quantitative experiments.
         </p>
         <div class="sig">from physics_earthorbit import compute_acceleration, R_EARTH, ForceLaw
 
 def run_earth_orbit(
-    h0        = 300.0,        # initial altitude (m)
-    uInit     = 0.0,          # initial x-velocity (m/s) -- tangential at launch
-    vInit     = 7900.0,       # initial y-velocity (m/s) -- radial at launch
-    dt        = 0.4,          # timestep (s)
-    maxSteps  = 15000,        # max integration steps
-    force_law: ForceLaw = "simplified"
-) -> (xs, ys, xEarth, yEarth)</div>
+    h0        = 300.0,
+    uInit     = 7900.0,       # initial x/tangential velocity (m/s)
+    vInit     = 0.0,          # initial y/radial velocity (m/s)
+    dt        = 0.4,
+    maxSteps  = 15000,
+    force_law: ForceLaw = "simplified",
+    return_diagnostics = False
+)</div>
       </div>
 
       <!-- plot -->
@@ -777,12 +783,10 @@ def run_earth_orbit(
         <div class="mc-role">Entry Point</div>
         <div class="mc-name">main.py</div>
         <p>
-          The only file the user needs to edit. Set the launch parameters and
+          The only file most users need to edit. Set the launch parameters and
           <code>force_law</code> here, then run <code>python main.py</code>. The plot appears
-          immediately. Note that <code>uInit</code> and <code>vInit</code> are swapped relative
-          to <code>run_earth_orbit()</code>'s own bare defaults, since a purely tangential
-          launch (the actual "attempt orbit" scenario) needs <code>uInit</code> nonzero and
-          <code>vInit</code> zero, not the other way around.
+          immediately. <code>uInit</code> is the x/tangential (horizontal-at-launch)
+          component, and <code>vInit</code> is the y/radial (vertical-at-launch) component.
         </p>
         <div class="sig">from driver_earthorbit import run_earth_orbit
 from plot_earthorbit  import plot_earth_orbit
@@ -808,11 +812,10 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
     <h2>Parameters</h2>
 
     <p>
-      All parameters are set as arguments to <code>run_earth_orbit()</code> in
-      <code>main.py</code>. As actually called in <code>main.py</code> (which overrides
-      two of <code>run_earth_orbit()</code>'s own bare defaults, see the table below), the
-      defaults produce a nearly circular orbit just 300 m above Earth's surface — the
-      idealised Newton's Cannon scenario.
+      All ordinary launch parameters are set as arguments to <code>run_earth_orbit()</code>
+      in <code>main.py</code>. The defaults reproduce the Newton's Cannon setup:
+      a tangential launch at 7 900 m s<sup>−1</sup> from 300 m above the reference Earth
+      radius, using the constant-magnitude-\(g\) force law.
     </p>
 
     <table class="param-table">
@@ -839,30 +842,26 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
         </tr>
         <tr>
           <td class="pname">uInit</td>
-          <td class="pdefault">0.0</td>
+          <td class="pdefault">7900.0</td>
           <td>m s<sup>−1</sup></td>
           <td>
-            Initial x-velocity (<strong>tangential</strong> component at launch, since the
-            launch point sits on the \(y\)-axis). This is the component that must be
-            nonzero to attempt an orbit — <code>main.py</code> overrides this default to
-            <code>7900.0</code>. The circular speed at 300 m altitude is
-            \(v_c \approx 7\,906\) m s<sup>−1</sup>; 7 900 m s<sup>−1</sup> is marginally
-            below circular, producing a very slightly sub-circular orbit that grazes the
-            surface. Increase to ~7 910 m s<sup>−1</sup> for a clean circular orbit at this
-            altitude. Zero here (the bare function default) instead gives a purely radial
-            (straight up) launch.
+            Initial x-velocity (<strong>tangential/horizontal</strong> at launch, since the
+            launch point sits on the \(y\)-axis). The inverse-square circular-speed estimate
+            at 300 m altitude is \(v_c \approx 7\,906\) m s<sup>−1</sup>. The default setup
+            uses 7 900 m s<sup>−1</sup>, which is slightly sub-orbital. Try different values
+            to see their effects. Because the numerical method is approximate, a trajectory that looks circular on
+            the whole-Earth plot should not be interpreted as a high-precision orbit.
           </td>
         </tr>
         <tr>
           <td class="pname">vInit</td>
-          <td class="pdefault">7900.0</td>
+          <td class="pdefault">0.0</td>
           <td>m s<sup>−1</sup></td>
           <td>
-            Initial y-velocity (<strong>radial</strong> component at launch). Zero gives a
-            purely tangential launch, placing the start point at an apsis of the orbit —
-            <code>main.py</code> overrides this default to <code>0.0</code> for exactly
-            that reason. A non-zero value adds a radial component and rotates the orbit's
-            orientation.
+            Initial y-velocity (<strong>radial/vertical</strong> at launch). Zero gives a
+            purely tangential launch and places the start point at an apsis when the tangential
+            speed is not exactly circular. A non-zero value adds a radial component and changes
+            the orbit's orientation and eccentricity.
           </td>
         </tr>
         <tr>
@@ -870,10 +869,10 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
           <td class="pdefault">0.4</td>
           <td>s</td>
           <td>
-            Fixed integration timestep. The symplectic integrator is stable for any
-            \(\Delta t\), but positional accuracy improves with smaller values.
-            Halving <code>dt</code> while doubling <code>maxSteps</code> gives the
-            same simulated duration with twice the spatial resolution.
+            Fixed integration timestep. Smaller values generally improve numerical accuracy;
+            excessively large timesteps can distort the trajectory. Halving <code>dt</code>
+            while approximately doubling <code>maxSteps</code> preserves the simulated duration
+            while increasing temporal resolution.
           </td>
         </tr>
         <tr>
@@ -888,15 +887,27 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
           </td>
         </tr>
         <tr>
+          <td class="pname">return_diagnostics</td>
+          <td class="pdefault">False</td>
+          <td>—</td>
+          <td>
+            Optional analysis output. When <code>True</code>, the driver returns
+            <code>ts</code>, <code>us</code>, and <code>vs</code> after the usual four arrays.
+            This is useful for period and energy experiments and leaves the normal plotting
+            interface unchanged when <code>False</code>.
+          </td>
+        </tr>
+        <tr>
           <td class="pname">force_law</td>
           <td class="pdefault">"simplified"</td>
           <td>—</td>
           <td>
-            <code>"simplified"</code> (default) keeps Schutz's original constant-magnitude
-            approximation; <code>"inverse_square"</code> switches to the physically accurate
-            law. Several of the Suggested Experiments below (closed elliptical orbits,
-            Kepler's third law) require <code>"inverse_square"</code> explicitly, since
-            under the default law only <em>circular</em> orbits stay closed.
+            <code>"simplified"</code> (default) runs the simulation using the constant-magnitude
+            approximation; <code>"inverse_square"</code> switches to the inverse-square
+            force law. Several Suggested Experiments below (Keplerian ellipses, escape, and
+            Kepler's third law) require <code>"inverse_square"</code> explicitly. Under the
+            default constant-magnitude force, non-circular bounded trajectories generally
+            precess rather than tracing a fixed Kepler ellipse.
           </td>
         </tr>
       </tbody>
@@ -938,9 +949,11 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
       <em>EarthOrbit — Attempting to Achieve Orbit</em>.
     </p>
     <p>
-      The four arrays returned by <code>run_earth_orbit()</code> can also be used directly
-      for custom analyses — for example, computing altitude vs. time, speed vs. time, or
-      overlaying multiple trajectories launched at different speeds on the same figure.
+      By default <code>run_earth_orbit()</code> returns the same four arrays used by the
+      plotter. For quantitative work, call it with <code>return_diagnostics=True</code>; the
+      function then additionally returns <code>ts</code>, <code>us</code>, and <code>vs</code>,
+      aligned with the position arrays. These make it straightforward to estimate orbital
+      periods, plot speed, or examine numerical energy error.
     </p>
   </section>
 
@@ -954,11 +967,12 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
         <div class="ec-num">EXP-1</div>
         <h4>Find the Circular Speed</h4>
         <p>
-          With a purely tangential launch at 300 m altitude, scan <code>uInit</code>
-          until the red trajectory closes into a circle exactly matching the blue Earth
-          circle. Compare your empirical value with the theoretical prediction
-          \(v_c = \sqrt{k/r}\) — at this altitude the <code>"simplified"</code> and
-          <code>"inverse_square"</code> laws agree to within 0.01%, so either works here.
+          This experiment sets up a purely tangential launch at 300 m
+          altitude. Start at 7 900 m s<sup>−1</sup> and increase toward 7 906 m s<sup>−1</sup>
+          until the path visually follows Earth's surface for a full revolution. Compare with
+          \(v_c=\sqrt{k/r}\). At this altitude the two force laws have nearly the same circular
+          speed. Remember that visual agreement on a whole-Earth plot is a pedagogical test,
+          not a precision measurement; reduce <code>dt</code> to examine numerical error.
         </p>
         <div class="ep">h0=300.0, vInit=0.0
 uInit=7906.0  (scan from 7900)</div>
@@ -968,13 +982,14 @@ uInit=7906.0  (scan from 7900)</div>
         <div class="ec-num">EXP-2</div>
         <h4>Sub-orbital Arc</h4>
         <p>
-          Reduce the launch speed well below circular. The trajectory should curve
-          back and intersect the Earth-surface circle. Vary the speed and observe how
-          the range increases — a numerical demonstration of Newton's Cannon at low
-          powder charges.
+          Use a launch speed only modestly below circular so the impact arc is visible on
+          the whole-Earth plot. Compare several values between about 7 800 and 7 900 m s<sup>−1</sup>.
+          Lower values such as 5 000 m s<sup>−1</sup> hit the surface so quickly that the
+          trajectory is nearly indistinguishable from a dot at this plotting scale.
         </p>
         <div class="ep">h0=300.0, vInit=0.0
-uInit=5000.0</div>
+uInit=7800, 7850, 7900
+force_law="simplified"</div>
       </div>
 
       <div class="exp-card">
@@ -1015,26 +1030,28 @@ force_law="inverse_square"</div>
         <div class="ec-num">EXP-5</div>
         <h4>Radial Launch Component</h4>
         <p>
-          Keep the total launch speed fixed at \(v_c\) but split it between
-          <code>uInit</code> (tangential) and <code>vInit</code> (radial). The orbit
-          is no longer circular — its orientation rotates and its eccentricity depends
-          on the fraction of radial velocity. (Under the default force law the resulting
-          orbit will also precess turn to turn, on top of this eccentricity effect.)
+          Use the inverse-square extension at a higher starting altitude so an eccentric
+          orbit has room to develop without immediately intersecting Earth. Keep the total
+          speed close to the local circular speed but give it a radial component. The orbit
+          is no longer circular; its orientation and eccentricity change even though the
+          total launch speed is almost unchanged.
         </p>
-        <div class="ep">h0=300.0, vInit=6000.0
-uInit=5000.0  # |v|≈7810 ≈ v_c</div>
+        <div class="ep">h0=1_000_000.0
+uInit=7307.0, vInit=800.0  # |v|≈7351 m/s ≈ local v_c
+dt=1.0, maxSteps=10000
+force_law="inverse_square"</div>
       </div>
 
       <div class="exp-card">
         <div class="ec-num">EXP-6</div>
         <h4>GEO Orbit</h4>
         <p>
-          A geostationary orbit sits at 35 786 km altitude where \(v_c \approx 3\,075\)
-          m s<sup>−1</sup>. Simulate this orbit and compare the orbital period with the
-          expected 24 hours. You will need a much smaller timestep and many more steps.
-          <strong>Requires <code>force_law="inverse_square"</code></strong> — at this
-          altitude the two laws disagree enormously (the default law gives a ~3.6 hour
-          period at the same radius, not 24 hours).
+          A geostationary orbit sits at about 35 786 km altitude where
+          \(v_c \approx 3\,075\) m s<sup>−1</sup>. Simulate this orbit and compare its period
+          with one sidereal day (about 23 h 56 min). A timestep of 10 s is still small compared
+          with the orbital period and keeps the number of steps manageable.
+          <strong>Requires <code>force_law="inverse_square"</code></strong> — at this altitude
+          the constant-\(g\) model gives a completely different period.
         </p>
         <div class="ep">h0=35_786_000.0, vInit=0.0
 uInit=3075.0
@@ -1046,16 +1063,18 @@ force_law="inverse_square"</div>
         <div class="ec-num">EXP-7</div>
         <h4>Verify Kepler's Third Law</h4>
         <p>
-          Run circular orbits at several altitudes and record the simulated period
-          (step count × dt) each time. Confirm that \(T^2 \propto r^3\) — Kepler's third
-          law — holds numerically across the full range from 300 m to 35 786 km.
-          <strong>Requires <code>force_law="inverse_square"</code></strong> — Kepler's
-          third law is a direct consequence of the \(1/r^2\) force law. Under the default
-          constant-\(g\) law, circular-orbit periods instead obey \(T^2 \propto r\), a
-          completely different scaling, so this check would otherwise appear to fail.
+          Run nearly circular inverse-square orbits at several altitudes with
+          <code>return_diagnostics=True</code>. Estimate one revolution by unwrapping
+          \(\theta=\operatorname{atan2}(y,x)\) and finding when its change first reaches
+          \(2\pi\); interpolate between the two surrounding time samples for a better period
+          estimate. Confirm that \(T^2/r^3\) is approximately constant and repeat with smaller
+          <code>dt</code> to check convergence. Under the constant-\(g\) model, circular
+          periods instead obey \(T^2\propto r\).
         </p>
-        <div class="ep">h0 = 300, 300_000, 35_786_000
-uInit = v_c at each altitude
+        <div class="ep">result = run_earth_orbit(..., return_diagnostics=True)
+xs, ys, xE, yE, ts, us, vs = result
+theta = np.unwrap(np.arctan2(ys, xs))
+# find first |theta-theta[0]| >= 2*pi and interpolate
 force_law="inverse_square"</div>
       </div>
 
@@ -1063,21 +1082,20 @@ force_law="inverse_square"</div>
         <div class="ec-num">EXP-8</div>
         <h4>Energy Conservation Check</h4>
         <p>
-          Add a post-processing step in <code>main.py</code> to compute a specific-energy
-          quantity at every step and plot it vs. time, confirming the symplectic
-          integrator keeps it bounded without secular drift over many orbits. The correct
-          expression depends on which force law you're running:
-          under <code>force_law="inverse_square"</code>, use
-          \(\mathcal{E} = \tfrac{1}{2}(u^2+v^2) - k/r\) (the familiar \(-k/r\)
-          potential); under the default <code>"simplified"</code> law, the constant-\(g\)
-          acceleration instead corresponds to a <em>linear</em> potential, so use
-          \(\mathcal{E} = \tfrac{1}{2}(u^2+v^2) + g\,r\) instead — using the \(-k/r\) form
-          under the default law will show a small but real spurious drift, since it isn't
-          the quantity this force law actually conserves.
+          Use <code>return_diagnostics=True</code> to compute the mechanical specific energy
+          at every stored point. For <code>"inverse_square"</code>, use
+          \(\mathcal{E}=\tfrac12(u^2+v^2)-k/r\); for <code>"simplified"</code>, use
+          \(\mathcal{E}=\tfrac12(u^2+v^2)+gr\). The continuous equations conserve these
+          quantities, but the algorithm employed here is not symplectic and does not conserve them exactly.
+          Plot \(\mathcal{E}(t)-\mathcal{E}(0)\), then repeat with <code>dt</code> halved
+          while increasing <code>maxSteps</code> to keep the same duration. The energy error
+          should decrease as the timestep is reduced.
         </p>
-        <div class="ep">Compute from xs, ys returned by driver
-# save velocities in driver first
-# pick the E formula matching your force_law</div>
+        <div class="ep">xs, ys, xE, yE, ts, us, vs = run_earth_orbit(
+    ..., return_diagnostics=True)
+r = np.hypot(xs, ys)
+# inverse_square: E = 0.5*(us**2+vs**2) - K_APPROX/r
+# simplified:     E = 0.5*(us**2+vs**2) + G_SURFACE*r</div>
       </div>
 
     </div><!-- /exp-grid -->
@@ -1160,19 +1178,19 @@ force_law="inverse_square"</div>
     <ul class="related-list">
       <li>
         <strong>Orbit</strong> — the general planetary orbit program (Chapter 4). Uses a
-        full predictor-corrector with adaptive timestep rather than the fixed-step
-        leapfrog; supports five output modes including energy and velocity hodograph.
-        EarthOrbit is the pedagogically simpler version focused specifically on Newton's Cannon.
+        predictor-corrector scheme with adaptive timestep rather than EarthOrbit's simple
+        fixed-step algorithm; supports multiple output modes including energy and velocity
+        hodographs. EarthOrbit is the pedagogically simpler version focused specifically on
+        Newton's Cannon.
       </li>
       <li>
-        <strong>RelativisticOrbit</strong> — integrates the Schwarzschild geodesic in the
-        equatorial plane of a non-rotating black hole (Chapter 8). Shares the same
-        predictor-corrector integration core as Orbit but adds the GR correction term
-        \(Q/r^2\) to the effective acceleration.
+        <strong>RelativisticOrbit</strong> — explores strong-field orbital behaviour with
+        an effective relativistic correction to the orbital acceleration (Chapter 21).
+        It shares the predictor-corrector integration core used by Orbit.
       </li>
       <li>
         <strong>Binary</strong> — extends the Orbit integrator to a two-body system with
-        mutual gravitational interaction (Chapter 4). Both bodies move under Newton's
+        mutual gravitational interaction (Chapter 13). Both bodies move under Newton's
         law; the predictor-corrector loop handles the coupled equations simultaneously.
       </li>
       <li>
