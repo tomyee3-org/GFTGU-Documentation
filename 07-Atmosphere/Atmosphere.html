@@ -458,7 +458,7 @@
         <strong>Atmosphere</strong> models the vertical pressure, density, and temperature structure
         of a planetary atmosphere in hydrostatic equilibrium. Starting from a measured sea-level
         (or reference-level) pressure and a user-supplied temperature profile, the program integrates
-        upward in altitude until the pressure becomes negligible, then plots whichever of the three
+        upward in altitude until the numerical integration reaches its zero-pressure boundary, then plots whichever of the three
         atmospheric quantities the user selects.
       </p>
       <p>
@@ -469,6 +469,12 @@
         <strong>Textbook reference:</strong>
         Bernard Schutz, <em>Gravity from the Ground Up</em>, Cambridge University Press (2003),
         Chapter 7 — Investigations 7.1 and 7.3.
+      </div>
+      <div class="note">
+        <strong>Default Earth profile:</strong>
+        The lower-atmosphere temperatures use U.S. Standard Atmosphere 1976 values. The
+        thermospheric portion is a representative NRLMSIS 2.0 solar-maximum profile through
+        500 km; see <a href="#parameters">Parameters</a> for the run conditions and limitations.
       </div>
     </section>
 
@@ -533,9 +539,11 @@
       </div>
       <p>
         where \(\rho_0\) is the density computed from Eq.&nbsp;(7.2) at the surface pressure
-        \(p_0\) and surface temperature \(T_0\). For Earth, \(H \approx 8.5\;\text{km}\).
-        The initial integration step size is set to \(\Delta h = H/200\), giving about
-        200 steps per scale height.
+        \(p_0\) and surface temperature \(T_0\). For the default Earth parameters,
+        \(H \approx 8.4\;\text{km}\). The <em>initial</em> integration step size is
+        \(\Delta h = H/200\). If 1 000 steps are insufficient to reach the model's numerical
+        upper boundary, the driver restarts with a larger step; therefore the successful run
+        may use substantially fewer than 200 steps per scale height.
       </p>
 
       <h3>Temperature Profile</h3>
@@ -568,18 +576,12 @@
         \]
       </div>
       <p>
-        The exponent \(\alpha = 0.5\) (the default <code>power</code> attribute) means that
-        temperature falls as the square root of pressure. This closure was chosen for
-        mathematical convenience — it is continuous with the last measured point and keeps
-        the integration well-behaved — not because it is physically realistic. In reality
-        the thermosphere <em>rises</em> in temperature with altitude, due to solar UV/X-ray
-        absorption (as the default Earth profile's own measured points show, climbing to
-        423&nbsp;K by 500&nbsp;km — see <a href="#parameters">Parameters</a>). Because this
-        power law only takes over <em>above</em> the highest measured breakpoint, it
-        inevitably diverges from reality there: as the integration proceeds far enough that
-        pressure approaches zero, \(T = \beta\,p^{0.5}\) forces the temperature toward zero
-        as well, which is not a real physical effect — it is an artifact of extrapolating a
-        simple closure to its own breaking point.
+        The exponent \(\alpha = 0.5\) means that temperature falls as the square root of
+        pressure. This closure is a simple mathematical extrapolation, not a realistic model
+        of the upper atmosphere. The default Earth profile supplied in <code>main.py</code>
+        extends to 500 km; only above that altitude does this power-law relation take over.
+        As pressure approaches zero it also drives the modeled temperature toward zero, which
+        is a consequence of the chosen extrapolation rather than a real physical effect.
       </p>
     </section>
 
@@ -603,13 +605,13 @@
         last valid step is discarded.
       </p>
 
-      <h3>Adaptive Step-Size (dh Doubling)</h3>
+      <h3>Step-Size Restart (dh Doubling)</h3>
       <p>
-        The outer loop uses an adaptive strategy: if the inner for-loop of 1 000 steps
-        does not bring the pressure to zero (i.e. the atmosphere has not been fully traversed),
-        the step size \(\Delta h\) is doubled and the integration restarts from the surface.
-        This ensures that very extended atmospheres — or those with very large scale heights —
-        are always captured within a reasonable number of iterations.
+        If 1 000 Euler steps do not cross the model's zero-pressure boundary, the driver doubles
+        \(\Delta h\) and restarts the calculation from the surface. This is a coverage
+        mechanism rather than an error-controlled adaptive integrator: it ensures that the
+        calculation eventually spans a sufficiently large altitude range, but the successful
+        run can be considerably coarser than the initial \(H/200\) step size.
       </p>
       <pre><code>rho0  = ideal_gas_density(p0, mu, T0)      # surface density
 scale = p0 / (g * rho0)                    # scale height H
@@ -640,11 +642,11 @@ while last_step == 0:
       </p>
 
       <div class="note">
-        <strong>Numerical note:</strong> The first-order Euler scheme is adequate here because
-        the exponential decrease in pressure means each step remains a small fraction of the
-        scale height. For quantitative accuracy at large altitudes, a smaller initial
-        <code>dh</code> (or higher-order integrator) could be substituted in
-        <code>driver_atmosphere.py</code> without changing any other module.
+        <strong>Numerical note:</strong> This is a first-order Euler calculation intended to
+        illustrate hydrostatic equilibrium. Because the step size may be doubled repeatedly,
+        the final run can accumulate noticeable numerical error with altitude. The isothermal
+        convergence experiment below provides an exact exponential solution against which this
+        error can be measured.
       </div>
     </section>
 
@@ -657,9 +659,9 @@ while last_step == 0:
         <span class="role-tag">Physics Layer</span>
         <h3>physics_atmosphere.py</h3>
         <p>
-          Encodes the physical constants and the three primitive equations that govern
-          atmospheric structure. No integration logic appears here — only pure physics.
-          The only literal numbers are universal physical constants.
+          Encodes the physical constants, temperature-profile interpolation and extrapolation,
+          ideal-gas density relation, and one hydrostatic pressure step. It also validates the
+          supplied temperature profile before the integration begins.
         </p>
 
         <h3>Physical Constants</h3>
@@ -671,13 +673,13 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
 &nbsp;&nbsp;&nbsp;&nbsp;h: List[float]           # altitude breakpoints (m)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;T: List[float]           # temperatures at breakpoints (K)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;power: float = 0.5       # exponent α in T = β·p^α<br>
-&nbsp;&nbsp;&nbsp;&nbsp;beta: float  = 0.0       # coefficient β (set on first pass above top)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;beta: float  = 0.0       # coefficient β (set on first pass above the highest supplied breakpoint)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;reached_top: bool = False</span>
         <p class="func-desc">
-          Stores the measured temperature profile and state for the upper-atmosphere power-law
-          extension. <code>reached_top</code> is set <code>True</code> the first time the
-          integration altitude exceeds the highest measured breakpoint, at which point
-          <code>beta</code> is fixed and the power-law model takes over.
+          Stores the supplied temperature profile and state for the upper-atmosphere power-law
+          extension. The profile is validated before integration. <code>beta</code> is fixed
+          on the first step above the highest supplied breakpoint so that the extrapolation
+          joins continuously to the tabulated temperature.
         </p>
 
         <h3>Functions</h3>
@@ -701,8 +703,8 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
         <span class="func-sig">hydrostatic_step(pressure_prev: float, rho_prev: float, g_accel: float, dh: float) -&gt; float</span>
         <p class="func-desc">
           Advances the pressure by one Euler step: \(p_j = p_{j-1} - g\,\rho_{j-1}\,\Delta h\).
-          Implements Eq.&nbsp;(7.7). Negative results signal that the atmosphere top has
-          been passed.
+          Implements Eq.&nbsp;(7.7). Negative results signal that the model's zero-pressure boundary has
+          been crossed.
         </p>
       </div>
     </section>
@@ -723,7 +725,8 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
         <h3>Type Alias</h3>
         <span class="func-sig">OutputType = Literal["Pressure", "Density", "Temperature"]</span>
         <p class="func-desc">
-          Constrains <code>output_type</code> to one of the three supported output quantities.
+          Lists the three supported output quantities. The driver also checks the value at
+          runtime and reports an explanatory <code>ValueError</code> for an invalid choice.
         </p>
 
         <h3>Data Classes</h3>
@@ -771,11 +774,8 @@ class CurveData:
     y_label: str
     title:   str</code></pre>
         <p class="func-desc">
-          Structured, uniformly-typed plot-ready result. Replaced an earlier
-          <code>Dict[str, List[float]]</code> design: since <code>y_unit</code>,
-          <code>x_label</code>, <code>y_label</code>, and <code>title</code> are strings, not
-          <code>List[float]</code>, that dict's declared value type was never actually
-          honest about its own contents.
+          Contains the altitude and selected atmospheric quantity to be plotted, together with
+          the corresponding units, axis labels, and figure title.
         </p>
 
         <h3>Function</h3>
@@ -848,15 +848,19 @@ g_accel     = 9.81          # m s⁻²
 mu          = 28.97         # mean molecular weight (dry air)
 p0          = 1.013e5       # Pa  (1 atm)
 
-# 13-point profile spanning troposphere through thermosphere;
-# see Parameters below for the full table and altitude labels.
+# Hybrid Earth temperature profile:
+# U.S. Standard Atmosphere 1976 through ~86 km,
+# then representative NRLMSIS 2.0 solar-maximum temperatures to 500 km.
 h_points = [
-    0.0, 5_000.0, 10_000.0, 11_000.0, 20_000.0, 30_000.0, 47_000.0,
-    50_000.0, 60_000.0, 85_000.0, 100_000.0, 200_000.0, 500_000.0,
+    0.0, 11_019.0, 20_063.0, 32_162.0, 47_350.0,
+    51_412.0, 71_802.0, 86_000.0, 100_000.0,
+    150_000.0, 200_000.0, 250_000.0, 300_000.0,
+    400_000.0, 500_000.0,
 ]
 T_points = [
-    288.0, 281.5, 275.0, 217.0, 227.0, 237.0, 271.0,
-    258.0, 248.0, 263.0, 273.0, 373.0, 423.0,
+    288.15, 216.65, 216.65, 228.65, 270.65,
+    270.65, 214.65, 186.946, 190.0,
+    800.0, 1080.0, 1190.0, 1225.0, 1240.0, 1240.0,
 ]
 output_type: OutputType = "Pressure"    # "Pressure" | "Density" | "Temperature"
 
@@ -876,9 +880,9 @@ plot_atmosphere(curve_data)</code></pre>
     <section id="parameters">
       <h2>Parameters</h2>
       <p>
-        All parameters are set in <code>main.py</code>. The defaults model Earth's atmosphere
-        using a 13-point temperature profile spanning the troposphere through the
-        thermosphere (500 km).
+        All parameters are set in <code>main.py</code>. The default Earth temperature profile
+        combines U.S. Standard Atmosphere 1976 values through about 86 km with a representative
+        NRLMSIS 2.0 thermospheric profile extending to 500 km.
       </p>
       <table>
         <thead>
@@ -916,16 +920,15 @@ plot_atmosphere(curve_data)</code></pre>
           </tr>
           <tr>
             <td><code>h_points</code></td>
-            <td><code>[0, 5000, 10000, 11000, 20000, 30000, 47000,<br>
-                50000, 60000, 85000, 100000, 200000, 500000]</code></td>
+            <td><code>[0, 11019, 20063, 32162, 47350, 51412, 71802, 86000,<br>
+                100000, 150000, 200000, 250000, 300000, 400000, 500000]</code></td>
             <td>m</td>
-            <td>Altitude breakpoints of the temperature profile (13 points, sea level to
-                500 km)</td>
+            <td>Altitude breakpoints for the hybrid Earth temperature profile</td>
           </tr>
           <tr>
             <td><code>T_points</code></td>
-            <td><code>[288, 281.5, 275, 217, 227, 237, 271,<br>
-                258, 248, 263, 273, 373, 423]</code></td>
+            <td><code>[288.15, 216.65, 216.65, 228.65, 270.65, 270.65, 214.65,<br>
+                186.946, 190, 800, 1080, 1190, 1225, 1240, 1240]</code></td>
             <td>K</td>
             <td>Temperature at each altitude breakpoint</td>
           </tr>
@@ -939,17 +942,29 @@ plot_atmosphere(curve_data)</code></pre>
       </table>
 
       <div class="note">
-        <strong>Temperature profile note:</strong>
-        The Earth defaults are drawn from the U.S. Standard Atmosphere (1976) and trace its
-        full named layer structure: a troposphere cooling from 288 K at sea level to 217 K
-        at 11 km (the tropopause); a stratosphere warming back to 271 K at 47 km (the
-        stratopause); a mesosphere cooling again to 248 K at 85 km (the mesopause); then a
-        thermosphere that <em>rises</em> sharply, to 373 K at 200 km and 423 K at 500 km,
-        driven by solar UV/X-ray absorption. Only altitudes above this last point (500 km)
-        fall back on the power-law extrapolation of <a href="#physics">Eq. 7.6</a> — see the
-        note there about where that model does and does not resemble reality.
-        The <code>h_points</code> and <code>T_points</code> lists must have the same length
-        and must be in ascending altitude order.
+        <strong>Temperature profile sources and limitations:</strong>
+        From sea level through approximately 86 km, the default temperatures use
+        U.S. Standard Atmosphere 1976 layer-boundary values. The standard defines those
+        boundaries in geopotential height; the corresponding geometric altitudes are used here.
+        <br><br>
+        From 100 km through 500 km, the values are rounded neutral temperatures read from an
+        NRLMSIS 2.0 CCMC Instant Run for 15 October 2024 at 12:00 UTC, geographic latitude
+        55° N and longitude 45° E. The CCMC run used observational solar and geomagnetic
+        indices for that date. These thermospheric values are therefore a representative
+        solar-maximum example, not universal standard temperatures: the thermosphere varies
+        strongly with solar activity, geomagnetic activity, location, season, and time of day.
+        <br><br>
+        The temperature curve is consequently more realistic than a single fixed thermospheric
+        profile, but the rest of this program remains deliberately simple. In particular,
+        <code>g_accel</code> and <code>mu</code> are held constant with altitude, whereas the
+        real thermosphere changes in composition and effective molecular mass. Pressure and
+        density above roughly 100 km should therefore be interpreted as an illustrative
+        continuation of the hydrostatic ideal-gas model, not as an NRLMSIS-quality prediction.
+        Above 500 km, the program resumes the simplified power-law extrapolation of
+        Eq.&nbsp;(7.6).
+        <br><br>
+        The <code>h_points</code> and <code>T_points</code> lists must have the same length;
+        altitudes must be strictly increasing, and all temperatures must be positive.
       </div>
     </section>
 
@@ -983,18 +998,18 @@ plot_atmosphere(curve_data)</code></pre>
           <div class="out-name">"Temperature"</div>
           <div class="out-unit">y-axis unit: K</div>
           <p>
-            Temperature vs. altitude. Directly shows the user-supplied profile up through
-            its highest measured breakpoint (troposphere, stratosphere, mesosphere, and — with
-            the default Earth data — the rising thermosphere), and the
-            \(T = \beta\,p^{0.5}\) power-law extension above that.
+            Temperature vs. altitude. With the default Earth data, this shows the
+            U.S. Standard Atmosphere lower profile followed by the strongly rising
+            solar-maximum NRLMSIS thermosphere through 500 km. Above the highest supplied
+            breakpoint, the program uses the \(T = \beta\,p^{0.5}\) power-law extension.
           </p>
         </div>
       </div>
       <div class="note">
         <strong>Logarithmic scale tip:</strong>
-        Pressure and density span many orders of magnitude. To see the full profile clearly,
-        add <code>ax.set_xscale('log')</code> (or <code>set_yscale</code>, depending on
-        axis orientation) in <code>plot_atmosphere.py</code> after the
+        Pressure and density span many orders of magnitude. Because altitude is on the
+        horizontal axis and the selected atmospheric quantity is on the vertical axis, use
+        <code>ax.set_yscale("log")</code> in <code>plot_atmosphere.py</code> after the
         <code>ax.plot()</code> call.
       </div>
     </section>
@@ -1003,17 +1018,20 @@ plot_atmosphere(curve_data)</code></pre>
     <section id="experiments">
       <h2>Suggested Experiments</h2>
       <p>
-        Settings for these experiments require editing only <code>main.py</code>.
+        Settings for these experiments require editing only <code>main.py</code>, except where
+        a plotting change is explicitly noted.
       </p>
 
       <div class="scenario-card">
-        <h4>1 · Earth's Standard Atmosphere</h4>
+        <h4>1 · Earth's Hybrid Atmospheric Temperature Profile</h4>
         <p>
-          Run the program with the default Earth parameters. Plot Pressure, then Density,
-          then Temperature in three separate runs.
-          Compare the pressure profile to the exponential barometric formula
-          \(p = p_0\,e^{-h/H}\) with \(H = 8.5\;\text{km}\).
-          Note how the non-constant temperature causes deviations from a pure exponential.
+          Run the default model and plot Pressure, Density, and Temperature in separate runs.
+          Below about 86 km, identify the familiar tropospheric, stratospheric, and mesospheric
+          temperature structure represented by the U.S. Standard Atmosphere values. Then follow
+          the rapid thermospheric temperature rise in the NRLMSIS solar-maximum portion of the
+          profile. The simplified power-law extrapolation is used only above 500 km.
+          <br>
+          This simplified power-law extrapolation holds up reasonably well only while pressure is still non-negligible, and it breaks down once pressure is many orders of magnitude below the surface value. The rapid fall-off in temperature seen at the right end of the temperature plot with default parameters is in fact highly non-realistic. In reality, thermospheric heating from solar EUV radiation causes the temperature to continue rising towards an "exospheric temperature" where the curve flattens out. This limit temperature depends strongly on solar activity.
         </p>
         <div class="params">output_type = "Pressure"  # then "Density", then "Temperature"
 # all other parameters at their defaults</div>
@@ -1022,85 +1040,115 @@ plot_atmosphere(curve_data)</code></pre>
       <div class="scenario-card">
         <h4>2 · Logarithmic Pressure Profile</h4>
         <p>
-          Add a logarithmic x-axis to the plotter (<code>ax.set_xscale('log')</code>).
-          On a log-pressure vs. altitude plot, an isothermal atmosphere produces a straight
-          line. Identify the regions in Earth's atmosphere where temperature is approximately
-          constant and the profile is therefore nearly linear on the log scale.
+          Set <code>output_type = "Pressure"</code> and add
+          <code>ax.set_yscale("log")</code> in <code>plot_atmosphere.py</code>. For an
+          isothermal atmosphere, exponential pressure decline appears as a straight line on
+          this semilog plot. Compare that ideal behavior with the changing slope produced by
+          Earth's nonuniform temperature profile.
         </p>
         <div class="params">output_type = "Pressure"
-# add ax.set_xscale('log') in plot_atmosphere.py</div>
+# add ax.set_yscale("log") after ax.plot(x, y)</div>
       </div>
 
       <div class="scenario-card">
-        <h4>3 · Mars</h4>
+        <h4>3 · Mars: Scale Height vs. Surface Pressure</h4>
         <p>
-          Mars has a thin CO₂ atmosphere. Its pressure profile falls off much more sharply
-          than Earth's because of stronger gravity per unit of molecular weight.
-          The scale height for Mars is about 11 km, but the much lower surface pressure
-          (≈ 610 Pa) means the total column is tiny.
+          Mars has a CO₂ atmosphere and much weaker surface gravity than Earth. With the values
+          below, its base scale height is about 11 km—slightly larger than Earth's—even though
+          its surface pressure is only about 610 Pa. This illustrates an important distinction:
+          scale height controls the <em>fractional</em> falloff of pressure, whereas surface
+          pressure sets the absolute pressure scale.
         </p>
         <div class="params">planet_name = "Mars"
-g_accel     = 3.72       # m s⁻²
-mu          = 44.0       # CO₂
-p0          = 610.0      # Pa
-h_points    = [0.0, 10000.0, 25000.0, 45000.0]   # m
-T_points    = [210.0, 170.0, 145.0, 130.0]        # K</div>
+g_accel     = 3.72
+mu          = 44.0
+p0          = 610.0
+h_points    = [0.0, 10000.0, 25000.0, 45000.0]
+T_points    = [210.0, 170.0, 145.0, 130.0]</div>
       </div>
 
       <div class="scenario-card">
-        <h4>4 · Venus</h4>
+        <h4>4 · Venus: Why Surface Pressure Does Not Set Scale Height</h4>
         <p>
-          Venus has a crushing CO₂ atmosphere with surface pressure ≈ 92 atm.
-          Despite similar gravity to Earth, the enormous molecular weight and surface pressure
-          create a very compact but extremely massive atmosphere.
-          Compare its scale height to Earth's.
+          Venus combines a heavy CO₂ atmosphere with very high surface temperature. Using the
+          values below gives a base scale height of roughly 16 km, larger than Earth's despite
+          the larger molecular weight. Compare this with Eq.&nbsp;(7.4): temperature, gravity,
+          and molecular weight determine scale height, while surface pressure cancels out of
+          the expression. Venus's enormous surface pressure instead reflects the much greater
+          atmospheric column mass.
         </p>
         <div class="params">planet_name = "Venus"
-g_accel     = 8.87       # m s⁻²
-mu          = 44.0       # CO₂
-p0          = 9.2e6      # Pa  (~92 atm)
+g_accel     = 8.87
+mu          = 44.0
+p0          = 9.2e6
 h_points    = [0.0, 10000.0, 30000.0, 60000.0]
-T_points    = [735.0, 500.0, 340.0, 230.0]        # K</div>
+T_points    = [735.0, 500.0, 340.0, 230.0]</div>
       </div>
 
       <div class="scenario-card">
-        <h4>5 · Jupiter (Upper Atmosphere)</h4>
+        <h4>5 · Jupiter: A Local 1-Bar-Level Model</h4>
         <p>
-          Model the outer visible layer of Jupiter's hydrogen–helium atmosphere.
-          Jupiter's scale height is enormous because of its low mean molecular weight
-          (\(\mu \approx 2.2\)) despite its strong gravity.
-          Use a reference level near the 1-bar cloud deck.
+          Use the 1-bar level as a reference and model only a relatively thin region of
+          Jupiter's outer atmosphere. The low mean molecular weight of the hydrogen-helium gas
+          gives a comparatively large scale height despite strong gravity. This is <strong>not</strong>
+          a model of Jupiter's full atmosphere or interior: the program assumes constant gravity
+          and a fixed-composition ideal gas, approximations that become unsuitable over large
+          depths in a gas giant.
         </p>
         <div class="params">planet_name = "Jupiter"
-g_accel     = 24.8       # m s⁻²
-mu          = 2.2        # H₂/He mix
-p0          = 1.0e5      # Pa  (1 bar reference level)
+g_accel     = 24.8
+mu          = 2.2
+p0          = 1.0e5
 h_points    = [0.0, 20000.0, 50000.0, 100000.0]
-T_points    = [165.0, 130.0, 110.0, 150.0]        # K</div>
+T_points    = [165.0, 130.0, 110.0, 150.0]</div>
       </div>
 
       <div class="scenario-card">
         <h4>6 · Varying Molecular Weight on Earth</h4>
         <p>
-          Keep all Earth parameters fixed but change <code>mu</code>.
-          How does the scale height change if Earth's atmosphere were pure water vapor
-          (\(\mu = 18\)) or pure CO₂ (\(\mu = 44\))?
-          Verify the theoretical prediction \(H \propto 1/\mu\).
+          Keep the Earth values of gravity, temperature profile, and surface pressure fixed
+          while changing <code>mu</code>. Compare hypothetical atmospheres with
+          \(\mu=18\), 28.97, and 44. Verify from the plotted pressure profiles and
+          Eq.&nbsp;(7.4) that \(H\propto1/\mu\).
         </p>
-        <div class="params">mu = 18.0   # water vapor — compare to default 28.97 and to 44.0</div>
+        <div class="params">mu = 18.0   # compare with 28.97 and 44.0</div>
       </div>
 
       <div class="scenario-card">
-        <h4>7 · Effect of Temperature Profile Shape</h4>
+        <h4>7 · Temperature Profile Shape</h4>
         <p>
-          Replace the 13-point Earth profile with a simple two-point isothermal profile
-          (<code>h_points=[0, 100000]</code>, <code>T_points=[288, 288]</code>).
-          The output should be very close to the barometric exponential.
-          Then add a temperature inversion (warm layer aloft) and observe how it
-          changes the density profile.
+          Replace the default profile with a deliberately simple temperature structure and
+          observe how warm and cool layers alter density through \(\rho\propto p/T\).
+          For example, introduce a warm layer above a cooler one and compare the Pressure,
+          Density, and Temperature outputs.
         </p>
         <div class="params">h_points = [0.0, 50000.0, 100000.0]
-T_points = [288.0, 200.0, 350.0]   # inversion above 50 km</div>
+T_points = [288.0, 200.0, 350.0]</div>
+      </div>
+
+      <div class="scenario-card">
+        <h4>8 · Isothermal Euler-Method Accuracy</h4>
+        <p>
+          This experiment provides an exact solution against which to test the numerical
+          integration. Use a constant temperature of 288.15 K from 0 to 100 km and plot
+          Pressure. In that interval the exact solution is
+          \(p(h)=p_0\exp(-h/H)\), with
+          \(H=k_BT/(g\mu m_p)\). Compare the numerical pressure with the exact value at
+          selected altitudes such as 10, 50, and 90 km. The disagreement grows with altitude
+          because the calculation uses first-order Euler steps.
+        </p>
+        <p>
+          To study convergence, temporarily change the line
+          <code>dh = scale / 200.0</code> in <code>driver_atmosphere.py</code> to
+          <code>scale / 400.0</code> and then <code>scale / 800.0</code>, while increasing
+          <code>max_steps</code> enough that the run reaches 100 km without triggering the
+          step-doubling restart. The error should decrease approximately in proportion to the
+          step size, as expected for a first-order method.
+        </p>
+        <div class="params">h_points = [0.0, 100000.0]
+T_points = [288.15, 288.15]
+output_type = "Pressure"
+# Compare numerical p(h) with p0 * exp(-h/H) for h <= 100 km.</div>
       </div>
     </section>
 
@@ -1184,8 +1232,8 @@ T_points = [288.0, 200.0, 350.0]   # inversion above 50 km</div>
         in physical content are:
       </p>
       <div class="related-list">
-        <a class="related-chip" href="../Star/Star_Help.html">Star</a>
-        <a class="related-chip" href="../Neutron/Neutron_Help.html">Neutron</a>
+        <a class="related-chip" href="../08-Star/Star.html">Star</a>
+        <a class="related-chip" href="../20-Neutron/Neutron.html">Neutron</a>
       </div>
       <ul>
         <li>
@@ -1195,7 +1243,7 @@ T_points = [288.0, 200.0, 350.0]   # inversion above 50 km</div>
           with gravity varying with radius and mass continuity replacing the ideal-gas closure.
         </li>
         <li>
-          <strong>Neutron</strong> (Chapter 9) — extends stellar structure to general relativity
+          <strong>Neutron</strong> (Chapter 20) — extends stellar structure to general relativity
           via the Tolman–Oppenheimer–Volkoff (TOV) equation, the relativistic counterpart of
           Atmosphere's hydrostatic step with a polytropic equation of state.
         </li>
@@ -1206,8 +1254,7 @@ T_points = [288.0, 200.0, 350.0]   # inversion above 50 km</div>
   <section id="license">
     <h2>License</h2>
     <p>
-      This Python port is derived from the original Java programs by
-      <strong>Bernard Schutz</strong> accompanying
+      This software is based on programs by <strong>Bernard Schutz</strong> accompanying
       <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
       The port is distributed under the
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
