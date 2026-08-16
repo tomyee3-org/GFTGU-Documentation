@@ -366,11 +366,10 @@
   <div class="sub">
     Source Code:
     <a href="https://github.com/tomyee3-org/GFTGU-Programs"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
-    <br/>
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
     Documentation:
         <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
   </div>
 </header>
 
@@ -385,7 +384,7 @@
 
   <div class="nav-label">Numerical Method</div>
   <a href="#algorithm">Integration Algorithm</a>
-  <a href="#adaptive">Adaptive Step Size</a>
+  <a href="#adaptive">Step-Size Restart</a>
 
   <div class="nav-label">Program Structure</div>
   <a href="#modules">Module Overview</a>
@@ -408,746 +407,245 @@
   <!-- ── Physical Background ── -->
   <section id="physics">
     <h2>Physical Background</h2>
-
     <p>
-      The <strong>Star</strong> program models the internal structure of a spherically symmetric
-      star in Newtonian gravity using a <em>polytropic equation of state</em>. Starting from
-      user-supplied central pressure and temperature, it integrates outward through the stellar
-      interior—tracking pressure, density, temperature, and enclosed mass as functions of
-      radius—until the pressure drops to zero at the stellar surface.
+      <strong>Star</strong> models a spherically symmetric star in Newtonian gravity with a
+      single <em>polytropic equation of state</em>. Starting from user-supplied central pressure
+      and temperature, it integrates outward while tracking pressure, density, temperature,
+      and enclosed mass until the modeled pressure reaches zero.
     </p>
     <p>
-      Real stars are held in mechanical equilibrium by the outward pressure gradient of their hot
-      gas balancing the inward force of self-gravity. In the simplest treatment, the gas obeys
-      two coupled laws: the <strong>ideal gas law</strong>, which relates pressure, density, and
-      temperature; and a <strong>polytropic equation of state</strong>, which relates pressure and
-      density through a power law \(\rho \propto p^{1/\gamma}\). Together, these two relations
-      determine the temperature throughout the star without requiring an explicit treatment of
-      energy generation or radiative transport.
+      The model deliberately omits nuclear energy generation and explicit radiative or convective
+      energy transport. Instead, pressure and density are constrained everywhere by one power law,
+      while the ideal-gas relation is used to set the central density and to recover a temperature
+      profile. This is the same deliberately simple physical picture emphasized in Schutz's
+      Chapter 8 Star investigation.
     </p>
     <p>
-      A critical feature that distinguishes this program from simpler atmospheric models is that
-      gravity is <em>not</em> constant. The gravitational acceleration at radius \(r\) is
-      determined by the mass \(m(r)\) enclosed within that radius, following Newton's shell
-      theorem: \(g(r) = G\,m(r)/r^2\). The hydrostatic equilibrium equation and the mass
-      continuity equation must therefore be integrated simultaneously as the radius increases
-      outward from the center.
+      Gravity is not constant inside a star. The gravitational acceleration at radius \(r\) is
+      \(g(r)=Gm(r)/r^2\), where \(m(r)\) is the mass enclosed within that radius. Hydrostatic
+      equilibrium and mass continuity must therefore be integrated together.
     </p>
-    <p>
-      The default parameters in <code>main.py</code> are calibrated to give a solar model
-      accurate to a fraction of a percent in both radius and mass (see
-      <a href="#adaptive">Adaptive Step Size</a>): a central pressure
-      \(p_c = 7.158 \times 10^{15}\) Pa, a central temperature \(T_c = 2.263 \times 10^7\)
-      K, a mean molecular weight \(\mu = 1.285\), and a polytropic index \(\gamma = 1.36\).
-      Unlike the textbook value \(\gamma = 5/3\) for a non-relativistic ideal monatomic
-      gas, this \(\mu\) and \(\gamma\) pair was tuned together specifically to reproduce
-      the Sun's known radius and mass within the polytropic approximation, rather than
-      derived purely from an idealized plasma composition — see the note on \(\mu\) in
-      <a href="#parameters">Input Parameters</a>.
-    </p>
+    <div class="note">
+      <strong>About the default "solar" model:</strong>
+      The default parameters give approximately the observed total mass and radius of the Sun,
+      but this should not be confused with a high-accuracy solar-interior model. A single
+      polytrope cannot reproduce the Sun's layered equation of state, composition, energy
+      generation, and energy transport. In particular, the default central temperature and
+      density differ substantially from standard solar-model values. The parameter
+      \(\mu=1.285\) is best regarded as an effective parameter of this simplified model, not
+      as the actual mean molecular weight of the fully ionized solar core.
+    </div>
   </section>
 
   <!-- ── Governing Equations ── -->
   <section id="equations">
     <h2>Governing Equations</h2>
-
     <h3>Ideal Gas Law</h3>
-    <p>
-      The pressure of an ideal gas with mean molecular weight \(\mu\) (in units of the proton mass)
-      is related to its mass density \(\rho\) and temperature \(T\) by
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Ideal Gas Law &nbsp;(1)</div>
-      \[\begin{equation}
-        p \;=\; \frac{\rho\, k_{\mathrm{B}}\, T}{m_p\, \mu}
-        \label{eq:ideal-gas}
-      \end{equation}\]
+    <p>The central density is tied to the supplied pressure, temperature, and effective mean molecular weight by</p>
+    <div class="eq-block"><div class="eq-label">Ideal Gas Law &nbsp;(1)</div>
+      \[ p=\frac{\rho k_{\mathrm B}T}{m_p\mu}. \]
     </div>
-    <p>
-      where \(k_{\mathrm{B}} = 1.38 \times 10^{-23}\) J/K is the Boltzmann constant and
-      \(m_p = 1.67 \times 10^{-27}\) kg is the proton mass. It is convenient to define the
-      combination
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">q Factor &nbsp;(2)</div>
-      \[\begin{equation}
-        q \;=\; \frac{m_p\,\mu}{k_{\mathrm{B}}}
-        \label{eq:q-factor}
-      \end{equation}\]
-    </div>
-    <p>
-      so that the ideal gas law becomes \(p = \rho\,T/q\) and the temperature can be recovered
-      at any point as \(T = q\,p/\rho\). The function <code>q_factor(mu)</code> in
-      <code>physics_star.py</code> computes this combination; it is the only place where the
-      values of \(k_{\mathrm{B}}\) and \(m_p\) appear in the code.
-    </p>
+    <p>Defining \(q=m_p\mu/k_{\mathrm B}\) gives \(\rho_c=p_cq/T_c\) and \(T=qp/\rho\).</p>
 
     <h3>Polytropic Equation of State</h3>
     <p>
-      A polytrope relates density to pressure through a power law parameterized by the
-      adiabatic exponent \(\gamma\):
+      The program parameter \(\gamma\) is the <strong>polytropic exponent</strong>, not the
+      polytropic index \(n\). The two are related by
+      \(\gamma=1+1/n\), or \(n=1/(\gamma-1)\).
     </p>
-    <div class="eq-block">
-      <div class="eq-label">Polytropic EOS &nbsp;(3)</div>
-      \[\begin{equation}
-        \rho \;=\; D\, p^{1/\gamma}
-        \label{eq:polytrope}
-      \end{equation}\]
+    <div class="eq-block"><div class="eq-label">Polytropic EOS &nbsp;(2)</div>
+      \[ p=K\rho^\gamma, \qquad \rho=Dp^{1/\gamma}. \]
+    </div>
+    <div class="eq-block"><div class="eq-label">Central normalization &nbsp;(3)</div>
+      \[ D=\frac{\rho_c}{p_c^{1/\gamma}}. \]
+    </div>
+    <p>Once \(D\) has been fixed at the center, the same polytropic relation is used throughout the model.</p>
+
+    <h3>Hydrostatic Equilibrium and Mass Continuity</h3>
+    <div class="eq-block"><div class="eq-label">Hydrostatic equilibrium &nbsp;(4)</div>
+      \[ \frac{dp}{dr}=-\frac{Gm(r)\rho}{r^2}. \]
+    </div>
+    <div class="eq-block"><div class="eq-label">Mass continuity &nbsp;(5)</div>
+      \[ \frac{dm}{dr}=4\pi r^2\rho. \]
     </div>
     <p>
-      The proportionality constant \(D\) is fixed by requiring the polytrope to reproduce the
-      central density \(\rho_c\) at the central pressure \(p_c\):
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Polytropic Constant &nbsp;(4)</div>
-      \[\begin{equation}
-        D \;=\; \frac{\rho_c}{p_c^{1/\gamma}}
-        \label{eq:poly-D}
-      \end{equation}\]
-    </div>
-    <p>
-      Once \(D\) is determined from the central conditions, it is used at every subsequent radial
-      step to obtain density from pressure, without any further reference to temperature. This
-      makes the polytropic model self-contained: temperature is not an independent variable but
-      a derived quantity recovered from \(T = q\,p/\rho\).
+      These equations are coupled: pressure controls density through the polytropic law, density
+      determines how rapidly enclosed mass grows, and enclosed mass determines the gravitational
+      pressure gradient.
     </p>
 
-    <h3>Hydrostatic Equilibrium</h3>
-    <p>
-      A star in mechanical equilibrium satisfies the condition that the outward pressure gradient
-      exactly balances the inward gravitational force per unit volume:
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Hydrostatic Equilibrium &nbsp;(5)</div>
-      \[\begin{equation}
-        \frac{dp}{dr} \;=\; -\,\frac{G\,m(r)\,\rho}{r^2}
-        \label{eq:hydrostatic}
-      \end{equation}\]
+    <div class="note">
+      <strong>Range of the one-polytrope model:</strong>
+      A Lane–Emden polytrope has an ordinary finite zero-pressure radius only for
+      \(n&lt;5\), corresponding here to \(\gamma&gt;6/5\). The Python driver therefore rejects
+      \(\gamma\le6/5\). The familiar Newtonian radial-stability boundary is \(\gamma=4/3\)
+      under the simple case in which this exponent also describes the star's adiabatic response;
+      the program should not be read as claiming that every real star can be classified by one
+      constant \(\gamma\).
     </div>
-    <p>
-      where \(G = 6.672 \times 10^{-11}\) N m\(^2\) kg\(^{-2}\) is Newton's gravitational
-      constant and \(m(r)\) is the mass enclosed within radius \(r\). The local gravitational
-      acceleration \(g(r) = G\,m(r)/r^2\) varies with position, unlike the constant-\(g\)
-      approximation used in atmosphere models.
-    </p>
-
-    <h3>Mass Continuity</h3>
-    <p>
-      The rate of change of enclosed mass with radius is the mass of a thin spherical shell
-      of thickness \(dr\) and radius \(r\):
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Mass Continuity &nbsp;(6)</div>
-      \[\begin{equation}
-        \frac{dm}{dr} \;=\; 4\pi r^2\,\rho
-        \label{eq:mass-cont}
-      \end{equation}\]
-    </div>
-    <p>
-      Equations (5) and (6) are coupled: the pressure gradient depends on \(m(r)\), which in turn
-      depends on the density distribution, which depends on the pressure through the polytrope (3).
-      All four quantities—\(r\), \(p\), \(\rho\), \(m\)—must be advanced simultaneously at each
-      radial step.
-    </p>
   </section>
 
   <!-- ── Initial Conditions ── -->
   <section id="initial">
     <h2>Initial Conditions</h2>
-
     <p>
-      At the exact center of the star (\(r = 0\)), the hydrostatic equilibrium equation (5) is
-      singular because \(r^2\) appears in the denominator. The integration therefore begins at
-      the first radial grid point \(r_1 = dr\), a small but finite distance from the center.
-      All initial values are derived from the user-supplied central pressure \(p_c\) and central
-      temperature \(T_c\).
+      At the exact center, the expression \(Gm/r^2\) appears indeterminate even though the
+      physical gravitational acceleration tends smoothly to zero. The integration therefore
+      stores the exact central values at \(r=0\), then initializes the first nonzero point at
+      \(r=dr\) using the leading-order central approximation.
     </p>
-
-    <h3>Central Density</h3>
-    <p>
-      The central density follows directly from the ideal gas law (1) evaluated at the center:
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Central Density &nbsp;(7)</div>
-      \[\begin{equation}
-        \rho_c \;=\; \frac{p_c\,q}{T_c}
-        \label{eq:rho-c}
-      \end{equation}\]
+    <div class="eq-block"><div class="eq-label">Central density &nbsp;(6)</div>
+      \[ \rho_c=\frac{p_cq}{T_c}. \]
     </div>
-
-    <h3>Pressure Scale Height</h3>
+    <h3>Characteristic Radial Scale</h3>
     <p>
-      To choose an appropriate radial step size, the program estimates the characteristic length
-      scale over which the pressure varies significantly near the center:
+      The program uses the dimensional scale
     </p>
-    <div class="eq-block">
-      <div class="eq-label">Pressure Scale Height &nbsp;(8)</div>
-      \[\begin{equation}
-        \ell \;=\; \frac{\sqrt{p_c/G}}{\rho_c}
-        \label{eq:scale-height}
-      \end{equation}\]
+    <div class="eq-block"><div class="eq-label">Radial scale &nbsp;(7)</div>
+      \[ \ell=\frac{\sqrt{p_c/G}}{\rho_c}, \qquad dr=\frac{\ell}{N_s}, \]
     </div>
     <p>
-      This is approximately the distance over which the pressure falls by a factor of order 2
-      near the center. The radial step size is then
+      where \(N_s=\)<code>steps_per_scale</code>. This quantity is a convenient numerical
+      length scale; it should not be interpreted as a literal local pressure scale height at the
+      stellar center, where \(dp/dr\to0\).
     </p>
-    <div class="eq-block">
-      <div class="eq-label">Radial Step Size &nbsp;(9)</div>
-      \[\begin{equation}
-        dr \;=\; \frac{\ell}{400}
-        \label{eq:dr}
-      \end{equation}\]
-    </div>
-
-    <h3>Initial Array Values at \(r_1 = dr\)</h3>
-    <p>
-      At the first grid point, pressure and density are taken to be their central values.
-      The enclosed mass is that of a small sphere of radius \(dr\) at uniform central density,
-      and the temperature is recovered from the ideal gas law:
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Initial Conditions &nbsp;(10)</div>
-      \[\begin{equation}
-        p_1 = p_c, \quad
-        \rho_1 = \rho_c, \quad
-        m_1 = \tfrac{4}{3}\pi\,dr^3\,\rho_c, \quad
-        T_1 = \frac{q\,p_c}{\rho_c}
-        \label{eq:ic}
-      \end{equation}\]
+    <div class="eq-block"><div class="eq-label">First nonzero grid point &nbsp;(8)</div>
+      \[ r_1=dr,\quad p_1=p_c,\quad \rho_1=\rho_c,\quad
+         m_1=\frac{4\pi}{3}\rho_cdr^3,\quad T_1=T_c. \]
     </div>
   </section>
 
   <!-- ── Integration Algorithm ── -->
   <section id="algorithm">
     <h2>Integration Algorithm</h2>
-
     <p>
-      The driver module advances the arrays \(\{r_j,\, p_j,\, \rho_j,\, T_j,\, m_j\}\) from
-      index \(j = 1\) outward toward the stellar surface using a <strong>forward Euler</strong>
-      finite-difference scheme. At each step \(j\) the following sequence of updates is applied,
-      each delegated to the corresponding function in <code>physics_star.py</code>:
+      The driver advances the model outward with a first-order forward-Euler scheme. For each
+      ordinary radial step it first updates pressure,
     </p>
-
-    <h3>Step 1 — Pressure Update</h3>
-    <p>
-      The discrete form of hydrostatic equilibrium (5):
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Finite-Difference Pressure Step &nbsp;(11)</div>
-      \[\begin{equation}
-        p_j \;=\; p_{j-1} \;-\; \frac{G\,\rho_{j-1}\,m_{j-1}\,dr}{r_{j-1}^2}
-        \label{eq:dp}
-      \end{equation}\]
+    <div class="eq-block"><div class="eq-label">Pressure step &nbsp;(9)</div>
+      \[ p_j=p_{j-1}-\frac{G\rho_{j-1}m_{j-1}}{r_{j-1}^2}\,dr, \]
     </div>
-
-    <h3>Surface Detection</h3>
-    <p>
-      Immediately after computing \(p_j\) — <strong>before</strong> Steps 2 and 3 below —
-      the loop checks whether the pressure has turned negative, signaling that the
-      integration has passed through the stellar surface:
-    </p>
-    <pre>if p[j] &lt; 0:
-    last_index = j
-    break          # Steps 2 and 3 are skipped entirely for this j</pre>
-    <p>
-      The stellar radius is \(r_{j-1}\) (the last step with positive pressure) and the total
-      stellar mass is \(m_{j-1}\). All arrays are trimmed to <code>last_index</code> before
-      being returned to the plotting module. Because the check happens right after the
-      pressure update, \(\rho_j\), \(T_j\), and \(m_j\) are never computed for the discarded,
-      negative-pressure point — Steps 2 and 3 only execute when this check passes.
-    </p>
-
-    <h3>Step 2 — Mass Update</h3>
-    <p>
-      The enclosed mass grows by the shell mass between \(r_{j-1}\) and \(r_j\):
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Finite-Difference Mass Step &nbsp;(12)</div>
-      \[\begin{equation}
-        m_j \;=\; m_{j-1} \;+\; 4\pi\,r_{j-1}^2\,\rho_{j-1}\,dr
-        \label{eq:dm}
-      \end{equation}\]
+    <p>then, if the trial pressure is still positive, updates mass, density, and temperature:</p>
+    <div class="eq-block"><div class="eq-label">Remaining updates &nbsp;(10)</div>
+      \[ m_j=m_{j-1}+4\pi r_{j-1}^2\rho_{j-1}dr, \]
+      \[ \rho_j=Dp_j^{1/\gamma},\qquad T_j=\frac{qp_j}{\rho_j}. \]
     </div>
-
-    <h3>Step 3 — Density and Temperature</h3>
+    <h3>Interpolated Surface</h3>
     <p>
-      Density is recovered from the polytropic relation (3) and temperature from the ideal
-      gas law:
+      When an Euler pressure step first crosses from positive to nonpositive pressure, the revised
+      driver linearly interpolates along that final pressure segment to estimate the radius at
+      which \(p=0\). It appends that surface point with \(p=\rho=T=0\), and advances the enclosed
+      mass over the corresponding fractional shell. The returned arrays therefore include both
+      the center at \(r=0\) and an explicit modeled surface at \(p=0\).
     </p>
-    <div class="eq-block">
-      <div class="eq-label">Density and Temperature Update &nbsp;(13)</div>
-      \[\begin{equation}
-        \rho_j \;=\; D\,p_j^{1/\gamma}, \qquad
-        T_j \;=\; \frac{q\,p_j}{\rho_j}
-        \label{eq:rho-T-update}
-      \end{equation}\]
+    <div class="note">
+      <strong>Numerical accuracy:</strong>
+      Forward Euler has local truncation error \(O(dr^2)\) and global accumulated error
+      \(O(dr)\). Agreement of the default model's total mass or radius with the observed Sun is
+      therefore a combination of the simplified model parameters and the numerical discretization;
+      it should not be used as a stand-alone measure of physical accuracy.
     </div>
   </section>
 
-  <!-- ── Adaptive Step Size ── -->
+  <!-- ── Step-Size Restart ── -->
   <section id="adaptive">
-    <h2>Adaptive Step Size</h2>
-
+    <h2>Step-Size Restart</h2>
     <p>
-      The initial radial step \(dr = \ell/400\) is calibrated to resolve the steep central
-      pressure gradient near the core. For some parameter combinations—especially low central
-      pressures or small \(\gamma\)—the stellar radius may be very large and the integration
-      may exhaust all <code>max_points</code> steps without the pressure ever reaching zero.
+      The initial spacing is <code>radial_scale / steps_per_scale</code>. If the model has not
+      reached zero pressure within <code>max_points</code> grid points, the driver doubles
+      <code>dr</code> and restarts from the center. This guarantees greater radial coverage but
+      sacrifices resolution; it is not an error-controlled adaptive integrator.
     </p>
     <p>
-      In that case, the driver automatically doubles the step size and restarts from the initial
-      conditions:
+      <code>max_points</code> determines how far a given spacing can extend before such a restart
+      is necessary. Increasing <code>max_points</code> does <em>not</em> make an already successful
+      run finer. To perform an actual resolution study, increase
+      <code>steps_per_scale</code> (for example, 200, 400, 800, 1600) while keeping enough
+      <code>max_points</code> to avoid a restart.
     </p>
-    <pre>while surface not found:
-    dr *= 2
-    restart from r[1]=dr, p[1]=p_c, rho[1]=rho_c, ...</pre>
     <p>
-      This doubling repeats as many times as necessary until the integration completes within
-      <code>max_points</code> steps. The trade-off is accuracy: a coarser step introduces larger
-      truncation errors. For the default solar parameters, no doubling is needed.
+      The returned <code>StarResult</code> reports both <code>radial_step</code> and
+      <code>restart_count</code>, making it possible to tell whether the requested initial
+      resolution was retained.
     </p>
-
-    <div class="note">
-      <strong>Note on accuracy:</strong> The forward Euler method accumulates truncation error of
-      order \(O(dr)\) per step. For the default parameters the step is fine enough that the
-      resulting stellar radius and mass agree with the Sun's actual values to well under
-      1% — 0.11% in radius and 0.33% in mass. Changing to a
-      dramatically different parameter regime may require experimenting with
-      <code>max_points</code> to balance resolution against computation time.
-    </div>
   </section>
 
   <!-- ── Module Overview ── -->
   <section id="modules">
     <h2>Module Overview</h2>
-
-    <p>
-      The program is divided into four cooperating modules following a strict
-      physics / driver / plot / main separation of concerns. This architecture keeps the
-      physical equations isolated from the numerical integration logic and from the display code.
-    </p>
-
     <div class="module-grid">
-
-      <!-- physics_star.py -->
-      <div class="module-card">
-        <div class="mc-name">physics_star.py</div>
-        <div class="mc-role">Physics</div>
-        <p>
-          Encodes the physical laws of polytropic stellar structure as pure, stateless functions.
-          Contains exactly three literal numbers—the physical constants \(k_{\mathrm{B}}\),
-          \(m_p\), and \(G\)—and seven functions implementing the ideal gas law, polytropic EOS,
-          hydrostatic equilibrium, and mass continuity. No integration logic resides here.
-        </p>
-        <div class="mc-sig">
-          k_BOLTZMANN = 1.38e-23  # J/K<br>
-          MPROTON     = 1.67e-27  # kg<br>
-          G_NEWTON    = 6.672e-11 # m³ kg⁻¹ s⁻²<br>
-          <br>
-          q_factor(mu)<br>
-          central_density(p_c, T_c, mu)<br>
-          polytropic_D(rho_c, p_c, gamma)<br>
-          scale_height(p_c, rho_c)<br>
-          hydrostatic_step(p_prev, rho_prev,<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mass_prev, r_prev, dr)<br>
-          mass_step(mass_prev, r_prev, rho_prev, dr)<br>
-          density_from_pressure(p, D, gamma)<br>
-          temperature_from_prho(p, rho, mu)
-        </div>
+      <div class="module-card"><div class="mc-name">physics_star.py</div><div class="mc-role">Physics</div>
+        <p>Ideal-gas relations, polytropic EOS, characteristic radial scale, hydrostatic step, and mass-continuity step.</p>
+        <div class="mc-sig">q_factor(mu)<br>central_density(p_c, T_c, mu)<br>polytropic_D(rho_c, p_c, gamma)<br>radial_scale(p_c, rho_c)<br>hydrostatic_step(...)<br>mass_step(...)<br>density_from_pressure(...)<br>temperature_from_prho(...)</div>
       </div>
-
-      <!-- driver_star.py -->
-      <div class="module-card">
-        <div class="mc-name">driver_star.py</div>
-        <div class="mc-role">Driver</div>
-        <p>
-          Orchestrates the full radial integration from center to surface. Computes central
-          conditions and the initial step size, runs the forward-Euler loop calling
-          <code>physics_star</code> functions at each step, applies step doubling if the surface
-          is not reached within <code>max_points</code> steps, and returns all profiles in a
-          structured <code>StarResult</code> dataclass.
-        </p>
-        <div class="mc-sig">
-          integrate_star(<br>
-          &nbsp;&nbsp;p_c,<br>
-          &nbsp;&nbsp;T_c,<br>
-          &nbsp;&nbsp;mu,<br>
-          &nbsp;&nbsp;gamma,<br>
-          &nbsp;&nbsp;max_points = 2000,<br>
-          &nbsp;&nbsp;output_type = "pressure"<br>
-          ) -&gt; StarResult<br>
-          <br>
-          @dataclass<br>
-          class StarResult:<br>
-          &nbsp;&nbsp;radius: List[float]<br>
-          &nbsp;&nbsp;pressure: List[float]<br>
-          &nbsp;&nbsp;density: List[float]<br>
-          &nbsp;&nbsp;temperature: List[float]<br>
-          &nbsp;&nbsp;mass: List[float]<br>
-          &nbsp;&nbsp;last_index: int<br>
-          &nbsp;&nbsp;output_type: OutputType
-        </div>
+      <div class="module-card"><div class="mc-name">driver_star.py</div><div class="mc-role">Driver</div>
+        <p>Validates the user parameters, performs the forward-Euler radial integration, restarts with a larger step only when necessary for radial coverage, and interpolates the zero-pressure surface.</p>
+        <div class="mc-sig">integrate_star(..., max_points=2000,<br>&nbsp;&nbsp;steps_per_scale=400,<br>&nbsp;&nbsp;output_type="pressure") → StarResult</div>
       </div>
-
-      <!-- plot_star.py -->
-      <div class="module-card">
-        <div class="mc-name">plot_star.py</div>
-        <div class="mc-role">Plot</div>
-        <p>
-          Receives the <code>StarResult</code> from the driver and produces a labelled matplotlib
-          graph of the chosen quantity versus radius. Selects axis labels and title automatically
-          from <code>output_type</code>. Raises <code>ValueError</code> for any unrecognized
-          output type string.
-        </p>
-        <div class="mc-sig">
-          plot_star_structure(result: StarResult)<br>
-          <br>
-          output_type  →  y-axis label<br>
-          "pressure"   →  "Pressure [Pa]"<br>
-          "density"    →  "Density [kg/m³]"<br>
-          "temperature"→  "Temperature [K]"<br>
-          "mass"       →  "Enclosed mass [kg]"<br>
-          <br>
-          x-axis: "Radius [m]"<br>
-          Title: "Stellar structure: &lt;type&gt; vs radius"
-        </div>
+      <div class="module-card"><div class="mc-name">plot_star.py</div><div class="mc-role">Plot</div>
+        <p>Plots pressure, density, temperature, or enclosed mass versus radius. An optional logarithmic y-axis is available for pressure, density, and temperature.</p>
+        <div class="mc-sig">plot_star_structure(result, log_y=False)</div>
       </div>
-
-      <!-- main.py -->
-      <div class="module-card">
-        <div class="mc-name">main.py</div>
-        <div class="mc-role">Entry Point</div>
-        <p>
-          The user-facing entry script. Sets all physical input parameters to solar-model
-          defaults and calls the driver and plotting modules in sequence. To explore a different
-          stellar model, edit the parameter values here; no other file needs to change.
-        </p>
-        <div class="mc-sig">
-          p_c         = 7.158e15  # central pressure [Pa]<br>
-          T_c         = 2.263e7   # central temperature [K]<br>
-          mu          = 1.285     # mean molecular weight<br>
-          gamma       = 1.36      # polytropic exponent<br>
-          output_type = "pressure"<br>
-          <br>
-          result = integrate_star(<br>
-          &nbsp;&nbsp;p_c=p_c, T_c=T_c, mu=mu,<br>
-          &nbsp;&nbsp;gamma=gamma,<br>
-          &nbsp;&nbsp;max_points=2000,<br>
-          &nbsp;&nbsp;output_type=output_type)<br>
-          plot_star_structure(result)
-        </div>
+      <div class="module-card"><div class="mc-name">main.py</div><div class="mc-role">Entry Point</div>
+        <p>Contains the ordinary physical and numerical parameters intended for experimentation. No edits to the other modules are needed for the suggested experiments.</p>
       </div>
-
-    </div><!-- /module-grid -->
+    </div>
   </section>
 
   <!-- ── Input Parameters ── -->
   <section id="parameters">
     <h2>Input Parameters</h2>
-
-    <p>
-      All parameters are set in <code>main.py</code>. The defaults produce a solar model
-      accurate to a fraction of a percent (see <a href="#adaptive">Adaptive Step Size</a>).
-      Change only the values in <code>main.py</code>; the physics, driver, and plot
-      modules require no modification.
-    </p>
-    <div class="note">
-      <strong>What "accurate" means here:</strong> that fraction-of-a-percent figure is
-      specifically about total mass and radius, which \(\gamma\), \(\mu\), \(T_C\), and
-      \(p_C\) were tuned together to match. It does <em>not</em> extend to the detailed
-      density profile — in particular, the model's central density
-      (\(\rho_c \approx 4.9\times10^4\,\mathrm{kg\,m^{-3}}\) with the defaults, computed
-      directly from \(\rho_c = p_C q / T_C\)) comes out noticeably lower than the real
-      Sun's actual central density (\(\approx1.5\times10^5\,\mathrm{kg\,m^{-3}}\)). That's
-      an expected, inherent limitation of representing the Sun's genuinely layered
-      internal structure with a single polytropic index — not a computational error.
-    </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Parameter</th>
-          <th>Default</th>
-          <th>Units</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>p_c</code></td>
-          <td><code>7.158e15</code></td>
-          <td>Pa</td>
-          <td>
-            Central pressure. Sets the overall energy scale of the stellar model. Higher \(p_c\)
-            generally produces a more massive, more compact star.
-          </td>
-        </tr>
-        <tr>
-          <td><code>T_c</code></td>
-          <td><code>2.263e7</code></td>
-          <td>K</td>
-          <td>
-            Central temperature. Combined with \(p_c\) and \(\mu\) via the ideal gas law to
-            set the central density \(\rho_c\). A higher \(T_c\) yields a lower \(\rho_c\) for
-            the same \(p_c\), producing a larger, less dense star.
-          </td>
-        </tr>
-        <tr>
-          <td><code>mu</code></td>
-          <td><code>1.285</code></td>
-          <td>dimensionless</td>
-          <td>
-            Mean molecular weight in units of the proton mass. This value, together with
-            <code>gamma</code> below, was tuned to reproduce the Sun's actual radius and mass
-            (see <a href="#physics">Physical Background</a>) — it is not simply the
-            textbook fully-ionized-plasma figure (\(\mu \approx 0.61\)); see the note below
-            the table. For a pure neutron fluid, \(\mu = 1\). Smaller \(\mu\) means lighter
-            particles and higher pressure per unit density.
-          </td>
-        </tr>
-        <tr>
-          <td><code>gamma</code></td>
-          <td><code>1.36</code></td>
-          <td>dimensionless</td>
-          <td>
-            Polytropic exponent \(\gamma\). Tuned together with <code>mu</code> to fit the
-            Sun (see above); the textbook value \(5/3\) corresponds to a non-relativistic
-            ideal monatomic gas. Red giants require \(\gamma\) closer to \(4/3\); neutron
-            stars modeled with a stiff EOS use \(\gamma \approx 2\). Values near \(1\)
-            produce very extended, low-density stars.
-          </td>
-        </tr>
-        <tr>
-          <td><code>max_points</code></td>
-          <td><code>2000</code></td>
-          <td>integer</td>
-          <td>
-            Maximum number of radial grid points per integration attempt. If the stellar surface
-            is not reached, the step size doubles and integration restarts. Increase this value
-            for better resolution with extreme parameter choices.
-          </td>
-        </tr>
-        <tr>
-          <td><code>output_type</code></td>
-          <td><code>"pressure"</code></td>
-          <td>string</td>
-          <td>
-            Selects the quantity displayed in the plot. One of <code>"pressure"</code>,
-            <code>"density"</code>, <code>"temperature"</code>, or <code>"mass"</code>.
-            All four profiles are always computed; only the display changes.
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="note">
-      <strong>Physical meaning of \(\mu\):</strong> For a pure hydrogen plasma (fully ionized),
-      each proton contributes one proton mass and one electron mass to the mean, but the electron
-      mass is negligible, so \(\mu \approx 0.5\). For a solar-composition hydrogen–helium mixture
-      (roughly 75% H, 25% He by mass, both fully ionized), \(\mu \approx 0.61\). For a pure
-      neutron star modeled in Newtonian gravity, \(\mu = 1\) (no free electrons). The program's
-      default, \(\mu = 1.285\), is higher than any of these idealized-composition figures — it
-      was not derived from a specific plasma composition, but fitted together with
-      \(\gamma = 1.36\) so the resulting model reproduces the Sun's actual radius and mass (see
-      <a href="#physics">Physical Background</a>).
-    </div>
+    <p>Ordinary experiment settings are all in <code>main.py</code>.</p>
+    <table><thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead><tbody>
+      <tr><td><code>p_c</code></td><td><code>7.158e15</code></td><td>Pa</td><td>Central pressure. Within a family having fixed \(T_c\), \(\mu\), and \(\gamma\), increasing \(p_c\) raises the central density and makes both radius and mass smaller; the model scales as \(R,M\propto p_c^{-1/2}\).</td></tr>
+      <tr><td><code>T_c</code></td><td><code>2.263e7</code></td><td>K</td><td>Central temperature used with \(p_c\) and \(\mu\) to set \(\rho_c\). At fixed \(p_c,\mu,\gamma\), the model scales as \(R\propto T_c\) and \(M\propto T_c^2\).</td></tr>
+      <tr><td><code>mu</code></td><td><code>1.285</code></td><td>dimensionless</td><td>Effective mean molecular-weight parameter in proton-mass units. In this simplified default model it should not be interpreted as the actual mean molecular weight of the solar core. At fixed \(p_c,T_c,\gamma\), \(R\propto\mu^{-1}\) and \(M\propto\mu^{-2}\).</td></tr>
+      <tr><td><code>gamma</code></td><td><code>1.36</code></td><td>dimensionless</td><td>Polytropic exponent in \(p=K\rho^\gamma\); it is related to the conventional polytropic index by \(n=1/(\gamma-1)\). This program requires \(\gamma&gt;1.2\) so the mathematical polytrope has a finite zero-pressure radius.</td></tr>
+      <tr><td><code>max_points</code></td><td><code>2000</code></td><td>integer</td><td>Maximum grid points in one attempt. Increase it when an extended model would otherwise trigger step doubling; it does not by itself refine a successful run.</td></tr>
+      <tr><td><code>steps_per_scale</code></td><td><code>400</code></td><td>integer</td><td>Controls the initial numerical resolution through \(dr=\ell/\text{steps_per_scale}\). Larger values give a finer calculation, provided <code>max_points</code> is large enough to avoid a restart.</td></tr>
+      <tr><td><code>output_type</code></td><td><code>"pressure"</code></td><td>string</td><td>One of <code>"pressure"</code>, <code>"density"</code>, <code>"temperature"</code>, or <code>"mass"</code>.</td></tr>
+      <tr><td><code>log_y</code></td><td><code>False</code></td><td>boolean</td><td>Use a logarithmic vertical axis for pressure, density, or temperature. Leave false for mass because \(m(0)=0\).</td></tr>
+    </tbody></table>
+    <div class="note"><strong>Input checks:</strong> The driver rejects nonpositive central pressure, temperature, or \(\mu\); \(\gamma\le1.2\); fewer than three grid points; nonpositive <code>steps_per_scale</code>; and unsupported output names with explanatory <code>ValueError</code> messages.</div>
   </section>
 
   <!-- ── Output Modes ── -->
   <section id="output">
     <h2>Output Modes</h2>
-
     <p>
-      Set <code>output_type</code> in <code>main.py</code> to choose which stellar structure
-      profile is plotted. In all modes the horizontal axis is the radius \(r\) in metres,
-      running from the first grid point \(r = dr\) to the stellar surface. All four profiles
-      are computed internally during each run; only the displayed quantity changes.
+      All four physical profiles are computed in every run; <code>output_type</code> chooses which
+      one is displayed. The horizontal axis begins at the stored center \(r=0\) and ends at the
+      interpolated zero-pressure surface.
     </p>
-
-    <table>
-      <thead>
-        <tr>
-          <th>output_type</th>
-          <th>Quantity plotted</th>
-          <th>Units</th>
-          <th>What to look for</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>"pressure"</code></td>
-          <td>Pressure \(p(r)\)</td>
-          <td>Pa</td>
-          <td>
-            Peaks at the center and falls monotonically to zero at the surface. The radius at
-            which \(p \to 0\) is the stellar radius \(R_\star\).
-          </td>
-        </tr>
-        <tr>
-          <td><code>"density"</code></td>
-          <td>Density \(\rho(r)\)</td>
-          <td>kg m\(^{-3}\)</td>
-          <td>
-            Also highest at the center, falling to zero at the surface. Because
-            \(\rho \propto p^{1/\gamma}\) with \(\gamma > 1\), density falls off
-            more slowly than pressure.
-          </td>
-        </tr>
-        <tr>
-          <td><code>"temperature"</code></td>
-          <td>Temperature \(T(r)\)</td>
-          <td>K</td>
-          <td>
-            Hottest at the center. Since \(T = qp/\rho\) and \(\rho\) falls more slowly than
-            \(p\), the temperature drops faster than pressure but more slowly than
-            a simple linear interpolation would suggest.
-          </td>
-        </tr>
-        <tr>
-          <td><code>"mass"</code></td>
-          <td>Enclosed mass \(m(r)\)</td>
-          <td>kg</td>
-          <td>
-            Increases from nearly zero at the center to the total stellar mass \(M_\star\) at
-            the surface. The curve rises steeply in the dense interior and flattens near the
-            low-density outer layers.
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <table><thead><tr><th>output_type</th><th>Quantity</th><th>What to look for</th></tr></thead><tbody>
+      <tr><td><code>"pressure"</code></td><td>\(p(r)\), Pa</td><td>Falls monotonically from \(p_c\) to zero. A logarithmic y-axis reveals the low-pressure envelope particularly well.</td></tr>
+      <tr><td><code>"density"</code></td><td>\(\rho(r)\), kg m\(^{-3}\)</td><td>Falls from \(\rho_c\) to zero according to the imposed polytropic relation.</td></tr>
+      <tr><td><code>"temperature"</code></td><td>\(T(r)\), K</td><td>A derived quantity: \(T=qp/\rho\). It is not obtained from a stellar energy-transport equation.</td></tr>
+      <tr><td><code>"mass"</code></td><td>\(m(r)\), kg</td><td>Rises from zero at the center to the modeled total stellar mass at the surface.</td></tr>
+    </tbody></table>
   </section>
 
   <!-- ── Suggested Scenarios ── -->
   <section id="scenarios">
     <h2>Suggested Experiments</h2>
-
-    <p>
-      The following experiments are drawn from Schutz's original program description and the
-      exercises in <em>Gravity from the Ground Up</em>, Chapter 8. Each requires only changes
-      to the parameter values in <code>main.py</code>.
-    </p>
-
+    <p>The first four investigations closely follow the questions posed in Schutz's original Star material; the later ones make the scaling and numerical behavior explicit.</p>
     <div class="scenario-grid">
+      <div class="scenario-card"><h4>1 · Baseline Solar-Like Model</h4><p>Run all four output modes. Estimate the modeled radius and total mass, but also compare the central temperature and density with standard solar values. Notice that matching two global observables does not make a one-polytrope model an accurate representation of the detailed solar interior.</p><div class="sc-params">use the default physical parameters<br>try all four output_type values<br>try log_y = True for pressure and density</div></div>
 
-      <div class="scenario-card">
-        <h4>1 · Solar Model Baseline</h4>
-        <p>
-          Run with default parameters. Switch <code>output_type</code> between all four modes
-          to build up a complete picture of the solar interior. Verify that the stellar radius
-          is of order \(7 \times 10^8\) m and the total enclosed mass is of order
-          \(2 \times 10^{30}\) kg.
-        </p>
-        <div class="sc-params">
-          p_c = 7.158e15, T_c = 2.263e7<br>
-          mu = 1.285, gamma = 1.36<br>
-          output_type = "mass"
-        </div>
-      </div>
+      <div class="scenario-card"><h4>2 · Central-Temperature Sensitivity</h4><p>Change \(T_c\) by ±10% with \(p_c,\mu,\gamma\) fixed. Verify that the higher-temperature model is both larger and more massive. The exact similarity scaling of this family is \(R\propto T_c\) and \(M\propto T_c^2\).</p><div class="sc-params">T_c = 0.9 * 2.263e7<br>T_c = 1.1 * 2.263e7<br>compare surface radius and mass</div></div>
 
-      <div class="scenario-card">
-        <h4>2 · Central Temperature Sensitivity</h4>
-        <p>
-          Change \(T_c\) by ±10% while keeping \(p_c\) fixed. A higher central temperature
-          lowers the central density (ideal gas law), making the star larger and less massive.
-          Observe how sensitively the stellar radius and total mass respond to this small change.
-        </p>
-        <div class="sc-params">
-          T_c = 2.037e7  # −10%<br>
-          T_c = 2.489e7  # +10%<br>
-          output_type = "mass"
-        </div>
-      </div>
+      <div class="scenario-card"><h4>3 · Compensating a Temperature Change</h4><p>Schutz asks how a change in central pressure can restore the original stellar mass after changing \(T_c\). Use trial runs, or the scaling relations, to bring the mass back near its original value. Then compare the resulting radius with the baseline radius. This demonstrates how simultaneous mass and radius observations constrain a stellar model.</p><div class="sc-params">change T_c by 10%<br>adjust p_c until M returns to baseline<br>then compare R</div></div>
 
-      <div class="scenario-card">
-        <h4>3 · Red Giant Model</h4>
-        <p>
-          Set \(\gamma\) close to \(4/3\) to model a gas that is close to the instability
-          threshold. Near-\(4/3\) polytropes favor very extended, tenuous envelopes —
-          but changing \(\gamma\) alone while leaving \(p_C\) at its solar default barely
-          changes the radius (verified: \(\gamma=1.335\) with the solar default \(p_C\)
-          gives just \(1.15\,R_\odot\)). To actually reach a red-giant-sized radius, \(p_C\)
-          must be lowered too. There is an exact, verified relationship for this: holding
-          \(T_C\) and \(\mu\) fixed, radius and mass both scale as
-        </p>
-        <div class="eq" style="margin:10px 0;">
-          \[
-            R \;\propto\; p_C^{-1/2}
-          \]
-        </div>
-        <p>
-          independent of \(\gamma\). Practical recipe: run any pilot value of \(p_C\)
-          (e.g. the solar default), note the resulting \(R_\text{pilot}\), then solve for
-          the \(p_C\) that hits your target radius directly:
-        </p>
-        <div class="eq" style="margin:10px 0;">
-          \[
-            p_{C,\,\text{target}} \;=\; p_{C,\,\text{pilot}}
-              \left(\frac{R_\text{pilot}}{R_\text{target}}\right)^{2}
-          \]
-        </div>
-        <p>
-          Verified to hit a 30-\(R_\odot\) target to 5 significant figures on the first
-          try (\(p_C \approx 1.070\times10^{13}\) with the solar \(T_C\), \(\mu\),
-          \(\gamma=4/3\)). One caveat: that same combination gives a mass of
-          \(\approx27\,M_\odot\) — enormous for a real red giant. If you want a more
-          realistic low-mass giant, try lowering \(\mu\) as well; the radius recipe
-          above still applies regardless of what \(\mu\) and \(\gamma\) you settle on.
-          Compare the resulting density profile with the baseline solar run.
-        </p>
-        <div class="sc-params">
-          gamma = 1.335<br>
-          p_C = &lt;computed via the recipe above for your target radius&gt;<br>
-          output_type = "density"
-        </div>
-      </div>
+      <div class="scenario-card"><h4>4 · A Schematic Red-Giant Polytrope</h4><p>Set \(\gamma=1.335\), as in Schutz's investigation, and try to construct a much larger model while controlling its total mass. Do not interpret the resulting single-polytrope structure as a realistic red giant: real giants have strongly differentiated cores and envelopes. The exercise is about the sensitivity of polytropic families.</p><div class="sc-params">gamma = 1.335<br>target: much larger R at chosen M<br>vary p_c and T_c</div></div>
 
-      <div class="scenario-card">
-        <h4>4 · Neutron Star (Newtonian)</h4>
-        <p>
-          Set \(\mu = 1\) (pure neutrons, no free electrons) and \(\gamma = 2\) (stiff
-          nuclear matter). This gives a much more compact object with a much smaller radius.
-          Note that a fully rigorous neutron-star model requires general relativity, as treated
-          in the companion Neutron program.
-        </p>
-        <div class="sc-params">
-          mu = 1.0, gamma = 2.0<br>
-          p_c = 2.5e16<br>
-          output_type = "pressure"
-        </div>
-      </div>
+      <div class="scenario-card"><h4>5 · Newtonian Neutron-Star Toy Model</h4><p>Following Schutz's challenge, use \(\gamma=2\) and \(\mu=1\) and search for central values giving approximately \(R=10\) km and \(M=1.4M_\odot\). Very large central pressure and a formal ideal-gas temperature will be required. Treat those values only as parameters that normalize the toy polytrope: realistic neutron-star matter is degenerate, strongly interacting, and requires general relativity.</p><div class="sc-params">mu = 1.0<br>gamma = 2.0<br>target R ≈ 1.0e4 m<br>target M ≈ 2.8e30 kg</div></div>
 
-      <div class="scenario-card">
-        <h4>5 · Scaling Relations</h4>
-        <p>
-          For a polytrope, dimensional analysis predicts that stellar radius \(R\) and mass
-          \(M\) scale as power laws in \(p_c\) and \(\rho_c\). Vary \(p_c\) over a factor of
-          10 and plot \(\log R\) versus \(\log p_c\) to measure the exponent. Compare with the
-          theoretical prediction for \(\gamma = 5/3\).
-        </p>
-        <div class="sc-params">
-          p_c in [1e15, 1e16, 1e17]<br>
-          gamma = 5.0/3.0<br>
-          output_type = "mass"
-        </div>
-      </div>
+      <div class="scenario-card"><h4>6 · Pressure Scaling</h4><p>Hold \(T_c,\mu,\gamma\) fixed and vary \(p_c\) by factors of 4 or 10. Verify \(R\propto p_c^{-1/2}\) and \(M\propto p_c^{-1/2}\). A log-log plot of either quantity against \(p_c\) should have slope \(-1/2\).</p><div class="sc-params">p_c = baseline / 4, baseline, baseline * 4<br>record R and M</div></div>
 
-      <div class="scenario-card">
-        <h4>6 · Effect of Composition (\(\mu\))</h4>
-        <p>
-          Compare models with \(\mu = 0.5\) (idealized pure hydrogen plasma), \(\mu = 0.61\)
-          (idealized fully-ionized solar mix), \(\mu = 1.0\) (pure protons or neutrons), and
-          \(\mu = 1.285\) (this program's actual fitted default — see the note in
-          <a href="#parameters">Input Parameters</a>). Higher \(\mu\) means heavier particles,
-          higher central density at the same pressure and temperature, and a more compact star.
-        </p>
-        <div class="sc-params">
-          mu in [0.5, 0.61, 1.0, 1.285]<br>
-          p_c = 7.158e15, T_c = 2.263e7<br>
-          output_type = "mass"
-        </div>
-      </div>
+      <div class="scenario-card"><h4>7 · Composition-Parameter Scaling</h4><p>At fixed \(p_c,T_c,\gamma\), vary \(\mu\). Verify that the model follows \(R\propto\mu^{-1}\) and \(M\propto\mu^{-2}\). This is a mathematical scaling experiment; values of \(\mu\) should not all be interpreted as realistic compositions for the same star.</p><div class="sc-params">mu = 0.6, 1.0, 1.285<br>record R and M</div></div>
 
-    </div><!-- /scenario-grid -->
+      <div class="scenario-card"><h4>8 · Numerical Convergence</h4><p>Keep the physical inputs fixed and increase <code>steps_per_scale</code>. Increase <code>max_points</code> if necessary so <code>restart_count</code> remains zero. Compare surface radius and total mass. Because forward Euler is first order globally, the error should decrease approximately in proportion to \(dr\) once the calculation is in its asymptotic convergence regime.</p><div class="sc-params">steps_per_scale = 200, 400, 800, 1600<br>ensure restart_count == 0</div></div>
+    </div>
   </section>
 
   <!-- ============================================================
@@ -1224,56 +722,12 @@
   <!-- ── Related Programs ── -->
   <section id="related">
     <h2>Related Programs</h2>
-
-    <p>
-      The Star program is part of a suite covering stellar and gravitational physics from
-      <em>Gravity from the Ground Up</em>. Documentation for each program is available in
-      the
-      <a href="https://github.com/tomyee3/GFTGU-Documentation">GFTGU Documentation repository</a>.
-    </p>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Program</th>
-          <th>Chapter</th>
-          <th>Topic</th>
-          <th>Documentation</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>Binary</code></td>
-          <td>Ch. 4</td>
-          <td>Newtonian two-body orbit with predictor–corrector integration</td>
-          <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/04-Binary">04-Binary</a></td>
-        </tr>
-        <tr>
-          <td><code>MercPert</code></td>
-          <td>Ch. 5</td>
-          <td>Mercury perihelion precession with GR perturbation</td>
-          <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/05-MercPert">05-MercPert</a></td>
-        </tr>
-        <tr>
-          <td><code>Multiple</code></td>
-          <td>Ch. 6</td>
-          <td>N-body gravitational simulation</td>
-          <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/06-Multiple">06-Multiple</a></td>
-        </tr>
-        <tr>
-          <td><code>Neutron</code></td>
-          <td>Ch. 9</td>
-          <td>Relativistic neutron-star structure (TOV equation)</td>
-          <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/09-Neutron">09-Neutron</a></td>
-        </tr>
-        <tr>
-          <td><code>RelativisticOrbit</code></td>
-          <td>Ch. 18</td>
-          <td>Test-particle orbit in Schwarzschild spacetime</td>
-          <td><a href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/18-RelativisticOrbit">18-RelativisticOrbit</a></td>
-        </tr>
-      </tbody>
-    </table>
+    <table><thead><tr><th>Program</th><th>Chapter</th><th>Connection</th></tr></thead><tbody>
+      <tr><td><a href="../04-SphereGravity/SphereGravity.html">SphereGravity</a></td><td>4</td><td>Newton's shell theorem, which justifies using only enclosed mass in the stellar gravitational field.</td></tr>
+      <tr><td><a href="../07-Atmosphere/Atmosphere.html">Atmosphere</a></td><td>7</td><td>Introduces hydrostatic equilibrium before gravity is allowed to vary with enclosed mass.</td></tr>
+      <tr><td><a href="../13-Binary/Binary.html">Binary</a></td><td>13</td><td>Stellar masses inferred dynamically from binary orbital motion.</td></tr>
+      <tr><td><a href="../20-Neutron/Neutron.html">Neutron</a></td><td>20</td><td>Relativistic neutron-star structure and the limitations of the Newtonian toy exercise above.</td></tr>
+    </tbody></table>
   </section>
 
   <!-- ── License ── -->
