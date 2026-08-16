@@ -382,11 +382,10 @@
   <div class="sub">
     Source Code:
     <a href="https://github.com/tomyee3-org/GFTGU-Programs"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
-    <br/>
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
     Documentation:
         <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
   </div>
 </header>
 
@@ -410,461 +409,117 @@
 <!-- ─── Description ─── -->
 <section id="description">
   <h2>Program Description</h2>
-  <p>
-    <strong>Random2</strong> simulates how randomly wandering particles travel from their 
-    starting point as a function of the
-    number of steps taken. The simulation is motivated by one of astrophysics' most
-    striking transport phenomena: the extraordinarily slow journey of a photon from the
-    core of the Sun to its surface.
-  </p>
-
-  <p>
-    A photon produced by nuclear fusion at the Sun's center does not travel outward in a
-    straight line. Instead, it is absorbed and re-emitted by the dense solar plasma
-    billions of times, changing direction randomly at each interaction. The net outward
-    displacement after \(N\) such steps is not proportional to \(N\) — as it would be
-    for directed motion — but rather to \(\sqrt{N}\). This square-root scaling is the
-    hallmark of <em>diffusion</em>, and it means that a photon requires roughly 10,000
-    to 170,000 years to traverse the 700,000 km from core to surface, even though light
-    itself crosses that distance in about 2.3 seconds if unobstructed.
-  </p>
-
-    
+  <p><strong>Random2</strong> explores the square-root scaling of random walks and provides a visual, two-dimensional illustration motivated by radiative diffusion in a stellar interior. Random displacements accumulate very differently from directed motion: after \(N\) independent steps, a characteristic net displacement grows in proportion to \(\sqrt{N}\), not \(N\).</p>
+  <p>In the Sun, energy produced by nuclear reactions in the core is transported outward through an opaque plasma. In regions where radiative diffusion dominates, repeated absorption, emission, and scattering make energy propagation resemble a random walk. Detailed diffusion-time estimates depend on the solar model and on the rapidly changing opacity and photon mean free path; the important lesson here is the random-walk scaling rather than one particular travel time.</p>
   <h3>Two Modes of Operation</h3>
-
-  <p>
-    <strong>In the "scaled_distance" mode of operation</strong>, this program performs a systematic suite of experiments. 
-    Starting with a maximum walk length of <code>maxSteps</code>, 
-    it halves the number of steps repeatedly, running
-    <code>nTrials</code> independent random walks at each step-count to obtain a
-    statistically reliable average. The result is a table — and a log-log plot —
-    of average scaled net displacement versus number of steps. On log-log axes a
-    diffusive process appears as a straight line with slope exactly
-    \(\tfrac{1}{2}\), confirming the \(\langle d \rangle \propto \sqrt{N}\) scaling law.
-  </p>
-  <p>
-    Each step in a single walk has <strong>two</strong> components drawn independently and
-    uniformly from the interval \([-1, +1]\) — see
-    <a href="#physics">Physics &amp; Equations</a> for the full derivation. This mimics an
-    isotropic scattering event where direction is equally likely in any direction within
-    the plane. Because the step lengths vary (a step drawn near a corner of the unit
-    square is longer than one drawn near an edge), the raw displacement is normalized by
-    the average step length before averaging across trials, producing a dimensionless
-    <em>scaled distance</em> that cleanly reveals the diffusive scaling.
-  </p>
-
-  <p>
-    <strong>The "walk2d" mode of operation</strong> adds a directly visual way of seeing the same physics. 
-    Instead of generating a log-log plot of scaled distance versus step count that
-    provides a quantitative view of the statistics, this second mode provides
-    an intuitive view of how a handful of individual photons might follow a meandering
-    path from the center of a circular "star" outward towards the surface before
-    eventually escaping.
-  </p>
-  
-  <p>
-    These two separate displays are built on the same 2D step-generation physics (see
-    <a href="#physics">Physics &amp; Equations</a>). The scaled-distance experiment and
-    the star visualization can be run independently; neither depends on the other.
-  </p>
-  
-  <div class="note">
-    <strong>Astrophysical context:</strong> The random walk is the simplest model of
-    radiative diffusion in stellar interiors. More realistic models account for the
-    frequency-dependent mean free path of photons and the temperature gradient driving
-    a net outward energy flux, but the \(\sqrt{N}\) scaling persists and governs the
-    overall timescale of energy transport.
-  </div>
+  <p><strong><code>scaled_distance</code></strong> retains the component-based random-walk experiment used to demonstrate the statistical law. Each step has independently generated \(x\) and \(y\) components. The default components are uniform on \([-1,1]\); an optional Gaussian distribution lets you test Schutz's observation that the \(\sqrt{N}\) behavior does not depend on this particular choice of step distribution. Each walk's net displacement is divided by its own mean step length before trial averaging.</p>
+  <p><strong><code>walk2d</code></strong> is a visualization rather than a second version of the same step generator. Here every step has fixed length \(\lambda\) and an angle chosen uniformly from \(0\) to \(2\pi\). The result is genuinely isotropic in the plane: no direction is preferred. Several walks start at the center of a circular schematic star and continue until they cross its boundary or reach a safety limit.</p>
+  <div class="note"><strong>Solar-model limitation:</strong> Random2 is a schematic model of <em>radiative diffusion</em>, not a numerical model of the complete Sun. In the real Sun, radiative transport dominates through the core and radiative zone, while convection becomes the principal energy-transport mechanism in the outer convection zone, whose base is about 200,000 km below the visible surface (roughly \(0.7R_\odot\)). The circle in the visualization should therefore be regarded as a pedagogical boundary, not as a literal simulation of one photon random-walking through every solar layer. See <a href="https://solarscience.msfc.nasa.gov/interior.shtml" target="_blank">NASA: The Solar Interior</a>.</div>
+  <div class="note"><strong>Why 2D?</strong> The exponent in the diffusion law, \(D\propto\sqrt{N}\), does not depend on whether the walk is drawn in two or three dimensions, so a planar walk is sufficient for demonstrating that scaling and is much easier to visualize. Quantitative radial and first-passage statistics do depend on dimensionality, however, so the displayed escape-time distribution should not be interpreted as a three-dimensional solar prediction.</div>
 </section>
 
 
 <!-- ─── Physics ─── -->
 <section id="physics">
   <h2>Physics &amp; Equations</h2>
-
-  <h3>The Random Step</h3>
-  <p>
-    At each step \(i\), two displacements are drawn independently and uniformly from
-    \([-1, +1]\):
-  </p>
-  <div class="eq-block">
-    <span class="eq-label">(1)</span>
-    \[
-      \Delta x_i = 2 U_i^{(x)} - 1, \quad
-      \Delta y_i = 2 U_i^{(y)} - 1,
-      \qquad U \sim \mathrm{Uniform}(0,1).
-    \]
-  </div>
-  <div class="note">
-    <strong>Why 2D:</strong> Random2 uses a 2D walk throughout, for both display modes,
-    since the star visualization is inherently planar, and the \(\sqrt{N}\) diffusion law
-    (see <a href="#physics">Diffusion Scaling Law</a> below) is dimension-independent, so
-    nothing about the underlying physics demonstration is lost by working in a plane.
-  </div>
-
+  <h3>Component-Based Step for the Scaled-Distance Experiment</h3>
+  <p>With the default <code>step_distribution = "uniform"</code>, the two components of step \(i\) are independent:</p>
+  <div class="eq-block"><span class="eq-label">(1)</span>\[
+    \Delta x_i=2U_{x,i}-1,\qquad \Delta y_i=2U_{y,i}-1,\qquad U_{x,i},U_{y,i}\sim\mathrm{Uniform}(0,1).
+  \]</div>
+  <p>These endpoints are uniform over a square. The resulting directions are <strong>not isotropic</strong>; directions near the square's diagonals occur more often than directions near its coordinate axes. That anisotropy does not change the \(\sqrt{N}\) scaling being studied in this statistical mode.</p>
   <h3>Individual Step Length</h3>
-  <p>
-    The Euclidean length of step \(i\) is:
-  </p>
-  <div class="eq-block">
-    <span class="eq-label">(2)</span>
-    \[
-      \ell_i = \sqrt{\Delta x_i^2 + \Delta y_i^2}.
-    \]
-  </div>
-  <p>
-    For components uniform on \([-1,1]\), the expected 2D step length has the closed
-    form
-  </p>
-  <div class="eq-block">
-    <span class="eq-label">(3)</span>
-    \[
-      \langle \ell \rangle = \frac{\sqrt{2} + \ln(1+\sqrt{2})}{3} \approx 0.7652,
-    \]
-  </div>
-  <p>
-    confirmed numerically by direct simulation (20 million samples agree with this value
-    to five significant figures). Individual step lengths range from \(0\) to
-    \(\sqrt{2}\).
-  </p>
-
-  <h3>Accumulated Position and Net Displacement</h3>
-  <p>
-    After \(N\) steps the walker's position is:
-  </p>
-  <div class="eq-block">
-    <span class="eq-label">(4)</span>
-    \[
-      X = \sum_{i=1}^{N} \Delta x_i, \quad
-      Y = \sum_{i=1}^{N} \Delta y_i.
-    \]
-  </div>
-  <div class="eq-block">
-    <span class="eq-label">(5)</span>
-    \[
-      D = \sqrt{X^2 + Y^2}.
-    \]
-  </div>
-
-  <h3>Average Step Length and Scaled Distance</h3>
-  <div class="eq-block">
-    <span class="eq-label">(6)</span>
-    \[
-      \bar{\ell} = \frac{1}{N} \sum_{i=1}^{N} \ell_i,
-      \qquad
-      d = \frac{D}{\bar{\ell}}.
-    \]
-  </div>
-
+  <div class="eq-block"><span class="eq-label">(2)</span>\[\ell_i=\sqrt{\Delta x_i^2+\Delta y_i^2}.\]</div>
+  <p>For the uniform-component model, the exact mean step length is</p>
+  <div class="eq-block"><span class="eq-label">(3)</span>\[\langle\ell\rangle=\frac{\sqrt{2}+\ln(1+\sqrt{2})}{3}\approx0.7652.\]</div>
+  <h3>Accumulated Position and Scaled Distance</h3>
+  <div class="eq-block"><span class="eq-label">(4)</span>\[X=\sum_{i=1}^{N}\Delta x_i,\qquad Y=\sum_{i=1}^{N}\Delta y_i,\qquad D=\sqrt{X^2+Y^2}.\]</div>
+  <div class="eq-block"><span class="eq-label">(5)</span>\[\bar{\ell}=\frac{1}{N}\sum_{i=1}^{N}\ell_i,\qquad d=\frac{D}{\bar{\ell}}.\]</div>
   <h3>Diffusion Scaling Law</h3>
-  <p>
-    As in the original program, the expected scaled distance grows as the square root
-    of the number of steps, appearing as a line of slope \(\tfrac{1}{2}\) on log-log
-    axes:
-  </p>
-  <div class="eq-block">
-    <span class="eq-label">(7)</span>
-    \[
-      \langle d \rangle \propto \sqrt{N}, \qquad
-      \log \langle d \rangle = \tfrac{1}{2}\log N + \mathrm{const}.
-    \]
-  </div>
+  <p>For independent steps with finite variance, characteristic random-walk displacement grows as the square root of the number of steps:</p>
+  <div class="eq-block"><span class="eq-label">(6)</span>\[\langle d\rangle\propto\sqrt{N},\qquad \log\langle d\rangle=\frac{1}{2}\log N+\mathrm{constant}.\]</div>
+  <p>A finite Monte Carlo run will not normally produce a fitted slope of exactly \(1/2\). Increasing <code>nTrials</code> reduces the statistical scatter, and the measured trend should approach the theoretical value.</p>
+  <h3>Fixed-Length Isotropic Step for the Star Display</h3>
+  <p>In <code>walk2d</code> mode the direction angle is uniform and every step has length \(\lambda=\)<code>mean_free_path</code>:</p>
+  <div class="eq-block"><span class="eq-label">(7)</span>\[\theta_i\sim\mathrm{Uniform}(0,2\pi),\qquad \Delta x_i=\lambda\cos\theta_i,\qquad \Delta y_i=\lambda\sin\theta_i.\]</div>
+  <p>This construction is isotropic in the plane. For \(N\) such independent steps, \(\langle D^2\rangle=N\lambda^2\), so the root-mean-square displacement is</p>
+  <div class="eq-block"><span class="eq-label">(8)</span>\[D_{\mathrm{rms}}=\lambda\sqrt{N}.\]</div>
 </section>
 
 <!-- ─── Algorithm ─── -->
-<section id="algorithm">
-  <h2>Algorithm Overview</h2>
+<section id="algorithm"><h2>Algorithm Overview</h2><h3>Scaled-Distance Mode</h3><p>Starting at <code>maxSteps</code>, the program performs <code>nTrials</code> independent walks, records their average scaled distance, then integer-halves the number of steps and repeats until a one-step experiment would be reached. The returned arrays are ordered from the shortest to the longest walk before plotting.</p><h3>2D Star Mode</h3><p>Each walk begins at the origin. A fixed-length isotropic step is generated and added to the current position. If that segment crosses the circular boundary, the code solves for the exact intersection point, stores the number of steps taken, and stops the random walk there. If the walk has not escaped after <code>step_cap</code> steps, it is returned as an incomplete walk rather than allowing an unbounded calculation.</p></section>
 
-  <p>
-    The scaled-distance experiment uses the following loop structure:
-  </p>
-  <ul>
-    <li><strong>Outer loop &mdash; experiment suite:</strong> Index \(j\) runs from
-        \(n_{\mathrm{walks}}-1\) down to \(0\); the step count starts at
-        <code>maxSteps</code> and is integer-halved after each experiment, exiting early
-        if it drops to \(\le 1\).</li>
-    <li><strong>Middle loop &mdash; trial averaging:</strong> <code>nTrials</code>
-        independent walks are performed per step count and their scaled distances
-        averaged.</li>
-    <li><strong>Inner loop &mdash; single walk:</strong> steps through \(n_{\mathrm{steps}}\)
-        iterations, accumulating position and total step length.</li>
-  </ul>
-  <p>
-    As before, filling <code>lengths[j]</code>/<code>avg_dist[j]</code> from high \(j\)
-    to low leaves both arrays in ascending step-count order on return, with no sorting
-    needed before plotting.
-  </p>
-</section>
-
-<!-- ─── 2D Star Visualization (NEW) ─── -->
+<!-- ─── 2D Star Visualization ─── -->
 <section id="starwalk">
   <h2>2D Star Visualization</h2>
-
-  <p>
-    This display draws <code>n_walks</code> independent 2D walks starting at the
-    origin ("the star's center"), each continuing until it crosses a circular boundary
-    ("the surface") of a given or default radius &mdash; at which point a straight ray
-    is drawn onward from the crossing point, in the walk's final direction of travel,
-    representing the photon escaping into space.
-  </p>
-
+  <p>The star display is a geometric visualization of diffusion. It is not intended to reproduce the Sun's radial opacity profile, changing photon mean free path, three-dimensional geometry, or transition to convective transport.</p>
   <h3>Default Radius</h3>
-  <p>
-    The default radius is a small multiple of a walk's characteristic (RMS) diffusion
-    distance for a nominal step count:
-  </p>
-  <div class="eq-block">
-    <span class="eq-label">(8)</span>
-    \[
-      R = f \sqrt{N_{\mathrm{ref}} \, \lambda}, \qquad f = 2,\ \ N_{\mathrm{ref}} = 2000,
-      \ \ \lambda = 1
-    \]
-  </div>
-  <p>
-    where \(f\) is <code>radius_factor</code>, \(N_{\mathrm{ref}}\) is
-    <code>reference_steps</code>, and \(\lambda\) is <code>mean_free_path</code>.
-  </p>
-  <div class="note">
-    <strong>reference_steps sizes the star, not the walk:</strong> it only feeds Eq. 8
-    above. Each walk keeps going &mdash; however many steps that takes &mdash; until it
-    actually reaches the boundary; it typically takes several thousand steps to do so,
-    well beyond <code>reference_steps</code> itself. That's expected, not a malfunction.
-  </div>
-
+  <p>Because the isotropic display step has fixed length \(\lambda\), Eq.&nbsp;8 provides a natural characteristic diffusion distance. The default display radius is chosen as a multiple \(f\) of that distance for a reference step count:</p>
+  <div class="eq-block"><span class="eq-label">(9)</span>\[R=f\,\lambda\sqrt{N_{\mathrm{ref}}},\qquad f=\texttt{radius\_factor}.\]</div>
+  <p>This formula is dimensionally consistent: \(N_{\mathrm{ref}}\) and \(f\) are dimensionless, while both \(R\) and \(\lambda\) have units of length. <code>reference_steps</code> therefore sets the diffusion scale used to size the drawing; it is <em>not</em> the maximum number of steps allowed for each displayed walk.</p>
   <h3>Exact Boundary Crossing</h3>
-  <p>
-    Rather than simply stopping a walk at the first step that lands outside the circle
-    (which would leave a visible, unphysical jump past the boundary), the exact crossing
-    point is found by solving for where the straight segment from the last inside point
-    \(\mathbf{p}_0\) to the first outside point \(\mathbf{p}_1\) meets the circle
-    \(|\mathbf{p}(t)| = R\), with \(\mathbf{p}(t) = \mathbf{p}_0 + t(\mathbf{p}_1 -
-    \mathbf{p}_0)\):
-  </p>
-  <div class="eq-block">
-    <span class="eq-label">(9)</span>
-    \[
-      a t^2 + b t + c = 0, \quad
-      a = |\mathbf{p}_1-\mathbf{p}_0|^2,\ \,
-      b = 2\mathbf{p}_0\cdot(\mathbf{p}_1-\mathbf{p}_0),\ \,
-      c = |\mathbf{p}_0|^2 - R^2,
-    \]
-  </div>
-  <p>
-    taking the root \(t \in (0,1]\). The escaping ray then continues from this exact
-    point in the direction of the walk's final step, extended an additional
-    <code>ray_length_factor</code> \(\times\, R\) beyond it.
-  </p>
-
-  <h3>Number of Walks</h3>
-  <p>
-    <code>n_walks</code> defaults to <strong>4</strong>. With more walks drawn
-    simultaneously, paths overlap heavily near the center and individual character is
-    lost; with four, each walk's full, often dramatically convoluted shape stays legible
-    &mdash; including cases where a walk wanders out toward one side of the star, nearly
-    reaching the surface, then backtracks across almost the entire interior before
-    finally escaping somewhere else altogether.
-  </p>
+  <p>When a step goes from an inside point \(\mathbf p_0\) to an outside point \(\mathbf p_1\), the final plotted random-walk segment is clipped to the exact point at which it intersects the circle. With \(\mathbf p(t)=\mathbf p_0+t(\mathbf p_1-\mathbf p_0)\), the crossing satisfies</p>
+  <div class="eq-block"><span class="eq-label">(10)</span>\[at^2+bt+c=0,\]\[a=|\mathbf p_1-\mathbf p_0|^2,\qquad b=2\mathbf p_0\cdot(\mathbf p_1-\mathbf p_0),\qquad c=|\mathbf p_0|^2-R^2.\]</div>
+  <p>The first root \(t\in(0,1]\) is used. A short straight segment can then be drawn beyond the boundary in the direction of the final step. This ray is only a visual cue that scattering has stopped in the toy model; it is not a physical treatment of the Sun's outer layers.</p>
+  <h3>Escape Step Count</h3>
+  <p>Every returned <code>WalkPath</code> includes <code>steps_taken</code>. This makes the first-passage behavior directly measurable without requiring the user to infer it from the number of plotted points. Diffusion predicts the characteristic relation</p>
+  <div class="eq-block"><span class="eq-label">(11)</span>\[N_{\mathrm{escape}}\propto\left(\frac{R}{\lambda}\right)^2.\]</div>
 </section>
 
 <!-- ─── Modules ─── -->
-<section id="modules">
-  <h2>Module Structure</h2>
-
-  <p>
-    Random2 follows the standard GFtGU physics/driver/plot/main pattern.
-  </p>
-
-  <div class="module-grid">
-
-    <div class="module-card">
-      <h4>random2_physics.py</h4>
-      <p>
-        2D step generation, the default-radius formula (Eq. 8), and the exact
-        circle-crossing geometry (Eq. 9). No plotting, no driver-loop logic.
-      </p>
-      <div class="sig">generate_2d_step()
-  → (dx, dy)
-
-default_radius(n_steps, mfp, f)
-  → radius
-
-circle_crossing_fraction(p0, p1, r)
-  → t in (0, 1] or None</div>
-    </div>
-
-    <div class="module-card">
-      <h4>random2_driver.py</h4>
-      <p>
-        Both experiments live here: <code>run_scaled_distance_experiment</code>
-        (the scaled-distance suite) and <code>run_walk2d</code> (the star
-        visualization, running each walk until it escapes).
-      </p>
-      <div class="sig">run_scaled_distance_experiment(
-    max_steps, n_trials)
-  → (lengths, avg_dist)
+<section id="modules"><h2>Module Structure</h2><p>Random2 follows the GFtGU physics/driver/plot/main organization.</p><div class="module-grid">
+<div class="module-card"><h4>random2_physics.py</h4><p>Defines the component-based step used for the scaled-distance experiment, the fixed-length isotropic step used by the star display, the default-radius relation, and the exact line-circle crossing geometry.</p><div class="sig">generate_component_step(distribution)
+generate_isotropic_step(mean_free_path)
+default_radius(reference_steps, mean_free_path, radius_factor)
+circle_crossing_fraction(p0, p1, radius)</div></div>
+<div class="module-card"><h4>random2_driver.py</h4><p>Runs both experiments, validates user parameters, records the exact boundary crossing, and reports <code>steps_taken</code> for every displayed walk.</p><div class="sig">run_scaled_distance_experiment(
+    max_steps, n_trials, step_distribution)
 
 run_walk2d(
-    reference_steps=2000,
-    n_walks=4, ...)
-  → Walk2DResult</div>
-    </div>
-
-    <div class="module-card">
-      <h4>random2_plot.py</h4>
-      <p>
-        <code>plot_scaled_distance</code> reproduces the original log-log figure.
-        <code>plot_walk2d</code> draws the star and its walks.
-      </p>
-      <div class="sig">plot_scaled_distance(lengths, avg_dist)
-plot_walk2d(result, corner="upper right")</div>
-    </div>
-
-  </div><!-- /module-grid -->
-
-  <div class="note">
-    <strong>main.py:</strong> chooses between <code>display = "scaled_distance"</code>
-    or <code>"walk2d"</code>. All editable parameters for whichever mode is selected are
-    set at the top of the function, following the same single-entry-point convention as
-    every other GFtGU program.
-  </div>
-</section>
+    reference_steps, n_walks, ...)</div></div>
+<div class="module-card"><h4>random2_plot.py</h4><p>Produces the log-log scaling graph or the circular star visualization and reports basic escape statistics in the annotation box.</p><div class="sig">plot_scaled_distance(lengths, avg_dist)
+plot_walk2d(result, corner="upper right")</div></div></div>
+<div class="note"><strong>main.py:</strong> selects <code>"scaled_distance"</code> or <code>"walk2d"</code> and exposes all parameters intended for ordinary experimentation, including <code>step_distribution</code>, <code>ray_length_factor</code>, and <code>step_cap</code>.</div></section>
 
 <!-- ─── Parameters ─── -->
-<section id="parameters">
-  <h2>Parameters</h2>
-
-  <p>
-    All parameters are set at the top of <code>main.py</code>, split by which
-    <code>display</code> is selected.
-  </p>
-
-  <h3>Scaled-Distance Mode</h3>
-  <table class="param-table">
-    <thead>
-      <tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>maxSteps</code></td><td><code>4096</code></td>
-        <td>Maximum walk length; experiments run at <code>maxSteps</code>,
-            <code>maxSteps/2</code>, &hellip; down to 2.</td>
-      </tr>
-      <tr>
-        <td><code>nTrials</code></td><td><code>100</code></td>
-        <td>Independent walks averaged per step count.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3>2D Star Visualization Mode</h3>
-  <table class="param-table">
-    <thead>
-      <tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>reference_steps</code></td><td><code>2000</code></td>
-        <td>The \(N_{\mathrm{ref}}\) of Eq. 8 &mdash; sizes the default radius only, not
-            a per-walk step budget (see the note in
-            <a href="#starwalk">2D Star Visualization</a>).</td>
-      </tr>
-      <tr>
-        <td><code>n_walks</code></td><td><code>4</code></td>
-        <td>Number of simultaneous walks. Kept small so each one's full, individually
-            convoluted path stays visible.</td>
-      </tr>
-      <tr>
-        <td><code>radius_factor</code></td><td><code>2.0</code></td>
-        <td>\(f\) in Eq. 8.</td>
-      </tr>
-      <tr>
-        <td><code>mean_free_path</code></td><td><code>1.0</code></td>
-        <td>\(\lambda\) in Eq. 8.</td>
-      </tr>
-      <tr>
-        <td><code>radius</code></td><td><code>None</code></td>
-        <td>Explicit override for Eq. 8's computed default.</td>
-      </tr>
-      <tr>
-        <td><code>ray_length_factor</code></td><td><code>0.6</code></td>
-        <td>Escaping-ray length beyond the boundary, as a fraction of the radius.</td>
-      </tr>
-      <tr>
-        <td><code>step_cap</code></td><td><code>200000</code></td>
-        <td>Safety limit only; essentially never reached at the default
-            <code>radius_factor</code>.</td>
-      </tr>
-      <tr>
-        <td><code>corner</code></td><td><code>"upper right"</code></td>
-        <td>Placement of the results annotation box.</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+<section id="parameters"><h2>Parameters</h2><p>All ordinary experiment settings are in <code>main.py</code>.</p>
+<h3>Scaled-Distance Mode</h3><table class="param-table"><thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>maxSteps</code></td><td><code>4096</code></td><td>Largest walk in the scaling experiment. The step count is repeatedly halved until the next value would be 1.</td></tr>
+<tr><td><code>nTrials</code></td><td><code>100</code></td><td>Independent walks averaged at each step count. Larger values reduce Monte Carlo scatter.</td></tr>
+<tr><td><code>step_distribution</code></td><td><code>"uniform"</code></td><td><code>"uniform"</code> uses independent components on \([-1,1]\); <code>"gaussian"</code> uses independent standard-normal components.</td></tr></tbody></table>
+<h3>2D Star Visualization Mode</h3><table class="param-table"><thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>reference_steps</code></td><td><code>2000</code></td><td>\(N_{\mathrm{ref}}\) in Eq.&nbsp;9. It sets the diffusion scale used to compute the default radius; it is not a walk-length limit.</td></tr>
+<tr><td><code>n_walks</code></td><td><code>4</code></td><td>Number of independent paths drawn simultaneously.</td></tr>
+<tr><td><code>mean_free_path</code></td><td><code>1.0</code></td><td>Fixed length \(\lambda\) of every isotropic display step, in arbitrary distance units.</td></tr>
+<tr><td><code>radius_factor</code></td><td><code>2.0</code></td><td>Multiplier \(f\) in \(R=f\lambda\sqrt{N_{\mathrm{ref}}}\).</td></tr>
+<tr><td><code>radius</code></td><td><code>None</code></td><td>Optional positive explicit radius. When supplied, it overrides Eq.&nbsp;9.</td></tr>
+<tr><td><code>ray_length_factor</code></td><td><code>0.6</code></td><td>Length of the schematic outgoing ray as a fraction of the star radius. Set to <code>0</code> to suppress the ray.</td></tr>
+<tr><td><code>step_cap</code></td><td><code>200000</code></td><td>Positive safety limit on the number of steps in any one displayed walk.</td></tr>
+<tr><td><code>corner</code></td><td><code>"upper right"</code></td><td>Annotation-box location: upper/lower left/right.</td></tr></tbody></table>
+<div class="note">Invalid display names, distributions, corners, nonpositive physical parameters, and nonpositive trial/step counts are rejected with explanatory <code>ValueError</code> messages rather than silently selecting another behavior.</div></section>
 
 <!-- ─── Output ─── -->
-<section id="output">
-  <h2>Program Output</h2>
-
-  <p>
-    <strong>Scaled-distance mode</strong> produces a log-log plot of average scaled distance
-    versus number of steps, expected to lie close to a line of slope \(\tfrac{1}{2}\).
-  </p>
-  <p>
-    <strong>2D star-visualization mode</strong> produces a single square figure showing
-    the star as a filled circle, each walk in its own color, and an escaping ray
-    wherever a walk reached the boundary. A small annotation box (placed in the corner
-    given by <code>corner</code>, upper right by default) reports the radius, the
-    reference step count, and how many of the walks escaped.
-  </p>
-</section>
+<section id="output"><h2>Program Output</h2><p><strong>Scaled-distance mode</strong> produces a log-log plot of average scaled displacement versus number of steps. The points should approach a line of slope \(1/2\); finite trial counts produce visible statistical scatter.</p><p><strong>2D star mode</strong> produces a square plot of fixed-length isotropic walks within a circular schematic star. The annotation box reports the radius, mean free path, reference step count, number of escaped walks, and—when at least one walk escapes—the median escape step count. Each <code>WalkPath</code> also stores its individual <code>steps_taken</code> value for quantitative experiments.</p></section>
 
 <!-- ─── Suggested Experiments ─── -->
-<section id="experiments">
-  <h2>Suggested Experiments</h2>
-
-  <div class="scenario-grid">
-
-    <div class="scenario-card">
-      <h4>Verify the &radic;N Law</h4>
-      <p>Run the scaled-distance mode with defaults and confirm the log-log slope is
-         \(\tfrac{1}{2}\).</p>
-      <div class="params">display = "scaled_distance"</div>
-    </div>
-
-    <div class="scenario-card">
-      <h4>Escape-Time Distribution</h4>
-      <p>Record how many steps each walk actually takes to escape at the default
-         radius. Histogram the results across many runs &mdash; the tail is
-         considerably longer than the median.</p>
-      <div class="params">reference_steps = 2000
-radius_factor = 2.0</div>
-    </div>
-
-    <div class="scenario-card">
-      <h4>Radius Factor vs. Escape Time</h4>
-      <p>Increase <code>radius_factor</code> from 0.5 up to 2.0 or higher and watch how
-         much longer a walk typically takes to escape as the star grows.</p>
-      <div class="params">radius_factor = 0.5 # then 1.0, 1.5, 2.0</div>
-    </div>
-
-    <div class="scenario-card">
-      <h4>Number of Walks vs. Legibility</h4>
-      <p>Compare <code>n_walks = 4</code> against <code>n_walks = 10</code> or more.
-         At what point do individual convoluted paths become impossible to follow?</p>
-      <div class="params">n_walks = 4 # then 6, 10</div>
-    </div>
-
-    <div class="scenario-card">
-      <h4>A Custom Radius</h4>
-      <p>Override the default entirely with an explicit <code>radius</code>, and observe
-         how a small radius produces short, direct-looking rays while a large one
-         produces long, tangled interior paths before escape.</p>
-      <div class="params">radius = 40.0  # override Eq. 8</div>
-    </div>
-
-  </div>
-</section>
+<section id="experiments"><h2>Suggested Experiments</h2><div class="scenario-grid">
+<div class="scenario-card"><h4>1 · Verify the &radic;N Law</h4><p>Run the default scaled-distance experiment. The log-log points should lie near a straight line of slope \(1/2\), with some Monte Carlo scatter.</p><div class="params">display = "scaled_distance"
+maxSteps = 4096
+nTrials = 100</div></div>
+<div class="scenario-card"><h4>2 · Reduce Statistical Scatter</h4><p>Increase <code>nTrials</code> while leaving the step counts unchanged. The estimated curve should become smoother and its overall slope more stable.</p><div class="params">nTrials = 25
+# compare with 100, 500, 1000</div></div>
+<div class="scenario-card"><h4>3 · Change the Step Distribution</h4><p>Repeat the scaled-distance calculation using Gaussian components. The numerical coefficient changes, but after scaling by each walk's mean step length the characteristic \(N^{1/2}\) dependence remains.</p><div class="params">step_distribution = "uniform"
+# compare with "gaussian"</div></div>
+<div class="scenario-card"><h4>4 · Escape-Time Distribution</h4><p>Run many isotropic star walks and collect <code>walk.steps_taken</code> for the escaped paths. The first-passage times have a broad distribution: individual random walks can escape much sooner or much later than a typical walk.</p><div class="params">display = "walk2d"
+n_walks = 100
+# inspect [w.steps_taken for w in result.walks if w.escaped]</div></div>
+<div class="scenario-card"><h4>5 · Verify Escape Steps &prop; R&sup2;</h4><p>Hold <code>mean_free_path</code> fixed and repeat the calculation for several explicit radii. Average <code>steps_taken</code> over many walks and compare it with \(R^2\). Diffusion predicts a characteristic first-passage step count proportional to \((R/\lambda)^2\).</p><div class="params">radius = 30.0
+# compare with 40.0, 50.0, 60.0</div></div>
+<div class="scenario-card"><h4>6 · Mean Free Path and Geometric Scaling</h4><p>With <code>radius = None</code>, multiply <code>mean_free_path</code> by a constant. Eq.&nbsp;9 scales the star radius by the same constant, so the picture has the same statistical geometry expressed in larger distance units.</p><div class="params">mean_free_path = 1.0
+# compare with 0.5 and 2.0</div></div>
+<div class="scenario-card"><h4>7 · Number of Walks vs. Legibility</h4><p>Compare a few simultaneous walks with ten or more. This does not change the physics; it shows why a small default is useful when the goal is to see the convoluted character of individual paths.</p><div class="params">n_walks = 4
+# compare with 6 and 10</div></div>
+</div></section>
 
 <!-- ============================================================
      RESTORE TO DEFAULTS CALLOUT
@@ -938,33 +593,13 @@ radius_factor = 2.0</div>
 
 
 <!-- ─── Related Programs ─── -->
-<section id="related">
-  <h2>Related Programs</h2>
-  <div class="related-grid">
-
-    <a class="related-card"
-       href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/08-Star"
-       target="_blank">
-      <div class="rc-name">Star</div>
-      <div class="rc-desc">Polytropic stellar structure (Newtonian)</div>
-    </a>
-
-    <a class="related-card"
-       href="https://github.com/tomyee3/GFTGU-Documentation/tree/main/08-Neutron"
-       target="_blank">
-      <div class="rc-name">Neutron</div>
-      <div class="rc-desc">Neutron star structure (TOV equation)</div>
-    </a>
-
-  </div>
-</section>
+<section id="related"><h2>Related Programs</h2><div class="related-grid"><a class="related-card" href="../08-Star/Star.html"><div class="rc-name">Star</div><div class="rc-desc">Stellar structure and the physical conditions through a star</div></a><a class="related-card" href="../20-Neutron/Neutron.html"><div class="rc-name">Neutron</div><div class="rc-desc">Relativistic neutron-star structure</div></a></div></section>
 
   <!-- ── License ── -->
   <section id="license">
     <h2>License</h2>
     <p>
-      This Python port is derived from the original Java programs by
-      <strong>Bernard Schutz</strong> accompanying
+      This software is based on programs by <strong>Bernard Schutz</strong> accompanying
       <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
       The port is distributed under the
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
