@@ -324,7 +324,7 @@
      HEADER
 ════════════════════════════════════════════ -->
 <header>
-  <div class="badge">GFtGU Programs &nbsp;·&nbsp; Python Port</div>
+  <div class="badge">GFtGU Programs</div>
   <h1>Neutron &mdash; <em>Neutron Star Structure</em></h1>
   <div class="sub">
     Source Code:
@@ -354,14 +354,14 @@
   <a href="#eos">Equation of State</a>
   <a href="#mass">Mass Integral</a>
   <a href="#buchdahl">Buchdahl's Theorem</a>
-  <a href="#masslimit">Maximum Mass</a>
+  <a href="#masslimit">Maximum Mass &amp; Stability</a>
 
   <hr class="nav-divider" />
   <span class="nav-label">Numerical Methods</span>
-  <a href="#radial-march">Radial Marching Scheme</a>
+  <a href="#radial-march">Radial Integration Scheme</a>
   <a href="#stepsize">Step Sizing</a>
   <a href="#ic">Initial Conditions</a>
-  <a href="#doubling">Step Doubling</a>
+  <a href="#doubling">Surface Location</a>
 
   <hr class="nav-divider" />
   <span class="nav-label">Reference</span>
@@ -376,799 +376,321 @@
 
 <!-- ─── Overview ─── -->
 <h2 id="overview">Overview</h2>
-
 <p>
-  <strong>Neutron</strong> builds a complete model of a neutron star's internal structure by
-  integrating the equations of <em>general-relativistic hydrostatics</em> outward from the
-  stellar center to the surface.  Unlike the orbital programs in this collection
-  (Binary, Multiple, MercPert), Neutron does not evolve a system through time; instead it
-  computes a <em>static, spherically symmetric</em> equilibrium configuration — the unique
-  structure that results from a given central pressure and equation of state.
+  <strong>Neutron</strong> computes static, spherically symmetric stellar
+  configurations in general relativity. It integrates the
+  Tolman–Oppenheimer–Volkoff (TOV) pressure equation and the enclosed-mass
+  equation outward from the center until the pressure reaches zero.
 </p>
 <p>
-  The central physics ingredient is the <strong>Tolman–Oppenheimer–Volkoff (TOV) equation</strong>,
-  which is the general-relativistic replacement for Newtonian hydrostatic equilibrium.
-  It accounts for the fact that in a sufficiently compact object, pressure itself contributes
-  to gravity — an effect that is negligible for ordinary stars but crucial for neutron stars.
-  This feedback between pressure and gravity is responsible for the famous <em>maximum mass</em>
-  of neutron stars: beyond a critical central pressure, adding more mass actually reduces the
-  star's size until it collapses to a black hole.
+  Matter is represented by one simple polytropic equation of state,
+  \(p=K\rho^\gamma\). This is intentionally a <strong>pedagogical
+  polytropic model</strong>, not a modern tabulated neutron-star equation of
+  state.
 </p>
 <p>
-  The program uses a <strong>polytropic equation of state</strong>,
-  \( p = K\rho^\gamma \), which captures a broad class of stellar models with two
-  parameters: the polytropic exponent \(\gamma\) and the proportionality constant \(K\).
-  By varying these parameters the user can explore normal neutron stars, strange-quark-matter
-  stars, and ultra-stiff or ultra-soft nuclear equations of state.
+  By varying central pressure and the EOS parameters, students can construct
+  equilibrium sequences and identify a maximum gravitational mass. The program
+  does not evolve stars in time, so it does not simulate collapse; it computes
+  static equilibrium configurations only.
 </p>
 <div class="note tip">
-  <strong>How this program differs from the others in this collection</strong>
-  Neutron is a <em>radial structure solver</em>, not a time-domain ODE integrator.
-  There is no predictor–corrector loop and no orbit to complete.
-  The independent variable is radius \(r\) (not time), and the integration marches outward
-  from \(r = 0\) until pressure first becomes negative — that point is the stellar surface.
+  <strong>Correction to the historical implementation</strong>
+  The complete TOV pressure source is \(m+4\pi r^3p/c^2\). The original Java
+  source omitted the factor \(p\) from this term even though its written
+  documentation displayed the correct equation. The revised Python program
+  uses the complete TOV expression.
 </div>
 
-
-<!-- ─── Parameters ─── -->
 <h2 id="parameters">Parameters</h2>
-
-<p>
-  All parameters are set near the top of <code>main.py</code> and passed to the
-  <code>compute_neutron_star()</code> driver function.  No command-line interface or GUI
-  is provided; edit the values directly in the source file.
-</p>
-
+<p>Set these values near the top of <code>main.py</code>.</p>
 <table>
-  <thead>
-    <tr>
-      <th>Parameter</th>
-      <th>Default</th>
-      <th>Units</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>gamma</td>
-      <td>5/3</td>
-      <td>dimensionless</td>
-      <td>
-        Polytropic exponent \(\gamma\) in \(p = K\rho^\gamma\).
-        \(\gamma = 5/3\) corresponds to a non-relativistic, degenerate neutron gas.
-        Use \(\gamma = 1\) with \(K = c^2/3\) to model strange-quark matter.
-      </td>
-    </tr>
-    <tr>
-      <td>pC</td>
-      <td>1.26e35</td>
-      <td>Pa</td>
-      <td>
-        Central pressure \(p_C\) (pressure at \(r = 0\)).  This is the
-        primary free parameter determining the star's mass and radius.
-        Larger \(p_C\) gives a more massive, more compact star. Together
-        with the default \(K\) below, this produces a star of radius
-        \(\approx 7.1\) km and mass \(\approx 1.1\,M_\odot\) — consistent
-        with observed neutron stars.
-      </td>
-    </tr>
-    <tr>
-      <td>K</td>
-      <td>5.3802e3</td>
-      <td>SI (Pa&nbsp;·&nbsp;m<sup>3γ</sup>&nbsp;kg<sup>&minus;γ</sup>)</td>
-      <td>
-        Polytropic proportionality constant.  Together with \(\gamma\) it
-        determines how stiff the equation of state is.  Larger \(K\) produces
-        larger, less dense stars at the same central pressure. The default
-        value corresponds to a central density of
-        \(\approx 6.6\times10^{18}\,\mathrm{kg\,m^{-3}}\)
-        (\(\approx 29\times\) nuclear density), and independently matches
-        (to 4 significant figures) the value derivable from the physical
-        equation of state of a non-relativistic degenerate neutron gas.
-      </td>
-    </tr>
-    <tr>
-      <td>output_type</td>
-      <td>"Pressure"</td>
-      <td>string</td>
-      <td>
-        Selects the plotted quantity.  Must be exactly one of
-        <code>"Pressure"</code>, <code>"Density"</code>, or <code>"Mass"</code>.
-      </td>
-    </tr>
-  </tbody>
+<thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>gamma</td><td>1.666667</td><td>dimensionless</td><td>Polytropic exponent in \(p=K\rho^\gamma\). Must be greater than 1.</td></tr>
+<tr><td>pC</td><td>1.26e35</td><td>Pa</td><td>Central pressure.</td></tr>
+<tr><td>K</td><td>5.3802e3</td><td>depends on \(\gamma\)</td><td>Polytropic constant. Its dimensions depend on \(\gamma\), so changing \(\gamma\) while keeping the same numerical \(K\) is not a controlled stiffness comparison.</td></tr>
+<tr><td>output_type</td><td>"Pressure"</td><td>string</td><td><code>"Pressure"</code>, <code>"Density"</code>, or <code>"Mass"</code>.</td></tr>
+<tr><td>log_y</td><td>False</td><td>boolean</td><td>Optional logarithmic y-axis for pressure or density.</td></tr>
+<tr><td>steps_per_scale</td><td>400</td><td>—</td><td>Nominal radial resolution, \(\Delta r=\ell/\text{steps_per_scale}\).</td></tr>
+<tr><td>max_steps</td><td>200000</td><td>—</td><td>Safety limit on radial integration steps.</td></tr>
+</tbody>
 </table>
-
 <div class="note">
-  <strong>Physical constants (hard-coded in physics_neutron.py)</strong>
-  <ul>
-    <li>\(G = 6.672 \times 10^{-11}\) N&nbsp;m<sup>2</sup>&nbsp;kg<sup>&minus;2</sup> — Newton's gravitational constant</li>
-    <li>\(c^2 = 8.98755 \times 10^{16}\) m<sup>2</sup>&nbsp;s<sup>&minus;2</sup> — speed of light squared</li>
-  </ul>
+<strong>Physical constants</strong>
+The code uses \(G=6.67430\times10^{-11}\ \mathrm{m^3\,kg^{-1}\,s^{-2}}\)
+and the exact SI speed of light \(c=299\,792\,458\ \mathrm{m\,s^{-1}}\).
 </div>
 
-
-<!-- ─── Output Modes ─── -->
 <h2 id="output">Output Modes</h2>
-
 <p>
-  The program always integrates the full stellar structure (pressure, density, and enclosed mass
-  as functions of radius).  The <code>output_type</code> parameter selects which of the three
-  profiles is displayed in the matplotlib figure.
+  Every run computes radius, pressure, density, and enclosed gravitational
+  mass. <code>output_type</code> selects which profile is displayed.
 </p>
-
 <table>
-  <thead>
-    <tr><th>output_type</th><th>y-axis quantity</th><th>y-axis label</th></tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>"Pressure"</td>
-      <td>Pressure \(p(r)\)</td>
-      <td>Pressure (Pa)</td>
-    </tr>
-    <tr>
-      <td>"Density"</td>
-      <td>Mass density \(\rho(r)\)</td>
-      <td>Density (kg/m³)</td>
-    </tr>
-    <tr>
-      <td>"Mass"</td>
-      <td>Enclosed mass \(m(r)\)</td>
-      <td>Mass interior (kg)</td>
-    </tr>
-  </tbody>
+<thead><tr><th>output_type</th><th>Displayed quantity</th><th>Plot units</th></tr></thead>
+<tbody>
+<tr><td>"Pressure"</td><td>\(p(r)\)</td><td>Pa versus km</td></tr>
+<tr><td>"Density"</td><td>\(\rho(r)\)</td><td>kg/m³ versus km</td></tr>
+<tr><td>"Mass"</td><td>\(m(r)\)</td><td>\(M_\odot\) versus km</td></tr>
+</tbody>
 </table>
-
 <p>
-  The x-axis is always the radial coordinate in metres.  The figure title reads
-  "Neutron Star: &lt;output_type&gt;".  To see all three profiles, change
-  <code>output_type</code> and re-run; no recomputation is needed because the driver
-  already returns all three arrays.
+  <code>print_model_summary()</code> reports surface radius, total mass,
+  central density, compactness \(2GM/(Rc^2)\), the Buchdahl check, radial sample
+  count, and nominal radial spacing. Pressure and density may be shown on a
+  logarithmic scale with <code>log_y=True</code>.
 </p>
 
-
-<!-- ─── Module Structure ─── -->
 <h2 id="modules">Module Structure</h2>
-
-<p>
-  The program is divided into four Python modules following the same architecture as
-  the other programs in this collection:
-</p>
-
 <div class="mc-grid">
+<div class="mc-card"><h4>main.py</h4><p>Entry point and user configuration.</p>
+<ul><li>Sets EOS and central pressure.</li><li>Selects output and radial resolution.</li><li>Prints the global model summary and plots the chosen profile.</li></ul></div>
+<div class="mc-card"><h4>physics_neutron.py</h4><p>Relativistic stellar-structure equations.</p>
+<ul><li><span class="fn">eos_density()</span> — polytropic EOS inversion.</li>
+<li><span class="fn">structure_derivatives()</span> — complete TOV pressure and mass equations.</li>
+<li><span class="fn">central_state()</span> — regular small-\(r\) expansion.</li>
+<li><span class="fn">rk4_step()</span> — coupled fourth-order Runge–Kutta step.</li></ul></div>
+<div class="mc-card"><h4>driver_neutron.py</h4><p>Validates inputs, integrates outward on dynamically growing arrays, locates the \(p=0\) surface, checks compactness, and returns full profiles plus model properties.</p></div>
+<div class="mc-card"><h4>plot_neutron.py</h4><p>Plots radius in km and mass in solar masses, optionally uses logarithmic pressure/density axes, and prints the model summary.</p></div>
+</div>
 
-  <div class="mc-card">
-    <h4>main.py</h4>
-    <p>Entry point.  Sets all user-adjustable parameters and calls the driver and plot functions.</p>
-    <ul>
-      <li>Imports <span class="fn">compute_neutron_star</span> from <code>driver_neutron</code></li>
-      <li>Imports <span class="fn">plot_neutron</span> from <code>plot_neutron</code></li>
-      <li>Sets <code>gamma</code>, <code>pC</code>, <code>K</code>, <code>output_type</code></li>
-      <li>One-line call: <code>data = compute_neutron_star(gamma, pC, K)</code></li>
-      <li>One-line plot: <code>plot_neutron(data, output_type)</code></li>
-    </ul>
-  </div>
-
-  <div class="mc-card">
-    <h4>driver_neutron.py</h4>
-    <p>
-      Orchestrates the radial integration.  Implements the marching loop, step-doubling
-      logic, surface detection, and array trimming.  Returns a dictionary of trimmed
-      arrays ready for plotting.
-    </p>
-    <ul>
-      <li><span class="fn">compute_neutron_star(gamma, pC, K)</span> &rarr; dict</li>
-      <li>Computes \(\rho_C\), scale height, and initial step size \(dr\)</li>
-      <li>Fills arrays: <code>radius</code>, <code>pressure</code>, <code>density</code>, <code>mass</code></li>
-      <li>Stops integration when \(p &lt; 0\) (surface reached)</li>
-      <li>Doubles <code>dr</code> and retries if surface not reached in 2000 steps</li>
-      <li>Returns dict with key <code>last_step</code> and trimmed arrays</li>
-    </ul>
-  </div>
-
-  <div class="mc-card">
-    <h4>physics_neutron.py</h4>
-    <p>
-      Defines the three physics kernels — the equation of state, the TOV pressure step,
-      and the mass increment — plus the physical constants \(G\) and \(c^2\).
-    </p>
-    <ul>
-      <li><span class="fn">eos_density(p, K, gamma)</span> — polytropic inversion: \(\rho = (p/K)^{1/\gamma}\)</li>
-      <li><span class="fn">tov_pressure_step(p, rho, m, r, dr)</span> — one radial step of the TOV equation</li>
-      <li><span class="fn">mass_step(m, rho, r, dr)</span> — one radial step of the mass integral</li>
-      <li>Constants: <code>G = 6.672e-11</code>, <code>c2 = 8.98755e16</code></li>
-    </ul>
-  </div>
-
-  <div class="mc-card">
-    <h4>plot_neutron.py</h4>
-    <p>
-      Produces the matplotlib figure.  Reads the data dictionary returned by the driver
-      and plots the selected profile versus radius.
-    </p>
-    <ul>
-      <li><span class="fn">plot_neutron(data, output_type)</span></li>
-      <li>8&nbsp;&times;&nbsp;6 inch figure, line width 2, grid on</li>
-      <li>x-axis: "Radius (m)"</li>
-      <li>y-axis label and title determined by <code>output_type</code></li>
-      <li>Raises <code>ValueError</code> for unrecognised <code>output_type</code></li>
-    </ul>
-  </div>
-
-</div><!-- end mc-grid -->
-
-
-<!-- ════════════════════════════════════════════
-     PHYSICS
-════════════════════════════════════════════ -->
 <h2 id="newtonian">Newtonian Hydrostatics</h2>
-
+<p>For a spherical Newtonian star, hydrostatic equilibrium is</p>
+<div class="eq">\[
+\frac{dp}{dr}=-\frac{Gm(r)\rho(r)}{r^2}. \tag{1}
+\]<span class="eq-label">(1)</span></div>
 <p>
-  An ordinary star is in <em>hydrostatic equilibrium</em>: at each radius the outward
-  pressure gradient exactly balances the inward gravitational pull of the mass below.
-  In Newtonian gravity this condition reads
-</p>
-<div class="eq">
-  \[
-    \frac{dp}{dr} = -\frac{G\,m(r)\,\rho}{r^2},
-    \tag{1}
-  \]
-  <span class="eq-label">(1)</span>
-</div>
-<p>
-  where \(m(r)\) is the mass enclosed within radius \(r\), \(\rho\) is the local
-  mass density, and \(G\) is Newton's gravitational constant.  Equation (1) is the
-  foundation of the companion program <strong>Star</strong> in this collection.
-</p>
-<p>
-  For white dwarfs and most ordinary stars, equation (1) is adequate.  But for neutron stars,
-  where \(p\) approaches \(\rho c^2\) and the gravitational radius
-  \(r_g = 2GM/c^2\) is comparable to the physical radius, two Newtonian approximations
-  break down simultaneously:
-</p>
-<ul>
-  <li>Pressure contributes to the <em>source of gravity</em> through Einstein's equations —
-      it is not merely a restoring force.</li>
-  <li>The geometry of space inside a compact object is curved; the Newtonian formula
-      for enclosed volume underestimates the actual amount of matter.</li>
-</ul>
-<p>
-  These two effects are captured by the Tolman–Oppenheimer–Volkoff equation.
+  This is adequate when pressure-energy and compactness are small. Neutron
+  stars require the relativistic corrections contained in the TOV equation.
 </p>
 
-
-<!-- ─── TOV Equation ─── -->
 <h2 id="tov">The Tolman–Oppenheimer–Volkoff (TOV) Equation</h2>
-
 <p>
-  Derived from Einstein's field equations for a static, spherically symmetric perfect fluid,
-  the TOV equation replaces Newtonian hydrostatics for relativistic stellar interiors:
+  For a static, spherically symmetric perfect fluid, with \(\rho\) denoting
+  mass density so that the energy density is \(\rho c^2\),
 </p>
-<div class="eq">
-  \[
-    \frac{dp}{dr}
-    = -\frac{G\!\left(\rho + \dfrac{p}{c^2}\right)
-            \!\left(m + \dfrac{4\pi r^3 p}{c^2}\right)}
-           {r\!\left(r - \dfrac{2Gm}{c^2}\right)}.
-    \tag{2}
-  \]
-  <span class="eq-label">(2)</span>
-</div>
+<div class="eq">\[
+\frac{dp}{dr}
+=-\frac{G\left(\rho+\dfrac{p}{c^2}\right)
+\left(m+\dfrac{4\pi r^3p}{c^2}\right)}
+{r\left(r-\dfrac{2Gm}{c^2}\right)}. \tag{2}
+\]<span class="eq-label">(2)</span></div>
 <p>
-  Comparing with the Newtonian equation (1), three corrections are immediately visible:
+  The two pressure-dependent factors represent relativistic pressure-energy
+  contributions, while the denominator contains the compactness factor
+  \(1-2Gm/(rc^2)\).
 </p>
-<ol>
-  <li>
-    <strong>\(\rho \to \rho + p/c^2\).</strong>
-    Pressure itself carries energy, and energy gravitates.  At nuclear densities,
-    \(p \sim \rho c^2\), so this correction can double the effective gravitational source.
-  </li>
-  <li>
-    <strong>\(m \to m + 4\pi r^3 p/c^2\).</strong>
-    The pressure inside the star contributes to the gravitational mass felt by a shell
-    at radius \(r\).  This "pressure mass" is negligible in Newtonian stars but significant
-    in compact ones.
-  </li>
-  <li>
-    <strong>Schwarzschild factor \((r - 2Gm/c^2)\) in the denominator.</strong>
-    As the gravitational radius \(r_g = 2Gm/c^2\) approaches the physical radius \(r\),
-    the pressure gradient diverges — the star can no longer be held up and collapses.
-    This is the GR origin of the neutron-star mass limit.
-  </li>
-</ol>
-
-<div class="note">
-  <strong>Implementation note</strong>
-  The denominator \(r(r - 2Gm/c^2)\) in equation (2) is algebraically equivalent to
-  \(r^2(1 - 2Gm/rc^2)\), the standard form found in many GR texts.
-  This implementation factors the \(r^2\) into the numerator to give the compact form
-  in the <code>tov_pressure_step()</code>.
-</div>
-
-<p>
-  The TOV equation is integrated numerically by <code>tov_pressure_step()</code> using a
-  forward-Euler step of size \(dr\):
-</p>
-
-<pre><code>def tov_pressure_step(p, rho, m, r, dr):
-    numerator   = G * (rho + p / c2) * (m + 4.0 * math.pi * r**3 / c2)
-    denominator = r * (r - 2.0 * G * m / c2)
-    return p - numerator * dr / denominator</code></pre>
-
-<p>
-  Each call advances the pressure by one radial step:
-  \(p_{j} = p_{j-1} - (dp/dr)\,\Delta r\).
-</p>
-
-
-<!-- ─── Equation of State ─── -->
-<h2 id="eos">Polytropic Equation of State</h2>
-
-<p>
-  To close the system of equations we need a relationship between pressure and density.
-  The program uses a <strong>polytropic</strong> equation of state:
-</p>
-<div class="eq">
-  \[
-    p = K\,\rho^\gamma.
-    \tag{3}
-  \]
-  <span class="eq-label">(3)</span>
-</div>
-<p>
-  Given the pressure \(p\) at each step, the density is recovered by inverting equation (3):
-</p>
-<div class="eq">
-  \[
-    \rho = \left(\frac{p}{K}\right)^{1/\gamma}.
-    \tag{4}
-  \]
-  <span class="eq-label">(4)</span>
-</div>
-<p>
-  This inversion is implemented in <code>eos_density(p, K, gamma)</code>
-  as <code>(p / K) ** (1.0 / gamma)</code>.
-</p>
-
-<div class="note tip">
-  <strong>Choice of \(\gamma\) and physical interpretation</strong>
-  <ul style="margin-top:6px;">
-    <li>
-      <strong>\(\gamma = 5/3\)</strong> (default) — non-relativistic degenerate neutron gas.
-      Appropriate for the outer layers of a neutron star.
-    </li>
-    <li>
-      <strong>\(\gamma = 2\)</strong> — a stiff, "hard" EOS; gives heavier, larger stars.
-      Explores the effect of strong nuclear repulsion at high density.
-    </li>
-    <li>
-      <strong>\(\gamma = 1\), \(K = c^2/3\)</strong> — a gas of massless fermions
-      (strange-quark matter / "MIT bag model").  Explores the hypothesis that the true
-      ground state of cold matter is quark matter rather than nuclear matter.
-    </li>
-  </ul>
-</div>
-
-
-<!-- ─── Mass Integral ─── -->
-<h2 id="mass">Mass Integral</h2>
-
-<p>
-  The mass enclosed within radius \(r\) satisfies the continuity equation,
-  which in the weak-field Newtonian limit takes the familiar form:
-</p>
-<div class="eq">
-  \[
-    \frac{dm}{dr} = 4\pi r^2 \rho.
-    \tag{5}
-  \]
-  <span class="eq-label">(5)</span>
-</div>
-<p>
-  (In full GR the right-hand side carries a metric factor, but 
-  this program uses the flat-space approximation for the mass increment, consistent
-  with the level of the textbook.)
-  One radial step gives:
-</p>
-<div class="eq">
-  \[
-    m_j = m_{j-1} + 4\pi r_{j-1}^2\,\rho_{j-1}\,\Delta r,
-    \tag{6}
-  \]
-  <span class="eq-label">(6)</span>
-</div>
-<p>
-  implemented in <code>mass_step(m, rho, r, dr)</code>
-  as <code>m + 4.0 * math.pi * r**2 * rho * dr</code>.
-  The value <code>data["mass"][-1]</code> (the last element after trimming)
-  gives the total gravitational mass of the star, in kg.
-</p>
-
-
-<!-- ─── Buchdahl Theorem ─── -->
-<h2 id="buchdahl">Buchdahl's Theorem</h2>
-
-<p>
-  A purely GR result, due to Hans Buchdahl (1959), states that for any static,
-  spherically symmetric fluid star in GR, the stellar radius \(R\) must satisfy:
-</p>
-<div class="eq">
-  \[
-    R \;\geq\; \frac{9}{4}\,\frac{GM}{c^2} \;=\; \frac{9}{8}\,r_g,
-    \tag{7}
-  \]
-  <span class="eq-label">(7)</span>
-</div>
-<p>
-  where \(r_g = 2GM/c^2\) is the Schwarzschild (gravitational) radius.
-  In other words, the physical radius of a stable star can be no smaller than
-  \(\tfrac{9}{8}\) of its gravitational radius; equivalently, the gravitational radius
-  cannot exceed \(\tfrac{8}{9}\) of the physical radius.
-</p>
-<p>
-  This bound is independent of the equation of state — it is a consequence of geometry and
-  the energy conditions alone.  For the default parameters in this program, you can verify
-  Buchdahl's theorem by reading off the stellar radius (where pressure first vanishes) and
-  comparing it with \((9/4)\,GM/c^2\) computed from the final enclosed mass.
-</p>
-
-
-<!-- ─── Maximum Mass ─── -->
-<h2 id="masslimit">The Maximum Mass of Neutron Stars</h2>
-
-<p>
-  One of the most striking predictions of the TOV equation is that there is an
-  <em>absolute maximum mass</em> for a cold neutron star in hydrostatic equilibrium.
-  As the central pressure \(p_C\) is increased, the stellar mass \(M\) first rises,
-  then reaches a maximum, and then decreases — beyond the peak, adding central pressure
-  makes the star less massive and less stable.  The critical configuration at the mass
-  peak is unstable against radial perturbations and will collapse to a black hole.
-</p>
-<p>
-  For the default polytrope (\(\gamma = 5/3\), \(K = 5.3802\times10^3\)) this maximum can be
-  found by running a sequence of models with increasing \(p_C\) and plotting total mass
-  versus central pressure.  For realistic nuclear equations of state the maximum is
-  typically in the range \(1.5\)–\(3\,M_\odot\), depending on the stiffness.
-</p>
-<div class="note">
-  <strong>Historical note</strong>
-  Oppenheimer and Volkoff (1939) derived the first quantitative maximum mass for a gas of
-  free neutrons, obtaining \(M_\text{max} \approx 0.7\,M_\odot\).  Modern equations
-  of state that include nuclear forces push the limit to \(2\)–\(3\,M_\odot\).
-  Observed pulsars with masses \(\sim 2\,M_\odot\) already rule out the softest
-  proposed equations of state.
-</div>
-
-
-<!-- ════════════════════════════════════════════
-     NUMERICAL METHODS
-════════════════════════════════════════════ -->
-<h2 id="radial-march">Radial Marching Scheme</h2>
-
-<p>
-  Neutron star structure is determined by a system of two first-order ODEs in \(r\):
-  the TOV pressure equation (2) and the mass continuity equation (5), coupled through
-  the equation of state (3)–(4).  The driver solves these by a simple
-  <strong>forward-Euler radial march</strong>: starting at the stellar center and
-  stepping outward by a fixed increment \(\Delta r\) until the surface is located.
-</p>
-<p>
-  At each radius step \(j\):
-</p>
-<ol>
-  <li>Advance the pressure: \(p_j \leftarrow \texttt{tov\_pressure\_step}(p_{j-1}, \rho_{j-1}, m_{j-1}, r_{j-1}, dr)\)</li>
-  <li>Check for surface: if \(p_j &lt; 0\), record <code>lastStep = j</code> and break.</li>
-  <li>Advance the enclosed mass: \(m_j \leftarrow \texttt{mass\_step}(m_{j-1}, \rho_{j-1}, r_{j-1}, dr)\)</li>
-  <li>Invert the EOS: \(\rho_j \leftarrow \texttt{eos\_density}(p_j, K, \gamma)\)</li>
-</ol>
-
-<p>
-  The arrays are declared with a maximum of <code>NMAX = 2000</code> steps and trimmed to
-  <code>[:lastStep]</code> before being returned to the caller.
-</p>
-
 <div class="note warn">
-  <strong>Forward Euler accuracy</strong>
-  Forward Euler is first-order accurate and accumulates truncation error proportional to
-  \(\Delta r\).  The step size is chosen to be small enough that this error is acceptable
-  for the illustrations in the textbook, but for high-precision stellar models a higher-order
-  integrator (e.g. Runge–Kutta) would be preferable.  Halving <code>dr</code> manually
-  (by setting <code>dr = scale / 800</code> in <code>driver_neutron.py</code>) is a quick
-  way to check convergence.
-</div>
-
-
-<!-- ─── Step Sizing ─── -->
-<h2 id="stepsize">Step Sizing and the Scale Height</h2>
-
-<p>
-  The integration step size \(\Delta r\) is set automatically from a characteristic
-  <em>scale height</em> of the star.  At the center, the pressure gradient is dominated
-  by the central density \(\rho_C\) and the central pressure \(p_C\).  A natural length
-  scale is obtained by balancing these:
-</p>
-<div class="eq">
-  \[
-    \ell = \frac{\sqrt{p_C / G}}{\rho_C},
-    \tag{8}
-  \]
-  <span class="eq-label">(8)</span>
+<strong>Historical implementation error</strong>
+The original Java source omitted the factor \(p\) in \(4\pi r^3p/c^2\).
+The revised Python implementation corrects that inherited error; old numerical
+results produced by the incomplete expression should not be used as reference
+values for the corrected program.
 </div>
 <p>
-  where the central density is derived from the central pressure via the equation of state:
-  \(\rho_C = (p_C / K)^{1/\gamma}\).  The step size is then:
+  If \(r-2Gm/c^2\le0\), the code stops with an explanatory error rather than
+  continuing through the singular TOV denominator.
 </p>
-<div class="eq">
-  \[
-    \Delta r = \frac{\ell}{400}.
-    \tag{9}
-  \]
-  <span class="eq-label">(9)</span>
+
+<h2 id="eos">Polytropic Equation of State</h2>
+<div class="eq">\[
+p=K\rho^\gamma,\qquad
+\rho=\left(\frac{p}{K}\right)^{1/\gamma}. \tag{3}
+\]<span class="eq-label">(3)</span></div>
+<p>
+  The default \(\gamma\approx5/3\), \(K=5.3802\times10^3\) combination is useful
+  as a simple pedagogical polytrope and is related to the ideal
+  non-relativistic degenerate-neutron EOS. At the extreme densities reached
+  inside neutron stars, however, realistic matter requires relativistic and
+  strong-interaction nuclear physics. The default is therefore not a modern
+  precision neutron-star EOS.
+</p>
+<div class="note">
+<strong>Comparing stiffness</strong>
+Because the dimensions of \(K\) depend on \(\gamma\), compare different
+exponents by choosing a common central reference state and computing
+\(K=p_C/\rho_C^\gamma\) separately for each \(\gamma\).
 </div>
+
+<h2 id="mass">Mass Integral</h2>
 <p>
-  With 400 steps per scale height and a maximum of 2000 steps, the integration covers
-  up to \(5\,\ell\) before doubling is triggered — sufficient for most stellar models whose
-  surface pressure falls to zero within a few scale heights of the center.
+  In the standard TOV formulation using Schwarzschild areal radius,
+</p>
+<div class="eq">\[
+\frac{dm}{dr}=4\pi r^2\rho. \tag{4}
+\]<span class="eq-label">(4)</span></div>
+<p>
+  This is already the relativistic TOV mass equation; no extra spatial metric
+  factor belongs on its right-hand side. The returned <code>mass</code> array is
+  the enclosed gravitational mass-energy expressed in kilograms, and the
+  plotting routine converts it to solar masses.
 </p>
 
-
-<!-- ─── Initial Conditions ─── -->
-<h2 id="ic">Initial Conditions at the Stellar Center</h2>
-
+<h2 id="buchdahl">Buchdahl's Theorem</h2>
 <p>
-  The TOV equation (2) is singular at \(r = 0\): the denominator vanishes.
-  To avoid this singularity the driver does not attempt to start the integration at
-  \(r = 0\); instead it sets the first grid point at \(r_1 = \Delta r\) and uses
-  the analytically known small-\(r\) behaviour to initialise the arrays:
+  Under Buchdahl's assumptions — including a static, spherically symmetric,
+  isotropic perfect fluid whose density does not increase outward —
 </p>
-<div class="eq">
-  \[
-    r_1 = \Delta r, \quad
-    p_1 = p_C, \quad
-    \rho_1 = \rho_C, \quad
-    m_1 = \tfrac{4}{3}\pi\,(\Delta r)^3\,\rho_C.
-    \tag{10}
-  \]
-  <span class="eq-label">(10)</span>
-</div>
+<div class="eq">\[
+R\ge\frac{9}{4}\frac{GM}{c^2}
+=\frac{9}{8}r_s,\qquad r_s=\frac{2GM}{c^2}. \tag{5}
+\]<span class="eq-label">(5)</span></div>
 <p>
-  The mass initialisation uses the fact that near the center a sphere of radius \(\Delta r\)
-  filled uniformly at density \(\rho_C\) has mass \(\frac{4}{3}\pi(\Delta r)^3\rho_C\).
-  This is a first-order approximation that becomes exact as \(\Delta r \to 0\).
+  Equivalently, \(2GM/(Rc^2)\le8/9\). The program reports the compactness of
+  every completed model. Buchdahl's theorem supplies a bound; a given
+  polytropic sequence need not approach equality.
 </p>
 
-
-<!-- ─── Step Doubling ─── -->
-<h2 id="doubling">Automatic Step Doubling</h2>
-
+<h2 id="masslimit">Maximum Mass and Stability</h2>
 <p>
-  If the stellar surface (the radius at which pressure first becomes negative) is not reached
-  within 2000 steps, the step size is doubled and the integration is restarted from scratch:
+  Along many one-parameter sequences of cold relativistic stellar models, the
+  gravitational mass first rises with central pressure or density, reaches a
+  maximum, and then turns over. Under the usual turning-point interpretation,
+  the first maximum marks the onset of the fundamental radial instability.
+</p>
+<p>
+  <strong>Neutron</strong> computes equilibrium configurations only. It can
+  display models on either side of a mass maximum, but it does not dynamically
+  evolve an unstable star or simulate black-hole formation.
+</p>
+<p>
+  The maximum mass found here is a property of the assumed polytropic EOS, not
+  a precision prediction for real neutron stars.
 </p>
 
-<pre><code># Conceptual outline of the while loop in driver_neutron.py
-while lastStep == 0:
-    dr = initial_dr
-    # ... fill arrays ...
-    if surface not reached in NMAX steps:
-        dr *= 2           # double and retry</code></pre>
-
+<h2 id="radial-march">Radial Integration Scheme</h2>
 <p>
-  This doubling continues until the surface is found, at the cost of reduced radial resolution.
-  It is <em>not</em> an adaptive accuracy control — it simply
-  ensures the integration range is wide enough to encompass the whole star.  If you find that
-  your chosen parameters require many doublings, the resulting coarse grid may not resolve
-  the stellar structure well, and you should consider whether the parameters describe a
-  physically reasonable star.
+  Pressure and enclosed mass form a coupled pair of first-order ODEs. The
+  revised solver advances both with classical fourth-order Runge–Kutta (RK4)
+  rather than the historical first-order forward-Euler march.
 </p>
-
+<p>
+  Python lists grow as required, so there is no fixed 2000-element storage
+  limit and no resolution-degrading step doubling merely to fit the star inside
+  a preallocated array.
+</p>
 <div class="note tip">
-  <strong>When does step doubling occur?</strong>
-  Step doubling is triggered when the star is much larger than the estimated scale height \(\ell\).
-  This can happen when \(K\) is very large (very stiff EOS), \(\gamma\) is very close to 1
-  (nearly incompressible), or \(p_C\) is unusually low.  The default parameters (\(\gamma = 5/3\),
-  \(p_C = 1.26\times10^{35}\) Pa, \(K = 5.3802\times10^3\)) do not require doubling.
+<strong>Convergence test</strong>
+Repeat a model with <code>steps_per_scale</code> = 400, 800, and 1600.
+Surface radius and total mass should settle as the radial grid is refined.
 </div>
 
+<h2 id="stepsize">Step Sizing and the Scale Height</h2>
+<p>
+  The central density is \(\rho_C=(p_C/K)^{1/\gamma}\). Following the original
+  exercise, define
+</p>
+<div class="eq">\[
+\ell=\frac{\sqrt{p_C/G}}{\rho_C}. \tag{6}
+\]<span class="eq-label">(6)</span></div>
+<p>The nominal radial spacing is</p>
+<div class="eq">\[
+\Delta r=\frac{\ell}{N_{\rm scale}}, \tag{7}
+\]<span class="eq-label">(7)</span></div>
+<p>
+  where <code>steps_per_scale</code> supplies \(N_{\rm scale}\). The default is
+  400. Near the surface, the solver may temporarily shorten the final trial
+  interval to avoid evaluating the EOS at negative pressure.
+</p>
 
-<!-- ════════════════════════════════════════════
-     EXPERIMENTS
-════════════════════════════════════════════ -->
+<h2 id="ic">Initial Conditions at the Stellar Center</h2>
+<p>
+  The TOV equation is formally singular at \(r=0\), although the physical
+  solution is regular. The solver therefore starts at
+  \(r_0=\Delta r\) using the central expansion
+</p>
+<div class="eq">\[
+m(r_0)\simeq\frac{4\pi}{3}\rho_Cr_0^3,
+\]</div>
+<div class="eq">\[
+p(r_0)\simeq p_C
+-2\pi G\left(\rho_C+\frac{p_C}{c^2}\right)
+\left(\frac{\rho_C}{3}+\frac{p_C}{c^2}\right)r_0^2. \tag{8}
+\]<span class="eq-label">(8)</span></div>
+<p>
+  This preserves the regular central boundary conditions while improving on
+  the historical approximation \(p(r_0)=p_C\).
+</p>
+
+<h2 id="doubling">Locating the Stellar Surface</h2>
+<p>
+  The surface is defined by \(p=0\). The solver integrates outward on the
+  nominal grid and shortens the final step when the local pressure slope shows
+  that the zero lies within the next interval. Surface radius and enclosed mass
+  are then evaluated at that zero-pressure location.
+</p>
+<p>
+  This removes both the old one-grid-step ambiguity in the reported radius and
+  the historical need to double the radial spacing when a fixed 2000-point
+  array was exhausted.
+</p>
+
 <h2 id="experiments">Suggested Experiments</h2>
-
-<h3>1. Mass–Central-Pressure Sequence (Finding the Maximum Mass)</h3>
+<h3>1. Mass–Central-Pressure Sequence</h3>
 <p>
-  Run the program repeatedly with <code>output_type = "Mass"</code>, increasing
-  <code>pC</code> from \(10^{33}\) to \(10^{36}\) Pa in steps of a factor of 3.
-  For each run, note the value of <code>data["mass"][-1]</code> (total mass in kg;
-  divide by \(1.989 \times 10^{30}\) to convert to solar masses).
-  Plot total mass vs.\ \(p_C\) and identify the maximum.  Beyond the peak, the
-  TOV equation predicts an unstable branch.
+  Run a logarithmically spaced series of <code>pC</code> values and record
+  <code>data["total_mass_solar"]</code> and
+  <code>data["surface_radius_km"]</code>. Plot mass and radius against central
+  pressure and locate any mass maximum. The program computes equilibria; it
+  does not dynamically collapse the unstable branch.
 </p>
 
-<h3>2. Strange Quark Stars</h3>
+<h3>2. Numerical Convergence</h3>
 <p>
-  Set \(\gamma = 1\) and \(K = c^2/3 \approx 2.996 \times 10^{16}\) m<sup>2</sup>&nbsp;s<sup>&minus;2</sup>.
-  This models strange-quark matter, for which the EOS is \(p = (\rho c^2 - \rho_0 c^2)/3\),
-  approximated here by a linear polytrope.  Quark stars are predicted to have significantly
-  different mass–radius relations from neutron stars — compare the surface radii and total
-  masses with the \(\gamma = 5/3\) case.
+  Repeat the default model with <code>steps_per_scale</code> = 200, 400, 800,
+  and 1600. Compare surface radius, total mass, and compactness.
 </p>
 
-<h3>3. Comparison with Newtonian Hydrostatics (Star Program)</h3>
+<h3>3. Comparison with Newtonian Hydrostatics</h3>
 <p>
-  The companion program <strong>Star</strong> (Chapter 4 of GFtGU) integrates the Newtonian
-  hydrostatic equation (1) with the same polytropic EOS.  Running both programs with identical
-  \(\gamma\), \(K\), and \(p_C\) reveals the importance of the GR corrections: the Newtonian
-  version overestimates the radius and underestimates the central density for the same central
-  pressure.  At the highest pressures the Newtonian star does not collapse — it just keeps
-  growing — while the TOV star reaches an instability.
+  Use the <strong>Star</strong> program with the same \(p_C\), \(K\), and
+  \(\gamma\). Identical EOS inputs imply the same central density, so compare
+  mass, radius, pressure profile, and density profile rather than central
+  density. Relativistic differences grow as compactness increases.
 </p>
 
-<h3>4. Verifying Buchdahl's Theorem</h3>
+<h3>4. Buchdahl Check</h3>
 <p>
-  After running any model, compute the gravitational radius \(r_g = 2GM_\text{tot}/c^2\)
-  using the total mass from <code>data["mass"][-1]</code>, and compare it with the stellar
-  radius (the last element of <code>data["radius"]</code>).  Buchdahl's theorem requires
-  \(R \geq (9/4)(GM/c^2) = (9/8)\,r_g\).  For the default parameters this ratio should
-  comfortably exceed 9/8; try to push \(p_C\) until the ratio approaches the Buchdahl bound.
+  Examine <code>data["compactness"]</code> for a sequence of models.
+  Configurations satisfying Buchdahl's assumptions must remain at or below
+  \(8/9\). Investigate how close the chosen sequence comes to the bound; the
+  theorem does not require saturation.
 </p>
 
-<h3>5. Effect of EOS Stiffness</h3>
+<h3>5. Controlled EOS-Stiffness Comparison</h3>
 <p>
-  Increasing \(\gamma\) while keeping \(K\) and \(p_C\) fixed does <em>not</em> give a
-  well-resolved comparison — it collapses the number of usable integration points
-  dramatically, because the same \(p_C\) now implies a far larger, far less dense
-  (no longer neutron-star-like) structure. Measured directly: \(\gamma=1.667\)
-  (default) integrates in 436 points; \(\gamma=1.8\) in only 72; \(\gamma=2.0\) in
-  just 10; \(\gamma=2.2\) in 3 before the calculation overflows. A plotted curve with
-  3&ndash;10 points looks like disconnected straight-line segments rather than a smooth
-  profile — that is this effect, not a bug.
-</p>
-<p>
-  To compare EOS stiffness meaningfully, rescale \(K\) alongside \(\gamma\) so the
-  central density (and hence the star's overall compactness) stays in the same
-  ballpark. Solving \(\rho_c = (p_C/K)^{1/\gamma}\) for \(K\) at a fixed target
-  \(\rho_c\) gives:
-</p>
-<div class="eq" style="margin:10px 0;">
-  \[
-    K \;=\; \dfrac{p_C}{\rho_c^{\,\gamma}}
-  \]
-</div>
-<p>
-  Verified against the default's own central density
-  (\(\rho_c \approx 6.6\times10^{18}\,\mathrm{kg\,m^{-3}}\), about 29&times; nuclear
-  density):
-</p>
-<pre style="margin:10px 0;">&gamma;=1.8: K=1.6795e+01  &rarr;  389 points, R=6.39 km, M=1.048 Msun
-&gamma;=2.0: K=2.8926e-03  &rarr;  350 points, R=5.74 km, M=0.984 Msun
-&gamma;=2.2: K=4.9817e-07  &rarr;  326 points, R=5.35 km, M=0.939 Msun</pre>
-<p>
-  All three stay well-resolved and physically sensible. Plot the stellar radius and
-  total mass as functions of \(\gamma\) using this recalibrated \(K\) at each point,
-  rather than a single fixed \(K\).
+  Choose a common \(p_C\) and target \(\rho_C\). For each
+  \(\gamma&gt;1\), calculate \(K=p_C/\rho_C^\gamma\) and compare the resulting
+  mass-radius models. This keeps the central reference state comparable.
 </p>
 
-<h3>6. Minimum Neutron Star Mass</h3>
+<h3>6. Limits of a Single Polytrope</h3>
 <p>
-  Decrease \(p_C\) until the total mass approaches a minimum.  Very low central pressures
-  correspond to small, low-mass neutron stars whose surfaces are reached after very few steps.
-  The minimum mass for a stable neutron star (set by the weak-force neutron-decay threshold)
-  is of order \(0.1\,M_\odot\); explore how close your polytropic model gets.
+  Explore a wide central-pressure range and note when the simple EOS produces
+  extreme densities or compactness. Compare its assumptions with modern
+  piecewise or tabulated nuclear equations of state. A realistic self-bound
+  quark-matter EOS generally includes an offset energy density and cannot be
+  represented merely by setting \(\gamma=1\) and \(K=c^2/3\) in this solver.
 </p>
 
-<!-- ============================================================
-     RESTORE TO DEFAULTS CALLOUT
-     ============================================================ -->
-
-<section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
-  <div style="
-    border: 1.5px solid #b5811a;
-    border-left: 5px solid #b5811a;
-    border-radius: 6px;
-    background: #fffbeb;
-    padding: 1.1em 1.4em;
-    display: flex;
-    gap: 1em;
-    align-items: flex-start;
-  ">
-    <!-- Icon -->
-    <div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
-
-    <!-- Content -->
-    <div>
-      <div style="
-        font-weight: 700;
-        font-size: 0.95em;
-        color: #7b2d00;
-        margin-bottom: 0.35em;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-      ">Restoring Default Parameter Values</div>
-
-      <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        After experimenting with parameter values in <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>,
-        you can restore the originals using any of the following methods:
-      </p>
-
-      <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
-        <li>
-          <strong>Same session:</strong>
-          Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
-          (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
-          (macOS) repeatedly in PyCharm to undo your edits.
-        </li>
-        <li>
-          <strong>After reopening PyCharm:</strong>
-          Right-click <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
-          in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
-        </li>
-        <li>
-          <strong>Full reset:</strong>
-          Re-download the ZIP from
-          <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank"
-             style="color:#7b2d00; text-decoration:underline;">
-            github.com/tomyee3-org/GFTGU-Programs
-          </a>
-          and replace this program's folder with the fresh copy.
-        </li>
-      </ul>
-
-      <p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
-        For step-by-step instructions on all four restore methods, see
-        <strong>Section&nbsp;10</strong> of the
-        <em>GFTGU Python Setup Guide</em>.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     END RESTORE TO DEFAULTS CALLOUT
-     ============================================================ -->
-
-
-<!-- ─── See Also ─── -->
 <h2 id="seealso">See Also</h2>
-
 <ul>
-  <li>
-    <strong><a href="https://github.com/tomyee3-org/GFTGU-Documentation/tree/main/04-SphereGravity"
-              target="_blank">Star / SphereGravity</a></strong> —
-    Newtonian stellar structure (companion program; compare directly with Neutron).
-  </li>
-  <li>
-    <strong><a href="https://github.com/tomyee3-org/GFTGU-Documentation/tree/main/13-Binary"
-              target="_blank">Binary</a></strong> —
-    Two-body gravitational orbit (predictor–corrector integrator).
-  </li>
-  <li>
-    R.C. Tolman (1939); J.R. Oppenheimer &amp; G.M. Volkoff (1939) — original derivations
-    of the TOV equation.
-  </li>
-  <li>
-    H.A. Buchdahl, <em>General Relativistic Fluid Spheres</em>,
-    Phys. Rev. <strong>116</strong>, 1027 (1959) — proof of the compactness bound.
-  </li>
+<li><strong>Star</strong> — Newtonian stellar hydrostatic structure with a polytropic model.</li>
+<li>Bernard Schutz, <em>Gravity from the Ground Up</em>, Chapter 20 — motivation for the original exercise.</li>
+<li>Tolman (1939) and Oppenheimer &amp; Volkoff (1939) — relativistic stellar equilibrium.</li>
+<li>Buchdahl (1959), <em>General Relativistic Fluid Spheres</em> — compactness bound under the theorem's assumptions.</li>
 </ul>
 
-  <!-- ── License ── -->
-  <section id="license">
+<section id="license">
     <h2>License</h2>
     <p>
-      This Python port is derived from the original Java programs by
-      <strong>Bernard Schutz</strong> accompanying
-      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
-      The port is distributed under the
+      This software is based on the programs by <strong>Bernard Schutz</strong>
+      accompanying <em>Gravity from the Ground Up</em> (Cambridge University
+      Press, 2003) and is distributed under the
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
-         International (CC BY-NC-SA 4.0)</a> license.
-    </p>
-    <p>
-      You are free to share and adapt the material for non-commercial purposes, provided
-      you give appropriate credit and distribute any adaptations under the same license.
+         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike
+      4.0 International (CC BY-NC-SA 4.0)</a> license.
     </p>
   </section>
 
