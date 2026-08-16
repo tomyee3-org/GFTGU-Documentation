@@ -337,11 +337,10 @@
   <div class="sub">
     Source Code:
     <a href="https://github.com/tomyee3-org/GFTGU-Programs"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
-    <br/>
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
     Documentation:
         <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
+       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
   </div>
 </header>
 
@@ -385,25 +384,28 @@
   <section id="overview">
     <h2>Overview</h2>
     <p>
-      <strong>Binary</strong> simulates the orbital motion of two gravitationally
-      bound point masses under Newtonian gravity. Given the initial positions and
-      velocities of both bodies, the program integrates the coupled equations of
-      motion forward in time using a predictor–corrector algorithm with an
-      adaptive timestep.
+      <strong>Binary</strong> simulates two point masses interacting only through
+      Newtonian gravity. The masses, initial positions, and initial velocities are
+      all editable, so the same program can represent bound binaries, extreme
+      mass-ratio systems, and unbound gravitational encounters.
     </p>
     <p>
-      The simulation records the position, velocity, and total mechanical energy
-      of each body at every accepted step, and produces seven distinct plot types —
-      from orbital trajectories and velocity-space diagrams to time-series of
-      position, velocity, and energy. Integration always runs for exactly
-      <code>max_steps</code> accepted steps; there is no early-termination
-      condition based on orbit closure.
+      The program integrates the coupled equations of motion with an Euler predictor
+      and an iterated trapezoidal corrector. It records both bodies' positions and
+      velocities together with the system's kinetic, gravitational potential, and
+      total mechanical energy.
+    </p>
+    <p>
+      By default the calculation stops after the relative position vector has completed
+      one revolution. Set <code>stop_after_one_orbit = False</code> when you want a
+      long integration for energy-conservation tests or when studying an unbound orbit.
+      In all cases <code>max_steps</code> remains a safety ceiling.
     </p>
     <div class="note">
-      <strong>Scope:</strong> Binary is a purely Newtonian simulation.
-      No relativistic corrections are applied. For post-Newtonian or
-      Schwarzschild-metric counterparts see the <em>MercPert</em> and
-      <em>RelativisticOrbit</em> programs in this collection.
+      <strong>Scope:</strong> Binary is a Newtonian two-body program.
+      <em>Multiple</em> extends the Newtonian calculation to many gravitating bodies,
+      while <em>RelativisticOrbit</em> treats relativistic orbital motion later in
+      the book.
     </div>
   </section>
 
@@ -425,9 +427,7 @@ python main.py</pre>
       \(M_A = M_B = 2\times10^{30}\,\mathrm{kg}\) (approximately one solar mass
       each), placed symmetrically at \(x = \pm\,4.6\times10^{10}\,\mathrm{m}\)
       with equal and opposite transverse velocities of
-      \(\pm\,1.3\times10^{4}\,\mathrm{m\,s^{-1}}\). This produces a visibly
-      eccentric elliptical orbit — the two bodies' separation varies by nearly
-      a factor of 8 between periapsis and apoapsis.
+      \(\pm\,1.3\times10^{4}\,\mathrm{m\,s^{-1}}\). This produces a visibly eccentric elliptical orbit.
     </p>
 
     <h3>Choosing Output</h3>
@@ -449,9 +449,9 @@ python main.py</pre>
         <div class="mc-role">Entry Point &amp; Configuration</div>
         <p>
           Defines every initial condition and simulation parameter — masses,
-          starting positions, starting velocities, the maximum timestep
-          <code>dt</code>, the step limit <code>max_steps</code>, and the two
-          tolerance thresholds <code>eps1</code> and <code>eps2</code>. After
+          starting positions, starting velocities, the maximum timestep <code>dt</code>, the safety limit <code>max_steps</code>,
+          the tolerance thresholds <code>eps1</code> and <code>eps2</code>, and
+          <code>stop_after_one_orbit</code>. After
           calling <code>integrate_binary()</code> to run the simulation it passes
           the result to <code>plot_binary()</code> for display. All
           user-adjustable settings live here; no other file needs editing for
@@ -484,10 +484,9 @@ python main.py</pre>
           positions, velocities, and energies for both bodies) and the function
           <code>integrate_binary()</code>. The driver advances the system step
           by step using the Euler predictor followed by the averaged-acceleration
-          corrector, with fractional-change convergence testing and adaptive
-          timestep control. It runs for exactly <code>max_steps</code> accepted
-          steps; there is no orbit-closure detection. All numerical
-          method logic lives in this module.
+          corrector, with vector-based convergence testing and adaptive timestep control. It can
+          stop after one relative revolution or continue to the <code>max_steps</code>
+          safety ceiling. All numerical-method logic lives in this module.
         </p>
       </div>
 
@@ -515,41 +514,43 @@ python main.py</pre>
     <h2>Two-Body Problem</h2>
     <p>
       Two point masses \(M_A\) and \(M_B\) interact solely through Newtonian
-      gravitational attraction. Newton's law of universal gravitation gives the
-      magnitude of the mutual force:
+      gravitational attraction:
     </p>
-    <div class="eq">
-      <span class="eq-label">(1)</span>
+    <div class="eq"><span class="eq-label">(1)</span>
       \[
-        F \;=\; \frac{G\,M_A\,M_B}{r^2}
+        F=\frac{GM_AM_B}{r^2},
+        \qquad
+        r=\sqrt{(x_A-x_B)^2+(y_A-y_B)^2}.
       \]
     </div>
     <p>
-      where \(G = 6.6726\times10^{-11}\,\mathrm{N\,m^2\,kg^{-2}}\) is
-      Newton's gravitational constant and
+      The program uses \(G=6.67430\times10^{-11}\,
+      \mathrm{m^3\,kg^{-1}\,s^{-2}}\). Following the notation used in the
+      program, \(v=\dot x\) and \(u=\dot y\).
     </p>
-    <div class="eq">
-      <span class="eq-label">(2)</span>
+
+    <h3>Centre of Mass</h3>
+    <div class="eq"><span class="eq-label">(2)</span>
       \[
-        r \;=\; \sqrt{(x_A - x_B)^2 + (y_A - y_B)^2}
+        \mathbf R_{\rm CM}=
+        \frac{M_A\mathbf r_A+M_B\mathbf r_B}{M_A+M_B},
+        \qquad
+        \mathbf V_{\rm CM}=
+        \frac{M_A\mathbf v_A+M_B\mathbf v_B}{M_A+M_B}.
       \]
     </div>
     <p>
-      is the scalar separation between the two bodies. The motion is confined to
-      the \(xy\)-plane. Following the convention used in the source code,
-      \(v\) denotes the \(x\)-component of velocity and \(u\) denotes the
-      \(y\)-component.
+      Because the system is isolated, \(\mathbf V_{\rm CM}\) is constant. With the
+      default equal masses and equal-and-opposite velocities it is zero, so the
+      centre of mass remains at the origin. Equal masses alone do <em>not</em>
+      require \(\mathbf v_A=-\mathbf v_B\); that relation additionally requires
+      zero centre-of-mass velocity.
     </p>
-    <div class="note">
-      <strong>Coordinate convention:</strong> The code stores each body's
-      state as \((x,\,y,\,v,\,u)\) — that is, \(v = \dot x\) and
-      \(u = \dot y\) .
-    </div>
     <p>
-      With equal masses and symmetric initial conditions the centre of mass
-      remains at the origin throughout the simulation. Varying the mass ratio
-      or the initial transverse speed produces elliptical orbits of arbitrary
-      eccentricity.
+      Only the relative separation controls the mutual force. Translating both
+      positions by the same vector therefore leaves the relative orbit unchanged,
+      and adding the same constant velocity to both bodies produces a Galilean
+      boost without changing their motion relative to one another.
     </p>
   </section>
 
@@ -646,27 +647,20 @@ python main.py</pre>
   <section id="closure">
     <h2>Termination Condition</h2>
     <p>
-      Integration always runs for exactly <code>max_steps</code> accepted steps —
-      there is no orbit-closure detection, and no early termination based on the
-      inter-body separation \(r\) returning close to its initial value.
-      (Contrast this with the <code>Orbit</code> program elsewhere in this
-      collection, which does implement closure detection for a single orbiting
-      body around a fixed center; <code>Binary</code>'s two-body geometry does
-      not use the same approach.)
+      With <code>stop_after_one_orbit = True</code>, the program follows the angle
+      swept by the relative vector \(\mathbf r_A-\mathbf r_B\). Signed angle
+      increments between successive accepted steps are accumulated, and the
+      calculation stops when their magnitude reaches \(2\pi\). This makes the test
+      independent of the arbitrary location of the coordinate origin.
     </p>
     <p>
-      In practice this means <code>max_steps</code> should be chosen large enough
-      to cover as much of the orbit as you want to see. If you increase
-      <code>dt</code> or decrease <code>max_steps</code> and the plotted
-      trajectory stops partway around, that simply means the run ended before
-      completing a full orbit — not that anything went wrong.
+      Set <code>stop_after_one_orbit = False</code> to continue for the full
+      <code>max_steps</code> accepted steps. This is useful for unbound trajectories
+      and long-term energy-conservation tests.
     </p>
     <div class="note">
-      <strong>Eccentric orbits:</strong> For highly elliptical orbits the
-      adaptive timestep contracts sharply near periapsis, where the
-      gravitational acceleration is large and rapidly varying, and expands near
-      apoapsis. This concentrates computational effort where it is most needed
-      and keeps the energy error small throughout the full orbit.
+      <strong>Safety limit:</strong> <code>max_steps</code> is always enforced.
+      An unbound orbit will generally never satisfy the one-revolution condition.
     </div>
   </section>
 
@@ -676,92 +670,45 @@ python main.py</pre>
   <section id="predictor-corrector">
     <h2>Predictor–Corrector</h2>
     <p>
-      The integration scheme is a two-stage Adams-style predictor–corrector.
-      Let superscript \(n\) denote values at the beginning of the current step
-      and \(n+1\) the values to be determined. The working timestep is
-      \(\Delta t\).
+      Each accepted step begins with an explicit Euler predictor. The program then
+      evaluates gravity at the predicted positions and, if the timestep passes the
+      accuracy gate described below, refines the result using an iterated
+      trapezoidal corrector.
     </p>
 
-    <h3>Stage 1 — Euler Predictor</h3>
-    <p>
-      An explicit Euler step provides a first estimate of the velocities and
-      positions at \(t^{n+1}\). For body A:
-    </p>
-    <div class="eq">
-      <span class="eq-label">(9)</span>
+    <h3>Euler Predictor</h3>
+    <div class="eq"><span class="eq-label">(9)</span>
       \[
-        \tilde v_A = v_A^{\,n} + a_{x,A}^{\,n}\,\Delta t, \qquad
-        \tilde u_A = u_A^{\,n} + a_{y,A}^{\,n}\,\Delta t
+        \tilde{\mathbf r}_A=\mathbf r_A^n+\mathbf v_A^n\Delta t,
+        \qquad
+        \tilde{\mathbf v}_A=\mathbf v_A^n+\mathbf a_A^n\Delta t,
       \]
     </div>
-    <div class="eq">
-      <span class="eq-label">(10)</span>
-      \[
-        \tilde x_A = x_A^{\,n} + v_A^{\,n}\,\Delta t, \qquad
-        \tilde y_A = y_A^{\,n} + u_A^{\,n}\,\Delta t
-      \]
-    </div>
-    <p>
-      and equivalently for body B. The gravitational accelerations
-      \(\tilde a_{x,A},\,\tilde a_{y,A},\,\tilde a_{x,B},\,\tilde a_{y,B}\)
-      are then evaluated at the predicted positions
-      \((\tilde x_A,\,\tilde y_A,\,\tilde x_B,\,\tilde y_B)\).
-    </p>
-    <div class="note">
-      Before proceeding to Stage 2, the driver first checks whether this
-      predictor estimate is even good enough to be worth refining — see
-      <a href="#timestep">Adaptive Timestep</a>. A step that fails this cheap
-      check is abandoned here, with the timestep halved and Stage 1 retried,
-      so the corrector below never runs for a rejected step.
-    </div>
+    <p>with equivalent equations for body B.</p>
 
-    <h3>Stage 2 — Averaged-Acceleration Corrector</h3>
+    <h3>Iterated Trapezoidal Corrector</h3>
+    <div class="eq"><span class="eq-label">(10)</span>
+      \[
+        \mathbf v_A^{n+1}
+        =\mathbf v_A^n+
+        \frac{\mathbf a_A^n+\mathbf a_A^{n+1}}{2}\Delta t,
+      \]
+      \[
+        \mathbf r_A^{n+1}
+        =\mathbf r_A^n+
+        \frac{\mathbf v_A^n+\mathbf v_A^{n+1}}{2}\Delta t.
+      \]
+    </div>
     <p>
-      The corrector refines the velocity estimates by averaging the
-      accelerations at the start-of-step and predicted states. For body A:
+      The end-of-step acceleration is recomputed from the refined positions and the
+      corrector is iterated. Convergence is tested from the dimensionless relative
+      change of each body's <em>velocity vector</em>, rather than from individual
+      Cartesian components.
     </p>
-    <div class="eq">
-      <span class="eq-label">(11)</span>
-      \[
-        v_A^{\,n+1} \;=\; v_A^{\,n}
-          + \tfrac{1}{2}\!\left(a_{x,A}^{\,n} + \tilde a_{x,A}\right)\Delta t
-      \]
-    </div>
-    <div class="eq">
-      <span class="eq-label">(12)</span>
-      \[
-        u_A^{\,n+1} \;=\; u_A^{\,n}
-          + \tfrac{1}{2}\!\left(a_{y,A}^{\,n} + \tilde a_{y,A}\right)\Delta t
-      \]
-    </div>
-    <p>and equivalently for body B.</p>
-
-    <h3>Position Update</h3>
     <p>
-      Positions are updated using the trapezoidal (averaged-velocity) rule:
-    </p>
-    <div class="eq">
-      <span class="eq-label">(13)</span>
-      \[
-        x_A^{\,n+1} \;=\; x_A^{\,n}
-          + \tfrac{1}{2}\!\left(v_A^{\,n} + v_A^{\,n+1}\right)\Delta t
-      \]
-    </div>
-    <div class="eq">
-      <span class="eq-label">(14)</span>
-      \[
-        y_A^{\,n+1} \;=\; y_A^{\,n}
-          + \tfrac{1}{2}\!\left(u_A^{\,n} + u_A^{\,n+1}\right)\Delta t
-      \]
-    </div>
-    <p>and equivalently for body B.</p>
-
-    <p>
-      After the position update, the accelerations are re-evaluated at the
-      corrected positions and the corrector loop repeats. The loop runs for at
-      most 10 iterations per step, exiting early once the fractional change in
-      all four acceleration components falls below \(\varepsilon_2\)
-      (see <a href="#convergence">Convergence Criteria</a>).
+      If ten corrector iterations are insufficient to meet <code>eps2</code>, the
+      timestep is halved and the same step is retried instead of silently accepting
+      a non-converged result.
     </p>
   </section>
 
@@ -769,273 +716,172 @@ python main.py</pre>
   <section id="timestep">
     <h2>Adaptive Timestep</h2>
     <p>
-      Before running the corrector loop at all, the driver first assesses
-      whether the current timestep is even worth the effort: it computes the
-      fractional change in body A's acceleration between the start of the
-      step and the cheap Euler predictor's estimate (Eq. 9), using only body
-      A — by Newton's third law, body B's acceleration is always proportional
-      to body A's for this two-body system, so checking one body is
-      sufficient. Denoting this quantity \(\Delta_a\):
+      Before the corrector is run, the program compares body A's acceleration at
+      the beginning of the step with the acceleration at the Euler-predicted
+      position. Since the two bodies' accelerations are proportional in an isolated
+      two-body system, their fractional changes are identical and testing one body
+      is sufficient.
     </p>
-    <div class="eq">
-      <span class="eq-label">(15)</span>
+    <div class="eq"><span class="eq-label">(11)</span>
       \[
-        \Delta_a \;=\;
-          \frac{\bigl|\tilde a_{x,A} - a_{x,A}^{\,n}\bigr| +
-                \bigl|\tilde a_{y,A} - a_{y,A}^{\,n}\bigr|}
-               {\bigl|a_{x,A}^{\,n}\bigr| + \bigl|a_{y,A}^{\,n}\bigr|}
+        \Delta_a=
+        \frac{\left\lVert\tilde{\mathbf a}_A-\mathbf a_A^n\right\rVert}
+             {\max\!\left(\left\lVert\tilde{\mathbf a}_A\right\rVert,
+                         \left\lVert\mathbf a_A^n\right\rVert\right)}.
       \]
     </div>
     <p>
-      where \(a_{x,A}^{\,n}, a_{y,A}^{\,n}\) are body A's accelerations at the
-      <em>start</em> of the step and \(\tilde a_{x,A}, \tilde a_{y,A}\) are its
-      accelerations at the Euler-predicted position. If this check fails, the
-      timestep is halved and retried (Eq. 16 below) — the corrector loop
-      never runs for a rejected step, saving up to 10 wasted iterations. Only
-      once this cheap check passes does the driver proceed to the corrector
-      loop described above.
+      If \(\Delta_a>\varepsilon_1\), the attempt is rejected and the working
+      timestep is halved. After an accepted step, the working timestep is allowed
+      to grow by 10% toward the user-specified ceiling <code>dt</code>.
     </p>
-
-    <h3>Step Rejection</h3>
-    <p>
-      If \(\Delta_a > \varepsilon_1\), the step is <em>rejected</em>. The
-      working timestep is halved and the entire predictor–corrector cycle is
-      retried from the unchanged current state:
-    </p>
-    <div class="eq">
-      <span class="eq-label">(16)</span>
-      \[
-        \Delta t \;\leftarrow\; \tfrac{1}{2}\,\Delta t
-        \qquad \bigl(\Delta_a > \varepsilon_1\bigr)
-      \]
+    <div class="note">
+      <strong>Interpretation:</strong> For sufficiently eccentric or rapidly
+      varying trajectories this mechanism normally uses smaller steps near
+      periapsis. The default orbit does not necessarily require timestep reduction.
     </div>
-
-    <h3>Step Growth</h3>
-    <p>
-      If the step is accepted (\(\Delta_a \le \varepsilon_1\)), the working
-      timestep grows by 10% toward the user-specified ceiling
-      \(\Delta t_{\max}\) <em>after</em> the corrector loop has converged:
-    </p>
-    <div class="eq">
-      <span class="eq-label">(17)</span>
-      \[
-        \Delta t_{\mathrm{work}} \;\leftarrow\;
-        \min\!\bigl(1.1\,\Delta t_{\mathrm{work}},\;\Delta t_{\max}\bigr)
-        \qquad \bigl(\Delta_a \le \varepsilon_1\bigr)
-      \]
-    </div>
-    <p>
-      This strategy automatically concentrates steps near periapsis, where
-      accelerations change most rapidly, and relaxes them near apoapsis, keeping
-      energy conservation uniform throughout each orbit at minimal computational
-      cost.
-    </p>
   </section>
 
   <!-- ─── Convergence Criteria ─── -->
   <section id="convergence">
     <h2>Convergence Criteria</h2>
-    <p>
-      Two independent tolerance parameters control integration quality. Both
-      are set in <code>main.py</code>.
-    </p>
+    <p>Two independent dimensionless tolerances control the integration.</p>
     <table>
-      <thead>
-        <tr>
-          <th>Parameter</th>
-          <th>Symbol</th>
-          <th>Default</th>
-          <th>Role</th>
-        </tr>
-      </thead>
+      <thead><tr><th>Parameter</th><th>Default</th><th>Role</th></tr></thead>
       <tbody>
         <tr>
-          <td><code>eps1</code></td>
-          <td>\(\varepsilon_1\)</td>
-          <td>\(0.05\)</td>
-          <td>Adaptive timestep gate, checked against the cheap Euler
-              predictor before the corrector loop runs (Eq. 15). Steps whose
-              fractional acceleration change \(\Delta_a\) exceeds this value
-              are rejected and retried at half the timestep, without ever
-              running the corrector.</td>
+          <td><code>eps1</code></td><td>\(0.05\)</td>
+          <td>Rejects a predictor step when the relative change in the acceleration
+              vector is too large.</td>
         </tr>
         <tr>
-          <td><code>eps2</code></td>
-          <td>\(\varepsilon_2\)</td>
-          <td>\(10^{-4}\)</td>
-          <td>Corrector convergence test, checked only for steps that already
-              passed the <code>eps1</code> gate. The corrector loop exits when
-              the largest fractional change in any of the four
-              <em>velocity</em> components (\(v_A, u_A, v_B, u_B\)) between
-              successive iterations falls below this value (or after 10
-              iterations).</td>
+          <td><code>eps2</code></td><td>\(10^{-4}\)</td>
+          <td>Requires successive corrected velocity vectors to agree to this
+              relative tolerance. Failure to converge after ten iterations causes
+              the timestep to be halved and retried.</td>
         </tr>
       </tbody>
     </table>
-    <div class="note">
-      <strong>Design relationship:</strong> \(\varepsilon_2\) should be
-      strictly smaller than \(\varepsilon_1\), since it governs a finer-grained
-      test (convergence of the iterative corrector) than \(\varepsilon_1\)'s
-      coarser, one-shot gate on whether the predictor was good enough to
-      bother refining at all. The defaults \(\varepsilon_1 = 0.05\),
-      \(\varepsilon_2 = 10^{-4}\) satisfy this comfortably. Tightening both
-      tolerances by a factor of ten typically reduces energy drift by roughly
-      two orders of magnitude at the cost of additional step halvings near
-      periapsis.
-    </div>
+    <p>
+      Tighter tolerances generally improve conservation of energy but require more
+      computation. There is no universal factor relating a tolerance change to an
+      energy-error change, so accuracy should be established by a convergence test.
+    </p>
   </section>
   
    <!-- ═══════════════════════════ EXPERIMENTS ═══════════════════════════ -->
    <section id="experiments">
-     <h2>Suggested Experiments</h2>
-     <p>
-       Since Binary is derived from Orbit, the suggestions we made for Orbit apply equally here. If you have done any of them, then you can try to implement them here too. One obvious further modification, of increasing the number of bodies to three or more, is something we will do in the later programs MercPert and Multiple.
-     </p>
-   </section>
+    <h2>Suggested Experiments</h2>
+
+    <h3>1 · Circular and Elliptical Equal-Mass Binaries</h3>
+    <p>
+      Run the defaults first. Then change only the transverse velocities to about
+      \(u_A=+2.69\times10^4\) m/s and \(u_B=-2.69\times10^4\) m/s. The orbit
+      should become nearly circular. Try intermediate speeds and watch the
+      eccentricity change.
+    </p>
+
+    <h3>2 · Unequal Masses and the Centre of Mass</h3>
+    <p>
+      Make body B progressively less massive. To keep the centre of mass at rest,
+      choose initial velocities satisfying
+      \(M_A\mathbf v_A+M_B\mathbf v_B=0\). Observe that the more massive body
+      makes the smaller orbit about the common centre of mass. In the extreme
+      mass-ratio limit the result approaches the fixed-central-mass picture used
+      in <em>Orbit</em>.
+    </p>
+
+    <h3>3 · Stellar Reflex Motion: Sun and Planets</h3>
+    <p>
+      Use approximate Sun–Jupiter initial conditions and examine the Sun's small
+      orbit about the barycentre. Repeat with Saturn and then Earth. Compare how
+      strongly each planet moves the Sun.
+    </p>
+
+    <h3>4 · Bound, Parabolic, and Unbound Motion</h3>
+    <p>
+      Starting from the same positions, increase the relative speed until the
+      system changes from a bound ellipse to an unbound trajectory. Plot
+      <code>"energy vs time"</code>. Verify that bound motion has \(E&lt;0\),
+      the marginal parabolic case has \(E\approx0\), and hyperbolic motion has
+      \(E&gt;0\). Set <code>stop_after_one_orbit = False</code> for unbound runs.
+    </p>
+
+    <h3>5 · Translation Invariance</h3>
+    <p>
+      Add the same constant displacement to both bodies. Their trajectories move
+      to a different part of the plane, but the relative orbit is unchanged.
+    </p>
+
+    <h3>6 · Galilean Relativity</h3>
+    <p>
+      Add the same velocity vector to both bodies. The binary now drifts across
+      the plot, but its internal orbit is unchanged. In
+      <code>"velocity space"</code>, both hodographs are translated by the added
+      velocity.
+    </p>
+
+    <h3>7 · Numerical Convergence and Energy Conservation</h3>
+    <p>
+      Set <code>stop_after_one_orbit = False</code> and integrate for several
+      periods. Repeat the same physical initial conditions with smaller
+      <code>dt</code> and tighter <code>eps1</code>/<code>eps2</code>. Compare
+      the total-energy curves. A trustworthy result should change less and less as
+      the numerical controls are tightened.
+    </p>
+  </section>
 
   <!-- ═══════════════════════════ REFERENCE ═══════════════════════════ -->
 
   <!-- ─── Parameters ─── -->
   <section id="parameters">
     <h2>Parameters</h2>
-    <p>All parameters are defined near the top of <code>main.py</code>.</p>
+    <p>All ordinary experiment settings are near the top of <code>main.py</code>.</p>
     <table>
-      <thead>
-        <tr>
-          <th>Variable</th>
-          <th>Default value</th>
-          <th>Unit</th>
-          <th>Description</th>
-        </tr>
-      </thead>
+      <thead><tr><th>Variable</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead>
       <tbody>
-        <tr>
-          <td><code>MA</code></td>
-          <td>\(2\times10^{30}\)</td>
-          <td>kg</td>
-          <td>Mass of body A (≈ 1 M<sub>☉</sub>)</td>
-        </tr>
-        <tr>
-          <td><code>MB</code></td>
-          <td>\(2\times10^{30}\)</td>
-          <td>kg</td>
-          <td>Mass of body B (≈ 1 M<sub>☉</sub>)</td>
-        </tr>
-        <tr>
-          <td><code>xInitA</code></td>
-          <td>\(+4.6\times10^{10}\)</td>
-          <td>m</td>
-          <td>Initial \(x\)-position of body A</td>
-        </tr>
-        <tr>
-          <td><code>xInitB</code></td>
-          <td>\(-4.6\times10^{10}\)</td>
-          <td>m</td>
-          <td>Initial \(x\)-position of body B</td>
-        </tr>
-        <tr>
-          <td><code>yInitA</code>, <code>yInitB</code></td>
-          <td>\(0\)</td>
-          <td>m</td>
-          <td>Initial \(y\)-positions — both bodies start on the \(x\)-axis</td>
-        </tr>
-        <tr>
-          <td><code>vInitA</code>, <code>vInitB</code></td>
-          <td>\(0\)</td>
-          <td>m s<sup>−1</sup></td>
-          <td>Initial \(x\)-velocities — no initial radial motion</td>
-        </tr>
-        <tr>
-          <td><code>uInitA</code></td>
-          <td>\(+1.3\times10^{4}\)</td>
-          <td>m s<sup>−1</sup></td>
-          <td>Initial \(y\)-velocity of body A (transverse)</td>
-        </tr>
-        <tr>
-          <td><code>uInitB</code></td>
-          <td>\(-1.3\times10^{4}\)</td>
-          <td>m s<sup>−1</sup></td>
-          <td>Initial \(y\)-velocity of body B (transverse, opposite)</td>
-        </tr>
-        <tr>
-          <td><code>dt</code></td>
-          <td>\(2\times10^{3}\)</td>
-          <td>s</td>
-          <td>Maximum timestep; the adaptive scheme may use smaller values</td>
-        </tr>
-        <tr>
-          <td><code>max_steps</code></td>
-          <td>\(10\,000\)</td>
-          <td>—</td>
-          <td>Number of accepted integration steps (always runs to
-              completion — see <a href="#closure">Termination Condition</a>)</td>
-        </tr>
-        <tr>
-          <td><code>eps1</code></td>
-          <td>\(0.05\)</td>
-          <td>—</td>
-          <td>Adaptive timestep tolerance \(\varepsilon_1\)</td>
-        </tr>
-        <tr>
-          <td><code>eps2</code></td>
-          <td>\(10^{-4}\)</td>
-          <td>—</td>
-          <td>Corrector convergence tolerance \(\varepsilon_2\)</td>
-        </tr>
+        <tr><td><code>MA</code>, <code>MB</code></td><td>\(2.0\times10^{30}\)</td><td>kg</td><td>Positive masses of A and B</td></tr>
+        <tr><td><code>xInitA</code></td><td>\(+4.6\times10^{10}\)</td><td>m</td><td>Initial x-position of A</td></tr>
+        <tr><td><code>xInitB</code></td><td>\(-4.6\times10^{10}\)</td><td>m</td><td>Initial x-position of B</td></tr>
+        <tr><td><code>yInitA</code>, <code>yInitB</code></td><td>\(0\)</td><td>m</td><td>Initial y-positions</td></tr>
+        <tr><td><code>vInitA</code>, <code>vInitB</code></td><td>\(0\)</td><td>m s<sup>−1</sup></td><td>Initial x-velocity components</td></tr>
+        <tr><td><code>uInitA</code></td><td>\(+1.3\times10^4\)</td><td>m s<sup>−1</sup></td><td>Initial y-velocity of A</td></tr>
+        <tr><td><code>uInitB</code></td><td>\(-1.3\times10^4\)</td><td>m s<sup>−1</sup></td><td>Initial y-velocity of B</td></tr>
+        <tr><td><code>dt</code></td><td>\(2000\)</td><td>s</td><td>Maximum working timestep</td></tr>
+        <tr><td><code>max_steps</code></td><td>\(10000\)</td><td>—</td><td>Safety ceiling on accepted steps</td></tr>
+        <tr><td><code>eps1</code></td><td>\(0.05\)</td><td>—</td><td>Acceleration-change tolerance</td></tr>
+        <tr><td><code>eps2</code></td><td>\(10^{-4}\)</td><td>—</td><td>Corrector convergence tolerance</td></tr>
+        <tr><td><code>stop_after_one_orbit</code></td><td><code>True</code></td><td>—</td><td>Stop after one relative revolution when possible</td></tr>
       </tbody>
     </table>
+    <div class="note">
+      Masses and <code>dt</code> must be positive; <code>max_steps</code> must be
+      a positive integer; both tolerances must lie between zero and one; and the
+      bodies may not begin at exactly the same position.
+    </div>
   </section>
 
   <!-- ─── Output Types ─── -->
   <section id="output-types">
     <h2>Output Types</h2>
-    <p>
-      Assign one of the following string literals to <code>output_type</code>
-      in <code>main.py</code>:
-    </p>
+    <p>Assign one of these strings to <code>output_type</code> in <code>main.py</code>:</p>
     <ul class="output-list">
-      <li>
-        <span class="tag">"orbits"</span>
-        <span>Orbital trajectories of both bodies in the \(xy\)-plane. The axes are set to equal aspect ratio so that circular orbits appear circular and shapes are not visually distorted.</span>
-      </li>
+      <li><span class="tag">"orbits"</span><span>Both trajectories in the \(xy\)-plane, with equal axis scales.</span></li>
       <li>
         <span class="tag">"velocity space"</span>
-        <span>Velocity-space trajectories — \(v_x\) vs. \(v_y\) for each body, also on equal-aspect axes since both are in the same units. For Newtonian (inverse-square) gravity this "hodograph" is <em>always a circle</em>, regardless of how eccentric the corresponding position-space orbit is — a distinctive, easy-to-miss feature of the \(1/r^2\) force law.</span>
-        <div class="note" style="margin-top:8px;">
-          <strong>Equal masses:</strong> when \(M_A = M_B\), momentum
-          conservation forces \(v_A = -v_B\) exactly at every instant (this
-          holds to machine precision, not just approximately). That makes
-          body B's hodograph the exact point-reflection of body A's through
-          the origin — same radius, but generally a different center, since
-          in general the Kepler hodograph circle is offset from the origin
-          rather than centered on it. For a <em>near-circular</em> orbit
-          that offset is small, so the two circles nearly coincide on the
-          plot; they do not shrink to a point, and they are not expected
-          to — that would require zero velocity, not equal masses. For a
-          more eccentric equal-mass orbit the two circles are more visibly
-          separated (same radius, offset centers).
-        </div>
+        <span>
+          \(v_x\) versus \(v_y\) for each body. In inverse-square Kepler motion a
+          complete bound-orbit hodograph is a circle; an unbound encounter traces
+          an arc of the corresponding circle. With the default equal masses and
+          zero centre-of-mass velocity, the two velocity vectors are negatives of
+          one another at every instant. A Galilean boost translates both hodographs.
+        </span>
       </li>
-      <li>
-        <span class="tag">"position vs. time, body A"</span>
-        <span>\(x_A(t)\) and \(y_A(t)\) as functions of time for body A.</span>
-      </li>
-      <li>
-        <span class="tag">"position vs. time, body B"</span>
-        <span>\(x_B(t)\) and \(y_B(t)\) as functions of time for body B.</span>
-      </li>
-      <li>
-        <span class="tag">"velocity vs. time, body A"</span>
-        <span>\(v_A(t)\) and \(u_A(t)\) as functions of time for body A.</span>
-      </li>
-      <li>
-        <span class="tag">"velocity vs. time, body B"</span>
-        <span>\(v_B(t)\) and \(u_B(t)\) as functions of time for body B.</span>
-      </li>
-      <li>
-        <span class="tag">"energy vs time"</span>
-        <span>Kinetic \(K(t)\), gravitational potential \(U(t)\), and total mechanical energy \(E(t)\) vs. time. This is the primary diagnostic plot for assessing numerical accuracy.</span>
-      </li>
+      <li><span class="tag">"position vs. time, body A"</span><span>\(x_A(t)\) and \(y_A(t)\).</span></li>
+      <li><span class="tag">"position vs. time, body B"</span><span>\(x_B(t)\) and \(y_B(t)\).</span></li>
+      <li><span class="tag">"velocity vs. time, body A"</span><span>\(v_A(t)\) and \(u_A(t)\).</span></li>
+      <li><span class="tag">"velocity vs. time, body B"</span><span>\(v_B(t)\) and \(u_B(t)\).</span></li>
+      <li><span class="tag">"energy vs time"</span><span>System kinetic \(K\), potential \(U\), and total \(E\); the principal numerical-accuracy diagnostic.</span></li>
     </ul>
   </section>
 
@@ -1043,17 +889,12 @@ python main.py</pre>
   <section id="license">
     <h2>License</h2>
     <p>
-      This Python port is derived from the original Java programs by
-      <strong>Bernard Schutz</strong> accompanying
-      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
-      The port is distributed under the
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
-         International (CC BY-NC-SA 4.0)</a> license.
-    </p>
-    <p>
-      You are free to share and adapt the material for non-commercial purposes, provided
-      you give appropriate credit and distribute any adaptations under the same license.
+      This software is based on the programs by <strong>Bernard Schutz</strong>
+      accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press,
+      2003) and is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+      (CC BY-NC-SA 4.0)</a> license.
     </p>
   </section>
 
@@ -1062,9 +903,8 @@ python main.py</pre>
 <!-- ═══════════════════ FOOTER ═══════════════════ -->
 <footer>
   <em>Gravity from the Ground Up</em> — Python Programs ·
-  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
-  Python port © 2024–2026 Thomas Yee ·
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
+  Bernard Schutz, Cambridge University Press ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
 </footer>
 
 </div><!-- .page-wrap -->
