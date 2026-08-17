@@ -1,12 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Orbit – Help File | GFtGU Programs</title>
-
-  <!-- MathJax 3 -->
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Orbit – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
     MathJax = {
       tex: {
         inlineMath:  [['\\(','\\)']],
@@ -16,10 +16,8 @@
       options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
-          id="MathJax-script" async></script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
     /* ── Reset & custom properties ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -403,672 +401,307 @@
     }
   </style>
 </head>
-
 <body>
 <div class="page-wrap">
-
 <!-- ══════════════════════════════════════════════
      HEADER
 ═══════════════════════════════════════════════ -->
 <header>
-  <div class="badge">Chapter 4 · Gravity from the Ground Up</div>
-  <h1><em>Orbit</em> — Newtonian Planetary Orbits</h1>
-  <div class="sub">
+<div class="badge">Chapter 4 · Gravity from the Ground Up</div>
+<h1><em>Orbit</em> — Newtonian Planetary Orbits</h1>
+<div class="sub">
     Source Code:
-    <a href="https://github.com/tomyee3-org/GFTGU-Programs"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
     <br/>
     Documentation:
-        <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
   </div>
 </header>
-
 <!-- ══════════════════════════════════════════════
      SIDEBAR NAV
 ═══════════════════════════════════════════════ -->
 <nav id="sidebar">
-  <div class="nav-label">Overview</div>
-  <a href="#description">Description</a>
-  <a href="#background">Physical Background</a>
-
-  <div class="nav-label">Mathematics</div>
-  <a href="#equations">Governing Equations</a>
-  <a href="#algorithm">Algorithm</a>
-
-  <div class="nav-label">Code</div>
-  <a href="#modules">Module Overview</a>
-  <a href="#parameters">Parameters</a>
-  <a href="#output">Output Modes</a>
-
-  <div class="nav-label">Experiments</div>
-  <a href="#experiments">Suggested Experiments</a>
-  <a href="#related">Related Programs</a>
-
-  <div class="nav-label">Legal</div>
-  <a href="#license">License</a>
+<div class="nav-label">Overview</div>
+<a href="#description">Description</a>
+<a href="#background">Physical Background</a>
+<div class="nav-label">Mathematics</div>
+<a href="#equations">Governing Equations</a>
+<a href="#algorithm">Algorithm</a>
+<div class="nav-label">Code</div>
+<a href="#modules">Module Overview</a>
+<a href="#parameters">Parameters</a>
+<a href="#output">Output Modes</a>
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
+<a href="#related">Related Programs</a>
+<div class="nav-label">Legal</div>
+<a href="#license">License</a>
 </nav>
-
 <!-- ══════════════════════════════════════════════
      MAIN CONTENT
 ═══════════════════════════════════════════════ -->
 <main>
-
-  <!-- ── Description ── -->
-  <section id="description">
-    <h2>Description</h2>
-    <p>
-      <strong>Orbit</strong> computes the trajectory of a test particle (planet, satellite, or comet)
-      moving in the gravitational field of a fixed central mass under Newton's law of gravity.
-      The central mass is treated as stationary and located at the origin of the coordinate system;
-      the test particle's position and velocity are integrated forward in time using a
-      <em>predictor-corrector</em> scheme with an <em>adaptive time-step</em>.
-    </p>
-    <p>
-      The default configuration reproduces <strong>Mercury's orbit around the Sun</strong>,
-      starting from perihelion at \(r = 4.6 \times 10^{10}\) m with the perihelion speed of
-      58&thinsp;980 m s<sup>−1</sup>.  With equal-axis scaling the output is a closed ellipse—a
-      direct numerical demonstration of Kepler's first law.
-    </p>
-    <p>
-      Five output modes let the user examine the orbit shape, velocity hodograph, position or
-      velocity as functions of time, and kinetic/potential/total energy as functions of time.
-      Orbit is the <em>foundation program</em> for all later orbital investigations in the book;
-      Binary, RelativisticOrbit, and the three-body programs are all straightforward extensions
-      of the same core integration logic.
-    </p>
-  </section>
-
-  <!-- ── Physical Background ── -->
-  <section id="background">
-    <h2>Physical Background</h2>
-
-    <h3>Newton's Law of Gravitation</h3>
-    <p>
-      A body of mass \(M\) located at the origin exerts a gravitational acceleration on a
-      test particle at position \(\mathbf{r} = (x, y)\) directed radially inward with magnitude
-      \(GM/r^2\), where \(G = 6.674\times10^{-11}\) N m² kg⁻² is Newton's gravitational constant
-      and \(r = |\mathbf{r}|\).  The program uses the composite parameter
-      \(k = GM\) so that the acceleration components become:
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Newton's gravitational acceleration</div>
-      \[
-        a_x = -\frac{k\,x}{r^3}, \qquad a_y = -\frac{k\,y}{r^3}, \qquad r = \sqrt{x^2 + y^2}
-      \]
-    </div>
-    <p>
-      For the default (Sun), \(k = GM_\odot = 1.327\times10^{20}\) m³ s⁻².
-      Changing <code>k</code> to \(GM_\oplus = 3.986\times10^{14}\) m³ s⁻² models Earth-centered
-      orbits (the Moon, satellites); any central body can be substituted.
-    </p>
-
-    <h3>Bound and Unbound Orbits</h3>
-    <p>
-      The character of the orbit is determined entirely by the <em>specific mechanical energy</em>
-      (energy per unit mass):
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Specific mechanical energy</div>
-      \[
-        \mathcal{E} = \frac{1}{2}v^2 - \frac{k}{r}
-      \]
-    </div>
-    <ul>
-      <li>\(\mathcal{E} < 0\) — <strong>bound orbit</strong> (ellipse); the particle returns periodically.</li>
-      <li>\(\mathcal{E} = 0\) — <strong>parabolic escape</strong>; marginal case, cometary in character.</li>
-      <li>\(\mathcal{E} > 0\) — <strong>hyperbolic flyby</strong>; the particle escapes to infinity.</li>
-    </ul>
-    <p>
-      A remarkable feature of \(1/r^2\) gravity (Bertrand's theorem) is that <em>all</em> bound
-      orbits are <strong>closed ellipses</strong>—this is not true for any other power law.
-      The program verifies closure by tracking the angular position through each orbit.
-    </p>
-
-    <h3>Kepler's Laws (Numerical Verification)</h3>
-    <p>
-      By running the program for different planets (using the perihelion distances and speeds in
-      Table 4.3 of Schutz) the user can verify:
-    </p>
-    <ul>
-      <li><strong>First law</strong> — orbits are closed ellipses (equal-axis plot).</li>
-      <li><strong>Second law</strong> — equal areas swept in equal times (visible from position-vs-time output).</li>
-      <li><strong>Third law</strong> — \(T^2 \propto a^3\), period increases with semi-major axis.</li>
-    </ul>
-  </section>
-
-  <!-- ── Governing Equations ── -->
-  <section id="equations">
-    <h2>Governing Equations</h2>
-
-    <h3>Equations of Motion</h3>
-    <p>
-      The state vector is \((x,\, y,\, v_x,\, v_y)\).  Newton's second law gives four coupled
-      first-order ODEs:
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Equations of motion</div>
-      \[
-        \dot{x} = v_x, \qquad \dot{y} = v_y
-      \]
-      \[
-        \dot{v}_x = a_x = -\frac{k\,x}{r^3}, \qquad \dot{v}_y = a_y = -\frac{k\,y}{r^3}
-      \]
-    </div>
-
-    <h3>Predictor Step (Constant-Acceleration Approximation)</h3>
-    <p>
-      At the start of each timestep \(\Delta t\), accelerations \((a_{x0}, a_{y0})\) are computed
-      at the current position.  A first-order predictor gives a trial endpoint:
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Predictor — trial position</div>
-      \[
-        \Delta v = a_{x0}\,\Delta t, \quad \Delta u = a_{y0}\,\Delta t
-      \]
-      \[
-        \delta x = v_x\,\Delta t + \tfrac{1}{2}\Delta v\,\Delta t, \quad
-        \delta y = v_y\,\Delta t + \tfrac{1}{2}\Delta u\,\Delta t
-      \]
-      \[
-        x_1 = x + \delta x, \quad y_1 = y + \delta y
-      \]
-    </div>
-
-    <h3>Adaptive Timestep Control (eps1)</h3>
-    <p>
-      Accelerations \((a_{x1}, a_{y1})\) at the trial endpoint are compared with those at the
-      start.  If the fractional change (sum-of-absolute-values norm) exceeds the threshold
-      <code>eps1</code>, the step is rejected and \(\Delta t\) is halved:
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Timestep rejection test</div>
-      \[
-        |a_{x1} - a_{x0}| + |a_{y1} - a_{y0}| \;>\; \varepsilon_1
-          \bigl(|a_{x0}| + |a_{y0}|\bigr)
-      \]
-    </div>
-    <p>
-      Halving repeats until the test passes.  The timestep is never <em>increased</em>
-      automatically; it is only shortened when accuracy demands it.
-    </p>
-
-    <h3>Predictor-Corrector Iteration (eps2)</h3>
-    <p>
-      Once the timestep is accepted, the corrector iterates (up to 10 times) using the
-      <em>average</em> of the beginning and predicted endpoint accelerations:
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Corrector — improved velocity increment</div>
-      \[
-        \Delta v = \tfrac{1}{2}(a_{x0} + a_{x1})\,\Delta t, \quad
-        \Delta u = \tfrac{1}{2}(a_{y0} + a_{y1})\,\Delta t
-      \]
-      \[
-        \delta\delta x_1 = \tfrac{1}{2}\Delta v\,\Delta t, \quad
-        \delta\delta y_1 = \tfrac{1}{2}\Delta u\,\Delta t
-      \]
-    </div>
-    <p>
-      The iteration converges when the change in the corrector increment satisfies:
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Corrector convergence test</div>
-      \[
-        |\delta\delta x_1 - \delta\delta x_0| + |\delta\delta y_1 - \delta\delta y_0|
-          \;\leq\; \varepsilon_2 \bigl(|\delta\delta x_0| + |\delta\delta y_0|\bigr)
-      \]
-    </div>
-
-    <h3>Committed Step</h3>
-    <p>
-      After convergence the state is advanced using the corrected increments:
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">State update</div>
-      \[
-        x \leftarrow x + v_x\,\Delta t + \delta\delta x_1, \quad
-        y \leftarrow y + v_y\,\Delta t + \delta\delta y_1
-      \]
-      \[
-        v_x \leftarrow v_x + \Delta v, \quad v_y \leftarrow v_y + \Delta u
-      \]
-    </div>
-
-    <h3>Specific Energy (Energy Output Mode)</h3>
-    <p>
-      Because the test-particle mass cancels, the program reports energy <em>per unit mass</em>:
-    </p>
-    <div class="eq-block">
-      <div class="eq-label">Specific kinetic, potential, and total energy</div>
-      \[
-        \mathcal{K} = \tfrac{1}{2}v^2, \qquad
-        \mathcal{U} = -\frac{k}{r}, \qquad
-        \mathcal{E} = \mathcal{K} + \mathcal{U}
-      \]
-    </div>
-    <p>
-      \(\mathcal{E}\) should remain constant throughout the integration; deviations indicate
-      numerical error.
-    </p>
-  </section>
-
-  <!-- ── Algorithm ── -->
-  <section id="algorithm">
-    <h2>Algorithm</h2>
-
-    <h3>Overview</h3>
-    <p>
-      The integration proceeds step-by-step in simulated time.  For each step the driver:
-    </p>
-    <ol>
-      <li>Computes accelerations at the current position (physics module call).</li>
-      <li>Runs the <strong>predictor</strong> to obtain a trial new position.</li>
-      <li>Tests the <strong>adaptive timestep criterion</strong>; if it fails, halves \(\Delta t\) and retries from step 1.</li>
-      <li>Runs the <strong>predictor-corrector loop</strong> (≤ 10 iterations) until convergence.</li>
-      <li>Commits the position and velocity update.</li>
-      <li>Runs the <strong>orbit-closure test</strong>; stops if one full orbit has been completed or <code>maxSteps</code> reached.</li>
-    </ol>
-
-    <h3>Orbit-Closure Detection</h3>
-    <p>
-      Closure detection tracks the polar angle \(\theta = \mathrm{atan2}(y, x)\) relative to
-      where the orbit <em>started</em>, not relative to zero — this matters because the
-      starting point can be anywhere, not just on the positive \(x\)-axis. Two reference
-      angles are computed once, before the integration loop begins:
-    </p>
-    <ul>
-      <li><code>angleInitPos</code> \(= \mathrm{atan2}(\texttt{yInit}, \texttt{xInit})\) —
-          the angular position of the starting point.</li>
-      <li><code>angleInitVel</code> \(= \mathrm{atan2}(\texttt{vyInit}, \texttt{vxInit})\) —
-          the angular direction of the starting velocity.</li>
-    </ul>
-    <p>
-      The difference between these two (wrapped into \([-\pi, \pi]\)) determines whether the
-      orbit runs clockwise or counter-clockwise — a positive difference means
-      <code>counterclockwise = True</code>. This is determined once, from the initial data,
-      not assumed.
-    </p>
-    <p>
-      At every subsequent step, <code>anglediff</code> \(= \theta_{\text{now}} -
-      \texttt{angleInitPos}\) (also wrapped into \([-\pi, \pi]\)) measures how far around the
-      orbit has come relative to its own start:
-    </p>
-    <ul>
-      <li>A flag <code>halfOrbit</code> is set once <code>anglediff</code> crosses zero in the
-          direction consistent with the orbit's own travel direction (negative for
-          counter-clockwise orbits, positive for clockwise) — i.e. once the orbit has passed
-          the point diametrically opposite its start.</li>
-      <li>A flag <code>fullOrbit</code> is set once <code>anglediff</code> crosses zero
-          <em>again</em>, in the opposite sense, but only after <code>halfOrbit</code> is
-          already true — i.e. the orbit has come back around to its starting angle.</li>
-      <li>The integration loop's own condition is <code>not fullOrbit</code>: as soon as
-          <code>fullOrbit</code> becomes true, the loop simply stops (there is no separate
-          orbit counter to reach a target count — one full orbit is always the stopping
-          condition for a bound orbit).</li>
-    </ul>
-    <p>
-      Requiring the half-orbit crossing before arming the full-orbit test is what prevents
-      the very first step (which is trivially "at" the starting angle) from being mistaken
-      for closure. Referencing everything to <code>angleInitPos</code> and computing
-      <code>counterclockwise</code> from the actual initial velocity — rather than assuming
-      the orbit starts on the \(x\)-axis moving counter-clockwise — is what makes this test
-      correct for <em>any</em> starting position and direction.
-    </p>
-
-    <div class="note">
-      <strong>Tip:</strong> The program stops naturally after <em>one</em> complete orbit of a
-      bound trajectory — <code>fullOrbit</code> is a hard stop, not a counter you can set to a
-      target number of orbits.  For unbound (hyperbolic) orbits, where the orbit never closes,
-      it instead runs until <code>maxSteps</code> is exhausted.  To see more than one orbit
-      you would need to modify <code>driver_orbit.py</code>'s loop condition directly.
-    </div>
-
-    <h3>Accuracy Notes</h3>
-    <p>
-      The <code>eps1</code> and <code>eps2</code> parameters control independent aspects of
-      accuracy:
-    </p>
-    <ul>
-      <li><code>eps1 = 0.05</code> (default) is relatively loose.  Tightening to <code>0.005</code>
-          or <code>0.001</code> will increase step count but give a more faithful ellipse.</li>
-      <li><code>eps2 = 1×10⁻⁴</code> is the corrector convergence tolerance; it rarely needs
-          tuning for standard planetary orbits.</li>
-      <li>Setting either parameter to a large value (e.g. 10) disables the corresponding
-          correction entirely — useful for understanding what each contributes.</li>
-    </ul>
-  </section>
-
-  <!-- ── Modules ── -->
-  <section id="modules">
-    <h2>Module Overview</h2>
-    <div class="module-grid">
-
-      <div class="module-card">
-        <div class="mc-role">Physics Layer</div>
-        <div class="mc-name">physics_orbit.py</div>
-        <p>
-          Encodes Newton's gravitational acceleration law.  The only literal number is the
-          exponent in the inverse-square formula; the gravitational parameter \(k = GM\) is
-          always passed in as an argument so the physics is independent of any specific body.
-        </p>
-        <div class="sig">def compute_acceleration(x, y, k)
-  -> (ax, ay)</div>
-      </div>
-
-      <div class="module-card">
-        <div class="mc-role">Driver Layer</div>
-        <div class="mc-name">driver_orbit.py</div>
-        <p>
-          Implements the full predictor-corrector integration loop with adaptive timestep
-          and orbit-closure detection.  Always computes and returns the complete position,
-          velocity, time, and energy history as a single <code>OrbitResult</code> — which
-          output mode to display is decided later, by <code>plot_orbit()</code>, not here.
-        </p>
-        <div class="sig">def run_orbit(
-  xInit=4.6e10, yInit=0.0,
-  vxInit=0.0, vyInit=58980.0,
-  k=1.327e20,
-  dt0=1e4,
-  maxSteps=20000,
-  eps1=0.05,
-  eps2=1e-4,
-) -> OrbitResult</div>
-      </div>
-
-      <div class="module-card">
-        <div class="mc-role">Plot Layer</div>
-        <div class="mc-name">plot_orbit.py</div>
-        <p>
-          Receives the full <code>OrbitResult</code> from the driver and produces matplotlib
-          figures.  Dispatches on the <code>output</code> mode string to select the
-          appropriate plot type (orbit trace, hodograph, time series, or energy curves) and
-          axis labels/units for each — none of the non-"orbit"/"velocity" modes share axis
-          units, so only those two use equal-aspect scaling.
-        </p>
-        <div class="sig">def plot_orbit(result, output="orbit")
-  -> matplotlib figure (displayed)</div>
-      </div>
-
-      <div class="module-card">
-        <div class="mc-role">Entry Point</div>
-        <div class="mc-name">main.py</div>
-        <p>
-          User-editable entry point.  Set the initial conditions, gravitational parameter,
-          timestep, accuracy controls, and output mode here, then run this file to execute
-          the simulation and display the plot.
-        </p>
-        <div class="sig">from driver_orbit import run_orbit
-from plot_orbit  import plot_orbit
-
-result = run_orbit(...)
-plot_orbit(result, output=...)</div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ── Parameters ── -->
-  <section id="parameters">
-    <h2>Parameters</h2>
-    <p>
-      Almost all parameters are set in <code>main.py</code> as arguments to
-      <code>run_orbit()</code>; the exception is <code>output</code>, which is a
-      <code>plot_orbit()</code> argument instead, since it only affects how the
-      already-computed result is displayed, not the computation itself — see the table
-      below and <a href="#output">Output Modes</a>.
-      Defaults reproduce Mercury's orbit around the Sun.
-    </p>
-
-    <table class="param-table">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-          <th>Default</th>
-          <th>Units</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="pname">xInit</td>
-          <td class="pdefault">4.6e10</td>
-          <td>m</td>
-          <td>Initial x-position (Mercury perihelion distance from Sun)</td>
-        </tr>
-        <tr>
-          <td class="pname">yInit</td>
-          <td class="pdefault">0.0</td>
-          <td>m</td>
-          <td>Initial y-position; start on the x-axis for a canonical perihelion launch</td>
-        </tr>
-        <tr>
-          <td class="pname">vxInit</td>
-          <td class="pdefault">0.0</td>
-          <td>m s⁻¹</td>
-          <td>Initial x-velocity; zero for a perpendicular perihelion launch</td>
-        </tr>
-        <tr>
-          <td class="pname">vyInit</td>
-          <td class="pdefault">58980.0</td>
-          <td>m s⁻¹</td>
-          <td>
-            Initial y-velocity; Mercury's perihelion speed. Schutz's own documentation uses
-            59&thinsp;220 m s⁻¹ instead — 58&thinsp;980 m s⁻¹ is closer to the modern
-            accepted value.
-          </td>
-        </tr>
-        <tr>
-          <td class="pname">k</td>
-          <td class="pdefault">1.327e20</td>
-          <td>m³ s⁻²</td>
-          <td>
-            Gravitational parameter \(GM\) for the central body (default: Sun). This is the
-            directly-measured value of \(GM_\odot\), known far more precisely than \(G\) and
-            \(M_\odot\) individually. Schutz's documentation instead gives \(M_\odot=2\times
-            10^{30}\) kg to be multiplied by \(G\) — that product is about 0.5% too high,
-            since multiplying two independently-rounded constants compounds their rounding
-            error.
-          </td>
-        </tr>
-        <tr>
-          <td class="pname">dt0</td>
-          <td class="pdefault">1e4</td>
-          <td>s</td>
-          <td>Initial timestep; reduced automatically by eps1 control if needed</td>
-        </tr>
-        <tr>
-          <td class="pname">maxSteps</td>
-          <td class="pdefault">20000</td>
-          <td>—</td>
-          <td>Maximum integration steps; limits runtime for unbound orbits</td>
-        </tr>
-        <tr>
-          <td class="pname">eps1</td>
-          <td class="pdefault">0.05</td>
-          <td>—</td>
-          <td>Fractional-change threshold for adaptive timestep halving (sum-of-abs norm)</td>
-        </tr>
-        <tr>
-          <td class="pname">eps2</td>
-          <td class="pdefault">1e-4</td>
-          <td>—</td>
-          <td>Convergence threshold for predictor-corrector iteration</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>
-      One further parameter, <code>output</code> (default <code>"orbit"</code>), is passed
-      to <code>plot_orbit()</code> instead of <code>run_orbit()</code> — see
-      <a href="#output">Output Modes</a> for all five choices.
-    </p>
-
-    <div class="note">
-      <strong>Common substitutions:</strong>
-      Earth-centered orbits: set <code>k = 3.986e14</code> (m³ s⁻²).
-      For the Moon at perigee: <code>xInit=3.626e8</code>, <code>vyInit=1082</code>.
-      For a comet near-parabolic orbit: set speed close to the escape speed
-      \(v_\text{esc} = \sqrt{2k/r}\).
-    </div>
-  </section>
-
-  <!-- ── Output Modes ── -->
-  <section id="output">
-    <h2>Output Modes</h2>
-    <p>
-      The <code>output</code> parameter, passed to <code>plot_orbit()</code> (not
-      <code>run_orbit()</code>, which always computes the full history regardless of which
-      mode you want — see <a href="#modules">Module Overview</a>), selects which fields of
-      the returned <code>OrbitResult</code> get plotted, and how.
-    </p>
-
-    <table class="out-table">
-      <thead>
-        <tr>
-          <th>Mode string</th>
-          <th>Fields plotted</th>
-          <th>Plot produced</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="oname">"orbit"</td>
-          <td><code>result.xs, result.ys</code></td>
-          <td>Trajectory in the x-y orbital plane; displays as an ellipse for bound orbits</td>
-        </tr>
-        <tr>
-          <td class="oname">"velocity"</td>
-          <td><code>result.vxs, result.vys</code></td>
-          <td>Velocity hodograph — the curve traced by \((v_x, v_y)\) through the orbit; always a circle for Newtonian gravity</td>
-        </tr>
-        <tr>
-          <td class="oname">"position_time"</td>
-          <td><code>result.ts, result.xs, result.ys</code></td>
-          <td>x-position and y-position vs. time; period readable from the repeating pattern</td>
-        </tr>
-        <tr>
-          <td class="oname">"velocity_time"</td>
-          <td><code>result.ts, result.vxs, result.vys</code></td>
-          <td>x-velocity and y-velocity vs. time; confirms the orbit is periodic in velocity too</td>
-        </tr>
-        <tr>
-          <td class="oname">"energy"</td>
-          <td><code>result.ts, result.KEs, result.PEs</code></td>
-          <td>Specific kinetic (\(\mathcal{K}\)), potential (\(\mathcal{U}\)), and total (\(\mathcal{E}\)) energy vs. time; total should be constant — deviations reveal numerical error</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="note">
-      <strong>Verification tip:</strong> Call <code>plot_orbit(result, output="energy")</code>
-      and examine how flat the total energy curve is.  Tighten <code>eps1</code> (a
-      <code>run_orbit()</code> argument) and re-plot to see the improvement; this
-      is a direct measure of numerical energy conservation.
-    </div>
-  </section>
-
-  <!-- ── Suggested Experiments ── -->
-  <section id="experiments">
-    <h2>Suggested Experiments</h2>
-
-    <div class="exp-grid">
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-1</div>
-        <h4>Reproduce the Solar System</h4>
-        <p>
-          Use the perihelion distances and speeds from Table 4.3 of Schutz to set
-          <code>xInit</code> and <code>vyInit</code> for each planet.  Confirm that each
-          output orbit is a closed ellipse and compare the computed eccentricity to the
-          tabulated value.
-        </p>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-2</div>
-        <h4>Measure Orbital Periods</h4>
-        <p>
-          Switch to <code>plot_orbit(result, output="position_time")</code>.  Read the period
-          from the x-position time series.  Verify Kepler's third law \(T^2 \propto a^3\)
-          across multiple planets.
-        </p>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-3</div>
-        <h4>Velocity Hodograph</h4>
-        <p>
-          Call <code>plot_orbit(result, output="velocity")</code> to plot the velocity-space
-          curve.  For a
-          Newtonian \(1/r^2\) force, the hodograph is a <em>perfect circle</em>—one of the
-          elegant consequences of the inverse-square law discovered by Hamilton.
-        </p>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-4</div>
-        <h4>Bound vs. Unbound Orbits</h4>
-        <p>
-          Starting from Mercury's perihelion, gradually increase <code>vyInit</code>.
-          At the escape speed \(v_\text{esc} = \sqrt{2k/\texttt{xInit}}\approx 75\,800\) m s⁻¹
-          the orbit opens into a parabola; above it, a hyperbola.
-        </p>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-5</div>
-        <h4>Direction Independence of Binding</h4>
-        <p>
-          Keep the speed fixed but rotate the initial velocity vector (adjust
-          <code>vxInit</code> and <code>vyInit</code> so that \(v_x^2 + v_y^2\) is constant).
-          Verify that the orbit changes shape but bound/unbound character does not — a
-          consequence of energy conservation.
-        </p>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-6</div>
-        <h4>Energy Conservation Accuracy</h4>
-        <p>
-          Run with <code>eps1</code> (a <code>run_orbit()</code> argument) progressively
-          tightened from <code>0.5</code> to <code>0.001</code>, re-plotting each result with
-          <code>plot_orbit(result, output="energy")</code>.  Plot how the total-energy drift
-          scales
-          with <code>eps1</code>; this demonstrates that accuracy improves systematically with
-          the control parameter.
-        </p>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-7</div>
-        <h4>Disable Corrections</h4>
-        <p>
-          Set <code>eps1 = 10</code> (disable adaptive timestep) and <code>eps2 = 10</code>
-          (disable predictor-corrector).  Observe how the orbit drifts and energy fails
-          to conserve — a vivid illustration of what the two accuracy techniques accomplish.
-        </p>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-8</div>
-        <h4>Moon Around Earth</h4>
-        <p>
-          Set <code>k = 3.986e14</code>, <code>xInit = 3.626e8</code> (perigee distance),
-          <code>vyInit = 1082</code> m s⁻¹, and scale <code>dt0</code> to ~100 s.
-          The output should be a nearly circular orbit with a period of ≈ 27.3 days.
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ============================================================
+<!-- ── Description ── -->
+<section id="description">
+<h2>Description</h2>
+<p><strong>Orbit</strong> computes the trajectory of a test particle—planet, satellite, or comet—
+moving in the gravitational field of a fixed central mass under Newton's inverse-square law.
+The central mass remains at the origin; the orbiting body's position and velocity are advanced
+with an adaptive predictor-corrector integrator.</p>
+<p>The supplied defaults approximate Mercury at perihelion. Five display modes show the
+x-y orbit, velocity hodograph, position versus time, velocity versus time, or specific
+kinetic/potential/total energy.</p>
+<p>The revised solver retains Schutz's pedagogical predictor-corrector approach while making
+the accuracy controls more robust: rejected steps may shrink, successful steps can recover
+toward the user's maximum timestep, unconverged corrector iterations are retried, and complete
+revolutions are measured from accumulated azimuth rather than hard-coded half/full-orbit flags.</p>
+</section>
+<!-- ── Physical Background ── -->
+<section id="background">
+<h2>Physical Background</h2>
+<h3>Newton's Law of Gravitation</h3>
+<p>For a fixed central body with gravitational parameter \(\mu=GM\),</p>
+<div class="eq-block"><div class="eq-label">Newtonian acceleration</div>
+\[
+a_x=-\frac{\mu x}{r^3},\qquad
+a_y=-\frac{\mu y}{r^3},\qquad
+r=\sqrt{x^2+y^2}.
+\]
+</div>
+<p>The default uses the IAU nominal solar gravitational parameter
+\(\mu_\odot=1.3271244\times10^{20}\ {\rm m^3\,s^{-2}}\). For other central
+bodies, replace <code>k</code> with the corresponding \(GM\).</p>
+<h3>Bound and Unbound Kepler Orbits</h3>
+<p>The specific mechanical energy is</p>
+<div class="eq-block"><div class="eq-label">Specific energy</div>
+\[
+\mathcal E=\frac12v^2-\frac{\mu}{r}.
+\]
+</div>
+<ul>
+<li>\(\mathcal E&lt;0\): bound ellipse (apart from the degenerate radial-collision case).</li>
+<li>\(\mathcal E=0\): parabolic escape trajectory.</li>
+<li>\(\mathcal E&gt;0\): hyperbolic escape trajectory.</li>
+</ul>
+<h3>Bertrand's Theorem</h3>
+<p>Inverse-square gravity has the remarkable property that every non-collision bound orbit is
+closed. Bertrand's theorem states that only two central-force families have the stronger
+property that <em>all</em> bounded orbits are closed: inverse-square gravity and the isotropic
+harmonic oscillator, whose restoring force is proportional to \(r\).</p>
+<h3>Kepler's Laws</h3>
+<ul>
+<li><strong>First law:</strong> bound inverse-square gravitational orbits are ellipses with the central mass at a focus.</li>
+<li><strong>Second law:</strong> equal areas are swept in equal times because the specific angular momentum \(h=xv_y-yv_x\) is constant and \(dA/dt=h/2\).</li>
+<li><strong>Third law:</strong> for a fixed central mass, \(T^2\propto a^3\).</li>
+</ul>
+</section>
+<!-- ── Governing Equations ── -->
+<section id="equations">
+<h2>Governing Equations</h2>
+<h3>Equations of Motion</h3>
+<div class="eq-block"><div class="eq-label">Four first-order equations</div>
+\[
+\dot x=v_x,\qquad \dot y=v_y,
+\]
+\[
+\dot v_x=-\frac{\mu x}{r^3},\qquad
+\dot v_y=-\frac{\mu y}{r^3}.
+\]
+</div>
+<h3>Predictor</h3>
+<p>At the start of a proposed timestep \(\Delta t\), the solver predicts the endpoint using
+the current acceleration:</p>
+<div class="eq-block"><div class="eq-label">Constant-acceleration prediction</div>
+\[
+\tilde{\mathbf v}=\mathbf v_n+\mathbf a_n\Delta t,\qquad
+\tilde{\mathbf r}=\mathbf r_n+\frac{\mathbf v_n+\tilde{\mathbf v}}{2}\Delta t.
+\]
+</div>
+<h3>Adaptive Timestep Gate</h3>
+<p>The predicted endpoint acceleration is compared with the starting acceleration using the
+Euclidean vector norm:</p>
+<div class="eq-block"><div class="eq-label">eps1 test</div>
+\[
+\delta_a=
+\frac{\|\tilde{\mathbf a}-\mathbf a_n\|}
+{\max(\|\tilde{\mathbf a}\|,\|\mathbf a_n\|)}.
+\]
+</div>
+<p>If \(\delta_a&gt;\varepsilon_1\), the attempted step is discarded and the working timestep
+is halved.</p>
+<h3>Iterated Corrector</h3>
+<p>The accepted predictor is refined with the average beginning/end acceleration:</p>
+<div class="eq-block"><div class="eq-label">Trapezoidal corrector</div>
+\[
+\mathbf v_{n+1}=
+\mathbf v_n+\frac{\mathbf a_n+\mathbf a_{n+1}}{2}\Delta t,
+\qquad
+\mathbf r_{n+1}=
+\mathbf r_n+\frac{\mathbf v_n+\mathbf v_{n+1}}{2}\Delta t.
+\]
+</div>
+<p>Successive corrected velocity vectors must agree to <code>eps2</code>. If ten corrector
+iterations do not converge, the complete step is rejected, \(\Delta t\) is halved, and the
+step is tried again.</p>
+<h3>Conserved Quantities</h3>
+<div class="eq-block"><div class="eq-label">Specific energy and angular momentum</div>
+\[
+\mathcal E=\frac12(v_x^2+v_y^2)-\frac{\mu}{r},
+\qquad
+h=xv_y-yv_x.
+\]
+</div>
+<p>The program reports the maximum fractional drift of both quantities. These provide
+independent numerical-accuracy checks.</p>
+</section>
+<!-- ── Algorithm ── -->
+<section id="algorithm">
+<h2>Algorithm</h2>
+<h3>Adaptive Integration</h3>
+<ol>
+<li>Compute acceleration at the current position.</li>
+<li>Predict position and velocity at the end of the proposed timestep.</li>
+<li>Reject and halve the timestep if the acceleration-vector change exceeds <code>eps1</code>.</li>
+<li>Iterate the trapezoidal corrector until successive velocity estimates meet <code>eps2</code>.</li>
+<li>If ten corrector passes fail, reject the entire step and retry at half the timestep.</li>
+<li>Commit the accepted state and record position, velocity, time, energy, and angular momentum.</li>
+<li>After a successful step, increase the working timestep by 10% toward the user's <code>dt0</code>, which is the maximum timestep.</li>
+</ol>
+<h3>Revolution Counting</h3>
+<p>The solver evaluates \(\phi=\operatorname{atan2}(y,x)\) after every accepted step and unwraps
+the signed angular change across the \(-\pi/\pi\) branch cut. The accumulated angular travel gives</p>
+<div class="eq-block"><div class="eq-label">Accumulated revolutions</div>
+\[
+N_{\rm rev}=\frac{|\Delta\phi_{\rm accumulated}|}{2\pi}.
+\]
+</div>
+<p>This works for clockwise or counter-clockwise motion and for an arbitrary starting direction.
+<code>maxOrbits</code> may be 1, 1.5, 2, or another positive value. When the requested angular
+travel is crossed, the final state is interpolated to the requested azimuth rather than simply
+waiting for the next full timestep.</p>
+<h3>Closure Diagnostics</h3>
+<p>Crossing the starting angular ray is not, by itself, proof that a numerical orbit has closed.
+For a run ending after an integral number of revolutions, the solver therefore also reports
+fractional differences in radius and velocity relative to the initial state. A well-resolved
+Kepler ellipse should have small closure residuals.</p>
+<h3>Point-Mass Singularity</h3>
+<p>The mathematical field diverges at \(r=0\). The code therefore has a very small numerical
+guard radius to stop a trajectory that approaches the ideal point singularity before infinities
+or NaNs are produced. This is <em>not</em> a physical radius for the Sun, Earth, or any other
+central body.</p>
+</section>
+<!-- ── Modules ── -->
+<section id="modules">
+<h2>Module Overview</h2>
+<div class="module-grid">
+<div class="module-card"><div class="mc-role">Physics Layer</div><div class="mc-name">physics_orbit.py</div>
+<p>Contains the inverse-square acceleration, the IAU nominal solar \(GM\), and helper functions
+for specific energy and specific angular momentum.</p>
+<div class="sig">compute_acceleration(x, y, mu)
+specific_energy(...)
+specific_angular_momentum(...)</div></div>
+<div class="module-card"><div class="mc-role">Driver Layer</div><div class="mc-name">driver_orbit.py</div>
+<p>Implements adaptive predictor-corrector integration, timestep shrink/recovery, revolution
+counting, singularity protection, explicit termination reasons, and conservation/closure
+diagnostics. It always returns the complete history.</p>
+<div class="sig">run_orbit(..., maxOrbits=1.0) -&gt; OrbitResult</div></div>
+<div class="module-card"><div class="mc-role">Plot Layer</div><div class="mc-name">plot_orbit.py</div>
+<p>Displays one of the five traditional Orbit views from the already-computed
+<code>OrbitResult</code>. Orbit and hodograph plots use equal aspect ratios.</p>
+<div class="sig">plot_orbit(result, output="orbit")</div></div>
+<div class="module-card"><div class="mc-role">Entry Point</div><div class="mc-name">main.py</div>
+<p>Contains user-editable initial conditions, central \(GM\), numerical controls,
+<code>maxOrbits</code>, and output selection. It also prints the run diagnostics.</p>
+<div class="sig">result = run_orbit(...)
+plot_orbit(result, output=output)</div></div>
+</div>
+</section>
+<!-- ── Parameters ── -->
+<section id="parameters">
+<h2>Parameters</h2>
+<table class="param-table">
+<thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td class="pname">xInit</td><td class="pdefault">4.6e10</td><td>m</td><td>Initial x-position; default approximates Mercury perihelion.</td></tr>
+<tr><td class="pname">yInit</td><td class="pdefault">0.0</td><td>m</td><td>Initial y-position.</td></tr>
+<tr><td class="pname">vxInit</td><td class="pdefault">0.0</td><td>m s⁻¹</td><td>Initial x-velocity.</td></tr>
+<tr><td class="pname">vyInit</td><td class="pdefault">58980.0</td><td>m s⁻¹</td><td>Initial y-velocity; default approximates Mercury's perihelion speed.</td></tr>
+<tr><td class="pname">k</td><td class="pdefault">1.3271244e20</td><td>m³ s⁻²</td><td>Central gravitational parameter \(GM\); default is the IAU nominal solar value.</td></tr>
+<tr><td class="pname">dt0</td><td class="pdefault">1e4</td><td>s</td><td>Maximum timestep. The working timestep can shrink and later recover toward this value.</td></tr>
+<tr><td class="pname">maxSteps</td><td class="pdefault">20000</td><td>—</td><td>Maximum number of accepted integration steps, excluding the initial state.</td></tr>
+<tr><td class="pname">maxOrbits</td><td class="pdefault">1.0</td><td>revolutions</td><td>Maximum accumulated azimuthal travel in units of \(2\pi\).</td></tr>
+<tr><td class="pname">eps1</td><td class="pdefault">0.05</td><td>—</td><td>Acceleration-vector change threshold for timestep rejection.</td></tr>
+<tr><td class="pname">eps2</td><td class="pdefault">1e-4</td><td>—</td><td>Convergence tolerance for successive corrected velocity vectors.</td></tr>
+</tbody>
+</table>
+<p><code>output</code> is set separately in <code>main.py</code> and controls only the display,
+not the integration.</p>
+</section>
+<!-- ── Output Modes ── -->
+<section id="output">
+<h2>Output Modes</h2>
+<table class="out-table">
+<thead><tr><th>Mode string</th><th>Fields plotted</th><th>Tutorial use</th></tr></thead>
+<tbody>
+<tr><td class="oname">"orbit"</td><td><code>xs, ys</code></td><td>True-shape x-y trajectory with equal-axis scaling.</td></tr>
+<tr><td class="oname">"velocity"</td><td><code>vxs, vys</code></td><td>Hamilton hodograph. For a non-radial Kepler orbit the velocity vectors lie on a circle; an ellipse traces the full circle, while parabolic/hyperbolic motion traces only an arc.</td></tr>
+<tr><td class="oname">"position_time"</td><td><code>ts, xs, ys</code></td><td>Position components versus time; useful for reading orbital periods and seeing nonuniform orbital speed.</td></tr>
+<tr><td class="oname">"velocity_time"</td><td><code>ts, vxs, vys</code></td><td>Velocity components versus time and periodicity.</td></tr>
+<tr><td class="oname">"energy"</td><td><code>ts, KEs, PEs</code></td><td>Specific kinetic, potential, and total energy; the total should remain constant.</td></tr>
+</tbody>
+</table>
+<p>The console summary additionally reports termination reason, elapsed simulated time,
+revolution count, maximum fractional energy drift, maximum fractional angular-momentum drift,
+and—when appropriate—one-revolution closure residuals.</p>
+</section>
+<!-- ── Suggested Experiments ── -->
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<div class="exp-grid">
+<div class="exp-card"><div class="ec-num">EXP-1</div><h4>Reproduce Planetary Orbits</h4>
+<p>Use perihelion distances and speeds from Schutz's table for different planets. Compare
+the measured perihelion/aphelion distances and eccentricities with the expected Kepler ellipses.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-2</div><h4>Kepler's Third Law</h4>
+<p>Run several planetary initial conditions and use the reported final time for a
+<code>maxOrbits=1</code> run. Compare \(T^2/a^3\) across the models.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-3</div><h4>Kepler's Second Law</h4>
+<p>Use the returned \(x,y,t\) arrays to divide the trajectory into equal time intervals and
+compare swept triangular areas. Relate the result to the nearly constant
+\(h=xv_y-yv_x\) reported by the conservation diagnostic.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-4</div><h4>Velocity Hodograph</h4>
+<p>Plot <code>output="velocity"</code>. A bound non-radial Kepler ellipse traces a full
+Hamilton hodograph circle. Try an unbound orbit and observe that only an arc is traced.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-5</div><h4>Bound, Parabolic, and Hyperbolic Motion</h4>
+<p>At a fixed starting radius, vary the speed through
+\(v_{\rm esc}=\sqrt{2\mu/r}\). Compare the sign of the initial specific energy with the
+resulting trajectory class.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-6</div><h4>Direction Independence of Binding</h4>
+<p>Keep \(v_x^2+v_y^2\) fixed while rotating the initial velocity vector. The orbital shape
+and angular momentum change, but the bound/unbound classification does not because the
+specific energy is unchanged.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-7</div><h4>Numerical Convergence</h4>
+<p>Reduce <code>dt0</code> and tighten <code>eps1</code> and <code>eps2</code>. Compare the
+period, energy drift, angular-momentum drift, and one-revolution closure residuals rather than
+judging accuracy from the orbit plot alone.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-8</div><h4>Repeat Several Revolutions</h4>
+<p>Set <code>maxOrbits=2</code> or 5 and examine whether successive numerical ellipses lie on
+top of one another. This makes accumulated integration error visible.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-9</div><h4>Approximate Moon Around a Fixed Earth</h4>
+<p>Set \(GM_\oplus\approx3.9860\times10^{14}\ {\rm m^3\,s^{-2}}\),
+<code>xInit=3.626e8</code> m and <code>vyInit=1082</code> m/s. The fixed-Earth test-particle
+model implied by these numbers has a Kepler period of about <strong>27.8 days</strong>.
+The real Earth-Moon relative orbit is not exactly this model because the Moon's mass is not negligible.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-10</div><h4>Point-Mass Radial Infall</h4>
+<p>Give the particle nearly zero angular momentum and an inward velocity. Observe the
+termination near the mathematical \(r=0\) singularity. Do not interpret the numerical guard
+radius as the physical surface of the central body.</p></div>
+</div>
+</section>
+<!-- ============================================================
      RESTORE TO DEFAULTS CALLOUT
      ============================================================ -->
-
 <section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
-  <div style="
+<div style="
     border: 1.5px solid #b5811a;
     border-left: 5px solid #b5811a;
     border-radius: 6px;
@@ -1078,12 +711,11 @@ plot_orbit(result, output=...)</div>
     gap: 1em;
     align-items: flex-start;
   ">
-    <!-- Icon -->
-    <div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
-
-    <!-- Content -->
-    <div>
-      <div style="
+<!-- Icon -->
+<div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
+<!-- Content -->
+<div>
+<div style="
         font-weight: 700;
         font-size: 0.95em;
         color: #7b2d00;
@@ -1091,106 +723,71 @@ plot_orbit(result, output=...)</div>
         text-transform: uppercase;
         letter-spacing: 0.04em;
       ">Restoring Default Parameter Values</div>
-
-      <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
+<p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
         After experimenting with parameter values in <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>,
         you can restore the originals using any of the following methods:
       </p>
-
-      <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
-        <li>
-          <strong>Same session:</strong>
+<ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
+<li>
+<strong>Same session:</strong>
           Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
           (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
           (macOS) repeatedly in PyCharm to undo your edits.
         </li>
-        <li>
-          <strong>After reopening PyCharm:</strong>
+<li>
+<strong>After reopening PyCharm:</strong>
           Right-click <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
           in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
         </li>
-        <li>
-          <strong>Full reset:</strong>
+<li>
+<strong>Full reset:</strong>
           Re-download the ZIP from
-          <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank"
-             style="color:#7b2d00; text-decoration:underline;">
+          <a href="https://github.com/tomyee3-org/GFTGU-Programs" style="color:#7b2d00; text-decoration:underline;" target="_blank">
             github.com/tomyee3-org/GFTGU-Programs
           </a>
           and replace this program's folder with the fresh copy.
         </li>
-      </ul>
-
-      <p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
+</ul>
+<p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
         For step-by-step instructions on all four restore methods, see
-        <strong>Section&nbsp;10</strong> of the
+        <strong>Section 10</strong> of the
         <em>GFTGU Python Setup Guide</em>.
       </p>
-    </div>
-  </div>
+</div>
+</div>
 </section>
-
 <!-- ============================================================
      END RESTORE TO DEFAULTS CALLOUT
      ============================================================ -->
-
-  
-  <!-- ── Related Programs ── -->
-  <section id="related">
-    <h2>Related Programs</h2>
-    <ul class="related-list">
-      <li>
-        <strong>Binary</strong> —
-        Extends Orbit to the full two-body problem where both bodies orbit their common
-        centre of mass.  Uses the same predictor-corrector integration but treats two
-        mutually attracting bodies.
-      </li>
-      <li>
-        <strong>RelativisticOrbit</strong> —
-        Adds the leading-order general-relativistic (Schwarzschild) correction term to the
-        Newtonian acceleration.  Produces the famous perihelion precession absent from this
-        Newtonian version.
-      </li>
-      <li>
-        <strong>SphereGravity</strong> —
-        Uses the same gravitational acceleration law to verify the shell theorem: a uniform
-        spherical shell exerts no net force on a particle inside it and acts like a point
-        mass on a particle outside.
-      </li>
-    </ul>
-  </section>
-
-  <!-- ── License ── -->
-  <section id="license">
-    <h2>License</h2>
-    <p>
-      This Python port is derived from the original Java programs by
-      <strong>Bernard Schutz</strong> accompanying
-      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
-      The port is distributed under the
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
-         International (CC BY-NC-SA 4.0)</a> license.
-    </p>
-    <p>
-      You are free to share and adapt the material for non-commercial purposes, provided
-      you give appropriate credit and distribute any adaptations under the same license.
-    </p>
-  </section>
-
+<!-- ── Related Programs ── -->
+<section id="related">
+<h2>Related Programs</h2>
+<ul class="related-list">
+<li><strong>EarthOrbit</strong> — introduces numerical projectile/orbital integration before the full inverse-square central force.</li>
+<li><strong>Binary</strong> — removes the fixed-central-mass approximation and lets two bodies move around their common center of mass.</li>
+<li><strong>MercPert</strong> — restricted three-body Newtonian perturbations.</li>
+<li><strong>RelativisticOrbit</strong> — uses a proper-time form of the equatorial Schwarzschild geodesic equation to explore relativistic precession and strong-field motion; it is not merely a generic “leading-order correction” switch applied to this Newtonian solver.</li>
+</ul>
+</section>
+<!-- ── License ── -->
+<section id="license">
+<h2>License</h2>
+<p>This software is based on the programs by <strong>Bernard Schutz</strong> accompanying
+<em>Gravity from the Ground Up</em> (Cambridge University Press, 2003) and is distributed
+under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a>
+license.</p>
+</section>
 </main><!-- /main -->
-
 <!-- ══════════════════════════════════════════════
      FOOTER
 ═══════════════════════════════════════════════ -->
 <footer>
-  <em>Gravity from the Ground Up</em> — Python Programs ·
-  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
-  Python port © 2024–2026 Thomas Yee ·
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
+<em>Gravity from the Ground Up</em> — Python Programs ·
+Bernard Schutz, Cambridge University Press ·
+<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
 </footer>
-
 </div><!-- /page-wrap -->
-
 <!-- ── Sidebar active-link tracking ── -->
 <script>
   (function () {
@@ -1207,6 +804,5 @@ plot_orbit(result, output=...)</div>
     document.querySelectorAll('main section[id]').forEach(s => observer.observe(s));
   })();
 </script>
-
 </body>
 </html>
