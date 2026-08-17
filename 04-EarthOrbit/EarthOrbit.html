@@ -463,18 +463,21 @@
       <strong>EarthOrbit</strong> is a numerical realisation of Newton's Cannon — the thought
       experiment by which Isaac Newton first explained orbital motion in the <em>Principia</em>
       (1687). A projectile is launched horizontally from a tower high above Earth's surface.
-      If the launch speed is too low, the trajectory curves back to the ground. At exactly the
-      right speed the curvature of the path matches the curvature of Earth and the projectile
-      orbits indefinitely. Above that speed the orbit becomes an ellipse; above the escape speed
-      it becomes a hyperbola and the projectile leaves Earth permanently.
+      In the physical inverse-square version of the thought experiment, low launch speeds produce
+      impact arcs, the circular speed gives a circular orbit, speeds between circular and escape
+      give ellipses, and speeds at or above escape produce open trajectories. The default
+      <strong>EarthOrbit</strong> calculation instead follows the near-surface approximation used
+      for this exercise: gravity has constant magnitude \(g\) while its direction continually
+      points toward Earth's centre.
     </p>
     <p>
       The program integrates the projectile's two-dimensional trajectory using a
       fixed-timestep, averaged-velocity algorithm, plotting
       the result against a reference circle showing Earth's surface. The default force law also
       uses a constant-magnitude-\(g\) model; an optional
-      <code>"inverse_square"</code> extension is provided for comparison. All the usual launch
-      parameters are set in <code>main.py</code>.
+      <code>"inverse_square"</code> extension is provided for realistic higher-altitude,
+      Keplerian, and escape experiments. The default model is best used within a few kilometres
+      of Earth's surface. All the usual launch parameters are set in <code>main.py</code>.
     </p>
   </section>
 
@@ -515,8 +518,9 @@
       inverse-square law and becomes increasingly unrealistic as the orbit ranges far from
       Earth's surface.
       <br><br>
-      Bertrand's theorem states that the inverse-square and isotropic harmonic-oscillator
-      central forces are the only such force laws for which <em>all</em> bounded orbits are
+      A broader result from classical mechanics, Bertrand's theorem, states that the inverse-square
+      and isotropic harmonic-oscillator central forces are the only such force laws for which
+      <em>all</em> bounded orbits are
       closed. Under constant-magnitude central force, non-circular bounded trajectories
       generally precess and form rosette patterns rather than Keplerian ellipses. The circular
       orbit remains a special closed case.
@@ -546,7 +550,7 @@
       The acceleration direction is always toward the centre.
     </p>
 
-    <h3>Circular and Escape Speeds</h3>
+    <h3>Circular and Escape Speeds for the Inverse-Square Law</h3>
     <p>
       At orbital radius \(r = R_\oplus + h\):
     </p>
@@ -572,13 +576,13 @@
           <td>300 m (default h0)</td>
           <td>6 378 500</td>
           <td>≈ 7 906</td>
-          <td>≈ 11 182</td>
+          <td>≈ 11 181</td>
         </tr>
         <tr>
           <td>300 km (LEO)</td>
           <td>6 678 200</td>
-          <td>≈ 7 730</td>
-          <td>≈ 10 931</td>
+          <td>≈ 7 726</td>
+          <td>≈ 10 927</td>
         </tr>
         <tr>
           <td>35 786 km (GEO)</td>
@@ -691,16 +695,20 @@
       <li>the step counter reaches <code>maxSteps</code> — the budget is exhausted.</li>
     </ul>
     <p>
-      The trajectory arrays are trimmed to the number of steps actually taken before being
-      returned.
+      The trajectory arrays are trimmed to the number of stored points actually produced before
+      being returned. If the projectile hits Earth, the final plotted point may lie slightly below
+      the surface circle because the driver stops after detecting \(r &lt; R_\oplus\); it does not
+      interpolate the exact surface-crossing point between timesteps.
     </p>
 
     <div class="note">
       <strong>Choosing dt and maxSteps:</strong>
       At the default <code>dt = 0.4</code> s and launch speed ≈ 7 900 m s<sup>−1</sup>,
-      one near-surface revolution takes roughly 5 060 s, requiring about 12 650 steps.
-      The default <code>maxSteps = 15 000</code> therefore covers slightly more than one
-      revolution if the projectile does not hit Earth first. For longer-period orbits increase
+      one near-surface revolution takes roughly 5 070 s, requiring about 12 673 integration
+      updates. <code>maxSteps</code> counts stored trajectory points, including the initial point,
+      so the loop can perform at most <code>maxSteps - 1</code> updates. The default
+      <code>maxSteps = 15 000</code> therefore covers slightly more than one revolution if the
+      projectile does not hit Earth first. For longer-period orbits increase
       <code>maxSteps</code>; for better numerical accuracy decrease <code>dt</code> and increase
       <code>maxSteps</code> so the desired simulated duration is retained.
     </div>
@@ -880,10 +888,11 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
           <td class="pdefault">15000</td>
           <td>—</td>
           <td>
-            Maximum number of integration steps. At <code>dt = 0.4</code> s this
-            covers 6 000 s of simulated time — just over one orbital period at 300 m
-            altitude (\(T \approx 5\,060\) s). Increase for longer simulations or
-            higher orbits with longer periods.
+            Maximum number of stored trajectory points, including the initial position. The loop
+            can therefore perform at most <code>maxSteps - 1</code> integration updates. At
+            <code>dt = 0.4</code> s the default covers about 6 000 s of simulated time — just over
+            one orbital period at 300 m altitude (\(T \approx 5\,070\) s). Increase for longer
+            simulations or higher orbits with longer periods.
           </td>
         </tr>
         <tr>
@@ -918,7 +927,16 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
       <code>h0</code> is in <em>metres</em>. Setting <code>h0 = 300</code> gives an altitude
       of 300 m (just above the surface), not 300 km. To simulate a realistic low-Earth orbit
       at the altitude of the International Space Station, use <code>h0 = 408_000</code>
-      (408 km = 408 000 m) with <code>uInit ≈ 7\,670</code> m s<sup>−1</sup> (tangential).
+      (408 km = 408 000 m) with <code>uInit ≈ 7\,665</code> m s<sup>−1</sup> (tangential)
+      when using <code>force_law="inverse_square"</code>.
+    </div>
+
+    <div class="note">
+      <strong>Accepted parameter values:</strong>
+      <code>h0</code> must be non-negative, <code>dt</code> must be positive,
+      <code>maxSteps</code> must be an integer of at least 2, and the altitude and velocity values
+      must be finite numbers. An unrecognised <code>force_law</code> also produces a clear
+      <code>ValueError</code> rather than a misleading plot.
     </div>
   </section>
 
@@ -969,9 +987,11 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
         <p>
           This experiment sets up a purely tangential launch at 300 m
           altitude. Start at 7 900 m s<sup>−1</sup> and increase toward 7 906 m s<sup>−1</sup>
-          until the path visually follows Earth's surface for a full revolution. Compare with
-          \(v_c=\sqrt{k/r}\). At this altitude the two force laws have nearly the same circular
-          speed. Remember that visual agreement on a whole-Earth plot is a pedagogical test,
+          until the path visually follows Earth's surface for a full revolution. For the default
+          constant-magnitude force, the exact circular-speed condition is \(v_c=\sqrt{gr}\).
+          The inverse-square extension gives \(v_c=\sqrt{k/r}\). At 300 m altitude the two values
+          differ by less than 0.4 m s<sup>−1</sup>, so the same scan around 7 906 m s<sup>−1</sup>
+          works for this near-surface example. Remember that visual agreement on a whole-Earth plot is a pedagogical test,
           not a precision measurement; reduce <code>dt</code> to examine numerical error.
         </p>
         <div class="ep">h0=300.0, vInit=0.0
@@ -1013,7 +1033,7 @@ force_law="inverse_square"</div>
         <div class="ec-num">EXP-4</div>
         <h4>Approach the Escape Speed</h4>
         <p>
-          At 300 km altitude, \(v_e \approx 10\,931\) m s<sup>−1</sup>. Set
+          At 300 km altitude, \(v_e \approx 10\,927\) m s<sup>−1</sup>. Set
           <code>uInit</code> just below this value and watch the orbit open to a very
           elongated ellipse. At or above \(v_e\) the trajectory never returns.
           <strong>Requires <code>force_law="inverse_square"</code></strong> — escape
@@ -1035,6 +1055,8 @@ force_law="inverse_square"</div>
           speed close to the local circular speed but give it a radial component. The orbit
           is no longer circular; its orientation and eccentricity change even though the
           total launch speed is almost unchanged.
+          <strong>Requires <code>force_law="inverse_square"</code></strong> for the intended
+          Keplerian interpretation.
         </p>
         <div class="ep">h0=1_000_000.0
 uInit=7307.0, vInit=800.0  # |v|≈7351 m/s ≈ local v_c
@@ -1071,6 +1093,7 @@ force_law="inverse_square"</div>
           surface; <code>ts</code> contains the elapsed times; and <code>us</code> and
           <code>vs</code> are the x- and y-components of the projectile's velocity.
           For this experiment you need only <code>xs</code>, <code>ys</code>, and <code>ts</code>.
+          <strong>Requires <code>force_law="inverse_square"</code></strong> to test Kepler's third law.
         </p>
         <p>
           The code below calculates the projectile's angular position around Earth at each
@@ -1120,7 +1143,9 @@ force_law="inverse_square"</div>
           <code>dt</code> and increase <code>maxSteps</code> enough to keep the same simulated
           duration. The energy error should decrease as the timestep is reduced.
         </p>
-        <div class="ep">xs, ys, xEarth, yEarth, ts, us, vs = run_earth_orbit(
+        <div class="ep">from physics_earthorbit import K_APPROX, G_SURFACE
+
+xs, ys, xEarth, yEarth, ts, us, vs = run_earth_orbit(
     ..., return_diagnostics=True)
 
 # xEarth and yEarth are not needed for this calculation.
@@ -1209,6 +1234,12 @@ speed_squared = us**2 + vs**2
   <section id="related">
     <h2>Related Programs</h2>
     <ul class="related-list">
+      <li>
+        <strong>CannonTrajectory</strong> — the simpler near-surface projectile calculation on
+        which EarthOrbit builds. EarthOrbit adds the essential new feature that the direction of
+        gravitational acceleration changes with position so that it always points toward Earth's
+        centre; the underlying mathematics is developed in Investigations 4.1 and 4.2.
+      </li>
       <li>
         <strong>Orbit</strong> — the general planetary orbit program (Chapter 4). Uses a
         predictor-corrector scheme with adaptive timestep rather than EarthOrbit's simple
