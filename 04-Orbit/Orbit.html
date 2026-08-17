@@ -423,6 +423,7 @@
 <nav id="sidebar">
 <div class="nav-label">Overview</div>
 <a href="#description">Description</a>
+<a href="#using">How to Use</a>
 <a href="#background">Physical Background</a>
 <div class="nav-label">Mathematics</div>
 <a href="#equations">Governing Equations</a>
@@ -451,10 +452,22 @@ with an adaptive predictor-corrector integrator.</p>
 <p>The supplied defaults approximate Mercury at perihelion. Five display modes show the
 x-y orbit, velocity hodograph, position versus time, velocity versus time, or specific
 kinetic/potential/total energy.</p>
-<p>The revised solver retains Schutz's pedagogical predictor-corrector approach while making
-the accuracy controls more robust: rejected steps may shrink, successful steps can recover
-toward the user's maximum timestep, unconverged corrector iterations are retried, and complete
-revolutions are measured from accumulated azimuth rather than hard-coded half/full-orbit flags.</p>
+<p>The solver uses an adaptive predictor-corrector method to control numerical error while
+following the orbit. Rejected steps may shrink, successful steps can recover toward the user's
+maximum timestep, and complete revolutions are measured by accumulating the azimuthal angle
+traveled. This works for clockwise or counter-clockwise motion starting from any direction.</p>
+</section>
+<!-- ── How to Use ── -->
+<section id="using">
+<h2>How to Use</h2>
+<ol>
+<li>Open <code>main.py</code> and edit the initial position, velocity, numerical controls, or <code>output</code> mode.</li>
+<li>Run <code>main.py</code>.</li>
+<li>Read the console summary for the termination reason and numerical-accuracy diagnostics.</li>
+<li>Inspect the selected plot. Try another output mode or change one parameter at a time for comparison.</li>
+</ol>
+<p>The parameter <code>k</code> is the central gravitational parameter <code>GM</code>, in
+m<sup>3</sup> s<sup>−2</sup>. Enter a gravitational parameter, not a mass in kilograms.</p>
 </section>
 <!-- ── Physical Background ── -->
 <section id="background">
@@ -484,8 +497,7 @@ bodies, replace <code>k</code> with the corresponding \(GM\).</p>
 <li>\(\mathcal E&gt;0\): hyperbolic escape trajectory.</li>
 </ul>
 <h3>Bertrand's Theorem</h3>
-<p>Inverse-square gravity has the remarkable property that every non-collision bound orbit is
-closed. Bertrand's theorem states that only two central-force families have the stronger
+<p>In this ideal fixed-center inverse-square model, every non-collision bound orbit is closed. Bertrand's theorem states that only two central-force families have the stronger
 property that <em>all</em> bounded orbits are closed: inverse-square gravity and the isotropic
 harmonic oscillator, whose restoring force is proportional to \(r\).</p>
 <h3>Kepler's Laws</h3>
@@ -540,9 +552,10 @@ is halved.</p>
 \mathbf r_n+\frac{\mathbf v_n+\mathbf v_{n+1}}{2}\Delta t.
 \]
 </div>
-<p>Successive corrected velocity vectors must agree to <code>eps2</code>. If ten corrector
-iterations do not converge, the complete step is rejected, \(\Delta t\) is halved, and the
-step is tried again.</p>
+<p>The corrector monitors the change in the estimated velocity increment over the timestep,
+scaled by the initial predicted increment. Successive correction estimates must agree to
+<code>eps2</code>. If ten corrector iterations do not converge, the complete step is rejected,
+\(\Delta t\) is halved, and the step is tried again.</p>
 <h3>Conserved Quantities</h3>
 <div class="eq-block"><div class="eq-label">Specific energy and angular momentum</div>
 \[
@@ -551,8 +564,9 @@ step is tried again.</p>
 h=xv_y-yv_x.
 \]
 </div>
-<p>The program reports the maximum fractional drift of both quantities. These provide
-independent numerical-accuracy checks.</p>
+<p>The program reports maximum fractional energy drift and, when the initial angular momentum
+is nonzero, maximum fractional angular-momentum drift. A fractional angular-momentum drift is
+not defined for exactly radial motion with zero initial angular momentum.</p>
 </section>
 <!-- ── Algorithm ── -->
 <section id="algorithm">
@@ -562,7 +576,7 @@ independent numerical-accuracy checks.</p>
 <li>Compute acceleration at the current position.</li>
 <li>Predict position and velocity at the end of the proposed timestep.</li>
 <li>Reject and halve the timestep if the acceleration-vector change exceeds <code>eps1</code>.</li>
-<li>Iterate the trapezoidal corrector until successive velocity estimates meet <code>eps2</code>.</li>
+<li>Iterate the trapezoidal corrector until successive estimates of the velocity increment meet <code>eps2</code>.</li>
 <li>If ten corrector passes fail, reject the entire step and retry at half the timestep.</li>
 <li>Commit the accepted state and record position, velocity, time, energy, and angular momentum.</li>
 <li>After a successful step, increase the working timestep by 10% toward the user's <code>dt0</code>, which is the maximum timestep.</li>
@@ -577,8 +591,9 @@ N_{\rm rev}=\frac{|\Delta\phi_{\rm accumulated}|}{2\pi}.
 </div>
 <p>This works for clockwise or counter-clockwise motion and for an arbitrary starting direction.
 <code>maxOrbits</code> may be 1, 1.5, 2, or another positive value. When the requested angular
-travel is crossed, the final state is interpolated to the requested azimuth rather than simply
-waiting for the next full timestep.</p>
+travel is crossed, the final plotted point is interpolated to the requested azimuth. Radius,
+velocity, and time are linearly interpolated across that final small step, so this endpoint is
+not a separately corrected integrator state.</p>
 <h3>Closure Diagnostics</h3>
 <p>Crossing the starting angular ray is not, by itself, proof that a numerical orbit has closed.
 For a run ending after an integral number of revolutions, the solver therefore also reports
@@ -603,10 +618,10 @@ specific_angular_momentum(...)</div></div>
 <div class="module-card"><div class="mc-role">Driver Layer</div><div class="mc-name">driver_orbit.py</div>
 <p>Implements adaptive predictor-corrector integration, timestep shrink/recovery, revolution
 counting, singularity protection, explicit termination reasons, and conservation/closure
-diagnostics. It always returns the complete history.</p>
+diagnostics. It returns the recorded history of accepted states.</p>
 <div class="sig">run_orbit(..., maxOrbits=1.0) -&gt; OrbitResult</div></div>
 <div class="module-card"><div class="mc-role">Plot Layer</div><div class="mc-name">plot_orbit.py</div>
-<p>Displays one of the five traditional Orbit views from the already-computed
+<p>Displays one of the five Orbit views from the already-computed
 <code>OrbitResult</code>. Orbit and hodograph plots use equal aspect ratios.</p>
 <div class="sig">plot_orbit(result, output="orbit")</div></div>
 <div class="module-card"><div class="mc-role">Entry Point</div><div class="mc-name">main.py</div>
@@ -626,16 +641,23 @@ plot_orbit(result, output=output)</div></div>
 <tr><td class="pname">yInit</td><td class="pdefault">0.0</td><td>m</td><td>Initial y-position.</td></tr>
 <tr><td class="pname">vxInit</td><td class="pdefault">0.0</td><td>m s⁻¹</td><td>Initial x-velocity.</td></tr>
 <tr><td class="pname">vyInit</td><td class="pdefault">58980.0</td><td>m s⁻¹</td><td>Initial y-velocity; default approximates Mercury's perihelion speed.</td></tr>
-<tr><td class="pname">k</td><td class="pdefault">1.3271244e20</td><td>m³ s⁻²</td><td>Central gravitational parameter \(GM\); default is the IAU nominal solar value.</td></tr>
+<tr><td class="pname">k</td><td class="pdefault">1.3271244e20</td><td>m³ s⁻²</td><td>Central gravitational parameter \(GM\), not the central mass in kg; default is the IAU nominal solar mass parameter.</td></tr>
 <tr><td class="pname">dt0</td><td class="pdefault">1e4</td><td>s</td><td>Maximum timestep. The working timestep can shrink and later recover toward this value.</td></tr>
 <tr><td class="pname">maxSteps</td><td class="pdefault">20000</td><td>—</td><td>Maximum number of accepted integration steps, excluding the initial state.</td></tr>
-<tr><td class="pname">maxOrbits</td><td class="pdefault">1.0</td><td>revolutions</td><td>Maximum accumulated azimuthal travel in units of \(2\pi\).</td></tr>
-<tr><td class="pname">eps1</td><td class="pdefault">0.05</td><td>—</td><td>Acceleration-vector change threshold for timestep rejection.</td></tr>
-<tr><td class="pname">eps2</td><td class="pdefault">1e-4</td><td>—</td><td>Convergence tolerance for successive corrected velocity vectors.</td></tr>
+<tr><td class="pname">maxOrbits</td><td class="pdefault">1.0</td><td>revolutions</td><td>Maximum accumulated azimuthal travel in units of \(2\pi\). For unbound or nearly radial trajectories this target may never be reached, so the run may instead stop at <code>maxSteps</code> or the singularity guard.</td></tr>
+<tr><td class="pname">eps1</td><td class="pdefault">0.05</td><td>—</td><td>Positive acceleration-vector change threshold for timestep rejection. Smaller values demand smaller timesteps.</td></tr>
+<tr><td class="pname">eps2</td><td class="pdefault">1e-4</td><td>—</td><td>Positive convergence tolerance for successive estimates of the velocity increment. Smaller values demand tighter corrector convergence.</td></tr>
 </tbody>
 </table>
 <p><code>output</code> is set separately in <code>main.py</code> and controls only the display,
 not the integration.</p>
+<div class="note"><strong>Valid numerical inputs.</strong> The initial position must not be at
+<code>r=0</code>; <code>k</code>, <code>dt0</code>, <code>eps1</code>, <code>eps2</code>, and
+<code>maxOrbits</code> must be positive; and <code>maxSteps</code> must be a positive integer.
+The two tolerances are independent and need not be ordered. For experiments on the numerical
+method, a large value such as 10 for <code>eps1</code> effectively prevents ordinary timestep
+rejection, while a similarly large <code>eps2</code> makes the corrector stop after its first
+correction rather than iterating further.</div>
 </section>
 <!-- ── Output Modes ── -->
 <section id="output">
@@ -651,8 +673,11 @@ not the integration.</p>
 </tbody>
 </table>
 <p>The console summary additionally reports termination reason, elapsed simulated time,
-revolution count, maximum fractional energy drift, maximum fractional angular-momentum drift,
-and—when appropriate—one-revolution closure residuals.</p>
+revolution count, maximum fractional energy drift, and—when defined—maximum fractional
+angular-momentum drift. Closure residuals are reported when the requested endpoint is an
+integral number of revolutions.</p>
+<p><strong>Specific energy</strong> means energy per unit mass of the orbiting body. The mass of
+the test particle is therefore not needed.</p>
 </section>
 <!-- ── Suggested Experiments ── -->
 <section id="experiments">
@@ -681,11 +706,14 @@ and angular momentum change, but the bound/unbound classification does not becau
 specific energy is unchanged.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-7</div><h4>Numerical Convergence</h4>
 <p>Reduce <code>dt0</code> and tighten <code>eps1</code> and <code>eps2</code>. Compare the
-period, energy drift, angular-momentum drift, and one-revolution closure residuals rather than
-judging accuracy from the orbit plot alone.</p></div>
+period, energy drift, angular-momentum drift, and closure residuals rather than judging
+accuracy from the orbit plot alone. You can also make either tolerance deliberately large to
+see what happens when that accuracy control is effectively relaxed.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-8</div><h4>Repeat Several Revolutions</h4>
 <p>Set <code>maxOrbits=2</code> or 5 and examine whether successive numerical ellipses lie on
-top of one another. This makes accumulated integration error visible.</p></div>
+top of one another. This makes accumulated integration error visible. Fractional values such
+as 1.5 are also allowed, but closure residuals are withheld because the final state should not
+then coincide with the starting state.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-9</div><h4>Approximate Moon Around a Fixed Earth</h4>
 <p>Set \(GM_\oplus\approx3.9860\times10^{14}\ {\rm m^3\,s^{-2}}\),
 <code>xInit=3.626e8</code> m and <code>vyInit=1082</code> m/s. The fixed-Earth test-particle
@@ -766,7 +794,7 @@ radius as the physical surface of the central body.</p></div>
 <li><strong>EarthOrbit</strong> — introduces numerical projectile/orbital integration before the full inverse-square central force.</li>
 <li><strong>Binary</strong> — removes the fixed-central-mass approximation and lets two bodies move around their common center of mass.</li>
 <li><strong>MercPert</strong> — restricted three-body Newtonian perturbations.</li>
-<li><strong>RelativisticOrbit</strong> — uses a proper-time form of the equatorial Schwarzschild geodesic equation to explore relativistic precession and strong-field motion; it is not merely a generic “leading-order correction” switch applied to this Newtonian solver.</li>
+<li><strong>RelativisticOrbit</strong> — extends the orbital investigations into relativistic gravity.</li>
 </ul>
 </section>
 <!-- ── License ── -->
