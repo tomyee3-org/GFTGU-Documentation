@@ -388,181 +388,116 @@
   <section id="overview">
     <h2>Overview</h2>
     <p>
-      <strong>RelativisticOrbit</strong> integrates the trajectory of a test
-      particle — a planet or spacecraft of negligible mass — moving in the
-      gravitational field of a central body in the context of Einstein's
-      general theory of relativity. The central body is modelled as a
-      non-rotating, spherically symmetric mass (a <em>Schwarzschild</em>
-      black hole or compact star), and the orbit is computed in the
-      equatorial plane of the Schwarzschild geometry.
+      <strong>RelativisticOrbit</strong> integrates the equatorial trajectory of
+      a negligible-mass test particle around a one-solar-mass, non-rotating,
+      spherically symmetric source. In <code>model="schwarzschild"</code> the
+      program uses an exact Newtonian-looking rewriting of the spatial
+      Schwarzschild geodesic equations when the independent variable is the
+      particle's own proper time \(\tau\). A <code>"newtonian"</code> mode is
+      provided for direct comparison.
     </p>
     <p>
-      Unlike the purely Newtonian
-      <a href="https://github.com/tomyee3-org/GFTGU-Documentation/tree/main/13-Binary">Binary</a>
-      and
-      <a href="https://github.com/tomyee3-org/GFTGU-Documentation/tree/main/13-MercPert">MercPert</a>
-      programs, RelativisticOrbit incorporates the leading post-Newtonian
-      correction to the radial force — a term proportional to \(1/r^4\) —
-      which causes an otherwise elliptical orbit to precess. This precession
-      is the famous general-relativistic prediction confirmed for Mercury in
-      1915, one of the first observational tests of general relativity.
+      The displayed curve uses
+      \(x=r\cos\phi,\ y=r\sin\phi\), where \(r\) is Schwarzschild areal radius
+      and \(\phi\) is azimuth. These are convenient <em>diagram coordinates</em>,
+      not global Cartesian coordinates of a flat spatial geometry.
     </p>
     <p>
-      The program uses the same predictor–corrector integration scheme as
-      Binary and MercPert. The user specifies the initial position and
-      velocity of the test particle, the number of orbits to simulate, and
-      the accuracy tolerances, and the program produces an orbital plot in
-      the \(xy\)-plane with the Schwarzschild horizon drawn as a reference
-      circle.
+      Relativistic bound orbits generally precess rather than close. The program
+      records periapsides automatically, estimates the mean apsidal advance, and
+      reports numerical drift in the conserved specific angular momentum and in
+      the effective energy integral of the equation being integrated.
     </p>
     <div class="note">
-      <strong>Scope:</strong> The GR correction used here is the effective
-      post-Newtonian acceleration derived from the Schwarzschild metric.
-      It is exact for equatorial geodesics in Schwarzschild geometry — not
-      a perturbative approximation — but it treats the central body as a
-      point mass and neglects radiation reaction, frame-dragging
-      (Kerr rotation), and any tidal or finite-size effects.
+      <strong>Free fall:</strong> The quantity called “acceleration” in the code
+      is \(d^2(x,y)/d\tau^2\), a coordinate second derivative used to integrate
+      the orbital diagram. A freely falling test particle has zero physical
+      proper acceleration.
     </div>
   </section>
 
   <!-- ─── Quick Start ─── -->
   <section id="quickstart">
     <h2>Quick Start</h2>
-
     <h3>Requirements</h3>
     <p>Python 3.9 or later with <code>matplotlib</code>:</p>
     <pre>pip install matplotlib</pre>
 
-    <h3>Running the Program</h3>
-    <p>
-    </p>
-    <pre>from driver_relativistic_orbit import integrate_relativistic_orbit, RelativisticOrbitParams
-from plot_relativistic_orbit import plot_relativistic_orbit
-
-params = RelativisticOrbitParams(
-    x_init     = 1.5e4,     # initial x-position (m);  start on the x-axis
-    u_init     = 1.2e8,     # initial y-velocity  (m/s); > 0 → counter-clockwise
-    dt         = 2.0e-6,    # initial time-step   (s)
-    max_steps  = 6_000,     # safety cap on total integration steps
-    max_orbits = 10,        # stop after this many complete orbits
-    eps1       = 0.05,      # fractional acceleration change allowed per step
-    eps2       = 1.0e-4,    # corrector-loop convergence tolerance
-)
-
-result = integrate_relativistic_orbit(params)
-if result.fell_into_hole:
-    print(f"Particle crossed the Schwarzschild horizon after "
-          f"{result.final_step} steps.")
-else:
-    print(f"Integration complete: {result.n_orbits:.0f} orbit(s) "
-          f"in {result.final_step} steps.")
-
-plot_relativistic_orbit(result)</pre>
-
+    <h3>Running</h3>
     <pre>cd GFTGU-Programs/RelativisticOrbit
 python main.py</pre>
 
     <p>
-      The Schwarzschild radius for one solar mass is
-      \(r_g = 2GM_\odot/c^2 \approx 2{,}953\,\mathrm{m}\). The default
-      configuration places the test particle at only
-      \(1.5\times10^{4}\,\mathrm{m}\) from the central mass
-      (\(M = M_\odot\)) — about \(5\,r_g\), deep in the strong-field
-      regime, orbiting between roughly \(5\,r_g\) and \(8\,r_g\) over the
-      run. This is deliberately chosen to make the precession dramatic and
-      immediately visible (a tightly wound, rosette-like path) rather than
-      the small, Mercury-scale precession a weak-field orbit would show;
-      see <a href="#scenarios">Suggested Scenarios</a> below for a
-      weak-field comparison case.
+      The default starts at \(r=1.5\times10^4\) m with
+      \(dy/d\tau=1.2\times10^8\) m/s. Here \(dy/d\tau\) is a derivative with
+      respect to the particle's proper time; it is <strong>not</strong> the
+      local physical speed measured by a stationary observer.
+    </p>
+    <p>
+      After the run, the console reports why the integration stopped, accepted
+      steps, accumulated azimuthal revolutions, detected periapsides, and
+      conservation drift. If at least two periapsides are found, it also reports
+      the mean periapsis advance per radial period.
     </p>
 
-    <h3>Adjusting the Simulation</h3>
-    <p>All parameters are set in <code>RelativisticOrbitParams</code> in <code>main.py</code>:</p>
+    <h3>Main user controls</h3>
     <ul style="margin: 0 0 14px 28px; line-height: 2.1;">
-      <li><code>x_init</code> — initial x-position (m); particle starts on the x-axis</li>
-      <li><code>u_init</code> — initial y-velocity (m&nbsp;s<sup>−1</sup>); positive gives counter-clockwise orbit</li>
-      <li><code>dt</code> — initial timestep (s); halved automatically when accuracy demands it</li>
-      <li><code>max_steps</code> — safety cap on total integration steps</li>
-      <li><code>max_orbits</code> — stop after this many complete orbits</li>
-      <li><code>eps1</code> — vector-norm fractional acceleration change allowed per step</li>
-      <li><code>eps2</code> — corrector-loop convergence tolerance on position change</li>
+      <li><code>x_init</code> — starting areal radius on the +x diagram axis</li>
+      <li><code>u_init</code> — initial \(dy/d\tau\)</li>
+      <li><code>dt</code> — maximum proper-time integration step</li>
+      <li><code>max_steps</code> — maximum accepted steps</li>
+      <li><code>max_orbits</code> — maximum accumulated azimuthal revolutions</li>
+      <li><code>eps1</code>, <code>eps2</code> — timestep and corrector tolerances</li>
+      <li><code>model</code> — <code>"schwarzschild"</code> or <code>"newtonian"</code></li>
+      <li><code>show_isco</code> — show/hide the true Schwarzschild ISCO circle</li>
+      <li><code>show_periapsides</code> — mark automatically detected periapsides</li>
     </ul>
-    <p>No other file needs editing for typical use.</p>
-
   </section>
 
   <!-- ─── Program Files ─── -->
   <section id="modules">
     <h2>Program Files</h2>
     <div class="mc">
-
       <div class="mc-card">
         <div class="mc-name">main.py</div>
         <div class="mc-role">Entry Point &amp; Configuration</div>
         <p>
-          Defines the <code>RelativisticOrbitParams</code> instance with all
-          initial conditions and run parameters, calls
-          <code>integrate_relativistic_orbit(params)</code> to integrate the
-          trajectory, and passes the result to
-          <code>plot_relativistic_orbit(result)</code> for display. Prints a
-          one-line summary reporting either the number of completed orbits or
-          a horizon-crossing notification. All user-adjustable settings live
-          here; no other file needs editing for typical use.
+          Holds the user-editable initial conditions, numerical tolerances,
+          Schwarzschild/Newtonian switch, and plotting options. It prints the
+          run summary and precession/conservation diagnostics.
         </p>
       </div>
-
       <div class="mc-card">
         <div class="mc-name">physics_relativistic_orbit.py</div>
         <div class="mc-role">Physics Engine</div>
         <p>
-          Defines the physical constants
-          \(GM_\odot = 1.327\times10^{20}\,\mathrm{m^3\,s^{-2}}\),
-          \(c^2 = 8.98755\times10^{16}\,\mathrm{m^2\,s^{-2}}\), and
-          \(r_g = 2GM_\odot/c^2\) (the Schwarzschild radius for one solar
-          mass). Provides two functions:
-          <code>kepler_constants(x_init, u_init)</code> computes the
-          orbital constants \(K\) and \(Q\) from the initial conditions;
-          <code>schwarzschild_acceleration(x, y, K, Q)</code> evaluates
-          the general-relativistic effective acceleration at the current
-          position.
+          Defines the nominal solar gravitational parameter, exact SI speed of
+          light, Schwarzschild horizon/ISCO/photon-orbit radii, the orbital
+          acceleration, circular-orbit proper-time speed, and conserved-quantity
+          diagnostic functions.
         </p>
       </div>
-
       <div class="mc-card">
         <div class="mc-name">driver_relativistic_orbit.py</div>
-        <div class="mc-role">Integration Driver</div>
+        <div class="mc-role">Adaptive Integrator</div>
         <p>
-          Defines the <code>RelativisticOrbitParams</code> and
-          <code>RelativisticOrbitResult</code> dataclasses and the function
-          <code>integrate_relativistic_orbit(params)</code>. The driver integrates
-          the orbit using the same predictor–corrector scheme as Binary and
-          MercPert, with adaptive timestep halving on the acceleration-change
-          test (\(\varepsilon_1\)) and corrector convergence on the
-          position-change test (\(\varepsilon_2\)). It counts completed
-          orbits by tracking sign changes in \(y\), stops when
-          <code>max_orbits</code> is reached or the particle crosses inside
-          the Schwarzschild horizon, and returns the full trajectory plus a
-          circle of horizon points for the plot.
+          Validates inputs, advances the orbit with an iterated
+          predictor-corrector, rejects unconverged steps, allows timestep
+          recovery, unwraps azimuth for revolution counting, interpolates the
+          first horizon crossing, detects periapsides, and records the
+          termination reason.
         </p>
       </div>
-
       <div class="mc-card">
         <div class="mc-name">plot_relativistic_orbit.py</div>
-        <div class="mc-role">Visualisation</div>
+        <div class="mc-role">Plotting</div>
         <p>
-          Provides <code>plot_relativistic_orbit(result)</code>, which
-          renders a matplotlib figure showing the orbital trajectory in blue
-          and the Schwarzschild horizon as a red filled circle at the origin.
-          Because the true horizon radius (~2,953&nbsp;m) is many orders of
-          magnitude smaller than a typical orbital radius, the circle is drawn
-          with <code>radius = max(HORIZON_RADIUS, 2_pixels_in_data_units)</code>
-          so it is always visible regardless of zoom level. The legend is
-          placed below the axes area so it never obscures the trajectory.
-          Equal aspect ratio is enforced.
+          Draws the orbital diagram with equal spatial scales. The horizon is
+          always shown at its true coordinate radius; a separate marker denotes
+          the central mass. The ISCO and detected periapsides are optional.
         </p>
       </div>
-
-    </div><!-- .mc -->
+    </div>
   </section>
 
   <!-- ═══════════════════════════ PHYSICS ═══════════════════════════ -->
@@ -571,228 +506,166 @@ python main.py</pre>
   <section id="schwarzschild">
     <h2>Schwarzschild Geometry</h2>
     <p>
-      The Schwarzschild metric describes the curved spacetime outside any
-      spherically symmetric, non-rotating mass \(M\). In Schwarzschild
-      coordinates \((t, r, \theta, \phi)\) with \(\theta = \pi/2\)
-      (equatorial plane), the metric reads:
+      Outside a non-rotating spherical mass, the vacuum geometry is the
+      Schwarzschild spacetime. For the one-solar-mass source used here,
     </p>
     <div class="eq">
-      <span class="eq-label">(1)</span>
       \[
-        ds^2 \;=\; -\!\left(1 - \frac{r_g}{r}\right)c^2\,dt^2
-                    + \left(1 - \frac{r_g}{r}\right)^{-1}\!dr^2
-                    + r^2\,d\phi^2
+        r_s=\frac{2GM_\odot}{c^2}\approx 2.953\times10^3\ {\rm m}.
       \]
     </div>
     <p>
-      where \(r_g = 2GM/c^2\) is the Schwarzschild (gravitational) radius.
-      For one solar mass:
+      The program uses Schwarzschild areal radius \(r\): a sphere at coordinate
+      radius \(r\) has area \(4\pi r^2\). The orbital diagram then maps
+      \(r,\phi\) to \(x=r\cos\phi,\ y=r\sin\phi\) for visualization.
     </p>
-    <div class="eq">
-      <span class="eq-label">(2)</span>
-      \[
-        r_g \;=\; \frac{2\,GM_\odot}{c^2}
-              \;=\; \frac{2 \times 1.327\times10^{20}}{8.98755\times10^{16}}
-              \;\approx\; 2{,}953\;\mathrm{m}
-      \]
-    </div>
     <p>
-      The surface \(r = r_g\) is the <em>event horizon</em>: the boundary
-      beyond which no signal can escape to infinity. A test particle that
-      crosses inside \(r = r_g\) cannot return to the outer region.
+      Schwarzschild coordinate time is <em>not</em> the independent variable of
+      this program. The integration advances the particle's proper time
+      \(\tau\).
     </p>
-    <div class="note">
-      <strong>Coordinates vs. geometry:</strong> Schwarzschild coordinates
-      are singular at \(r = r_g\), but the physics is not — the event
-      horizon is a coordinate singularity, not a physical one. The program
-      detects horizon crossing by checking whether the particle's coordinate
-      radius \(r = \sqrt{x^2 + y^2}\) falls below <code>HORIZON_RADIUS</code>
-      and terminates the integration at that point.
-    </div>
   </section>
 
   <!-- ─── GR Effective Acceleration ─── -->
   <section id="gr-acceleration">
     <h2>General-Relativistic Effective Acceleration</h2>
     <p>
-      For a test particle moving in the equatorial plane of a Schwarzschild
-      black hole, the radial equation of motion derived from the geodesic
-      equations can be recast as an effective Newtonian-like force with a
-      correction term. In Cartesian coordinates \((x, y)\) with the central
-      mass at the origin, the GR effective acceleration is:
+      For equatorial timelike Schwarzschild geodesics, the spatial orbit can be
+      written in the Newtonian-looking proper-time form
     </p>
     <div class="eq">
-      <span class="eq-label">(3)</span>
       \[
-        \ddot{\mathbf{r}} \;=\;
-          -\frac{GM}{r^3}\left(1 + \frac{Q}{r^2}\right)\mathbf{r}
+        \frac{d^2\mathbf r}{d\tau^2}
+        =
+        -\frac{GM}{r^3}
+        \left(1+\frac{3h^2}{c^2r^2}\right)\mathbf r,
       \]
     </div>
     <p>
-      where \(r = \sqrt{x^2 + y^2}\) and \(Q\) is a constant determined by
-      the orbit's angular momentum (see <a href="#kepler-constants">below</a>).
-      In component form:
+      where \(h=r^2d\phi/d\tau\) is the conserved specific angular momentum.
+      The additional \(1/r^4\) radial-force term produces apsidal precession.
+      In weak fields it is often discussed as the leading relativistic
+      correction to Newtonian motion, but the equation used here is not merely
+      a truncated post-Newtonian force law: with proper time as parameter it is
+      an exact rewriting of the Schwarzschild spatial geodesic equation.
     </p>
-    <div class="eq">
-      <span class="eq-label">(4)</span>
-      \[
-        \ddot x \;=\; -\frac{GM}{r^3}\!\left(1 + \frac{Q}{r^2}\right)x,
-        \qquad
-        \ddot y \;=\; -\frac{GM}{r^3}\!\left(1 + \frac{Q}{r^2}\right)y
-      \]
+    <div class="note">
+      <strong>Coordinate acceleration:</strong>
+      \(d^2\mathbf r/d\tau^2\) should not be confused with an accelerometer
+      reading. The test particle is in free fall and has zero proper
+      acceleration.
     </div>
-    <p>
-      Comparing with the Newtonian acceleration
-      \(\ddot{\mathbf{r}} = -GM\mathbf{r}/r^3\), the GR correction is
-      the additional factor \(Q/r^2\). This correction is negligible when
-      \(r \gg \sqrt{Q}\) (the weak-field regime) but grows rapidly as the
-      particle approaches the central mass. At large \(r\) the orbit
-      approximates a Keplerian ellipse; close in, the correction causes
-      the orbit to precess.
-    </p>
-    <p>
-      This effective acceleration is implemented in
-      <code>schwarzschild_acceleration(x, y, K, Q)</code> in
-      <code>physics_relativistic_orbit.py</code> as:
-    </p>
-    <pre>r2     = x * x + y * y
-r      = math.sqrt(r2)
-r3     = r * r2
-factor = -GMSOLAR / r3 * (1.0 + Q / r2)
-ax     = factor * x
-ay     = factor * y</pre>
   </section>
 
   <!-- ─── Kepler Constants K and Q ─── -->
   <section id="kepler-constants">
-    <h2>The Orbital Constants K and Q</h2>
+    <h2>Angular-Momentum Constants</h2>
     <p>
-      The constant \(Q\) in the GR acceleration (eq. 3) is determined by the
-      specific angular momentum of the orbit. For a test particle starting
-      on the \(x\)-axis (\(y = 0\)) with initial transverse velocity
-      \(\dot y = v_y\) and initial radial position \(x = x_0\), the
-      specific angular momentum per unit mass is \(L = x_0\,v_y\).
-      The program uses a scaled version:
+      The initial conditions are \(x=x_0,\ y=0,\ dx/d\tau=0,\ dy/d\tau=u_0\).
+      Therefore the conserved specific angular momentum is
     </p>
     <div class="eq">
-      <span class="eq-label">(5)</span>
       \[
-        K \;=\; \frac{1}{2}\,x_0\,v_y
+        h=x_0u_0.
       \]
     </div>
     <p>
-      where the factor of \(\tfrac{1}{2}\) follows Schutz's convention
-      (half the specific angular momentum). The GR correction parameter is
-      then:
+      Schutz's original notation defined \(K=h/2\) and
+      \(Q=12K^2/c^2=3h^2/c^2\). The revised code uses \(h\) directly but the
+      physics is identical.
     </p>
-    <div class="eq">
-      <span class="eq-label">(6)</span>
-      \[
-        Q \;=\; \frac{12\,K^2}{c^2}
-      \]
-    </div>
     <p>
-      These are computed once at the start of the integration by
-      <code>kepler_constants(x_init, u_init)</code> and held fixed
-      for the entire run. The factor of 12 in equation (6) comes from
-      the Schwarzschild geodesic equation in the weak-field limit and
-      encodes the leading-order GR correction to Keplerian motion.
+      The driver independently recomputes
+      \(h=x\,dy/d\tau-y\,dx/d\tau\) along the numerical trajectory and reports
+      its maximum fractional drift as an accuracy diagnostic.
     </p>
-    <div class="note">
-      <strong>Physical interpretation of Q:</strong>
-      The characteristic length scale \(\sqrt{Q} = \sqrt{12}\,K/c\)
-      is the radius at which the GR correction term \(Q/r^2\) becomes
-      comparable to unity. Inside this radius the orbit deviates strongly
-      from a Keplerian ellipse. For a Mercury-like orbit
-      (\(x_0 \approx 4.6\times10^{10}\,\mathrm{m}\),
-      \(v_y \approx 5.90\times10^{4}\,\mathrm{m\,s^{-1}}\) at perihelion),
-      \(\sqrt{Q} \approx 1.57\times10^{7}\,\mathrm{m}\) — still over three
-      thousand times smaller than
-      Mercury's orbital radius of \(5.8\times10^{10}\,\mathrm{m}\) —
-      confirming that GR effects on Mercury are a small but measurable
-      perturbation.
-    </div>
   </section>
 
   <!-- ─── Orbital Precession ─── -->
   <section id="precession">
     <h2>Orbital Precession</h2>
     <p>
-      In Newtonian gravity the orbit of a test particle in a central
-      \(1/r^2\) force field is a closed ellipse that repeats exactly after
-      each period. The GR correction term \(Q/r^4\) in the radial force
-      breaks this closure: the ellipse rotates in its own plane by a small
-      angle \(\Delta\phi\) per orbit, known as the <em>perihelion precession</em>.
+      A bound Schwarzschild orbit generally has two different periods: the
+      azimuth can advance by \(2\pi\) before the particle has returned from one
+      periapsis to the next. The angular excess between successive periapsides
+      is the apsidal advance.
     </p>
     <p>
-      For a Schwarzschild geometry the exact formula for the precession per
-      orbit in the weak-field limit is:
+      RelativisticOrbit automatically looks for local minima of
+      \(r=\sqrt{x^2+y^2}\). If two or more periapsides are present, the console
+      reports
     </p>
     <div class="eq">
-      <span class="eq-label">(7)</span>
       \[
-        \Delta\phi \;=\; \frac{6\pi\,GM}{a(1-e^2)\,c^2}
+        \Delta\phi_{\rm advance}
+        =
+        |\phi_{p,n+1}-\phi_{p,n}|-2\pi .
       \]
     </div>
     <p>
-      where \(a\) is the semi-major axis and \(e\) is the eccentricity of
-      the unperturbed Keplerian ellipse. For Mercury,
-      \(\Delta\phi \approx 43^{\prime\prime}\) per century — one of the
-      first precision confirmations of general relativity.
+      In the weak-field limit this can be compared with the familiar
+      Schwarzschild approximation
     </p>
+    <div class="eq">
+      \[
+        \Delta\phi \approx
+        \frac{6\pi GM}{a(1-e^2)c^2}
+      \]
+    </div>
     <p>
-      RelativisticOrbit makes this precession directly visible: after even a
-      few orbits the aphelion point of the trajectory shifts measurably in the
-      orbital plot, rotating counter-clockwise with each pass.
+      for an orbit of semimajor axis \(a\) and eccentricity \(e\).
     </p>
     <div class="note">
-      <strong>Measuring precession numerically:</strong> Run the simulation
-      for many orbits (increase <code>max_orbits</code>) and compare the
-      angular position of successive perihelion passages (closest approach
-      points in the plot). The difference in angle per orbit gives the
-      numerical precession rate, which can be compared with equation (7)
-      evaluated for the chosen initial conditions.
+      <strong>Two different counters:</strong> <code>max_orbits</code> limits
+      accumulated <em>azimuthal revolutions</em>. The periapsis detector measures
+      <em>radial periods</em>. In a precessing orbit these are not identical.
     </div>
   </section>
 
   <!-- ─── Event Horizon ─── -->
   <section id="horizon">
-    <h2>Event Horizon and Plunge Orbits</h2>
+    <h2>Event Horizon, Circular Orbits, and the ISCO</h2>
     <p>
-      If the initial velocity is too low for a given orbital radius, or if the
-      orbit decays close to the central mass, the test particle crosses the
-      innermost stable circular orbit (ISCO) and plunges inside the
-      Schwarzschild horizon. In Schwarzschild geometry the ISCO radius is:
+      For a Schwarzschild source,
+      \(r_s=2GM/c^2\) is the horizon and
+      \(r_{\rm ISCO}=6GM/c^2=3r_s\) is the innermost
+      <em>stable</em> timelike circular orbit.
+    </p>
+    <p>
+      Timelike circular geodesics also exist in the interval
+      \(3GM/c^2&lt;r&lt;6GM/c^2\), but they are unstable. No timelike circular
+      geodesic exists at or below the photon-orbit radius \(3GM/c^2\).
+    </p>
+    <p>
+      For this program's proper-time initial derivative, the exact circular
+      value is
     </p>
     <div class="eq">
-      <span class="eq-label">(8)</span>
       \[
-        r_{\mathrm{ISCO}} \;=\; 3\,r_g \;=\; \frac{6\,GM}{c^2}
+        u_{\rm circular}
+        =
+        \sqrt{\frac{GM}{r-3GM/c^2}},
+        \qquad r>3GM/c^2.
       \]
     </div>
     <p>
-      Inside the ISCO there are no stable circular orbits; any particle
-      at \(r &lt; r_{\mathrm{ISCO}}\) that is not moving outward fast
-      enough will spiral inward.
+      This quantity is \(dy/d\tau\), not a locally measured physical speed, so
+      it is not constrained to remain below \(c\). Its divergence as
+      \(r\rightarrow3GM/c^2\) reflects the fact that a timelike circular
+      geodesic cannot reach the photon orbit.
     </p>
     <p>
-      The driver monitors \(r = \sqrt{x^2 + y^2}\) at every step and
-      terminates the integration immediately if
-      \(r &lt; \texttt{HORIZON\_RADIUS} = r_g\). The
-      <code>RelativisticOrbitResult</code> includes a flag indicating
-      whether the run ended by horizon crossing or by reaching
-      <code>max_orbits</code>, and the plot always shows the horizon as a
-      red circle at the origin so the user can see how close the orbit came
-      to the boundary.
+      A geodesic inside the ISCO does not automatically “decay.” This program
+      contains no radiation reaction. Depending on its constants of motion, a
+      particle can plunge, execute several near-circular whirls before plunging,
+      or pass to periapsis inside the ISCO and return outward.
     </p>
-    <div class="note">
-      <strong>Exploring plunge orbits:</strong> Reduce <code>u_init</code>
-      until the orbit just grazes the ISCO — the trajectory will spiral
-      inward over several orbits and eventually terminate at the horizon.
-      The critical velocity for a circular orbit at radius \(r_0\) is
-      \(v_c = \sqrt{GM/r_0}\); setting <code>u_init</code> significantly
-      below \(v_c\) will produce a plunge orbit within a few revolutions.
-    </div>
+    <p>
+      The driver detects the first intersection of an accepted path segment
+      with the true horizon circle and stops there. The plot never enlarges the
+      horizon merely to make it visible; a separate central marker identifies
+      the origin in weak-field plots.
+    </p>
   </section>
 
   <!-- ═══════════════════════════ NUMERICAL METHODS ═══════════════════════════ -->
@@ -801,76 +674,26 @@ ay     = factor * y</pre>
   <section id="predictor-corrector">
     <h2>Predictor–Corrector</h2>
     <p>
-      Let superscript \(n\) denote values at time \(t\) and a tilde denote the
-      cheap Euler predictor's estimate. The current GR acceleration is
-      \(\mathbf{a}^n = \texttt{schwarzschild\_acceleration}(x^n, y^n, K, Q)\).
-    </p>
-
-    <h3>Stage 1 — Kinematic Predictor</h3>
-    <p>
-      First estimates of the state at \(t + \Delta t\) are obtained by a
-      kinematic (constant-acceleration) step, using the acceleration at the
-      <em>start</em> of the step throughout:
+      Each attempted proper-time step begins with a constant-acceleration
+      predictor for position and velocity. If the acceleration-change test
+      passes, an iterated trapezoidal corrector refines both:
     </p>
     <div class="eq">
-      <span class="eq-label">(9)</span>
       \[
-        \tilde{\mathbf{v}} \;=\; \mathbf{v}^n + \mathbf{a}^n\,\Delta t,
+        \mathbf v^{n+1}
+        =
+        \mathbf v^n+\frac{\mathbf a^n+\mathbf a^{n+1}}{2}\Delta\tau,
         \qquad
-        \tilde{\mathbf{r}} \;=\; \mathbf{r}^n + \mathbf{v}^n\,\Delta t
-          + \tfrac{1}{2}\,\mathbf{a}^n\,\Delta t^2
+        \mathbf r^{n+1}
+        =
+        \mathbf r^n+\frac{\mathbf v^n+\mathbf v^{n+1}}{2}\Delta\tau .
       \]
     </div>
     <p>
-      The predicted acceleration is then evaluated:
-      \(\tilde{\mathbf{a}} = \texttt{schwarzschild\_acceleration}(\tilde x, \tilde y, K, Q)\).
-      Immediately after this — before any corrector work — the timestep is
-      gated by the acceleration check; see
-      <a href="#timestep">Adaptive Timestep</a> below. A step that fails
-      this gate is abandoned here, with \(\Delta t\) halved and Stage 1
-      retried, so the corrector below never runs for a rejected step.
-    </p>
-
-    <h3>Stage 2 — Iterative Corrector</h3>
-    <p>
-      Once the acceleration check passes, the corrector refines the position
-      by <em>fixed-point iteration</em>, not a single averaging pass: at each
-      iteration \(k\), it re-evaluates the acceleration at the current
-      position estimate and uses it to refine the extra (non-Euler)
-      displacement \(\Delta\mathbf{r}^{(k)}\):
-    </p>
-    <div class="eq">
-      <span class="eq-label">(10)</span>
-      \[
-        \Delta\mathbf{r}^{(k+1)} \;=\; \tfrac{1}{4}\bigl(\mathbf{a}^n + \mathbf{a}^{(k)}\bigr)\Delta t^2,
-        \qquad
-        \mathbf{r}^{(k+1)} \;=\; \mathbf{r}^n + \mathbf{v}^n\Delta t + \Delta\mathbf{r}^{(k+1)}
-      \]
-    </div>
-    <p>
-      where \(\mathbf{a}^{(k)}\) is the acceleration evaluated at the
-      <em>previous</em> iteration's position estimate (\(\mathbf{a}^{(0)} =
-      \tilde{\mathbf{a}}\), the predictor's own acceleration). This repeats
-      for up to 10 iterations or until successive \(\Delta\mathbf{r}^{(k)}\)
-      agree to within \(\varepsilon_2\) — see
-      <a href="#timestep">Adaptive Timestep</a>. Once the loop exits, the
-      final position \(\mathbf{r}^{n+1}\) is simply the last
-      \(\mathbf{r}^{(k+1)}\) computed, and the velocity is updated using the
-      final, converged acceleration \(\mathbf{a}^{n+1}\) averaged with the
-      start-of-step value:
-    </p>
-    <div class="eq">
-      <span class="eq-label">(11)</span>
-      \[
-        \mathbf{v}^{n+1} \;=\; \mathbf{v}^n
-          + \tfrac{1}{2}\!\left(\mathbf{a}^n + \mathbf{a}^{n+1}\right)\Delta t
-      \]
-    </div>
-    <p>
-      The GR acceleration
-      is an autonomous function of position only (no explicit time
-      dependence), so the predictor and every corrector iteration differ only
-      in their spatial argument.
+      The endpoint acceleration is recomputed from each refined position.
+      Corrector iteration is capped at ten passes. If it has not converged by
+      then, the entire attempted step is rejected, the timestep is halved, and
+      the step is retried.
     </p>
   </section>
 
@@ -878,168 +701,85 @@ ay     = factor * y</pre>
   <section id="timestep">
     <h2>Adaptive Timestep</h2>
     <p>
-      Two checks govern the timestep, at two different points in the cycle:
-      the acceleration check runs once, immediately after the Euler
-      predictor and before any corrector iteration; the position check runs
-      inside the corrector's own iteration loop, comparing successive
-      iterations against each other. Both use a single global ratio summed
-      over both components — not a per-component maximum.
-    </p>
-
-    <h3>Acceleration Check (eps1)</h3>
-    <p>
-      Immediately after Stage 1, the fractional change between the
-      predictor's acceleration and the acceleration at the start of the
-      step is tested as a single summed ratio:
+      The predictor's acceleration vector is compared with the start-of-step
+      acceleration using the rotationally invariant Euclidean norm,
     </p>
     <div class="eq">
-      <span class="eq-label">(12)</span>
       \[
-        \delta_a \;=\;
-          \frac{|\tilde a_x - a_x^{n}| + |\tilde a_y - a_y^{n}|}
-               {|a_x^{n}| + |a_y^{n}|}
+        \delta_a=
+        \frac{\|\tilde{\mathbf a}-\mathbf a^n\|}
+        {\max(\|\tilde{\mathbf a}\|,\|\mathbf a^n\|)}.
       \]
     </div>
     <p>
-      If \(\delta_a > \varepsilon_1\) the step is rejected before the
-      corrector ever runs: the timestep is halved and Stage 1 is retried
-      from scratch:
+      If \(\delta_a&gt;\varepsilon_1\), the attempted step is discarded and
+      \(\Delta\tau\) is halved. After a successful step, the working timestep
+      grows by 10% toward the user's <code>dt</code>, which acts as the maximum
+      allowed timestep. Thus a short close passage does not permanently force
+      the rest of the run to use its smallest timestep.
     </p>
-    <div class="eq">
-      <span class="eq-label">(13)</span>
-      \[
-        \Delta t \;\leftarrow\; \tfrac{1}{2}\,\Delta t \qquad
-        (\delta_a > \varepsilon_1)
-      \]
-    </div>
-
-    <h3>Corrector Convergence Check (eps2)</h3>
     <p>
-      Only once the acceleration check passes does the corrector loop (Eq. 10)
-      run. At each iteration \(k\), the change in the extra displacement
-      \(\Delta\mathbf{r}\) from the previous iteration is compared with a
-      reference fixed once, before the loop begins: the same second-order
-      displacement \(\Delta\mathbf{r}^{(0)} = \tfrac{1}{2}\mathbf{a}^n\,\Delta t^2\)
-      used to build the predictor's own position \(\tilde{\mathbf{r}}\) in
-      Eq. 9 — note this uses the start-of-step acceleration \(\mathbf{a}^n\),
-      not the predictor's own \(\tilde{\mathbf{a}}\):
+      A retry limit prevents pathological initial conditions from causing
+      endless timestep halving.
     </p>
-    <div class="eq">
-      <span class="eq-label">(14)</span>
-      \[
-        \delta_r \;=\;
-          \frac{\bigl|\Delta x^{(k+1)} - \Delta x^{(k)}\bigr| +
-                \bigl|\Delta y^{(k+1)} - \Delta y^{(k)}\bigr|}
-               {\bigl|\Delta x^{(0)}\bigr| + \bigl|\Delta y^{(0)}\bigr|}
-      \]
-    </div>
-    <p>
-      Once \(\delta_r < \varepsilon_2\), the corrector loop exits early
-      (or after 10 iterations regardless). This is a convergence check on
-      the iteration itself, not a comparison against the predictor's
-      position — it asks whether the fixed-point iteration in Eq. 10 has
-      settled down, not whether the corrector agrees with Stage 1.
-      Unlike the acceleration check, a slow-converging position does
-      <em>not</em> reject and retry the step at a smaller \(\Delta t\); it
-      simply accepts whatever the loop produced after its 10th iteration,
-      converged or not.
-    </p>
-    <div class="note">
-      <strong>Timestep collapse near the horizon:</strong> As the test
-      particle approaches the Schwarzschild horizon the acceleration grows
-      very steeply (the GR correction \(Q/r^2\) diverges as \(r \to 0\)).
-      This forces repeated halving of the timestep, which can stall the
-      integration before the horizon is actually reached. If this occurs,
-      loosen <code>eps1</code> or reduce <code>x_init</code> to start
-      further from the horizon.
-    </div>
   </section>
 
   <!-- ─── Orbit Counting ─── -->
   <section id="orbit-count">
-    <h2>Orbit Counting</h2>
+    <h2>Revolution Counting</h2>
     <p>
-      The driver counts completed orbits with a two-stage detector on the
-      sign of \(y\) alone (the sign of \(x\) is never checked). For a
-      counter-clockwise orbit (\(u_\text{init} > 0\)): the first time \(y\)
-      becomes positive, a <em>half</em> orbit is registered; the next time
-      \(y\) becomes negative again, a <em>full</em> orbit is registered and
-      the counter increments (the logic is mirrored for clockwise orbits).
-      Completing one orbit therefore requires crossing \(y = 0\)
-      <em>twice</em> — once heading each way — not once. Integration
-      terminates when the counter reaches <code>max_orbits</code>.
+      The revised driver no longer infers a completed orbit merely from the
+      sign of \(y\). Instead it computes
+      \(\phi=\operatorname{atan2}(y,x)\), unwraps the change in azimuth at every
+      accepted step, and accumulates the signed angular travel.
     </p>
-    <p>
-      This criterion assumes the orbit is prograde in a consistent sense
-      (it does not re-detect direction reversals) and does not cross the
-      origin. For highly eccentric or near-plunge orbits the crossing
-      detector may fire more or fewer times than expected — in those cases,
-      monitor the plotted trajectory directly rather than relying on the
-      orbit count.
-    </p>
-    <div class="note">
-      <strong>Precessing orbits and orbit counting:</strong> Because the
-      orbit precesses, the particle does not return to exactly the same
-      \(\phi = 0\) line each time. The crossing criterion still works
-      because it only depends on the sign of \(y\), not on any particular
-      value of \(x\) or \(\phi\) — the particle crosses \(y = 0\) twice
-      per revolution (once each direction) regardless of how much the
-      perihelion has rotated, or which side of the central mass those
-      crossings happen to fall on.
+    <div class="eq">
+      \[
+        N_{\rm rev}=\frac{|\Delta\phi_{\rm accumulated}|}{2\pi}.
+      \]
     </div>
+    <p>
+      This fixes a porting error in the previous Python version, which could
+      count the first half-revolution as a full orbit. Integration stops when
+      the accumulated revolution count reaches <code>max_orbits</code>, unless
+      the horizon or <code>max_steps</code> is reached first.
+    </p>
   </section>
 
   <!-- ─── Convergence Criteria ─── -->
   <section id="convergence">
-    <h2>Convergence Criteria</h2>
+    <h2>Convergence and Numerical Diagnostics</h2>
     <table>
-      <thead>
-        <tr>
-          <th>Parameter</th>
-          <th>Symbol</th>
-          <th>Suggested default</th>
-          <th>Role</th>
-        </tr>
-      </thead>
+      <thead><tr><th>Quantity</th><th>Default</th><th>Role</th></tr></thead>
       <tbody>
-        <tr>
-          <td><code>eps1</code> (vector-norm)</td>
-          <td>\(\varepsilon_1\)</td>
-          <td>\(0.05\)</td>
-          <td>
-            Timestep gate, checked once against the cheap predictor before
-            the corrector runs. Steps where the fractional change in
-            acceleration between predictor and the start-of-step value
-            (Eq. 12) exceeds this value are rejected and retried at half
-            the timestep — the corrector never runs for a rejected step.
-          </td>
-        </tr>
-        <tr>
-          <td><code>eps2</code></td>
-          <td>\(\varepsilon_2\)</td>
-          <td>\(10^{-4}\)</td>
-          <td>
-            Corrector convergence tolerance, checked only for steps that
-            already passed the <code>eps1</code> gate. Governs how tightly
-            the iterative corrector (Eq. 10) converges before its loop
-            exits early — it is not a step-rejection test: an
-            unconverged corrector after 10 iterations is still accepted
-            as-is, not retried at a smaller timestep. Should be strictly
-            less than \(\varepsilon_1\).
-          </td>
-        </tr>
+        <tr><td><code>eps1</code></td><td>0.05</td><td>Maximum fractional acceleration-vector change allowed by the predictor gate.</td></tr>
+        <tr><td><code>eps2</code></td><td>1e-4</td><td>Required fractional convergence of successive corrected velocity vectors.</td></tr>
       </tbody>
     </table>
-    <div class="note">
-      <strong>Accuracy vs. speed:</strong> Tightening <code>eps1</code> by a
-      factor of 10 significantly increases the number of accepted steps but
-      produces a more accurate precession rate; tightening <code>eps2</code>
-      makes the corrector iterate more before accepting its result, at
-      modest extra cost per step. For a quick qualitative
-      view of the precessing orbit the defaults are adequate; for measuring
-      the precession angle to compare with equation (7), use
-      \(\varepsilon_1 = 5\times10^{-3}\) and \(\varepsilon_2 = 10^{-5}\).
+    <p>
+      The program requires \(0&lt;\varepsilon_2&lt;\varepsilon_1&lt;1\).
+      An unconverged corrector is no longer silently accepted.
+    </p>
+    <p>
+      Two conserved quantities provide additional checks. The driver reports
+      maximum fractional drift in
+      \(h=x\,dy/d\tau-y\,dx/d\tau\) and in the effective energy integral
+    </p>
+    <div class="eq">
+      \[
+        \mathcal E_{\rm eff}
+        =
+        \frac12\left[\left(\frac{dx}{d\tau}\right)^2+
+        \left(\frac{dy}{d\tau}\right)^2\right]
+        -\frac{GM}{r}
+        -\frac{GMh^2}{c^2r^3}
+      \]
     </div>
+    <p>
+      for Schwarzschild mode. These are diagnostics of the integrated orbital
+      equation; \(\mathcal E_{\rm eff}\) should not be mistaken for a local
+      observer's measured kinetic-plus-potential energy.
+    </p>
   </section>
 
   <!-- ═══════════════════════════ REFERENCE ═══════════════════════════ -->
@@ -1048,180 +788,95 @@ ay     = factor * y</pre>
   <section id="parameters">
     <h2>Parameters</h2>
     <table>
-      <thead>
-        <tr>
-          <th>Parameter</th>
-          <th>Default</th>
-          <th>Unit</th>
-          <th>Description</th>
-        </tr>
-      </thead>
+      <thead><tr><th>Parameter</th><th>Default</th><th>Meaning</th></tr></thead>
       <tbody>
-        <tr>
-          <td><code>x_init</code></td>
-          <td>1.5 × 10<sup>4</sup></td>
-          <td>m</td>
-          <td>Initial \(x\)-position (the particle always starts on the
-              \(x\)-axis with \(y_0 = 0\) fixed inside the driver — there
-              is no separate <code>y_init</code> parameter to set)</td>
-        </tr>
-        <tr>
-          <td><code>u_init</code></td>
-          <td>1.2 × 10<sup>8</sup></td>
-          <td>m s<sup>−1</sup></td>
-          <td>Initial transverse (\(y\)-direction) velocity; positive gives
-              a counter-clockwise orbit. There is no separate radial-velocity
-              parameter — the initial velocity is purely transverse by
-              construction</td>
-        </tr>
-        <tr>
-          <td><code>dt</code></td>
-          <td>2.0 × 10<sup>−6</sup></td>
-          <td>s</td>
-          <td>Initial timestep; halved as needed by the adaptive controller</td>
-        </tr>
-        <tr>
-          <td><code>max_steps</code></td>
-          <td>6,000</td>
-          <td>—</td>
-          <td>Safety cap on total integration steps, regardless of how many
-              orbits have completed</td>
-        </tr>
-        <tr>
-          <td><code>max_orbits</code></td>
-          <td>10</td>
-          <td>—</td>
-          <td>Number of complete orbit crossings before the run ends</td>
-        </tr>
-        <tr>
-          <td><code>eps1</code></td>
-          <td>0.05</td>
-          <td>—</td>
-          <td>Relative acceleration-change tolerance for timestep control</td>
-        </tr>
-        <tr>
-          <td><code>eps2</code></td>
-          <td>1 × 10<sup>−4</sup></td>
-          <td>—</td>
-          <td>Relative convergence tolerance for the iterative corrector</td>
-        </tr>
+        <tr><td><code>x_init</code></td><td>1.5e4 m</td><td>Initial Schwarzschild areal radius, placed on +x in the diagram.</td></tr>
+        <tr><td><code>u_init</code></td><td>1.2e8 m/s</td><td>Initial \(dy/d\tau\), not a local measured speed.</td></tr>
+        <tr><td><code>dt</code></td><td>2e-6 s</td><td>Maximum proper-time step.</td></tr>
+        <tr><td><code>max_steps</code></td><td>6000</td><td>Maximum accepted steps.</td></tr>
+        <tr><td><code>max_orbits</code></td><td>10</td><td>Maximum accumulated azimuthal revolutions.</td></tr>
+        <tr><td><code>eps1</code></td><td>0.05</td><td>Acceleration-vector timestep tolerance.</td></tr>
+        <tr><td><code>eps2</code></td><td>1e-4</td><td>Corrector velocity-convergence tolerance.</td></tr>
+        <tr><td><code>model</code></td><td>"schwarzschild"</td><td><code>"schwarzschild"</code> or <code>"newtonian"</code>.</td></tr>
+        <tr><td><code>show_isco</code></td><td>True</td><td>Show the true \(6GM/c^2\) reference circle.</td></tr>
+        <tr><td><code>show_periapsides</code></td><td>False</td><td>Mark detected radius minima on the plot.</td></tr>
       </tbody>
     </table>
-
-    <h3>Hard-Coded Physical Constants</h3>
-    <table>
-      <thead>
-        <tr><th>Constant</th><th>Value</th><th>Description</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>GMSOLAR</code></td>
-          <td>1.327 × 10<sup>20</sup> m<sup>3</sup> s<sup>−2</sup></td>
-          <td>\(G M_\odot\) — gravitational parameter for one solar mass</td>
-        </tr>
-        <tr>
-          <td><code>C2</code></td>
-          <td>8.98755 × 10<sup>16</sup> m<sup>2</sup> s<sup>−2</sup></td>
-          <td>\(c^2\) — speed of light squared</td>
-        </tr>
-        <tr>
-          <td><code>HORIZON_RADIUS</code></td>
-          <td>\(2\,GM_\odot/c^2 \approx 2{,}953\,\mathrm{m}\)</td>
-          <td>Schwarzschild radius for one solar mass</td>
-        </tr>
-      </tbody>
-    </table>
+    <p>
+      The physics module uses the IAU nominal solar gravitational parameter
+      \(GM_\odot=1.3271244\times10^{20}\ {\rm m^3\,s^{-2}}\) and exact SI
+      \(c=299\,792\,458\ {\rm m\,s^{-1}}\).
+    </p>
   </section>
 
   <!-- ─── Suggested Scenarios ─── -->
   <section id="scenarios">
     <h2>Suggested Scenarios</h2>
     <div class="note">
-      <strong>Before you start — timestep scaling:</strong> the default
-      <code>dt</code> and <code>max_steps</code> are tuned specifically for
-      the strong-field default orbit's short period. Changing
-      <code>x_init</code>/<code>u_init</code> without also rescaling
-      <code>dt</code> is the single most common cause of "nothing seems to
-      happen" (a flat trajectory, or a plot that never completes an orbit).
-      A reliable starting point: <code>dt &approx; x_init / u_init / 2000</code>
-      (roughly 2000 steps per orbit), with <code>max_steps</code> set generously
-      above what a full orbit actually needs. Every scenario below gives
-      concrete, tested values for both.
+      <strong>Choosing a starting timestep:</strong> for a near-circular orbit,
+      a useful first estimate for \(N\) samples per revolution is
+      \[
+        \Delta\tau \sim \frac{2\pi r}{uN}.
+      \]
+      Adaptive stepping will reduce this automatically where the dynamics
+      require finer resolution.
     </div>
     <div class="scenario-grid">
-
       <div class="scenario-card">
-        <div class="sc-title">Mercury Analogue (Weak Field)</div>
-        <code>x_init=5.8e10, u_init=4.7e4, dt=620.0, max_steps=120000,
-        max_orbits=20</code>. Verified: completes orbits cleanly with
-        \(y\) ranging to \(\pm5.6\times10^{10}\,\mathrm{m}\) — a clearly
-        visible, gently precessing ellipse. Measure the perihelion advance
-        per orbit and compare with the predicted 43&#8243;/century. (A
-        perihelion-based alternative, also verified:
-        <code>x_init=4.6e10, u_init=58980.0, dt=390.0,
-        max_steps=20000, max_orbits=2</code>.)
+        <div class="sc-title">Default Strong-Field Rosette</div>
+        Run the supplied defaults first. Turn on
+        <code>show_periapsides=True</code> and compare the rotating sequence of
+        periapsides with the printed mean apsidal advance.
       </div>
 
       <div class="scenario-card">
-        <div class="sc-title">Circular Orbit</div>
-        The exact circular speed for <em>this program's own</em>
-        \(K,Q\) formalism (not the plain Newtonian \(\sqrt{GM/r}\), which is
-        only a weak-field approximation of it) is:
-        <div class="eq" style="margin:10px 0;">
-          \[
-            u_\text{circular} = \sqrt{\dfrac{GM_\odot}{x_\text{init} - 1.5\,r_g}}
-          \]
-        </div>
-        Verified to give 0.000% radius variation at every radius tested.
-        Example: <code>x_init=29529.7 (10&middot;r_g), u_init=72710344.0,
-        dt=0.2, max_steps=20000, max_orbits=3</code>. Note this formula
-        predicts <em>superluminal</em> speeds inside about \(2\,r_g\) — a
-        real limitation of the simplified \(Q/r^2\) correction, not a
-        target to chase; stay above \(\sim3\,r_g\) for physically
-        meaningful circular orbits.
+        <div class="sc-title">Circular Geodesics</div>
+        Use <code>circular_proper_time_speed(r)</code> from the physics module.
+        Compare a stable circular orbit above \(6GM/c^2\) with a carefully
+        initialized unstable circular orbit between \(3GM/c^2\) and
+        \(6GM/c^2\). Perturb the latter slightly and watch it depart.
       </div>
 
       <div class="scenario-card">
-        <div class="sc-title">Highly Eccentric Orbit</div>
-        <code>x_init=23623.8 (8&middot;r_g), u_init=70675340.5, dt=0.15,
-        max_steps=100000, max_orbits=3</code>. Verified: \(r\) ranges
-        \([9931, 23624]\,\mathrm{m}\) (ratio 2.4), stays bound, and precesses
-        dramatically within just a few orbits. Below about 85% of the local
-        circular speed at this radius the orbit stops being a bound ellipse
-        and plunges into the horizon instead — that boundary is itself worth
-        exploring.
+        <div class="sc-title">Inside the ISCO</div>
+        Choose an eccentric orbit whose periapsis lies inside
+        \(6GM/c^2\) but which still returns outward. This demonstrates why
+        “inside the ISCO” does not mean that every geodesic must immediately
+        plunge.
       </div>
 
       <div class="scenario-card">
-        <div class="sc-title">Approaching the ISCO</div>
-        <code>x_init=11811.9 (4&middot;r_g), u_init=134071249.7, dt=0.08,
-        max_steps=50000, max_orbits=4</code> — the exact circular speed
-        from the formula above, at four Schwarzschild radii (comfortably
-        outside the true ISCO at \(3\,r_g\), and well clear of where the
-        formula itself turns superluminal). Verified: stable, perfectly
-        circular, with dramatic precession per orbit — the sweet spot for
-        seeing strong-field precession without the approximation breaking
-        down.
+        <div class="sc-title">Zoom-Whirl / Plunge</div>
+        Tune the initial derivative near the boundary between scattering/bound
+        motion and plunge. Some trajectories execute several near-circular
+        whirls before crossing the horizon, despite having no dissipative
+        orbital decay.
       </div>
 
       <div class="scenario-card">
-        <div class="sc-title">Plunge Orbit</div>
-        <code>x_init=17717.8 (6&middot;r_g), u_init=74948107.0, dt=0.12,
-        max_steps=10000</code> — deliberately below the stable threshold at
-        this radius. Verified: about 3000 recorded points showing a genuine,
-        visible inward spiral before the particle crosses the horizon
-        (rather than vanishing in one or two steps), demonstrating the
-        driver's horizon-detection logic clearly.
+        <div class="sc-title">Weak-Field Mercury Analogue</div>
+        Use Mercury-like perihelion distance and perihelion proper-time
+        derivative, run for many radial periods, and compare the automatically
+        measured apsidal advance with
+        \(6\pi GM/[a(1-e^2)c^2]\). For a quantitative 43-arcsec/century
+        comparison, use initial conditions matched to Mercury's actual orbital
+        elements rather than merely a vaguely Mercury-sized orbit.
       </div>
 
       <div class="scenario-card">
-        <div class="sc-title">GR vs. Newtonian Comparison</div>
-        Set <code>Q = 0.0</code> manually in
-        <code>schwarzschild_acceleration()</code> (effectively setting
-        \(c \to \infty\)) and compare the closed Keplerian ellipse with the
-        precessing GR trajectory for the same initial conditions.
+        <div class="sc-title">GR vs. Newtonian</div>
+        Run identical initial conditions twice, changing only
+        <code>model="schwarzschild"</code> to <code>"newtonian"</code>.
+        Compare the precessing relativistic orbit with the closed Keplerian
+        orbit without editing the physics source.
       </div>
 
+      <div class="scenario-card">
+        <div class="sc-title">Numerical Convergence</div>
+        Tighten <code>eps1</code> and <code>eps2</code> and/or reduce
+        <code>dt</code>. Compare the measured apsidal advance and the reported
+        angular-momentum and effective-energy drift.
+      </div>
     </div>
   </section>
 
@@ -1297,69 +952,35 @@ ay     = factor * y</pre>
   
   <!-- ─── GR vs. Newtonian ─── -->
   <section id="vs-newtonian">
-    <h2>GR vs. Newtonian Comparison</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Feature</th>
-          <th>Newtonian (Binary)</th>
-          <th>GR (RelativisticOrbit)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Force law</td>
-          <td>\(-GM/r^2\)</td>
-          <td>\(-GM/r^2 \cdot (1 + Q/r^2)\)</td>
-        </tr>
-        <tr>
-          <td>Orbit shape</td>
-          <td>Closed ellipse</td>
-          <td>Precessing ellipse</td>
-        </tr>
-        <tr>
-          <td>Innermost stable orbit</td>
-          <td>None (any \(r &gt; 0\) stable)</td>
-          <td>\(r_\mathrm{ISCO} = 3\,r_g\)</td>
-        </tr>
-        <tr>
-          <td>Event horizon</td>
-          <td>Not present</td>
-          <td>\(r_g = 2GM/c^2\); orbit terminates if \(r &lt; r_g\)</td>
-        </tr>
-        <tr>
-          <td>Angular momentum constant</td>
-          <td>Not needed</td>
-          <td>\(K = \tfrac{1}{2}\,x_0\,v_y\); fixes \(Q\)</td>
-        </tr>
-        <tr>
-          <td>Termination criterion</td>
-          <td>Always runs the full <code>max_steps</code> (no closure detection)</td>
-          <td>max_orbits or horizon crossing</td>
-        </tr>
-      </tbody>
-    </table>
+    <h2>Schwarzschild vs. Newtonian</h2>
+    <p>
+      The two modes use the same initial diagram coordinates and proper-time
+      derivative values. Newtonian mode removes the relativistic
+      \(3h^2/(c^2r^2)\) force factor:
+    </p>
+    <div class="eq">
+      \[
+        \mathbf a_{\rm N}=-\frac{GM}{r^3}\mathbf r,
+        \qquad
+        \mathbf a_{\rm Schw}=
+        -\frac{GM}{r^3}
+        \left(1+\frac{3h^2}{c^2r^2}\right)\mathbf r .
+      \]
+    </div>
+    <p>
+      This switch is intended as a controlled numerical experiment. In the
+      Newtonian model there is no physical Schwarzschild horizon or ISCO, so
+      those reference circles are omitted from the plot.
+    </p>
   </section>
 
   <!-- ─── Related Programs ─── -->
   <section id="related">
     <h2>Related Programs</h2>
-    <ul style="margin: 0 0 14px 28px; line-height: 2.2;">
-      <li>
-        <a href="https://github.com/tomyee3-org/GFTGU-Documentation/tree/main/13-Binary">Binary</a>
-        — Two-body Newtonian orbit (predictor–corrector); the Newtonian
-        counterpart of this program.
-      </li>
-      <li>
-        <a href="https://github.com/tomyee3-org/GFTGU-Documentation/tree/main/13-MercPert">MercPert</a>
-        — Mercury-like orbit perturbed by a binary companion; Newtonian
-        three-body problem for comparison with GR precession.
-      </li>
-      <li>
-        <a href="https://github.com/tomyee3-org/GFTGU-Documentation/tree/main/20-Neutron">Neutron</a>
-        — Tolman–Oppenheimer–Volkoff stellar structure; another GR program
-        in this collection.
-      </li>
+    <ul style="margin-left: 24px;">
+      <li><strong>Orbit</strong> — Newtonian central-force orbital motion using a related adaptive predictor-corrector.</li>
+      <li><strong>MercPert</strong> — restricted three-body perturbations and apsidal/orbital structure in Newtonian gravity.</li>
+      <li><strong>Binary</strong> — mutual Newtonian two-body motion.</li>
     </ul>
   </section>
 
@@ -1367,17 +988,12 @@ ay     = factor * y</pre>
   <section id="license">
     <h2>License</h2>
     <p>
-      This Python port is derived from the original Java programs by
-      <strong>Bernard Schutz</strong> accompanying
-      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
-      The port is distributed under the
+      This software is based on the programs by <strong>Bernard Schutz</strong>
+      accompanying <em>Gravity from the Ground Up</em> (Cambridge University
+      Press, 2003) and is distributed under the
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
-         International (CC BY-NC-SA 4.0)</a> license.
-    </p>
-    <p>
-      You are free to share and adapt the material for non-commercial purposes, provided
-      you give appropriate credit and distribute any adaptations under the same license.
+         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike
+      4.0 International (CC BY-NC-SA 4.0)</a> license.
     </p>
   </section>
 
@@ -1388,9 +1004,8 @@ ay     = factor * y</pre>
 ═══════════════════════════════════════════════ -->
 <footer>
   <em>Gravity from the Ground Up</em> — Python Programs ·
-  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
-  Python port © 2024–2026 Thomas Yee ·
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
+  Bernard Schutz, Cambridge University Press ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
 </footer>
 
 </div><!-- .page-wrap -->
