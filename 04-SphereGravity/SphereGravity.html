@@ -479,11 +479,12 @@
   <h2 id="overview">What This Program Does</h2>
   <p>
     <strong>SphereGravity</strong> computes the gravitational acceleration produced by a thin
-    spherical shell of matter at a series of radial distances ranging from deep inside the shell
-    to far outside it. The calculation is purely numerical: the shell is divided into
-    <em>n</em><sub>div</sub>&thinsp;&times;&thinsp;<em>n</em><sub>div</sub> small tiles, each
-    tile is treated as a point mass, and their individual gravitational contributions are summed
-    to give the total acceleration at each observation radius.
+    spherical shell of matter at a series of radial distances from the center, through the
+    interior, and out to about five shell radii. The calculation is a numerical approximation:
+    conceptually, the shell is divided into
+    <em>n</em><sub>div</sub>&thinsp;&times;&thinsp;<em>n</em><sub>div</sub> small tiles. By azimuthal
+    symmetry, the code sums over <em>n</em><sub>div</sub> latitude rings and multiplies each ring's
+    contribution by <em>n</em><sub>div</sub> identical tiles.
   </p>
   <p>
     The program can display either the raw acceleration profile or the <em>relative difference</em>
@@ -610,7 +611,9 @@
 
   <p>
     where the factor \((r + \sin\theta)\) is the projection of the tile-to-observer vector
-    onto the symmetry axis. The total acceleration at radius \(r\) is:
+    onto the symmetry axis. The plotted acceleration is the signed radial component in the
+    program's convention, so small numerical residuals inside the shell may have either sign.
+    The total acceleration at radius \(r\) is:
   </p>
 
   <div class="eq-block">
@@ -674,8 +677,9 @@
     <li>
       <strong>Skip the shell surface.</strong>
       The step at \(j = 200\) (i.e., \(r = 1.0\)) falls exactly on the idealized thin shell.
-      The field has a discontinuity across the surface, so this point is skipped and its plotted
-      value is set to zero.
+      The field has a discontinuity across the surface, so this point is not evaluated. Its plotted
+      value is set to zero only as a placeholder; this is not a claim that the physical surface
+      acceleration is zero.
     </li>
     <li>
       <strong>Inner loop: tile summation.</strong>
@@ -733,8 +737,8 @@
   <!-- ── Modules ── -->
   <h2 id="modules">Module Overview</h2>
   <p>
-    The program is split into four Python modules following the standard GFtGU separation of
-    concerns:
+    The calculation is split among four Python files so that the physics, plotting, and user
+    settings are easy to find:
   </p>
 
   <div class="module-grid">
@@ -747,7 +751,8 @@
         and the conversion to relative-difference output. The formulas described in Eqs. 2–7
         are implemented here.
       </p>
-      <div class="sig">compute_shell_mass(nDiv, epsilon=0.001) → float</div>
+      <div class="sig">compute_shell_mass(nDiv, epsilon=0.001) → float<br>
+        requires nDiv &gt; 0 and epsilon &gt; 0</div>
       <div class="sig" style="margin-top:6px">compute_acceleration_profile(nDiv,
         outputType='acceleration', epsilon=0.001) → (ndarray, ndarray)</div>
     </div>
@@ -756,9 +761,8 @@
       <div class="mod-role">Driver</div>
       <h4>driver_spheregravity.py</h4>
       <p>
-        Thin orchestration layer that calls the physics module and returns the
-        <code>(radius, acceleration)</code> arrays. Provides a clean interface so that
-        <code>main.py</code> and the plot module are decoupled from the physics internals.
+        Calls the physics calculation and returns the <code>(radius, acceleration)</code> arrays
+        used by <code>main.py</code> and the plotting routine.
       </p>
       <div class="sig">run_spheregravity(nDiv=100,
         outputType='acceleration') → (ndarray, ndarray)</div>
@@ -793,9 +797,9 @@
   <!-- ── Parameters ── -->
   <h2 id="parameters">Parameters</h2>
   <p>
-    All user-adjustable parameters are set in <code>main.py</code>. The physics module also
-    exposes <code>epsilon</code> as an optional keyword argument; it is fixed at
-    <code>0.001</code> for normal use.
+    The two normal user settings, <code>nDiv</code> and <code>outputType</code>, are set in
+    <code>main.py</code>. The physics module also accepts <code>epsilon</code> as an advanced
+    optional keyword argument; it remains fixed at <code>0.001</code> in the normal workflow.
   </p>
 
   <table class="param-table">
@@ -816,12 +820,13 @@
           Number of angular divisions per coordinate. The shell is divided into
           <em>n</em><sub>div</sub> latitude rings, each representing
           <em>n</em><sub>div</sub> identical azimuthal tiles. Larger values give higher
-          angular resolution at the cost of longer computation time.
+          angular resolution at the cost of longer computation time. The program does not impose
+          an arbitrary upper limit, so extremely large values may take a long time to run.
         </td>
       </tr>
       <tr>
         <td>outputType</td>
-        <td>'relative difference'</td>
+        <td>'relative difference' (main.py)</td>
         <td>OutputType (Literal['acceleration', 'relative difference'])</td>
         <td>
           Selects what the plot displays. Either <code>'acceleration'</code> (raw
@@ -837,7 +842,9 @@
           Mass-scale factor corresponding to nominal shell thickness divided by radius.
           Because every tile mass is placed on the same spherical surface, changing
           \(\varepsilon\) scales the raw acceleration and total mass but does not make the
-          modeled shell geometrically thicker.
+          modeled shell geometrically thicker. It is not a normal <code>main.py</code> setting;
+          to change it, call <code>compute_acceleration_profile()</code> directly from
+          <code>physics_spheregravity.py</code>.
         </td>
       </tr>
     </tbody>
@@ -861,15 +868,22 @@
       <p>
         Plots the fractional deviation between the numerical result and Newton's exact prediction
         (Eq. 7). This mode is more informative for convergence studies: as <code>nDiv</code>
-        increases the curve should drop closer and closer to zero everywhere. Inside the shell,
-        where Newton predicts \(g = 0\), the residual acceleration normalised by \(M\) is plotted
-        instead.
+        increases the curve should drop closer and closer to zero at sampled points away from
+        the skipped shell surface. Inside the shell, where Newton predicts \(g = 0\), the residual
+        acceleration normalised by \(M\) is plotted instead.
       </p>
     </div>
   </div>
 
   <!-- ── Quick start ── -->
   <h2 id="quickstart">Quick Start</h2>
+
+  <h3>What to edit</h3>
+  <p>
+    For ordinary use, edit only these two settings near the top of <code>main.py</code>:
+  </p>
+  <pre>nDiv = 100
+outputType = 'relative difference'</pre>
 
   <h3>Running the program</h3>
   <pre>cd SphereGravity
@@ -908,9 +922,10 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
       <h4>1 · Verify the Shell Theorem Visually</h4>
       <p>
         Run with the default parameters and <code>outputType = 'acceleration'</code>. Confirm
-        that the acceleration is zero for \(r &lt; 1\) and follows a \(1/r^2\) curve for
-        \(r > 1\). The discontinuity at \(r = 1\) (the shell surface, skipped by the program)
-        should be apparent.
+        that the acceleration is essentially zero for \(r &lt; 1\) and follows a \(1/r^2\) curve
+        for \(r > 1\). The sharp transition across the shell surface should be apparent from the
+        neighboring points. The plotted point exactly at \(r = 1\) is a zero placeholder because
+        the surface itself is not evaluated.
       </p>
       <div class="sc-params">nDiv=100 · outputType='acceleration'</div>
     </div>
