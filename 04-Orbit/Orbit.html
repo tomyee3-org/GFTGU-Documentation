@@ -682,47 +682,111 @@ the test particle is therefore not needed.</p>
 <!-- ── Suggested Experiments ── -->
 <section id="experiments">
 <h2>Suggested Experiments</h2>
+<p>
+  The experiments below are arranged in approximate order of difficulty. The first few require
+  only changes to the parameters or display mode in <code>main.py</code>; later experiments ask
+  you to interpret conservation laws, orbital geometry, or the numerical method.
+</p>
 <div class="exp-grid">
-<div class="exp-card"><div class="ec-num">EXP-1</div><h4>Reproduce Planetary Orbits</h4>
-<p>Use perihelion distances and speeds from Schutz's table for different planets. Compare
-the measured perihelion/aphelion distances and eccentricities with the expected Kepler ellipses.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-2</div><h4>Kepler's Third Law</h4>
-<p>Run several planetary initial conditions and use the reported final time for a
-<code>maxOrbits=1</code> run. Compare \(T^2/a^3\) across the models.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-3</div><h4>Kepler's Second Law</h4>
-<p>Use the returned \(x,y,t\) arrays to divide the trajectory into equal time intervals and
-compare swept triangular areas. Relate the result to the nearly constant
-\(h=xv_y-yv_x\) reported by the conservation diagnostic.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-4</div><h4>Velocity Hodograph</h4>
-<p>Plot <code>output="velocity"</code>. A bound non-radial Kepler ellipse traces a full
-Hamilton hodograph circle. Try an unbound orbit and observe that only an arc is traced.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-5</div><h4>Bound, Parabolic, and Hyperbolic Motion</h4>
-<p>At a fixed starting radius, vary the speed through
-\(v_{\rm esc}=\sqrt{2\mu/r}\). Compare the sign of the initial specific energy with the
-resulting trajectory class.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-6</div><h4>Direction Independence of Binding</h4>
-<p>Keep \(v_x^2+v_y^2\) fixed while rotating the initial velocity vector. The orbital shape
-and angular momentum change, but the bound/unbound classification does not because the
-specific energy is unchanged.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-7</div><h4>Numerical Convergence</h4>
+
+<div class="exp-card"><div class="ec-num">EXP-1 · Introductory</div><h4>Reproduce Planetary Orbits</h4>
+<p>Start with the default Mercury orbit. Then use perihelion distances and maximum orbital speeds
+from Schutz's planetary table to model other planets: place the planet on the positive x-axis at
+perihelion and give it velocity only in the y-direction. From the plotted perihelion and aphelion
+distances, estimate the eccentricity and compare it with the tabulated value. This directly tests
+whether Newton's inverse-square law reproduces the observed shapes of planetary orbits.</p></div>
+
+<div class="exp-card"><div class="ec-num">EXP-2 · Introductory</div><h4>Measure Planetary Periods</h4>
+<p>For several of the planetary orbits from EXP-1, set <code>maxOrbits=1</code> and compare the
+reported elapsed simulated time with the observed orbital period. You can also select
+<code>output="position_time"</code> or <code>output="velocity_time"</code> and read the period
+from the time axis. This is the period experiment suggested in Schutz's original Help.</p></div>
+
+<div class="exp-card"><div class="ec-num">EXP-3 · Introductory–Intermediate</div><h4>Position and Velocity Both Repeat</h4>
+<p>A closed orbit must return not only to its starting position but also to its starting velocity.
+Run one complete bound orbit and select <code>output="velocity"</code>. The velocity-space curve
+should close just as the position-space orbit does. The console closure residuals provide a
+numerical check: after an integral number of revolutions, both the final radius and velocity should
+be close to their initial values. This restores an experiment emphasized in Schutz's original Help.</p></div>
+
+<div class="exp-card"><div class="ec-num">EXP-4 · Intermediate</div><h4>Energy Conservation</h4>
+<p>Select <code>output="energy"</code> for a bound orbit. Kinetic and potential specific energy
+change continually, but their sum should remain nearly constant. Then make an unbound orbit and
+compare its total specific energy with that of the bound orbit. Bound Kepler orbits have negative
+specific energy, hyperbolic orbits positive specific energy, and the marginal parabolic case zero.
+The console's maximum fractional energy drift shows the remaining numerical error. This experiment,
+which Schutz associated with Chapter 6, is worth retaining explicitly rather than leaving energy
+conservation only as a numerical-accuracy diagnostic.</p></div>
+
+<div class="exp-card"><div class="ec-num">EXP-5 · Intermediate</div><h4>Bound, Parabolic, and Hyperbolic Motion</h4>
+<p>At a fixed starting radius \(r\), vary the initial speed through the escape value
+\(v_{\rm esc}=\sqrt{2\mu/r}\). Below it the orbit is bound; at the limiting value it is parabolic;
+above it the orbit is hyperbolic. For unbound cases, increase <code>maxSteps</code> if necessary
+because the requested <code>maxOrbits</code> may never be reached. Compare the trajectory class
+with the sign of the initial specific energy.</p></div>
+
+<div class="exp-card"><div class="ec-num">EXP-6 · Intermediate</div><h4>Direction Independence of Binding</h4>
+<p>Keep \(v_x^2+v_y^2\) fixed while rotating the initial velocity vector at a fixed starting
+position. The orbit's shape and angular momentum change, but its bound/unbound classification does
+not, because the specific energy depends on the speed rather than the direction of the velocity.
+This is the second part of Schutz's original unbound-orbit experiment.</p></div>
+
+<div class="exp-card"><div class="ec-num">EXP-7 · Intermediate</div><h4>Approximate Moon Around a Fixed Earth</h4>
+<p>Replace the solar gravitational parameter by
+\(GM_\oplus\approx3.9860\times10^{14}\ {\rm m^3\,s^{-2}}\), and try
+<code>xInit=3.626e8</code> m with <code>vyInit=1082</code> m/s. This fixed-Earth test-particle
+model has a Kepler period of about <strong>27.8 days</strong>. Compare the result with the model's
+prediction, remembering that the real Earth–Moon system differs because the Moon's mass is not
+negligible.</p></div>
+
+<div class="exp-card"><div class="ec-num">EXP-8 · Intermediate</div><h4>Repeat Several Revolutions</h4>
+<p>Set <code>maxOrbits=2</code> or 5 and examine whether successive numerical ellipses lie on top
+of one another. This makes accumulated integration error visible. Fractional values such as 1.5
+are also allowed, although closure residuals are reported only when the requested endpoint is an
+integral number of revolutions. Schutz originally proposed extending the program to do this; the
+Python version already provides the capability through <code>maxOrbits</code>.</p></div>
+
+<div class="exp-card"><div class="ec-num">EXP-9 · Intermediate–Advanced</div><h4>Numerical Convergence</h4>
 <p>Reduce <code>dt0</code> and tighten <code>eps1</code> and <code>eps2</code>. Compare the
-period, energy drift, angular-momentum drift, and closure residuals rather than judging
-accuracy from the orbit plot alone. You can also make either tolerance deliberately large to
-see what happens when that accuracy control is effectively relaxed.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-8</div><h4>Repeat Several Revolutions</h4>
-<p>Set <code>maxOrbits=2</code> or 5 and examine whether successive numerical ellipses lie on
-top of one another. This makes accumulated integration error visible. Fractional values such
-as 1.5 are also allowed, but closure residuals are withheld because the final state should not
-then coincide with the starting state.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-9</div><h4>Approximate Moon Around a Fixed Earth</h4>
-<p>Set \(GM_\oplus\approx3.9860\times10^{14}\ {\rm m^3\,s^{-2}}\),
-<code>xInit=3.626e8</code> m and <code>vyInit=1082</code> m/s. The fixed-Earth test-particle
-model implied by these numbers has a Kepler period of about <strong>27.8 days</strong>.
-The real Earth-Moon relative orbit is not exactly this model because the Moon's mass is not negligible.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-10</div><h4>Point-Mass Radial Infall</h4>
-<p>Give the particle nearly zero angular momentum and an inward velocity. Observe the
-termination near the mathematical \(r=0\) singularity. Do not interpret the numerical guard
-radius as the physical surface of the central body.</p></div>
+orbital period, energy drift, angular-momentum drift, and closure residuals rather than judging
+accuracy from the orbit plot alone. Try changing one numerical control at a time so that you can
+tell which effect it has. You can also make either tolerance deliberately large to see what happens
+when that accuracy control is effectively relaxed.</p></div>
+
+<div class="exp-card"><div class="ec-num">EXP-10 · Advanced</div><h4>Verify Kepler's Third Law</h4>
+<p>Run several bound planetary orbits. For each one, obtain the period \(T\) from a
+<code>maxOrbits=1</code> run and estimate the semi-major axis \(a=(r_{\rm peri}+r_{\rm apo})/2\)
+from the trajectory. Compare \(T^2/a^3\) among the different orbits. It should be approximately
+constant when the central mass is unchanged.</p></div>
+
+<div class="exp-card"><div class="ec-num">EXP-11 · Advanced</div><h4>Verify Kepler's Second Law</h4>
+<p>Use the returned \(x,y,t\) arrays to select positions separated by equal time intervals.
+Approximate the area swept during each interval by the triangle formed by the origin and the two
+successive radius vectors. The areas should be nearly equal. Relate this result to the nearly
+constant specific angular momentum \(h=xv_y-yv_x\) reported by the calculation.</p></div>
+
+<div class="exp-card"><div class="ec-num">EXP-12 · Advanced</div><h4>Explore the Velocity Hodograph</h4>
+<p>Select <code>output="velocity"</code>. For a non-radial Kepler orbit the velocity vectors lie
+on a circle: a bound ellipse traces the full circle, whereas parabolic and hyperbolic trajectories
+trace only part of it. Compare several eccentricities and then an unbound orbit. This goes beyond
+the original Help's observation that velocity repeats and reveals a deeper geometric property of
+the inverse-square law.</p></div>
+
+<div class="exp-card"><div class="ec-num">EXP-13 · Advanced</div><h4>Point-Mass Radial Infall</h4>
+<p>Give the particle zero or nearly zero angular momentum and an inward velocity. Observe what
+happens as the trajectory approaches the mathematical point-mass singularity. The program contains
+a numerical guard to prevent evaluation at \(r=0\); that guard radius is not the physical surface
+of a star or planet. Schutz specifically suggested investigating this troublesome limiting case.</p></div>
+
+<div class="exp-card"><div class="ec-num">EXP-14 · Advanced Programming Extension</div><h4>Try a Different Central Force Law</h4>
+<p>Schutz's original Help proposed changing the acceleration law and observing which orbits remain
+closed. As an optional programming exercise, make a copy of the program and replace the Newtonian
+inverse-square acceleration with another central-force law. A particularly instructive comparison
+is a Hooke-law acceleration proportional to \(-\mathbf r\), for which bound orbits are also closed.
+You can then try a small non-Newtonian correction and look for orbital precession. Keep this as a
+separate experimental copy so the standard <code>Orbit</code> program continues to represent
+Newtonian gravity.</p></div>
+
 </div>
 </section>
 <!-- ============================================================
