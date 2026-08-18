@@ -405,9 +405,20 @@
     <p>
       The default primary is Sun-like. The default companion has a mass of
       \(0.1\,M_\odot\), about 100 Jupiter masses; despite the historical
-      “Jupiter” label, an object this massive is in the low-mass stellar regime.
-      The exaggerated companion mass makes strong scattering and orbital
-      instability easy to see.
+      “Jupiter” label, an object this massive is above the roughly
+      \(0.08\,M_\odot\) hydrogen-burning threshold and is therefore in the
+      low-mass stellar regime. The exaggerated companion mass makes strong
+      scattering and orbital instability easy to see.
+    </p>
+    <p>
+      One of the central questions explored by MercPert is how a massive
+      companion can disturb or remove smaller bodies from nearby regions of a
+      planetary system. By varying the starting orbit, students can investigate
+      which regions remain stable, which lead to repeated close encounters or
+      ejection, and how far from a binary system long-lived planetary orbits can
+      exist. This test-particle model captures the gravitational part of the
+      “cleaning out” process discussed in Chapter 13, while deliberately leaving
+      out the gas physics of a protoplanetary disk.
     </p>
     <div class="note">
       <strong>What the model demonstrates:</strong> MercPert is useful for
@@ -432,16 +443,20 @@ python main.py</pre>
     <p>
       The default binary contains a \(1\,M_\odot\) Sun and a
       \(0.1\,M_\odot\) companion separated by \(0.7\,\mathrm{AU}\).
-      Mercury's user-facing initial state is specified <strong>relative to
+      Mercury's input initial state is specified <strong>relative to
       the Sun</strong>: it begins \(0.3\,\mathrm{AU}\) from the Sun with
       transverse relative speed \(59{,}220\,\mathrm{m\,s^{-1}}\).
       The program converts that state to barycentric inertial coordinates
       before integration.
     </p>
     <p>
-      By default, the calculation allows up to 10,000 accepted steps.
-      It stops earlier if Mercury enters the nominal solar radius. The final
-      trajectory is plotted in the barycentric inertial frame.
+      By default, the calculation allows up to 10,000 accepted steps. This gives
+      a clean baseline run; longer integrations are useful when searching for
+      strong encounters. The calculation stops earlier if Mercury enters the
+      nominal solar radius, or if a positive
+      <code>companion_collision_radius</code> has been supplied and Mercury
+      reaches that boundary. The final trajectory is plotted in the barycentric
+      inertial frame.
     </p>
 
     <h3>Customising the Simulation</h3>
@@ -597,14 +612,10 @@ python main.py</pre>
       predictor–corrector loop.
     </p>
     <div class="note">
-      <strong>Time-dependent forcing:</strong> Because the binary positions
-      \(\mathbf{r}_\odot(t)\) and \(\mathbf{r}_p(t)\) rotate with angular
-      velocity \(\omega\), Mercury's equation of motion is a
-      <em>non-autonomous</em> second-order ODE. The acceleration at position
-      \(\mathbf{r}\) depends not only on \(\mathbf{r}\) but also on the
-      current time \(t\). The corrector must therefore evaluate the
-      acceleration at \(t + \Delta t\) (not at \(t\)) when computing the
-      predicted positions.
+      <strong>Time-dependent forcing:</strong> The two massive bodies move, so
+      Mercury's acceleration depends explicitly on time as well as position.
+      The corrector must therefore evaluate the acceleration at
+      \(t + \Delta t\), using the primaries' positions at that later time.
     </div>
   </section>
 
@@ -639,8 +650,9 @@ python main.py</pre>
     <h3>Finite-Radius Stopping Surfaces</h3>
     <p>
       Point-mass gravity itself has no stellar surface. To prevent an orbit from
-      passing unscathed through a Sun-like primary, the default run sets
-      <code>sun_collision_radius = R_SUN</code>, the nominal solar radius.
+      passing through a Sun-like primary without a stopping condition, the
+      default run sets <code>sun_collision_radius = R_SUN</code>, the nominal
+      solar radius.
       Before an accepted endpoint is committed, the program checks the entire
       accepted Mercury segment against the Sun's moving finite-radius boundary.
       This can detect a crossing even when both timestep endpoints lie outside
@@ -651,7 +663,11 @@ python main.py</pre>
       <code>companion_collision_radius</code> defaults to zero because the
       companion can represent very different kinds of objects. Give it a
       physically appropriate positive radius if a particular experiment needs
-      collision stopping there.
+      collision stopping there. These radii are numerical termination surfaces,
+      not models of impacts, tidal disruption, accretion, or other physics after
+      contact. Likewise, <code>R_SUN</code> is appropriate only for a Sun-like
+      primary; change or disable it when the primary represents a different kind
+      of object.
     </p>
 
     <h3>Jacobi Constant</h3>
@@ -676,9 +692,13 @@ python main.py</pre>
       \]
     </div>
     <p>
-      <code>run_mercpert()</code> records \(C\) at every accepted state. The
-      optional Jacobi-drift plot provides a quantitative numerical-accuracy
-      diagnostic even when the orbit itself looks irregular.
+      In the ideal circular restricted three-body model, \(C\) is exactly
+      conserved because the gravitational potential is stationary in the frame
+      rotating with the binary. Any drift in the computed value is therefore
+      numerical rather than physical. <code>run_mercpert()</code> records
+      \(C\) at every accepted state, and the optional Jacobi-drift plot provides
+      a quantitative numerical-accuracy diagnostic even when the orbit itself
+      looks irregular.
     </p>
   </section>
 
@@ -780,7 +800,7 @@ python main.py</pre>
       <thead><tr><th>Variable</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead>
       <tbody>
         <tr><td><code>m_sun_solar</code></td><td>1.0</td><td>M<sub>☉</sub></td><td>Primary mass</td></tr>
-        <tr><td><code>m_planet_solar</code></td><td>0.1</td><td>M<sub>☉</sub></td><td>Companion mass; about 100 Jupiter masses, hence stellar rather than planetary</td></tr>
+        <tr><td><code>m_planet_solar</code></td><td>0.1</td><td>M<sub>☉</sub></td><td>Companion mass; about 100 Jupiter masses and above the ≈0.08 M<sub>☉</sub> hydrogen-burning threshold</td></tr>
         <tr><td><code>binary_separation</code></td><td>0.7 × AU</td><td>m</td><td>Centre-to-centre separation of the massive bodies</td></tr>
       </tbody>
     </table>
@@ -804,7 +824,7 @@ python main.py</pre>
         <tr><td><code>max_steps</code></td><td>10,000</td><td>Maximum accepted integration steps</td></tr>
         <tr><td><code>eps1</code></td><td>0.05</td><td>Acceleration-change timestep tolerance</td></tr>
         <tr><td><code>eps2</code></td><td>0.0001</td><td>Corrector convergence tolerance</td></tr>
-        <tr><td><code>sun_collision_radius</code></td><td><code>R_SUN</code></td><td>Stops the default run at the nominal solar surface; set 0 to disable</td></tr>
+        <tr><td><code>sun_collision_radius</code></td><td><code>R_SUN</code></td><td>Sun-like primary stopping surface; set 0 to disable or change for a different kind of primary</td></tr>
         <tr><td><code>companion_collision_radius</code></td><td>0</td><td>Optional companion stopping radius</td></tr>
       </tbody>
     </table>
@@ -906,9 +926,7 @@ python main.py</pre>
         <div class="gc-caption">
           <strong>Retrograde motion.</strong>
           In the scenario illustrated here, Mercury's chaotic motions include short loops where
-          Mercury moves in a retrograde sense. The student may also wish to try out
-          scenarios where the initial sense of Mercury's orbit is reversed, which produces a 
-          distinctly different family of loops and close approaches. 
+          Mercury moves in a retrograde sense. 
         </div>
       </div>
 
@@ -941,12 +959,17 @@ python main.py</pre>
   <section id="suggestions">
     <h2>Suggested Experiments</h2>
 
-    <h3>1 · Reproduce the Default Close-Encounter Problem</h3>
+    <h3>1 · Extend the Default Run Toward a Close Encounter</h3>
     <p>
-      Run the defaults first. Then make small changes in
-      <code>x_init</code> or <code>vy_init</code>. Compare not only the orbit
-      shapes but also the Jacobi drift. Strongly different long-term paths can
-      arise from small changes without implying numerical failure.
+      Run the 10,000-step defaults first as a baseline. Then increase
+      <code>max_steps</code> gradually — for example to 40,000, 60,000, and
+      100,000 — and watch for the onset of stronger perturbations and close
+      encounters. Also try small changes in <code>x_init</code> or
+      <code>vy_init</code>. Compare the orbit shapes and the maximum fractional
+      Jacobi drift. Very close encounters are numerically demanding, so a large
+      drift is a signal to repeat the experiment with tighter accuracy settings;
+      strongly different long-term paths by themselves do not prove numerical
+      failure.
     </p>
 
     <h3>2 · A Quieter Baseline Orbit</h3>
@@ -960,35 +983,45 @@ python main.py</pre>
     <h3>3 · Companion-Mass Sequence</h3>
     <p>
       Reduce <code>m_planet_solar</code> from 0.1 toward a genuine giant-planet
-      mass and observe how the stability region changes. The default 0.1-solar-
-      mass companion is deliberately extreme and belongs to the low-mass stellar
-      regime.
+      mass and observe how the stability region changes. Jupiter itself is about
+      \(9.5\times10^{-4}\,M_\odot\), giving a useful lower-end reference.
+      The default 0.1-solar-mass companion is deliberately extreme and belongs to
+      the low-mass stellar regime.
     </p>
 
     <h3>4 · Map a Stability Boundary</h3>
     <p>
-      Hold the binary fixed and scan Mercury's starting radius. Record which
-      initial conditions remain bounded for the chosen integration time, which
-      undergo close encounters, and which are ejected. Do not assume that a
-      visually sharp boundary remains sharp over arbitrarily long times.
+      Hold the binary fixed and try a sequence of Mercury starting radii. Record
+      which initial conditions remain bounded for the chosen integration time,
+      which undergo close encounters, and which are ejected. How far outside the
+      companion's orbit is it safe for Mercury to orbit without being seriously
+      disturbed? A handful of carefully chosen manual trials is enough to locate
+      the transition approximately; do not assume that a visually sharp boundary
+      remains sharp over arbitrarily long times.
     </p>
 
     <h3>5 · Equal-Mass Binary and Circumbinary Orbits</h3>
     <p>
       Set both massive bodies to \(1\,M_\odot\) and choose a separation near
       1 AU. Search for stable orbits far outside the binary as well as unstable
-      trajectories between the two stars.
+      trajectories between the two stars. Compare the smallest stable
+      circumbinary orbit you can find with the binary separation.
     </p>
 
     <h3>6 · Roche-Lobe / L1 Test-Particle Experiment</h3>
     <p>
       For an unequal-mass binary, place Mercury at different starting points on
-      the line between the two bodies and give it the local co-rotation velocity.
-      Explore the dividing region between trajectories that remain associated
-      with one primary and those transferred toward the other. This is a
-      test-particle analogue of motion near the inner Lagrange point \(L_1\),
-      not a complete model of gas transfer: real gas also develops pressure,
-      shocks, dissipation, and radiation.
+      the line between the two bodies. Compute the binary angular velocity
+      \(\omega\), set <code>y_init = 0</code> and <code>vx_init = 0</code>,
+      and give Mercury the Sun-relative co-rotation velocity
+      <code>vy_init = omega * x_init</code>. Explore the dividing region between
+      trajectories that remain associated with one primary and those transferred
+      toward the other. This is a test-particle analogue of motion near the inner
+      Lagrange point \(L_1\), not a complete model of gas transfer: real gas also
+      develops pressure, shocks, dissipation, and radiation. If the primary is
+      changed from a Sun-like star to a compact object such as a black hole, set
+      <code>sun_collision_radius</code> to zero or to a physically appropriate
+      stopping radius rather than leaving it at <code>R_SUN</code>.
     </p>
 
     <h3>7 · Retrograde Orbits</h3>
@@ -1001,10 +1034,12 @@ python main.py</pre>
     <h3>8 · Numerical Convergence</h3>
     <p>
       Repeat the same physical setup with smaller <code>dt</code> and tighter
-      <code>eps1</code>/<code>eps2</code>. Compare the trajectories over a
-      finite interval and compare the maximum fractional Jacobi drift. The
-      Jacobi diagnostic is especially useful when later portions of two
-      sensitive trajectories diverge visibly.
+      <code>eps1</code>/<code>eps2</code>; for example, try
+      <code>eps1 = 0.01</code> and <code>eps2 = 1e-5</code>. Compare the
+      trajectories over the same finite interval and compare the maximum
+      fractional Jacobi drift. Set <code>show_jacobi_diagnostic = True</code> if
+      you also want the drift plot. The Jacobi diagnostic is especially useful
+      when later portions of two sensitive trajectories diverge visibly.
     </p>
   </section>
 
@@ -1044,15 +1079,17 @@ python main.py</pre>
 
       <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
         <li>
-          <strong>Same session:</strong>
-          Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
-          (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
-          (macOS) repeatedly in PyCharm to undo your edits.
+          <strong>Same editing session:</strong>
+          Use your editor's Undo command — commonly
+          <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
+          (Windows/Linux) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
+          (macOS) — repeatedly to undo your edits.
         </li>
         <li>
-          <strong>After reopening PyCharm:</strong>
-          Right-click <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
-          in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+          <strong>After reopening your editor:</strong>
+          If your editor provides local file history, or if you are using version
+          control, restore <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
+          from a version saved before your changes.
         </li>
         <li>
           <strong>Full reset:</strong>
