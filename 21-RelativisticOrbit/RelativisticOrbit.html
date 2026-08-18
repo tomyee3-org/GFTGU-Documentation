@@ -439,6 +439,13 @@ python main.py</pre>
       conservation drift. If at least two periapsides are found, it also reports
       the mean periapsis advance per radial period.
     </p>
+    <div class="note">
+      <strong>Stopping limits:</strong> <code>max_steps</code> is a hard safety
+      cap. A run can therefore stop at <code>max_steps</code> before it reaches
+      <code>max_orbits</code>; this is normal when the requested number of
+      revolutions requires more accepted steps. Increase <code>max_steps</code>
+      if you want the integration to continue longer.
+    </div>
 
     <h3>Main user controls</h3>
     <ul style="margin: 0 0 14px 28px; line-height: 2.1;">
@@ -662,9 +669,11 @@ python main.py</pre>
     </p>
     <p>
       The driver detects the first intersection of an accepted path segment
-      with the true horizon circle and stops there. The plot never enlarges the
-      horizon merely to make it visible; a separate central marker identifies
-      the origin in weak-field plots.
+      with the true horizon circle and stops there. The crossing point and time
+      are estimated by linear interpolation along that last accepted segment,
+      so an excessively large timestep can make the reported crossing time less
+      precise. The plot never enlarges the horizon merely to make it visible; a
+      separate central marker identifies the origin in weak-field plots.
     </p>
   </section>
 
@@ -728,21 +737,24 @@ python main.py</pre>
   <section id="orbit-count">
     <h2>Revolution Counting</h2>
     <p>
-      The revised driver no longer infers a completed orbit merely from the
-      sign of \(y\). Instead it computes
-      \(\phi=\operatorname{atan2}(y,x)\), unwraps the change in azimuth at every
-      accepted step, and accumulates the signed angular travel.
+      The driver computes \(\phi=\operatorname{atan2}(y,x)\), unwraps the change
+      in azimuth at every accepted step, and accumulates the signed angular
+      travel.
     </p>
     <div class="eq">
       \[
-        N_{\rm rev}=\frac{|\Delta\phi_{\rm accumulated}|}{2\pi}.
+        N_{
+m rev}=rac{|\Delta\phi_{
+m accumulated}|}{2\pi}.
       \]
     </div>
     <p>
-      This fixes a porting error in the previous Python version, which could
-      count the first half-revolution as a full orbit. Integration stops when
-      the accumulated revolution count reaches <code>max_orbits</code>, unless
-      the horizon or <code>max_steps</code> is reached first.
+      This method counts accumulated azimuthal travel directly, so it works for
+      precessing orbits and for either direction of motion. Integration stops
+      when the accumulated revolution count reaches <code>max_orbits</code>,
+      unless the horizon or <code>max_steps</code> is reached first. Because the
+      condition is tested after each accepted step, the reported count can
+      exceed the requested limit by a small fraction of one step.
     </p>
   </section>
 
@@ -758,7 +770,7 @@ python main.py</pre>
     </table>
     <p>
       The program requires \(0&lt;\varepsilon_2&lt;\varepsilon_1&lt;1\).
-      An unconverged corrector is no longer silently accepted.
+      An unconverged corrector step is rejected: the timestep is halved and the step is retried.
     </p>
     <p>
       Two conserved quantities provide additional checks. The driver reports
@@ -776,7 +788,7 @@ python main.py</pre>
       \]
     </div>
     <p>
-      for Schwarzschild mode. These are diagnostics of the integrated orbital
+      for Schwarzschild mode. In Newtonian mode the final \(-GMh^2/(c^2r^3)\) term is omitted. These are diagnostics of the integrated orbital
       equation; \(\mathcal E_{\rm eff}\) should not be mistaken for a local
       observer's measured kinetic-plus-potential energy.
     </p>
@@ -790,11 +802,11 @@ python main.py</pre>
     <table>
       <thead><tr><th>Parameter</th><th>Default</th><th>Meaning</th></tr></thead>
       <tbody>
-        <tr><td><code>x_init</code></td><td>1.5e4 m</td><td>Initial Schwarzschild areal radius, placed on +x in the diagram.</td></tr>
+        <tr><td><code>x_init</code></td><td>1.5e4 m</td><td>Initial Schwarzschild areal radius, placed on +x in the diagram. In Schwarzschild mode it must exceed the horizon radius (about 2953 m).</td></tr>
         <tr><td><code>u_init</code></td><td>1.2e8 m/s</td><td>Initial \(dy/d\tau\), not a local measured speed.</td></tr>
         <tr><td><code>dt</code></td><td>2e-6 s</td><td>Maximum proper-time step.</td></tr>
-        <tr><td><code>max_steps</code></td><td>6000</td><td>Maximum accepted steps.</td></tr>
-        <tr><td><code>max_orbits</code></td><td>10</td><td>Maximum accumulated azimuthal revolutions.</td></tr>
+        <tr><td><code>max_steps</code></td><td>6000</td><td>Hard cap on accepted steps; a run can stop here before reaching <code>max_orbits</code>.</td></tr>
+        <tr><td><code>max_orbits</code></td><td>10</td><td>Maximum accumulated azimuthal revolutions; the reported count can exceed the limit slightly by the angular travel in the final accepted step.</td></tr>
         <tr><td><code>eps1</code></td><td>0.05</td><td>Acceleration-vector timestep tolerance.</td></tr>
         <tr><td><code>eps2</code></td><td>1e-4</td><td>Corrector velocity-convergence tolerance.</td></tr>
         <tr><td><code>model</code></td><td>"schwarzschild"</td><td><code>"schwarzschild"</code> or <code>"newtonian"</code>.</td></tr>
@@ -813,69 +825,117 @@ python main.py</pre>
   <section id="scenarios">
     <h2>Suggested Scenarios</h2>
     <div class="note">
+      <strong>How to use these exercises:</strong> work roughly from top to
+      bottom; the sequence moves from simple observation to progressively more
+      demanding strong-field experiments. Here <em>periapsis</em> means the
+      closest approach in a radial cycle. The plotted \(x,y\) values are diagram
+      coordinates built from Schwarzschild areal radius and azimuth, not global
+      flat-space Cartesian coordinates.
+    </div>
+    <div class="note">
       <strong>Choosing a starting timestep:</strong> for a near-circular orbit,
       a useful first estimate for \(N\) samples per revolution is
       \[
         \Delta\tau \sim \frac{2\pi r}{uN}.
       \]
       Adaptive stepping will reduce this automatically where the dynamics
-      require finer resolution.
+      require finer resolution. Very large <code>dt</code> or extreme initial
+      derivatives can force repeated timestep rejection or make diagnostics
+      less accurate.
     </div>
+
     <div class="scenario-grid">
       <div class="scenario-card">
-        <div class="sc-title">Default Strong-Field Rosette</div>
-        Run the supplied defaults first. Turn on
-        <code>show_periapsides=True</code> and compare the rotating sequence of
-        periapsides with the printed mean apsidal advance.
+        <div class="sc-title">1. Default Strong-Field Rosette — Introductory</div>
+        Run the supplied defaults. Then set
+        <code>show_periapsides=True</code>. Do successive periapsides occur at
+        the same angle? Compare their rotation with the printed mean apsidal
+        advance. Also note whether the run stops at <code>max_steps</code> or
+        <code>max_orbits</code>.
       </div>
 
       <div class="scenario-card">
-        <div class="sc-title">Circular Geodesics</div>
-        Use <code>circular_proper_time_speed(r)</code> from the physics module.
-        Compare a stable circular orbit above \(6GM/c^2\) with a carefully
-        initialized unstable circular orbit between \(3GM/c^2\) and
-        \(6GM/c^2\). Perturb the latter slightly and watch it depart.
+        <div class="sc-title">2. Regularity of the Rosette — Introductory</div>
+        Inspect <code>result.periapsis_radius</code> for a bound precessing run.
+        Verify that successive minimum radii remain nearly the same, within the
+        numerical drift reported by the program. The orbit changes orientation
+        even though its radial pattern remains regular.
       </div>
 
       <div class="scenario-card">
-        <div class="sc-title">Inside the ISCO</div>
-        Choose an eccentric orbit whose periapsis lies inside
-        \(6GM/c^2\) but which still returns outward. This demonstrates why
-        “inside the ISCO” does not mean that every geodesic must immediately
-        plunge.
-      </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">Zoom-Whirl / Plunge</div>
-        Tune the initial derivative near the boundary between scattering/bound
-        motion and plunge. Some trajectories execute several near-circular
-        whirls before crossing the horizon, despite having no dissipative
-        orbital decay.
-      </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">Weak-Field Mercury Analogue</div>
-        Use Mercury-like perihelion distance and perihelion proper-time
-        derivative, run for many radial periods, and compare the automatically
-        measured apsidal advance with
-        \(6\pi GM/[a(1-e^2)c^2]\). For a quantitative 43-arcsec/century
-        comparison, use initial conditions matched to Mercury's actual orbital
-        elements rather than merely a vaguely Mercury-sized orbit.
-      </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">GR vs. Newtonian</div>
+        <div class="sc-title">3. GR vs. Newtonian — Introductory</div>
         Run identical initial conditions twice, changing only
         <code>model="schwarzschild"</code> to <code>"newtonian"</code>.
-        Compare the precessing relativistic orbit with the closed Keplerian
-        orbit without editing the physics source.
+        The Newtonian bound orbit should be nearly closed, while the
+        Schwarzschild orbit precesses. What changes in the orbit, and what
+        remains the same about the initial data?
       </div>
 
       <div class="scenario-card">
-        <div class="sc-title">Numerical Convergence</div>
+        <div class="sc-title">4. Fall In or Escape — Introductory</div>
+        Starting from the default data, reduce <code>u_init</code> until the
+        orbit crosses the horizon, then increase it until the particle escapes
+        rather than remaining bound. Use modest changes first, then narrow the
+        transition. Record the termination reason in each case.
+      </div>
+
+      <div class="scenario-card">
+        <div class="sc-title">5. Circular Geodesics — Intermediate</div>
+        Use <code>circular_proper_time_speed(r)</code> from the physics module.
+        Compare a stable circular orbit above \(6GM/c^2\) with an unstable
+        circular orbit between \(3GM/c^2\) and \(6GM/c^2\). For the unstable
+        case, multiply the exact circular value by about 1.001 and follow the
+        departure over many steps. Try perturbations on both sides of the exact
+        value.
+      </div>
+
+      <div class="scenario-card">
+        <div class="sc-title">6. Numerical Convergence — Intermediate</div>
         Tighten <code>eps1</code> and <code>eps2</code> and/or reduce
         <code>dt</code>. Compare the measured apsidal advance and the reported
-        angular-momentum and effective-energy drift.
+        angular-momentum and effective-energy drift. A trustworthy physical
+        result should settle toward a stable value as the numerical controls are
+        tightened.
+      </div>
+
+      <div class="scenario-card">
+        <div class="sc-title">7. Inside the ISCO — Intermediate</div>
+        Search for an eccentric orbit whose periapsis lies inside
+        \(6GM/c^2\) but which still returns outward. A useful strategy is to
+        begin just outside the ISCO and vary <code>u_init</code> above the local
+        circular value in small increments. Use
+        <code>result.periapsis_radius</code> to check how far inward the orbit
+        actually reached. This shows why crossing the ISCO does not by itself
+        imply immediate plunge.
+      </div>
+
+      <div class="scenario-card">
+        <div class="sc-title">8. Toward the Photon Orbit — Advanced</div>
+        Explore bound or near-capture trajectories with closest approach moving
+        toward \(3GM/c^2\) from above. Watch how much azimuth can accumulate
+        during a close passage. Timelike circular geodesics cease to exist at
+        and below \(3GM/c^2\), so this experiment becomes increasingly
+        sensitive as that radius is approached.
+      </div>
+
+      <div class="scenario-card">
+        <div class="sc-title">9. Zoom-Whirl / Plunge — Advanced</div>
+        Tune <code>u_init</code> near the boundary between capture (plunge) and
+        a bound or escaping orbit. Some trajectories execute several
+        near-circular whirls before crossing the horizon. Expect fine tuning:
+        narrow the interval in <code>u_init</code> gradually and keep an eye on
+        the conservation diagnostics.
+      </div>
+
+      <div class="scenario-card">
+        <div class="sc-title">10. Weak-Field Precession — Advanced</div>
+        Move the starting radius outward and choose a correspondingly weaker
+        bound orbit. Verify qualitatively that Schwarzschild precession becomes
+        smaller as the field weakens, while Newtonian mode remains nearly
+        closed. The famous Mercury result is a much more demanding quantitative
+        test: its relativistic advance per orbit is tiny, so reproducing it
+        accurately requires carefully matched orbital elements, much tighter
+        numerical tolerances, and many well-resolved radial periods.
       </div>
     </div>
   </section>
@@ -919,10 +979,10 @@ python main.py</pre>
           <strong>Same session:</strong>
           Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
           (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
-          (macOS) repeatedly in PyCharm to undo your edits.
+          (macOS) repeatedly in your editor to undo your edits.
         </li>
         <li>
-          <strong>After reopening PyCharm:</strong>
+          <strong>If you are using PyCharm:</strong>
           Right-click <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
           in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
         </li>
@@ -938,9 +998,8 @@ python main.py</pre>
       </ul>
 
       <p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
-        For step-by-step instructions on all four restore methods, see
-        <strong>Section&nbsp;10</strong> of the
-        <em>GFTGU Python Setup Guide</em>.
+        For additional ways to restore program files, see the corresponding
+        recovery instructions in the <em>GFTGU Python Setup Guide</em>.
       </p>
     </div>
   </div>
