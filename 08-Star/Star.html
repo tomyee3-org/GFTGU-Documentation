@@ -553,7 +553,7 @@
     <p>
       The initial spacing is <code>radial_scale / steps_per_scale</code>. If the model has not
       reached zero pressure within <code>max_points</code> grid points, the driver doubles
-      <code>dr</code> and restarts from the center. This guarantees greater radial coverage but
+      <code>dr</code> and restarts from the center. This increases the radial coverage of the next attempt but
       sacrifices resolution; it is not an error-controlled adaptive integrator.
     </p>
     <p>
@@ -587,7 +587,7 @@
         <div class="mc-sig">plot_star_structure(result, log_y=False)</div>
       </div>
       <div class="module-card"><div class="mc-name">main.py</div><div class="mc-role">Entry Point</div>
-        <p>Contains the ordinary physical and numerical parameters intended for experimentation. No edits to the other modules are needed for the suggested experiments.</p>
+        <p>Contains the user-editable physical and numerical settings for experiments. No edits to the other modules are needed for the suggested investigations.</p>
       </div>
     </div>
   </section>
@@ -604,9 +604,9 @@
       <tr><td><code>max_points</code></td><td><code>2000</code></td><td>integer</td><td>Maximum grid points in one attempt. Increase it when an extended model would otherwise trigger step doubling; it does not by itself refine a successful run.</td></tr>
       <tr><td><code>steps_per_scale</code></td><td><code>400</code></td><td>integer</td><td>Controls the initial numerical resolution through \(dr=\ell/\text{steps_per_scale}\). Larger values give a finer calculation, provided <code>max_points</code> is large enough to avoid a restart.</td></tr>
       <tr><td><code>output_type</code></td><td><code>"pressure"</code></td><td>string</td><td>One of <code>"pressure"</code>, <code>"density"</code>, <code>"temperature"</code>, or <code>"mass"</code>.</td></tr>
-      <tr><td><code>log_y</code></td><td><code>False</code></td><td>boolean</td><td>Use a logarithmic vertical axis for pressure, density, or temperature. Leave false for mass because \(m(0)=0\).</td></tr>
+      <tr><td><code>log_y</code></td><td><code>False</code></td><td>boolean</td><td>Use a logarithmic vertical axis for pressure, density, or temperature. Leave false for mass because \(m(0)=0\). On a logarithmic plot, the exact zero-valued surface point is omitted because a logarithmic axis cannot display zero.</td></tr>
     </tbody></table>
-    <div class="note"><strong>Input checks:</strong> The driver rejects nonpositive central pressure, temperature, or \(\mu\); \(\gamma\le1.2\); fewer than three grid points; nonpositive <code>steps_per_scale</code>; and unsupported output names with explanatory <code>ValueError</code> messages.</div>
+    <div class="note"><strong>Input checks:</strong> The driver rejects non-finite numerical inputs, nonpositive central pressure, temperature, or \(\mu\); \(\gamma\le1.2\); fewer than three grid points; nonpositive <code>steps_per_scale</code>; and unsupported output names with explanatory <code>ValueError</code> messages.</div>
   </section>
 
   <!-- ── Output Modes ── -->
@@ -706,7 +706,7 @@
       </ul>
 
       <p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
-        For step-by-step instructions on all four restore methods, see
+        For step-by-step instructions on restoring defaults, see
         <strong>Section&nbsp;10</strong> of the
         <em>GFTGU Python Setup Guide</em>.
       </p>
