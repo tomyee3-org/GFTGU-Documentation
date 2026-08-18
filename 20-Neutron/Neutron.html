@@ -394,14 +394,6 @@
   does not evolve stars in time, so it does not simulate collapse; it computes
   static equilibrium configurations only.
 </p>
-<div class="note tip">
-  <strong>Correction to the historical implementation</strong>
-  The complete TOV pressure source is \(m+4\pi r^3p/c^2\). The original Java
-  source omitted the factor \(p\) from this term even though its written
-  documentation displayed the correct equation. The revised Python program
-  uses the complete TOV expression.
-</div>
-
 <h2 id="parameters">Parameters</h2>
 <p>Set these values near the top of <code>main.py</code>.</p>
 <table>
@@ -412,8 +404,8 @@
 <tr><td>K</td><td>5.3802e3</td><td>depends on \(\gamma\)</td><td>Polytropic constant. Its dimensions depend on \(\gamma\), so changing \(\gamma\) while keeping the same numerical \(K\) is not a controlled stiffness comparison.</td></tr>
 <tr><td>output_type</td><td>"Pressure"</td><td>string</td><td><code>"Pressure"</code>, <code>"Density"</code>, or <code>"Mass"</code>.</td></tr>
 <tr><td>log_y</td><td>False</td><td>boolean</td><td>Optional logarithmic y-axis for pressure or density.</td></tr>
-<tr><td>steps_per_scale</td><td>400</td><td>—</td><td>Nominal radial resolution, \(\Delta r=\ell/\text{steps_per_scale}\).</td></tr>
-<tr><td>max_steps</td><td>200000</td><td>—</td><td>Safety limit on radial integration steps.</td></tr>
+<tr><td>steps_per_scale</td><td>400</td><td>—</td><td>Nominal radial resolution, \(\Delta r=\ell/\text{steps_per_scale}\). Must be an integer of at least 50.</td></tr>
+<tr><td>max_steps</td><td>200000</td><td>—</td><td>Safety limit on radial integration steps. Must be an integer of at least 100.</td></tr>
 </tbody>
 </table>
 <div class="note">
@@ -439,7 +431,9 @@ and the exact SI speed of light \(c=299\,792\,458\ \mathrm{m\,s^{-1}}\).
   <code>print_model_summary()</code> reports surface radius, total mass,
   central density, compactness \(2GM/(Rc^2)\), the Buchdahl check, radial sample
   count, and nominal radial spacing. Pressure and density may be shown on a
-  logarithmic scale with <code>log_y=True</code>.
+  logarithmic scale with <code>log_y=True</code>; the exact zero-valued surface
+  point is omitted from a logarithmic plot because zero cannot be represented
+  on a log axis. <code>log_y</code> is ignored for mass plots.
 </p>
 
 <h2 id="modules">Module Structure</h2>
@@ -481,12 +475,11 @@ and the exact SI speed of light \(c=299\,792\,458\ \mathrm{m\,s^{-1}}\).
   contributions, while the denominator contains the compactness factor
   \(1-2Gm/(rc^2)\).
 </p>
-<div class="note warn">
-<strong>Historical implementation error</strong>
-The original Java source omitted the factor \(p\) in \(4\pi r^3p/c^2\).
-The revised Python implementation corrects that inherited error; old numerical
-results produced by the incomplete expression should not be used as reference
-values for the corrected program.
+<div class="note">
+<strong>Pressure gravitates</strong>
+The term \(4\pi r^3p/c^2\) is an essential relativistic contribution to the
+active gravitational mass inside radius \(r\). It is one of the ways in which
+pressure contributes to gravity in the TOV equation.
 </div>
 <p>
   If \(r-2Gm/c^2\le0\), the code stops with an explanatory error rather than
@@ -500,10 +493,10 @@ p=K\rho^\gamma,\qquad
 \]<span class="eq-label">(3)</span></div>
 <p>
   The default \(\gamma\approx5/3\), \(K=5.3802\times10^3\) combination is useful
-  as a simple pedagogical polytrope and is related to the ideal
-  non-relativistic degenerate-neutron EOS. At the extreme densities reached
-  inside neutron stars, however, realistic matter requires relativistic and
-  strong-interaction nuclear physics. The default is therefore not a modern
+  as a simple pedagogical polytrope and has the same \(\gamma=5/3\) scaling as
+  an ideal non-relativistic degenerate Fermi gas. At the extreme densities
+  reached inside neutron stars, however, realistic matter requires relativistic
+  and strong-interaction nuclear physics. The default is therefore not a modern
   precision neutron-star EOS.
 </p>
 <div class="note">
@@ -511,6 +504,14 @@ p=K\rho^\gamma,\qquad
 Because the dimensions of \(K\) depend on \(\gamma\), compare different
 exponents by choosing a common central reference state and computing
 \(K=p_C/\rho_C^\gamma\) separately for each \(\gamma\).
+</div>
+<div class="note warn">
+<strong>Limit of the simple EOS</strong>
+For this polytrope, the local sound-speed relation is
+\(v_s^2/c^2=\gamma p/(\rho c^2)\). Extreme parameter choices can therefore
+make the model formally acausal, with \(v_s&gt;c\). Such a result signals failure
+of the assumed polytropic EOS, not a prediction that real neutron-star matter
+transmits signals faster than light.
 </div>
 
 <h2 id="mass">Mass Integral</h2>
@@ -524,7 +525,8 @@ exponents by choosing a common central reference state and computing
   This is already the relativistic TOV mass equation; no extra spatial metric
   factor belongs on its right-hand side. The returned <code>mass</code> array is
   the enclosed gravitational mass-energy expressed in kilograms, and the
-  plotting routine converts it to solar masses.
+  plotting routine converts it to solar masses. This is the TOV gravitational
+  mass function; the program does not separately compute baryonic (rest) mass.
 </p>
 
 <h2 id="buchdahl">Buchdahl's Theorem</h2>
@@ -562,13 +564,11 @@ R\ge\frac{9}{4}\frac{GM}{c^2}
 <h2 id="radial-march">Radial Integration Scheme</h2>
 <p>
   Pressure and enclosed mass form a coupled pair of first-order ODEs. The
-  revised solver advances both with classical fourth-order Runge–Kutta (RK4)
-  rather than the historical first-order forward-Euler march.
+  solver advances both with classical fourth-order Runge–Kutta (RK4).
 </p>
 <p>
-  Python lists grow as required, so there is no fixed 2000-element storage
-  limit and no resolution-degrading step doubling merely to fit the star inside
-  a preallocated array.
+  The radial data arrays grow as required, while <code>max_steps</code> provides
+  a safety limit on the integration.
 </p>
 <div class="note tip">
 <strong>Convergence test</strong>
@@ -609,8 +609,8 @@ p(r_0)\simeq p_C
 \left(\frac{\rho_C}{3}+\frac{p_C}{c^2}\right)r_0^2. \tag{8}
 \]<span class="eq-label">(8)</span></div>
 <p>
-  This preserves the regular central boundary conditions while improving on
-  the historical approximation \(p(r_0)=p_C\).
+  This preserves the regular central boundary conditions while avoiding a
+  direct evaluation of the formally singular differential equation at \(r=0\).
 </p>
 
 <h2 id="doubling">Locating the Stellar Surface</h2>
@@ -618,16 +618,48 @@ p(r_0)\simeq p_C
   The surface is defined by \(p=0\). The solver integrates outward on the
   nominal grid and shortens the final step when the local pressure slope shows
   that the zero lies within the next interval. Surface radius and enclosed mass
-  are then evaluated at that zero-pressure location.
-</p>
-<p>
-  This removes both the old one-grid-step ambiguity in the reported radius and
-  the historical need to double the radial spacing when a fixed 2000-point
-  array was exhausted.
+  are then estimated at that zero-pressure location using the local slope or
+  linear interpolation over the final interval.
 </p>
 
 <h2 id="experiments">Suggested Experiments</h2>
-<h3>1. Mass–Central-Pressure Sequence</h3>
+<div class="note tip">
+<strong>Running a sequence</strong>
+Several experiments below require more than one model. You can edit and rerun
+<code>main.py</code> for each case, or write a short script that imports
+<code>compute_neutron_star()</code> from <code>driver_neutron.py</code> and loops
+over the desired parameter values.
+</div>
+
+<h3>1. Profile Shapes: Pressure, Density, and Mass</h3>
+<p>
+  Run the default model with <code>output_type</code> set in turn to
+  <code>"Pressure"</code>, <code>"Density"</code>, and <code>"Mass"</code>.
+  Describe how each profile changes with radius. Why must enclosed mass increase
+  outward while pressure and density decrease?
+</p>
+
+<h3>2. Numerical Convergence</h3>
+<p>
+  Repeat the default model with <code>steps_per_scale</code> = 200, 400, 800,
+  and 1600. Compare surface radius, total mass, and compactness. Which reported
+  quantity is most sensitive to radial refinement?
+</p>
+
+<h3>3. Comparison with Newtonian Hydrostatics</h3>
+<p>
+  Compare <strong>Neutron</strong> with the <strong>Star</strong> program at the
+  same central pressure, polytropic exponent, and central density.
+  <strong>Star</strong> obtains its central density from its temperature and
+  composition inputs and then derives its polytropic constant, so the two
+  programs do not take an identical set of EOS parameters. After running
+  <strong>Star</strong>, use its central density \(\rho_C\) to set
+  \(K=p_C/\rho_C^\gamma\) in <strong>Neutron</strong>. Compare mass, radius,
+  pressure profile, and density profile. Relativistic differences should grow
+  as compactness increases.
+</p>
+
+<h3>4. Mass–Central-Pressure Sequence</h3>
 <p>
   Run a logarithmically spaced series of <code>pC</code> values and record
   <code>data["total_mass_solar"]</code> and
@@ -636,42 +668,32 @@ p(r_0)\simeq p_C
   does not dynamically collapse the unstable branch.
 </p>
 
-<h3>2. Numerical Convergence</h3>
+<h3>5. Buchdahl Compactness Along a Sequence</h3>
 <p>
-  Repeat the default model with <code>steps_per_scale</code> = 200, 400, 800,
-  and 1600. Compare surface radius, total mass, and compactness.
-</p>
-
-<h3>3. Comparison with Newtonian Hydrostatics</h3>
-<p>
-  Use the <strong>Star</strong> program with the same \(p_C\), \(K\), and
-  \(\gamma\). Identical EOS inputs imply the same central density, so compare
-  mass, radius, pressure profile, and density profile rather than central
-  density. Relativistic differences grow as compactness increases.
-</p>
-
-<h3>4. Buchdahl Check</h3>
-<p>
-  Examine <code>data["compactness"]</code> for a sequence of models.
+  Plot <code>data["compactness"]</code> for a sequence of models.
   Configurations satisfying Buchdahl's assumptions must remain at or below
-  \(8/9\). Investigate how close the chosen sequence comes to the bound; the
-  theorem does not require saturation.
+  \(8/9\). Investigate how close the chosen sequence comes to the bound.
+  Numerical failure to exceed \(8/9\) is not a proof of Buchdahl's theorem;
+  the theorem follows from its analytic assumptions.
 </p>
 
-<h3>5. Controlled EOS-Stiffness Comparison</h3>
+<h3>6. Controlled EOS-Stiffness Comparison</h3>
 <p>
   Choose a common \(p_C\) and target \(\rho_C\). For each
-  \(\gamma&gt;1\), calculate \(K=p_C/\rho_C^\gamma\) and compare the resulting
-  mass-radius models. This keeps the central reference state comparable.
+  \(\gamma&gt;1\), calculate \(K=p_C/\rho_C^\gamma\) and compare the
+  resulting mass-radius models. This keeps the central reference state
+  comparable while you explore the effect of changing EOS stiffness.
 </p>
 
-<h3>6. Limits of a Single Polytrope</h3>
+<h3>7. Limits of a Single Polytrope</h3>
 <p>
-  Explore a wide central-pressure range and note when the simple EOS produces
-  extreme densities or compactness. Compare its assumptions with modern
-  piecewise or tabulated nuclear equations of state. A realistic self-bound
-  quark-matter EOS generally includes an offset energy density and cannot be
-  represented merely by setting \(\gamma=1\) and \(K=c^2/3\) in this solver.
+  Explore a wide central-pressure range. For each model, evaluate
+  \(v_s^2/c^2=\gamma p/(\rho c^2)\), especially at the center, and note
+  where the simple EOS becomes acausal or produces extreme densities and
+  compactness. Explain why those results mark limitations of the assumed
+  polytrope. A realistic self-bound quark-matter EOS generally includes an
+  offset energy density and cannot be represented merely by setting
+  \(\gamma=1\) and \(K=c^2/3\) in this solver.
 </p>
 
 <h2 id="seealso">See Also</h2>
