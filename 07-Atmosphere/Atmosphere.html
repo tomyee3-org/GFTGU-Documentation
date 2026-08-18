@@ -1028,82 +1028,108 @@ plot_atmosphere(curve_data)</code></pre>
     <section id="experiments">
       <h2>Suggested Experiments</h2>
       <p>
-        Settings for these experiments require editing only <code>main.py</code>, except where
-        a plotting change is explicitly noted.
+        The experiments below are arranged in approximate order of difficulty. Most require only
+        changes to <code>main.py</code>; experiments that require a plotting or algorithm change
+        say so explicitly.
       </p>
 
       <div class="scenario-card">
-        <h4>1 · Earth's Hybrid Atmospheric Temperature Profile</h4>
+        <h4>1 · Introductory — Explore Earth's Pressure, Density, and Temperature Profiles</h4>
         <p>
-          Run the default model and plot Pressure, Density, and Temperature in separate runs.
-          Below about 86 km, identify the familiar tropospheric, stratospheric, and mesospheric
-          temperature structure represented by the U.S. Standard Atmosphere values. Then follow
-          the rapid thermospheric temperature rise in the NRLMSIS thermospheric portion of the
-          profile. The simplified power-law extrapolation is used only above 500 km.
-          <br>
-          This simplified power-law extrapolation holds up reasonably well only while pressure is still non-negligible, and it breaks down once pressure is many orders of magnitude below the surface value. The rapid fall-off in temperature seen at the right end of the temperature plot with default parameters is in fact highly non-realistic. In reality, thermospheric heating from solar EUV radiation causes the temperature to continue rising towards an "exospheric temperature" where the curve flattens out. This limit temperature depends strongly on solar activity.
+          Run the default Earth model three times, selecting <code>"Pressure"</code>,
+          <code>"Density"</code>, and <code>"Temperature"</code> in turn. Compare how the three
+          quantities change with altitude. In the temperature plot, identify the familiar
+          lower-atmosphere structure below about 86 km and the strong thermospheric temperature
+          rise in the supplied 100–500 km profile. Above the highest supplied temperature point,
+          remember that the program uses its simplified power-law extrapolation; do not interpret
+          that far-upper-atmosphere continuation as a realistic physical temperature profile.
         </p>
         <div class="params">output_type = "Pressure"  # then "Density", then "Temperature"
 # all other parameters at their defaults</div>
       </div>
 
       <div class="scenario-card">
-        <h4>2 · Logarithmic Pressure Profile</h4>
+        <h4>2 · Introductory — Plot Pressure on a Logarithmic Scale</h4>
         <p>
           Set <code>output_type = "Pressure"</code> and add
-          <code>ax.set_yscale("log")</code> in <code>plot_atmosphere.py</code>. For an
-          isothermal atmosphere, exponential pressure decline appears as a straight line on
-          this semilog plot. Compare that ideal behavior with the changing slope produced by
-          Earth's nonuniform temperature profile.
+          <code>ax.set_yscale("log")</code> in <code>plot_atmosphere.py</code>. Pressure spans many
+          orders of magnitude, so a logarithmic vertical axis makes the structure much easier to
+          inspect. For an isothermal atmosphere an exponential pressure law would appear as a
+          straight line; Earth's changing temperature therefore shows up as changes in slope.
         </p>
         <div class="params">output_type = "Pressure"
 # add ax.set_yscale("log") after ax.plot(x, y)</div>
       </div>
 
       <div class="scenario-card">
-        <h4>3 · Mars: Scale Height vs. Surface Pressure</h4>
+        <h4>3 · Introductory–Intermediate — Surface Pressure Changes the Scale, Not the Scale Height</h4>
         <p>
-          Mars has a CO₂ atmosphere and much weaker surface gravity than Earth. With the values
-          below, its base scale height is about 11 km—slightly larger than Earth's—even though
-          its surface pressure is only about 610 Pa. This illustrates an important distinction:
-          scale height controls the <em>fractional</em> falloff of pressure, whereas surface
-          pressure sets the absolute pressure scale.
+          Keep Earth's gravity, molecular weight, and temperature profile fixed, but repeat the
+          calculation with surface pressure multiplied and divided by 10. Compare the pressure
+          profiles as fractions of their own surface values. The absolute pressures differ by a
+          factor of 10, but the fractional falloff with altitude is essentially unchanged. Relate
+          this to Eq.&nbsp;(7.4), in which the isothermal scale height depends on temperature,
+          gravity, and molecular weight but not on surface pressure.
         </p>
-        <div class="params">planet_name = "Mars"
-g_accel     = 3.72
-mu          = 44.0
-p0          = 610.0
-h_points    = [0.0, 10000.0, 25000.0, 45000.0]
-T_points    = [210.0, 170.0, 145.0, 130.0]</div>
+        <div class="params">p0 = 1.013e4   # then 1.013e5 and 1.013e6 Pa</div>
       </div>
 
       <div class="scenario-card">
-        <h4>4 · Venus: Why Surface Pressure Does Not Set Scale Height</h4>
+        <h4>4 · Intermediate — What Controls Scale Height?</h4>
         <p>
-          Venus combines a heavy CO₂ atmosphere with very high surface temperature. Using the
-          values below gives a base scale height of roughly 16 km, larger than Earth's despite
-          the larger molecular weight. Compare this with Eq.&nbsp;(7.4): temperature, gravity,
-          and molecular weight determine scale height, while surface pressure cancels out of
-          the expression. Venus's enormous surface pressure instead reflects the much greater
-          atmospheric column mass.
+          Change one parameter at a time while keeping the others at their Earth values. First try
+          <code>mu = 18</code>, <code>28.97</code>, and <code>44</code>; then repeat with several
+          values of <code>g_accel</code>. Verify qualitatively that the atmosphere becomes more
+          vertically extended when molecular weight or gravity is reduced. For an isothermal
+          atmosphere, Eq.&nbsp;(7.4) predicts \(H\propto T/(\mu g)\).
         </p>
-        <div class="params">planet_name = "Venus"
-g_accel     = 8.87
-mu          = 44.0
-p0          = 9.2e6
-h_points    = [0.0, 10000.0, 30000.0, 60000.0]
-T_points    = [735.0, 500.0, 340.0, 230.0]</div>
+        <div class="params">mu = 18.0, 28.97, 44.0
+# then vary g_accel while restoring mu = 28.97</div>
       </div>
 
       <div class="scenario-card">
-        <h4>5 · Jupiter: A Local 1-Bar-Level Model</h4>
+        <h4>5 · Intermediate — Compare Mars and Venus</h4>
         <p>
-          Use the 1-bar level as a reference and model only a relatively thin region of
-          Jupiter's outer atmosphere. The low mean molecular weight of the hydrogen-helium gas
-          gives a comparatively large scale height despite strong gravity. This is <strong>not</strong>
-          a model of Jupiter's full atmosphere or interior: the program assumes constant gravity
-          and a fixed-composition ideal gas, approximations that become unsuitable over large
-          depths in a gas giant.
+          Apply the same model to two very different CO₂ atmospheres. Mars has weak gravity and
+          very low surface pressure; Venus has much stronger gravity, an enormous surface pressure,
+          and a very hot lower atmosphere. Compare their pressure profiles and base scale heights.
+          Use the comparison to separate the roles of surface pressure, temperature, gravity, and
+          molecular weight rather than attributing atmospheric "thickness" to pressure alone.
+        </p>
+        <div class="params"># Mars
+planet_name = "Mars";  g_accel = 3.72;  mu = 44.0;  p0 = 610.0
+h_points = [0.0, 10000.0, 25000.0, 45000.0]
+T_points = [210.0, 170.0, 145.0, 130.0]
+
+# Venus
+planet_name = "Venus"; g_accel = 8.87;  mu = 44.0;  p0 = 9.2e6
+h_points = [0.0, 10000.0, 30000.0, 60000.0]
+T_points = [735.0, 500.0, 340.0, 230.0]</div>
+      </div>
+
+      <div class="scenario-card">
+        <h4>6 · Intermediate — Change the Temperature Profile</h4>
+        <p>
+          Replace the default profile with a deliberately simple temperature structure and observe
+          how warm and cool layers affect density through \(\rho\propto p/T\). Introduce a warm
+          layer above a cooler one, then compare the Pressure, Density, and Temperature outputs.
+          This isolates the role of the supplied temperature profile from changes in gravity,
+          molecular weight, or surface pressure.
+        </p>
+        <div class="params">h_points = [0.0, 50000.0, 100000.0]
+T_points = [288.0, 200.0, 350.0]</div>
+      </div>
+
+      <div class="scenario-card">
+        <h4>7 · Intermediate–Advanced — Jupiter as a Local 1-Bar-Level Model</h4>
+        <p>
+          Use the 1-bar level as a reference and model only a relatively thin region of Jupiter's
+          outer atmosphere. The low mean molecular weight of hydrogen-helium gas produces a large
+          scale height despite strong gravity. Treat this explicitly as a local exercise: the
+          program assumes constant gravity and fixed-composition ideal gas behavior, so it should
+          not be interpreted as a model of Jupiter's full atmosphere or interior. Schutz warned
+          against applying this simple constant-gravity model to an entire gas giant; the limited
+          calculation here is intended to show why that warning matters.
         </p>
         <div class="params">planet_name = "Jupiter"
 g_accel     = 24.8
@@ -1114,54 +1140,41 @@ T_points    = [165.0, 130.0, 110.0, 150.0]</div>
       </div>
 
       <div class="scenario-card">
-        <h4>6 · Varying Molecular Weight on Earth</h4>
+        <h4>8 · Advanced — Test the Euler Integration Against an Exact Isothermal Atmosphere</h4>
         <p>
-          Keep the Earth values of gravity, temperature profile, and surface pressure fixed
-          while changing <code>mu</code>. Compare hypothetical atmospheres with
-          \(\mu=18\), 28.97, and 44. Verify from the plotted pressure profiles and
-          Eq.&nbsp;(7.4) that \(H\propto1/\mu\).
-        </p>
-        <div class="params">mu = 18.0   # compare with 28.97 and 44.0</div>
-      </div>
-
-      <div class="scenario-card">
-        <h4>7 · Temperature Profile Shape</h4>
-        <p>
-          Replace the default profile with a deliberately simple temperature structure and
-          observe how warm and cool layers alter density through \(\rho\propto p/T\).
-          For example, introduce a warm layer above a cooler one and compare the Pressure,
-          Density, and Temperature outputs.
-        </p>
-        <div class="params">h_points = [0.0, 50000.0, 100000.0]
-T_points = [288.0, 200.0, 350.0]</div>
-      </div>
-
-      <div class="scenario-card">
-        <h4>8 · Isothermal Euler-Method Accuracy</h4>
-        <p>
-          This experiment provides an exact solution against which to test the numerical
-          integration. Use a constant temperature of 288.15 K from 0 to 100 km and plot
-          Pressure. In that interval the exact solution is
-          \(p(h)=p_0\exp(-h/H)\), with
-          \(H=k_BT/(g\mu m_p)\). Compare the numerical pressure with the exact value at
-          selected altitudes such as 10, 50, and 90 km. The disagreement grows with altitude
-          because the calculation uses first-order Euler steps. Only compare altitudes within this
-          supplied constant-temperature interval; above 100 km the power-law extrapolation begins
-          and the model is no longer isothermal.
+          Use a constant temperature of 288.15 K from 0 to 100 km and plot Pressure. In that
+          interval the exact solution is \(p(h)=p_0\exp(-h/H)\), with
+          \(H=k_BT/(g\mu m_p)\). Compare the numerical pressure with the exact result at selected
+          altitudes such as 10, 50, and 90 km. Only compare points within the supplied
+          constant-temperature interval; above 100 km the program begins its power-law
+          extrapolation and the atmosphere is no longer isothermal.
         </p>
         <p>
-          To study convergence, temporarily change the line
-          <code>dh = scale / 200.0</code> in <code>driver_atmosphere.py</code> to
-          <code>scale / 400.0</code> and then <code>scale / 800.0</code>, while increasing
-          <code>max_steps</code> enough that the run reaches 100 km without triggering the
-          step-doubling restart. The error should decrease approximately in proportion to the
-          step size, as expected for a first-order method.
+          To test convergence, temporarily change <code>dh = scale / 200.0</code> in
+          <code>driver_atmosphere.py</code> to <code>scale / 400.0</code> and then
+          <code>scale / 800.0</code>, while increasing <code>max_steps</code> enough to reach
+          100 km without triggering the step-doubling restart. The error should decrease roughly
+          in proportion to the step size, as expected for this first-order Euler update.
         </p>
         <div class="params">h_points = [0.0, 100000.0]
 T_points = [288.15, 288.15]
-output_type = "Pressure"
-# Compare numerical p(h) with p0 * exp(-h/H) for h <= 100 km.</div>
+output_type = "Pressure"</div>
       </div>
+
+      <div class="scenario-card">
+        <h4>9 · Advanced Programming Extension — Let Gravity Decrease with Altitude</h4>
+        <p>
+          Schutz's original Help suggested replacing the program's constant value of gravity with
+          a height-dependent gravitational acceleration. Make a separate experimental copy of the
+          program and replace the constant \(g\) in the hydrostatic step by a function such as
+          \(g(h)=g_0[R/(R+h)]^2\), where \(R\) is the planet's radius. Compare the resulting
+          pressure profile with the constant-gravity calculation and identify the altitude range
+          over which the simpler approximation is adequate. This is a natural bridge to later
+          stellar-structure calculations, where gravity varies with position.
+        </p>
+        <div class="params">advanced: modify the hydrostatic integration to use g(h)</div>
+      </div>
+
     </section>
 
     <!-- ============================================================
