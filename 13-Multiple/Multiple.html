@@ -415,11 +415,11 @@
     <p>
       The user supplies masses in solar-mass units, three-dimensional initial
       positions and velocities, and numerical controls. Output can be either a
-      complete static trajectory plot or a precomputed animation sampled at
+      static trajectory plot through all accepted integration states or a precomputed animation sampled at
       uniform intervals of <em>physical simulation time</em>.
     </p>
     <p>
-      The default example follows Schutz's planar three-body encounter: three
+      The default example is a planar three-body encounter in the spirit of Schutz's example: three
       equal-mass stars approach one another, exchange energy and angular
       momentum, and can form a temporary or long-lived binary while the third
       body moves onto a much wider trajectory. Longer integrations reveal
@@ -437,7 +437,7 @@
   <section id="quickstart">
     <h2>Quick Start</h2>
     <h3>Requirements</h3>
-    <p>Python 3.9 or later with <code>numpy</code> and <code>matplotlib</code>:</p>
+    <p>Python 3.9 or later with <code>numpy</code> and <code>matplotlib</code>. You may run the program from a terminal or from the run command of any Python IDE:</p>
     <pre>pip install numpy matplotlib</pre>
 
     <h3>Running the Program</h3>
@@ -458,6 +458,13 @@ python main.py</pre>
       reduce its timestep below the 2000-s maximum during close encounters, but
       animation frames remain uniformly separated by physical simulation time.
     </p>
+    <div class="note">
+      <strong>Check numerical reliability:</strong> close encounters can make a
+      point-mass calculation difficult. Watch the conservation-drift values
+      printed in the console. If the energy drift becomes large, repeat the run
+      with a smaller <code>dt</code> and/or tighter tolerances before interpreting
+      the later trajectory physically.
+    </div>
 
     <h3>Customising the Simulation</h3>
     <ul style="margin: 0 0 14px 28px; line-height: 2.1;">
@@ -471,6 +478,14 @@ python main.py</pre>
       <li><code>output_type</code> — <code>'trajectories'</code> or <code>'animation'</code></li>
       <li>animation controls — mode, frame spacing, trail duration, projection, and axis behavior</li>
     </ul>
+
+    <div class="note">
+      <strong>For first experiments:</strong> change only <code>masses_solar</code>,
+      <code>positions_init</code>, <code>velocities_init</code>,
+      <code>max_steps</code>, <code>output_type</code>, <code>projection</code>, and
+      <code>animation_mode</code>. Leave <code>eps1</code> and <code>eps2</code>
+      unchanged until you try the numerical-convergence exercise.
+    </div>
 
     <div class="note">
       <strong>Memory usage:</strong> <code>'trajectories'</code> stores every
@@ -665,11 +680,13 @@ python main.py</pre>
     </div>
     <p>
       Because input masses are given in solar units, the program omits one
-      common solar-mass factor from these diagnostics. This does not affect
-      fractional conservation drift. The console reports the maximum drift in
-      all three quantities. In <code>'trajectories'</code> mode, the complete
-      histories are returned and <code>plot_energy_drift()</code> can display
-      the energy error versus time.
+      common solar-mass factor from energy, momentum, and angular momentum.
+      This does not affect conservation tests. The console reports the maximum
+      drift in all three quantities. For a conserved vector whose initial norm
+      is exactly zero, the reported momentum or angular-momentum drift is an
+      absolute scaled drift rather than a fractional one. In
+      <code>'trajectories'</code> mode, the complete histories are returned and
+      <code>plot_energy_drift()</code> can display the energy error versus time.
     </p>
     <div class="note">
       <strong>Negative total energy:</strong> \(E&lt;0\) means the system as a
@@ -773,8 +790,10 @@ python main.py</pre>
       the quieter accelerations of many unrelated bodies.
     </p>
     <p>
-      After an accepted step, the working timestep grows by 10% toward the
-      user-specified maximum <code>dt</code>. A close encounter can therefore
+      An <em>accepted step</em> is an attempted adaptive timestep that passes
+      both the predictor and corrector tests and is actually used to update the
+      system. After an accepted step, the working timestep grows by 10% toward
+      the user-specified maximum <code>dt</code>. A close encounter can therefore
       demand short steps temporarily without forcing the entire remainder of
       the simulation to crawl at that resolution.
     </p>
@@ -834,6 +853,12 @@ python main.py</pre>
         <tr><td><code>axis_mode</code></td><td>'fixed'</td><td>—</td><td><code>'fixed'</code> or equal-scale <code>'auto'</code> zoom.</td></tr>
       </tbody>
     </table>
+    <p class="small">
+      The values in the Default column are the shipped settings in
+      <code>main.py</code>. Some fields, including <code>output_type</code>,
+      <code>eps1</code>, and <code>eps2</code>, are required when constructing
+      <code>SimulationParams</code> rather than class-level defaults.
+    </p>
   </section>
 
   <!-- ─── Output Modes ─── -->
@@ -889,61 +914,93 @@ python main.py</pre>
     <p>All of these experiments can be performed by editing <code>main.py</code>.</p>
     <div class="scenario-grid">
       <div class="scenario-card">
-        <div class="sc-title">Default three-body encounter</div>
-        Run the planar defaults first. Extend <code>max_steps</code> toward
-        several hundred thousand and watch whether two bodies form a binary
-        while the third makes increasingly wide excursions. Compare the energy,
-        momentum, and angular-momentum drift with the visual behavior.
+        <div class="sc-title">Two-body sanity check</div>
+        Before exploring chaotic three-body motion, test a familiar binary. For
+        two equal one-solar-mass bodies separated by \(1.0\times10^{11}\) m, put
+        them at \((\pm5.0\times10^{10},0,0)\) m and give them opposite
+        tangential speeds of about \(2.576\times10^4\) m/s. The center of mass
+        should remain fixed while the bodies follow nearly circular paths. Check
+        the reported energy and angular-momentum drift.
       </div>
 
       <div class="scenario-card">
-        <div class="sc-title">Binary hardening</div>
-        In a run where the third body remains bound or marginally bound, it can
-        return for repeated encounters with the binary. Watch whether successive
-        encounters shrink or widen the binary and how orbital energy is
-        redistributed between the inner pair and the third body.
+        <div class="sc-title">Default three-body encounter</div>
+        Run the planar shipped example first. Record which two bodies make the
+        closest sustained pair, whether the third makes a wide excursion, and
+        the reported conservation drift. Extend <code>max_steps</code> if you
+        want to watch later encounters, but do not expect a short run to reveal
+        a unique final fate.
+      </div>
+
+      <div class="scenario-card">
+        <div class="sc-title">Change the masses</div>
+        Keep the default positions and velocities but reassign the three masses.
+        How often does a close encounter produce a bound pair? Which body is
+        most often left on the widest orbit? This is a simple way to explore the
+        sensitivity of three-body outcomes without changing the geometry.
       </div>
 
       <div class="scenario-card">
         <div class="sc-title">Out-of-plane encounter</div>
-        Add a modest \(z\)-velocity to one body. The default starts entirely in
-        one plane, so this directly tests how a genuinely three-dimensional
-        encounter differs from the specially aligned planar case.
-      </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">Small star cluster</div>
-        Place 5–10 solar-mass stars randomly within about 0.1 pc. Contrast
-        sub-km/s to roughly 1 km/s starting speeds with several-km/s speeds.
-        Which choices remain collectively bound, expand, or eject members?
-        Then add one or two more massive bodies.
-      </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">Compare with MercPert</div>
-        Reproduce a MercPert setup by converting MercPert's Sun-relative test
-        particle state to the same barycentric inertial frame used for all
-        bodies in Multiple. Give the test particle a very small nonzero mass.
-        Agreement should be approximate because MercPert prescribes the circular
-        primary orbit while Multiple integrates all masses mutually.
-      </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">Galaxy collision — toy model</div>
-        Represent two galaxies with massive particles plus several orbiting
-        particles. The model has no true dissipative physics: any merger-like
-        behavior results from <em>redistribution</em> of conserved mechanical
-        energy and angular momentum among the particles, not from friction or
-        radiative energy loss.
+        Add a modest \(z\)-velocity to one body and compare the <code>'xy'</code>
+        and <code>'xz'</code> projections. Choose the vertical speed so that the
+        bodies' \(z\)-separations near closest approach are comparable to their
+        in-plane separations. If the vertical speed is too large, the bodies may
+        simply miss one another and the interesting encounter disappears.
       </div>
 
       <div class="scenario-card">
         <div class="sc-title">Numerical convergence</div>
-        Repeat the same physical initial conditions with smaller
-        <code>dt</code> and tighter tolerances. Compare finite-time trajectories
-        and the reported conservation drift. For sensitive three-body motion,
-        long-term trajectories can eventually separate even when both
-        integrations are individually accurate.
+        Repeat the same physical initial conditions with smaller <code>dt</code>
+        and tighter tolerances. Compare finite-time trajectories and the
+        reported conservation drift. For sensitive three-body motion, long-term
+        trajectories can eventually separate even when both integrations are
+        individually accurate.
+      </div>
+
+      <div class="scenario-card">
+        <div class="sc-title">Binary hardening</div>
+        In a run where two bodies form a persistent close pair, track all three
+        pair separations to identify the binary rather than relying only on the
+        plot. Compare the third body's distance from that pair's center of mass
+        before and after later encounters. Does the binary shrink or widen, and
+        where does the corresponding orbital energy go?
+      </div>
+
+      <div class="scenario-card">
+        <div class="sc-title">Small star cluster</div>
+        Place 5–10 solar-mass stars within about 0.1 pc. Contrast sub-km/s to
+        roughly 1 km/s starting speeds with several-km/s speeds. For a cleaner
+        display, subtract the initial center-of-mass position and velocity from
+        all bodies. Compare total energy, expansion of the cluster, and any
+        ejections; then try adding one or two more massive bodies.
+      </div>
+
+      <div class="scenario-card">
+        <div class="sc-title">Compare with MercPert — advanced</div>
+        Recreate the same physical Sun–perturber–test-particle configuration,
+        but express every body's initial state in one inertial frame for
+        Multiple. A convenient choice is the center-of-mass frame: translate
+        positions if desired and give the Sun the small compensating velocity
+        required to make total momentum zero. Give the test particle a very
+        small nonzero mass. Agreement should be approximate, because MercPert
+        prescribes its primary orbit whereas Multiple integrates all masses
+        mutually; simply copying Sun-relative coordinates is not an exact frame
+        conversion.
+      </div>
+
+      <div class="scenario-card">
+        <div class="sc-title">Galaxy collision — optional toy model</div>
+        A concrete starting experiment is two \(10^{11}\,M_\odot\) core particles
+        about 50 kpc apart and approaching at about 100 km/s, each surrounded by
+        several orbiting particles roughly 10 kpc out with speeds of order
+        300 km/s. First make the orbiting particles negligible in mass: the two
+        cores cannot lose orbital energy to them and tend to pass through. Then
+        give the surrounding particles substantial masses, of order
+        \(10^{10}\,M_\odot\), so orbital energy can be redistributed among many
+        bodies and merger-like behavior can occur. This remains a deliberately
+        crude model: there is no gas, friction, radiation, or other true
+        dissipative physics.
       </div>
     </div>
   </section>
