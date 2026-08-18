@@ -628,18 +628,25 @@ python main.py</pre>
       \]
     </div>
     <p>
-      For a gravitationally bound orbit \(E &lt; 0\) and is a conserved
-      quantity. Any systematic drift in \(E\) over the run is a direct measure
-      of accumulated numerical error. The <em>energy vs. time</em> plot is
-      therefore the primary diagnostic for assessing integration quality.
+      In the centre-of-mass frame, a gravitationally bound orbit has \(E &lt; 0\),
+      and the total mechanical energy is conserved. Any systematic drift in \(E\)
+      over the run is a direct measure of accumulated numerical error. The
+      <em>energy vs. time</em> plot is therefore the primary diagnostic for assessing
+      integration quality.
+    </p>
+    <p>
+      The plotted energy uses the velocities in the chosen inertial frame and
+      therefore includes any kinetic energy of the centre of mass. When using the
+      sign of \(E\) to classify the <em>internal</em> orbit as bound or unbound, keep
+      the centre of mass at rest or subtract its translational kinetic energy.
     </p>
     <div class="note">
-      <strong>Tip:</strong> If the total energy shows a noticeable drift, try
-      reducing <code>dt</code>, tightening <code>eps1</code>, or tightening
-      <code>eps2</code> in <code>main.py</code>. Each of these increases the
-      number of steps or corrector iterations per orbit and typically reduces
-      energy drift by roughly one order of magnitude per factor-of-ten
-      tightening.
+      <strong>Tip:</strong> If the total energy shows a noticeable drift, reducing
+      <code>dt</code> is usually the most effective remedy. Tightening
+      <code>eps1</code> or <code>eps2</code> can also make the step acceptance and
+      corrector tests more demanding, but the improvement is problem-dependent.
+      The safest test is to repeat the same physical run with stricter numerical
+      controls and check that the result changes less and less.
     </div>
   </section>
 
@@ -650,8 +657,10 @@ python main.py</pre>
       With <code>stop_after_one_orbit = True</code>, the program follows the angle
       swept by the relative vector \(\mathbf r_A-\mathbf r_B\). Signed angle
       increments between successive accepted steps are accumulated, and the
-      calculation stops when their magnitude reaches \(2\pi\). This makes the test
-      independent of the arbitrary location of the coordinate origin.
+      calculation stops when their magnitude reaches \(2\pi\), provided this occurs
+      before <code>max_steps</code>. This is a geometric stopping rule for one
+      relative revolution; it is independent of the coordinate origin and does not
+      by itself prove that the numerical trajectory is exactly closed.
     </p>
     <p>
       Set <code>stop_after_one_orbit = False</code> to continue for the full
@@ -677,7 +686,7 @@ python main.py</pre>
     </p>
 
     <h3>Euler Predictor</h3>
-    <div class="eq"><span class="eq-label">(9)</span>
+    <div class="eq"><span class="eq-label">(8)</span>
       \[
         \tilde{\mathbf r}_A=\mathbf r_A^n+\mathbf v_A^n\Delta t,
         \qquad
@@ -687,7 +696,7 @@ python main.py</pre>
     <p>with equivalent equations for body B.</p>
 
     <h3>Iterated Trapezoidal Corrector</h3>
-    <div class="eq"><span class="eq-label">(10)</span>
+    <div class="eq"><span class="eq-label">(9)</span>
       \[
         \mathbf v_A^{n+1}
         =\mathbf v_A^n+
@@ -708,7 +717,9 @@ python main.py</pre>
     <p>
       If ten corrector iterations are insufficient to meet <code>eps2</code>, the
       timestep is halved and the same step is retried instead of silently accepting
-      a non-converged result.
+      a non-converged result. <code>eps2</code> is a convergence test within one
+      trial step; it is not a direct tolerance on the global position, period, or
+      energy error.
     </p>
   </section>
 
@@ -722,7 +733,7 @@ python main.py</pre>
       two-body system, their fractional changes are identical and testing one body
       is sufficient.
     </p>
-    <div class="eq"><span class="eq-label">(11)</span>
+    <div class="eq"><span class="eq-label">(10)</span>
       \[
         \Delta_a=
         \frac{\left\lVert\tilde{\mathbf a}_A-\mathbf a_A^n\right\rVert}
@@ -733,12 +744,17 @@ python main.py</pre>
     <p>
       If \(\Delta_a>\varepsilon_1\), the attempt is rejected and the working
       timestep is halved. After an accepted step, the working timestep is allowed
-      to grow by 10% toward the user-specified ceiling <code>dt</code>.
+      to grow by 10% toward the user-specified ceiling <code>dt</code>. If repeated
+      halving would drive the working timestep below a tiny numerical safety floor,
+      the program stops with a clear error instead of continuing with effectively
+      zero time advance.
     </p>
     <div class="note">
       <strong>Interpretation:</strong> For sufficiently eccentric or rapidly
       varying trajectories this mechanism normally uses smaller steps near
-      periapsis. The default orbit does not necessarily require timestep reduction.
+      periapsis. With the current default parameters, no timestep reduction is
+      needed; increasing the eccentricity or choosing a larger <code>dt</code> makes
+      the controller easier to observe.
     </div>
   </section>
 
@@ -763,9 +779,12 @@ python main.py</pre>
       </tbody>
     </table>
     <p>
-      Tighter tolerances generally improve conservation of energy but require more
-      computation. There is no universal factor relating a tolerance change to an
-      energy-error change, so accuracy should be established by a convergence test.
+      Tighter tolerances make the local acceptance and convergence tests more
+      demanding and can require more computation. Once the corrector is already
+      converging reliably, reducing <code>dt</code> often has a much larger effect on
+      the global error than tightening <code>eps2</code>. There is no universal factor
+      relating a tolerance change to an energy-error change, so accuracy should be
+      established by a convergence test.
     </p>
   </section>
   
@@ -775,50 +794,60 @@ python main.py</pre>
 
     <h3>1 · Circular and Elliptical Equal-Mass Binaries</h3>
     <p>
-      Run the defaults first. Then change only the transverse velocities to about
-      \(u_A=+2.69\times10^4\) m/s and \(u_B=-2.69\times10^4\) m/s. The orbit
-      should become nearly circular. Try intermediate speeds and watch the
-      eccentricity change.
+      Run the defaults first. For equal masses \(M\) at \(x=\pm a\), each body in
+      a circular orbit has radius \(a\) while the gravitational separation is
+      \(2a\), giving \(v_{\rm circ}=\sqrt{GM/(4a)}\). With the default values this
+      is about \(2.69\times10^4\) m/s. Try
+      \(u_A=+2.69\times10^4\) m/s and \(u_B=-2.69\times10^4\) m/s, then try
+      intermediate speeds and watch the eccentricity change.
     </p>
 
-    <h3>2 · Unequal Masses and the Centre of Mass</h3>
+    <h3>2 · Translation Invariance</h3>
+    <p>
+      Add the same constant displacement to both bodies. Their coordinate
+      trajectories move to a different part of the plane, but the relative orbit
+      is unchanged.
+    </p>
+
+    <h3>3 · Galilean Relativity</h3>
+    <p>
+      Add the same velocity vector to both bodies. The binary now drifts across
+      the plot, but its internal orbit is unchanged. Compare the new
+      <code>"velocity space"</code> plot with the default one: both hodographs have
+      the same shape and are simply translated by the added velocity. If you also
+      compare energy plots, remember that the kinetic energy includes the motion of
+      the centre of mass.
+    </p>
+
+    <h3>4 · Unequal Masses and the Centre of Mass</h3>
     <p>
       Make body B progressively less massive. To keep the centre of mass at rest,
       choose initial velocities satisfying
-      \(M_A\mathbf v_A+M_B\mathbf v_B=0\). Observe that the more massive body
-      makes the smaller orbit about the common centre of mass. In the extreme
+      \(M_A\mathbf v_A+M_B\mathbf v_B=0\). A convenient method is to choose the
+      lighter body's velocity first and then set the heavier body's velocity to
+      balance its momentum component by component. Observe that the more massive
+      body makes the smaller orbit about the common centre of mass. In the extreme
       mass-ratio limit the result approaches the fixed-central-mass picture used
       in <em>Orbit</em>.
     </p>
 
-    <h3>3 · Stellar Reflex Motion: Sun and Planets</h3>
+    <h3>5 · Bound, Parabolic, and Unbound Motion</h3>
     <p>
-      Use approximate Sun–Jupiter initial conditions and examine the Sun's small
-      orbit about the barycentre. Repeat with Saturn and then Earth. Compare how
-      strongly each planet moves the Sun.
+      Keep the centre of mass at rest while increasing the relative speed from the
+      same starting positions. Plot <code>"energy vs time"</code>. Under this
+      zero-centre-of-mass condition, verify that bound elliptical motion has
+      \(E&lt;0\), the marginal parabolic case has \(E\approx0\), and hyperbolic
+      motion has \(E&gt;0\). Set <code>stop_after_one_orbit = False</code> for
+      unbound runs.
     </p>
 
-    <h3>4 · Bound, Parabolic, and Unbound Motion</h3>
+    <h3>6 · Challenge: Stellar Reflex Motion — Sun and Planets</h3>
     <p>
-      Starting from the same positions, increase the relative speed until the
-      system changes from a bound ellipse to an unbound trajectory. Plot
-      <code>"energy vs time"</code>. Verify that bound motion has \(E&lt;0\),
-      the marginal parabolic case has \(E\approx0\), and hyperbolic motion has
-      \(E&gt;0\). Set <code>stop_after_one_orbit = False</code> for unbound runs.
-    </p>
-
-    <h3>5 · Translation Invariance</h3>
-    <p>
-      Add the same constant displacement to both bodies. Their trajectories move
-      to a different part of the plane, but the relative orbit is unchanged.
-    </p>
-
-    <h3>6 · Galilean Relativity</h3>
-    <p>
-      Add the same velocity vector to both bodies. The binary now drifts across
-      the plot, but its internal orbit is unchanged. In
-      <code>"velocity space"</code>, both hodographs are translated by the added
-      velocity.
+      Use approximate circular-orbit data for the Sun and one planet, choosing
+      opposite transverse velocities so that the centre of mass is at rest. Start
+      with Jupiter and examine the Sun's small barycentric orbit; its radius should
+      be slightly larger than the Sun's own radius. Repeat with Saturn and then
+      Earth. Which planet produces the largest reflex motion of the Sun, and why?
     </p>
 
     <h3>7 · Numerical Convergence and Energy Conservation</h3>
@@ -826,8 +855,9 @@ python main.py</pre>
       Set <code>stop_after_one_orbit = False</code> and integrate for several
       periods. Repeat the same physical initial conditions with smaller
       <code>dt</code> and tighter <code>eps1</code>/<code>eps2</code>. Compare
-      the total-energy curves. A trustworthy result should change less and less as
-      the numerical controls are tightened.
+      the total-energy curves, for example by estimating the largest fractional
+      deviation \(\max|E(t)-E(0)|/|E(0)|\). A trustworthy result should change
+      less and less as the numerical controls are tightened.
     </p>
   </section>
 
@@ -836,7 +866,11 @@ python main.py</pre>
   <!-- ─── Parameters ─── -->
   <section id="parameters">
     <h2>Parameters</h2>
-    <p>All ordinary experiment settings are near the top of <code>main.py</code>.</p>
+    <p>
+      All ordinary experiment settings are near the top of <code>main.py</code>.
+      In the program's notation, <code>v</code> is the x-velocity component and
+      <code>u</code> is the y-velocity component.
+    </p>
     <table>
       <thead><tr><th>Variable</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead>
       <tbody>
@@ -855,9 +889,10 @@ python main.py</pre>
       </tbody>
     </table>
     <div class="note">
-      Masses and <code>dt</code> must be positive; <code>max_steps</code> must be
-      a positive integer; both tolerances must lie between zero and one; and the
-      bodies may not begin at exactly the same position.
+      All numeric inputs must be finite real numbers. Masses and <code>dt</code>
+      must be positive; <code>max_steps</code> must be a positive integer; both
+      tolerances must lie strictly between zero and one (0 and 1 are not allowed);
+      and the bodies may not begin at exactly the same position.
     </div>
   </section>
 
@@ -870,11 +905,13 @@ python main.py</pre>
       <li>
         <span class="tag">"velocity space"</span>
         <span>
-          \(v_x\) versus \(v_y\) for each body. In inverse-square Kepler motion a
-          complete bound-orbit hodograph is a circle; an unbound encounter traces
-          an arc of the corresponding circle. With the default equal masses and
-          zero centre-of-mass velocity, the two velocity vectors are negatives of
-          one another at every instant. A Galilean boost translates both hodographs.
+          The x-component of velocity is plotted horizontally and the y-component
+          vertically, showing how each velocity vector changes during the motion.
+          In inverse-square Kepler motion, the relative-motion hodograph is a circle
+          for a complete bound orbit; the individual bodies have the same form,
+          scaled according to the masses and shifted by any centre-of-mass velocity.
+          With the default equal masses and zero centre-of-mass velocity, the two
+          velocity vectors are negatives of one another at every instant.
         </span>
       </li>
       <li><span class="tag">"position vs. time, body A"</span><span>\(x_A(t)\) and \(y_A(t)\).</span></li>
