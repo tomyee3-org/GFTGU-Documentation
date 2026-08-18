@@ -912,66 +912,101 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
   <!-- ── Experiments ── -->
   <h2 id="experiments">Suggested Experiments</h2>
   <p>
-    The following scenarios are drawn from Schutz's suggestions in Chapter 4 and extended
-    with additional numerical investigations:
+    The experiments below are arranged in approximate order of difficulty. The first four require
+    only changes to <code>nDiv</code> and <code>outputType</code>; the last two make more direct use
+    of the numerical machinery or ask for a substantial programming extension.
   </p>
 
   <div class="scenario-grid">
 
     <div class="scenario-card">
-      <h4>1 · Verify the Shell Theorem Visually</h4>
+      <h4>1 · Introductory — Verify the Shell Theorem Visually</h4>
       <p>
-        Run with the default parameters and <code>outputType = 'acceleration'</code>. Confirm
-        that the acceleration is essentially zero for \(r &lt; 1\) and follows a \(1/r^2\) curve
-        for \(r > 1\). The sharp transition across the shell surface should be apparent from the
-        neighboring points. The plotted point exactly at \(r = 1\) is a zero placeholder because
-        the surface itself is not evaluated.
+        Run with <code>outputType = 'acceleration'</code>. Confirm the two parts of Newton's shell
+        theorem: the acceleration is essentially zero for \(r&lt;1\), while outside the shell it
+        falls approximately as \(1/r^2\). Compare, for example, the acceleration near \(r=2\) with
+        that near \(r=4\); the latter should be about one quarter as large. The plotted point exactly
+        at \(r=1\) is only a zero placeholder because the ideal thin-shell surface itself is not
+        evaluated.
       </p>
       <div class="sc-params">nDiv=100 · outputType='acceleration'</div>
     </div>
 
     <div class="scenario-card">
-      <h4>2 · Convergence at a Fixed Radius</h4>
+      <h4>2 · Introductory–Intermediate — Reproduce Schutz's Convergence Test</h4>
       <p>
-        Switch to <code>outputType = 'relative difference'</code> and run with
-        <code>nDiv = 100, 1000, 10000</code>. Compare the plotted value at the same exterior
-        radius, \(r=1.1\), in each run. The relative error should fall from about
-        \(2.5\times10^{-3}\) to \(2.5\times10^{-5}\) and then to
-        \(2.5\times10^{-7}\). Thus each tenfold increase in <code>nDiv</code> reduces the
-        error at this fixed radius by about a factor of 100, consistent with approximate
-        \(n_\text{div}^{-2}\) convergence.
+        Switch to <code>outputType = 'relative difference'</code> and increase the angular
+        resolution by factors of ten: <code>nDiv = 100, 1000, 10000</code>. Compare the curves and
+        observe that the numerical disagreement with Newton's theorem becomes rapidly smaller.
+        For a quantitative comparison, read the value at the same exterior radius, such as
+        \(r=1.1\), on each run rather than comparing different points on the three curves.
       </p>
-      <div class="sc-params">nDiv=100 / 1000 / 10000 · compare at r=1.1</div>
+      <div class="sc-params">nDiv=100 / 1000 / 10000 · outputType='relative difference'</div>
     </div>
 
     <div class="scenario-card">
-      <h4>3 · Why the Surface Is Numerically Difficult</h4>
+      <h4>3 · Intermediate — Measure the Convergence Rate</h4>
+      <p>
+        At the fixed exterior radius \(r=1.1\), compare the relative differences for
+        <code>nDiv = 100, 1000, 10000</code>. They should be approximately
+        \(2.5\times10^{-3}\), \(2.5\times10^{-5}\), and \(2.5\times10^{-7}\).
+        Each tenfold increase in <code>nDiv</code> therefore reduces the error by roughly a factor
+        of 100, consistent with approximate \(n_\text{div}^{-2}\) convergence away from the shell.
+        Explain why a statement about convergence must compare errors at the same radius.
+      </p>
+      <div class="sc-params">compare at r=1.1 · look for error ∝ nDiv⁻²</div>
+    </div>
+
+    <div class="scenario-card">
+      <h4>4 · Intermediate — Why the Shell Surface Is Numerically Difficult</h4>
       <p>
         Keep <code>outputType = 'relative difference'</code> and examine exterior points
         progressively closer to the shell, such as \(r=1.1,\ 1.05,\ 1.01,\ 1.005\).
-        At a fixed <code>nDiv</code>, the error grows as \(r\) approaches 1 because nearby
-        surface tiles make an increasingly sharp contribution that a coarse angular grid
-        resolves poorly. Repeat with a larger <code>nDiv</code> and observe how the
-        near-surface region improves.
+        At fixed <code>nDiv</code>, the error grows as \(r\) approaches 1 because the contribution
+        from nearby tiles becomes increasingly concentrated in angle and is poorly resolved by a
+        coarse grid. Repeat with a larger <code>nDiv</code> and see how much of the near-surface
+        discrepancy disappears.
       </p>
       <div class="sc-params">nDiv=100, then 1000 · compare r=1.1, 1.05, 1.01, 1.005</div>
     </div>
 
     <div class="scenario-card">
-      <h4>4 · Interior Convergence</h4>
+      <h4>5 · Intermediate–Advanced — Interior Cancellation and Shell-Mass Convergence</h4>
       <p>
-        Newton's theorem predicts zero acceleration everywhere inside the shell. In
-        <code>relative difference</code> mode the program therefore plots the residual
-        numerical acceleration divided by the shell mass. Compare a fixed interior point
-        such as \(r=0.5\) or \(r=0.9\) as <code>nDiv</code> increases. The residual should
-        approach zero. Points extremely close to the inner surface are again more difficult
-        numerically and can be compared separately with Experiment 3.
+        First compare the residual interior acceleration at a fixed point such as \(r=0.5\) or
+        \(r=0.9\) as <code>nDiv</code> increases; it should approach zero even though the individual
+        tile contributions are not zero. Then, in a short Python session, call
+        <code>compute_shell_mass(nDiv)</code> for the same values of <code>nDiv</code> and compare
+        the result with the continuum value \(4\pi\varepsilon\), with the default
+        \(\varepsilon=0.001\). These two tests show separately how the numerical tiling converges
+        in total mass and in the much more delicate cancellation of the gravitational field.
       </p>
-      <div class="sc-params">nDiv=100 / 1000 / 10000 · compare at r=0.5 or r=0.9</div>
+      <div class="sc-params">r=0.5 or 0.9 · compute_shell_mass(100, 1000, 10000)</div>
+    </div>
+
+    <div class="scenario-card">
+      <h4>6 · Advanced Programming Extension — Replace the Sphere by an Ellipsoidal Homoeoid</h4>
+      <p>
+        Schutz's original Help suggested replacing the spherical shell by an "elliptical" one and
+        testing the surprising result that the field inside can still vanish. This idea is worth
+        retaining, but it needs a more precise formulation. In three dimensions the corresponding
+        result applies to a thin <em>homoeoidal</em> shell — the thin-shell limit of material
+        between similar, concentric, similarly oriented ellipsoids of uniform volume density.
+        Merely placing equal masses uniformly over an arbitrary ellipsoidal surface does not, in
+        general, reproduce that mass distribution.
+      </p>
+      <p>
+        Make a separate experimental copy of the program, replace the spherical geometry by an
+        axially symmetric ellipsoidal homoeoid, and calculate the field at several interior points,
+        including points off the symmetry axis. Verify that the interior field tends toward zero as
+        the tiling is refined, while the exterior field is direction-dependent and therefore cannot
+        be represented by a point mass at the center. This is a substantial extension rather than
+        a routine parameter experiment.
+      </p>
+      <div class="sc-params">advanced · geometry, tile masses, and off-axis field components must change</div>
     </div>
 
   </div>
-
 <!-- ============================================================
      RESTORE TO DEFAULTS CALLOUT
      ============================================================ -->
