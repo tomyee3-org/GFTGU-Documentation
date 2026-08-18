@@ -612,7 +612,7 @@ returning an incomplete trajectory.
 <div class="note-box">
 <strong>Landing interpolation:</strong> the last stored point is below ground,
 not at \(h=0\). Its horizontal coordinate is therefore not the best estimate
-of the physical range. Experiment 3 shows how to interpolate between the last
+of the physical range. Experiment 5 shows how to interpolate between the last
 positive and first negative heights.
 </div>
 </section>
@@ -697,89 +697,112 @@ through the first below-ground point. Their length is the number of
 <!-- ── Suggested Experiments ──────────────────────────────── -->
 <section id="experiments">
 <h2>Suggested Experiments</h2>
-<div class="experiment-card">
-<div class="exp-num">Experiment 1</div>
-<div class="exp-title">Accuracy of the two integrators</div>
-<p>
-          Run the simulation twice with the same parameters, once with
-          <code>method="euler"</code> and once with <code>method="improved"</code>.
-          First estimate the landing point by the interpolation procedure in Experiment 3;
-          do not use the last element of <code>xs</code> directly, because it is the first
-          sampled point after the projectile has crossed the ground. Compare the interpolated
-          range against the analytic value \(R = v_0^2 \sin 2\theta / g\), then repeat
-          with <code>dt</code> halved and quartered. The Euler trajectory has first-order
-          global error. For this special constant-acceleration problem, however, Heun's method
-          gives the exact analytic state at each sampled time (apart from roundoff), so it is
-          better regarded here as a demonstration of why the improved method is more accurate
-          than as a generic measurement of second-order convergence.
-        </p>
+<div class="note-box">
+<strong>Suggested order:</strong> the experiments below are arranged roughly from introductory
+parameter exploration to more demanding numerical-analysis and code-modification exercises.
+Several later experiments use the interpolated landing point introduced in Experiment 5.
 </div>
 <div class="experiment-card">
-<div class="exp-num">Experiment 2 (Schutz suggestion)</div>
-<div class="exp-title">Degrade accuracy — use the final vertical speed</div>
-<p>
-          To reproduce Schutz's suggested less-accurate variant, replace the
-          averaged height increment with one that uses the <em>final</em> vertical
-          velocity over the whole interval. In the current Heun notation that velocity is
-          <code>ds2[1]</code>, so after computing the normal Heun result, replace its
-          height component by <code>state[1] + dt * ds2[1]</code>. This corresponds to
-          Schutz's \(h \leftarrow h+w\,dt\), where \(w=v-g\,dt\). Use the interpolated landing point from Experiment 3 when comparing
-          ranges; otherwise the first sampled point below ground introduces its own
-          \(\mathcal{O}(\Delta t)\) error. With that endpoint effect reduced, verify that
-          the deliberately degraded height update shows first-order convergence.
-        </p>
-</div>
-<div class="experiment-card">
-<div class="exp-num">Experiment 3 (Schutz suggestion)</div>
-<div class="exp-title">Interpolated landing point</div>
-<p>
-          The loop terminates at the first step where \(h &lt; 0\). Improve the accuracy of
-          the reported range by linear interpolation: if the last two heights are
-          \(h_{n-1} &gt; 0\) and \(h_n &lt; 0\), the zero crossing is at
-          \(x^* = x_{n-1} + (x_n - x_{n-1}) \cdot h_{n-1} / (h_{n-1} - h_n)\).
-          Add this correction to the driver and verify that it reduces the range error
-          significantly, even for large \(\Delta t\).
-        </p>
-</div>
-<div class="experiment-card">
-<div class="exp-num">Experiment 4</div>
+<div class="exp-num">Experiment 1 · Introductory</div>
 <div class="exp-title">Optimal firing angle</div>
 <p>
-          Loop over firing angles from 1° to 89° in 1° steps and record the range for each.
-          Plot range vs. angle. Confirm that the maximum occurs at 45° and that the range
-          curve is symmetric about 45° (i.e., complementary angles give the same range).
-          Use the interpolated landing point from Experiment 3 for the cleanest comparison;
-          raw final <code>xs</code> values can differ slightly because each trajectory crosses
-          the ground at a different phase within a timestep. Try this with both the Euler and
-          improved Euler methods — does the choice of integrator shift the numerically optimal
-          angle?
+          Keep <code>speed = 100</code> m/s and <code>dt = 0.1</code> s, and try several launch
+          angles between 0° and 90°. Which angle appears to give the greatest range? Then, if
+          you are comfortable modifying <code>main.py</code>, automate the test by looping over
+          angles from 1° to 89° in 1° steps and plotting range versus angle. Confirm that the
+          maximum occurs at 45° and that complementary angles, such as 30° and 60°, have the
+          same analytic range. Small differences in raw numerical endpoints are a timestep
+          sampling effect; Experiment 5 shows how to remove most of that ambiguity.
         </p>
 </div>
 <div class="experiment-card">
-<div class="exp-num">Experiment 5</div>
+<div class="exp-num">Experiment 2 · Introductory</div>
+<div class="exp-title">What does the timestep change?</div>
+<p>
+          Run the same 100 m/s, 45° trajectory with several values of <code>dt</code>, for example
+          0.5, 0.2, 0.1, 0.05, and 0.02 s. Compare the smoothness of the plotted curve, the number
+          of stored points, and the final sampled point below the ground. Repeat with both
+          <code>method="euler"</code> and <code>method="improved"</code>. Which visible effects are
+          caused by the integration method, and which are simply caused by sampling the
+          trajectory at discrete times? This is a qualitative preview of the more quantitative
+          accuracy tests in Experiments 5 and 6.
+        </p>
+</div>
+<div class="experiment-card">
+<div class="exp-num">Experiment 3 · Introductory–Intermediate</div>
 <div class="exp-title">Effect of muzzle speed</div>
 <p>
-          Fix the angle at 45° and vary <code>speed</code> from 50 to 500 m/s.
-          The range should scale as \(v_0^2\). Use the interpolated landing point from
-          Experiment 3, plot range vs. \(v_0^2\) on a linear scale, and verify that the slope
-          approaches \(\sin 90° / g = 1/g\). At sufficiently high speeds and ranges, the flat-Earth,
-          constant-\(g\) approximation ceases to be adequate. The later
-          <strong>EarthOrbit</strong> and <strong>Orbit</strong> programs explore
-          motion over distances where Earth's curvature and radial gravitational
-          field must be considered.
+          Fix the angle at 45° and vary <code>speed</code>, for example from 50 to 500 m/s.
+          Compare the ranges with the prediction that, in this model, range is proportional to
+          \(v_0^2\). A simple first test is to double the speed and see whether the range becomes
+          four times as large. For a more quantitative test, plot range against \(v_0^2\) and
+          compare the slope with \(1/g\). Use the interpolated landing point from Experiment 5
+          for the cleanest numerical comparison. At sufficiently large distances, remember that
+          the flat-Earth, constant-\(g\) approximation itself becomes inadequate; later programs
+          such as <strong>EarthOrbit</strong> and <strong>Orbit</strong> treat gravity over larger scales.
         </p>
 </div>
 <div class="experiment-card">
-<div class="exp-num">Experiment 6</div>
-<div class="exp-title">Overlay multiple trajectories</div>
+<div class="exp-num">Experiment 4 · Intermediate</div>
+<div class="exp-title">Overlay several trajectories</div>
 <p>
-          Call <code>run_cannon_trajectory</code> for angles of 15°, 30°, 45°, 60°, and 75°
-          at <code>speed = 100</code> m/s and overlay all five trajectories on a single
-          matplotlib figure. Observe that the 15°/75° pair and the 30°/60° pair each share
-          the same analytic range. Small differences in their raw endpoints can result
-          from timestep sampling; use the interpolation method of Experiment 3 if you want to
-          compare the landing ranges quantitatively. Add a horizontal line at the maximum
-          range for reference.
+          Call <code>run_cannon_trajectory</code> for launch angles of 15°, 30°, 45°, 60°, and 75°
+          at <code>speed = 100</code> m/s and plot all five trajectories on one matplotlib figure.
+          Identify the complementary-angle pairs that have the same analytic range, and compare
+          their maximum heights and flight times. The 15°/75° pair and the 30°/60° pair should
+          land at the same analytic horizontal distance even though their paths are very
+          different. If you compare landing ranges numerically, use the interpolation method in
+          Experiment 5 rather than the first sampled point below ground.
+        </p>
+</div>
+<div class="experiment-card">
+<div class="exp-num">Experiment 5 · Intermediate · Schutz suggestion</div>
+<div class="exp-title">Interpolate the landing point</div>
+<p>
+          The loop stops after storing the first point for which \(h&lt;0\), so the projectile has
+          actually crossed the ground between the last two stored samples. If those heights are
+          \(h_{n-1}&gt;0\) and \(h_n&lt;0\), estimate the crossing by linear interpolation,
+          \[
+          x^* = x_{n-1} + (x_n-x_{n-1})
+                 rac{h_{n-1}}{h_{n-1}-h_n}.
+          \]
+          First calculate \(x^*\) from the returned arrays without changing the driver. Then, as
+          an extension, modify the driver so that it reports or stores the interpolated landing
+          point. Compare the raw and interpolated ranges for several relatively large timesteps
+          and against the analytic range formula. The interpolation should substantially reduce
+          the endpoint error.
+        </p>
+</div>
+<div class="experiment-card">
+<div class="exp-num">Experiment 6 · Intermediate–Advanced</div>
+<div class="exp-title">Accuracy of the two integrators</div>
+<p>
+          Run the same trajectory with <code>method="euler"</code> and
+          <code>method="improved"</code>. Use the interpolated landing point from Experiment 5
+          and compare each numerical range with the analytic value
+          \(R=v_0^2\sin(2	heta)/g\). Repeat after halving <code>dt</code> and then halving it
+          again. For forward Euler, examine how the error changes when the timestep is reduced;
+          its global error is first order in \(\Delta t\). For this special constant-acceleration
+          problem, Heun's method reproduces the analytic state at the sampled times apart from
+          roundoff, so this exercise demonstrates its superior accuracy here rather than serving
+          as a general measurement of second-order convergence.
+        </p>
+</div>
+<div class="experiment-card">
+<div class="exp-num">Experiment 7 · Advanced · Schutz suggestion</div>
+<div class="exp-title">Deliberately degrade the vertical-position update</div>
+<p>
+          Schutz suggested making the vertical step less accurate by advancing the height with
+          the velocity at the <em>end</em> of the timestep instead of the average velocity over
+          the interval. In <code>improved_euler_step</code>, after <code>ds2</code> has been
+          calculated, construct a test version in which the new height is
+          <code>state[1] + dt * ds2[1]</code> while the other state components are updated as
+          before. This is the Python equivalent of Schutz's
+          \(h\leftarrow h+w\,dt\), with \(w=v-g\,dt\).
+          Compare this deliberately degraded method with the normal improved-Euler result for
+          several timesteps. Use Experiment 5's interpolated landing point so that ground-crossing
+          sampling does not obscure the integration error, and verify that the degraded update
+          shows first-order convergence.
         </p>
 </div>
 </section>
