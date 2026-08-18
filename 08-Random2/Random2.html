@@ -503,24 +503,135 @@ plot_walk2d(result, corner="upper right")</div></div></div>
 <section id="output"><h2>Program Output</h2><p><strong>Scaled-distance mode</strong> produces a log-log plot of average scaled displacement versus number of steps. The points should approach a line of slope \(1/2\); finite trial counts produce visible statistical scatter.</p><p><strong>2D star mode</strong> produces a square plot of fixed-length isotropic walks within a circular schematic star. The annotation box reports the radius, mean free path, reference step count, number of escaped walks, and—when at least one walk escapes—the median escape step count. Each <code>WalkPath</code> also stores its individual <code>steps_taken</code> value for quantitative experiments. A path with no terminal ray has reached <code>step_cap</code> without escaping.</p></section>
 
 <!-- ─── Suggested Experiments ─── -->
-<section id="experiments"><h2>Suggested Experiments</h2><div class="scenario-grid">
-<div class="scenario-card"><h4>1 · Verify the &radic;N Law</h4><p>Run the default scaled-distance experiment. The log-log points should lie near a straight line of slope \(1/2\), with some Monte Carlo scatter.</p><div class="params">display = "scaled_distance"
+<section id="experiments">
+  <h2>Suggested Experiments</h2>
+  <p>
+    The experiments below are arranged in approximate order of difficulty. The first group explores
+    the statistical square-root law; the later experiments use the 2D star visualization to study
+    first-passage behavior and geometric scaling.
+  </p>
+  <div class="scenario-grid">
+
+    <div class="scenario-card">
+      <h4>1 · Introductory — Verify the &radic;N Law</h4>
+      <p>
+        Run the default <code>scaled_distance</code> experiment. On the log-log plot, the points
+        should lie approximately along a straight line of slope \(1/2\). Do not expect an exact
+        straight line from only 100 trials: the departures from it are part of the Monte Carlo
+        experiment.
+      </p>
+      <div class="params">display = "scaled_distance"
 maxSteps = 4096
-nTrials = 100</div></div>
-<div class="scenario-card"><h4>2 · Reduce Statistical Scatter</h4><p>Try <code>nTrials = 25, 100, 500, 1000</code> while leaving the step counts unchanged. As the number of trials increases, the estimated curve should become smoother and its overall slope more stable.</p><div class="params">nTrials = 25
-# then try 100, 500, 1000</div></div>
-<div class="scenario-card"><h4>3 · Change the Step Distribution</h4><p>Repeat the scaled-distance calculation using Gaussian components. The numerical coefficient changes, but after scaling by each walk's mean step length the characteristic \(N^{1/2}\) dependence remains.</p><div class="params">step_distribution = "uniform"
-# compare with "gaussian"</div></div>
-<div class="scenario-card"><h4>4 · Escape-Time Distribution</h4><p>Run many isotropic star walks and collect <code>walk.steps_taken</code> for the escaped paths. The first-passage times have a broad distribution: individual random walks can escape much sooner or much later than a typical walk.</p><div class="params">display = "walk2d"
+nTrials = 100</div>
+    </div>
+
+    <div class="scenario-card">
+      <h4>2 · Introductory — Reduce Statistical Scatter</h4>
+      <p>
+        Repeat the same calculation with <code>nTrials = 25, 100, 500, 1000</code>. As more
+        independent walks are averaged, the points should fluctuate less and the overall trend
+        should become more stable. Notice the trade-off between statistical precision and run time.
+      </p>
+      <div class="params">nTrials = 25
+# then try 100, 500, 1000</div>
+    </div>
+
+    <div class="scenario-card">
+      <h4>3 · Introductory–Intermediate — Measure the Log-Log Slope</h4>
+      <p>
+        Go beyond judging the graph by eye. Use two well-separated plotted points, or fit a straight
+        line to all the points in \(\log N\) versus \(\log\langle d\rangle\), and estimate the
+        exponent \(\alpha\) in \(\langle d\rangle\propto N^\alpha\). Repeat for several
+        <code>nTrials</code> values and see whether the estimate approaches \(1/2\) as the Monte
+        Carlo noise is reduced.
+      </p>
+      <div class="params">expected exponent: alpha ≈ 0.5</div>
+    </div>
+
+    <div class="scenario-card">
+      <h4>4 · Intermediate — Change the Step Distribution</h4>
+      <p>
+        Repeat the scaled-distance calculation with Gaussian rather than uniform step components.
+        The detailed distribution of step lengths changes, but the characteristic
+        \(N^{1/2}\) dependence remains. This directly implements one of Schutz's suggested
+        modifications and demonstrates that the square-root law is not peculiar to a uniform
+        random-number distribution.
+      </p>
+      <div class="params">step_distribution = "uniform"
+# compare with "gaussian"</div>
+    </div>
+
+    <div class="scenario-card">
+      <h4>5 · Intermediate Programming Extension — Change the Definition of Walk Length</h4>
+      <p>
+        Schutz also suggested testing whether the square-root law depends on the program's chosen
+        definition of scaled distance. Make a separate experimental copy of the scaled-distance
+        calculation and omit the division by each walk's mean step length, so that the quantity
+        averaged is simply the net displacement \(r_N\). Repeat the log-log experiment. The
+        vertical normalization will change, but the exponent should remain close to \(1/2\).
+        This distinguishes a universal scaling law from an arbitrary choice of units.
+      </p>
+      <div class="params">advanced edit: average net_distance instead of net_distance / mean_step</div>
+    </div>
+
+    <div class="scenario-card">
+      <h4>6 · Intermediate — Mean Free Path and Geometric Scaling</h4>
+      <p>
+        Switch to <code>walk2d</code>. With <code>radius = None</code>, multiply
+        <code>mean_free_path</code> by a constant. Because the default radius is proportional to
+        the same mean free path, the displayed geometry should look statistically similar even
+        though all distances have been rescaled. This is a useful check that changing units does
+        not change the underlying dimensionless random-walk problem.
+      </p>
+      <div class="params">display = "walk2d"
+mean_free_path = 1.0
+# compare with 0.5 and 2.0</div>
+    </div>
+
+    <div class="scenario-card">
+      <h4>7 · Intermediate — Individual Walks and Statistical Variety</h4>
+      <p>
+        Display a few walks at a time and compare their shapes and escape step counts. Then increase
+        <code>n_walks</code> moderately. Individual paths can look strikingly different even though
+        they obey the same statistical rules. Keep the number small enough that the trajectories
+        remain visually distinguishable; the purpose is to connect the statistical law with the
+        irregular appearance of individual random walks.
+      </p>
+      <div class="params">n_walks = 4
+# compare with 6 and 10</div>
+    </div>
+
+    <div class="scenario-card">
+      <h4>8 · Intermediate–Advanced — Explore the Escape-Time Distribution</h4>
+      <p>
+        Run many isotropic star walks and collect <code>walk.steps_taken</code> for the paths that
+        escape. Compare the mean, median, minimum, and maximum, or make a histogram. First-passage
+        times form a broad distribution: two walks in the same star can escape after very different
+        numbers of steps. Check that <code>step_cap</code> is high enough that incomplete walks do
+        not bias the comparison.
+      </p>
+      <div class="params">display = "walk2d"
 n_walks = 100
-# inspect [w.steps_taken for w in result.walks if w.escaped]</div></div>
-<div class="scenario-card"><h4>5 · Verify Escape Steps &prop; R&sup2;</h4><p>Hold <code>mean_free_path</code> fixed and repeat the calculation for several explicit radii. Average <code>steps_taken</code> over many walks and compare it with \(R^2\). Diffusion predicts a characteristic first-passage step count proportional to \((R/\lambda)^2\).</p><div class="params">radius = 30.0
-# compare with 40.0, 50.0, 60.0</div></div>
-<div class="scenario-card"><h4>6 · Mean Free Path and Geometric Scaling</h4><p>With <code>radius = None</code>, multiply <code>mean_free_path</code> by a constant. Eq.&nbsp;9 scales the star radius by the same constant, so the picture has the same statistical geometry expressed in larger distance units.</p><div class="params">mean_free_path = 1.0
-# compare with 0.5 and 2.0</div></div>
-<div class="scenario-card"><h4>7 · Number of Walks vs. Legibility</h4><p>Compare a few simultaneous walks with ten or more. This does not change the physics; it shows why a small default is useful when the goal is to see the convoluted character of individual paths.</p><div class="params">n_walks = 4
-# compare with 6 and 10</div></div>
-</div></section>
+# inspect [w.steps_taken for w in result.walks if w.escaped]</div>
+    </div>
+
+    <div class="scenario-card">
+      <h4>9 · Advanced — Verify Escape Steps &prop; R&sup2;</h4>
+      <p>
+        Hold <code>mean_free_path</code> fixed and use several explicit star radii. For each radius,
+        average <code>steps_taken</code> over many escaped walks. Diffusion predicts a characteristic
+        first-passage step count proportional to \((R/\lambda)^2\). Test this by doubling \(R\):
+        the characteristic escape count should increase by roughly a factor of four. Because the
+        distribution is broad, use many walks and compare averages or medians rather than single
+        trajectories.
+      </p>
+      <div class="params">radius = 30.0
+# compare with 40.0, 50.0, 60.0
+# keep mean_free_path fixed</div>
+    </div>
+
+  </div>
+</section>
 
 <!-- ============================================================
      RESTORE TO DEFAULTS CALLOUT
