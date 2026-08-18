@@ -409,13 +409,13 @@
 <!-- ─── Description ─── -->
 <section id="description">
   <h2>Program Description</h2>
-  <p><strong>Random2</strong> explores the square-root scaling of random walks and provides a visual, two-dimensional illustration motivated by radiative diffusion in a stellar interior. Random displacements accumulate very differently from directed motion: after \(N\) independent steps, a characteristic net displacement grows in proportion to \(\sqrt{N}\), not \(N\).</p>
+  <p><strong>Random2</strong> explores the square-root scaling of random walks and provides a visual, two-dimensional illustration motivated by radiative diffusion in a stellar interior. Random displacements accumulate very differently from directed motion: after \(N\) independent steps, a characteristic net displacement grows in proportion to \(\sqrt{N}\), not \(N\). This square-root behavior is a general feature of many random-walk and diffusion processes, not only radiative transport in stars.</p>
   <p>In the Sun, energy produced by nuclear reactions in the core is transported outward through an opaque plasma. In regions where radiative diffusion dominates, repeated absorption, emission, and scattering make energy propagation resemble a random walk. Detailed diffusion-time estimates depend on the solar model and on the rapidly changing opacity and photon mean free path; the important lesson here is the random-walk scaling rather than one particular travel time.</p>
   <h3>Two Modes of Operation</h3>
-  <p><strong><code>scaled_distance</code></strong> retains the component-based random-walk experiment used to demonstrate the statistical law. Each step has independently generated \(x\) and \(y\) components. The default components are uniform on \([-1,1]\); an optional Gaussian distribution lets you test Schutz's observation that the \(\sqrt{N}\) behavior does not depend on this particular choice of step distribution. Each walk's net displacement is divided by its own mean step length before trial averaging.</p>
+  <p><strong><code>scaled_distance</code></strong> retains the three-dimensional component-based random-walk experiment used to demonstrate the statistical law. Each step has independently generated \(x\), \(y\), and \(z\) components. The default components are uniform on \([-1,1]\); an optional Gaussian distribution lets you test Schutz's observation that the \(\sqrt{N}\) behavior does not depend on this particular choice of step distribution. Each walk's net displacement is divided by its own mean step length before trial averaging.</p>
   <p><strong><code>walk2d</code></strong> is a visualization rather than a second version of the same step generator. Here every step has fixed length \(\lambda\) and an angle chosen uniformly from \(0\) to \(2\pi\). The result is genuinely isotropic in the plane: no direction is preferred. Several walks start at the center of a circular schematic star and continue until they cross its boundary or reach a safety limit.</p>
   <div class="note"><strong>Solar-model limitation:</strong> Random2 is a schematic model of <em>radiative diffusion</em>, not a numerical model of the complete Sun. In the real Sun, radiative transport dominates through the core and radiative zone, while convection becomes the principal energy-transport mechanism in the outer convection zone, whose base is about 200,000 km below the visible surface (roughly \(0.7R_\odot\)). The circle in the visualization should therefore be regarded as a pedagogical boundary, not as a literal simulation of one photon random-walking through every solar layer. See <a href="https://solarscience.msfc.nasa.gov/interior.shtml" target="_blank">NASA: The Solar Interior</a>.</div>
-  <div class="note"><strong>Why 2D?</strong> The exponent in the diffusion law, \(D\propto\sqrt{N}\), does not depend on whether the walk is drawn in two or three dimensions, so a planar walk is sufficient for demonstrating that scaling and is much easier to visualize. Quantitative radial and first-passage statistics do depend on dimensionality, however, so the displayed escape-time distribution should not be interpreted as a three-dimensional solar prediction.</div>
+  <div class="note"><strong>Why is the star display 2D?</strong> The square-root exponent for random-walk displacement does not depend on whether the walk is in two or three dimensions, so a planar display preserves the qualitative scaling while making individual paths easy to see. The <code>scaled_distance</code> calculation itself is three-dimensional. Quantitative radial and first-passage statistics do depend on dimensionality, so the displayed escape-time distribution should not be interpreted as a three-dimensional solar prediction.</div>
 </section>
 
 
@@ -423,18 +423,19 @@
 <section id="physics">
   <h2>Physics &amp; Equations</h2>
   <h3>Component-Based Step for the Scaled-Distance Experiment</h3>
-  <p>With the default <code>step_distribution = "uniform"</code>, the two components of step \(i\) are independent:</p>
+  <p>With the default <code>step_distribution = "uniform"</code>, the three components of step \(i\) are independent:</p>
   <div class="eq-block"><span class="eq-label">(1)</span>\[
-    \Delta x_i=2U_{x,i}-1,\qquad \Delta y_i=2U_{y,i}-1,\qquad U_{x,i},U_{y,i}\sim\mathrm{Uniform}(0,1).
+    \Delta x_i=2U_{x,i}-1,\qquad \Delta y_i=2U_{y,i}-1,\qquad \Delta z_i=2U_{z,i}-1,
+    \qquad U_{x,i},U_{y,i},U_{z,i}\sim\mathrm{Uniform}(0,1).
   \]</div>
-  <p>These endpoints are uniform over a square. The resulting directions are <strong>not isotropic</strong>; directions near the square's diagonals occur more often than directions near its coordinate axes. That anisotropy does not change the \(\sqrt{N}\) scaling being studied in this statistical mode.</p>
+  <p>These step vectors are uniform within a cube. The resulting directions are <strong>not isotropic</strong>; directions toward the cube's body diagonals are represented more strongly than directions toward its coordinate axes. That anisotropy does not change the \(\sqrt{N}\) scaling being studied in this statistical mode.</p>
   <h3>Individual Step Length</h3>
-  <div class="eq-block"><span class="eq-label">(2)</span>\[\ell_i=\sqrt{\Delta x_i^2+\Delta y_i^2}.\]</div>
-  <p>For the uniform-component model, the exact mean step length is</p>
-  <div class="eq-block"><span class="eq-label">(3)</span>\[\langle\ell\rangle=\frac{\sqrt{2}+\ln(1+\sqrt{2})}{3}\approx0.7652.\]</div>
+  <div class="eq-block"><span class="eq-label">(2)</span>\[\ell_i=\sqrt{\Delta x_i^2+\Delta y_i^2+\Delta z_i^2}.\]</div>
+  <p>For the uniform-component model, the mean step length is the average distance from the center of the cube to a uniformly chosen point within it:</p>
+  <div class="eq-block"><span class="eq-label">(3)</span>\[\langle\ell\rangle=\frac{1}{8}\int_{-1}^{1}\!\int_{-1}^{1}\!\int_{-1}^{1}\sqrt{x^2+y^2+z^2}\,dx\,dy\,dz\approx0.9606.\]</div>
   <h3>Accumulated Position and Scaled Distance</h3>
-  <div class="eq-block"><span class="eq-label">(4)</span>\[X=\sum_{i=1}^{N}\Delta x_i,\qquad Y=\sum_{i=1}^{N}\Delta y_i,\qquad D=\sqrt{X^2+Y^2}.\]</div>
-  <div class="eq-block"><span class="eq-label">(5)</span>\[\bar{\ell}=\frac{1}{N}\sum_{i=1}^{N}\ell_i,\qquad d=\frac{D}{\bar{\ell}}.\]</div>
+  <div class="eq-block"><span class="eq-label">(4)</span>\[X=\sum_{i=1}^{N}\Delta x_i,\qquad Y=\sum_{i=1}^{N}\Delta y_i,\qquad Z=\sum_{i=1}^{N}\Delta z_i,\qquad r_N=\sqrt{X^2+Y^2+Z^2}.\]</div>
+  <div class="eq-block"><span class="eq-label">(5)</span>\[\bar{\ell}=\frac{1}{N}\sum_{i=1}^{N}\ell_i,\qquad d=\frac{r_N}{\bar{\ell}}.\]</div>
   <h3>Diffusion Scaling Law</h3>
   <p>For independent steps with finite variance, characteristic random-walk displacement grows as the square root of the number of steps:</p>
   <div class="eq-block"><span class="eq-label">(6)</span>\[\langle d\rangle\propto\sqrt{N},\qquad \log\langle d\rangle=\frac{1}{2}\log N+\mathrm{constant}.\]</div>
@@ -486,7 +487,7 @@ plot_walk2d(result, corner="upper right")</div></div></div>
 <h3>Scaled-Distance Mode</h3><table class="param-table"><thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>maxSteps</code></td><td><code>4096</code></td><td>Largest walk in the scaling experiment. The step count is repeatedly halved until the next value would be 1.</td></tr>
 <tr><td><code>nTrials</code></td><td><code>100</code></td><td>Independent walks averaged at each step count. Larger values reduce Monte Carlo scatter.</td></tr>
-<tr><td><code>step_distribution</code></td><td><code>"uniform"</code></td><td><code>"uniform"</code> uses independent components on \([-1,1]\); <code>"gaussian"</code> uses independent standard-normal components.</td></tr></tbody></table>
+<tr><td><code>step_distribution</code></td><td><code>"uniform"</code></td><td><code>"uniform"</code> uses independent three-dimensional components on \([-1,1]\); <code>"gaussian"</code> uses independent three-dimensional standard-normal components.</td></tr></tbody></table>
 <h3>2D Star Visualization Mode</h3><table class="param-table"><thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>reference_steps</code></td><td><code>2000</code></td><td>\(N_{\mathrm{ref}}\) in Eq.&nbsp;9. It sets the diffusion scale used to compute the default radius; it is not a walk-length limit.</td></tr>
 <tr><td><code>n_walks</code></td><td><code>4</code></td><td>Number of independent paths drawn simultaneously.</td></tr>
@@ -496,18 +497,18 @@ plot_walk2d(result, corner="upper right")</div></div></div>
 <tr><td><code>ray_length_factor</code></td><td><code>0.6</code></td><td>Length of the schematic outgoing ray as a fraction of the star radius. Set to <code>0</code> to suppress the ray.</td></tr>
 <tr><td><code>step_cap</code></td><td><code>200000</code></td><td>Positive safety limit on the number of steps in any one displayed walk.</td></tr>
 <tr><td><code>corner</code></td><td><code>"upper right"</code></td><td>Annotation-box location: upper/lower left/right.</td></tr></tbody></table>
-<div class="note">Invalid display names, distributions, corners, nonpositive physical parameters, and nonpositive trial/step counts are rejected with explanatory <code>ValueError</code> messages rather than silently selecting another behavior.</div></section>
+<div class="note">Invalid display names, distributions, corners, non-finite or out-of-range physical parameters, and nonpositive trial/step counts are rejected with explanatory <code>ValueError</code> messages rather than silently selecting another behavior.</div></section>
 
 <!-- ─── Output ─── -->
-<section id="output"><h2>Program Output</h2><p><strong>Scaled-distance mode</strong> produces a log-log plot of average scaled displacement versus number of steps. The points should approach a line of slope \(1/2\); finite trial counts produce visible statistical scatter.</p><p><strong>2D star mode</strong> produces a square plot of fixed-length isotropic walks within a circular schematic star. The annotation box reports the radius, mean free path, reference step count, number of escaped walks, and—when at least one walk escapes—the median escape step count. Each <code>WalkPath</code> also stores its individual <code>steps_taken</code> value for quantitative experiments.</p></section>
+<section id="output"><h2>Program Output</h2><p><strong>Scaled-distance mode</strong> produces a log-log plot of average scaled displacement versus number of steps. The points should approach a line of slope \(1/2\); finite trial counts produce visible statistical scatter.</p><p><strong>2D star mode</strong> produces a square plot of fixed-length isotropic walks within a circular schematic star. The annotation box reports the radius, mean free path, reference step count, number of escaped walks, and—when at least one walk escapes—the median escape step count. Each <code>WalkPath</code> also stores its individual <code>steps_taken</code> value for quantitative experiments. A path with no terminal ray has reached <code>step_cap</code> without escaping.</p></section>
 
 <!-- ─── Suggested Experiments ─── -->
 <section id="experiments"><h2>Suggested Experiments</h2><div class="scenario-grid">
 <div class="scenario-card"><h4>1 · Verify the &radic;N Law</h4><p>Run the default scaled-distance experiment. The log-log points should lie near a straight line of slope \(1/2\), with some Monte Carlo scatter.</p><div class="params">display = "scaled_distance"
 maxSteps = 4096
 nTrials = 100</div></div>
-<div class="scenario-card"><h4>2 · Reduce Statistical Scatter</h4><p>Increase <code>nTrials</code> while leaving the step counts unchanged. The estimated curve should become smoother and its overall slope more stable.</p><div class="params">nTrials = 25
-# compare with 100, 500, 1000</div></div>
+<div class="scenario-card"><h4>2 · Reduce Statistical Scatter</h4><p>Try <code>nTrials = 25, 100, 500, 1000</code> while leaving the step counts unchanged. As the number of trials increases, the estimated curve should become smoother and its overall slope more stable.</p><div class="params">nTrials = 25
+# then try 100, 500, 1000</div></div>
 <div class="scenario-card"><h4>3 · Change the Step Distribution</h4><p>Repeat the scaled-distance calculation using Gaussian components. The numerical coefficient changes, but after scaling by each walk's mean step length the characteristic \(N^{1/2}\) dependence remains.</p><div class="params">step_distribution = "uniform"
 # compare with "gaussian"</div></div>
 <div class="scenario-card"><h4>4 · Escape-Time Distribution</h4><p>Run many isotropic star walks and collect <code>walk.steps_taken</code> for the escaped paths. The first-passage times have a broad distribution: individual random walks can escape much sooner or much later than a typical walk.</p><div class="params">display = "walk2d"
@@ -579,7 +580,7 @@ n_walks = 100
       </ul>
 
       <p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
-        For step-by-step instructions on all four restore methods, see
+        For step-by-step instructions on the available restore methods, see
         <strong>Section&nbsp;10</strong> of the
         <em>GFTGU Python Setup Guide</em>.
       </p>
