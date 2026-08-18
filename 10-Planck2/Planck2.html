@@ -471,9 +471,11 @@
     </p>
     <p>
       The graph reports the sampled peak, the area under the dimensionless shape function, and a
-      physical integral over wavelength or frequency. The physical integral allows a direct
-      numerical check of the Stefan–Boltzmann \(T^4\) law, while the dimensionless area remains
-      useful for checking the numerical integration used in Investigations 10.2 and 10.3.
+      physical integral over wavelength or frequency. Here, the <em>physical integral</em> means the
+      integral of the plotted spectrum over its physical horizontal coordinate; it is distinct from
+      the dimensionless area under \(f_p(x)\). The physical integral allows a direct numerical check
+      of the Stefan–Boltzmann \(T^4\) law. Investigations 10.1, 10.2, and 10.3 are relevant to this
+      program.
     </p>
   </section>
 
@@ -669,7 +671,7 @@ plot_planck2(result)</div>
   <!-- ── Parameters ── -->
   <section id="parameters">
     <h2>Parameters</h2>
-    <p>All ordinary experiment settings are exposed near the top of <code>main.py</code>.</p>
+    <p>All ordinary experiment settings are exposed near the top of <code>main.py</code>. Physical quantities are expressed in SI units throughout.</p>
     <table class="param-table">
       <thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
       <tbody>
@@ -684,7 +686,7 @@ plot_planck2(result)</div>
         <tr><td class="pname">y_frac_window</td><td class="pdefault">0.003</td><td>—</td><td>Fraction of peak used for automatic plot windowing; 0 shows the full domain.</td></tr>
       </tbody>
     </table>
-    <div class="note"><strong>Input checking:</strong> Invalid quantities, temperatures, resolutions, domain limits, annotation corners, and window fractions produce explanatory <code>ValueError</code> messages.</div>
+    <div class="note"><strong>Input checking:</strong> Invalid quantities, non-finite or nonpositive temperatures, invalid resolutions, non-finite or incorrectly ordered domain limits, invalid annotation corners, and window fractions outside the finite range 0–1 produce explanatory <code>ValueError</code> messages.</div>
   </section>
 
   <!-- ── Quantity Modes ── -->
@@ -741,11 +743,12 @@ plot_planck2(result)</div>
     <h2>Suggested Experiments</h2>
     <div class="exp-grid">
       <div class="exp-card"><div class="ec-num">EXP-1</div><h4>Solar Black-Body Approximation</h4><p>With <code>T=5900</code> and <code>quantity="wavelength"</code>, compare the sampled peak wavelength with Wien's displacement law. The result should be near 490 nm, in the visible range. A real solar spectrum also contains absorption lines and other departures from an ideal black body.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-2</div><h4>Wavelength vs. Frequency Peaks</h4><p>Run the same temperature with <code>"wavelength"</code> and <code>"frequency"</code>. Convert the frequency peak to \(c/\nu_\text{max}\) and compare it with the wavelength-mode peak. They do not agree because the two curves are densities with respect to different variables.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-3</div><h4>Stefan–Boltzmann T⁴ Scaling</h4><p>Run several temperatures and record <code>result.physical_integral</code>. For either radiance mode, verify that the integral divided by \(T^4\) is nearly constant and agrees with \(\sigma/\pi\). For <code>"energy_density"</code>, verify agreement with \(4\sigma/c\).</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-4</div><h4>Resolution and Peak Sampling</h4><p>Try <code>n_steps = 10, 100, 1000, 2000, 20000</code>. Compare both the dimensionless area and sampled peak with their known values. Area and peak location need not converge at the same rate because the peak is selected only from sampled grid points.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-5</div><h4>Where the Asymptotic Approximations Fail</h4><p>Move <code>x_low</code> upward and <code>x_high</code> downward, for example to 1 and 3. This deliberately forces the approximations into regions where they are less accurate. Compare the resulting peak and integrals with the defaults, then move the boundaries back outward.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-6</div><h4>Cosmic Microwave Background</h4><p>Set <code>T=2.725</code> and <code>quantity="frequency"</code>. The peak should be near 160 GHz. Research why the CMB's near-perfect black-body spectrum became one of the decisive lines of evidence for a hot early universe and against classical steady-state cosmology.</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-2</div><h4>Wien's Displacement Law and Temperature</h4><p>Run <code>quantity="wavelength"</code> at <code>T = 3000, 5900, 10000</code> K. Verify that <code>x_peak</code> stays nearly constant while \(\lambda_\text{peak}T\) stays near \(2.898\times10^{-3}\,\text{m K}\). Then try <code>"frequency"</code> and verify that the peak frequency is proportional to \(T\).</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-3</div><h4>Wavelength vs. Frequency Peaks</h4><p>At the same temperature, run <code>"wavelength"</code> and <code>"frequency"</code>. Record the \(B_\lambda\) peak wavelength, the \(B_\nu\) peak frequency, and \(c/\nu_\text{max}\). The two wavelengths do not agree because the curves are densities with respect to different variables.</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-4</div><h4>Stefan–Boltzmann T⁴ Scaling</h4><p>Use, for example, <code>T = 3000, 6000, 12000</code> K and record <code>result.physical_integral</code>. For either radiance mode, calculate <code>physical_integral / T**4</code> and verify that it is nearly constant and agrees with \(\sigma/\pi\). For <code>"energy_density"</code>, verify agreement with \(4\sigma/c\). When \(T\) doubles, the integral should increase by about a factor of 16.</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-5</div><h4>Resolution and Peak Sampling</h4><p>Try <code>n_steps = 10, 100, 1000, 2000, 20000</code>. Make a small table of <code>n_steps</code>, <code>x_peak</code>, <code>dimensionless_area</code>, and relative area error. The trapezoidal-rule area and the sampled peak location need not converge at the same rate because the peak is chosen only from grid points, without interpolation.</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-6</div><h4>Rayleigh–Jeans and Wien Limits</h4><p>For small \(x\), Planck's law approaches the Rayleigh–Jeans form; for large \(x\), it approaches Wien's approximation. Move <code>x_low</code> upward and <code>x_high</code> downward, for example to 1 and 3, so that these limiting forms are deliberately used too far from their valid regimes. Compare the peak and integrals with the defaults and explain which limiting approximation is responsible for the changes.</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-7</div><h4>Cosmic Microwave Background</h4><p>Set <code>T=2.725</code> and <code>quantity="frequency"</code>. The peak should be near 160 GHz. As an optional extension, research why the CMB's near-perfect black-body spectrum became important evidence for a hot early universe and against classical steady-state cosmology.</p></div>
     </div>
   </section>
 
@@ -835,7 +838,8 @@ plot_planck2(result)</div>
     <p>
       Planck2 accompanies the black-body-radiation investigations in Bernard Schutz's
       <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003), Chapter 10.
-      It is distributed under the
+      This rewritten and extended Python version descends from Schutz's original Java/Triana
+      <em>Planck</em> program for the first edition. It is distributed under the
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license.
     </p>
   </section>
