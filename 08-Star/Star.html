@@ -628,23 +628,100 @@
   <!-- ── Suggested Scenarios ── -->
   <section id="scenarios">
     <h2>Suggested Experiments</h2>
-    <p>The first four investigations closely follow the questions posed in Schutz's original Star material; the later ones make the scaling and numerical behavior explicit.</p>
+    <p>
+      The experiments below are arranged in approximate order of difficulty. The early exercises
+      require only parameter changes and reading the resulting radius and mass; later exercises
+      test scaling relations, numerical convergence, and substantial extensions of the stellar
+      model.
+    </p>
     <div class="scenario-grid">
-      <div class="scenario-card"><h4>1 · Baseline Solar-Like Model</h4><p>Run all four output modes. Estimate the modeled radius and total mass, but also compare the central temperature and density with standard solar values. Notice that matching two global observables does not make a one-polytrope model an accurate representation of the detailed solar interior.</p><div class="sc-params">use the default physical parameters<br>try all four output_type values<br>try log_y = True for pressure and density</div></div>
 
-      <div class="scenario-card"><h4>2 · Central-Temperature Sensitivity</h4><p>Change \(T_c\) by ±10% with \(p_c,\mu,\gamma\) fixed. Verify that the higher-temperature model is both larger and more massive. The exact similarity scaling of this family is \(R\propto T_c\) and \(M\propto T_c^2\).</p><div class="sc-params">T_c = 0.9 * 2.263e7<br>T_c = 1.1 * 2.263e7<br>compare surface radius and mass</div></div>
+      <div class="scenario-card"><h4>1 · Introductory — Explore the Baseline Solar-Like Model</h4><p>
+      Run the default calculation with each of the four output modes: pressure, density,
+      temperature, and enclosed mass. Identify the modeled surface where the pressure reaches
+      zero, and record the total radius and mass there. Compare the shapes of the profiles with
+      the solar model discussed in Chapter 8. Keep in mind that matching the Sun's overall mass
+      and radius does not make a one-polytrope calculation a detailed solar model.</p>
+      <div class="sc-params">use the default physical parameters<br>try all four output_type values<br>try log_y = True for pressure and density</div></div>
 
-      <div class="scenario-card"><h4>3 · Compensating a Temperature Change</h4><p>Schutz asks how a change in central pressure can restore the original stellar mass after changing \(T_c\). Use trial runs, or the scaling relations, to bring the mass back near its original value. Then compare the resulting radius with the baseline radius. This demonstrates how simultaneous mass and radius observations constrain a stellar model.</p><div class="sc-params">change T_c by 10%<br>adjust p_c until M returns to baseline<br>then compare R</div></div>
+      <div class="scenario-card"><h4>2 · Introductory–Intermediate — Central-Temperature Sensitivity</h4><p>
+      Change \(T_c\) by ±10% while holding \(p_c\), \(\mu\), and \(\gamma\) fixed. Record the
+      surface radius and total mass for each run. The hotter model should be both larger and
+      more massive. For this one-polytrope family the similarity relations predict
+      \(R\propto T_c\) and \(M\propto T_c^2\); check whether the numerical results agree.</p>
+      <div class="sc-params">T_c = 0.9 * 2.263e7<br>T_c = 1.1 * 2.263e7<br>compare surface radius and mass</div></div>
 
-      <div class="scenario-card"><h4>4 · A Schematic Red-Giant Polytrope</h4><p>Set \(\gamma=1.335\), as in Schutz's investigation, and try to construct a much larger model while controlling its total mass. Do not interpret the resulting single-polytrope structure as a realistic red giant: real giants have strongly differentiated cores and envelopes. The exercise is about the sensitivity of polytropic families.</p><div class="sc-params">gamma = 1.335<br>target: much larger R at chosen M<br>vary p_c and T_c</div></div>
+      <div class="scenario-card"><h4>3 · Intermediate — Pressure Scaling</h4><p>
+      Hold \(T_c\), \(\mu\), and \(\gamma\) fixed and vary \(p_c\) by factors of four.
+      Record the resulting stellar radius and mass. The similarity relations for this family
+      give \(R\propto p_c^{-1/2}\) and \(M\propto p_c^{-1/2}\). Thus multiplying the central
+      pressure by four should reduce both quantities by about a factor of two.</p>
+      <div class="sc-params">p_c = baseline / 4<br>p_c = baseline<br>p_c = baseline * 4<br>record R and M</div></div>
 
-      <div class="scenario-card"><h4>5 · Newtonian Neutron-Star Toy Model</h4><p>Following Schutz's challenge, use \(\gamma=2\) and \(\mu=1\) and search for central values giving approximately \(R=10\) km and \(M=1.4M_\odot\). Very large central pressure and a formal ideal-gas temperature will be required. Treat those values only as parameters that normalize the toy polytrope: realistic neutron-star matter is degenerate, strongly interacting, and requires general relativity.</p><div class="sc-params">mu = 1.0<br>gamma = 2.0<br>target R ≈ 1.0e4 m<br>target M ≈ 2.8e30 kg</div></div>
+      <div class="scenario-card"><h4>4 · Intermediate — Composition-Parameter Scaling</h4><p>
+      At fixed \(p_c\), \(T_c\), and \(\gamma\), vary the effective mean molecular-weight
+      parameter \(\mu\). Verify the mathematical scalings \(R\propto\mu^{-1}\) and
+      \(M\propto\mu^{-2}\). Treat this as a scaling experiment: the different values of
+      \(\mu\) should not all be interpreted as realistic compositions for otherwise identical
+      stars.</p>
+      <div class="sc-params">mu = 0.6, 1.0, 1.285<br>record R and M</div></div>
 
-      <div class="scenario-card"><h4>6 · Pressure Scaling</h4><p>Hold \(T_c,\mu,\gamma\) fixed and vary \(p_c\) by factors of 4 or 10. Verify \(R\propto p_c^{-1/2}\) and \(M\propto p_c^{-1/2}\). A log-log plot of either quantity against \(p_c\) should have slope \(-1/2\).</p><div class="sc-params">p_c = baseline / 4, baseline, baseline * 4<br>record R and M</div></div>
+      <div class="scenario-card"><h4>5 · Intermediate — Compensate for a Temperature Change</h4><p>
+      Schutz asks how a change in central pressure can restore the original stellar mass after
+      \(T_c\) has been changed. Increase or decrease \(T_c\) by 10%, then adjust \(p_c\) until
+      the total mass is again close to the baseline value. Finally compare the new radius with
+      the original one. The fact that matching the mass does not automatically restore the
+      radius illustrates why simultaneous mass and radius measurements constrain stellar
+      models more tightly than either observable alone.</p>
+      <div class="sc-params">change T_c by 10%<br>adjust p_c until M returns to baseline<br>then compare R</div></div>
 
-      <div class="scenario-card"><h4>7 · Composition-Parameter Scaling</h4><p>At fixed \(p_c,T_c,\gamma\), vary \(\mu\). Verify that the model follows \(R\propto\mu^{-1}\) and \(M\propto\mu^{-2}\). This is a mathematical scaling experiment; values of \(\mu\) should not all be interpreted as realistic compositions for the same star.</p><div class="sc-params">mu = 0.6, 1.0, 1.285<br>record R and M</div></div>
+      <div class="scenario-card"><h4>6 · Intermediate–Advanced — Test the Chapter 8 Scaling Relations</h4><p>
+      Investigation 8.6 derives proportionalities among central conditions, radius, and mass
+      for a fixed polytropic equation of state. Build a small family of models in which one
+      input parameter is changed systematically, record \(R\) and \(M\), and test the predicted
+      power laws. The temperature-, pressure-, and \(\mu\)-scaling experiments above provide
+      three ready-made examples; combine their results into a single table or log-log plot.</p>
+      <div class="sc-params">construct a table of input parameter, R, and M<br>compare measured exponents with the Chapter 8 scalings</div></div>
 
-      <div class="scenario-card"><h4>8 · Numerical Convergence</h4><p>Keep the physical inputs fixed and increase <code>steps_per_scale</code>. Increase <code>max_points</code> if necessary so <code>restart_count</code> remains zero. Compare surface radius and total mass. Because forward Euler is first order globally, the error should decrease approximately in proportion to \(dr\) once the calculation is in its asymptotic convergence regime.</p><div class="sc-params">steps_per_scale = 200, 400, 800, 1600<br>ensure restart_count == 0</div></div>
+      <div class="scenario-card"><h4>7 · Advanced — A Schematic Red-Giant Polytrope</h4><p>
+      Following Schutz, set \(\gamma=1.335\) and try to construct a model having approximately
+      one solar mass but a radius about 100 times larger than the baseline solar-like model.
+      Adjust \(p_c\) and \(T_c\) until both targets are reasonably close. Then try a model with
+      about ten solar masses using the same \(\gamma\) and \(\mu\). These are deliberately
+      schematic one-polytrope models; real red giants have strongly differentiated cores and
+      envelopes.</p>
+      <div class="sc-params">gamma = 1.335<br>first target: M ≈ 1 solar mass, R ≈ 100 baseline radii<br>second target: M ≈ 10 solar masses<br>vary p_c and T_c</div></div>
+
+      <div class="scenario-card"><h4>8 · Advanced — Newtonian Neutron-Star Toy Model</h4><p>
+      Follow Schutz's challenge by setting \(\gamma=2\) and \(\mu=1\), then search for central
+      values that give approximately \(R=10\) km and \(M=1.4M_\odot\). Very large central
+      pressure and a formal ideal-gas temperature will be required. Treat those quantities only
+      as parameters that normalize this Newtonian polytrope: realistic neutron-star matter is
+      not an ideal gas, and relativistic gravity is essential.</p>
+      <div class="sc-params">mu = 1.0<br>gamma = 2.0<br>target R ≈ 1.0e4 m<br>target M ≈ 2.8e30 kg</div></div>
+
+      <div class="scenario-card"><h4>9 · Advanced — Numerical Convergence</h4><p>
+      Keep the physical inputs fixed and increase <code>steps_per_scale</code>. Increase
+      <code>max_points</code> when necessary so that <code>restart_count</code> remains zero;
+      otherwise the automatic step-doubling restart changes the effective radial resolution.
+      Compare the surface radius and total mass. Because the integration uses forward Euler
+      steps, the global error should eventually decrease approximately in proportion to
+      \(dr\) as the grid is refined.</p>
+      <div class="sc-params">steps_per_scale = 200, 400, 800, 1600<br>increase max_points as needed<br>ensure restart_count == 0</div></div>
+
+      <div class="scenario-card"><h4>10 · Advanced Programming Extension — Use More Than One Polytropic Region</h4><p>
+      Schutz's original Help proposes allowing the equation of state to change from one region
+      of a star to another. Make a separate experimental copy of the program and divide the
+      model into two or three radial regions with different polytropic exponents or
+      normalizations. At every interface, enforce continuity of pressure and choose the new
+      polytropic normalization so that the density does not jump unless such a discontinuity is
+      intentionally part of the model. Compare the resulting profiles with those of the
+      one-polytrope calculation.</p><p>
+      This is a substantial extension: the purpose is not to construct a modern solar model,
+      but to see how allowing different equations of state in different layers changes the
+      global radius, mass distribution, and interior profiles.</p>
+      <div class="sc-params">advanced: introduce two or three radial EOS regions<br>preserve pressure continuity at each interface</div></div>
+
     </div>
   </section>
 
