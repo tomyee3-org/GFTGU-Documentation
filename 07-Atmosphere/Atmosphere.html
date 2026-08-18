@@ -459,7 +459,8 @@
         of a planetary atmosphere in hydrostatic equilibrium. Starting from a measured sea-level
         (or reference-level) pressure and a user-supplied temperature profile, the program integrates
         upward in altitude until the numerical integration reaches its zero-pressure boundary, then plots whichever of the three
-        atmospheric quantities the user selects.
+        atmospheric quantities the user selects. This zero-pressure boundary is a numerical stopping
+        condition for the simplified model, not a sharply defined physical surface in a real atmosphere.
       </p>
       <p>
         It is suitable for modeling Earth's atmosphere, comparing planetary atmospheres across the
@@ -473,7 +474,7 @@
       <div class="note">
         <strong>Default Earth profile:</strong>
         The lower-atmosphere temperatures use U.S. Standard Atmosphere 1976 values. The
-        thermospheric portion is a representative NRLMSIS 2.0 solar-maximum profile through
+        thermospheric portion is a representative NRLMSIS 2.0 thermospheric profile through
         500 km; see <a href="#parameters">Parameters</a> for the run conditions and limitations.
       </div>
     </section>
@@ -567,8 +568,9 @@
       <p>
         When the integration surpasses the highest measured altitude, the program switches to
         a power-law relationship between temperature and pressure.
-        At the first step above the highest measurement point a coefficient \(\beta\) is fixed
-        such that the profile is continuous:
+        On the first computed step above the highest supplied altitude, the coefficient \(\beta\)
+        is chosen so that the extrapolated temperature at that step equals the last supplied
+        temperature:
       </p>
       <div class="eq-box">
         \[
@@ -601,8 +603,8 @@
       <p>
         At each altitude step the density \(\rho_{j-1}\) is obtained from the ideal gas law
         (Eq.&nbsp;7.2) using the current pressure and the temperature profile at the current
-        altitude. The integration terminates as soon as \(p_j &lt; 0\), at which point the
-        last valid step is discarded.
+        altitude. The integration terminates as soon as \(p_j &lt; 0\). That negative-pressure point is
+        discarded, so the returned arrays end at the last valid non-negative-pressure step.
       </p>
 
       <h3>Step-Size Restart (dh Doubling)</h3>
@@ -611,7 +613,10 @@
         \(\Delta h\) and restarts the calculation from the surface. This is a coverage
         mechanism rather than an error-controlled adaptive integrator: it ensures that the
         calculation eventually spans a sufficiently large altitude range, but the successful
-        run can be considerably coarser than the initial \(H/200\) step size.
+        run can be considerably coarser than the initial \(H/200\) step size. On every restart,
+        the upper-atmosphere extrapolation state is reset so that \(\beta\) is recomputed from
+        the pressure profile of the new run. A retry limit prevents pathological parameter choices
+        from causing an indefinite sequence of step-size doublings.
       </p>
       <pre><code>rho0  = ideal_gas_density(p0, mu, T0)      # surface density
 scale = p0 / (g * rho0)                    # scale height H
@@ -678,8 +683,8 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
         <p class="func-desc">
           Stores the supplied temperature profile and state for the upper-atmosphere power-law
           extension. The profile is validated before integration. <code>beta</code> is fixed
-          on the first step above the highest supplied breakpoint so that the extrapolation
-          joins continuously to the tabulated temperature.
+          on the first computed step above the highest supplied breakpoint so that the extrapolated
+          temperature there equals the last supplied temperature.
         </p>
 
         <h3>Functions</h3>
@@ -690,14 +695,15 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
           Uses linear interpolation (Eq.&nbsp;7.5) between breakpoints while inside the
           measured range; below the first breakpoint returns \(T_0\) (constant); above the
           highest breakpoint applies \(T = \beta\,p^{\alpha}\) (Eq.&nbsp;7.6), fixing
-          \(\beta\) on the first call in that regime so the profile is continuous.
+          \(\beta\) on the first call in that regime so the extrapolated temperature there
+          equals the last supplied temperature.
         </p>
 
         <span class="func-sig">ideal_gas_density(pressure: float, mu: float, temperature: float) -&gt; float</span>
         <p class="func-desc">
           Returns the mass density \(\rho = p\,\mu\,m_p\,/\,(k_B\,T)\) in kg m<sup>−3</sup>.
-          Implements Eq.&nbsp;(7.2) directly. Requires <code>pressure &gt; 0</code> and
-          <code>temperature &gt; 0</code>.
+          Implements Eq.&nbsp;(7.2) directly. Requires <code>pressure &ge; 0</code> and
+          <code>temperature &gt; 0</code>, with finite numerical inputs.
         </p>
 
         <span class="func-sig">hydrostatic_step(pressure_prev: float, rho_prev: float, g_accel: float, dh: float) -&gt; float</span>
@@ -760,7 +766,7 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
           <code>__init__</code> stores the parameters and constructs a
           <code>TemperatureProfile</code> from <code>h_points</code> and <code>T_points</code>.
           <code>run()</code> computes the initial density and scale height, then executes the
-          adaptive while/for integration loop (described in the Algorithm section), returning
+          step-size-restart while/for integration loop (described in the Algorithm section), returning
           an <code>AtmosphereResult</code> with arrays sliced to <code>[:last_step]</code>.
         </p>
 
@@ -850,7 +856,7 @@ p0          = 1.013e5       # Pa  (1 atm)
 
 # Hybrid Earth temperature profile:
 # U.S. Standard Atmosphere 1976 through ~86 km,
-# then representative NRLMSIS 2.0 solar-maximum temperatures to 500 km.
+# then representative NRLMSIS 2.0 thermospheric temperatures to 500 km.
 h_points = [
     0.0, 11_019.0, 20_063.0, 32_162.0, 47_350.0,
     51_412.0, 71_802.0, 86_000.0, 100_000.0,
@@ -950,8 +956,8 @@ plot_atmosphere(curve_data)</code></pre>
         From 100 km through 500 km, the values are rounded neutral temperatures read from an
         NRLMSIS 2.0 CCMC Instant Run for 15 October 2024 at 12:00 UTC, geographic latitude
         55° N and longitude 45° E. The CCMC run used observational solar and geomagnetic
-        indices for that date. These thermospheric values are therefore a representative
-        solar-maximum example, not universal standard temperatures: the thermosphere varies
+        indices for that date. These thermospheric values are therefore a date- and condition-specific
+        example, not universal standard temperatures: the thermosphere varies
         strongly with solar activity, geomagnetic activity, location, season, and time of day.
         <br><br>
         The temperature curve is consequently more realistic than a single fixed thermospheric
@@ -960,11 +966,15 @@ plot_atmosphere(curve_data)</code></pre>
         real thermosphere changes in composition and effective molecular mass. Pressure and
         density above roughly 100 km should therefore be interpreted as an illustrative
         continuation of the hydrostatic ideal-gas model, not as an NRLMSIS-quality prediction.
-        Above 500 km, the program resumes the simplified power-law extrapolation of
+        Above 500 km, the program begins the simplified power-law extrapolation of
         Eq.&nbsp;(7.6).
         <br><br>
         The <code>h_points</code> and <code>T_points</code> lists must have the same length;
-        altitudes must be strictly increasing, and all temperatures must be positive.
+        all numerical inputs must be finite, altitudes must be strictly increasing, and all
+        temperatures must be positive. <code>g_accel</code>, <code>mu</code>, and <code>p0</code>
+        must also be positive. The calculation always starts at altitude 0 using
+        <code>T_points[0]</code> as the surface temperature; in normal use, set
+        <code>h_points[0] = 0.0</code>.
       </div>
     </section>
 
@@ -981,8 +991,8 @@ plot_atmosphere(curve_data)</code></pre>
           <div class="out-unit">y-axis unit: Pa</div>
           <p>
             Atmospheric pressure vs. altitude. Decreases roughly exponentially with
-            a scale height of ~8.5 km for Earth. The most sensitive indicator of
-            how extended the atmosphere is.
+            a scale height of ~8.5 km for Earth. On a logarithmic scale, the pressure curve makes changes in effective scale height
+            especially visible.
           </p>
         </div>
         <div class="output-card">
@@ -1000,7 +1010,7 @@ plot_atmosphere(curve_data)</code></pre>
           <p>
             Temperature vs. altitude. With the default Earth data, this shows the
             U.S. Standard Atmosphere lower profile followed by the strongly rising
-            solar-maximum NRLMSIS thermosphere through 500 km. Above the highest supplied
+            NRLMSIS thermospheric portion of the profile through 500 km. Above the highest supplied
             breakpoint, the program uses the \(T = \beta\,p^{0.5}\) power-law extension.
           </p>
         </div>
@@ -1028,7 +1038,7 @@ plot_atmosphere(curve_data)</code></pre>
           Run the default model and plot Pressure, Density, and Temperature in separate runs.
           Below about 86 km, identify the familiar tropospheric, stratospheric, and mesospheric
           temperature structure represented by the U.S. Standard Atmosphere values. Then follow
-          the rapid thermospheric temperature rise in the NRLMSIS solar-maximum portion of the
+          the rapid thermospheric temperature rise in the NRLMSIS thermospheric portion of the
           profile. The simplified power-law extrapolation is used only above 500 km.
           <br>
           This simplified power-law extrapolation holds up reasonably well only while pressure is still non-negligible, and it breaks down once pressure is many orders of magnitude below the surface value. The rapid fall-off in temperature seen at the right end of the temperature plot with default parameters is in fact highly non-realistic. In reality, thermospheric heating from solar EUV radiation causes the temperature to continue rising towards an "exospheric temperature" where the curve flattens out. This limit temperature depends strongly on solar activity.
@@ -1135,7 +1145,9 @@ T_points = [288.0, 200.0, 350.0]</div>
           \(p(h)=p_0\exp(-h/H)\), with
           \(H=k_BT/(g\mu m_p)\). Compare the numerical pressure with the exact value at
           selected altitudes such as 10, 50, and 90 km. The disagreement grows with altitude
-          because the calculation uses first-order Euler steps.
+          because the calculation uses first-order Euler steps. Only compare altitudes within this
+          supplied constant-temperature interval; above 100 km the power-law extrapolation begins
+          and the model is no longer isothermal.
         </p>
         <p>
           To study convergence, temporarily change the line
