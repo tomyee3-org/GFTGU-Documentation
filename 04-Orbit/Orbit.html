@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -456,7 +455,7 @@ kinetic/potential/total energy.</p>
 following the orbit. Rejected steps may shrink, successful steps can recover toward the user's
 maximum timestep, and complete revolutions are measured by accumulating the azimuthal angle
 traveled. This works for clockwise or counter-clockwise motion starting from any direction.</p>
-</section>
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
 <!-- ── How to Use ── -->
 <section id="using">
 <h2>How to Use</h2>
@@ -688,27 +687,23 @@ the test particle is therefore not needed.</p>
   you to interpret conservation laws, orbital geometry, or the numerical method.
 </p>
 <div class="exp-grid">
-
 <div class="exp-card"><div class="ec-num">EXP-1 · Introductory</div><h4>Reproduce Planetary Orbits</h4>
 <p>Start with the default Mercury orbit. Then use perihelion distances and maximum orbital speeds
 from Schutz's planetary table to model other planets: place the planet on the positive x-axis at
 perihelion and give it velocity only in the y-direction. From the plotted perihelion and aphelion
 distances, estimate the eccentricity and compare it with the tabulated value. This directly tests
 whether Newton's inverse-square law reproduces the observed shapes of planetary orbits.</p></div>
-
 <div class="exp-card"><div class="ec-num">EXP-2 · Introductory</div><h4>Measure Planetary Periods</h4>
 <p>For several of the planetary orbits from EXP-1, set <code>maxOrbits=1</code> and compare the
 reported elapsed simulated time with the observed orbital period. You can also select
 <code>output="position_time"</code> or <code>output="velocity_time"</code> and read the period
 from the time axis. This is the period experiment suggested in Schutz's original Help.</p></div>
-
 <div class="exp-card"><div class="ec-num">EXP-3 · Introductory–Intermediate</div><h4>Position and Velocity Both Repeat</h4>
 <p>A closed orbit must return not only to its starting position but also to its starting velocity.
 Run one complete bound orbit and select <code>output="velocity"</code>. The velocity-space curve
 should close just as the position-space orbit does. The console closure residuals provide a
 numerical check: after an integral number of revolutions, both the final radius and velocity should
 be close to their initial values. This restores an experiment emphasized in Schutz's original Help.</p></div>
-
 <div class="exp-card"><div class="ec-num">EXP-4 · Intermediate</div><h4>Energy Conservation</h4>
 <p>Select <code>output="energy"</code> for a bound orbit. Kinetic and potential specific energy
 change continually, but their sum should remain nearly constant. Then make an unbound orbit and
@@ -717,20 +712,17 @@ specific energy, hyperbolic orbits positive specific energy, and the marginal pa
 The console's maximum fractional energy drift shows the remaining numerical error. This experiment,
 which Schutz associated with Chapter 6, is worth retaining explicitly rather than leaving energy
 conservation only as a numerical-accuracy diagnostic.</p></div>
-
 <div class="exp-card"><div class="ec-num">EXP-5 · Intermediate</div><h4>Bound, Parabolic, and Hyperbolic Motion</h4>
 <p>At a fixed starting radius \(r\), vary the initial speed through the escape value
 \(v_{\rm esc}=\sqrt{2\mu/r}\). Below it the orbit is bound; at the limiting value it is parabolic;
 above it the orbit is hyperbolic. For unbound cases, increase <code>maxSteps</code> if necessary
 because the requested <code>maxOrbits</code> may never be reached. Compare the trajectory class
 with the sign of the initial specific energy.</p></div>
-
 <div class="exp-card"><div class="ec-num">EXP-6 · Intermediate</div><h4>Direction Independence of Binding</h4>
 <p>Keep \(v_x^2+v_y^2\) fixed while rotating the initial velocity vector at a fixed starting
 position. The orbit's shape and angular momentum change, but its bound/unbound classification does
 not, because the specific energy depends on the speed rather than the direction of the velocity.
 This is the second part of Schutz's original unbound-orbit experiment.</p></div>
-
 <div class="exp-card"><div class="ec-num">EXP-7 · Intermediate</div><h4>Approximate Moon Around a Fixed Earth</h4>
 <p>Replace the solar gravitational parameter by
 \(GM_\oplus\approx3.9860\times10^{14}\ {\rm m^3\,s^{-2}}\), and try
@@ -738,46 +730,39 @@ This is the second part of Schutz's original unbound-orbit experiment.</p></div>
 model has a Kepler period of about <strong>27.8 days</strong>. Compare the result with the model's
 prediction, remembering that the real Earth–Moon system differs because the Moon's mass is not
 negligible.</p></div>
-
 <div class="exp-card"><div class="ec-num">EXP-8 · Intermediate</div><h4>Repeat Several Revolutions</h4>
 <p>Set <code>maxOrbits=2</code> or 5 and examine whether successive numerical ellipses lie on top
 of one another. This makes accumulated integration error visible. Fractional values such as 1.5
 are also allowed, although closure residuals are reported only when the requested endpoint is an
 integral number of revolutions. Schutz originally proposed extending the program to do this; the
 Python version already provides the capability through <code>maxOrbits</code>.</p></div>
-
 <div class="exp-card"><div class="ec-num">EXP-9 · Intermediate–Advanced</div><h4>Numerical Convergence</h4>
 <p>Reduce <code>dt0</code> and tighten <code>eps1</code> and <code>eps2</code>. Compare the
 orbital period, energy drift, angular-momentum drift, and closure residuals rather than judging
 accuracy from the orbit plot alone. Try changing one numerical control at a time so that you can
 tell which effect it has. You can also make either tolerance deliberately large to see what happens
 when that accuracy control is effectively relaxed.</p></div>
-
 <div class="exp-card"><div class="ec-num">EXP-10 · Advanced</div><h4>Verify Kepler's Third Law</h4>
 <p>Run several bound planetary orbits. For each one, obtain the period \(T\) from a
 <code>maxOrbits=1</code> run and estimate the semi-major axis \(a=(r_{\rm peri}+r_{\rm apo})/2\)
 from the trajectory. Compare \(T^2/a^3\) among the different orbits. It should be approximately
 constant when the central mass is unchanged.</p></div>
-
 <div class="exp-card"><div class="ec-num">EXP-11 · Advanced</div><h4>Verify Kepler's Second Law</h4>
 <p>Use the returned \(x,y,t\) arrays to select positions separated by equal time intervals.
 Approximate the area swept during each interval by the triangle formed by the origin and the two
 successive radius vectors. The areas should be nearly equal. Relate this result to the nearly
 constant specific angular momentum \(h=xv_y-yv_x\) reported by the calculation.</p></div>
-
 <div class="exp-card"><div class="ec-num">EXP-12 · Advanced</div><h4>Explore the Velocity Hodograph</h4>
 <p>Select <code>output="velocity"</code>. For a non-radial Kepler orbit the velocity vectors lie
 on a circle: a bound ellipse traces the full circle, whereas parabolic and hyperbolic trajectories
 trace only part of it. Compare several eccentricities and then an unbound orbit. This goes beyond
 the original Help's observation that velocity repeats and reveals a deeper geometric property of
 the inverse-square law.</p></div>
-
 <div class="exp-card"><div class="ec-num">EXP-13 · Advanced</div><h4>Point-Mass Radial Infall</h4>
 <p>Give the particle zero or nearly zero angular momentum and an inward velocity. Observe what
 happens as the trajectory approaches the mathematical point-mass singularity. The program contains
 a numerical guard to prevent evaluation at \(r=0\); that guard radius is not the physical surface
 of a star or planet. Schutz specifically suggested investigating this troublesome limiting case.</p></div>
-
 <div class="exp-card"><div class="ec-num">EXP-14 · Advanced Programming Extension</div><h4>Try a Different Central Force Law</h4>
 <p>Schutz's original Help proposed changing the acceleration law and observing which orbits remain
 closed. As an optional programming exercise, make a copy of the program and replace the Newtonian
@@ -786,13 +771,8 @@ is a Hooke-law acceleration proportional to \(-\mathbf r\), for which bound orbi
 You can then try a small non-Newtonian correction and look for orbital precession. Keep this as a
 separate experimental copy so the standard <code>Orbit</code> program continues to represent
 Newtonian gravity.</p></div>
-
 </div>
-</section>
-<!-- ============================================================
-     RESTORE TO DEFAULTS CALLOUT
-     ============================================================ -->
-<section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
+</section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
 <div style="
     border: 1.5px solid #b5811a;
     border-left: 5px solid #b5811a;
@@ -816,20 +796,19 @@ Newtonian gravity.</p></div>
         letter-spacing: 0.04em;
       ">Restoring Default Parameter Values</div>
 <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        After experimenting with parameter values in <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>,
-        you can restore the originals using any of the following methods:
+        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
+        you can restore the original program files using any of the following methods:
       </p>
 <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
 <li>
 <strong>Same session:</strong>
           Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
           (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
-          (macOS) repeatedly in PyCharm to undo your edits.
+          (macOS) repeatedly in your editor to undo your edits.
         </li>
 <li>
-<strong>After reopening PyCharm:</strong>
-          Right-click <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
-          in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
         </li>
 <li>
 <strong>Full reset:</strong>
@@ -841,13 +820,16 @@ Newtonian gravity.</p></div>
         </li>
 </ul>
 <p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
-        For step-by-step instructions on all four restore methods, see
-        <strong>Section 10</strong> of the
-        <em>GFTGU Python Setup Guide</em>.
+        For additional ways to restore program files, see the corresponding
+        recovery instructions in the <em>GFTGU Python Setup Guide</em>.
       </p>
 </div>
 </div>
 </section>
+<!-- ============================================================
+     RESTORE TO DEFAULTS CALLOUT
+     ============================================================ -->
+
 <!-- ============================================================
      END RESTORE TO DEFAULTS CALLOUT
      ============================================================ -->

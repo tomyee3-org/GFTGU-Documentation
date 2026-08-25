@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Multiple – Help File | GFtGU Programs</title>
-
-  <!-- MathJax 3 -->
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Multiple – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
     MathJax = {
       tex: {
         inlineMath:  [['\\(','\\)']],
@@ -16,10 +15,8 @@
       options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
-          id="MathJax-script" async></script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
     /* ── Reset & custom properties ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -353,98 +350,84 @@
 </head>
 <body>
 <div class="page-wrap">
-
 <!-- ═══════════════════ HEADER ═══════════════════ -->
 <header>
-  <div class="badge">GFtGU Programs</div>
-  <h1>Multiple &nbsp;—&nbsp; <em>N-Body Gravitational Simulation in Three Dimensions</em></h1>
-  <div class="sub">
+<div class="badge">GFtGU Programs</div>
+<h1>Multiple  —  <em>N-Body Gravitational Simulation in Three Dimensions</em></h1>
+<div class="sub">
     Source Code:
-    <a href="https://github.com/tomyee3-org/GFTGU-Programs"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
     <br/>
     Documentation:
-        <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
   </div>
 </header>
-
 <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
 <nav id="sidebar">
-
-  <div class="nav-label">Contents</div>
-  <a href="#overview">Overview</a>
-  <a href="#quickstart">Quick Start</a>
-  <a href="#modules">Program Files</a>
-
-  <hr>
-  <div class="nav-label">Physics</div>
-  <a href="#n-body">N-Body Problem</a>
-  <a href="#eom">Equations of Motion</a>
-  <a href="#pair-loop">Pair-Loop Acceleration</a>
-  <a href="#energy">Energy Conservation</a>
-  <a href="#scaling">Computational Scaling</a>
-
-  <hr>
-  <div class="nav-label">Numerical Methods</div>
-  <a href="#predictor-corrector">Predictor–Corrector</a>
-  <a href="#timestep">Adaptive Timestep</a>
-  <a href="#convergence">Convergence Criteria</a>
-
-  <hr>
-  <div class="nav-label">Reference</div>
-  <a href="#parameters">Parameters</a>
-  <a href="#output-modes">Output Modes</a>
-  <a href="#scenarios">Suggested Scenarios</a>
-  <a href="#related">Related Programs</a>
-  <a href="#license">License</a>
-
+<div class="nav-label">Contents</div>
+<a href="#overview">Overview</a>
+<a href="#quickstart">Quick Start</a>
+<a href="#modules">Program Files</a>
+<hr/>
+<div class="nav-label">Physics</div>
+<a href="#n-body">N-Body Problem</a>
+<a href="#eom">Equations of Motion</a>
+<a href="#pair-loop">Pair-Loop Acceleration</a>
+<a href="#energy">Energy Conservation</a>
+<a href="#scaling">Computational Scaling</a>
+<hr/>
+<div class="nav-label">Numerical Methods</div>
+<a href="#predictor-corrector">Predictor–Corrector</a>
+<a href="#timestep">Adaptive Timestep</a>
+<a href="#convergence">Convergence Criteria</a>
+<hr/>
+<div class="nav-label">Reference</div>
+<a href="#parameters">Parameters</a>
+<a href="#output-modes">Output Modes</a>
+<a href="#scenarios">Suggested Scenarios</a>
+<a href="#related">Related Programs</a>
+<a href="#license">License</a>
 </nav>
-
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
-
-  <!-- ─── Overview ─── -->
-  <section id="overview">
-    <h2>Overview</h2>
-    <p>
-      <strong>Multiple</strong> simulates the Newtonian gravitational motion of
+<!-- ─── Overview ─── -->
+<section id="overview">
+<h2>Overview</h2>
+<p>
+<strong>Multiple</strong> simulates the Newtonian gravitational motion of
       an arbitrary number of point masses in three dimensions. Every body is
       integrated dynamically and exerts gravity on every other body.
     </p>
-    <p>
+<p>
       The user supplies masses in solar-mass units, three-dimensional initial
       positions and velocities, and numerical controls. Output can be either a
       static trajectory plot through all accepted integration states or a precomputed animation sampled at
       uniform intervals of <em>physical simulation time</em>.
     </p>
-    <p>
+<p>
       The default example is a planar three-body encounter in the spirit of Schutz's example: three
       equal-mass stars approach one another, exchange energy and angular
       momentum, and can form a temporary or long-lived binary while the third
       body moves onto a much wider trajectory. Longer integrations reveal
       repeated encounters and binary hardening.
     </p>
-    <div class="note">
-      <strong>Scope:</strong> Bodies are Newtonian mathematical point masses.
+<div class="note">
+<strong>Scope:</strong> Bodies are Newtonian mathematical point masses.
       The program does not model finite stellar radii, physical collisions,
       tides, relativity, gas, or dissipative processes. Exact coincidence of
       two point masses is singular and terminates with an error.
     </div>
-  </section>
-
-  <!-- ─── Quick Start ─── -->
-  <section id="quickstart">
-    <h2>Quick Start</h2>
-    <h3>Requirements</h3>
-    <p>Python 3.9 or later with <code>numpy</code> and <code>matplotlib</code>. You may run the program from a terminal or from the run command of any Python IDE:</p>
-    <pre>pip install numpy matplotlib</pre>
-
-    <h3>Running the Program</h3>
-    <pre>cd GFTGU-Programs/Multiple
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
+<!-- ─── Quick Start ─── -->
+<section id="quickstart">
+<h2>Quick Start</h2>
+<h3>Requirements</h3>
+<p>Python 3.9 or later with <code>numpy</code> and <code>matplotlib</code>. You may run the program from a terminal or from the run command of any Python IDE:</p>
+<pre>pip install numpy matplotlib</pre>
+<h3>Running the Program</h3>
+<pre>cd GFTGU-Programs/Multiple
 python main.py</pre>
-
-    <p>
+<p>
       The default calculation contains three \(1\,M_\odot\) bodies at
       \((4.6\times10^{10},0,0)\) m,
       \((-4.6\times10^{10},0,0)\) m, and
@@ -453,74 +436,70 @@ python main.py</pre>
       \((-3.0\times10^4,0,0)\) m s\(^{-1}\), so the default encounter is
       initially planar.
     </p>
-    <p>
+<p>
       The default output is an animation with short trails. The integrator may
       reduce its timestep below the 2000-s maximum during close encounters, but
       animation frames remain uniformly separated by physical simulation time.
     </p>
-    <div class="note">
-      <strong>Check numerical reliability:</strong> close encounters can make a
+<div class="note">
+<strong>Check numerical reliability:</strong> close encounters can make a
       point-mass calculation difficult. Watch the conservation-drift values
       printed in the console. If the energy drift becomes large, repeat the run
       with a smaller <code>dt</code> and/or tighter tolerances before interpreting
       the later trajectory physically.
     </div>
-
-    <h3>Customising the Simulation</h3>
-    <ul style="margin: 0 0 14px 28px; line-height: 2.1;">
-      <li><code>n_bodies</code> — number of point masses</li>
-      <li><code>masses_solar</code> — one mass per body, in solar units</li>
-      <li><code>positions_init</code> — one <code>[x,y,z]</code> position per body, in metres</li>
-      <li><code>velocities_init</code> — one <code>[vx,vy,vz]</code> velocity per body, in m/s</li>
-      <li><code>dt</code> — maximum adaptive timestep</li>
-      <li><code>max_steps</code> — maximum accepted integration steps</li>
-      <li><code>eps1</code>, <code>eps2</code> — timestep and corrector tolerances</li>
-      <li><code>output_type</code> — <code>'trajectories'</code> or <code>'animation'</code></li>
-      <li>animation controls — mode, frame spacing, trail duration, projection, and axis behavior</li>
-    </ul>
-
-    <div class="note">
-      <strong>For first experiments:</strong> change only <code>masses_solar</code>,
+<h3>Customising the Simulation</h3>
+<ul style="margin: 0 0 14px 28px; line-height: 2.1;">
+<li><code>n_bodies</code> — number of point masses</li>
+<li><code>masses_solar</code> — one mass per body, in solar units</li>
+<li><code>positions_init</code> — one <code>[x,y,z]</code> position per body, in metres</li>
+<li><code>velocities_init</code> — one <code>[vx,vy,vz]</code> velocity per body, in m/s</li>
+<li><code>dt</code> — maximum adaptive timestep</li>
+<li><code>max_steps</code> — maximum accepted integration steps</li>
+<li><code>eps1</code>, <code>eps2</code> — timestep and corrector tolerances</li>
+<li><code>output_type</code> — <code>'trajectories'</code> or <code>'animation'</code></li>
+<li>animation controls — mode, frame spacing, trail duration, projection, and axis behavior</li>
+</ul>
+<div class="note">
+<strong>For first experiments:</strong> change only <code>masses_solar</code>,
       <code>positions_init</code>, <code>velocities_init</code>,
       <code>max_steps</code>, <code>output_type</code>, <code>projection</code>, and
       <code>animation_mode</code>. Leave <code>eps1</code> and <code>eps2</code>
       unchanged until you try the numerical-convergence exercise.
     </div>
-
-    <div class="note">
-      <strong>Memory usage:</strong> <code>'trajectories'</code> stores every
+<div class="note">
+<strong>Memory usage:</strong> <code>'trajectories'</code> stores every
       accepted position and velocity state. <code>'animation'</code> stores only
       uniformly timed movie frames, so its memory use depends mainly on the
       number of frames rather than on the number of adaptive integration steps.
     </div>
-  </section>
-
-  <!-- ─── Program Files ─── -->
-  <section id="modules">
-    <h2>Program Files</h2>
-    <div class="mc">
-      <div class="mc-card">
-        <div class="mc-name">main.py</div>
-        <div class="mc-role">Entry Point &amp; Configuration</div>
-        <p>
+</section>
+<!-- ─── Program Files ─── -->
+<section id="modules">
+<h2>Program Files</h2>
+<div class="mc">
+<div class="mc-card">
+<div class="mc-name">main.py</div>
+<div class="mc-role">Entry Point &amp; Configuration</div>
+<p>
           Contains all ordinary user settings: masses, initial states, adaptive
           integration controls, output mode, animation controls, projection, and
           the optional energy-drift plot.
         </p>
-      </div>
-      <div class="mc-card">
-        <div class="mc-name">physics_multiple.py</div>
-        <div class="mc-role">Physics &amp; Diagnostics</div>
-        <p>
+</div>
+<div class="mc-card">
+<div class="mc-name">physics_multiple.py</div>
+<div class="mc-role">Physics &amp; Diagnostics</div>
+<p>
           Computes all pairwise Newtonian accelerations using the nominal solar
           mass parameter \(GM_\odot\), and provides scaled total energy, linear
           momentum, and angular momentum for conservation checks.
         </p>
-      </div>
-      <div class="mc-card">
-        <div class="mc-name">driver_multiple.py</div>
-        <div class="mc-role">Adaptive Integration</div>
-        <p>
+</div>
+<div class="mc-card">
+<div class="mc-name">driver_multiple.py</div>
+<div class="mc-role">Adaptive Integration</div>
+<p>
           Uses a predictor and iterated trapezoidal corrector. Each body's
           acceleration and corrector convergence are tested independently; a
           failed attempt is retried with half the timestep, while successful
@@ -528,66 +507,63 @@ python main.py</pre>
           Animation frames are sampled by cubic-Hermite interpolation at uniform
           physical times.
         </p>
-      </div>
-      <div class="mc-card">
-        <div class="mc-name">plot_multiple.py</div>
-        <div class="mc-role">Plots &amp; Animation</div>
-        <p>
+</div>
+<div class="mc-card">
+<div class="mc-name">plot_multiple.py</div>
+<div class="mc-role">Plots &amp; Animation</div>
+<p>
           Provides static trajectory plots, an optional energy-drift plot, and
           the interactive animation with current-position or trail display,
           three orthogonal projections, fixed or automatic equal-scale axes,
           and keyboard playback controls.
         </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════ PHYSICS ═══════════════════════════ -->
-
-  <!-- ─── N-Body Problem ─── -->
-  <section id="n-body">
-    <h2>N-Body Problem</h2>
-    <p>
+</div>
+</div>
+</section>
+<!-- ═══════════════════════════ PHYSICS ═══════════════════════════ -->
+<!-- ─── N-Body Problem ─── -->
+<section id="n-body">
+<h2>N-Body Problem</h2>
+<p>
       The Newtonian \(N\)-body problem follows \(N\) mutually gravitating point
       masses. Unlike MercPert, no primary orbit is prescribed and no body is
       dynamically privileged: every body's motion responds to all the others.
     </p>
-    <p>
+<p>
       The state of body \(A\) is its position
       \(\mathbf r_A=(x_A,y_A,z_A)\) and velocity
       \(\mathbf v_A=(v_{x,A},v_{y,A},v_{z,A})\).
     </p>
-    <div class="note">
-      <strong>Visualisation:</strong> The calculation is fully three-dimensional.
+<div class="note">
+<strong>Visualisation:</strong> The calculation is fully three-dimensional.
       Static plots and animations can display the <code>xy</code>,
       <code>xz</code>, or <code>yz</code> projection without changing the
       physical initial conditions.
     </div>
-  </section>
-
-  <!-- ─── Equations of Motion ─── -->
-  <section id="eom">
-    <h2>Equations of Motion</h2>
-    <p>
+</section>
+<!-- ─── Equations of Motion ─── -->
+<section id="eom">
+<h2>Equations of Motion</h2>
+<p>
       The gravitational acceleration on body \(A\) due to body \(B\) is
       given by Newton's law of universal gravitation, directed from \(A\)
       toward \(B\):
     </p>
-    <div class="eq">
-      <span class="eq-label">(1)</span>
+<div class="eq">
+<span class="eq-label">(1)</span>
       \[
         \mathbf{a}_{A \leftarrow B}
         \;=\;
         \frac{G\,m_B}{r_{AB}^3}\,\bigl(\mathbf{r}_B - \mathbf{r}_A\bigr)
       \]
     </div>
-    <p>
+<p>
       where \(r_{AB} = |\mathbf{r}_A - \mathbf{r}_B|\) is the scalar
       separation between the two bodies. The total acceleration on body
       \(A\) is the vector sum over all other bodies:
     </p>
-    <div class="eq">
-      <span class="eq-label">(2)</span>
+<div class="eq">
+<span class="eq-label">(2)</span>
       \[
         \ddot{\mathbf{r}}_A
         \;=\;
@@ -595,53 +571,52 @@ python main.py</pre>
         \frac{G\,m_B}{r_{AB}^3}\,\bigl(\mathbf{r}_B - \mathbf{r}_A\bigr)
       \]
     </div>
-    <p>
+<p>
       In the code, masses are stored in solar-mass units and the constant
       \(k = G\,M_\odot\) is factored out, so the acceleration on \(A\) due to
       \(B\) is written as:
     </p>
-    <div class="eq">
-      <span class="eq-label">(3)</span>
+<div class="eq">
+<span class="eq-label">(3)</span>
       \[
         \mathbf{a}_{A \leftarrow B}
         \;=\;
         \frac{k\,\tilde{m}_B}{r_{AB}^3}\,\bigl(\mathbf{r}_B - \mathbf{r}_A\bigr)
       \]
     </div>
-    <p>
+<p>
       where \(\tilde{m}_B\) is the mass of body \(B\) in solar-mass
       units and the program uses the IAU nominal solar mass parameter
       \(GM_\odot = 1.3271244\times10^{20}\,\mathrm{m^3\,s^{-2}}\).
     </p>
-  </section>
-
-  <!-- ─── Pair-Loop Acceleration ─── -->
-  <section id="pair-loop">
-    <h2>Pair-Loop Acceleration</h2>
-    <p>
+</section>
+<!-- ─── Pair-Loop Acceleration ─── -->
+<section id="pair-loop">
+<h2>Pair-Loop Acceleration</h2>
+<p>
       Each unordered pair \(A,B\) is evaluated once. With
       \(\boldsymbol{\Delta}_{AB}=\mathbf r_B-\mathbf r_A\),
     </p>
-    <div class="eq"><span class="eq-label">(4)</span>
+<div class="eq"><span class="eq-label">(4)</span>
       \[
         \mathbf F_{A\leftarrow B}=-\mathbf F_{B\leftarrow A},
       \]
     </div>
-    <p>
+<p>
       but the accelerations are generally <em>not</em> equal and opposite when
       the masses differ:
     </p>
-    <div class="eq"><span class="eq-label">(5)</span>
+<div class="eq"><span class="eq-label">(5)</span>
       \[
         m_A\mathbf a_{A\leftarrow B}
         =-m_B\mathbf a_{B\leftarrow A}.
       \]
     </div>
-    <p>
+<p>
       Using masses \(\tilde m\) in solar-mass units and the nominal solar mass
       parameter \(GM_\odot\), the pair contributions are
     </p>
-    <div class="eq"><span class="eq-label">(6)</span>
+<div class="eq"><span class="eq-label">(6)</span>
       \[
         \mathbf a_A \mathrel{+}=
         \frac{GM_\odot\,\tilde m_B}{r_{AB}^3}\boldsymbol{\Delta}_{AB},
@@ -650,35 +625,32 @@ python main.py</pre>
         \frac{GM_\odot\,\tilde m_A}{r_{AB}^3}\boldsymbol{\Delta}_{AB}.
       \]
     </div>
-    <p>
+<p>
       There are \(N(N-1)/2\) unique pairs per force evaluation, giving direct
       all-pairs force calculation its familiar \(\mathcal O(N^2)\) scaling.
     </p>
-  </section>
-
-  <!-- ─── Energy Conservation ─── -->
-  <section id="energy">
-    <h2>Conservation Diagnostics</h2>
-    <p>
+</section>
+<!-- ─── Energy Conservation ─── -->
+<section id="energy">
+<h2>Conservation Diagnostics</h2>
+<p>
       The exact isolated Newtonian point-mass problem conserves total mechanical
       energy, total linear momentum, and total angular momentum. Multiple tracks
       all three as numerical diagnostics.
     </p>
-    <div class="eq"><span class="eq-label">(7)</span>
+<div class="eq"><span class="eq-label">(7)</span>
       \[
         E =
         \frac12\sum_A m_A v_A^2
-        -\sum_{A<B}\frac{Gm_Am_B}{r_{AB}} .
-      \]
-    </div>
-    <div class="eq"><span class="eq-label">(8)</span>
+        -\sum_{A<b}\frac{gm_am_b}{r_{ab}} .="" <="" \]="" div="">
+<div class="eq"><span class="eq-label">(8)</span>
       \[
         \mathbf P=\sum_A m_A\mathbf v_A,
         \qquad
         \mathbf L=\sum_A m_A\,\mathbf r_A\times\mathbf v_A .
       \]
     </div>
-    <p>
+<p>
       Because input masses are given in solar units, the program omits one
       common solar-mass factor from energy, momentum, and angular momentum.
       This does not affect conservation tests. The console reports the maximum
@@ -688,58 +660,55 @@ python main.py</pre>
       <code>'trajectories'</code> mode, the complete histories are returned and
       <code>plot_energy_drift()</code> can display the energy error versus time.
     </p>
-    <div class="note">
-      <strong>Negative total energy:</strong> \(E&lt;0\) means the system as a
+<div class="note">
+<strong>Negative total energy:</strong> \(E&lt;0\) means the system as a
       whole has negative mechanical energy; it does <em>not</em> require every
       body to remain bound. A tightly bound negative-energy binary can coexist
       with an escaping third body.
     </div>
-  </section>
-
-  <!-- ─── Computational Scaling ─── -->
-  <section id="scaling">
-    <h2>Computational Scaling</h2>
-    <p>
+</b}\frac{gm_am_b}{r_{ab}}></div></section>
+<!-- ─── Computational Scaling ─── -->
+<section id="scaling">
+<h2>Computational Scaling</h2>
+<p>
       Every acceleration evaluation requires \(N(N-1)/2\) pair calculations.
       The number of force evaluations is larger than the number of accepted
       steps because rejected timestep attempts and corrector iterations require
       additional evaluations. Thus runtime is approximately proportional to
     </p>
-    <div class="eq"><span class="eq-label">(9)</span>
+<div class="eq"><span class="eq-label">(9)</span>
       \[
         \text{force evaluations}\times\frac{N(N-1)}{2}.
       \]
     </div>
-    <table>
-      <thead><tr><th>Bodies \(N\)</th><th>Pairs</th><th>Pair-cost relative to \(N=2\)</th></tr></thead>
-      <tbody>
-        <tr><td>2</td><td>1</td><td>1×</td></tr>
-        <tr><td>3</td><td>3</td><td>3×</td></tr>
-        <tr><td>5</td><td>10</td><td>10×</td></tr>
-        <tr><td>10</td><td>45</td><td>45×</td></tr>
-        <tr><td>20</td><td>190</td><td>190×</td></tr>
-      </tbody>
-    </table>
-    <div class="note">
-      <strong>Larger simulations:</strong> hierarchical tree methods are one
+<table>
+<thead><tr><th>Bodies \(N\)</th><th>Pairs</th><th>Pair-cost relative to \(N=2\)</th></tr></thead>
+<tbody>
+<tr><td>2</td><td>1</td><td>1×</td></tr>
+<tr><td>3</td><td>3</td><td>3×</td></tr>
+<tr><td>5</td><td>10</td><td>10×</td></tr>
+<tr><td>10</td><td>45</td><td>45×</td></tr>
+<tr><td>20</td><td>190</td><td>190×</td></tr>
+</tbody>
+</table>
+<div class="note">
+<strong>Larger simulations:</strong> hierarchical tree methods are one
       important family of techniques used for large collisionless gravitational
       systems, reducing the cost of distant-force approximations. Other
       professional \(N\)-body algorithms use different approximations and
       timestep strategies. Multiple intentionally retains the transparent
       direct-pair calculation for small educational systems.
     </div>
-  </section>
-
-  <!-- ═══════════════════════════ NUMERICAL METHODS ═══════════════════════════ -->
-
-  <!-- ─── Predictor–Corrector ─── -->
-  <section id="predictor-corrector">
-    <h2>Predictor–Corrector</h2>
-    <p>
+</section>
+<!-- ═══════════════════════════ NUMERICAL METHODS ═══════════════════════════ -->
+<!-- ─── Predictor–Corrector ─── -->
+<section id="predictor-corrector">
+<h2>Predictor–Corrector</h2>
+<p>
       For each attempted timestep, an explicit predictor first estimates the
       endpoint:
     </p>
-    <div class="eq"><span class="eq-label">(10)</span>
+<div class="eq"><span class="eq-label">(10)</span>
       \[
         \tilde{\mathbf r}
         =\mathbf r^n+\mathbf v^n\Delta t
@@ -749,11 +718,11 @@ python main.py</pre>
         =\mathbf v^n+\mathbf a^n\Delta t .
       \]
     </div>
-    <p>
+<p>
       If the acceleration-change test passes, the endpoint is refined by an
       iterated trapezoidal corrector:
     </p>
-    <div class="eq"><span class="eq-label">(11)</span>
+<div class="eq"><span class="eq-label">(11)</span>
       \[
         \mathbf v^{n+1}
         =\mathbf v^n+\frac{\mathbf a^n+\mathbf a^{n+1}}2\Delta t,
@@ -762,34 +731,33 @@ python main.py</pre>
         =\mathbf r^n+\frac{\mathbf v^n+\mathbf v^{n+1}}2\Delta t .
       \]
     </div>
-    <p>
+<p>
       The endpoint acceleration is recomputed from the refined positions and
       the correction is iterated up to ten times. If convergence is still not
       achieved, the timestep is halved and the entire step is retried.
     </p>
-  </section>
-
-  <!-- ─── Adaptive Timestep ─── -->
-  <section id="timestep">
-    <h2>Adaptive Timestep</h2>
-    <p>
+</section>
+<!-- ─── Adaptive Timestep ─── -->
+<section id="timestep">
+<h2>Adaptive Timestep</h2>
+<p>
       The preliminary <code>eps1</code> test is performed separately for every
       body:
     </p>
-    <div class="eq"><span class="eq-label">(12)</span>
+<div class="eq"><span class="eq-label">(12)</span>
       \[
         \delta_{a,A}=
         \frac{\|\tilde{\mathbf a}_A-\mathbf a_A\|}
              {\max(\|\tilde{\mathbf a}_A\|,\|\mathbf a_A\|)} .
       \]
     </div>
-    <p>
+<p>
       If the largest value over all bodies exceeds <code>eps1</code>, the
       attempted step is rejected and \(\Delta t\) is halved. Testing bodies
       individually prevents one violent close encounter from being diluted by
       the quieter accelerations of many unrelated bodies.
     </p>
-    <p>
+<p>
       An <em>accepted step</em> is an attempted adaptive timestep that passes
       both the predictor and corrector tests and is actually used to update the
       system. After an accepted step, the working timestep grows by 10% toward
@@ -797,16 +765,15 @@ python main.py</pre>
       demand short steps temporarily without forcing the entire remainder of
       the simulation to crawl at that resolution.
     </p>
-  </section>
-
-  <!-- ─── Convergence Criteria ─── -->
-  <section id="convergence">
-    <h2>Convergence Criteria</h2>
-    <p>
-      <code>eps2</code> controls convergence of the iterated corrector. For each
+</section>
+<!-- ─── Convergence Criteria ─── -->
+<section id="convergence">
+<h2>Convergence Criteria</h2>
+<p>
+<code>eps2</code> controls convergence of the iterated corrector. For each
       body the program compares successive corrected velocity vectors,
     </p>
-    <div class="eq"><span class="eq-label">(13)</span>
+<div class="eq"><span class="eq-label">(13)</span>
       \[
         \delta_{v,A}=
         \frac{\|\mathbf v_{A,\mathrm{new}}-\mathbf v_{A,\mathrm{old}}\|}
@@ -814,65 +781,61 @@ python main.py</pre>
                    \|\mathbf v_{A,\mathrm{old}}\|)} .
       \]
     </div>
-    <p>
+<p>
       The corrector has converged only when the largest \(\delta_{v,A}\) is
       below <code>eps2</code>. The defaults require
       \(0&lt;\varepsilon_2&lt;\varepsilon_1&lt;1\).
     </p>
-    <table>
-      <thead><tr><th>Parameter</th><th>Default</th><th>Role</th></tr></thead>
-      <tbody>
-        <tr><td><code>eps1</code></td><td>0.05</td><td>Maximum per-body acceleration-vector change allowed by the predictor gate.</td></tr>
-        <tr><td><code>eps2</code></td><td>0.0001</td><td>Required per-body velocity-vector convergence of the iterated corrector.</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- ═══════════════════════════ REFERENCE ═══════════════════════════ -->
-
-  <!-- ─── Parameters ─── -->
-  <section id="parameters">
-    <h2>Parameters</h2>
-    <table>
-      <thead><tr><th>Field</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead>
-      <tbody>
-        <tr><td><code>n_bodies</code></td><td>3</td><td>—</td><td>Number of point masses.</td></tr>
-        <tr><td><code>masses_solar</code></td><td>[1,1,1]</td><td>M<sub>☉</sub></td><td>One mass per body.</td></tr>
-        <tr><td><code>positions_init</code></td><td>see <code>main.py</code></td><td>m</td><td>Three Cartesian coordinates per body.</td></tr>
-        <tr><td><code>velocities_init</code></td><td>see <code>main.py</code></td><td>m/s</td><td>Three velocity components per body.</td></tr>
-        <tr><td><code>dt</code></td><td>2000</td><td>s</td><td>Maximum adaptive timestep.</td></tr>
-        <tr><td><code>max_steps</code></td><td>40000</td><td>—</td><td>Maximum accepted integration steps.</td></tr>
-        <tr><td><code>eps1</code></td><td>0.05</td><td>—</td><td>Per-body acceleration-change tolerance.</td></tr>
-        <tr><td><code>eps2</code></td><td>0.0001</td><td>—</td><td>Iterated-corrector convergence tolerance.</td></tr>
-        <tr><td><code>output_type</code></td><td>'animation'</td><td>—</td><td><code>'trajectories'</code> or <code>'animation'</code>.</td></tr>
-        <tr><td><code>animation_mode</code></td><td>'trails'</td><td>—</td><td><code>'current positions'</code> or <code>'trails'</code>.</td></tr>
-        <tr><td><code>frame_time</code></td><td>2.0e5</td><td>s</td><td>Physical simulation time between animation frames.</td></tr>
-        <tr><td><code>frame_interval_ms</code></td><td>50</td><td>ms</td><td>Real display time between frames.</td></tr>
-        <tr><td><code>trail_time</code></td><td>6.0e5</td><td>s</td><td>Physical history displayed behind each body.</td></tr>
-        <tr><td><code>projection</code></td><td>'xy'</td><td>—</td><td><code>'xy'</code>, <code>'xz'</code>, or <code>'yz'</code>.</td></tr>
-        <tr><td><code>axis_mode</code></td><td>'fixed'</td><td>—</td><td><code>'fixed'</code> or equal-scale <code>'auto'</code> zoom.</td></tr>
-      </tbody>
-    </table>
-    <p class="small">
+<table>
+<thead><tr><th>Parameter</th><th>Default</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td><code>eps1</code></td><td>0.05</td><td>Maximum per-body acceleration-vector change allowed by the predictor gate.</td></tr>
+<tr><td><code>eps2</code></td><td>0.0001</td><td>Required per-body velocity-vector convergence of the iterated corrector.</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ═══════════════════════════ REFERENCE ═══════════════════════════ -->
+<!-- ─── Parameters ─── -->
+<section id="parameters">
+<h2>Parameters</h2>
+<table>
+<thead><tr><th>Field</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>n_bodies</code></td><td>3</td><td>—</td><td>Number of point masses.</td></tr>
+<tr><td><code>masses_solar</code></td><td>[1,1,1]</td><td>M<sub>☉</sub></td><td>One mass per body.</td></tr>
+<tr><td><code>positions_init</code></td><td>see <code>main.py</code></td><td>m</td><td>Three Cartesian coordinates per body.</td></tr>
+<tr><td><code>velocities_init</code></td><td>see <code>main.py</code></td><td>m/s</td><td>Three velocity components per body.</td></tr>
+<tr><td><code>dt</code></td><td>2000</td><td>s</td><td>Maximum adaptive timestep.</td></tr>
+<tr><td><code>max_steps</code></td><td>40000</td><td>—</td><td>Maximum accepted integration steps.</td></tr>
+<tr><td><code>eps1</code></td><td>0.05</td><td>—</td><td>Per-body acceleration-change tolerance.</td></tr>
+<tr><td><code>eps2</code></td><td>0.0001</td><td>—</td><td>Iterated-corrector convergence tolerance.</td></tr>
+<tr><td><code>output_type</code></td><td>'animation'</td><td>—</td><td><code>'trajectories'</code> or <code>'animation'</code>.</td></tr>
+<tr><td><code>animation_mode</code></td><td>'trails'</td><td>—</td><td><code>'current positions'</code> or <code>'trails'</code>.</td></tr>
+<tr><td><code>frame_time</code></td><td>2.0e5</td><td>s</td><td>Physical simulation time between animation frames.</td></tr>
+<tr><td><code>frame_interval_ms</code></td><td>50</td><td>ms</td><td>Real display time between frames.</td></tr>
+<tr><td><code>trail_time</code></td><td>6.0e5</td><td>s</td><td>Physical history displayed behind each body.</td></tr>
+<tr><td><code>projection</code></td><td>'xy'</td><td>—</td><td><code>'xy'</code>, <code>'xz'</code>, or <code>'yz'</code>.</td></tr>
+<tr><td><code>axis_mode</code></td><td>'fixed'</td><td>—</td><td><code>'fixed'</code> or equal-scale <code>'auto'</code> zoom.</td></tr>
+</tbody>
+</table>
+<p class="small">
       The values in the Default column are the shipped settings in
       <code>main.py</code>. Some fields, including <code>output_type</code>,
       <code>eps1</code>, and <code>eps2</code>, are required when constructing
       <code>SimulationParams</code> rather than class-level defaults.
     </p>
-  </section>
-
-  <!-- ─── Output Modes ─── -->
-  <section id="output-modes">
-    <h2>Output Modes</h2>
-    <p>
-      <code>'trajectories'</code> stores every accepted position and velocity
+</section>
+<!-- ─── Output Modes ─── -->
+<section id="output-modes">
+<h2>Output Modes</h2>
+<p>
+<code>'trajectories'</code> stores every accepted position and velocity
       state and plots the complete paths. <code>'animation'</code> precomputes
       uniformly timed movie frames and therefore uses memory according mainly to
       the number of frames rather than the integration-step count.
     </p>
-
-    <h3>Uniform Physical-Time Frames</h3>
-    <p>
+<h3>Uniform Physical-Time Frames</h3>
+<p>
       With <code>frame_time = 2.0e5</code>, requested frames occur at
       \(t=0,\;2\times10^5,\;4\times10^5,\ldots\) s. The accepted adaptive
       integration states rarely land exactly on these times, so the display
@@ -881,40 +844,36 @@ python main.py</pre>
       timestep reductions therefore increase calculation work without changing
       the apparent movie speed.
     </p>
-
-    <h3>Current Positions and Trails</h3>
-    <p>
-      <code>animation_mode='current positions'</code> shows only the moving body
+<h3>Current Positions and Trails</h3>
+<p>
+<code>animation_mode='current positions'</code> shows only the moving body
       markers. <code>'trails'</code> additionally displays each body's recent
       path for the preceding <code>trail_time</code> seconds of simulated time.
     </p>
-
-    <h3>Projection and Axes</h3>
-    <p>
-      <code>projection</code> selects <code>'xy'</code>, <code>'xz'</code>, or
+<h3>Projection and Axes</h3>
+<p>
+<code>projection</code> selects <code>'xy'</code>, <code>'xz'</code>, or
       <code>'yz'</code>. <code>axis_mode='fixed'</code> calculates one viewing
       window from all movie frames. <code>'auto'</code> follows the currently
       visible bodies and trails, but always uses the same numerical span on both
       axes so the spatial scale remains 1:1 rather than stretching the picture.
     </p>
-
-    <h3>Keyboard Controls</h3>
-    <p>
-      <strong>Space</strong> pauses or resumes from the currently displayed
+<h3>Keyboard Controls</h3>
+<p>
+<strong>Space</strong> pauses or resumes from the currently displayed
       frame. <strong>Left/Right</strong> pause and step one frame.
       <strong>Home</strong> pauses at the first frame and <strong>End</strong>
       pauses at the last frame. Pressing Space while the final frame is
       displayed replays the movie from the beginning.
     </p>
-  </section>
-
-  <!-- ─── Suggested Scenarios ─── -->
-  <section id="scenarios">
-    <h2>Suggested Scenarios</h2>
-    <p>All of these experiments can be performed by editing <code>main.py</code>.</p>
-    <div class="scenario-grid">
-      <div class="scenario-card">
-        <div class="sc-title">Two-body sanity check</div>
+</section>
+<!-- ─── Suggested Scenarios ─── -->
+<section id="scenarios">
+<h2>Suggested Scenarios</h2>
+<p>All of these experiments can be performed by editing <code>main.py</code>.</p>
+<div class="scenario-grid">
+<div class="scenario-card">
+<div class="sc-title">Two-body sanity check</div>
         Before exploring chaotic three-body motion, test a familiar binary. For
         two equal one-solar-mass bodies separated by \(1.0\times10^{11}\) m, put
         them at \((\pm5.0\times10^{10},0,0)\) m and give them opposite
@@ -922,62 +881,55 @@ python main.py</pre>
         should remain fixed while the bodies follow nearly circular paths. Check
         the reported energy and angular-momentum drift.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">Default three-body encounter</div>
+<div class="scenario-card">
+<div class="sc-title">Default three-body encounter</div>
         Run the planar shipped example first. Record which two bodies make the
         closest sustained pair, whether the third makes a wide excursion, and
         the reported conservation drift. Extend <code>max_steps</code> if you
         want to watch later encounters, but do not expect a short run to reveal
         a unique final fate.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">Change the masses</div>
+<div class="scenario-card">
+<div class="sc-title">Change the masses</div>
         Keep the default positions and velocities but reassign the three masses.
         How often does a close encounter produce a bound pair? Which body is
         most often left on the widest orbit? This is a simple way to explore the
         sensitivity of three-body outcomes without changing the geometry.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">Out-of-plane encounter</div>
+<div class="scenario-card">
+<div class="sc-title">Out-of-plane encounter</div>
         Add a modest \(z\)-velocity to one body and compare the <code>'xy'</code>
         and <code>'xz'</code> projections. Choose the vertical speed so that the
         bodies' \(z\)-separations near closest approach are comparable to their
         in-plane separations. If the vertical speed is too large, the bodies may
         simply miss one another and the interesting encounter disappears.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">Numerical convergence</div>
+<div class="scenario-card">
+<div class="sc-title">Numerical convergence</div>
         Repeat the same physical initial conditions with smaller <code>dt</code>
         and tighter tolerances. Compare finite-time trajectories and the
         reported conservation drift. For sensitive three-body motion, long-term
         trajectories can eventually separate even when both integrations are
         individually accurate.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">Binary hardening</div>
+<div class="scenario-card">
+<div class="sc-title">Binary hardening</div>
         In a run where two bodies form a persistent close pair, track all three
         pair separations to identify the binary rather than relying only on the
         plot. Compare the third body's distance from that pair's center of mass
         before and after later encounters. Does the binary shrink or widen, and
         where does the corresponding orbital energy go?
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">Small star cluster</div>
+<div class="scenario-card">
+<div class="sc-title">Small star cluster</div>
         Place 5–10 solar-mass stars within about 0.1 pc. Contrast sub-km/s to
         roughly 1 km/s starting speeds with several-km/s speeds. For a cleaner
         display, subtract the initial center-of-mass position and velocity from
         all bodies. Compare total energy, expansion of the cluster, and any
         ejections; then try adding one or two more massive bodies.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">Compare with MercPert — advanced</div>
+<div class="scenario-card">
+<div class="sc-title">Compare with MercPert — advanced</div>
         Recreate the same physical Sun–perturber–test-particle configuration,
         but express every body's initial state in one inertial frame for
         Multiple. A convenient choice is the center-of-mass frame: translate
@@ -988,9 +940,8 @@ python main.py</pre>
         mutually; simply copying Sun-relative coordinates is not an exact frame
         conversion.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">Galaxy collision — optional toy model</div>
+<div class="scenario-card">
+<div class="sc-title">Galaxy collision — optional toy model</div>
         A concrete starting experiment is two \(10^{11}\,M_\odot\) core particles
         about 50 kpc apart and approaching at about 100 km/s, each surrounded by
         several orbiting particles roughly 10 kpc out with speeds of order
@@ -1002,15 +953,9 @@ python main.py</pre>
         crude model: there is no gas, friction, radiation, or other true
         dissipative physics.
       </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-     RESTORE TO DEFAULTS CALLOUT
-     ============================================================ -->
-
-<section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
-  <div style="
+</div>
+</section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
+<div style="
     border: 1.5px solid #b5811a;
     border-left: 5px solid #b5811a;
     border-radius: 6px;
@@ -1020,12 +965,11 @@ python main.py</pre>
     gap: 1em;
     align-items: flex-start;
   ">
-    <!-- Icon -->
-    <div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
-
-    <!-- Content -->
-    <div>
-      <div style="
+<!-- Icon -->
+<div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
+<!-- Content -->
+<div>
+<div style="
         font-weight: 700;
         font-size: 0.95em;
         color: #7b2d00;
@@ -1033,85 +977,75 @@ python main.py</pre>
         text-transform: uppercase;
         letter-spacing: 0.04em;
       ">Restoring Default Parameter Values</div>
-
-      <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        After experimenting with parameter values in <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>,
-        you can restore the originals using any of the following methods:
+<p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
+        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
+        you can restore the original program files using any of the following methods:
       </p>
-
-      <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
-        <li>
-          <strong>Same session:</strong>
+<ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
+<li>
+<strong>Same session:</strong>
           Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
           (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
-          (macOS) repeatedly in PyCharm to undo your edits.
+          (macOS) repeatedly in your editor to undo your edits.
         </li>
-        <li>
-          <strong>After reopening PyCharm:</strong>
-          Right-click <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
-          in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
         </li>
-        <li>
-          <strong>Full reset:</strong>
+<li>
+<strong>Full reset:</strong>
           Re-download the ZIP from
-          <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank"
-             style="color:#7b2d00; text-decoration:underline;">
+          <a href="https://github.com/tomyee3-org/GFTGU-Programs" style="color:#7b2d00; text-decoration:underline;" target="_blank">
             github.com/tomyee3-org/GFTGU-Programs
           </a>
           and replace this program's folder with the fresh copy.
         </li>
-      </ul>
-
-      <p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
-        For step-by-step instructions on all four restore methods, see
-        <strong>Section&nbsp;10</strong> of the
-        <em>GFTGU Python Setup Guide</em>.
+</ul>
+<p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
+        For additional ways to restore program files, see the corresponding
+        recovery instructions in the <em>GFTGU Python Setup Guide</em>.
       </p>
-    </div>
-  </div>
+</div>
+</div>
 </section>
+<!-- ============================================================
+     RESTORE TO DEFAULTS CALLOUT
+     ============================================================ -->
 
 <!-- ============================================================
      END RESTORE TO DEFAULTS CALLOUT
      ============================================================ -->
-
-  
-  <!-- ─── Related Programs ─── -->
-  <section id="related">
-    <h2>Related Programs</h2>
-    <table>
-      <thead><tr><th>Program</th><th>Relationship</th></tr></thead>
-      <tbody>
-        <tr><td><a href="../13-Binary/Binary.html">Binary</a></td><td>Two mutually gravitating bodies and the introductory predictor-corrector scheme.</td></tr>
-        <tr><td><a href="../13-MercPert/MercPert.html">MercPert</a></td><td>Circular restricted three-body problem with one negligible-mass test particle.</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- ── License ── -->
-  <section id="license">
-    <h2>License</h2>
-    <p>
+<!-- ─── Related Programs ─── -->
+<section id="related">
+<h2>Related Programs</h2>
+<table>
+<thead><tr><th>Program</th><th>Relationship</th></tr></thead>
+<tbody>
+<tr><td><a href="../13-Binary/Binary.html">Binary</a></td><td>Two mutually gravitating bodies and the introductory predictor-corrector scheme.</td></tr>
+<tr><td><a href="../13-MercPert/MercPert.html">MercPert</a></td><td>Circular restricted three-body problem with one negligible-mass test particle.</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ── License ── -->
+<section id="license">
+<h2>License</h2>
+<p>
       This software is based on the programs by <strong>Bernard Schutz</strong>
       accompanying <em>Gravity from the Ground Up</em> (Cambridge University
       Press, 2003) and is distributed under the
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike
       4.0 International (CC BY-NC-SA 4.0)</a> license.
     </p>
-  </section>
-
+</section>
 </main>
-
 <!-- ══════════════════════════════════════════════
      FOOTER
 ═══════════════════════════════════════════════ -->
 <footer>
-  <em>Gravity from the Ground Up</em> — Python Programs ·
+<em>Gravity from the Ground Up</em> — Python Programs ·
   Bernard Schutz, Cambridge University Press ·
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
 </footer>
-
 </div><!-- .page-wrap -->
 </body>
 </html>

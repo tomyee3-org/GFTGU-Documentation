@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Planck2 – Help File | GFtGU Programs</title>
-
-  <!-- MathJax 3 -->
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Planck2 – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
     MathJax = {
       tex: {
         inlineMath:  [['\\(','\\)']],
@@ -16,10 +15,8 @@
       options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
-          id="MathJax-script" async></script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
     /* ── Reset & custom properties ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -403,73 +400,62 @@
     }
   </style>
 </head>
-
 <body>
 <div class="page-wrap">
-
 <!-- ══════════════════════════════════════════════
      HEADER
 ═══════════════════════════════════════════════ -->
 <header>
-  <div class="badge">Chapter 10 · Gravity from the Ground Up</div>
-  <h1><em>Planck2</em> — Black-Body Radiation</h1>
-  <div class="sub">
+<div class="badge">Chapter 10 · Gravity from the Ground Up</div>
+<h1><em>Planck2</em> — Black-Body Radiation</h1>
+<div class="sub">
     Source Code:
-    <a href="https://github.com/tomyee3-org/GFTGU-Programs"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
     Documentation:
-        <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
-  </div>
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+</div>
 </header>
-
 <!-- ══════════════════════════════════════════════
      SIDEBAR NAV
 ═══════════════════════════════════════════════ -->
 <nav id="sidebar">
-  <div class="nav-label">Overview</div>
-  <a href="#description">Description</a>
-  <a href="#background">Physical Background</a>
-
-  <div class="nav-label">Mathematics</div>
-  <a href="#equations">Governing Equations</a>
-  <a href="#algorithm">Algorithm</a>
-
-  <div class="nav-label">Code</div>
-  <a href="#modules">Module Overview</a>
-  <a href="#parameters">Parameters</a>
-  <a href="#quantities">Quantity Modes</a>
-
-  <div class="nav-label">Experiments</div>
-  <a href="#experiments">Suggested Experiments</a>
-  <a href="#related">Related Programs</a>
-
-  <div class="nav-label">Legal</div>
-  <a href="#license">License</a>
+<div class="nav-label">Overview</div>
+<a href="#description">Description</a>
+<a href="#background">Physical Background</a>
+<div class="nav-label">Mathematics</div>
+<a href="#equations">Governing Equations</a>
+<a href="#algorithm">Algorithm</a>
+<div class="nav-label">Code</div>
+<a href="#modules">Module Overview</a>
+<a href="#parameters">Parameters</a>
+<a href="#quantities">Quantity Modes</a>
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
+<a href="#related">Related Programs</a>
+<div class="nav-label">Legal</div>
+<a href="#license">License</a>
 </nav>
-
 <!-- ══════════════════════════════════════════════
      MAIN CONTENT
 ═══════════════════════════════════════════════ -->
 <main>
-
-  <!-- ── Description ── -->
-  <section id="description">
-    <h2>Description</h2>
-    <p>
-      <strong>Planck2</strong> is a black-body-radiation investigation for Chapter 10.
+<!-- ── Description ── -->
+<section id="description">
+<h2>Description</h2>
+<p>
+<strong>Planck2</strong> is a black-body-radiation investigation for Chapter 10.
       It plots the user's choice of spectral radiance per unit wavelength \(B_\lambda\), spectral
       radiance per unit frequency \(B_\nu\), or spectral energy density per unit frequency
       \(u_\nu\), using physical wavelength or frequency on the horizontal axis.
     </p>
-    <p>
+<p>
       The wavelength and frequency descriptions are different spectral densities: changing from
       wavelength to frequency changes the interval represented by each horizontal-axis element,
       so \(B_\lambda\) and \(B_\nu\) do not peak at corresponding photons. By contrast,
       \(u_\nu=(4\pi/c)B_\nu\), so the frequency radiance and frequency energy-density curves
       have the same shape and the same peak frequency.
     </p>
-    <p>
+<p>
       The graph reports the sampled peak, the area under the dimensionless shape function, and a
       physical integral over wavelength or frequency. Here, the <em>physical integral</em> means the
       integral of the plotted spectrum over its physical horizontal coordinate; it is distinct from
@@ -477,287 +463,261 @@
       of the Stefan–Boltzmann \(T^4\) law. Investigations 10.1, 10.2, and 10.3 are relevant to this
       program.
     </p>
-  </section>
-
-  <!-- ── Physical Background ── -->
-  <section id="background">
-    <h2>Physical Background</h2>
-    <h3>The Dimensionless Variable x</h3>
-    <p>Following Investigation 10.2, define</p>
-    <div class="eq-block"><div class="eq-label">Dimensionless variable</div>
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
+<!-- ── Physical Background ── -->
+<section id="background">
+<h2>Physical Background</h2>
+<h3>The Dimensionless Variable x</h3>
+<p>Following Investigation 10.2, define</p>
+<div class="eq-block"><div class="eq-label">Dimensionless variable</div>
       \[x=\frac{hc}{\lambda kT}=\frac{h\nu}{kT}.\]
     </div>
-
-    <h3>Spectral Radiance per Unit Wavelength</h3>
-    <p>The standard Planck spectral radiance is</p>
-    <div class="eq-block"><div class="eq-label">Per unit wavelength</div>
+<h3>Spectral Radiance per Unit Wavelength</h3>
+<p>The standard Planck spectral radiance is</p>
+<div class="eq-block"><div class="eq-label">Per unit wavelength</div>
       \[
         B_\lambda(\lambda,T)=\frac{2hc^2}{\lambda^5}\frac{1}{e^{hc/(\lambda kT)}-1}
         =\frac{2k^5T^5}{h^4c^3}\frac{x^5}{e^x-1}.
       \]
     </div>
-    <p>
+<p>
       The corresponding hemispheric spectral exitance is \(M_\lambda=\pi B_\lambda\).
       Planck2 plots <em>radiance</em>, so its y-axis retains sr\(^{-1}\) and the wavelength
       prefactor does not contain an extra factor of \(\pi\).
     </p>
-
-    <h3>Spectral Radiance and Energy Density per Unit Frequency</h3>
-    <div class="eq-block"><div class="eq-label">Per unit frequency</div>
+<h3>Spectral Radiance and Energy Density per Unit Frequency</h3>
+<div class="eq-block"><div class="eq-label">Per unit frequency</div>
       \[
         B_\nu(\nu,T)=\frac{2h\nu^3}{c^2}\frac{1}{e^{h\nu/(kT)}-1}
         =\frac{2k^3T^3}{h^2c^2}\frac{x^3}{e^x-1}.
       \]
     </div>
-    <p>For isotropic black-body radiation,</p>
-    <div class="eq-block"><div class="eq-label">Spectral energy density</div>
+<p>For isotropic black-body radiation,</p>
+<div class="eq-block"><div class="eq-label">Spectral energy density</div>
       \[
         u_\nu=\frac{4\pi}{c}B_\nu
         =\frac{8\pi k^3T^3}{h^2c^3}\frac{x^3}{e^x-1}.
       \]
     </div>
-
-    <h3>Why the Wavelength and Frequency Peaks Differ</h3>
-    <p>
+<h3>Why the Wavelength and Frequency Peaks Differ</h3>
+<p>
       The wavelength shape \(x^5/(e^x-1)\) peaks at \(x\approx4.965114\), whereas the
       frequency shape \(x^3/(e^x-1)\) peaks at \(x\approx2.821439\). Therefore the wavelength
       at which \(B_\lambda\) is greatest is not equal to \(c/\nu_\text{max}\) for \(B_\nu\).
       This is not a contradiction: a spectral density depends on which variable defines an interval.
     </p>
-  </section>
-
-  <!-- ── Governing Equations ── -->
-  <section id="equations">
-    <h2>Governing Equations</h2>
-    <h3>Shape Function and Stable Evaluation</h3>
-    <p>
+</section>
+<!-- ── Governing Equations ── -->
+<section id="equations">
+<h2>Governing Equations</h2>
+<h3>Shape Function and Stable Evaluation</h3>
+<p>
       The two dimensionless shapes are special cases of \(f_p(x)=x^p/(e^x-1)\), with \(p=5\)
       for wavelength radiance and \(p=3\) for the two frequency-based quantities. Planck2 evaluates
     </p>
-    <div class="eq-block">\[\ln f_p(x)=p\ln x-\ln(e^x-1).\]</div>
-    <p>Three numerical regimes are used:</p>
-    <ul>
-      <li><strong>small x:</strong> \(e^x-1\approx x\);</li>
-      <li><strong>intermediate x:</strong> Python's <code>expm1(x)</code> evaluates \(e^x-1\) accurately;</li>
-      <li><strong>large x:</strong> \(\ln(e^x-1)\approx x\), avoiding overflow.</li>
-    </ul>
-    <p>The defaults are \(x_\text{low}=0.05\) and \(x_\text{high}=20\).</p>
-
-    <h3>Peak Finding</h3>
-    <p>
+<div class="eq-block">\[\ln f_p(x)=p\ln x-\ln(e^x-1).\]</div>
+<p>Three numerical regimes are used:</p>
+<ul>
+<li><strong>small x:</strong> \(e^x-1\approx x\);</li>
+<li><strong>intermediate x:</strong> Python's <code>expm1(x)</code> evaluates \(e^x-1\) accurately;</li>
+<li><strong>large x:</strong> \(\ln(e^x-1)\approx x\), avoiding overflow.</li>
+</ul>
+<p>The defaults are \(x_\text{low}=0.05\) and \(x_\text{high}=20\).</p>
+<h3>Peak Finding</h3>
+<p>
       The peak is found by direct comparison of sampled grid values. No interpolation or root-finding
       is used, so peak-location accuracy is limited by \(\Delta x\). Increasing <code>n_steps</code>
       refines the sampled peak.
     </p>
-
-    <h3>Dimensionless Area</h3>
-    <p>The trapezoidal rule integrates the sampled shape over the finite x-domain. Exact references are</p>
-    <div class="eq-block">
+<h3>Dimensionless Area</h3>
+<p>The trapezoidal rule integrates the sampled shape over the finite x-domain. Exact references are</p>
+<div class="eq-block">
       \[
         \int_0^\infty\frac{x^3}{e^x-1}\,dx=\frac{\pi^4}{15},\qquad
         \int_0^\infty\frac{x^5}{e^x-1}\,dx=\frac{8\pi^6}{63}.
       \]
     </div>
-    <p>
+<p>
       The \(p=5\) integral is a useful numerical check, but it is <strong>not</strong> the bolometric
       integral of \(B_\lambda\), because changing from x to wavelength introduces the Jacobian
       \(|d\lambda/dx|\propto x^{-2}\).
     </p>
-
-    <h3>Physical Integral and the Stefan–Boltzmann Law</h3>
-    <p>Planck2 also integrates the plotted physical quantity using the appropriate coordinate Jacobian:</p>
-    <div class="eq-block">
+<h3>Physical Integral and the Stefan–Boltzmann Law</h3>
+<p>Planck2 also integrates the plotted physical quantity using the appropriate coordinate Jacobian:</p>
+<div class="eq-block">
       \[
         \int_0^\infty B_\lambda\,d\lambda
         =\int_0^\infty B_\nu\,d\nu
         =\frac{\sigma T^4}{\pi}.
       \]
     </div>
-    <p>For the frequency energy density,</p>
-    <div class="eq-block">\[\int_0^\infty u_\nu\,d\nu=\frac{4\sigma}{c}T^4.\]</div>
-    <p>
+<p>For the frequency energy density,</p>
+<div class="eq-block">\[\int_0^\infty u_\nu\,d\nu=\frac{4\sigma}{c}T^4.\]</div>
+<p>
       Comparing <code>result.physical_integral</code> at different temperatures therefore gives a
       direct numerical test of the \(T^4\) Stefan–Boltzmann scaling.
     </p>
-  </section>
-
-  <!-- ── Algorithm ── -->
-  <section id="algorithm">
-    <h2>Algorithm</h2>
-    <ol>
-      <li>Validate the temperature, quantity, domain, and resolution.</li>
-      <li>Divide \([x_\text{min},x_\text{max}]\) into exactly <code>n_steps</code> intervals, giving <code>n_steps + 1</code> endpoints.</li>
-      <li>Evaluate the dimensionless shape with stable small-, intermediate-, and large-x formulas.</li>
-      <li>Multiply by the physical prefactor to obtain \(B_\lambda\), \(B_\nu\), or \(u_\nu\).</li>
-      <li>Record the largest sampled shape value and its physical wavelength or frequency.</li>
-      <li>Apply the trapezoidal rule only between actual neighboring sampled endpoints.</li>
-      <li>Accumulate both the dimensionless shape area and the physical integral using the proper coordinate Jacobian.</li>
-    </ol>
-    <h3>Plot Windowing</h3>
-    <p>
+</section>
+<!-- ── Algorithm ── -->
+<section id="algorithm">
+<h2>Algorithm</h2>
+<ol>
+<li>Validate the temperature, quantity, domain, and resolution.</li>
+<li>Divide \([x_\text{min},x_\text{max}]\) into exactly <code>n_steps</code> intervals, giving <code>n_steps + 1</code> endpoints.</li>
+<li>Evaluate the dimensionless shape with stable small-, intermediate-, and large-x formulas.</li>
+<li>Multiply by the physical prefactor to obtain \(B_\lambda\), \(B_\nu\), or \(u_\nu\).</li>
+<li>Record the largest sampled shape value and its physical wavelength or frequency.</li>
+<li>Apply the trapezoidal rule only between actual neighboring sampled endpoints.</li>
+<li>Accumulate both the dimensionless shape area and the physical integral using the proper coordinate Jacobian.</li>
+</ol>
+<h3>Plot Windowing</h3>
+<p>
       A uniform x-grid maps non-uniformly into physical wavelength or frequency. The plotter sorts
       the points by physical coordinate and, by default, displays the region where the curve exceeds
       a small fraction of its peak. Integration still uses the full x-domain. Set
       <code>y_frac_window=0</code> to display the complete computed coordinate range.
     </p>
-  </section>
-
-  <!-- ── Modules ── -->
-  <section id="modules">
-    <h2>Module Overview</h2>
-    <div class="module-grid">
-
-      <div class="module-card">
-        <div class="mc-role">Physics Layer</div>
-        <div class="mc-name">planck2_physics.py</div>
-        <p>
+</section>
+<!-- ── Modules ── -->
+<section id="modules">
+<h2>Module Overview</h2>
+<div class="module-grid">
+<div class="module-card">
+<div class="mc-role">Physics Layer</div>
+<div class="mc-name">planck2_physics.py</div>
+<p>
           Physical constants, the three-regime log-shape-function evaluator, the
           quantity-specific physical prefactors, and the \(x\)-to-wavelength/frequency
           conversions. It also supplies the coordinate Jacobians and exact bolometric reference values.
         </p>
-        <div class="sig">def shape_function(x, quantity, domain)
-  -> f(x)  (dimensionless)
+<div class="sig">def shape_function(x, quantity, domain)
+  -&gt; f(x)  (dimensionless)
 
 def prefactor(quantity, T)
-  -> physical scale factor</div>
-      </div>
-
-      <div class="module-card">
-        <div class="mc-role">Driver Layer</div>
-        <div class="mc-name">planck2_driver.py</div>
-        <p>
+  -&gt; physical scale factor</div>
+</div>
+<div class="module-card">
+<div class="mc-role">Driver Layer</div>
+<div class="mc-name">planck2_driver.py</div>
+<p>
           Samples the domain, evaluates the shape function and physical quantity at each
           point, tracks the peak, and accumulates both dimensionless and physical integrals. Returns a structured
           <code>Planck2Result</code> ready for plotting.
         </p>
-        <div class="sig">def run_planck2(
+<div class="sig">def run_planck2(
   T, quantity,
   n_steps=2000,
   domain=None
-) -> Planck2Result</div>
-      </div>
-
-      <div class="module-card">
-        <div class="mc-role">Plot Layer</div>
-        <div class="mc-name">planck2_plot.py</div>
-        <p>
+) -&gt; Planck2Result</div>
+</div>
+<div class="module-card">
+<div class="mc-role">Plot Layer</div>
+<div class="mc-name">planck2_plot.py</div>
+<p>
           Renders the curve against physical units, auto-windows the displayed range around
           the peak, and annotates peak location/value and area in a corner text box.
         </p>
-        <div class="sig">def plot_planck2(
+<div class="sig">def plot_planck2(
   result,
   corner="upper right",
   y_frac_window=0.003
-) -> None (displays figure)</div>
-      </div>
-
-      <div class="module-card">
-        <div class="mc-role">Entry Point</div>
-        <div class="mc-name">main.py</div>
-        <p>
+) -&gt; None (displays figure)</div>
+</div>
+<div class="module-card">
+<div class="mc-role">Entry Point</div>
+<div class="mc-name">main.py</div>
+<p>
           User-editable entry point. Set temperature, quantity, resolution, domain boundaries,
           approximation thresholds, and plot controls here, then run the calculation.
         </p>
-        <div class="sig">from planck2_driver import run_planck2
+<div class="sig">from planck2_driver import run_planck2
 from planck2_plot  import plot_planck2
 
 result = run_planck2(T=..., quantity=...)
 plot_planck2(result)</div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ── Parameters ── -->
-  <section id="parameters">
-    <h2>Parameters</h2>
-    <p>All ordinary experiment settings are exposed near the top of <code>main.py</code>. Physical quantities are expressed in SI units throughout.</p>
-    <table class="param-table">
-      <thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
-      <tbody>
-        <tr><td class="pname">T</td><td class="pdefault">5900.0</td><td>K</td><td>Black-body temperature; the default is a useful black-body approximation to the Sun's continuum.</td></tr>
-        <tr><td class="pname">quantity</td><td class="pdefault">"wavelength"</td><td>—</td><td><code>"wavelength"</code>, <code>"frequency"</code>, or <code>"energy_density"</code>.</td></tr>
-        <tr><td class="pname">n_steps</td><td class="pdefault">2000</td><td>—</td><td>Number of equal x-intervals; the program samples <code>n_steps + 1</code> endpoints.</td></tr>
-        <tr><td class="pname">x_min</td><td class="pdefault">0.01</td><td>—</td><td>Lower bound of the dimensionless x-domain.</td></tr>
-        <tr><td class="pname">x_max</td><td class="pdefault">100.0</td><td>—</td><td>Upper bound of the dimensionless x-domain.</td></tr>
-        <tr><td class="pname">x_low</td><td class="pdefault">0.05</td><td>—</td><td>Below this value, use the small-x approximation.</td></tr>
-        <tr><td class="pname">x_high</td><td class="pdefault">20.0</td><td>—</td><td>Above this value, use the large-x approximation.</td></tr>
-        <tr><td class="pname">corner</td><td class="pdefault">"upper right"</td><td>—</td><td>Annotation-box location.</td></tr>
-        <tr><td class="pname">y_frac_window</td><td class="pdefault">0.003</td><td>—</td><td>Fraction of peak used for automatic plot windowing; 0 shows the full domain.</td></tr>
-      </tbody>
-    </table>
-    <div class="note"><strong>Input checking:</strong> Invalid quantities, non-finite or nonpositive temperatures, invalid resolutions, non-finite or incorrectly ordered domain limits, invalid annotation corners, and window fractions outside the finite range 0–1 produce explanatory <code>ValueError</code> messages.</div>
-  </section>
-
-  <!-- ── Quantity Modes ── -->
-  <section id="quantities">
-    <h2>Quantity Modes</h2>
-    <p>
+</div>
+</div>
+</section>
+<!-- ── Parameters ── -->
+<section id="parameters">
+<h2>Parameters</h2>
+<p>All ordinary experiment settings are exposed near the top of <code>main.py</code>. Physical quantities are expressed in SI units throughout.</p>
+<table class="param-table">
+<thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td class="pname">T</td><td class="pdefault">5900.0</td><td>K</td><td>Black-body temperature; the default is a useful black-body approximation to the Sun's continuum.</td></tr>
+<tr><td class="pname">quantity</td><td class="pdefault">"wavelength"</td><td>—</td><td><code>"wavelength"</code>, <code>"frequency"</code>, or <code>"energy_density"</code>.</td></tr>
+<tr><td class="pname">n_steps</td><td class="pdefault">2000</td><td>—</td><td>Number of equal x-intervals; the program samples <code>n_steps + 1</code> endpoints.</td></tr>
+<tr><td class="pname">x_min</td><td class="pdefault">0.01</td><td>—</td><td>Lower bound of the dimensionless x-domain.</td></tr>
+<tr><td class="pname">x_max</td><td class="pdefault">100.0</td><td>—</td><td>Upper bound of the dimensionless x-domain.</td></tr>
+<tr><td class="pname">x_low</td><td class="pdefault">0.05</td><td>—</td><td>Below this value, use the small-x approximation.</td></tr>
+<tr><td class="pname">x_high</td><td class="pdefault">20.0</td><td>—</td><td>Above this value, use the large-x approximation.</td></tr>
+<tr><td class="pname">corner</td><td class="pdefault">"upper right"</td><td>—</td><td>Annotation-box location.</td></tr>
+<tr><td class="pname">y_frac_window</td><td class="pdefault">0.003</td><td>—</td><td>Fraction of peak used for automatic plot windowing; 0 shows the full domain.</td></tr>
+</tbody>
+</table>
+<div class="note"><strong>Input checking:</strong> Invalid quantities, non-finite or nonpositive temperatures, invalid resolutions, non-finite or incorrectly ordered domain limits, invalid annotation corners, and window fractions outside the finite range 0–1 produce explanatory <code>ValueError</code> messages.</div>
+</section>
+<!-- ── Quantity Modes ── -->
+<section id="quantities">
+<h2>Quantity Modes</h2>
+<p>
       The <code>quantity</code> parameter passed to <code>run_planck2()</code> selects which
       physical form of Planck's law is computed and plotted.
     </p>
-
-    <table class="out-table">
-      <thead>
-        <tr>
-          <th>Mode string</th>
-          <th>Physical quantity</th>
-          <th>Shape function</th>
-          <th>x-axis</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="oname">"wavelength"</td>
-          <td>Spectral radiance \(B_\lambda\) (W m⁻³ sr⁻¹)</td>
-          <td>\(x^5/(e^x-1)\), peaks at \(x\approx4.9651\)</td>
-          <td>Wavelength (m)</td>
-        </tr>
-        <tr>
-          <td class="oname">"frequency"</td>
-          <td>Spectral radiance \(B_\nu\) (W m⁻² sr⁻¹ Hz⁻¹)</td>
-          <td>\(x^3/(e^x-1)\), peaks at \(x\approx2.8214\)</td>
-          <td>Frequency (Hz)</td>
-        </tr>
-        <tr>
-          <td class="oname">"energy_density"</td>
-          <td>Spectral energy density \(u_\nu\) (J m⁻³ Hz⁻¹)</td>
-          <td>\(x^3/(e^x-1)\), peaks at \(x\approx2.8214\)</td>
-          <td>Frequency (Hz)</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="note">
-      <strong>Verification tip:</strong> Run <code>"frequency"</code> and
+<table class="out-table">
+<thead>
+<tr>
+<th>Mode string</th>
+<th>Physical quantity</th>
+<th>Shape function</th>
+<th>x-axis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="oname">"wavelength"</td>
+<td>Spectral radiance \(B_\lambda\) (W m⁻³ sr⁻¹)</td>
+<td>\(x^5/(e^x-1)\), peaks at \(x\approx4.9651\)</td>
+<td>Wavelength (m)</td>
+</tr>
+<tr>
+<td class="oname">"frequency"</td>
+<td>Spectral radiance \(B_\nu\) (W m⁻² sr⁻¹ Hz⁻¹)</td>
+<td>\(x^3/(e^x-1)\), peaks at \(x\approx2.8214\)</td>
+<td>Frequency (Hz)</td>
+</tr>
+<tr>
+<td class="oname">"energy_density"</td>
+<td>Spectral energy density \(u_\nu\) (J m⁻³ Hz⁻¹)</td>
+<td>\(x^3/(e^x-1)\), peaks at \(x\approx2.8214\)</td>
+<td>Frequency (Hz)</td>
+</tr>
+</tbody>
+</table>
+<div class="note">
+<strong>Verification tip:</strong> Run <code>"frequency"</code> and
       <code>"energy_density"</code> side by side. Both peak at the same \(x\) (and hence the
       same frequency) since they share the same shape function \(g(x)\) — only the physical
       prefactor and y-axis units differ. Compare either against <code>"wavelength"</code> and
       note the peak lands at a <em>different</em> \(x\), and therefore corresponds to a
       different photon, per the discussion in Physical Background.
     </div>
-  </section>
-
-  <!-- ── Suggested Experiments ── -->
-  <section id="experiments">
-    <h2>Suggested Experiments</h2>
-    <div class="exp-grid">
-      <div class="exp-card"><div class="ec-num">EXP-1</div><h4>Solar Black-Body Approximation</h4><p>With <code>T=5900</code> and <code>quantity="wavelength"</code>, compare the sampled peak wavelength with Wien's displacement law. The result should be near 490 nm, in the visible range. A real solar spectrum also contains absorption lines and other departures from an ideal black body.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-2</div><h4>Wien's Displacement Law and Temperature</h4><p>Run <code>quantity="wavelength"</code> at <code>T = 3000, 5900, 10000</code> K. Verify that <code>x_peak</code> stays nearly constant while \(\lambda_\text{peak}T\) stays near \(2.898\times10^{-3}\,\text{m K}\). Then try <code>"frequency"</code> and verify that the peak frequency is proportional to \(T\).</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-3</div><h4>Wavelength vs. Frequency Peaks</h4><p>At the same temperature, run <code>"wavelength"</code> and <code>"frequency"</code>. Record the \(B_\lambda\) peak wavelength, the \(B_\nu\) peak frequency, and \(c/\nu_\text{max}\). The two wavelengths do not agree because the curves are densities with respect to different variables.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-4</div><h4>Stefan–Boltzmann T⁴ Scaling</h4><p>Use, for example, <code>T = 3000, 6000, 12000</code> K and record <code>result.physical_integral</code>. For either radiance mode, calculate <code>physical_integral / T**4</code> and verify that it is nearly constant and agrees with \(\sigma/\pi\). For <code>"energy_density"</code>, verify agreement with \(4\sigma/c\). When \(T\) doubles, the integral should increase by about a factor of 16.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-5</div><h4>Resolution and Peak Sampling</h4><p>Try <code>n_steps = 10, 100, 1000, 2000, 20000</code>. Make a small table of <code>n_steps</code>, <code>x_peak</code>, <code>dimensionless_area</code>, and relative area error. The trapezoidal-rule area and the sampled peak location need not converge at the same rate because the peak is chosen only from grid points, without interpolation.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-6</div><h4>Rayleigh–Jeans and Wien Limits</h4><p>For small \(x\), Planck's law approaches the Rayleigh–Jeans form; for large \(x\), it approaches Wien's approximation. Move <code>x_low</code> upward and <code>x_high</code> downward, for example to 1 and 3, so that these limiting forms are deliberately used too far from their valid regimes. Compare the peak and integrals with the defaults and explain which limiting approximation is responsible for the changes.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-7</div><h4>Cosmic Microwave Background</h4><p>Set <code>T=2.725</code> and <code>quantity="frequency"</code>. The peak should be near 160 GHz. As an optional extension, research why the CMB's near-perfect black-body spectrum became important evidence for a hot early universe and against classical steady-state cosmology.</p></div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-     RESTORE TO DEFAULTS CALLOUT
-     ============================================================ -->
-
-<section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
-  <div style="
+</section>
+<!-- ── Suggested Experiments ── -->
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<div class="exp-grid">
+<div class="exp-card"><div class="ec-num">EXP-1</div><h4>Solar Black-Body Approximation</h4><p>With <code>T=5900</code> and <code>quantity="wavelength"</code>, compare the sampled peak wavelength with Wien's displacement law. The result should be near 490 nm, in the visible range. A real solar spectrum also contains absorption lines and other departures from an ideal black body.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-2</div><h4>Wien's Displacement Law and Temperature</h4><p>Run <code>quantity="wavelength"</code> at <code>T = 3000, 5900, 10000</code> K. Verify that <code>x_peak</code> stays nearly constant while \(\lambda_\text{peak}T\) stays near \(2.898\times10^{-3}\,\text{m K}\). Then try <code>"frequency"</code> and verify that the peak frequency is proportional to \(T\).</p></div>
+<div class="exp-card"><div class="ec-num">EXP-3</div><h4>Wavelength vs. Frequency Peaks</h4><p>At the same temperature, run <code>"wavelength"</code> and <code>"frequency"</code>. Record the \(B_\lambda\) peak wavelength, the \(B_\nu\) peak frequency, and \(c/\nu_\text{max}\). The two wavelengths do not agree because the curves are densities with respect to different variables.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-4</div><h4>Stefan–Boltzmann T⁴ Scaling</h4><p>Use, for example, <code>T = 3000, 6000, 12000</code> K and record <code>result.physical_integral</code>. For either radiance mode, calculate <code>physical_integral / T**4</code> and verify that it is nearly constant and agrees with \(\sigma/\pi\). For <code>"energy_density"</code>, verify agreement with \(4\sigma/c\). When \(T\) doubles, the integral should increase by about a factor of 16.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-5</div><h4>Resolution and Peak Sampling</h4><p>Try <code>n_steps = 10, 100, 1000, 2000, 20000</code>. Make a small table of <code>n_steps</code>, <code>x_peak</code>, <code>dimensionless_area</code>, and relative area error. The trapezoidal-rule area and the sampled peak location need not converge at the same rate because the peak is chosen only from grid points, without interpolation.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-6</div><h4>Rayleigh–Jeans and Wien Limits</h4><p>For small \(x\), Planck's law approaches the Rayleigh–Jeans form; for large \(x\), it approaches Wien's approximation. Move <code>x_low</code> upward and <code>x_high</code> downward, for example to 1 and 3, so that these limiting forms are deliberately used too far from their valid regimes. Compare the peak and integrals with the defaults and explain which limiting approximation is responsible for the changes.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-7</div><h4>Cosmic Microwave Background</h4><p>Set <code>T=2.725</code> and <code>quantity="frequency"</code>. The peak should be near 160 GHz. As an optional extension, research why the CMB's near-perfect black-body spectrum became important evidence for a hot early universe and against classical steady-state cosmology.</p></div>
+</div>
+</section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
+<div style="
     border: 1.5px solid #b5811a;
     border-left: 5px solid #b5811a;
     border-radius: 6px;
@@ -767,12 +727,11 @@ plot_planck2(result)</div>
     gap: 1em;
     align-items: flex-start;
   ">
-    <!-- Icon -->
-    <div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
-
-    <!-- Content -->
-    <div>
-      <div style="
+<!-- Icon -->
+<div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
+<!-- Content -->
+<div>
+<div style="
         font-weight: 700;
         font-size: 0.95em;
         color: #7b2d00;
@@ -780,84 +739,74 @@ plot_planck2(result)</div>
         text-transform: uppercase;
         letter-spacing: 0.04em;
       ">Restoring Default Parameter Values</div>
-
-      <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        After experimenting with parameter values in <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>,
-        you can restore the originals using any of the following methods:
+<p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
+        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
+        you can restore the original program files using any of the following methods:
       </p>
-
-      <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
-        <li>
-          <strong>Same session:</strong>
+<ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
+<li>
+<strong>Same session:</strong>
           Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
           (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
-          (macOS) repeatedly in PyCharm to undo your edits.
+          (macOS) repeatedly in your editor to undo your edits.
         </li>
-        <li>
-          <strong>After reopening PyCharm:</strong>
-          Right-click <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
-          in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
         </li>
-        <li>
-          <strong>Full reset:</strong>
+<li>
+<strong>Full reset:</strong>
           Re-download the ZIP from
-          <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank"
-             style="color:#7b2d00; text-decoration:underline;">
+          <a href="https://github.com/tomyee3-org/GFTGU-Programs" style="color:#7b2d00; text-decoration:underline;" target="_blank">
             github.com/tomyee3-org/GFTGU-Programs
           </a>
           and replace this program's folder with the fresh copy.
         </li>
-      </ul>
-
-      <p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
-        For step-by-step instructions on all four restore methods, see
-        <strong>Section&nbsp;10</strong> of the
-        <em>GFTGU Python Setup Guide</em>.
+</ul>
+<p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
+        For additional ways to restore program files, see the corresponding
+        recovery instructions in the <em>GFTGU Python Setup Guide</em>.
       </p>
-    </div>
-  </div>
+</div>
+</div>
 </section>
+<!-- ============================================================
+     RESTORE TO DEFAULTS CALLOUT
+     ============================================================ -->
 
 <!-- ============================================================
      END RESTORE TO DEFAULTS CALLOUT
      ============================================================ -->
-
-  
-  <!-- ── Related Programs ── -->
-  <section id="related">
-    <h2>Related Programs</h2>
-    <ul class="related-list">
-      <li><a href="../08-Star/Star.html"><strong>Star</strong></a> — Models stellar structure and central/surface conditions; Planck2 shows the thermal spectrum associated with a chosen temperature.</li>
-      <li><a href="../08-Random2/Random2.html"><strong>Random2</strong></a> — Illustrates radiative diffusion through an opaque stellar interior before radiation ultimately emerges from the surface.</li>
-    </ul>
-  </section>
-
-  <!-- ── License ── -->
-  <section id="license">
-    <h2>License</h2>
-    <p>
+<!-- ── Related Programs ── -->
+<section id="related">
+<h2>Related Programs</h2>
+<ul class="related-list">
+<li><a href="../08-Star/Star.html"><strong>Star</strong></a> — Models stellar structure and central/surface conditions; Planck2 shows the thermal spectrum associated with a chosen temperature.</li>
+<li><a href="../08-Random2/Random2.html"><strong>Random2</strong></a> — Illustrates radiative diffusion through an opaque stellar interior before radiation ultimately emerges from the surface.</li>
+</ul>
+</section>
+<!-- ── License ── -->
+<section id="license">
+<h2>License</h2>
+<p>
       Planck2 accompanies the black-body-radiation investigations in Bernard Schutz's
       <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003), Chapter 10.
       This rewritten and extended Python version descends from Schutz's original Java/Triana
       <em>Planck</em> program for the first edition. It is distributed under the
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license.
     </p>
-  </section>
-
+</section>
 </main><!-- /main -->
-
 <!-- ══════════════════════════════════════════════
      FOOTER
 ═══════════════════════════════════════════════ -->
 <footer>
-  <em>Gravity from the Ground Up</em> — Python Programs ·
+<em>Gravity from the Ground Up</em> — Python Programs ·
   Bernard Schutz © 2003 (Cambridge University Press) ·
   Python programs © 2024–2026 Thomas Yee ·
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
 </footer>
-
 </div><!-- /page-wrap -->
-
 <!-- ── Sidebar active-link tracking ── -->
 <script>
   (function () {
@@ -874,6 +823,5 @@ plot_planck2(result)</div>
     document.querySelectorAll('main section[id]').forEach(s => observer.observe(s));
   })();
 </script>
-
 </body>
 </html>

@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Atmosphere – Help File | GFtGU Programs</title>
-
-  <!-- MathJax 3 -->
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Atmosphere – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
     MathJax = {
       tex: {
         inlineMath:  [['\\(','\\)']],
@@ -16,10 +15,8 @@
       options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
-          id="MathJax-script" async></script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
     /* ── Reset & custom properties ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -406,178 +403,162 @@
     }
   </style>
 </head>
-
 <body>
 <div class="page-wrap">
-
-  <!-- ══════════════════════ HEADER ══════════════════════ -->
-  <header>
-    <div class="badge">Chapter 7 &middot; Atmospheres</div>
-    <h1><em>Atmosphere</em> – Planetary Atmosphere Structure</h1>
-    <div class="sub">
+<!-- ══════════════════════ HEADER ══════════════════════ -->
+<header>
+<div class="badge">Chapter 7 · Atmospheres</div>
+<h1><em>Atmosphere</em> – Planetary Atmosphere Structure</h1>
+<div class="sub">
       Source Code:
-      <a href="https://github.com/tomyee3-org/GFTGU-Programs"
-         target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
+      <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
       <br/>
       Documentation:
-      <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
+      <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
     </div>
-  </header>
-
-  <!-- ══════════════════════ SIDEBAR ══════════════════════ -->
-  <nav id="sidebar">
-    <div class="nav-label">Overview</div>
-    <a href="#description">Description</a>
-    <a href="#physics">Physics &amp; Equations</a>
-    <a href="#algorithm">Algorithm</a>
-
-    <div class="nav-label">Code</div>
-    <a href="#mod-physics">physics_atmosphere.py</a>
-    <a href="#mod-driver">driver_atmosphere.py</a>
-    <a href="#mod-plot">plot_atmosphere.py</a>
-    <a href="#mod-main">main.py</a>
-
-    <div class="nav-label">Usage</div>
-    <a href="#parameters">Parameters</a>
-    <a href="#output">Output Modes</a>
-    <a href="#experiments">Suggested Experiments</a>
-
-    <div class="nav-label">Reference</div>
-    <a href="#related">Related Programs</a>
-    <a href="#license">License</a>
-  </nav>
-
-  <!-- ══════════════════════ MAIN ══════════════════════ -->
-  <main>
-
-    <!-- ── Description ── -->
-    <section id="description">
-      <h2>Description</h2>
-      <p>
-        <strong>Atmosphere</strong> models the vertical pressure, density, and temperature structure
+</header>
+<!-- ══════════════════════ SIDEBAR ══════════════════════ -->
+<nav id="sidebar">
+<div class="nav-label">Overview</div>
+<a href="#description">Description</a>
+<a href="#physics">Physics &amp; Equations</a>
+<a href="#algorithm">Algorithm</a>
+<div class="nav-label">Code</div>
+<a href="#mod-physics">physics_atmosphere.py</a>
+<a href="#mod-driver">driver_atmosphere.py</a>
+<a href="#mod-plot">plot_atmosphere.py</a>
+<a href="#mod-main">main.py</a>
+<div class="nav-label">Usage</div>
+<a href="#parameters">Parameters</a>
+<a href="#output">Output Modes</a>
+<a href="#experiments">Suggested Experiments</a>
+<div class="nav-label">Reference</div>
+<a href="#related">Related Programs</a>
+<a href="#license">License</a>
+</nav>
+<!-- ══════════════════════ MAIN ══════════════════════ -->
+<main>
+<!-- ── Description ── -->
+<section id="description">
+<h2>Description</h2>
+<p>
+<strong>Atmosphere</strong> models the vertical pressure, density, and temperature structure
         of a planetary atmosphere in hydrostatic equilibrium. Starting from a measured sea-level
         (or reference-level) pressure and a user-supplied temperature profile, the program integrates
         upward in altitude until the numerical integration reaches its zero-pressure boundary, then plots whichever of the three
         atmospheric quantities the user selects. This zero-pressure boundary is a numerical stopping
         condition for the simplified model, not a sharply defined physical surface in a real atmosphere.
       </p>
-      <p>
+<p>
         It is suitable for modeling Earth's atmosphere, comparing planetary atmospheres across the
         Solar System, and exploring how scale height depends on gravity and molecular weight.
       </p>
-      <div class="note">
-        <strong>Textbook reference:</strong>
+<div class="note">
+<strong>Textbook reference:</strong>
         Bernard Schutz, <em>Gravity from the Ground Up</em>, Cambridge University Press (2003),
         Chapter 7 — Investigations 7.1 and 7.3.
       </div>
-      <div class="note">
-        <strong>Default Earth profile:</strong>
+<div class="note">
+<strong>Default Earth profile:</strong>
         The lower-atmosphere temperatures use U.S. Standard Atmosphere 1976 values. The
         thermospheric portion is a representative NRLMSIS 2.0 thermospheric profile through
         500 km; see <a href="#parameters">Parameters</a> for the run conditions and limitations.
       </div>
-    </section>
-
-    <!-- ── Physics ── -->
-    <section id="physics">
-      <h2>Physics &amp; Equations</h2>
-
-      <h3>Hydrostatic Equilibrium</h3>
-      <p>
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
+<!-- ── Physics ── -->
+<section id="physics">
+<h2>Physics &amp; Equations</h2>
+<h3>Hydrostatic Equilibrium</h3>
+<p>
         A column of atmosphere in static equilibrium satisfies the condition that the pressure
         gradient exactly balances the weight per unit volume of the gas:
       </p>
-      <div class="eq-box">
+<div class="eq-box">
         \[
           \frac{dp}{dh} = -g\,\rho \tag{7.1}
         \]
       </div>
-      <p>
+<p>
         where \(p\) is pressure (Pa), \(h\) is altitude (m), \(g\) is the local gravitational
         acceleration (m s<sup>−2</sup>), and \(\rho\) is the mass density (kg m<sup>−3</sup>).
         The negative sign reflects the fact that pressure decreases with increasing altitude.
       </p>
-
-      <h3>Ideal Gas Law</h3>
-      <p>
+<h3>Ideal Gas Law</h3>
+<p>
         The density of an ideal gas is related to its pressure and temperature by
       </p>
-      <div class="eq-box">
+<div class="eq-box">
         \[
           \rho = \frac{p\,\mu\,m_p}{k_B\,T} \tag{7.2}
         \]
       </div>
-      <p>
+<p>
         where \(\mu\) is the mean molecular weight (dimensionless, e.g. 28.97 for dry air),
         \(m_p = 1.67\times10^{-27}\;\text{kg}\) is the proton mass,
         \(k_B = 1.38\times10^{-23}\;\text{J K}^{-1}\) is the Boltzmann constant,
         and \(T\) is the temperature in Kelvin.
       </p>
-      <p>
-        Substituting Eq.&nbsp;(7.2) into Eq.&nbsp;(7.1) gives the complete governing equation
+<p>
+        Substituting Eq. (7.2) into Eq. (7.1) gives the complete governing equation
         for atmospheric structure:
       </p>
-      <div class="eq-box">
+<div class="eq-box">
         \[
           \frac{dp}{dh} = -\frac{g\,\mu\,m_p}{k_B\,T(h)}\,p \tag{7.3}
         \]
       </div>
-      <p>
+<p>
         For an isothermal atmosphere this integrates to the barometric formula
         \(p = p_0\,e^{-h/H}\), where \(H\) is the <em>scale height</em>.
       </p>
-
-      <h3>Scale Height</h3>
-      <p>
+<h3>Scale Height</h3>
+<p>
         The scale height \(H\) sets the characteristic altitude over which the pressure drops
         by a factor of \(e\). At the base of the atmosphere it is
       </p>
-      <div class="eq-box">
+<div class="eq-box">
         \[
           H = \frac{p_0}{g\,\rho_0} = \frac{k_B\,T_0}{g\,\mu\,m_p} \tag{7.4}
         \]
       </div>
-      <p>
-        where \(\rho_0\) is the density computed from Eq.&nbsp;(7.2) at the surface pressure
+<p>
+        where \(\rho_0\) is the density computed from Eq. (7.2) at the surface pressure
         \(p_0\) and surface temperature \(T_0\). For the default Earth parameters,
         \(H \approx 8.4\;\text{km}\). The <em>initial</em> integration step size is
         \(\Delta h = H/200\). If 1 000 steps are insufficient to reach the model's numerical
         upper boundary, the driver restarts with a larger step; therefore the successful run
         may use substantially fewer than 200 steps per scale height.
       </p>
-
-      <h3>Temperature Profile</h3>
-      <p>
+<h3>Temperature Profile</h3>
+<p>
         Real atmospheres have non-uniform temperature structures driven by solar heating,
         convection, and radiation. The program accepts an arbitrary set of
         \((h_i,\,T_i)\) measurement pairs and constructs a piecewise temperature profile:
       </p>
-      <div class="eq-box">
+<div class="eq-box">
         \[
           T(h) = T_{i-1} + \frac{T_i - T_{i-1}}{h_i - h_{i-1}}\,(h - h_{i-1}),
-          \qquad h_{i-1} \le h < h_i \tag{7.5}
+          \qquad h_{i-1} \le h &lt; h_i \tag{7.5}
         \]
       </div>
-      <p>
+<p>
         That is, temperature is linearly interpolated between adjacent measured altitudes.
         Below the first measurement point the temperature is held constant at \(T_0\).
       </p>
-
-      <h3>Upper Atmosphere Extension (Power-Law Model)</h3>
-      <p>
+<h3>Upper Atmosphere Extension (Power-Law Model)</h3>
+<p>
         When the integration surpasses the highest measured altitude, the program switches to
         a power-law relationship between temperature and pressure.
         On the first computed step above the highest supplied altitude, the coefficient \(\beta\)
         is chosen so that the extrapolated temperature at that step equals the last supplied
         temperature:
       </p>
-      <div class="eq-box">
+<div class="eq-box">
         \[
           T = \beta\,p^{\,\alpha}, \qquad \alpha = 0.5 \tag{7.6}
         \]
       </div>
-      <p>
+<p>
         The exponent \(\alpha = 0.5\) means that temperature falls as the square root of
         pressure. This closure is a simple mathematical extrapolation, not a realistic model
         of the upper atmosphere. The default Earth profile supplied in <code>main.py</code>
@@ -585,30 +566,27 @@
         As pressure approaches zero it also drives the modeled temperature toward zero, which
         is a consequence of the chosen extrapolation rather than a real physical effect.
       </p>
-    </section>
-
-    <!-- ── Algorithm ── -->
-    <section id="algorithm">
-      <h2>Algorithm</h2>
-
-      <h3>Finite-Difference Integration</h3>
-      <p>
-        Equation&nbsp;(7.1) is discretized using a first-order forward (Euler) step:
+</section>
+<!-- ── Algorithm ── -->
+<section id="algorithm">
+<h2>Algorithm</h2>
+<h3>Finite-Difference Integration</h3>
+<p>
+        Equation (7.1) is discretized using a first-order forward (Euler) step:
       </p>
-      <div class="eq-box">
+<div class="eq-box">
         \[
           p_j = p_{j-1} - g\,\rho_{j-1}\,\Delta h \tag{7.7}
         \]
       </div>
-      <p>
+<p>
         At each altitude step the density \(\rho_{j-1}\) is obtained from the ideal gas law
-        (Eq.&nbsp;7.2) using the current pressure and the temperature profile at the current
+        (Eq. 7.2) using the current pressure and the temperature profile at the current
         altitude. The integration terminates as soon as \(p_j &lt; 0\). That negative-pressure point is
         discarded, so the returned arrays end at the last valid non-negative-pressure step.
       </p>
-
-      <h3>Step-Size Restart (dh Doubling)</h3>
-      <p>
+<h3>Step-Size Restart (dh Doubling)</h3>
+<p>
         If 1 000 Euler steps do not cross the model's zero-pressure boundary, the driver doubles
         \(\Delta h\) and restarts the calculation from the surface. This is a coverage
         mechanism rather than an error-controlled adaptive integrator: it ensures that the
@@ -618,7 +596,7 @@
         the pressure profile of the new run. A retry limit prevents pathological parameter choices
         from causing an indefinite sequence of step-size doublings.
       </p>
-      <pre><code>rho0  = ideal_gas_density(p0, mu, T0)      # surface density
+<pre><code>rho0  = ideal_gas_density(p0, mu, T0)      # surface density
 scale = p0 / (g * rho0)                    # scale height H
 dh    = scale / 200.0                      # initial step
 
@@ -627,7 +605,7 @@ while last_step == 0:
     for j in range(1, max_steps):          # max_steps = 1000
         alt[j] = alt[j-1] + dh
         p[j] = hydrostatic_step(p[j-1], rho[j-1], g, dh)
-        if p[j] < 0.0:
+        if p[j] &lt; 0.0:
             last_step = j
             break                          # atmosphere top reached;
                                             # T[j], rho[j] never computed
@@ -637,141 +615,125 @@ while last_step == 0:
     dh *= 2.0                              # only matters if last_step
                                             # is still 0 -- loop then
                                             # retries with a larger step</code></pre>
-
-      <h3>Output Arrays</h3>
-      <p>
+<h3>Output Arrays</h3>
+<p>
         After the loop, the result arrays are trimmed to <code>[:last_step]</code>, excluding
         the unphysical negative-pressure point. The <code>extract_output()</code> function then
         selects whichever quantity the user requested (pressure, density, or temperature) and
         packages it with axis labels, units, and a title for the plotter.
       </p>
-
-      <div class="note">
-        <strong>Numerical note:</strong> This is a first-order Euler calculation intended to
+<div class="note">
+<strong>Numerical note:</strong> This is a first-order Euler calculation intended to
         illustrate hydrostatic equilibrium. Because the step size may be doubled repeatedly,
         the final run can accumulate noticeable numerical error with altitude. The isothermal
         convergence experiment below provides an exact exponential solution against which this
         error can be measured.
       </div>
-    </section>
-
-    <!-- ══════════════ MODULE CARDS ══════════════ -->
-
-    <!-- physics_atmosphere.py -->
-    <section id="mod-physics">
-      <h2>Module: <code>physics_atmosphere.py</code></h2>
-      <div class="module-card">
-        <span class="role-tag">Physics Layer</span>
-        <h3>physics_atmosphere.py</h3>
-        <p>
+</section>
+<!-- ══════════════ MODULE CARDS ══════════════ -->
+<!-- physics_atmosphere.py -->
+<section id="mod-physics">
+<h2>Module: <code>physics_atmosphere.py</code></h2>
+<div class="module-card">
+<span class="role-tag">Physics Layer</span>
+<h3>physics_atmosphere.py</h3>
+<p>
           Encodes the physical constants, temperature-profile interpolation and extrapolation,
           ideal-gas density relation, and one hydrostatic pressure step. It also validates the
           supplied temperature profile before the integration begins.
         </p>
-
-        <h3>Physical Constants</h3>
-        <pre><code>K_BOLTZMANN = 1.38e-23   # Boltzmann constant  (J K⁻¹)
+<h3>Physical Constants</h3>
+<pre><code>K_BOLTZMANN = 1.38e-23   # Boltzmann constant  (J K⁻¹)
 M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
-
-        <h3>Data Class</h3>
-        <span class="func-sig">@dataclass<br>class TemperatureProfile:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;h: List[float]           # altitude breakpoints (m)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;T: List[float]           # temperatures at breakpoints (K)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;power: float = 0.5       # exponent α in T = β·p^α<br>
-&nbsp;&nbsp;&nbsp;&nbsp;beta: float  = 0.0       # coefficient β (set on first pass above the highest supplied breakpoint)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;reached_top: bool = False</span>
-        <p class="func-desc">
+<h3>Data Class</h3>
+<span class="func-sig">@dataclass<br/>class TemperatureProfile:<br/>
+    h: List[float]           # altitude breakpoints (m)<br/>
+    T: List[float]           # temperatures at breakpoints (K)<br/>
+    power: float = 0.5       # exponent α in T = β·p^α<br/>
+    beta: float  = 0.0       # coefficient β (set on first pass above the highest supplied breakpoint)<br/>
+    reached_top: bool = False</span>
+<p class="func-desc">
           Stores the supplied temperature profile and state for the upper-atmosphere power-law
           extension. The profile is validated before integration. <code>beta</code> is fixed
           on the first computed step above the highest supplied breakpoint so that the extrapolated
           temperature there equals the last supplied temperature.
         </p>
-
-        <h3>Functions</h3>
-
-        <span class="func-sig">TemperatureProfile.get_temp(self, altitude: float, pressure: float) -&gt; float</span>
-        <p class="func-desc">
+<h3>Functions</h3>
+<span class="func-sig">TemperatureProfile.get_temp(self, altitude: float, pressure: float) -&gt; float</span>
+<p class="func-desc">
           Returns the temperature at the given altitude and current pressure.
-          Uses linear interpolation (Eq.&nbsp;7.5) between breakpoints while inside the
+          Uses linear interpolation (Eq. 7.5) between breakpoints while inside the
           measured range; below the first breakpoint returns \(T_0\) (constant); above the
-          highest breakpoint applies \(T = \beta\,p^{\alpha}\) (Eq.&nbsp;7.6), fixing
+          highest breakpoint applies \(T = \beta\,p^{\alpha}\) (Eq. 7.6), fixing
           \(\beta\) on the first call in that regime so the extrapolated temperature there
           equals the last supplied temperature.
         </p>
-
-        <span class="func-sig">ideal_gas_density(pressure: float, mu: float, temperature: float) -&gt; float</span>
-        <p class="func-desc">
+<span class="func-sig">ideal_gas_density(pressure: float, mu: float, temperature: float) -&gt; float</span>
+<p class="func-desc">
           Returns the mass density \(\rho = p\,\mu\,m_p\,/\,(k_B\,T)\) in kg m<sup>−3</sup>.
-          Implements Eq.&nbsp;(7.2) directly. Requires <code>pressure &ge; 0</code> and
+          Implements Eq. (7.2) directly. Requires <code>pressure ≥ 0</code> and
           <code>temperature &gt; 0</code>, with finite numerical inputs.
         </p>
-
-        <span class="func-sig">hydrostatic_step(pressure_prev: float, rho_prev: float, g_accel: float, dh: float) -&gt; float</span>
-        <p class="func-desc">
+<span class="func-sig">hydrostatic_step(pressure_prev: float, rho_prev: float, g_accel: float, dh: float) -&gt; float</span>
+<p class="func-desc">
           Advances the pressure by one Euler step: \(p_j = p_{j-1} - g\,\rho_{j-1}\,\Delta h\).
-          Implements Eq.&nbsp;(7.7). Negative results signal that the model's zero-pressure boundary has
+          Implements Eq. (7.7). Negative results signal that the model's zero-pressure boundary has
           been crossed.
         </p>
-      </div>
-    </section>
-
-    <!-- driver_atmosphere.py -->
-    <section id="mod-driver">
-      <h2>Module: <code>driver_atmosphere.py</code></h2>
-      <div class="module-card">
-        <span class="role-tag">Driver / Solver</span>
-        <h3>driver_atmosphere.py</h3>
-        <p>
+</div>
+</section>
+<!-- driver_atmosphere.py -->
+<section id="mod-driver">
+<h2>Module: <code>driver_atmosphere.py</code></h2>
+<div class="module-card">
+<span class="role-tag">Driver / Solver</span>
+<h3>driver_atmosphere.py</h3>
+<p>
           Owns all integration logic: builds the temperature profile, computes the initial
           scale height, runs the while/for adaptive loop, and packages results into
           structured dataclasses (<code>AtmosphereResult</code>, then <code>CurveData</code>
           via <code>extract_output()</code>) ready for the plotter.
         </p>
-
-        <h3>Type Alias</h3>
-        <span class="func-sig">OutputType = Literal["Pressure", "Density", "Temperature"]</span>
-        <p class="func-desc">
+<h3>Type Alias</h3>
+<span class="func-sig">OutputType = Literal["Pressure", "Density", "Temperature"]</span>
+<p class="func-desc">
           Lists the three supported output quantities. The driver also checks the value at
           runtime and reports an explanatory <code>ValueError</code> for an invalid choice.
         </p>
-
-        <h3>Data Classes</h3>
-        <span class="func-sig">@dataclass<br>class AtmosphereParameters:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;planet_name: str<br>
-&nbsp;&nbsp;&nbsp;&nbsp;g_accel:     float        # gravitational acceleration (m s⁻²)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;mu:          float        # mean molecular weight (dimensionless)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;p0:          float        # surface pressure (Pa)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;h_points:    List[float]  # altitude breakpoints (m)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;T_points:    List[float]  # temperature at each breakpoint (K)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;output_type: OutputType</span>
-        <p class="func-desc">User-supplied configuration for one atmosphere model run.</p>
-
-        <span class="func-sig">@dataclass<br>class AtmosphereResult:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;altitudes:    List[float]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;pressures:    List[float]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;densities:    List[float]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;temperatures: List[float]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;output_type:  OutputType<br>
-&nbsp;&nbsp;&nbsp;&nbsp;planet_name:  str</span>
-        <p class="func-desc">
+<h3>Data Classes</h3>
+<span class="func-sig">@dataclass<br/>class AtmosphereParameters:<br/>
+    planet_name: str<br/>
+    g_accel:     float        # gravitational acceleration (m s⁻²)<br/>
+    mu:          float        # mean molecular weight (dimensionless)<br/>
+    p0:          float        # surface pressure (Pa)<br/>
+    h_points:    List[float]  # altitude breakpoints (m)<br/>
+    T_points:    List[float]  # temperature at each breakpoint (K)<br/>
+    output_type: OutputType</span>
+<p class="func-desc">User-supplied configuration for one atmosphere model run.</p>
+<span class="func-sig">@dataclass<br/>class AtmosphereResult:<br/>
+    altitudes:    List[float]<br/>
+    pressures:    List[float]<br/>
+    densities:    List[float]<br/>
+    temperatures: List[float]<br/>
+    output_type:  OutputType<br/>
+    planet_name:  str</span>
+<p class="func-desc">
           Structured result from <code>AtmosphereModel.run()</code>. All four lists are
           co-indexed and trimmed to the last valid (non-negative-pressure) step.
         </p>
-
-        <h3>Class</h3>
-        <span class="func-sig">class AtmosphereModel:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, params: AtmosphereParameters) -&gt; None<br>
-&nbsp;&nbsp;&nbsp;&nbsp;def run(self) -&gt; AtmosphereResult</span>
-        <p class="func-desc">
-          <code>__init__</code> stores the parameters and constructs a
+<h3>Class</h3>
+<span class="func-sig">class AtmosphereModel:<br/>
+    def __init__(self, params: AtmosphereParameters) -&gt; None<br/>
+    def run(self) -&gt; AtmosphereResult</span>
+<p class="func-desc">
+<code>__init__</code> stores the parameters and constructs a
           <code>TemperatureProfile</code> from <code>h_points</code> and <code>T_points</code>.
           <code>run()</code> computes the initial density and scale height, then executes the
           step-size-restart while/for integration loop (described in the Algorithm section), returning
           an <code>AtmosphereResult</code> with arrays sliced to <code>[:last_step]</code>.
         </p>
-
-        <h3>Data Class</h3>
-        <pre><code>@dataclass
+<h3>Data Class</h3>
+<pre><code>@dataclass
 class CurveData:
     x:       List[float]  # altitudes (m)
     y:       List[float]  # selected quantity
@@ -779,74 +741,69 @@ class CurveData:
     x_label: str
     y_label: str
     title:   str</code></pre>
-        <p class="func-desc">
+<p class="func-desc">
           Contains the altitude and selected atmospheric quantity to be plotted, together with
           the corresponding units, axis labels, and figure title.
         </p>
-
-        <h3>Function</h3>
-        <span class="func-sig">extract_output(result: AtmosphereResult) -&gt; CurveData</span>
-        <p class="func-desc">
+<h3>Function</h3>
+<span class="func-sig">extract_output(result: AtmosphereResult) -&gt; CurveData</span>
+<p class="func-desc">
           Converts an <code>AtmosphereResult</code> into a plot-ready <code>CurveData</code>.
           The <code>y</code> array and label depend on <code>result.output_type</code>:
           pressures (Pa), densities (kg m<sup>−3</sup>), or temperatures (K).
           The <code>x</code> array is always the altitude in meters.
         </p>
-      </div>
-    </section>
-
-    <!-- plot_atmosphere.py -->
-    <section id="mod-plot">
-      <h2>Module: <code>plot_atmosphere.py</code></h2>
-      <div class="module-card">
-        <span class="role-tag">Visualization</span>
-        <h3>plot_atmosphere.py</h3>
-        <p>
+</div>
+</section>
+<!-- plot_atmosphere.py -->
+<section id="mod-plot">
+<h2>Module: <code>plot_atmosphere.py</code></h2>
+<div class="module-card">
+<span class="role-tag">Visualization</span>
+<h3>plot_atmosphere.py</h3>
+<p>
           Accepts the structured <code>CurveData</code> from <code>extract_output()</code> and
           produces a matplotlib line graph. The module is intentionally minimal: all axis
           labels, units, and the title are already embedded in <code>CurveData</code>, so the
           plotter needs no knowledge of the underlying physics.
         </p>
-
-        <h3>Function</h3>
-        <span class="func-sig">plot_atmosphere(curve_data: CurveData) -&gt; None</span>
-        <p class="func-desc">
+<h3>Function</h3>
+<span class="func-sig">plot_atmosphere(curve_data: CurveData) -&gt; None</span>
+<p class="func-desc">
           Reads <code>curve_data.x</code> (altitudes, m), <code>curve_data.y</code> (selected
           quantity), <code>curve_data.x_label</code>, <code>curve_data.y_label</code>, and
           <code>curve_data.title</code>. Creates a single-axes figure with
           <code>ax.plot(x, y)</code>, applies labels and a grid, then calls
           <code>plt.tight_layout()</code> and <code>plt.show()</code>.
         </p>
-
-        <h3>CurveData fields used here</h3>
-        <table>
-          <thead>
-            <tr><th>Field</th><th>Type</th><th>Content</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><code>x</code></td><td>List[float]</td><td>Altitudes (m)</td></tr>
-            <tr><td><code>y</code></td><td>List[float]</td><td>Selected output quantity</td></tr>
-            <tr><td><code>y_unit</code></td><td>str</td><td>Unit string, e.g. <code>"Pa"</code></td></tr>
-            <tr><td><code>x_label</code></td><td>str</td><td>x-axis label</td></tr>
-            <tr><td><code>y_label</code></td><td>str</td><td>y-axis label</td></tr>
-            <tr><td><code>title</code></td><td>str</td><td>Figure title</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- main.py -->
-    <section id="mod-main">
-      <h2>Module: <code>main.py</code></h2>
-      <div class="module-card">
-        <span class="role-tag">Entry Point</span>
-        <h3>main.py</h3>
-        <p>
+<h3>CurveData fields used here</h3>
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Content</th></tr>
+</thead>
+<tbody>
+<tr><td><code>x</code></td><td>List[float]</td><td>Altitudes (m)</td></tr>
+<tr><td><code>y</code></td><td>List[float]</td><td>Selected output quantity</td></tr>
+<tr><td><code>y_unit</code></td><td>str</td><td>Unit string, e.g. <code>"Pa"</code></td></tr>
+<tr><td><code>x_label</code></td><td>str</td><td>x-axis label</td></tr>
+<tr><td><code>y_label</code></td><td>str</td><td>y-axis label</td></tr>
+<tr><td><code>title</code></td><td>str</td><td>Figure title</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- main.py -->
+<section id="mod-main">
+<h2>Module: <code>main.py</code></h2>
+<div class="module-card">
+<span class="role-tag">Entry Point</span>
+<h3>main.py</h3>
+<p>
           The user-facing entry point. Sets all input parameters to Earth defaults and calls
           the driver and plotter. Edit the parameters in this file to model a different planet
           or atmospheric scenario; the other three modules never need to be modified.
         </p>
-        <pre><code>from driver_atmosphere import AtmosphereParameters, AtmosphereModel, OutputType, extract_output
+<pre><code>from driver_atmosphere import AtmosphereParameters, AtmosphereModel, OutputType, extract_output
 from plot_atmosphere  import plot_atmosphere
 
 planet_name = "Earth"
@@ -879,87 +836,85 @@ model      = AtmosphereModel(params)
 result     = model.run()
 curve_data = extract_output(result)
 plot_atmosphere(curve_data)</code></pre>
-      </div>
-    </section>
-
-    <!-- ── Parameters table ── -->
-    <section id="parameters">
-      <h2>Parameters</h2>
-      <p>
+</div>
+</section>
+<!-- ── Parameters table ── -->
+<section id="parameters">
+<h2>Parameters</h2>
+<p>
         All parameters are set in <code>main.py</code>. The default Earth temperature profile
         combines U.S. Standard Atmosphere 1976 values through about 86 km with a representative
         NRLMSIS 2.0 thermospheric profile extending to 500 km.
       </p>
-      <table>
-        <thead>
-          <tr>
-            <th>Parameter</th>
-            <th>Default (Earth)</th>
-            <th>Unit</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>planet_name</code></td>
-            <td><code>"Earth"</code></td>
-            <td>—</td>
-            <td>Label used in plot title</td>
-          </tr>
-          <tr>
-            <td><code>g_accel</code></td>
-            <td><code>9.81</code></td>
-            <td>m s<sup>−2</sup></td>
-            <td>Surface gravitational acceleration</td>
-          </tr>
-          <tr>
-            <td><code>mu</code></td>
-            <td><code>28.97</code></td>
-            <td>dimensionless</td>
-            <td>Mean molecular weight of atmosphere (dry air ≈ 28.97; CO₂ ≈ 44; H₂ ≈ 2)</td>
-          </tr>
-          <tr>
-            <td><code>p0</code></td>
-            <td><code>1.013e5</code></td>
-            <td>Pa</td>
-            <td>Surface (reference) pressure (1 atm = 101 325 Pa)</td>
-          </tr>
-          <tr>
-            <td><code>h_points</code></td>
-            <td><code>[0, 11019, 20063, 32162, 47350, 51412, 71802, 86000,<br>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default (Earth)</th>
+<th>Unit</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>planet_name</code></td>
+<td><code>"Earth"</code></td>
+<td>—</td>
+<td>Label used in plot title</td>
+</tr>
+<tr>
+<td><code>g_accel</code></td>
+<td><code>9.81</code></td>
+<td>m s<sup>−2</sup></td>
+<td>Surface gravitational acceleration</td>
+</tr>
+<tr>
+<td><code>mu</code></td>
+<td><code>28.97</code></td>
+<td>dimensionless</td>
+<td>Mean molecular weight of atmosphere (dry air ≈ 28.97; CO₂ ≈ 44; H₂ ≈ 2)</td>
+</tr>
+<tr>
+<td><code>p0</code></td>
+<td><code>1.013e5</code></td>
+<td>Pa</td>
+<td>Surface (reference) pressure (1 atm = 101 325 Pa)</td>
+</tr>
+<tr>
+<td><code>h_points</code></td>
+<td><code>[0, 11019, 20063, 32162, 47350, 51412, 71802, 86000,<br/>
                 100000, 150000, 200000, 250000, 300000, 400000, 500000]</code></td>
-            <td>m</td>
-            <td>Altitude breakpoints for the hybrid Earth temperature profile</td>
-          </tr>
-          <tr>
-            <td><code>T_points</code></td>
-            <td><code>[288.15, 216.65, 216.65, 228.65, 270.65, 270.65, 214.65,<br>
+<td>m</td>
+<td>Altitude breakpoints for the hybrid Earth temperature profile</td>
+</tr>
+<tr>
+<td><code>T_points</code></td>
+<td><code>[288.15, 216.65, 216.65, 228.65, 270.65, 270.65, 214.65,<br/>
                 186.946, 190, 800, 1080, 1190, 1225, 1240, 1240]</code></td>
-            <td>K</td>
-            <td>Temperature at each altitude breakpoint</td>
-          </tr>
-          <tr>
-            <td><code>output_type</code></td>
-            <td><code>"Pressure"</code></td>
-            <td>—</td>
-            <td>Which quantity to plot: <code>"Pressure"</code>, <code>"Density"</code>, or <code>"Temperature"</code></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="note">
-        <strong>Temperature profile sources and limitations:</strong>
+<td>K</td>
+<td>Temperature at each altitude breakpoint</td>
+</tr>
+<tr>
+<td><code>output_type</code></td>
+<td><code>"Pressure"</code></td>
+<td>—</td>
+<td>Which quantity to plot: <code>"Pressure"</code>, <code>"Density"</code>, or <code>"Temperature"</code></td>
+</tr>
+</tbody>
+</table>
+<div class="note">
+<strong>Temperature profile sources and limitations:</strong>
         From sea level through approximately 86 km, the default temperatures use
         U.S. Standard Atmosphere 1976 layer-boundary values. The standard defines those
         boundaries in geopotential height; the corresponding geometric altitudes are used here.
-        <br><br>
+        <br/><br/>
         From 100 km through 500 km, the values are rounded neutral temperatures read from an
         NRLMSIS 2.0 CCMC Instant Run for 15 October 2024 at 12:00 UTC, geographic latitude
         55° N and longitude 45° E. The CCMC run used observational solar and geomagnetic
         indices for that date. These thermospheric values are therefore a date- and condition-specific
         example, not universal standard temperatures: the thermosphere varies
         strongly with solar activity, geomagnetic activity, location, season, and time of day.
-        <br><br>
+        <br/><br/>
         The temperature curve is consequently more realistic than a single fixed thermospheric
         profile, but the rest of this program remains deliberately simple. In particular,
         <code>g_accel</code> and <code>mu</code> are held constant with altitude, whereas the
@@ -967,8 +922,8 @@ plot_atmosphere(curve_data)</code></pre>
         density above roughly 100 km should therefore be interpreted as an illustrative
         continuation of the hydrostatic ideal-gas model, not as an NRLMSIS-quality prediction.
         Above 500 km, the program begins the simplified power-law extrapolation of
-        Eq.&nbsp;(7.6).
-        <br><br>
+        Eq. (7.6).
+        <br/><br/>
         The <code>h_points</code> and <code>T_points</code> lists must have the same length;
         all numerical inputs must be finite, altitudes must be strictly increasing, and all
         temperatures must be positive. <code>g_accel</code>, <code>mu</code>, and <code>p0</code>
@@ -976,66 +931,63 @@ plot_atmosphere(curve_data)</code></pre>
         <code>T_points[0]</code> as the surface temperature; in normal use, set
         <code>h_points[0] = 0.0</code>.
       </div>
-    </section>
-
-    <!-- ── Output modes ── -->
-    <section id="output">
-      <h2>Output Modes</h2>
-      <p>
+</section>
+<!-- ── Output modes ── -->
+<section id="output">
+<h2>Output Modes</h2>
+<p>
         Set <code>output_type</code> in <code>main.py</code> to select which atmospheric
         quantity is plotted on the vertical axis (with altitude on the horizontal axis).
       </p>
-      <div class="output-grid">
-        <div class="output-card">
-          <div class="out-name">"Pressure"</div>
-          <div class="out-unit">y-axis unit: Pa</div>
-          <p>
+<div class="output-grid">
+<div class="output-card">
+<div class="out-name">"Pressure"</div>
+<div class="out-unit">y-axis unit: Pa</div>
+<p>
             Atmospheric pressure vs. altitude. Decreases roughly exponentially with
             a scale height of ~8.5 km for Earth. On a logarithmic scale, the pressure curve makes changes in effective scale height
             especially visible.
           </p>
-        </div>
-        <div class="output-card">
-          <div class="out-name">"Density"</div>
-          <div class="out-unit">y-axis unit: kg m<sup>−3</sup></div>
-          <p>
+</div>
+<div class="output-card">
+<div class="out-name">"Density"</div>
+<div class="out-unit">y-axis unit: kg m<sup>−3</sup></div>
+<p>
             Mass density vs. altitude, derived from the ideal gas law.
             Also decreases exponentially, but the profile is additionally modulated
             by temperature variations through \(\rho \propto p/T\).
           </p>
-        </div>
-        <div class="output-card">
-          <div class="out-name">"Temperature"</div>
-          <div class="out-unit">y-axis unit: K</div>
-          <p>
+</div>
+<div class="output-card">
+<div class="out-name">"Temperature"</div>
+<div class="out-unit">y-axis unit: K</div>
+<p>
             Temperature vs. altitude. With the default Earth data, this shows the
             U.S. Standard Atmosphere lower profile followed by the strongly rising
             NRLMSIS thermospheric portion of the profile through 500 km. Above the highest supplied
             breakpoint, the program uses the \(T = \beta\,p^{0.5}\) power-law extension.
           </p>
-        </div>
-      </div>
-      <div class="note">
-        <strong>Logarithmic scale tip:</strong>
+</div>
+</div>
+<div class="note">
+<strong>Logarithmic scale tip:</strong>
         Pressure and density span many orders of magnitude. Because altitude is on the
         horizontal axis and the selected atmospheric quantity is on the vertical axis, use
         <code>ax.set_yscale("log")</code> in <code>plot_atmosphere.py</code> after the
         <code>ax.plot()</code> call.
       </div>
-    </section>
-
-    <!-- ── Suggested Experiments ── -->
-    <section id="experiments">
-      <h2>Suggested Experiments</h2>
-      <p>
+</section>
+<!-- ── Suggested Experiments ── -->
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<p>
         The experiments below are arranged in approximate order of difficulty. Most require only
         changes to <code>main.py</code>; experiments that require a plotting or algorithm change
         say so explicitly.
       </p>
-
-      <div class="scenario-card">
-        <h4>1 · Introductory — Explore Earth's Pressure, Density, and Temperature Profiles</h4>
-        <p>
+<div class="scenario-card">
+<h4>1 · Introductory — Explore Earth's Pressure, Density, and Temperature Profiles</h4>
+<p>
           Run the default Earth model three times, selecting <code>"Pressure"</code>,
           <code>"Density"</code>, and <code>"Temperature"</code> in turn. Compare how the three
           quantities change with altitude. In the temperature plot, identify the familiar
@@ -1044,59 +996,55 @@ plot_atmosphere(curve_data)</code></pre>
           remember that the program uses its simplified power-law extrapolation; do not interpret
           that far-upper-atmosphere continuation as a realistic physical temperature profile.
         </p>
-        <div class="params">output_type = "Pressure"  # then "Density", then "Temperature"
+<div class="params">output_type = "Pressure"  # then "Density", then "Temperature"
 # all other parameters at their defaults</div>
-      </div>
-
-      <div class="scenario-card">
-        <h4>2 · Introductory — Plot Pressure on a Logarithmic Scale</h4>
-        <p>
+</div>
+<div class="scenario-card">
+<h4>2 · Introductory — Plot Pressure on a Logarithmic Scale</h4>
+<p>
           Set <code>output_type = "Pressure"</code> and add
           <code>ax.set_yscale("log")</code> in <code>plot_atmosphere.py</code>. Pressure spans many
           orders of magnitude, so a logarithmic vertical axis makes the structure much easier to
           inspect. For an isothermal atmosphere an exponential pressure law would appear as a
           straight line; Earth's changing temperature therefore shows up as changes in slope.
         </p>
-        <div class="params">output_type = "Pressure"
+<div class="params">output_type = "Pressure"
 # add ax.set_yscale("log") after ax.plot(x, y)</div>
-      </div>
-
-      <div class="scenario-card">
-        <h4>3 · Introductory–Intermediate — Surface Pressure Changes the Scale, Not the Scale Height</h4>
-        <p>
+</div>
+<div class="scenario-card">
+<h4>3 · Introductory–Intermediate — Surface Pressure Changes the Scale, Not the Scale Height</h4>
+<p>
           Keep Earth's gravity, molecular weight, and temperature profile fixed, but repeat the
           calculation with surface pressure multiplied and divided by 10. Compare the pressure
           profiles as fractions of their own surface values. The absolute pressures differ by a
           factor of 10, but the fractional falloff with altitude is essentially unchanged. Relate
-          this to Eq.&nbsp;(7.4), in which the isothermal scale height depends on temperature,
+          this to Eq. (7.4), in which the isothermal scale height depends on temperature,
           gravity, and molecular weight but not on surface pressure.
         </p>
-        <div class="params">p0 = 1.013e4   # then 1.013e5 and 1.013e6 Pa</div>
-      </div>
-
-      <div class="scenario-card">
-        <h4>4 · Intermediate — What Controls Scale Height?</h4>
-        <p>
+<div class="params">p0 = 1.013e4   # then 1.013e5 and 1.013e6 Pa</div>
+</div>
+<div class="scenario-card">
+<h4>4 · Intermediate — What Controls Scale Height?</h4>
+<p>
           Change one parameter at a time while keeping the others at their Earth values. First try
           <code>mu = 18</code>, <code>28.97</code>, and <code>44</code>; then repeat with several
           values of <code>g_accel</code>. Verify qualitatively that the atmosphere becomes more
           vertically extended when molecular weight or gravity is reduced. For an isothermal
-          atmosphere, Eq.&nbsp;(7.4) predicts \(H\propto T/(\mu g)\).
+          atmosphere, Eq. (7.4) predicts \(H\propto T/(\mu g)\).
         </p>
-        <div class="params">mu = 18.0, 28.97, 44.0
+<div class="params">mu = 18.0, 28.97, 44.0
 # then vary g_accel while restoring mu = 28.97</div>
-      </div>
-
-      <div class="scenario-card">
-        <h4>5 · Intermediate — Compare Mars and Venus</h4>
-        <p>
+</div>
+<div class="scenario-card">
+<h4>5 · Intermediate — Compare Mars and Venus</h4>
+<p>
           Apply the same model to two very different CO₂ atmospheres. Mars has weak gravity and
           very low surface pressure; Venus has much stronger gravity, an enormous surface pressure,
           and a very hot lower atmosphere. Compare their pressure profiles and base scale heights.
           Use the comparison to separate the roles of surface pressure, temperature, gravity, and
           molecular weight rather than attributing atmospheric "thickness" to pressure alone.
         </p>
-        <div class="params"># Mars
+<div class="params"># Mars
 planet_name = "Mars";  g_accel = 3.72;  mu = 44.0;  p0 = 610.0
 h_points = [0.0, 10000.0, 25000.0, 45000.0]
 T_points = [210.0, 170.0, 145.0, 130.0]
@@ -1105,24 +1053,22 @@ T_points = [210.0, 170.0, 145.0, 130.0]
 planet_name = "Venus"; g_accel = 8.87;  mu = 44.0;  p0 = 9.2e6
 h_points = [0.0, 10000.0, 30000.0, 60000.0]
 T_points = [735.0, 500.0, 340.0, 230.0]</div>
-      </div>
-
-      <div class="scenario-card">
-        <h4>6 · Intermediate — Change the Temperature Profile</h4>
-        <p>
+</div>
+<div class="scenario-card">
+<h4>6 · Intermediate — Change the Temperature Profile</h4>
+<p>
           Replace the default profile with a deliberately simple temperature structure and observe
           how warm and cool layers affect density through \(\rho\propto p/T\). Introduce a warm
           layer above a cooler one, then compare the Pressure, Density, and Temperature outputs.
           This isolates the role of the supplied temperature profile from changes in gravity,
           molecular weight, or surface pressure.
         </p>
-        <div class="params">h_points = [0.0, 50000.0, 100000.0]
+<div class="params">h_points = [0.0, 50000.0, 100000.0]
 T_points = [288.0, 200.0, 350.0]</div>
-      </div>
-
-      <div class="scenario-card">
-        <h4>7 · Intermediate–Advanced — Jupiter as a Local 1-Bar-Level Model</h4>
-        <p>
+</div>
+<div class="scenario-card">
+<h4>7 · Intermediate–Advanced — Jupiter as a Local 1-Bar-Level Model</h4>
+<p>
           Use the 1-bar level as a reference and model only a relatively thin region of Jupiter's
           outer atmosphere. The low mean molecular weight of hydrogen-helium gas produces a large
           scale height despite strong gravity. Treat this explicitly as a local exercise: the
@@ -1131,17 +1077,16 @@ T_points = [288.0, 200.0, 350.0]</div>
           against applying this simple constant-gravity model to an entire gas giant; the limited
           calculation here is intended to show why that warning matters.
         </p>
-        <div class="params">planet_name = "Jupiter"
+<div class="params">planet_name = "Jupiter"
 g_accel     = 24.8
 mu          = 2.2
 p0          = 1.0e5
 h_points    = [0.0, 20000.0, 50000.0, 100000.0]
 T_points    = [165.0, 130.0, 110.0, 150.0]</div>
-      </div>
-
-      <div class="scenario-card">
-        <h4>8 · Advanced — Test the Euler Integration Against an Exact Isothermal Atmosphere</h4>
-        <p>
+</div>
+<div class="scenario-card">
+<h4>8 · Advanced — Test the Euler Integration Against an Exact Isothermal Atmosphere</h4>
+<p>
           Use a constant temperature of 288.15 K from 0 to 100 km and plot Pressure. In that
           interval the exact solution is \(p(h)=p_0\exp(-h/H)\), with
           \(H=k_BT/(g\mu m_p)\). Compare the numerical pressure with the exact result at selected
@@ -1149,21 +1094,20 @@ T_points    = [165.0, 130.0, 110.0, 150.0]</div>
           constant-temperature interval; above 100 km the program begins its power-law
           extrapolation and the atmosphere is no longer isothermal.
         </p>
-        <p>
+<p>
           To test convergence, temporarily change <code>dh = scale / 200.0</code> in
           <code>driver_atmosphere.py</code> to <code>scale / 400.0</code> and then
           <code>scale / 800.0</code>, while increasing <code>max_steps</code> enough to reach
           100 km without triggering the step-doubling restart. The error should decrease roughly
           in proportion to the step size, as expected for this first-order Euler update.
         </p>
-        <div class="params">h_points = [0.0, 100000.0]
+<div class="params">h_points = [0.0, 100000.0]
 T_points = [288.15, 288.15]
 output_type = "Pressure"</div>
-      </div>
-
-      <div class="scenario-card">
-        <h4>9 · Advanced Programming Extension — Let Gravity Decrease with Altitude</h4>
-        <p>
+</div>
+<div class="scenario-card">
+<h4>9 · Advanced Programming Extension — Let Gravity Decrease with Altitude</h4>
+<p>
           Schutz's original Help suggested replacing the program's constant value of gravity with
           a height-dependent gravitational acceleration. Make a separate experimental copy of the
           program and replace the constant \(g\) in the hydrostatic step by a function such as
@@ -1172,17 +1116,10 @@ output_type = "Pressure"</div>
           over which the simpler approximation is adequate. This is a natural bridge to later
           stellar-structure calculations, where gravity varies with position.
         </p>
-        <div class="params">advanced: modify the hydrostatic integration to use g(h)</div>
-      </div>
-
-    </section>
-
-    <!-- ============================================================
-     RESTORE TO DEFAULTS CALLOUT
-     ============================================================ -->
-
-<section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
-  <div style="
+<div class="params">advanced: modify the hydrostatic integration to use g(h)</div>
+</div>
+</section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
+<div style="
     border: 1.5px solid #b5811a;
     border-left: 5px solid #b5811a;
     border-radius: 6px;
@@ -1192,12 +1129,11 @@ output_type = "Pressure"</div>
     gap: 1em;
     align-items: flex-start;
   ">
-    <!-- Icon -->
-    <div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
-
-    <!-- Content -->
-    <div>
-      <div style="
+<!-- Icon -->
+<div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
+<!-- Content -->
+<div>
+<div style="
         font-weight: 700;
         font-size: 0.95em;
         color: #7b2d00;
@@ -1205,105 +1141,94 @@ output_type = "Pressure"</div>
         text-transform: uppercase;
         letter-spacing: 0.04em;
       ">Restoring Default Parameter Values</div>
-
-      <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        After experimenting with parameter values in <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>,
-        you can restore the originals using any of the following methods:
+<p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
+        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
+        you can restore the original program files using any of the following methods:
       </p>
-
-      <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
-        <li>
-          <strong>Same session:</strong>
+<ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
+<li>
+<strong>Same session:</strong>
           Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
           (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
-          (macOS) repeatedly in PyCharm to undo your edits.
+          (macOS) repeatedly in your editor to undo your edits.
         </li>
-        <li>
-          <strong>After reopening PyCharm:</strong>
-          Right-click <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
-          in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
         </li>
-        <li>
-          <strong>Full reset:</strong>
+<li>
+<strong>Full reset:</strong>
           Re-download the ZIP from
-          <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank"
-             style="color:#7b2d00; text-decoration:underline;">
+          <a href="https://github.com/tomyee3-org/GFTGU-Programs" style="color:#7b2d00; text-decoration:underline;" target="_blank">
             github.com/tomyee3-org/GFTGU-Programs
           </a>
           and replace this program's folder with the fresh copy.
         </li>
-      </ul>
-
-      <p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
-        For step-by-step instructions on all four restore methods, see
-        <strong>Section&nbsp;10</strong> of the
-        <em>GFTGU Python Setup Guide</em>.
+</ul>
+<p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
+        For additional ways to restore program files, see the corresponding
+        recovery instructions in the <em>GFTGU Python Setup Guide</em>.
       </p>
-    </div>
-  </div>
+</div>
+</div>
 </section>
+<!-- ============================================================
+     RESTORE TO DEFAULTS CALLOUT
+     ============================================================ -->
 
 <!-- ============================================================
      END RESTORE TO DEFAULTS CALLOUT
      ============================================================ -->
-
-    
-    <!-- ── Related Programs ── -->
-    <section id="related">
-      <h2>Related Programs</h2>
-      <p>
+<!-- ── Related Programs ── -->
+<section id="related">
+<h2>Related Programs</h2>
+<p>
         Atmosphere shares the same layered module architecture — physics / driver / plot /
         main — with all other programs in this suite. The programs most closely related
         in physical content are:
       </p>
-      <div class="related-list">
-        <a class="related-chip" href="../08-Star/Star.html">Star</a>
-        <a class="related-chip" href="../20-Neutron/Neutron.html">Neutron</a>
-      </div>
-      <ul>
-        <li>
-          <strong>Star</strong> (Chapter 8) — integrates the analogous Newtonian hydrostatic
+<div class="related-list">
+<a class="related-chip" href="../08-Star/Star.html">Star</a>
+<a class="related-chip" href="../20-Neutron/Neutron.html">Neutron</a>
+</div>
+<ul>
+<li>
+<strong>Star</strong> (Chapter 8) — integrates the analogous Newtonian hydrostatic
           equilibrium equation for a self-gravitating polytropic star. The structure equation
-          \(dp/dr = -G M(r)\,\rho/r^2\) is the stellar generalization of Eq.&nbsp;(7.1),
+          \(dp/dr = -G M(r)\,\rho/r^2\) is the stellar generalization of Eq. (7.1),
           with gravity varying with radius and mass continuity replacing the ideal-gas closure.
         </li>
-        <li>
-          <strong>Neutron</strong> (Chapter 20) — extends stellar structure to general relativity
+<li>
+<strong>Neutron</strong> (Chapter 20) — extends stellar structure to general relativity
           via the Tolman–Oppenheimer–Volkoff (TOV) equation, the relativistic counterpart of
           Atmosphere's hydrostatic step with a polytropic equation of state.
         </li>
-      </ul>
-    </section>
-
-  <!-- ── License ── -->
-  <section id="license">
-    <h2>License</h2>
-    <p>
+</ul>
+</section>
+<!-- ── License ── -->
+<section id="license">
+<h2>License</h2>
+<p>
       This software is based on programs by <strong>Bernard Schutz</strong> accompanying
       <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
       The port is distributed under the
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
          International (CC BY-NC-SA 4.0)</a> license.
     </p>
-    <p>
+<p>
       You are free to share and adapt the material for non-commercial purposes, provided
       you give appropriate credit and distribute any adaptations under the same license.
     </p>
-  </section>
-
-  </main>
-
-  <!-- ══════════════════════ FOOTER ══════════════════════ -->
-    <footer>
-      <em>Gravity from the Ground Up</em> — Python Programs ·
+</section>
+</main>
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer>
+<em>Gravity from the Ground Up</em> — Python Programs ·
       Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
       Python port © 2024–2026 Thomas Yee ·
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
     </footer>
-
 </div><!-- /.page-wrap -->
-
 <!-- ── Active nav link via IntersectionObserver ── -->
 <script>
   (function () {
@@ -1327,6 +1252,5 @@ output_type = "Pressure"</div>
     targets.forEach(t => observer.observe(t));
   })();
 </script>
-
 </body>
 </html>

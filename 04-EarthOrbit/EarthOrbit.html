@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EarthOrbit – Help File | GFtGU Programs</title>
-
-  <!-- MathJax 3 -->
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EarthOrbit – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
     MathJax = {
       tex: {
         inlineMath:  [['\\(','\\)']],
@@ -16,10 +15,8 @@
       options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
-          id="MathJax-script" async></script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
     /* ── Reset & custom properties ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -405,62 +402,51 @@
     }
   </style>
 </head>
-
 <body>
 <div class="page-wrap">
-
 <!-- ═══════════════════════════════════════════════
      HEADER
 ══════════════════════════════════════════════ -->
 <header>
-  <div class="badge">Chapter 4 · Gravity from the Ground Up</div>
-  <h1><em>EarthOrbit</em> — Newton's Cannon</h1>
-  <div class="sub">
+<div class="badge">Chapter 4 · Gravity from the Ground Up</div>
+<h1><em>EarthOrbit</em> — Newton's Cannon</h1>
+<div class="sub">
     Source Code:
-    <a href="https://github.com/tomyee3-org/GFTGU-Programs"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
     <br/>
     Documentation:
-        <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
   </div>
 </header>
-
 <!-- ═══════════════════════════════════════════════
      SIDEBAR NAV
 ══════════════════════════════════════════════ -->
 <nav id="sidebar">
-  <div class="nav-label">Overview</div>
-  <a href="#description">Description</a>
-  <a href="#background">Physical Background</a>
-
-  <div class="nav-label">Mathematics</div>
-  <a href="#equations">Governing Equations</a>
-  <a href="#algorithm">Integration Algorithm</a>
-
-  <div class="nav-label">Code</div>
-  <a href="#modules">Module Overview</a>
-  <a href="#parameters">Parameters</a>
-  <a href="#output">Output</a>
-
-  <div class="nav-label">Experiments</div>
-  <a href="#experiments">Suggested Experiments</a>
-
-  <div class="nav-label">Reference</div>
-  <a href="#related">Related Programs</a>
-  <a href="#license">License</a>
+<div class="nav-label">Overview</div>
+<a href="#description">Description</a>
+<a href="#background">Physical Background</a>
+<div class="nav-label">Mathematics</div>
+<a href="#equations">Governing Equations</a>
+<a href="#algorithm">Integration Algorithm</a>
+<div class="nav-label">Code</div>
+<a href="#modules">Module Overview</a>
+<a href="#parameters">Parameters</a>
+<a href="#output">Output</a>
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
+<div class="nav-label">Reference</div>
+<a href="#related">Related Programs</a>
+<a href="#license">License</a>
 </nav>
-
 <!-- ═══════════════════════════════════════════════
      MAIN CONTENT
 ══════════════════════════════════════════════ -->
 <main>
-
-  <!-- ── Description ── -->
-  <section id="description">
-    <h2>Description</h2>
-    <p>
-      <strong>EarthOrbit</strong> is a numerical realisation of Newton's Cannon — the thought
+<!-- ── Description ── -->
+<section id="description">
+<h2>Description</h2>
+<p>
+<strong>EarthOrbit</strong> is a numerical realisation of Newton's Cannon — the thought
       experiment by which Isaac Newton first explained orbital motion in the <em>Principia</em>
       (1687). A projectile is launched horizontally from a tower high above Earth's surface.
       In the physical inverse-square version of the thought experiment, low launch speeds produce
@@ -470,7 +456,7 @@
       for this exercise: gravity has constant magnitude \(g\) while its direction continually
       points toward Earth's centre.
     </p>
-    <p>
+<p>
       The program integrates the projectile's two-dimensional trajectory using a
       fixed-timestep, averaged-velocity algorithm, plotting
       the result against a reference circle showing Earth's surface. The default force law also
@@ -479,69 +465,65 @@
       Keplerian, and escape experiments. The default model is best used within a few kilometres
       of Earth's surface. All the usual launch parameters are set in <code>main.py</code>.
     </p>
-  </section>
-
-  <!-- ── Physical Background ── -->
-  <section id="background">
-    <h2>Physical Background</h2>
-
-    <h3>Newton's Cannon Thought Experiment</h3>
-    <p>
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
+<!-- ── Physical Background ── -->
+<section id="background">
+<h2>Physical Background</h2>
+<h3>Newton's Cannon Thought Experiment</h3>
+<p>
       Newton imagined a cannon mounted on a mountain so high it clears the atmosphere, firing
       horizontally with increasing powder charges. For the physical inverse-square law, the
       sequence of outcomes illustrates a continuous family of trajectories:
     </p>
-    <ul>
-      <li>
-        <strong>Sub-orbital arc:</strong> below the circular speed the trajectory curves more
+<ul>
+<li>
+<strong>Sub-orbital arc:</strong> below the circular speed the trajectory curves more
         steeply than Earth's surface and the projectile impacts the ground.
       </li>
-      <li>
-        <strong>Circular orbit:</strong> at the circular speed \(v_c\) the curvature of the
+<li>
+<strong>Circular orbit:</strong> at the circular speed \(v_c\) the curvature of the
         trajectory exactly matches Earth's curvature. The projectile never lands.
       </li>
-      <li>
-        <strong>Elliptical orbit:</strong> between \(v_c\) and the escape speed \(v_e\) the
+<li>
+<strong>Elliptical orbit:</strong> between \(v_c\) and the escape speed \(v_e\) the
         orbit is a closed ellipse with the launch point as one of the apsides.
       </li>
-      <li>
-        <strong>Escape trajectory:</strong> for inverse-square gravity, at or above the escape
+<li>
+<strong>Escape trajectory:</strong> for inverse-square gravity, at or above the escape
         speed \(v_e = \sqrt{2}\,v_c\), the projectile leaves Earth and does not return.
       </li>
-    </ul>
-
-    <div class="warn">
-      <strong>Constant magnitude central force versus inverse-square:</strong>
+</ul>
+<div class="warn">
+<strong>Constant magnitude central force versus inverse-square:</strong>
       The default force model used by this program holds the magnitude of the acceleration fixed at
       \(g = 9.8\) m s<sup>−2</sup> while continually redirecting it toward Earth's centre.
       Near the surface this is a useful pedagogical approximation, but it is not the
       inverse-square law and becomes increasingly unrealistic as the orbit ranges far from
       Earth's surface.
-      <br><br>
+      <br/><br/>
       A broader result from classical mechanics, Bertrand's theorem, states that the inverse-square
       and isotropic harmonic-oscillator central forces are the only such force laws for which
       <em>all</em> bounded orbits are
       closed. Under constant-magnitude central force, non-circular bounded trajectories
       generally precess and form rosette patterns rather than Keplerian ellipses. The circular
       orbit remains a special closed case.
-      <br><br>
+      <br/><br/>
       Use <code>"inverse_square"</code> for realistic higher-altitude, Kepler-law,
       and escape-orbit experiments.
     </div>
-
-    <h3>The Inverse-Square Force Law</h3>
-    <p>
+<h3>The Inverse-Square Force Law</h3>
+<p>
       At any distance \(r\) from Earth's centre the gravitational acceleration has magnitude
     </p>
-    <div class="eq-block">
-      <div class="eq-label">Gravitational acceleration (inverse-square law) — Eq. 1</div>
+<div class="eq-block">
+<div class="eq-label">Gravitational acceleration (inverse-square law) — Eq. 1</div>
       \[
         |\mathbf{a}| \;=\; g\!\left(\frac{R_\oplus}{r}\right)^{\!2}
                        \;=\; \frac{k}{r^2},
         \qquad k \;\equiv\; g\,R_\oplus^2
       \]
     </div>
-    <p>
+<p>
       where \(g = 9.8\) m s<sup>−2</sup> and
       \(R_\oplus = 6\,378\,200\) m is a
       reference radius close to Earth's equatorial radius, not the modern mean radius.
@@ -549,63 +531,59 @@
       is close to, but not exactly equal to, the accepted value of \(GM_\oplus\).
       The acceleration direction is always toward the centre.
     </p>
-
-    <h3>Circular and Escape Speeds for the Inverse-Square Law</h3>
-    <p>
+<h3>Circular and Escape Speeds for the Inverse-Square Law</h3>
+<p>
       At orbital radius \(r = R_\oplus + h\):
     </p>
-    <div class="eq-block">
-      <div class="eq-label">Circular speed and escape speed — Eq. 2</div>
+<div class="eq-block">
+<div class="eq-label">Circular speed and escape speed — Eq. 2</div>
       \[
         v_c \;=\; \sqrt{\frac{k}{r}}, \qquad
         v_e \;=\; \sqrt{\frac{2k}{r}} \;=\; \sqrt{2}\,v_c
       \]
     </div>
-
-    <table class="param-table" style="margin-top:.6rem;">
-      <thead>
-        <tr>
-          <th>Altitude h</th>
-          <th>Orbital radius r (m)</th>
-          <th>v<sub>c</sub> (m s<sup>−1</sup>)</th>
-          <th>v<sub>e</sub> (m s<sup>−1</sup>)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>300 m (default h0)</td>
-          <td>6 378 500</td>
-          <td>≈ 7 906</td>
-          <td>≈ 11 181</td>
-        </tr>
-        <tr>
-          <td>300 km (LEO)</td>
-          <td>6 678 200</td>
-          <td>≈ 7 726</td>
-          <td>≈ 10 927</td>
-        </tr>
-        <tr>
-          <td>35 786 km (GEO)</td>
-          <td>42 164 200</td>
-          <td>≈ 3 075</td>
-          <td>≈ 4 348</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- ── Governing Equations ── -->
-  <section id="equations">
-    <h2>Governing Equations</h2>
-
-    <h3>Equations of Motion</h3>
-    <p>
+<table class="param-table" style="margin-top:.6rem;">
+<thead>
+<tr>
+<th>Altitude h</th>
+<th>Orbital radius r (m)</th>
+<th>v<sub>c</sub> (m s<sup>−1</sup>)</th>
+<th>v<sub>e</sub> (m s<sup>−1</sup>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>300 m (default h0)</td>
+<td>6 378 500</td>
+<td>≈ 7 906</td>
+<td>≈ 11 181</td>
+</tr>
+<tr>
+<td>300 km (LEO)</td>
+<td>6 678 200</td>
+<td>≈ 7 726</td>
+<td>≈ 10 927</td>
+</tr>
+<tr>
+<td>35 786 km (GEO)</td>
+<td>42 164 200</td>
+<td>≈ 3 075</td>
+<td>≈ 4 348</td>
+</tr>
+</tbody>
+</table>
+</section>
+<!-- ── Governing Equations ── -->
+<section id="equations">
+<h2>Governing Equations</h2>
+<h3>Equations of Motion</h3>
+<p>
       The state vector is \((x,\,y,\,u,\,v)\), where \((x, y)\) is the projectile position
       in the equatorial plane (with the origin at Earth's centre) and \((u, v)\) is the velocity.
       Newton's second law gives four coupled ODEs:
     </p>
-    <div class="eq-block">
-      <div class="eq-label">Equations of motion — Eq. 3</div>
+<div class="eq-block">
+<div class="eq-label">Equations of motion — Eq. 3</div>
       \[
         \dot{x} = u, \quad \dot{y} = v,
         \qquad
@@ -615,29 +593,28 @@
         r = \sqrt{x^2 + y^2}
       \]
     </div>
-    <p>
+<p>
       where \((a_x, a_y)\) depend on the chosen <code>force_law</code>
       (see <a href="#background">Physical Background</a>):
     </p>
-    <div class="eq-block">
-      <div class="eq-label">"simplified" (default)</div>
+<div class="eq-block">
+<div class="eq-label">"simplified" (default)</div>
       \[
         a_x = -\frac{g\,x}{r}, \qquad a_y = -\frac{g\,y}{r} \qquad (|\mathbf{a}| = g \text{ always})
       \]
     </div>
-    <div class="eq-block">
-      <div class="eq-label">"inverse_square"</div>
+<div class="eq-block">
+<div class="eq-label">"inverse_square"</div>
       \[
         a_x = -\frac{k\,x}{r^3}, \qquad a_y = -\frac{k\,y}{r^3}, \qquad k = g\,R_\oplus^2
       \]
     </div>
-
-    <h3>Initial Conditions</h3>
-    <p>
+<h3>Initial Conditions</h3>
+<p>
       By convention the projectile starts on the positive \(y\)-axis (the "top" of the orbit):
     </p>
-    <div class="eq-block">
-      <div class="eq-label">Initial conditions — Eq. 4</div>
+<div class="eq-block">
+<div class="eq-label">Initial conditions — Eq. 4</div>
       \[
         x_0 = 0, \quad
         y_0 = R_\oplus + h_0, \quad
@@ -645,7 +622,7 @@
         v_0 = v_\text{init}
       \]
     </div>
-    <p>
+<p>
       Because the launch point sits on the \(y\)-axis, \(u\) (the \(x\)-velocity) is the
       <strong>tangential</strong> component and \(v\) (the \(y\)-velocity) is the
       <strong>radial</strong> component at launch. A purely horizontal (tangential) launch
@@ -655,22 +632,19 @@
       Setting \(v_\text{init} \neq 0\) adds a radial velocity component and rotates the
       orbit's orientation.
     </p>
-  </section>
-
-
-  <!-- ── Integration Algorithm ── -->
-  <section id="algorithm">
-    <h2>Integration Algorithm</h2>
-
-    <h3>The Averaged-Velocity Fixed-Step Method</h3>
-    <p>
+</section>
+<!-- ── Integration Algorithm ── -->
+<section id="algorithm">
+<h2>Integration Algorithm</h2>
+<h3>The Averaged-Velocity Fixed-Step Method</h3>
+<p>
       In the integration algorithm employed by this program,
       the acceleration is evaluated at the <em>beginning</em> of each interval,
       the velocity is advanced using that one acceleration value, and the position is then
       advanced using the average of the old and new velocities:
     </p>
-    <div class="eq-block">
-      <div class="eq-label">Integration step — Eq. 5</div>
+<div class="eq-block">
+<div class="eq-label">Integration step — Eq. 5</div>
       \[
         u_1 = u_0 + a_x(x_0,y_0)\,\Delta t, \quad
         v_1 = v_0 + a_y(x_0,y_0)\,\Delta t
@@ -680,29 +654,27 @@
         y \;\leftarrow\; y_0 + \tfrac{1}{2}(v_0 + v_1)\,\Delta t
       \]
     </div>
-    <p>
+<p>
       This simple algorithm has limitations. For constant acceleration it gives the exact
       kinematic position update; for position-dependent gravity it accumulates numerical error. Quantitative orbital tests
       should therefore be repeated with smaller <code>dt</code> to check convergence.
     </p>
-
-    <h3>Termination Conditions</h3>
-    <p>
+<h3>Termination Conditions</h3>
+<p>
       After each step the driver evaluates \(r = \sqrt{x^2 + y^2}\) and stops when either:
     </p>
-    <ul>
-      <li>\(r < R_\oplus\) — the projectile has hit Earth's surface, or</li>
-      <li>the step counter reaches <code>maxSteps</code> — the budget is exhausted.</li>
-    </ul>
-    <p>
+<ul>
+<li>\(r &lt; R_\oplus\) — the projectile has hit Earth's surface, or</li>
+<li>the step counter reaches <code>maxSteps</code> — the budget is exhausted.</li>
+</ul>
+<p>
       The trajectory arrays are trimmed to the number of stored points actually produced before
       being returned. If the projectile hits Earth, the final plotted point may lie slightly below
       the surface circle because the driver stops after detecting \(r &lt; R_\oplus\); it does not
       interpolate the exact surface-crossing point between timesteps.
     </p>
-
-    <div class="note">
-      <strong>Choosing dt and maxSteps:</strong>
+<div class="note">
+<strong>Choosing dt and maxSteps:</strong>
       At the default <code>dt = 0.4</code> s and launch speed ≈ 7 900 m s<sup>−1</sup>,
       one near-surface revolution takes roughly 5 070 s, requiring about 12 673 integration
       updates. <code>maxSteps</code> counts stored trajectory points, including the initial point,
@@ -712,19 +684,16 @@
       <code>maxSteps</code>; for better numerical accuracy decrease <code>dt</code> and increase
       <code>maxSteps</code> so the desired simulated duration is retained.
     </div>
-  </section>
-
-  <!-- ── Module Overview ── -->
-  <section id="modules">
-    <h2>Module Overview</h2>
-
-    <div class="module-grid">
-
-      <!-- physics -->
-      <div class="module-card">
-        <div class="mc-role">Physics Layer</div>
-        <div class="mc-name">physics_earthorbit.py</div>
-        <p>
+</section>
+<!-- ── Module Overview ── -->
+<section id="modules">
+<h2>Module Overview</h2>
+<div class="module-grid">
+<!-- physics -->
+<div class="module-card">
+<div class="mc-role">Physics Layer</div>
+<div class="mc-name">physics_earthorbit.py</div>
+<p>
           Defines Earth's physical constants and <strong>two</strong> selectable gravitational
           force laws via the <code>force_law</code> argument to
           <code>compute_acceleration()</code>: the constant-magnitude <code>"simplified"</code>
@@ -734,22 +703,21 @@
           <code>K_APPROX</code> is derived from them and is only approximately
           \(GM_\oplus\).
         </p>
-        <div class="sig">G_SURFACE = 9.8
+<div class="sig">G_SURFACE = 9.8
 R_EARTH   = 6_378_200.0   # m; reference radius
 K_APPROX = G_SURFACE * R_EARTH**2  # close to GM_Earth
 
 ForceLaw = Literal["simplified", "inverse_square"]
 
-def compute_acceleration(x, y, force_law="simplified") -> (ax, ay)
+def compute_acceleration(x, y, force_law="simplified") -&gt; (ax, ay)
     # "simplified":      ax = -G_SURFACE * x / r,  ay = -G_SURFACE * y / r
     # "inverse_square":  ax = -K_APPROX * x / r³,   ay = -K_APPROX * y / r³</div>
-      </div>
-
-      <!-- driver -->
-      <div class="module-card">
-        <div class="mc-role">Driver Layer</div>
-        <div class="mc-name">driver_earthorbit.py</div>
-        <p>
+</div>
+<!-- driver -->
+<div class="module-card">
+<div class="mc-role">Driver Layer</div>
+<div class="mc-name">driver_earthorbit.py</div>
+<p>
           Implements the fixed-step averaged-velocity integration loop. Imports
           <code>compute_acceleration</code>, <code>R_EARTH</code>, and <code>ForceLaw</code>
           from the physics module, and forwards <code>force_law</code> to
@@ -758,7 +726,7 @@ def compute_acceleration(x, y, force_law="simplified") -> (ax, ay)
           <code>maxSteps</code> is reached. With <code>return_diagnostics=True</code>, it also
           returns time and velocity arrays for quantitative experiments.
         </p>
-        <div class="sig">from physics_earthorbit import compute_acceleration, R_EARTH, ForceLaw
+<div class="sig">from physics_earthorbit import compute_acceleration, R_EARTH, ForceLaw
 
 def run_earth_orbit(
     h0        = 300.0,
@@ -769,34 +737,32 @@ def run_earth_orbit(
     force_law: ForceLaw = "simplified",
     return_diagnostics = False
 )</div>
-      </div>
-
-      <!-- plot -->
-      <div class="module-card">
-        <div class="mc-role">Plot Layer</div>
-        <div class="mc-name">plot_earthorbit.py</div>
-        <p>
+</div>
+<!-- plot -->
+<div class="module-card">
+<div class="mc-role">Plot Layer</div>
+<div class="mc-name">plot_earthorbit.py</div>
+<p>
           Renders the trajectory and Earth's surface circle on a single equal-aspect matplotlib
           figure. Contains no physics or integration logic. Imports only matplotlib.
         </p>
-        <div class="sig">def plot_earth_orbit(xs, ys, xEarth, yEarth)
+<div class="sig">def plot_earth_orbit(xs, ys, xEarth, yEarth)
     # Blue dashed:  Earth surface (xEarth, yEarth)
     # Red solid:    Projectile trajectory (xs, ys)
     # Equal aspect, grid, legend
     # Title: "EarthOrbit — Attempting to Achieve Orbit"</div>
-      </div>
-
-      <!-- main -->
-      <div class="module-card">
-        <div class="mc-role">Entry Point</div>
-        <div class="mc-name">main.py</div>
-        <p>
+</div>
+<!-- main -->
+<div class="module-card">
+<div class="mc-role">Entry Point</div>
+<div class="mc-name">main.py</div>
+<p>
           The only file most users need to edit. Set the launch parameters and
           <code>force_law</code> here, then run <code>python main.py</code>. The plot appears
           immediately. <code>uInit</code> is the x/tangential (horizontal-at-launch)
           component, and <code>vInit</code> is the y/radial (vertical-at-launch) component.
         </p>
-        <div class="sig">from driver_earthorbit import run_earth_orbit
+<div class="sig">from driver_earthorbit import run_earth_orbit
 from plot_earthorbit  import plot_earth_orbit
 
 force_law = "simplified"
@@ -810,49 +776,45 @@ xs, ys, xEarth, yEarth = run_earth_orbit(
 )
 
 plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
-      </div>
-
-    </div><!-- /module-grid -->
-  </section>
-
-  <!-- ── Parameters ── -->
-  <section id="parameters">
-    <h2>Parameters</h2>
-
-    <p>
+</div>
+</div><!-- /module-grid -->
+</section>
+<!-- ── Parameters ── -->
+<section id="parameters">
+<h2>Parameters</h2>
+<p>
       All ordinary launch parameters are set as arguments to <code>run_earth_orbit()</code>
       in <code>main.py</code>. The defaults reproduce the Newton's Cannon setup:
       a tangential launch at 7 900 m s<sup>−1</sup> from 300 m above the reference Earth
       radius, using the constant-magnitude-\(g\) force law.
     </p>
-
-    <table class="param-table">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-          <th>Default</th>
-          <th>Units</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="pname">h0</td>
-          <td class="pdefault">300.0</td>
-          <td>m</td>
-          <td>
+<table class="param-table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Units</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="pname">h0</td>
+<td class="pdefault">300.0</td>
+<td>m</td>
+<td>
             Initial altitude above Earth's surface. The starting position is
             \((0,\;R_\oplus + h_0)\). The default is 300 <em>metres</em>, not
             kilometres — just above the height of the Eiffel Tower, representing
             Newton's idealised mountain-top. For a realistic low-Earth orbit use
             <code>h0 = 300_000.0</code>.
           </td>
-        </tr>
-        <tr>
-          <td class="pname">uInit</td>
-          <td class="pdefault">7900.0</td>
-          <td>m s<sup>−1</sup></td>
-          <td>
+</tr>
+<tr>
+<td class="pname">uInit</td>
+<td class="pdefault">7900.0</td>
+<td>m s<sup>−1</sup></td>
+<td>
             Initial x-velocity (<strong>tangential/horizontal</strong> at launch, since the
             launch point sits on the \(y\)-axis). The inverse-square circular-speed estimate
             at 300 m altitude is \(v_c \approx 7\,906\) m s<sup>−1</sup>. The default setup
@@ -860,138 +822,130 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
             to see their effects. Because the numerical method is approximate, a trajectory that looks circular on
             the whole-Earth plot should not be interpreted as a high-precision orbit.
           </td>
-        </tr>
-        <tr>
-          <td class="pname">vInit</td>
-          <td class="pdefault">0.0</td>
-          <td>m s<sup>−1</sup></td>
-          <td>
+</tr>
+<tr>
+<td class="pname">vInit</td>
+<td class="pdefault">0.0</td>
+<td>m s<sup>−1</sup></td>
+<td>
             Initial y-velocity (<strong>radial/vertical</strong> at launch). Zero gives a
             purely tangential launch and places the start point at an apsis when the tangential
             speed is not exactly circular. A non-zero value adds a radial component and changes
             the orbit's orientation and eccentricity.
           </td>
-        </tr>
-        <tr>
-          <td class="pname">dt</td>
-          <td class="pdefault">0.4</td>
-          <td>s</td>
-          <td>
+</tr>
+<tr>
+<td class="pname">dt</td>
+<td class="pdefault">0.4</td>
+<td>s</td>
+<td>
             Fixed integration timestep. Smaller values generally improve numerical accuracy;
             excessively large timesteps can distort the trajectory. Halving <code>dt</code>
             while approximately doubling <code>maxSteps</code> preserves the simulated duration
             while increasing temporal resolution.
           </td>
-        </tr>
-        <tr>
-          <td class="pname">maxSteps</td>
-          <td class="pdefault">15000</td>
-          <td>—</td>
-          <td>
+</tr>
+<tr>
+<td class="pname">maxSteps</td>
+<td class="pdefault">15000</td>
+<td>—</td>
+<td>
             Maximum number of stored trajectory points, including the initial position. The loop
             can therefore perform at most <code>maxSteps - 1</code> integration updates. At
             <code>dt = 0.4</code> s the default covers about 6 000 s of simulated time — just over
             one orbital period at 300 m altitude (\(T \approx 5\,070\) s). Increase for longer
             simulations or higher orbits with longer periods.
           </td>
-        </tr>
-        <tr>
-          <td class="pname">return_diagnostics</td>
-          <td class="pdefault">False</td>
-          <td>—</td>
-          <td>
+</tr>
+<tr>
+<td class="pname">return_diagnostics</td>
+<td class="pdefault">False</td>
+<td>—</td>
+<td>
             Optional analysis output. When <code>True</code>, the driver returns
             <code>ts</code>, <code>us</code>, and <code>vs</code> after the usual four arrays.
             This is useful for period and energy experiments and leaves the normal plotting
             interface unchanged when <code>False</code>.
           </td>
-        </tr>
-        <tr>
-          <td class="pname">force_law</td>
-          <td class="pdefault">"simplified"</td>
-          <td>—</td>
-          <td>
-            <code>"simplified"</code> (default) runs the simulation using the constant-magnitude
+</tr>
+<tr>
+<td class="pname">force_law</td>
+<td class="pdefault">"simplified"</td>
+<td>—</td>
+<td>
+<code>"simplified"</code> (default) runs the simulation using the constant-magnitude
             approximation; <code>"inverse_square"</code> switches to the inverse-square
             force law. Several Suggested Experiments below (Keplerian ellipses, escape, and
             Kepler's third law) require <code>"inverse_square"</code> explicitly. Under the
             default constant-magnitude force, non-circular bounded trajectories generally
             precess rather than tracing a fixed Kepler ellipse.
           </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="warn">
-      <strong>Altitude units — common mistake:</strong>
-      <code>h0</code> is in <em>metres</em>. Setting <code>h0 = 300</code> gives an altitude
+</tr>
+</tbody>
+</table>
+<div class="warn">
+<strong>Altitude units — common mistake:</strong>
+<code>h0</code> is in <em>metres</em>. Setting <code>h0 = 300</code> gives an altitude
       of 300 m (just above the surface), not 300 km. To simulate a realistic low-Earth orbit
       at the altitude of the International Space Station, use <code>h0 = 408_000</code>
       (408 km = 408 000 m) with <code>uInit ≈ 7\,665</code> m s<sup>−1</sup> (tangential)
       when using <code>force_law="inverse_square"</code>.
     </div>
-
-    <div class="note">
-      <strong>Accepted parameter values:</strong>
-      <code>h0</code> must be non-negative, <code>dt</code> must be positive,
+<div class="note">
+<strong>Accepted parameter values:</strong>
+<code>h0</code> must be non-negative, <code>dt</code> must be positive,
       <code>maxSteps</code> must be an integer of at least 2, and the altitude and velocity values
       must be finite numbers. An unrecognised <code>force_law</code> also produces a clear
       <code>ValueError</code> rather than a misleading plot.
     </div>
-  </section>
-
-  <!-- ── Output ── -->
-  <section id="output">
-    <h2>Output</h2>
-
-    <p>
+</section>
+<!-- ── Output ── -->
+<section id="output">
+<h2>Output</h2>
+<p>
       The program produces a single matplotlib figure with two overlaid curves on shared
       equal-aspect axes:
     </p>
-    <ul>
-      <li>
-        <strong>Blue dashed circle</strong> — Earth's surface, drawn as 401 evenly spaced
+<ul>
+<li>
+<strong>Blue dashed circle</strong> — Earth's surface, drawn as 401 evenly spaced
         points on a circle of radius \(R_\oplus\). This is pre-computed by the driver and
         passed to the plotter as <code>xEarth, yEarth</code>.
       </li>
-      <li>
-        <strong>Red solid line</strong> — the projectile trajectory \((x_j, y_j)\) for
+<li>
+<strong>Red solid line</strong> — the projectile trajectory \((x_j, y_j)\) for
         all accepted steps, from the launch point until surface impact or step budget
         exhaustion.
       </li>
-    </ul>
-    <p>
+</ul>
+<p>
       The axis labels are "x (meters)" and "y (meters)". The aspect ratio is forced equal
       so that the Earth appears as a true circle and orbital ellipses are not distorted.
       A legend and grid are included; the title reads
       <em>EarthOrbit — Attempting to Achieve Orbit</em>.
     </p>
-    <p>
+<p>
       By default <code>run_earth_orbit()</code> returns the same four arrays used by the
       plotter. For quantitative work, call it with <code>return_diagnostics=True</code>; the
       function then additionally returns <code>ts</code>, <code>us</code>, and <code>vs</code>,
       aligned with the position arrays. These make it straightforward to estimate orbital
       periods, plot speed, or examine numerical energy error.
     </p>
-  </section>
-
-  <!-- ── Suggested Experiments ── -->
-  <section id="experiments">
-    <h2>Suggested Experiments</h2>
-
-    <div class="note">
-      <strong>Suggested order:</strong> The experiments below are arranged from introductory
+</section>
+<!-- ── Suggested Experiments ── -->
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<div class="note">
+<strong>Suggested order:</strong> The experiments below are arranged from introductory
       parameter exploration to more demanding numerical-analysis work. Experiments 1–3 require
       only edits to the values passed from <code>main.py</code>; later experiments progressively
       ask for additional calculations or small code changes.
     </div>
-
-    <div class="exp-grid">
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-1 · INTRODUCTORY</div>
-        <h4>Find the Circular Speed</h4>
-        <p>
+<div class="exp-grid">
+<div class="exp-card">
+<div class="ec-num">EXP-1 · INTRODUCTORY</div>
+<h4>Find the Circular Speed</h4>
+<p>
           Begin with the default near-surface setup: <code>h0=300.0</code>,
           <code>vInit=0.0</code>, and <code>force_law="simplified"</code>. Start at
           7 900 m s<sup>−1</sup> and increase the horizontal launch speed toward
@@ -999,205 +953,196 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
           Earth's surface for a full revolution. Then compare your result with the theoretical
           circular-speed condition \(v_c=\sqrt{gr}\).
         </p>
-        <p>
+<p>
           Repeat with <code>force_law="inverse_square"</code>. At only 300 m altitude the two
           theoretical circular speeds differ by less than 0.4 m s<sup>−1</sup>, so the same scan
           works for both models. Reduce <code>dt</code> if you want to distinguish numerical error
           from the physical difference between the two force laws.
         </p>
-        <div class="ep">h0=300.0, vInit=0.0
+<div class="ep">h0=300.0, vInit=0.0
 uInit=7906.0  # scan upward from 7900
 force_law="simplified"</div>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-2 · INTRODUCTORY</div>
-        <h4>How Sensitive Is the Orbit to Launch Speed?</h4>
-        <p>
+</div>
+<div class="exp-card">
+<div class="ec-num">EXP-2 · INTRODUCTORY</div>
+<h4>How Sensitive Is the Orbit to Launch Speed?</h4>
+<p>
           Keep the 300 m starting altitude and vary only <code>uInit</code> through values such as
           7 800, 7 850, 7 900, and the circular value found in Experiment 1. Compare how far each
           projectile travels before striking Earth. This is the central qualitative lesson of
           Newton's cannon: a change of only a few metres per second near orbital speed can make a
           large difference to the trajectory.
         </p>
-        <p>
+<p>
           Very low speeds such as 5 000 m s<sup>−1</sup> strike the surface so quickly that the
           trajectory is nearly indistinguishable from a dot on a whole-Earth plot.
         </p>
-        <div class="ep">h0=300.0, vInit=0.0
+<div class="ep">h0=300.0, vInit=0.0
 uInit=7800, 7850, 7900, 7906
 force_law="simplified"</div>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-3 · INTRODUCTORY–INTERMEDIATE</div>
-        <h4>Compare the Two Force Laws</h4>
-        <p>
+</div>
+<div class="exp-card">
+<div class="ec-num">EXP-3 · INTRODUCTORY–INTERMEDIATE</div>
+<h4>Compare the Two Force Laws</h4>
+<p>
           First repeat a near-surface orbit with both <code>force_law="simplified"</code> and
           <code>force_law="inverse_square"</code>. The trajectories should be very similar because
           the altitude is tiny compared with Earth's radius. Then raise the starting altitude to
           300 km and use the appropriate circular speed for each law. Compare the resulting orbital
           speeds and periods.
         </p>
-        <p>
+<p>
           This experiment shows directly where the constant-magnitude-\(g\) approximation is useful
           and where it ceases to represent terrestrial gravity well. At 300 km the two circular
           speeds already differ by several percent.
         </p>
-        <div class="ep"># Near surface: h0=300.0
+<div class="ep"># Near surface: h0=300.0
 # Higher altitude: h0=300_000.0
 # Run each case with both force laws.</div>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-4 · INTERMEDIATE · SCHUTZ SUGGESTION</div>
-        <h4>Interpolate the Impact Point</h4>
-        <p>
+</div>
+<div class="exp-card">
+<div class="ec-num">EXP-4 · INTERMEDIATE · SCHUTZ SUGGESTION</div>
+<h4>Interpolate the Impact Point</h4>
+<p>
           For a sub-orbital launch, the integration stops after the first stored point has moved
           inside Earth. The actual impact therefore occurred between the final two samples. Use
           the last two radii, \(r_{n-1}\ge R_\oplus\) and \(r_n&lt;R_\oplus\), to estimate where the
           trajectory crossed Earth's surface rather than treating the final inside-Earth point as
           the impact location.
         </p>
-        <p>
+<p>
           A simple first attempt is linear interpolation in the fraction
           \(f=(r_{n-1}-R_\oplus)/(r_{n-1}-r_n)\), followed by interpolation of both \(x\) and \(y\)
           between the two samples. Compare the interpolated point with the raw final point, and
           repeat with smaller <code>dt</code>. As an optional programming exercise, modify the driver
           so that the interpolated surface crossing replaces the below-surface endpoint.
         </p>
-        <div class="ep">from physics_earthorbit import R_EARTH
+<div class="ep">from physics_earthorbit import R_EARTH
 
 r = np.hypot(xs, ys)
 f = (r[-2] - R_EARTH) / (r[-2] - r[-1])
 x_hit = xs[-2] + f * (xs[-1] - xs[-2])
 y_hit = ys[-2] + f * (ys[-1] - ys[-2])</div>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-5 · INTERMEDIATE</div>
-        <h4>Radial Launch Component</h4>
-        <p>
+</div>
+<div class="exp-card">
+<div class="ec-num">EXP-5 · INTERMEDIATE</div>
+<h4>Radial Launch Component</h4>
+<p>
           Use the inverse-square extension at a higher starting altitude so an eccentric orbit has
           room to develop without immediately intersecting Earth. Keep the total speed close to the
           local circular speed but give the projectile a radial component. Compare the resulting
           orbit with the purely tangential circular case.
         </p>
-        <p>
+<p>
           The orbit is no longer circular even though the total launch speed is almost unchanged.
           <strong>Use <code>force_law="inverse_square"</code></strong> for the intended Keplerian
           interpretation.
         </p>
-        <div class="ep">h0=1_000_000.0
+<div class="ep">h0=1_000_000.0
 uInit=7307.0, vInit=800.0  # |v|≈7351 m/s ≈ local v_c
 dt=1.0, maxSteps=10000
 force_law="inverse_square"</div>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-6 · INTERMEDIATE</div>
-        <h4>Elliptical Orbit at LEO Altitude</h4>
-        <p>
+</div>
+<div class="exp-card">
+<div class="ec-num">EXP-6 · INTERMEDIATE</div>
+<h4>Elliptical Orbit at LEO Altitude</h4>
+<p>
           Start at 300 km altitude with no radial velocity and set the tangential speed above the
           local circular value. The launch point is then the perigee of an ellipse with a higher
           apogee. Try several launch speeds and observe how the eccentricity changes. Increase
           <code>maxSteps</code> as needed to capture a complete orbit.
         </p>
-        <p>
-          <strong>Requires <code>force_law="inverse_square"</code>.</strong> Under the default
+<p>
+<strong>Requires <code>force_law="inverse_square"</code>.</strong> Under the default
           constant-magnitude force, non-circular bounded trajectories generally precess into
           rosettes instead of remaining fixed Keplerian ellipses.
         </p>
-        <div class="ep">h0=300_000.0, vInit=0.0
+<div class="ep">h0=300_000.0, vInit=0.0
 uInit=9000.0, maxSteps=50000
 force_law="inverse_square"</div>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-7 · INTERMEDIATE</div>
-        <h4>Geostationary-Altitude Orbit</h4>
-        <p>
+</div>
+<div class="exp-card">
+<div class="ec-num">EXP-7 · INTERMEDIATE</div>
+<h4>Geostationary-Altitude Orbit</h4>
+<p>
           Use the inverse-square law at an altitude of about 35 786 km with a circular speed near
           3 075 m s<sup>−1</sup>. Estimate the period from the trajectory and compare it with one
           sidereal day (about 23 h 56 min). A timestep of 10 s is small compared with the orbital
           period while keeping the number of integration steps manageable.
         </p>
-        <p>
+<p>
           This is a useful real-world check on the inverse-square extension. The simulation is
           two-dimensional and does not model Earth's rotation, so it reproduces the orbital period
           associated with geostationary altitude rather than geographic station-keeping itself.
         </p>
-        <div class="ep">h0=35_786_000.0, vInit=0.0
+<div class="ep">h0=35_786_000.0, vInit=0.0
 uInit=3075.0
 dt=10.0, maxSteps=10000
 force_law="inverse_square"</div>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-8 · INTERMEDIATE–ADVANCED</div>
-        <h4>Approach the Escape Speed</h4>
-        <p>
+</div>
+<div class="exp-card">
+<div class="ec-num">EXP-8 · INTERMEDIATE–ADVANCED</div>
+<h4>Approach the Escape Speed</h4>
+<p>
           At 300 km altitude the inverse-square escape speed is about
           10 927 m s<sup>−1</sup>. Start somewhat below this value and increase the launch speed.
           Watch a bound ellipse become more elongated as the speed approaches escape. At or above
           the escape speed the trajectory does not return, so <code>maxSteps</code> determines how
           much of the open path is calculated.
         </p>
-        <p>
-          <strong>Requires <code>force_law="inverse_square"</code>.</strong> The default
+<p>
+<strong>Requires <code>force_law="inverse_square"</code>.</strong> The default
           constant-magnitude central force has a potential that increases without bound with
           distance, so it has no finite escape speed.
         </p>
-        <div class="ep">h0=300_000.0, vInit=0.0
+<div class="ep">h0=300_000.0, vInit=0.0
 uInit=10900.0, maxSteps=100000
 force_law="inverse_square"</div>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-9 · ADVANCED</div>
-        <h4>Verify Kepler's Third Law</h4>
-        <p>
+</div>
+<div class="exp-card">
+<div class="ec-num">EXP-9 · ADVANCED</div>
+<h4>Verify Kepler's Third Law</h4>
+<p>
           Run nearly circular inverse-square orbits at several altitudes with
           <code>return_diagnostics=True</code>. In this mode, <code>run_earth_orbit()</code> returns
           seven arrays: <code>xs</code>, <code>ys</code>, <code>xEarth</code>, <code>yEarth</code>,
           <code>ts</code>, <code>us</code>, and <code>vs</code>. For this experiment you need only
           <code>xs</code>, <code>ys</code>, and <code>ts</code>.
         </p>
-        <p>
+<p>
           Compute the angular position with <code>np.unwrap(np.arctan2(ys, xs))</code>. Estimate the
-          period <em>T</em> when the accumulated angular change first reaches 2&pi;; interpolation
+          period <em>T</em> when the accumulated angular change first reaches 2π; interpolation
           between the surrounding samples gives a better estimate. Compare several orbital radii
           and confirm that \(T^2/r^3\) is approximately constant. Repeat with smaller
           <code>dt</code> to check numerical convergence. As a contrast, circular orbits under the
           constant-magnitude force obey \(T^2\propto r\), not Kepler's third law.
         </p>
-        <div class="ep">result = run_earth_orbit(..., return_diagnostics=True)
+<div class="ep">result = run_earth_orbit(..., return_diagnostics=True)
 xs, ys, xEarth, yEarth, ts, us, vs = result
 
 theta = np.unwrap(np.arctan2(ys, xs))
 angle_travelled = np.abs(theta - theta[0])
 # Find when angle_travelled first reaches 2*pi.
 force_law="inverse_square"</div>
-      </div>
-
-      <div class="exp-card">
-        <div class="ec-num">EXP-10 · ADVANCED</div>
-        <h4>Energy Conservation and Timestep Error</h4>
-        <p>
+</div>
+<div class="exp-card">
+<div class="ec-num">EXP-10 · ADVANCED</div>
+<h4>Energy Conservation and Timestep Error</h4>
+<p>
           Use <code>return_diagnostics=True</code> so that the position and velocity histories are
           available. At each stored point calculate \(r=\sqrt{x^2+y^2}\) and the speed squared
           \(u^2+v^2\). For <code>"inverse_square"</code>, calculate the specific mechanical energy
           \(\mathcal{E}=\tfrac12(u^2+v^2)-k/r\); for <code>"simplified"</code>, use
           \(\mathcal{E}=\tfrac12(u^2+v^2)+gr\).
         </p>
-        <p>
+<p>
           Plot \(\mathcal{E}(t)-\mathcal{E}(0)\). The continuous equations conserve energy, but
           this fixed-timestep numerical algorithm does not conserve it exactly. Halve
           <code>dt</code> while increasing <code>maxSteps</code> enough to keep the same simulated
           duration, and verify that the energy error decreases. This experiment is the most direct
           quantitative test here of the limitations of the integration method itself.
         </p>
-        <div class="ep">from physics_earthorbit import K_APPROX, G_SURFACE
+<div class="ep">from physics_earthorbit import K_APPROX, G_SURFACE
 
 xs, ys, xEarth, yEarth, ts, us, vs = run_earth_orbit(
     ..., return_diagnostics=True)
@@ -1206,17 +1151,10 @@ speed_squared = us**2 + vs**2
 # inverse_square: E = 0.5*speed_squared - K_APPROX/r
 # simplified:     E = 0.5*speed_squared + G_SURFACE*r
 # Plot E - E[0] against ts.</div>
-      </div>
-
-    </div><!-- /exp-grid -->
-  </section>
-  
-  <!-- ============================================================
-     RESTORE TO DEFAULTS CALLOUT
-     ============================================================ -->
-
-<section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
-  <div style="
+</div>
+</div><!-- /exp-grid -->
+</section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
+<div style="
     border: 1.5px solid #b5811a;
     border-left: 5px solid #b5811a;
     border-radius: 6px;
@@ -1226,12 +1164,11 @@ speed_squared = us**2 + vs**2
     gap: 1em;
     align-items: flex-start;
   ">
-    <!-- Icon -->
-    <div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
-
-    <!-- Content -->
-    <div>
-      <div style="
+<!-- Icon -->
+<div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
+<!-- Content -->
+<div>
+<div style="
         font-weight: 700;
         font-size: 0.95em;
         color: #7b2d00;
@@ -1239,116 +1176,105 @@ speed_squared = us**2 + vs**2
         text-transform: uppercase;
         letter-spacing: 0.04em;
       ">Restoring Default Parameter Values</div>
-
-      <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        After experimenting with parameter values in <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>,
-        you can restore the originals using any of the following methods:
+<p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
+        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
+        you can restore the original program files using any of the following methods:
       </p>
-
-      <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
-        <li>
-          <strong>Same session:</strong>
+<ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
+<li>
+<strong>Same session:</strong>
           Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
           (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
-          (macOS) repeatedly in PyCharm to undo your edits.
+          (macOS) repeatedly in your editor to undo your edits.
         </li>
-        <li>
-          <strong>After reopening PyCharm:</strong>
-          Right-click <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
-          in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
         </li>
-        <li>
-          <strong>Full reset:</strong>
+<li>
+<strong>Full reset:</strong>
           Re-download the ZIP from
-          <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank"
-             style="color:#7b2d00; text-decoration:underline;">
+          <a href="https://github.com/tomyee3-org/GFTGU-Programs" style="color:#7b2d00; text-decoration:underline;" target="_blank">
             github.com/tomyee3-org/GFTGU-Programs
           </a>
           and replace this program's folder with the fresh copy.
         </li>
-      </ul>
-
-      <p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
-        For step-by-step instructions on all four restore methods, see
-        <strong>Section&nbsp;10</strong> of the
-        <em>GFTGU Python Setup Guide</em>.
+</ul>
+<p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
+        For additional ways to restore program files, see the corresponding
+        recovery instructions in the <em>GFTGU Python Setup Guide</em>.
       </p>
-    </div>
-  </div>
+</div>
+</div>
 </section>
+<!-- ============================================================
+     RESTORE TO DEFAULTS CALLOUT
+     ============================================================ -->
 
 <!-- ============================================================
      END RESTORE TO DEFAULTS CALLOUT
      ============================================================ -->
-
-
-  <!-- ── Related Programs ── -->
-  <section id="related">
-    <h2>Related Programs</h2>
-    <ul class="related-list">
-      <li>
-        <strong>CannonTrajectory</strong> — the simpler near-surface projectile calculation on
+<!-- ── Related Programs ── -->
+<section id="related">
+<h2>Related Programs</h2>
+<ul class="related-list">
+<li>
+<strong>CannonTrajectory</strong> — the simpler near-surface projectile calculation on
         which EarthOrbit builds. EarthOrbit adds the essential new feature that the direction of
         gravitational acceleration changes with position so that it always points toward Earth's
         centre; the underlying mathematics is developed in Investigations 4.1 and 4.2.
       </li>
-      <li>
-        <strong>Orbit</strong> — the general planetary orbit program (Chapter 4). Uses a
+<li>
+<strong>Orbit</strong> — the general planetary orbit program (Chapter 4). Uses a
         predictor-corrector scheme with adaptive timestep rather than EarthOrbit's simple
         fixed-step algorithm; supports multiple output modes including energy and velocity
         hodographs. EarthOrbit is the pedagogically simpler version focused specifically on
         Newton's Cannon.
       </li>
-      <li>
-        <strong>RelativisticOrbit</strong> — explores strong-field orbital behaviour with
+<li>
+<strong>RelativisticOrbit</strong> — explores strong-field orbital behaviour with
         an effective relativistic correction to the orbital acceleration (Chapter 21).
         It shares the predictor-corrector integration core used by Orbit.
       </li>
-      <li>
-        <strong>Binary</strong> — extends the Orbit integrator to a two-body system with
+<li>
+<strong>Binary</strong> — extends the Orbit integrator to a two-body system with
         mutual gravitational interaction (Chapter 13). Both bodies move under Newton's
         law; the predictor-corrector loop handles the coupled equations simultaneously.
       </li>
-      <li>
-        <strong>Atmosphere</strong> — companion program (Chapter 7) covering the related
+<li>
+<strong>Atmosphere</strong> — companion program (Chapter 7) covering the related
         problem of vertical hydrostatic equilibrium in a planetary atmosphere, where the
         same constant-g vs. inverse-square distinction arises.
       </li>
-    </ul>
-  </section>
-
-  <!-- ── License ── -->
-  <section id="license">
-    <h2>License</h2>
-    <p>
+</ul>
+</section>
+<!-- ── License ── -->
+<section id="license">
+<h2>License</h2>
+<p>
       This Python port is derived from the original Java programs by
       <strong>Bernard Schutz</strong> accompanying
       <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
       The port is distributed under the
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
          International (CC BY-NC-SA 4.0)</a> license.
     </p>
-    <p>
+<p>
       You are free to share and adapt the material for non-commercial purposes, provided
       you give appropriate credit and distribute any adaptations under the same license.
     </p>
-  </section>
-
+</section>
 </main>
-
 <!-- ═══════════════════════════════════════════════
      FOOTER
 ══════════════════════════════════════════════ -->
 <footer>
-  <em>Gravity from the Ground Up</em> — Python Programs ·
+<em>Gravity from the Ground Up</em> — Python Programs ·
   Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
   Python port © 2024–2026 Thomas Yee ·
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
 </footer>
-
 </div><!-- /page-wrap -->
-
 <!-- ── Active-link tracker ── -->
 <script>
   const sections = document.querySelectorAll('section[id]');
@@ -1364,6 +1290,5 @@ speed_squared = us**2 + vs**2
   }, { rootMargin: '-30% 0px -60% 0px' });
   sections.forEach(s => io.observe(s));
 </script>
-
 </body>
 </html>

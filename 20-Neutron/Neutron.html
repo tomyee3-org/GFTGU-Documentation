@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Neutron – Help File | GFtGU Programs</title>
-
-  <!-- MathJax 3 -->
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Neutron – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
     MathJax = {
       tex: {
         inlineMath:  [['\\(','\\)']],
@@ -16,10 +15,8 @@
       options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
-          id="MathJax-script" async></script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
     /* ── Reset & custom properties ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -316,68 +313,58 @@
 
   </style>
 </head>
-
 <body>
 <div class="page-wrap">
-
 <!-- ════════════════════════════════════════════
      HEADER
 ════════════════════════════════════════════ -->
 <header>
-  <div class="badge">GFtGU Programs</div>
-  <h1>Neutron &mdash; <em>Neutron Star Structure</em></h1>
-  <div class="sub">
+<div class="badge">GFtGU Programs</div>
+<h1>Neutron — <em>Neutron Star Structure</em></h1>
+<div class="sub">
     Source Code:
-    <a href="https://github.com/tomyee3-org/GFTGU-Programs"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
     <br/>
     Documentation:
-        <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
   </div>
 </header>
-
 <!-- ════════════════════════════════════════════
      SIDEBAR NAV
 ════════════════════════════════════════════ -->
 <nav>
-  <span class="nav-label">Contents</span>
-  <a href="#overview">Overview</a>
-  <a href="#parameters">Parameters</a>
-  <a href="#output">Output Modes</a>
-  <a href="#modules">Module Structure</a>
-
-  <hr class="nav-divider" />
-  <span class="nav-label">Physics</span>
-  <a href="#newtonian">Newtonian Hydrostatics</a>
-  <a href="#tov">TOV Equation</a>
-  <a href="#eos">Equation of State</a>
-  <a href="#mass">Mass Integral</a>
-  <a href="#buchdahl">Buchdahl's Theorem</a>
-  <a href="#masslimit">Maximum Mass &amp; Stability</a>
-
-  <hr class="nav-divider" />
-  <span class="nav-label">Numerical Methods</span>
-  <a href="#radial-march">Radial Integration Scheme</a>
-  <a href="#stepsize">Step Sizing</a>
-  <a href="#ic">Initial Conditions</a>
-  <a href="#doubling">Surface Location</a>
-
-  <hr class="nav-divider" />
-  <span class="nav-label">Reference</span>
-  <a href="#experiments">Suggested Experiments</a>
-  <a href="#seealso">See Also</a>
+<span class="nav-label">Contents</span>
+<a href="#overview">Overview</a>
+<a href="#parameters">Parameters</a>
+<a href="#output">Output Modes</a>
+<a href="#modules">Module Structure</a>
+<hr class="nav-divider"/>
+<span class="nav-label">Physics</span>
+<a href="#newtonian">Newtonian Hydrostatics</a>
+<a href="#tov">TOV Equation</a>
+<a href="#eos">Equation of State</a>
+<a href="#mass">Mass Integral</a>
+<a href="#buchdahl">Buchdahl's Theorem</a>
+<a href="#masslimit">Maximum Mass &amp; Stability</a>
+<hr class="nav-divider"/>
+<span class="nav-label">Numerical Methods</span>
+<a href="#radial-march">Radial Integration Scheme</a>
+<a href="#stepsize">Step Sizing</a>
+<a href="#ic">Initial Conditions</a>
+<a href="#doubling">Surface Location</a>
+<hr class="nav-divider"/>
+<span class="nav-label">Reference</span>
+<a href="#experiments">Suggested Experiments</a>
+<a href="#seealso">See Also</a>
 </nav>
-
 <!-- ════════════════════════════════════════════
      MAIN CONTENT
 ════════════════════════════════════════════ -->
 <main>
-
 <!-- ─── Overview ─── -->
 <h2 id="overview">Overview</h2>
 <p>
-  <strong>Neutron</strong> computes static, spherically symmetric stellar
+<strong>Neutron</strong> computes static, spherically symmetric stellar
   configurations in general relativity. It integrates the
   Tolman–Oppenheimer–Volkoff (TOV) pressure equation and the enclosed-mass
   equation outward from the center until the pressure reaches zero.
@@ -394,7 +381,7 @@
   does not evolve stars in time, so it does not simulate collapse; it computes
   static equilibrium configurations only.
 </p>
-<h2 id="parameters">Parameters</h2>
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div><h2 id="parameters">Parameters</h2>
 <p>Set these values near the top of <code>main.py</code>.</p>
 <table>
 <thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
@@ -413,7 +400,6 @@
 The code uses \(G=6.67430\times10^{-11}\ \mathrm{m^3\,kg^{-1}\,s^{-2}}\)
 and the exact SI speed of light \(c=299\,792\,458\ \mathrm{m\,s^{-1}}\).
 </div>
-
 <h2 id="output">Output Modes</h2>
 <p>
   Every run computes radius, pressure, density, and enclosed gravitational
@@ -428,14 +414,13 @@ and the exact SI speed of light \(c=299\,792\,458\ \mathrm{m\,s^{-1}}\).
 </tbody>
 </table>
 <p>
-  <code>print_model_summary()</code> reports surface radius, total mass,
+<code>print_model_summary()</code> reports surface radius, total mass,
   central density, compactness \(2GM/(Rc^2)\), the Buchdahl check, radial sample
   count, and nominal radial spacing. Pressure and density may be shown on a
   logarithmic scale with <code>log_y=True</code>; the exact zero-valued surface
   point is omitted from a logarithmic plot because zero cannot be represented
   on a log axis. <code>log_y</code> is ignored for mass plots.
 </p>
-
 <h2 id="modules">Module Structure</h2>
 <div class="mc-grid">
 <div class="mc-card"><h4>main.py</h4><p>Entry point and user configuration.</p>
@@ -448,7 +433,6 @@ and the exact SI speed of light \(c=299\,792\,458\ \mathrm{m\,s^{-1}}\).
 <div class="mc-card"><h4>driver_neutron.py</h4><p>Validates inputs, integrates outward on dynamically growing arrays, locates the \(p=0\) surface, checks compactness, and returns full profiles plus model properties.</p></div>
 <div class="mc-card"><h4>plot_neutron.py</h4><p>Plots radius in km and mass in solar masses, optionally uses logarithmic pressure/density axes, and prints the model summary.</p></div>
 </div>
-
 <h2 id="newtonian">Newtonian Hydrostatics</h2>
 <p>For a spherical Newtonian star, hydrostatic equilibrium is</p>
 <div class="eq">\[
@@ -458,7 +442,6 @@ and the exact SI speed of light \(c=299\,792\,458\ \mathrm{m\,s^{-1}}\).
   This is adequate when pressure-energy and compactness are small. Neutron
   stars require the relativistic corrections contained in the TOV equation.
 </p>
-
 <h2 id="tov">The Tolman–Oppenheimer–Volkoff (TOV) Equation</h2>
 <p>
   For a static, spherically symmetric perfect fluid, with \(\rho\) denoting
@@ -485,7 +468,6 @@ pressure contributes to gravity in the TOV equation.
   If \(r-2Gm/c^2\le0\), the code stops with an explanatory error rather than
   continuing through the singular TOV denominator.
 </p>
-
 <h2 id="eos">Polytropic Equation of State</h2>
 <div class="eq">\[
 p=K\rho^\gamma,\qquad
@@ -513,7 +495,6 @@ make the model formally acausal, with \(v_s&gt;c\). Such a result signals failur
 of the assumed polytropic EOS, not a prediction that real neutron-star matter
 transmits signals faster than light.
 </div>
-
 <h2 id="mass">Mass Integral</h2>
 <p>
   In the standard TOV formulation using Schwarzschild areal radius,
@@ -528,7 +509,6 @@ transmits signals faster than light.
   plotting routine converts it to solar masses. This is the TOV gravitational
   mass function; the program does not separately compute baryonic (rest) mass.
 </p>
-
 <h2 id="buchdahl">Buchdahl's Theorem</h2>
 <p>
   Under Buchdahl's assumptions — including a static, spherically symmetric,
@@ -543,7 +523,6 @@ R\ge\frac{9}{4}\frac{GM}{c^2}
   every completed model. Buchdahl's theorem supplies a bound; a given
   polytropic sequence need not approach equality.
 </p>
-
 <h2 id="masslimit">Maximum Mass and Stability</h2>
 <p>
   Along many one-parameter sequences of cold relativistic stellar models, the
@@ -552,7 +531,7 @@ R\ge\frac{9}{4}\frac{GM}{c^2}
   the first maximum marks the onset of the fundamental radial instability.
 </p>
 <p>
-  <strong>Neutron</strong> computes equilibrium configurations only. It can
+<strong>Neutron</strong> computes equilibrium configurations only. It can
   display models on either side of a mass maximum, but it does not dynamically
   evolve an unstable star or simulate black-hole formation.
 </p>
@@ -560,7 +539,6 @@ R\ge\frac{9}{4}\frac{GM}{c^2}
   The maximum mass found here is a property of the assumed polytropic EOS, not
   a precision prediction for real neutron stars.
 </p>
-
 <h2 id="radial-march">Radial Integration Scheme</h2>
 <p>
   Pressure and enclosed mass form a coupled pair of first-order ODEs. The
@@ -575,7 +553,6 @@ R\ge\frac{9}{4}\frac{GM}{c^2}
 Repeat a model with <code>steps_per_scale</code> = 400, 800, and 1600.
 Surface radius and total mass should settle as the radial grid is refined.
 </div>
-
 <h2 id="stepsize">Step Sizing and the Scale Height</h2>
 <p>
   The central density is \(\rho_C=(p_C/K)^{1/\gamma}\). Following the original
@@ -593,7 +570,6 @@ Surface radius and total mass should settle as the radial grid is refined.
   400. Near the surface, the solver may temporarily shorten the final trial
   interval to avoid evaluating the EOS at negative pressure.
 </p>
-
 <h2 id="ic">Initial Conditions at the Stellar Center</h2>
 <p>
   The TOV equation is formally singular at \(r=0\), although the physical
@@ -612,7 +588,6 @@ p(r_0)\simeq p_C
   This preserves the regular central boundary conditions while avoiding a
   direct evaluation of the formally singular differential equation at \(r=0\).
 </p>
-
 <h2 id="doubling">Locating the Stellar Surface</h2>
 <p>
   The surface is defined by \(p=0\). The solver integrates outward on the
@@ -621,7 +596,6 @@ p(r_0)\simeq p_C
   are then estimated at that zero-pressure location using the local slope or
   linear interpolation over the final interval.
 </p>
-
 <h2 id="experiments">Suggested Experiments</h2>
 <div class="note tip">
 <strong>Running a sequence</strong>
@@ -630,7 +604,6 @@ Several experiments below require more than one model. You can edit and rerun
 <code>compute_neutron_star()</code> from <code>driver_neutron.py</code> and loops
 over the desired parameter values.
 </div>
-
 <h3>1. Profile Shapes: Pressure, Density, and Mass</h3>
 <p>
   Run the default model with <code>output_type</code> set in turn to
@@ -638,14 +611,12 @@ over the desired parameter values.
   Describe how each profile changes with radius. Why must enclosed mass increase
   outward while pressure and density decrease?
 </p>
-
 <h3>2. Numerical Convergence</h3>
 <p>
   Repeat the default model with <code>steps_per_scale</code> = 200, 400, 800,
   and 1600. Compare surface radius, total mass, and compactness. Which reported
   quantity is most sensitive to radial refinement?
 </p>
-
 <h3>3. Comparison with Newtonian Hydrostatics</h3>
 <p>
   Compare <strong>Neutron</strong> with the <strong>Star</strong> program at the
@@ -658,7 +629,6 @@ over the desired parameter values.
   pressure profile, and density profile. Relativistic differences should grow
   as compactness increases.
 </p>
-
 <h3>4. Mass–Central-Pressure Sequence</h3>
 <p>
   Run a logarithmically spaced series of <code>pC</code> values and record
@@ -667,7 +637,6 @@ over the desired parameter values.
   pressure and locate any mass maximum. The program computes equilibria; it
   does not dynamically collapse the unstable branch.
 </p>
-
 <h3>5. Buchdahl Compactness Along a Sequence</h3>
 <p>
   Plot <code>data["compactness"]</code> for a sequence of models.
@@ -676,7 +645,6 @@ over the desired parameter values.
   Numerical failure to exceed \(8/9\) is not a proof of Buchdahl's theorem;
   the theorem follows from its analytic assumptions.
 </p>
-
 <h3>6. Controlled EOS-Stiffness Comparison</h3>
 <p>
   Choose a common \(p_C\) and target \(\rho_C\). For each
@@ -684,7 +652,6 @@ over the desired parameter values.
   resulting mass-radius models. This keeps the central reference state
   comparable while you explore the effect of changing EOS stiffness.
 </p>
-
 <h3>7. Limits of a Single Polytrope</h3>
 <p>
   Explore a wide central-pressure range. For each model, evaluate
@@ -695,39 +662,86 @@ over the desired parameter values.
   offset energy density and cannot be represented merely by setting
   \(\gamma=1\) and \(K=c^2/3\) in this solver.
 </p>
-
-<h2 id="seealso">See Also</h2>
+<section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
+<div style="
+    border: 1.5px solid #b5811a;
+    border-left: 5px solid #b5811a;
+    border-radius: 6px;
+    background: #fffbeb;
+    padding: 1.1em 1.4em;
+    display: flex;
+    gap: 1em;
+    align-items: flex-start;
+  ">
+<!-- Icon -->
+<div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
+<!-- Content -->
+<div>
+<div style="
+        font-weight: 700;
+        font-size: 0.95em;
+        color: #7b2d00;
+        margin-bottom: 0.35em;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      ">Restoring Default Parameter Values</div>
+<p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
+        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
+        you can restore the original program files using any of the following methods:
+      </p>
+<ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
+<li>
+<strong>Same session:</strong>
+          Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
+          (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
+          (macOS) repeatedly in your editor to undo your edits.
+        </li>
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+        </li>
+<li>
+<strong>Full reset:</strong>
+          Re-download the ZIP from
+          <a href="https://github.com/tomyee3-org/GFTGU-Programs" style="color:#7b2d00; text-decoration:underline;" target="_blank">
+            github.com/tomyee3-org/GFTGU-Programs
+          </a>
+          and replace this program's folder with the fresh copy.
+        </li>
+</ul>
+<p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
+        For additional ways to restore program files, see the corresponding
+        recovery instructions in the <em>GFTGU Python Setup Guide</em>.
+      </p>
+</div>
+</div>
+</section><h2 id="seealso">See Also</h2>
 <ul>
 <li><strong>Star</strong> — Newtonian stellar hydrostatic structure with a polytropic model.</li>
 <li>Bernard Schutz, <em>Gravity from the Ground Up</em>, Chapter 20 — motivation for the original exercise.</li>
 <li>Tolman (1939) and Oppenheimer &amp; Volkoff (1939) — relativistic stellar equilibrium.</li>
 <li>Buchdahl (1959), <em>General Relativistic Fluid Spheres</em> — compactness bound under the theorem's assumptions.</li>
 </ul>
-
 <section id="license">
-    <h2>License</h2>
-    <p>
+<h2>License</h2>
+<p>
       This software is based on the programs by <strong>Bernard Schutz</strong>
       accompanying <em>Gravity from the Ground Up</em> (Cambridge University
       Press, 2003) and is distributed under the
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike
       4.0 International (CC BY-NC-SA 4.0)</a> license.
     </p>
-  </section>
-
+</section>
 </main><!-- end main -->
-
 <!-- ══════════════════════════════════════════════
      FOOTER
 ═══════════════════════════════════════════════ -->
 <footer>
-  <em>Gravity from the Ground Up</em> — Python Programs ·
+<em>Gravity from the Ground Up</em> — Python Programs ·
   Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
   Python port © 2024–2026 Thomas Yee ·
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
 </footer>
-
 </div><!-- end page-wrap -->
 </body>
 </html>

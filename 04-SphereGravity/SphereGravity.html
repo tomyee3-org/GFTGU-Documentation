@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SphereGravity – Help File | GFtGU Programs</title>
-
-  <!-- MathJax 3 -->
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SphereGravity – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
     MathJax = {
       tex: {
         inlineMath:  [['\\(','\\)']],
@@ -16,10 +15,8 @@
       options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
-          id="MathJax-script" async></script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
     /* ── Reset & custom properties ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -426,113 +423,97 @@
     footer a:hover { text-decoration: underline; }
   </style>
 </head>
-
 <body>
 <div class="page-wrap">
-
 <!-- ══════════════════════ HEADER ══════════════════════ -->
 <header>
-  <div class="badge">CHAPTER 4 · INVESTIGATION 4.3</div>
-  <h1>Sphere<em>Gravity</em></h1>
-  <div class="sub">
+<div class="badge">CHAPTER 4 · INVESTIGATION 4.3</div>
+<h1>Sphere<em>Gravity</em></h1>
+<div class="sub">
     Source Code:
-    <a href="https://github.com/tomyee3-org/GFTGU-Programs"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
     <br/>
     Documentation:
-        <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
   </div>
 </header>
-
 <!-- ══════════════════════ SIDEBAR ══════════════════════ -->
 <nav>
-  <div class="nav-label">Overview</div>
-  <a href="#overview">What this program does</a>
-  <a href="#background">Physical background</a>
-
-  <div class="nav-label">Physics</div>
-  <a href="#shell-theorem">Newton's shell theorem</a>
-  <a href="#equations">Governing equations</a>
-
-  <div class="nav-label">Numerical Methods</div>
-  <a href="#algorithm">Tiling algorithm</a>
-  <a href="#accuracy">Accuracy &amp; convergence</a>
-
-  <div class="nav-label">Code</div>
-  <a href="#modules">Module overview</a>
-  <a href="#parameters">Parameters</a>
-  <a href="#output-modes">Output modes</a>
-
-  <div class="nav-label">Usage</div>
-  <a href="#quickstart">Quick start</a>
-  <a href="#experiments">Suggested experiments</a>
-
-  <div class="nav-label">Reference</div>
-  <a href="#related">Related programs</a>
+<div class="nav-label">Overview</div>
+<a href="#overview">What this program does</a>
+<a href="#background">Physical background</a>
+<div class="nav-label">Physics</div>
+<a href="#shell-theorem">Newton's shell theorem</a>
+<a href="#equations">Governing equations</a>
+<div class="nav-label">Numerical Methods</div>
+<a href="#algorithm">Tiling algorithm</a>
+<a href="#accuracy">Accuracy &amp; convergence</a>
+<div class="nav-label">Code</div>
+<a href="#modules">Module overview</a>
+<a href="#parameters">Parameters</a>
+<a href="#output-modes">Output modes</a>
+<div class="nav-label">Usage</div>
+<a href="#quickstart">Quick start</a>
+<a href="#experiments">Suggested experiments</a>
+<div class="nav-label">Reference</div>
+<a href="#related">Related programs</a>
 </nav>
-
 <!-- ══════════════════════ MAIN ══════════════════════ -->
 <main>
-
-  <!-- ── Overview ── -->
-  <h2 id="overview">What This Program Does</h2>
-  <p>
-    <strong>SphereGravity</strong> computes the gravitational acceleration produced by a thin
+<!-- ── Overview ── -->
+<h2 id="overview">What This Program Does</h2>
+<p>
+<strong>SphereGravity</strong> computes the gravitational acceleration produced by a thin
     spherical shell of matter at a series of radial distances from the center, through the
     interior, and out to about five shell radii. The calculation is a numerical approximation:
     conceptually, the shell is divided into
-    <em>n</em><sub>div</sub>&thinsp;&times;&thinsp;<em>n</em><sub>div</sub> small tiles. By azimuthal
+    <em>n</em><sub>div</sub> × <em>n</em><sub>div</sub> small tiles. By azimuthal
     symmetry, the code sums over <em>n</em><sub>div</sub> latitude rings and multiplies each ring's
     contribution by <em>n</em><sub>div</sub> identical tiles.
   </p>
-  <p>
+<p>
     The program can display either the raw acceleration profile or the <em>relative difference</em>
     between the numerical result and the exact Newtonian prediction. The latter mode makes it
     easy to see how rapidly the computation converges to the analytical answer as the number of
     tiles is increased.
   </p>
-
-  <!-- ── Physical Background ── -->
-  <h2 id="background">Physical Background</h2>
-  <p>
+<!-- ── Physical Background ── -->
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div><h2 id="background">Physical Background</h2>
+<p>
     One of Newton's most beautiful results in the <em>Principia</em> is the <strong>shell
     theorem</strong>: a uniform spherical shell of mass \(M\) and radius \(R\) exerts exactly the
     same gravitational force on any external test mass as if all of \(M\) were concentrated at the
     shell's center. Furthermore, a test mass placed <em>anywhere inside</em> the hollow shell
     experiences <em>no net gravitational force at all</em>.
   </p>
-  <p>
+<p>
     These results have profound consequences throughout physics and astronomy. They allow us to
     treat the Earth, Sun, and any other spherically symmetric body as point masses when computing
     exterior gravitational fields. The theorem is also important in Newtonian cosmology: for a
     spherically symmetric mass distribution, matter in shells outside a chosen radius makes no net
     contribution to the gravitational acceleration at that radius.
   </p>
-  <p>
+<p>
     Newton proved the theorem analytically. Here we verify it numerically: because any spherically
     symmetric body can be decomposed into a nested set of thin shells, proving the result for a
     single thin shell suffices for the general case, as Schutz explains in Investigation 4.3.
   </p>
-
-  <!-- ── Shell Theorem ── -->
-  <h2 id="shell-theorem">Newton's Shell Theorem</h2>
-  <p>
+<!-- ── Shell Theorem ── -->
+<h2 id="shell-theorem">Newton's Shell Theorem</h2>
+<p>
     For a thin spherical shell of total mass \(M\) and radius \(R\), the gravitational acceleration
     \(g\) at radial distance \(r\) from the center is:
   </p>
-
-  <div class="eq-block">
-    <div class="eq-label">Eq. 1 — Shell theorem (exact Newtonian result)</div>
+<div class="eq-block">
+<div class="eq-label">Eq. 1 — Shell theorem (exact Newtonian result)</div>
     \[
       g(r) = \begin{cases}
-        \dfrac{GM}{r^2} & r > R \quad (\text{outside the shell}) \\[10pt]
-        0               & r < R \quad (\text{inside the hollow shell})
+        \dfrac{GM}{r^2} &amp; r &gt; R \quad (\text{outside the shell}) \\[10pt]
+        0               &amp; r &lt; R \quad (\text{inside the hollow shell})
       \end{cases}
     \]
   </div>
-
-  <p>
+<p>
     The program uses <em>dimensionless</em> units throughout: the shell radius is set to
     \(R = 1\), the volume-density scale is \(\rho = 1\), and \(G = 1\). The parameter
     \(\varepsilon = 0.001\) supplies a nominal thickness factor when assigning mass to each
@@ -540,33 +521,28 @@
     the calculation is a thin-shell model; changing \(\varepsilon\) changes the mass scale,
     not the shell geometry.
   </p>
-
-  <!-- ── Governing Equations ── -->
-  <h2 id="equations">Governing Equations</h2>
-
-  <h3>Shell geometry and tile masses</h3>
-  <p>
+<!-- ── Governing Equations ── -->
+<h2 id="equations">Governing Equations</h2>
+<h3>Shell geometry and tile masses</h3>
+<p>
     The shell is parameterised by latitude angle \(\theta\) (measured from the equator,
     ranging from \(-\pi/2\) at the south pole to \(+\pi/2\) at the north pole) and azimuthal
     angle \(\varphi\). The shell is divided into \(n_\text{div}\) equal steps in each coordinate.
     The angular step sizes are:
   </p>
-
-  <div class="eq-block">
-    <div class="eq-label">Eq. 2 — Angular step sizes</div>
+<div class="eq-block">
+<div class="eq-label">Eq. 2 — Angular step sizes</div>
     \[
       \Delta\varphi = \frac{2\pi}{n_\text{div}}, \qquad
       \Delta\theta  = \frac{\Delta\varphi}{2}
     \]
   </div>
-
-  <p>
+<p>
     Each tile at latitude \(\theta\) has a surface area element \(\Delta A = \cos\theta\,
     \Delta\theta\,\Delta\varphi\) (in units where \(R = 1\)). The mass of each tile is:
   </p>
-
-  <div class="eq-block">
-    <div class="eq-label">Eq. 3 — Tile mass</div>
+<div class="eq-block">
+<div class="eq-label">Eq. 3 — Tile mass</div>
     \[
       \delta m = \varepsilon\,\rho\,R^2\,\cos\theta\;\Delta\theta\;\Delta\varphi
               \;\longrightarrow\;
@@ -574,271 +550,246 @@
               \quad (R = \rho = 1)
     \]
   </div>
-
-  <p>
+<p>
     All \(n_\text{div}\) tiles in a ring of constant latitude are identical, so the ring's
     contribution to the total mass is \(n_\text{div}\,\delta m\). In the continuum limit the
     shell mass is \(M = 4\pi\varepsilon\). The program uses the finite midpoint sum produced by
     the same latitude tiling, which approaches this value as <code>nDiv</code> increases.
   </p>
-
-  <h3>Distance from tile to observer</h3>
-  <p>
+<h3>Distance from tile to observer</h3>
+<p>
     By the azimuthal symmetry of the problem the observation point is placed at position
     \(r\) along the shell's symmetry axis. The distance from a tile at latitude \(\theta\) to
     the observer at radius \(r\) is:
   </p>
-
-  <div class="eq-block">
-    <div class="eq-label">Eq. 4 — Distance from tile to observer</div>
+<div class="eq-block">
+<div class="eq-label">Eq. 4 — Distance from tile to observer</div>
     \[
       d(\theta,r) = \sqrt{1 + r^2 + 2r\sin\theta}
     \]
   </div>
-
-  <h3>Axial component of acceleration</h3>
-  <p>
+<h3>Axial component of acceleration</h3>
+<p>
     The gravitational acceleration toward the center of the shell contributed by a single ring
     of tiles is:
   </p>
-
-  <div class="eq-block">
-    <div class="eq-label">Eq. 5 — Ring contribution to radial acceleration</div>
+<div class="eq-block">
+<div class="eq-label">Eq. 5 — Ring contribution to radial acceleration</div>
     \[
       \delta g = n_\text{div}\;\frac{G\,\delta m\;(r + \sin\theta)}{d(\theta,r)^3}
     \]
   </div>
-
-  <p>
+<p>
     where the factor \((r + \sin\theta)\) is the projection of the tile-to-observer vector
     onto the symmetry axis. The plotted acceleration is the signed radial component in the
     program's convention, so small numerical residuals inside the shell may have either sign.
     The total acceleration at radius \(r\) is:
   </p>
-
-  <div class="eq-block">
-    <div class="eq-label">Eq. 6 — Total numerical acceleration</div>
+<div class="eq-block">
+<div class="eq-label">Eq. 6 — Total numerical acceleration</div>
     \[
       g_\text{num}(r) = \sum_{k=0}^{n_\text{div}-1} \delta g_k
     \]
   </div>
-
-  <h3>Relative difference</h3>
-  <p>
+<h3>Relative difference</h3>
+<p>
     When the <em>relative difference</em> output mode is selected, the program reports:
   </p>
-
-  <div class="eq-block">
-    <div class="eq-label">Eq. 7 — Relative difference from Newton's theorem</div>
+<div class="eq-block">
+<div class="eq-label">Eq. 7 — Relative difference from Newton's theorem</div>
     \[
       \delta(r) = \begin{cases}
-        \dfrac{g_\text{num}(r) - g_\text{Newton}(r)}{g_\text{Newton}(r)} &
-          r > 1 \quad\bigl(g_\text{Newton} = M/r^2\bigr)\\[10pt]
-        \dfrac{g_\text{num}(r)}{M} &
+        \dfrac{g_\text{num}(r) - g_\text{Newton}(r)}{g_\text{Newton}(r)} &amp;
+          r &gt; 1 \quad\bigl(g_\text{Newton} = M/r^2\bigr)\\[10pt]
+        \dfrac{g_\text{num}(r)}{M} &amp;
           r \leq 1 \quad \text{(inside: Newton predicts zero)}
       \end{cases}
     \]
   </div>
-
-  <p>
+<p>
     Outside the shell the Newtonian acceleration is \(g_\text{Newton} = M/r^2\) (with \(G=1\)).
     Inside the shell Newton predicts exactly zero, so the raw numerical acceleration is
     normalised by \(M\) (the Newtonian acceleration just outside the surface) to produce a
     dimensionless measure of the residual error.
   </p>
-
-  <!-- ── Algorithm ── -->
-  <h2 id="algorithm">Tiling Algorithm</h2>
-  <p>
+<!-- ── Algorithm ── -->
+<h2 id="algorithm">Tiling Algorithm</h2>
+<p>
     The computation follows a straightforward nested-loop scheme described in Investigation 4.3
     of <em>Gravity from the Ground Up</em>:
   </p>
-
-  <ol class="algo-steps">
-    <li>
-      <strong>Initialise geometry.</strong>
+<ol class="algo-steps">
+<li>
+<strong>Initialise geometry.</strong>
       Compute the angular step sizes \(\Delta\varphi\) and \(\Delta\theta\), and set the initial
       latitude \(\theta_0 = \tfrac{1}{2}\Delta\theta - 90°\) (centre of the first tile, just
       above the south pole).
     </li>
-    <li>
-      <strong>Compute total shell mass.</strong>
+<li>
+<strong>Compute total shell mass.</strong>
       Loop over all \(n_\text{div}\) latitude rings. For each ring accumulate
       \(\Delta M_k = n_\text{div}\;\delta m_k\). This gives the normalisation constant \(M\)
       used in relative-difference mode.
     </li>
-    <li>
-      <strong>Outer loop: radial positions.</strong>
+<li>
+<strong>Outer loop: radial positions.</strong>
       Step through 1 000 observation radii \(r_j = 0.005\,j\) for
       \(j = 0, 1, \ldots, 999\), giving \(r \in [0, 4.995]\). Restricting the plot to about
       five shell radii leaves enough horizontal space to see the behaviour throughout the
       interior \(r &lt; 1\), while still showing the exterior \(1/r^2\) falloff.
     </li>
-    <li>
-      <strong>Skip the shell surface.</strong>
+<li>
+<strong>Skip the shell surface.</strong>
       The step at \(j = 200\) (i.e., \(r = 1.0\)) falls exactly on the idealized thin shell.
       The field has a discontinuity across the surface, so this point is not evaluated. Its plotted
       value is set to zero only as a placeholder; this is not a claim that the physical surface
       acceleration is zero.
     </li>
-    <li>
-      <strong>Inner loop: tile summation.</strong>
+<li>
+<strong>Inner loop: tile summation.</strong>
       For each \(r_j\), loop over all \(n_\text{div}\) latitude rings. Compute
       \(d_k = \sqrt{1 + r_j^2 + 2\,r_j\,\sin\theta_k}\) and add the ring's contribution
       (Eq. 5) to the running sum \(g_\text{num}(r_j)\).
     </li>
-    <li>
-      <strong>Post-process for output mode.</strong>
+<li>
+<strong>Post-process for output mode.</strong>
       If <em>relative difference</em> is selected, convert each acceleration value using Eq. 7.
       Otherwise output the raw acceleration array.
     </li>
-  </ol>
-
-  <div class="note">
-    <strong>Computational cost:</strong> The inner loop executes \(n_\text{div}\) times for each
+</ol>
+<div class="note">
+<strong>Computational cost:</strong> The inner loop executes \(n_\text{div}\) times for each
     of the 1 000 radii, so the total work scales as \(\mathcal{O}(1000 \times n_\text{div})\).
     The mass-summation loop adds another \(\mathcal{O}(n_\text{div})\). For
     \(n_\text{div} = 10\,000\) this is \(10^7\) floating-point operations — fast on modern
     hardware but noticeable. 
   </div>
-
-  <!-- ── Accuracy ── -->
-  <h2 id="accuracy">Accuracy and Convergence</h2>
-  <p>
+<!-- ── Accuracy ── -->
+<h2 id="accuracy">Accuracy and Convergence</h2>
+<p>
     The key parameter controlling angular resolution is <code>nDiv</code>. As it increases,
     the latitude rings become narrower and the numerical sum approaches the exact shell-theorem
     result. Away from the shell surface, the midpoint-style angular discretisation converges
     approximately as \(n_\text{div}^{-2}\).
   </p>
-
-  <table class="param-table">
-    <thead>
-      <tr>
-        <th>nDiv</th>
-        <th>Relative error at \(r=1.1\)</th>
-        <th>Expected trend</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>100</td><td>≈ 2.5 × 10<sup>−3</sup></td><td>baseline</td></tr>
-      <tr><td>1 000</td><td>≈ 2.5 × 10<sup>−5</sup></td><td>about 100× smaller</td></tr>
-      <tr><td>10 000</td><td>≈ 2.5 × 10<sup>−7</sup></td><td>about 100× smaller again</td></tr>
-    </tbody>
-  </table>
-
-  <p>
+<table class="param-table">
+<thead>
+<tr>
+<th>nDiv</th>
+<th>Relative error at \(r=1.1\)</th>
+<th>Expected trend</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>100</td><td>≈ 2.5 × 10<sup>−3</sup></td><td>baseline</td></tr>
+<tr><td>1 000</td><td>≈ 2.5 × 10<sup>−5</sup></td><td>about 100× smaller</td></tr>
+<tr><td>10 000</td><td>≈ 2.5 × 10<sup>−7</sup></td><td>about 100× smaller again</td></tr>
+</tbody>
+</table>
+<p>
     It is important to compare the error at a <em>fixed radius</em>. Very close to the shell,
     the contribution from nearby tiles becomes sharply concentrated and is much harder to
     resolve with a coarse angular grid. With the present fine radial sampling, the first point
     outside the shell is \(r=1.005\), where the error can be much larger than it is at
     \(r=1.1\). This near-surface behaviour is itself a useful numerical effect to investigate.
   </p>
-
-  <!-- ── Modules ── -->
-  <h2 id="modules">Module Overview</h2>
-  <p>
+<!-- ── Modules ── -->
+<h2 id="modules">Module Overview</h2>
+<p>
     The calculation is split among four Python files so that the physics, plotting, and user
     settings are easy to find:
   </p>
-
-  <div class="module-grid">
-
-    <div class="module-card">
-      <div class="mod-role">Physics</div>
-      <h4>physics_spheregravity.py</h4>
-      <p>
+<div class="module-grid">
+<div class="module-card">
+<div class="mod-role">Physics</div>
+<h4>physics_spheregravity.py</h4>
+<p>
         Encodes the shell-tiling algorithm, shell-mass calculation, gravitational summation,
         and the conversion to relative-difference output. The formulas described in Eqs. 2–7
         are implemented here.
       </p>
-      <div class="sig">compute_shell_mass(nDiv, epsilon=0.001) → float<br>
+<div class="sig">compute_shell_mass(nDiv, epsilon=0.001) → float<br/>
         requires nDiv &gt; 0 and epsilon &gt; 0</div>
-      <div class="sig" style="margin-top:6px">compute_acceleration_profile(nDiv,
+<div class="sig" style="margin-top:6px">compute_acceleration_profile(nDiv,
         outputType='acceleration', epsilon=0.001) → (ndarray, ndarray)</div>
-    </div>
-
-    <div class="module-card">
-      <div class="mod-role">Driver</div>
-      <h4>driver_spheregravity.py</h4>
-      <p>
+</div>
+<div class="module-card">
+<div class="mod-role">Driver</div>
+<h4>driver_spheregravity.py</h4>
+<p>
         Calls the physics calculation and returns the <code>(radius, acceleration)</code> arrays
         used by <code>main.py</code> and the plotting routine.
       </p>
-      <div class="sig">run_spheregravity(nDiv=100,
+<div class="sig">run_spheregravity(nDiv=100,
         outputType='acceleration') → (ndarray, ndarray)</div>
-    </div>
-
-    <div class="module-card">
-      <div class="mod-role">Plot</div>
-      <h4>plot_spheregravity.py</h4>
-      <p>
+</div>
+<div class="module-card">
+<div class="mod-role">Plot</div>
+<h4>plot_spheregravity.py</h4>
+<p>
         Accepts the <code>(radius, acceleration)</code> arrays from the driver and renders a
         matplotlib figure. Axis labels and title adapt automatically to the selected output
         mode.
       </p>
-      <div class="sig">plot_spheregravity(radius, acceleration,
+<div class="sig">plot_spheregravity(radius, acceleration,
         outputType='acceleration') → None</div>
-    </div>
-
-    <div class="module-card">
-      <div class="mod-role">Entry Point</div>
-      <h4>main.py</h4>
-      <p>
+</div>
+<div class="module-card">
+<div class="mod-role">Entry Point</div>
+<h4>main.py</h4>
+<p>
         The only file the user needs to edit. Set <code>nDiv</code> and
         <code>outputType</code>, then run <code>python main.py</code>. Calls
         <code>run_spheregravity()</code> and passes the result to
         <code>plot_spheregravity()</code>.
       </p>
-      <div class="sig">nDiv = 100<br>outputType = 'relative difference'</div>
-    </div>
-
-  </div>
-
-  <!-- ── Parameters ── -->
-  <h2 id="parameters">Parameters</h2>
-  <p>
+<div class="sig">nDiv = 100<br/>outputType = 'relative difference'</div>
+</div>
+</div>
+<!-- ── Parameters ── -->
+<h2 id="parameters">Parameters</h2>
+<p>
     The two normal user settings, <code>nDiv</code> and <code>outputType</code>, are set in
     <code>main.py</code>. The physics module also accepts <code>epsilon</code> as an advanced
     optional keyword argument; it remains fixed at <code>0.001</code> in the normal workflow.
   </p>
-
-  <table class="param-table">
-    <thead>
-      <tr>
-        <th>Parameter</th>
-        <th>Default</th>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>nDiv</td>
-        <td>100</td>
-        <td>int</td>
-        <td>
+<table class="param-table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nDiv</td>
+<td>100</td>
+<td>int</td>
+<td>
           Number of angular divisions per coordinate. The shell is divided into
           <em>n</em><sub>div</sub> latitude rings, each representing
           <em>n</em><sub>div</sub> identical azimuthal tiles. Larger values give higher
           angular resolution at the cost of longer computation time. The program does not impose
           an arbitrary upper limit, so extremely large values may take a long time to run.
         </td>
-      </tr>
-      <tr>
-        <td>outputType</td>
-        <td>'relative difference' (main.py)</td>
-        <td>OutputType (Literal['acceleration', 'relative difference'])</td>
-        <td>
+</tr>
+<tr>
+<td>outputType</td>
+<td>'relative difference' (main.py)</td>
+<td>OutputType (Literal['acceleration', 'relative difference'])</td>
+<td>
           Selects what the plot displays. Either <code>'acceleration'</code> (raw
           \(g(r)\)) or <code>'relative difference'</code> (fractional error from
           Newton's theorem per Eq. 7).
         </td>
-      </tr>
-      <tr>
-        <td>epsilon</td>
-        <td>0.001</td>
-        <td>float</td>
-        <td>
+</tr>
+<tr>
+<td>epsilon</td>
+<td>0.001</td>
+<td>float</td>
+<td>
           Mass-scale factor corresponding to nominal shell thickness divided by radius.
           Because every tile mass is placed on the same spherical surface, changing
           \(\varepsilon\) scales the raw acceleration and total mass but does not make the
@@ -846,50 +797,44 @@
           to change it, call <code>compute_acceleration_profile()</code> directly from
           <code>physics_spheregravity.py</code>.
         </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- ── Output modes ── -->
-  <h2 id="output-modes">Output Modes</h2>
-
-  <div class="mode-list">
-    <div class="mode-item">
-      <div class="mode-pill">acceleration</div>
-      <p>
+</tr>
+</tbody>
+</table>
+<!-- ── Output modes ── -->
+<h2 id="output-modes">Output Modes</h2>
+<div class="mode-list">
+<div class="mode-item">
+<div class="mode-pill">acceleration</div>
+<p>
         Plots the computed gravitational acceleration \(g_\text{num}(r)\) versus radius \(r\).
-        Outside the shell (\(r > 1\)) you will see the characteristic \(1/r^2\) falloff; inside
-        (\(r < 1\)) the acceleration is essentially zero. The shell radius \(R = 1\) is the
+        Outside the shell (\(r &gt; 1\)) you will see the characteristic \(1/r^2\) falloff; inside
+        (\(r &lt; 1\)) the acceleration is essentially zero. The shell radius \(R = 1\) is the
         boundary between the two regions.
       </p>
-    </div>
-    <div class="mode-item">
-      <div class="mode-pill">relative difference</div>
-      <p>
+</div>
+<div class="mode-item">
+<div class="mode-pill">relative difference</div>
+<p>
         Plots the fractional deviation between the numerical result and Newton's exact prediction
         (Eq. 7). This mode is more informative for convergence studies: as <code>nDiv</code>
         increases the curve should drop closer and closer to zero at sampled points away from
         the skipped shell surface. Inside the shell, where Newton predicts \(g = 0\), the residual
         acceleration normalised by \(M\) is plotted instead.
       </p>
-    </div>
-  </div>
-
-  <!-- ── Quick start ── -->
-  <h2 id="quickstart">Quick Start</h2>
-
-  <h3>What to edit</h3>
-  <p>
+</div>
+</div>
+<!-- ── Quick start ── -->
+<h2 id="quickstart">Quick Start</h2>
+<h3>What to edit</h3>
+<p>
     For ordinary use, edit only these two settings near the top of <code>main.py</code>:
   </p>
-  <pre>nDiv = 100
+<pre>nDiv = 100
 outputType = 'relative difference'</pre>
-
-  <h3>Running the program</h3>
-  <pre>cd SphereGravity
+<h3>Running the program</h3>
+<pre>cd SphereGravity
 python main.py</pre>
-
-  <p>
+<p>
     With the default settings (<code>nDiv = 100</code>, <code>outputType = 'relative
     difference'</code>) the program computes the acceleration profile over 1 000 radii from
     \(r=0\) to \(r=4.995\) and opens a matplotlib window. Away from the shell surface the
@@ -897,31 +842,26 @@ python main.py</pre>
     \(r=1.1\) is about \(2.5\times10^{-3}\) (0.25%). Much closer to \(r=1\), the finite angular
     tiling is harder to resolve and the error is larger.
   </p>
-
-  <h3>Switching output mode</h3>
-  <pre># In main.py — show raw acceleration instead of relative difference
+<h3>Switching output mode</h3>
+<pre># In main.py — show raw acceleration instead of relative difference
 outputType = 'acceleration'</pre>
-
-  <h3>Running programmatically</h3>
-  <pre>from driver_spheregravity import run_spheregravity
+<h3>Running programmatically</h3>
+<pre>from driver_spheregravity import run_spheregravity
 from plot_spheregravity   import plot_spheregravity
 
 radius, accel = run_spheregravity(nDiv=1000, outputType='relative difference')
 plot_spheregravity(radius, accel, outputType='relative difference')</pre>
-
-  <!-- ── Experiments ── -->
-  <h2 id="experiments">Suggested Experiments</h2>
-  <p>
+<!-- ── Experiments ── -->
+<h2 id="experiments">Suggested Experiments</h2>
+<p>
     The experiments below are arranged in approximate order of difficulty. The first four require
     only changes to <code>nDiv</code> and <code>outputType</code>; the last two make more direct use
     of the numerical machinery or ask for a substantial programming extension.
   </p>
-
-  <div class="scenario-grid">
-
-    <div class="scenario-card">
-      <h4>1 · Introductory — Verify the Shell Theorem Visually</h4>
-      <p>
+<div class="scenario-grid">
+<div class="scenario-card">
+<h4>1 · Introductory — Verify the Shell Theorem Visually</h4>
+<p>
         Run with <code>outputType = 'acceleration'</code>. Confirm the two parts of Newton's shell
         theorem: the acceleration is essentially zero for \(r&lt;1\), while outside the shell it
         falls approximately as \(1/r^2\). Compare, for example, the acceleration near \(r=2\) with
@@ -929,24 +869,22 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
         at \(r=1\) is only a zero placeholder because the ideal thin-shell surface itself is not
         evaluated.
       </p>
-      <div class="sc-params">nDiv=100 · outputType='acceleration'</div>
-    </div>
-
-    <div class="scenario-card">
-      <h4>2 · Introductory–Intermediate — Reproduce Schutz's Convergence Test</h4>
-      <p>
+<div class="sc-params">nDiv=100 · outputType='acceleration'</div>
+</div>
+<div class="scenario-card">
+<h4>2 · Introductory–Intermediate — Reproduce Schutz's Convergence Test</h4>
+<p>
         Switch to <code>outputType = 'relative difference'</code> and increase the angular
         resolution by factors of ten: <code>nDiv = 100, 1000, 10000</code>. Compare the curves and
         observe that the numerical disagreement with Newton's theorem becomes rapidly smaller.
         For a quantitative comparison, read the value at the same exterior radius, such as
         \(r=1.1\), on each run rather than comparing different points on the three curves.
       </p>
-      <div class="sc-params">nDiv=100 / 1000 / 10000 · outputType='relative difference'</div>
-    </div>
-
-    <div class="scenario-card">
-      <h4>3 · Intermediate — Measure the Convergence Rate</h4>
-      <p>
+<div class="sc-params">nDiv=100 / 1000 / 10000 · outputType='relative difference'</div>
+</div>
+<div class="scenario-card">
+<h4>3 · Intermediate — Measure the Convergence Rate</h4>
+<p>
         At the fixed exterior radius \(r=1.1\), compare the relative differences for
         <code>nDiv = 100, 1000, 10000</code>. They should be approximately
         \(2.5\times10^{-3}\), \(2.5\times10^{-5}\), and \(2.5\times10^{-7}\).
@@ -954,12 +892,11 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
         of 100, consistent with approximate \(n_\text{div}^{-2}\) convergence away from the shell.
         Explain why a statement about convergence must compare errors at the same radius.
       </p>
-      <div class="sc-params">compare at r=1.1 · look for error ∝ nDiv⁻²</div>
-    </div>
-
-    <div class="scenario-card">
-      <h4>4 · Intermediate — Why the Shell Surface Is Numerically Difficult</h4>
-      <p>
+<div class="sc-params">compare at r=1.1 · look for error ∝ nDiv⁻²</div>
+</div>
+<div class="scenario-card">
+<h4>4 · Intermediate — Why the Shell Surface Is Numerically Difficult</h4>
+<p>
         Keep <code>outputType = 'relative difference'</code> and examine exterior points
         progressively closer to the shell, such as \(r=1.1,\ 1.05,\ 1.01,\ 1.005\).
         At fixed <code>nDiv</code>, the error grows as \(r\) approaches 1 because the contribution
@@ -967,12 +904,11 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
         coarse grid. Repeat with a larger <code>nDiv</code> and see how much of the near-surface
         discrepancy disappears.
       </p>
-      <div class="sc-params">nDiv=100, then 1000 · compare r=1.1, 1.05, 1.01, 1.005</div>
-    </div>
-
-    <div class="scenario-card">
-      <h4>5 · Intermediate–Advanced — Interior Cancellation and Shell-Mass Convergence</h4>
-      <p>
+<div class="sc-params">nDiv=100, then 1000 · compare r=1.1, 1.05, 1.01, 1.005</div>
+</div>
+<div class="scenario-card">
+<h4>5 · Intermediate–Advanced — Interior Cancellation and Shell-Mass Convergence</h4>
+<p>
         First compare the residual interior acceleration at a fixed point such as \(r=0.5\) or
         \(r=0.9\) as <code>nDiv</code> increases; it should approach zero even though the individual
         tile contributions are not zero. Then, in a short Python session, call
@@ -981,12 +917,11 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
         \(\varepsilon=0.001\). These two tests show separately how the numerical tiling converges
         in total mass and in the much more delicate cancellation of the gravitational field.
       </p>
-      <div class="sc-params">r=0.5 or 0.9 · compute_shell_mass(100, 1000, 10000)</div>
-    </div>
-
-    <div class="scenario-card">
-      <h4>6 · Advanced Programming Extension — Replace the Sphere by an Ellipsoidal Homoeoid</h4>
-      <p>
+<div class="sc-params">r=0.5 or 0.9 · compute_shell_mass(100, 1000, 10000)</div>
+</div>
+<div class="scenario-card">
+<h4>6 · Advanced Programming Extension — Replace the Sphere by an Ellipsoidal Homoeoid</h4>
+<p>
         Schutz's original Help suggested replacing the spherical shell by an "elliptical" one and
         testing the surprising result that the field inside can still vanish. This idea is worth
         retaining, but it needs a more precise formulation. In three dimensions the corresponding
@@ -995,7 +930,7 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
         Merely placing equal masses uniformly over an arbitrary ellipsoidal surface does not, in
         general, reproduce that mass distribution.
       </p>
-      <p>
+<p>
         Make a separate experimental copy of the program, replace the spherical geometry by an
         axially symmetric ellipsoidal homoeoid, and calculate the field at several interior points,
         including points off the symmetry axis. Verify that the interior field tends toward zero as
@@ -1003,16 +938,19 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
         be represented by a point mass at the center. This is a substantial extension rather than
         a routine parameter experiment.
       </p>
-      <div class="sc-params">advanced · geometry, tile masses, and off-axis field components must change</div>
-    </div>
-
-  </div>
+<div class="sc-params">advanced · geometry, tile masses, and off-axis field components must change</div>
+</div>
+</div>
 <!-- ============================================================
      RESTORE TO DEFAULTS CALLOUT
      ============================================================ -->
 
+<!-- ============================================================
+     END RESTORE TO DEFAULTS CALLOUT
+     ============================================================ -->
+<!-- ── Related programs ── -->
 <section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
-  <div style="
+<div style="
     border: 1.5px solid #b5811a;
     border-left: 5px solid #b5811a;
     border-radius: 6px;
@@ -1022,12 +960,11 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
     gap: 1em;
     align-items: flex-start;
   ">
-    <!-- Icon -->
-    <div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
-
-    <!-- Content -->
-    <div>
-      <div style="
+<!-- Icon -->
+<div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
+<!-- Content -->
+<div>
+<div style="
         font-weight: 700;
         font-size: 0.95em;
         color: #7b2d00;
@@ -1035,96 +972,76 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
         text-transform: uppercase;
         letter-spacing: 0.04em;
       ">Restoring Default Parameter Values</div>
-
-      <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        After experimenting with parameter values in <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>,
-        you can restore the originals using any of the following methods:
+<p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
+        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
+        you can restore the original program files using any of the following methods:
       </p>
-
-      <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
-        <li>
-          <strong>Same session:</strong>
+<ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
+<li>
+<strong>Same session:</strong>
           Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
           (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
-          (macOS) repeatedly in PyCharm to undo your edits.
+          (macOS) repeatedly in your editor to undo your edits.
         </li>
-        <li>
-          <strong>After reopening PyCharm:</strong>
-          Right-click <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
-          in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
         </li>
-        <li>
-          <strong>Full reset:</strong>
+<li>
+<strong>Full reset:</strong>
           Re-download the ZIP from
-          <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank"
-             style="color:#7b2d00; text-decoration:underline;">
+          <a href="https://github.com/tomyee3-org/GFTGU-Programs" style="color:#7b2d00; text-decoration:underline;" target="_blank">
             github.com/tomyee3-org/GFTGU-Programs
           </a>
           and replace this program's folder with the fresh copy.
         </li>
-      </ul>
-
-      <p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
-        For step-by-step instructions on all four restore methods, see
-        <strong>Section&nbsp;10</strong> of the
-        <em>GFTGU Python Setup Guide</em>.
+</ul>
+<p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
+        For additional ways to restore program files, see the corresponding
+        recovery instructions in the <em>GFTGU Python Setup Guide</em>.
       </p>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     END RESTORE TO DEFAULTS CALLOUT
-     ============================================================ -->
-
-
-  <!-- ── Related programs ── -->
-  <h2 id="related">Related Programs</h2>
-  <p>
-    <strong>SphereGravity</strong> provides a numerical demonstration of Newton's shell theorem,
+</div>
+</div>
+</section><h2 id="related">Related Programs</h2>
+<p>
+<strong>SphereGravity</strong> provides a numerical demonstration of Newton's shell theorem,
     a result used throughout later gravitational calculations:
   </p>
-  <div class="related-list">
-    <a class="related-tag" href="../07-Atmosphere/Atmosphere.html">Atmosphere (Ch. 7)</a>
-    <a class="related-tag" href="../08-Star/Star.html">Star (Ch. 8)</a>
-    <a class="related-tag" href="../20-Neutron/Neutron.html">Neutron (Ch. 20)</a>
-    <a class="related-tag" href="../21-RelativisticOrbit/RelativisticOrbit.html">RelativisticOrbit (Ch. 21)</a>
-  </div>
-
-  <p style="margin-top:18px; font-family:var(--sans); font-size:0.875rem; color:var(--muted);">
-    <strong>Textbook reference:</strong>
+<div class="related-list">
+<a class="related-tag" href="../07-Atmosphere/Atmosphere.html">Atmosphere (Ch. 7)</a>
+<a class="related-tag" href="../08-Star/Star.html">Star (Ch. 8)</a>
+<a class="related-tag" href="../20-Neutron/Neutron.html">Neutron (Ch. 20)</a>
+<a class="related-tag" href="../21-RelativisticOrbit/RelativisticOrbit.html">RelativisticOrbit (Ch. 21)</a>
+</div>
+<p style="margin-top:18px; font-family:var(--sans); font-size:0.875rem; color:var(--muted);">
+<strong>Textbook reference:</strong>
     B. F. Schutz, <em>Gravity from the Ground Up</em>, Cambridge University Press, 2003.
     Chapter 4, Investigation 4.3 ("Newton's shell theorem").
   </p>
-
-  <!-- ── License ── -->
-  <section id="license">
-    <h2>License</h2>
-    <p>
+<!-- ── License ── -->
+<section id="license">
+<h2>License</h2>
+<p>
       This Python port is derived from the original Java programs by
       <strong>Bernard Schutz</strong> accompanying
       <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
       The port is distributed under the
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
          International (CC BY-NC-SA 4.0)</a> license.
     </p>
-    <p>
+<p>
       You are free to share and adapt the material for non-commercial purposes, provided
       you give appropriate credit and distribute any adaptations under the same license.
     </p>
-  </section>
-
+</section>
 </main>
-
 <!-- ══════════════════════ FOOTER ══════════════════════ -->
 <footer>
-  <em>Gravity from the Ground Up</em> — Python Programs ·
+<em>Gravity from the Ground Up</em> — Python Programs ·
   Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
   Python port © 2024–2026 Thomas Yee ·
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
 </footer>
-
 </div><!-- .page-wrap -->
 </body>
 </html>

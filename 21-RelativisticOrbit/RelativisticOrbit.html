@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RelativisticOrbit – Help File | GFtGU Programs</title>
-
-  <!-- MathJax 3 -->
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RelativisticOrbit – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
     MathJax = {
       tex: {
         inlineMath:  [['\\(','\\)']],
@@ -16,10 +15,8 @@
       options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
-          id="MathJax-script" async></script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
     /* ── Reset & custom properties ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -332,63 +329,52 @@
 </head>
 <body>
 <div class="page-wrap">
-
 <!-- ═══════════════════ HEADER ═══════════════════ -->
 <header>
-  <div class="badge">GFtGU Programs</div>
-  <h1>RelativisticOrbit &nbsp;—&nbsp; <em>Orbital Precession in Schwarzschild Geometry</em></h1>
-  <div class="sub">
+<div class="badge">GFtGU Programs</div>
+<h1>RelativisticOrbit  —  <em>Orbital Precession in Schwarzschild Geometry</em></h1>
+<div class="sub">
     Source Code:
-    <a href="https://github.com/tomyee3-org/GFTGU-Programs"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>· 
     <br/>
     Documentation:
-        <a href="https://github.com/tomyee3-org/GFTGU-Documentation"
-       target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
   </div>
 </header>
-
 <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
 <nav id="sidebar">
-
-  <div class="nav-label">Contents</div>
-  <a href="#overview">Overview</a>
-  <a href="#quickstart">Quick Start</a>
-  <a href="#modules">Program Files</a>
-
-  <hr>
-  <div class="nav-label">Physics</div>
-  <a href="#schwarzschild">Schwarzschild Geometry</a>
-  <a href="#gr-acceleration">GR Effective Acceleration</a>
-  <a href="#kepler-constants">Kepler Constants K and Q</a>
-  <a href="#precession">Orbital Precession</a>
-  <a href="#horizon">Event Horizon</a>
-
-  <hr>
-  <div class="nav-label">Numerical Methods</div>
-  <a href="#predictor-corrector">Predictor–Corrector</a>
-  <a href="#timestep">Adaptive Timestep</a>
-  <a href="#orbit-count">Orbit Counting</a>
-  <a href="#convergence">Convergence Criteria</a>
-
-  <hr>
-  <div class="nav-label">Reference</div>
-  <a href="#parameters">Parameters</a>
-  <a href="#scenarios">Suggested Scenarios</a>
-  <a href="#vs-newtonian">GR vs. Newtonian</a>
-  <a href="#related">Related Programs</a>
-  <a href="#license">License</a>
-
+<div class="nav-label">Contents</div>
+<a href="#overview">Overview</a>
+<a href="#quickstart">Quick Start</a>
+<a href="#modules">Program Files</a>
+<hr/>
+<div class="nav-label">Physics</div>
+<a href="#schwarzschild">Schwarzschild Geometry</a>
+<a href="#gr-acceleration">GR Effective Acceleration</a>
+<a href="#kepler-constants">Kepler Constants K and Q</a>
+<a href="#precession">Orbital Precession</a>
+<a href="#horizon">Event Horizon</a>
+<hr/>
+<div class="nav-label">Numerical Methods</div>
+<a href="#predictor-corrector">Predictor–Corrector</a>
+<a href="#timestep">Adaptive Timestep</a>
+<a href="#orbit-count">Orbit Counting</a>
+<a href="#convergence">Convergence Criteria</a>
+<hr/>
+<div class="nav-label">Reference</div>
+<a href="#parameters">Parameters</a>
+<a href="#scenarios">Suggested Scenarios</a>
+<a href="#vs-newtonian">GR vs. Newtonian</a>
+<a href="#related">Related Programs</a>
+<a href="#license">License</a>
 </nav>
-
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
-
-  <!-- ─── Overview ─── -->
-  <section id="overview">
-    <h2>Overview</h2>
-    <p>
-      <strong>RelativisticOrbit</strong> integrates the equatorial trajectory of
+<!-- ─── Overview ─── -->
+<section id="overview">
+<h2>Overview</h2>
+<p>
+<strong>RelativisticOrbit</strong> integrates the equatorial trajectory of
       a negligible-mass test particle around a one-solar-mass, non-rotating,
       spherically symmetric source. In <code>model="schwarzschild"</code> the
       program uses an exact Newtonian-looking rewriting of the spatial
@@ -396,151 +382,143 @@
       particle's own proper time \(\tau\). A <code>"newtonian"</code> mode is
       provided for direct comparison.
     </p>
-    <p>
+<p>
       The displayed curve uses
       \(x=r\cos\phi,\ y=r\sin\phi\), where \(r\) is Schwarzschild areal radius
       and \(\phi\) is azimuth. These are convenient <em>diagram coordinates</em>,
       not global Cartesian coordinates of a flat spatial geometry.
     </p>
-    <p>
+<p>
       Relativistic bound orbits generally precess rather than close. The program
       records periapsides automatically, estimates the mean apsidal advance, and
       reports numerical drift in the conserved specific angular momentum and in
       the effective energy integral of the equation being integrated.
     </p>
-    <div class="note">
-      <strong>Free fall:</strong> The quantity called “acceleration” in the code
+<div class="note">
+<strong>Free fall:</strong> The quantity called “acceleration” in the code
       is \(d^2(x,y)/d\tau^2\), a coordinate second derivative used to integrate
       the orbital diagram. A freely falling test particle has zero physical
       proper acceleration.
     </div>
-  </section>
-
-  <!-- ─── Quick Start ─── -->
-  <section id="quickstart">
-    <h2>Quick Start</h2>
-    <h3>Requirements</h3>
-    <p>Python 3.9 or later with <code>matplotlib</code>:</p>
-    <pre>pip install matplotlib</pre>
-
-    <h3>Running</h3>
-    <pre>cd GFTGU-Programs/RelativisticOrbit
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
+<!-- ─── Quick Start ─── -->
+<section id="quickstart">
+<h2>Quick Start</h2>
+<h3>Requirements</h3>
+<p>Python 3.9 or later with <code>matplotlib</code>:</p>
+<pre>pip install matplotlib</pre>
+<h3>Running</h3>
+<pre>cd GFTGU-Programs/RelativisticOrbit
 python main.py</pre>
-
-    <p>
+<p>
       The default starts at \(r=1.5\times10^4\) m with
       \(dy/d\tau=1.2\times10^8\) m/s. Here \(dy/d\tau\) is a derivative with
       respect to the particle's proper time; it is <strong>not</strong> the
       local physical speed measured by a stationary observer.
     </p>
-    <p>
+<p>
       After the run, the console reports why the integration stopped, accepted
       steps, accumulated azimuthal revolutions, detected periapsides, and
       conservation drift. If at least two periapsides are found, it also reports
       the mean periapsis advance per radial period.
     </p>
-    <div class="note">
-      <strong>Stopping limits:</strong> <code>max_steps</code> is a hard safety
+<div class="note">
+<strong>Stopping limits:</strong> <code>max_steps</code> is a hard safety
       cap. A run can therefore stop at <code>max_steps</code> before it reaches
       <code>max_orbits</code>; this is normal when the requested number of
       revolutions requires more accepted steps. Increase <code>max_steps</code>
       if you want the integration to continue longer.
     </div>
-
-    <h3>Main user controls</h3>
-    <ul style="margin: 0 0 14px 28px; line-height: 2.1;">
-      <li><code>x_init</code> — starting areal radius on the +x diagram axis</li>
-      <li><code>u_init</code> — initial \(dy/d\tau\)</li>
-      <li><code>dt</code> — maximum proper-time integration step</li>
-      <li><code>max_steps</code> — maximum accepted steps</li>
-      <li><code>max_orbits</code> — maximum accumulated azimuthal revolutions</li>
-      <li><code>eps1</code>, <code>eps2</code> — timestep and corrector tolerances</li>
-      <li><code>model</code> — <code>"schwarzschild"</code> or <code>"newtonian"</code></li>
-      <li><code>show_isco</code> — show/hide the true Schwarzschild ISCO circle</li>
-      <li><code>show_periapsides</code> — mark automatically detected periapsides</li>
-    </ul>
-  </section>
-
-  <!-- ─── Program Files ─── -->
-  <section id="modules">
-    <h2>Program Files</h2>
-    <div class="mc">
-      <div class="mc-card">
-        <div class="mc-name">main.py</div>
-        <div class="mc-role">Entry Point &amp; Configuration</div>
-        <p>
+<h3>Main user controls</h3>
+<ul style="margin: 0 0 14px 28px; line-height: 2.1;">
+<li><code>x_init</code> — starting areal radius on the +x diagram axis</li>
+<li><code>u_init</code> — initial \(dy/d\tau\)</li>
+<li><code>dt</code> — maximum proper-time integration step</li>
+<li><code>max_steps</code> — maximum accepted steps</li>
+<li><code>max_orbits</code> — maximum accumulated azimuthal revolutions</li>
+<li><code>eps1</code>, <code>eps2</code> — timestep and corrector tolerances</li>
+<li><code>model</code> — <code>"schwarzschild"</code> or <code>"newtonian"</code></li>
+<li><code>show_isco</code> — show/hide the true Schwarzschild ISCO circle</li>
+<li><code>show_periapsides</code> — mark automatically detected periapsides</li>
+</ul>
+</section>
+<!-- ─── Program Files ─── -->
+<section id="modules">
+<h2>Program Files</h2>
+<div class="mc">
+<div class="mc-card">
+<div class="mc-name">main.py</div>
+<div class="mc-role">Entry Point &amp; Configuration</div>
+<p>
           Holds the user-editable initial conditions, numerical tolerances,
           Schwarzschild/Newtonian switch, and plotting options. It prints the
           run summary and precession/conservation diagnostics.
         </p>
-      </div>
-      <div class="mc-card">
-        <div class="mc-name">physics_relativistic_orbit.py</div>
-        <div class="mc-role">Physics Engine</div>
-        <p>
+</div>
+<div class="mc-card">
+<div class="mc-name">physics_relativistic_orbit.py</div>
+<div class="mc-role">Physics Engine</div>
+<p>
           Defines the nominal solar gravitational parameter, exact SI speed of
           light, Schwarzschild horizon/ISCO/photon-orbit radii, the orbital
           acceleration, circular-orbit proper-time speed, and conserved-quantity
           diagnostic functions.
         </p>
-      </div>
-      <div class="mc-card">
-        <div class="mc-name">driver_relativistic_orbit.py</div>
-        <div class="mc-role">Adaptive Integrator</div>
-        <p>
+</div>
+<div class="mc-card">
+<div class="mc-name">driver_relativistic_orbit.py</div>
+<div class="mc-role">Adaptive Integrator</div>
+<p>
           Validates inputs, advances the orbit with an iterated
           predictor-corrector, rejects unconverged steps, allows timestep
           recovery, unwraps azimuth for revolution counting, interpolates the
           first horizon crossing, detects periapsides, and records the
           termination reason.
         </p>
-      </div>
-      <div class="mc-card">
-        <div class="mc-name">plot_relativistic_orbit.py</div>
-        <div class="mc-role">Plotting</div>
-        <p>
+</div>
+<div class="mc-card">
+<div class="mc-name">plot_relativistic_orbit.py</div>
+<div class="mc-role">Plotting</div>
+<p>
           Draws the orbital diagram with equal spatial scales. The horizon is
           always shown at its true coordinate radius; a separate marker denotes
           the central mass. The ISCO and detected periapsides are optional.
         </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════ PHYSICS ═══════════════════════════ -->
-
-  <!-- ─── Schwarzschild Geometry ─── -->
-  <section id="schwarzschild">
-    <h2>Schwarzschild Geometry</h2>
-    <p>
+</div>
+</div>
+</section>
+<!-- ═══════════════════════════ PHYSICS ═══════════════════════════ -->
+<!-- ─── Schwarzschild Geometry ─── -->
+<section id="schwarzschild">
+<h2>Schwarzschild Geometry</h2>
+<p>
       Outside a non-rotating spherical mass, the vacuum geometry is the
       Schwarzschild spacetime. For the one-solar-mass source used here,
     </p>
-    <div class="eq">
+<div class="eq">
       \[
         r_s=\frac{2GM_\odot}{c^2}\approx 2.953\times10^3\ {\rm m}.
       \]
     </div>
-    <p>
+<p>
       The program uses Schwarzschild areal radius \(r\): a sphere at coordinate
       radius \(r\) has area \(4\pi r^2\). The orbital diagram then maps
       \(r,\phi\) to \(x=r\cos\phi,\ y=r\sin\phi\) for visualization.
     </p>
-    <p>
+<p>
       Schwarzschild coordinate time is <em>not</em> the independent variable of
       this program. The integration advances the particle's proper time
       \(\tau\).
     </p>
-  </section>
-
-  <!-- ─── GR Effective Acceleration ─── -->
-  <section id="gr-acceleration">
-    <h2>General-Relativistic Effective Acceleration</h2>
-    <p>
+</section>
+<!-- ─── GR Effective Acceleration ─── -->
+<section id="gr-acceleration">
+<h2>General-Relativistic Effective Acceleration</h2>
+<p>
       For equatorial timelike Schwarzschild geodesics, the spatial orbit can be
       written in the Newtonian-looking proper-time form
     </p>
-    <div class="eq">
+<div class="eq">
       \[
         \frac{d^2\mathbf r}{d\tau^2}
         =
@@ -548,7 +526,7 @@ python main.py</pre>
         \left(1+\frac{3h^2}{c^2r^2}\right)\mathbf r,
       \]
     </div>
-    <p>
+<p>
       where \(h=r^2d\phi/d\tau\) is the conserved specific angular momentum.
       The additional \(1/r^4\) radial-force term produces apsidal precession.
       In weak fields it is often discussed as the leading relativistic
@@ -556,118 +534,115 @@ python main.py</pre>
       a truncated post-Newtonian force law: with proper time as parameter it is
       an exact rewriting of the Schwarzschild spatial geodesic equation.
     </p>
-    <div class="note">
-      <strong>Coordinate acceleration:</strong>
+<div class="note">
+<strong>Coordinate acceleration:</strong>
       \(d^2\mathbf r/d\tau^2\) should not be confused with an accelerometer
       reading. The test particle is in free fall and has zero proper
       acceleration.
     </div>
-  </section>
-
-  <!-- ─── Kepler Constants K and Q ─── -->
-  <section id="kepler-constants">
-    <h2>Angular-Momentum Constants</h2>
-    <p>
+</section>
+<!-- ─── Kepler Constants K and Q ─── -->
+<section id="kepler-constants">
+<h2>Angular-Momentum Constants</h2>
+<p>
       The initial conditions are \(x=x_0,\ y=0,\ dx/d\tau=0,\ dy/d\tau=u_0\).
       Therefore the conserved specific angular momentum is
     </p>
-    <div class="eq">
+<div class="eq">
       \[
         h=x_0u_0.
       \]
     </div>
-    <p>
+<p>
       Schutz's original notation defined \(K=h/2\) and
       \(Q=12K^2/c^2=3h^2/c^2\). The revised code uses \(h\) directly but the
       physics is identical.
     </p>
-    <p>
+<p>
       The driver independently recomputes
       \(h=x\,dy/d\tau-y\,dx/d\tau\) along the numerical trajectory and reports
       its maximum fractional drift as an accuracy diagnostic.
     </p>
-  </section>
-
-  <!-- ─── Orbital Precession ─── -->
-  <section id="precession">
-    <h2>Orbital Precession</h2>
-    <p>
+</section>
+<!-- ─── Orbital Precession ─── -->
+<section id="precession">
+<h2>Orbital Precession</h2>
+<p>
       A bound Schwarzschild orbit generally has two different periods: the
       azimuth can advance by \(2\pi\) before the particle has returned from one
       periapsis to the next. The angular excess between successive periapsides
       is the apsidal advance.
     </p>
-    <p>
+<p>
       RelativisticOrbit automatically looks for local minima of
       \(r=\sqrt{x^2+y^2}\). If two or more periapsides are present, the console
       reports
     </p>
-    <div class="eq">
+<div class="eq">
       \[
         \Delta\phi_{\rm advance}
         =
         |\phi_{p,n+1}-\phi_{p,n}|-2\pi .
       \]
     </div>
-    <p>
+<p>
       In the weak-field limit this can be compared with the familiar
       Schwarzschild approximation
     </p>
-    <div class="eq">
+<div class="eq">
       \[
         \Delta\phi \approx
         \frac{6\pi GM}{a(1-e^2)c^2}
       \]
     </div>
-    <p>
+<p>
       for an orbit of semimajor axis \(a\) and eccentricity \(e\).
     </p>
-    <div class="note">
-      <strong>Two different counters:</strong> <code>max_orbits</code> limits
+<div class="note">
+<strong>Two different counters:</strong> <code>max_orbits</code> limits
       accumulated <em>azimuthal revolutions</em>. The periapsis detector measures
       <em>radial periods</em>. In a precessing orbit these are not identical.
     </div>
-  </section>
-
-  <!-- ─── Event Horizon ─── -->
-  <section id="horizon">
-    <h2>Event Horizon, Circular Orbits, and the ISCO</h2>
-    <p>
+</section>
+<!-- ─── Event Horizon ─── -->
+<section id="horizon">
+<h2>Event Horizon, Circular Orbits, and the ISCO</h2>
+<p>
       For a Schwarzschild source,
       \(r_s=2GM/c^2\) is the horizon and
       \(r_{\rm ISCO}=6GM/c^2=3r_s\) is the innermost
       <em>stable</em> timelike circular orbit.
     </p>
-    <p>
+<p>
       Timelike circular geodesics also exist in the interval
       \(3GM/c^2&lt;r&lt;6GM/c^2\), but they are unstable. No timelike circular
       geodesic exists at or below the photon-orbit radius \(3GM/c^2\).
     </p>
-    <p>
+<p>
       For this program's proper-time initial derivative, the exact circular
       value is
     </p>
-    <div class="eq">
+<div class="eq">
       \[
         u_{\rm circular}
         =
         \sqrt{\frac{GM}{r-3GM/c^2}},
-        \qquad r>3GM/c^2.
+        \qquad r&gt;3GM/c^2.
       \]
     </div>
-    <p>
+<p>
       This quantity is \(dy/d\tau\), not a locally measured physical speed, so
       it is not constrained to remain below \(c\). Its divergence as
       \(r\rightarrow3GM/c^2\) reflects the fact that a timelike circular
       geodesic cannot reach the photon orbit.
     </p>
-    <p>
+<p>
       A geodesic inside the ISCO does not automatically “decay.” This program
       contains no radiation reaction. Depending on its constants of motion, a
       particle can plunge, execute several near-circular whirls before plunging,
       or pass to periapsis inside the ISCO and return outward.
     </p>
-    <p>
+<p>
       The driver detects the first intersection of an accepted path segment
       with the true horizon circle and stops there. The crossing point and time
       are estimated by linear interpolation along that last accepted segment,
@@ -675,19 +650,17 @@ python main.py</pre>
       precise. The plot never enlarges the horizon merely to make it visible; a
       separate central marker identifies the origin in weak-field plots.
     </p>
-  </section>
-
-  <!-- ═══════════════════════════ NUMERICAL METHODS ═══════════════════════════ -->
-
-  <!-- ─── Predictor–Corrector ─── -->
-  <section id="predictor-corrector">
-    <h2>Predictor–Corrector</h2>
-    <p>
+</section>
+<!-- ═══════════════════════════ NUMERICAL METHODS ═══════════════════════════ -->
+<!-- ─── Predictor–Corrector ─── -->
+<section id="predictor-corrector">
+<h2>Predictor–Corrector</h2>
+<p>
       Each attempted proper-time step begins with a constant-acceleration
       predictor for position and velocity. If the acceleration-change test
       passes, an iterated trapezoidal corrector refines both:
     </p>
-    <div class="eq">
+<div class="eq">
       \[
         \mathbf v^{n+1}
         =
@@ -698,57 +671,55 @@ python main.py</pre>
         \mathbf r^n+\frac{\mathbf v^n+\mathbf v^{n+1}}{2}\Delta\tau .
       \]
     </div>
-    <p>
+<p>
       The endpoint acceleration is recomputed from each refined position.
       Corrector iteration is capped at ten passes. If it has not converged by
       then, the entire attempted step is rejected, the timestep is halved, and
       the step is retried.
     </p>
-  </section>
-
-  <!-- ─── Adaptive Timestep ─── -->
-  <section id="timestep">
-    <h2>Adaptive Timestep</h2>
-    <p>
+</section>
+<!-- ─── Adaptive Timestep ─── -->
+<section id="timestep">
+<h2>Adaptive Timestep</h2>
+<p>
       The predictor's acceleration vector is compared with the start-of-step
       acceleration using the rotationally invariant Euclidean norm,
     </p>
-    <div class="eq">
+<div class="eq">
       \[
         \delta_a=
         \frac{\|\tilde{\mathbf a}-\mathbf a^n\|}
         {\max(\|\tilde{\mathbf a}\|,\|\mathbf a^n\|)}.
       \]
     </div>
-    <p>
+<p>
       If \(\delta_a&gt;\varepsilon_1\), the attempted step is discarded and
       \(\Delta\tau\) is halved. After a successful step, the working timestep
       grows by 10% toward the user's <code>dt</code>, which acts as the maximum
       allowed timestep. Thus a short close passage does not permanently force
       the rest of the run to use its smallest timestep.
     </p>
-    <p>
+<p>
       A retry limit prevents pathological initial conditions from causing
       endless timestep halving.
     </p>
-  </section>
-
-  <!-- ─── Orbit Counting ─── -->
-  <section id="orbit-count">
-    <h2>Revolution Counting</h2>
-    <p>
+</section>
+<!-- ─── Orbit Counting ─── -->
+<section id="orbit-count">
+<h2>Revolution Counting</h2>
+<p>
       The driver computes \(\phi=\operatorname{atan2}(y,x)\), unwraps the change
       in azimuth at every accepted step, and accumulates the signed angular
       travel.
     </p>
-    <div class="eq">
+<div class="eq">
       \[
         N_{
 m rev}=rac{|\Delta\phi_{
 m accumulated}|}{2\pi}.
       \]
     </div>
-    <p>
+<p>
       This method counts accumulated azimuthal travel directly, so it works for
       precessing orbits and for either direction of motion. Integration stops
       when the accumulated revolution count reaches <code>max_orbits</code>,
@@ -756,28 +727,27 @@ m accumulated}|}{2\pi}.
       condition is tested after each accepted step, the reported count can
       exceed the requested limit by a small fraction of one step.
     </p>
-  </section>
-
-  <!-- ─── Convergence Criteria ─── -->
-  <section id="convergence">
-    <h2>Convergence and Numerical Diagnostics</h2>
-    <table>
-      <thead><tr><th>Quantity</th><th>Default</th><th>Role</th></tr></thead>
-      <tbody>
-        <tr><td><code>eps1</code></td><td>0.05</td><td>Maximum fractional acceleration-vector change allowed by the predictor gate.</td></tr>
-        <tr><td><code>eps2</code></td><td>1e-4</td><td>Required fractional convergence of successive corrected velocity vectors.</td></tr>
-      </tbody>
-    </table>
-    <p>
+</section>
+<!-- ─── Convergence Criteria ─── -->
+<section id="convergence">
+<h2>Convergence and Numerical Diagnostics</h2>
+<table>
+<thead><tr><th>Quantity</th><th>Default</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td><code>eps1</code></td><td>0.05</td><td>Maximum fractional acceleration-vector change allowed by the predictor gate.</td></tr>
+<tr><td><code>eps2</code></td><td>1e-4</td><td>Required fractional convergence of successive corrected velocity vectors.</td></tr>
+</tbody>
+</table>
+<p>
       The program requires \(0&lt;\varepsilon_2&lt;\varepsilon_1&lt;1\).
       An unconverged corrector step is rejected: the timestep is halved and the step is retried.
     </p>
-    <p>
+<p>
       Two conserved quantities provide additional checks. The driver reports
       maximum fractional drift in
       \(h=x\,dy/d\tau-y\,dx/d\tau\) and in the effective energy integral
     </p>
-    <div class="eq">
+<div class="eq">
       \[
         \mathcal E_{\rm eff}
         =
@@ -787,53 +757,50 @@ m accumulated}|}{2\pi}.
         -\frac{GMh^2}{c^2r^3}
       \]
     </div>
-    <p>
+<p>
       for Schwarzschild mode. In Newtonian mode the final \(-GMh^2/(c^2r^3)\) term is omitted. These are diagnostics of the integrated orbital
       equation; \(\mathcal E_{\rm eff}\) should not be mistaken for a local
       observer's measured kinetic-plus-potential energy.
     </p>
-  </section>
-
-  <!-- ═══════════════════════════ REFERENCE ═══════════════════════════ -->
-
-  <!-- ─── Parameters ─── -->
-  <section id="parameters">
-    <h2>Parameters</h2>
-    <table>
-      <thead><tr><th>Parameter</th><th>Default</th><th>Meaning</th></tr></thead>
-      <tbody>
-        <tr><td><code>x_init</code></td><td>1.5e4 m</td><td>Initial Schwarzschild areal radius, placed on +x in the diagram. In Schwarzschild mode it must exceed the horizon radius (about 2953 m).</td></tr>
-        <tr><td><code>u_init</code></td><td>1.2e8 m/s</td><td>Initial \(dy/d\tau\), not a local measured speed.</td></tr>
-        <tr><td><code>dt</code></td><td>2e-6 s</td><td>Maximum proper-time step.</td></tr>
-        <tr><td><code>max_steps</code></td><td>6000</td><td>Hard cap on accepted steps; a run can stop here before reaching <code>max_orbits</code>.</td></tr>
-        <tr><td><code>max_orbits</code></td><td>10</td><td>Maximum accumulated azimuthal revolutions; the reported count can exceed the limit slightly by the angular travel in the final accepted step.</td></tr>
-        <tr><td><code>eps1</code></td><td>0.05</td><td>Acceleration-vector timestep tolerance.</td></tr>
-        <tr><td><code>eps2</code></td><td>1e-4</td><td>Corrector velocity-convergence tolerance.</td></tr>
-        <tr><td><code>model</code></td><td>"schwarzschild"</td><td><code>"schwarzschild"</code> or <code>"newtonian"</code>.</td></tr>
-        <tr><td><code>show_isco</code></td><td>True</td><td>Show the true \(6GM/c^2\) reference circle.</td></tr>
-        <tr><td><code>show_periapsides</code></td><td>False</td><td>Mark detected radius minima on the plot.</td></tr>
-      </tbody>
-    </table>
-    <p>
+</section>
+<!-- ═══════════════════════════ REFERENCE ═══════════════════════════ -->
+<!-- ─── Parameters ─── -->
+<section id="parameters">
+<h2>Parameters</h2>
+<table>
+<thead><tr><th>Parameter</th><th>Default</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>x_init</code></td><td>1.5e4 m</td><td>Initial Schwarzschild areal radius, placed on +x in the diagram. In Schwarzschild mode it must exceed the horizon radius (about 2953 m).</td></tr>
+<tr><td><code>u_init</code></td><td>1.2e8 m/s</td><td>Initial \(dy/d\tau\), not a local measured speed.</td></tr>
+<tr><td><code>dt</code></td><td>2e-6 s</td><td>Maximum proper-time step.</td></tr>
+<tr><td><code>max_steps</code></td><td>6000</td><td>Hard cap on accepted steps; a run can stop here before reaching <code>max_orbits</code>.</td></tr>
+<tr><td><code>max_orbits</code></td><td>10</td><td>Maximum accumulated azimuthal revolutions; the reported count can exceed the limit slightly by the angular travel in the final accepted step.</td></tr>
+<tr><td><code>eps1</code></td><td>0.05</td><td>Acceleration-vector timestep tolerance.</td></tr>
+<tr><td><code>eps2</code></td><td>1e-4</td><td>Corrector velocity-convergence tolerance.</td></tr>
+<tr><td><code>model</code></td><td>"schwarzschild"</td><td><code>"schwarzschild"</code> or <code>"newtonian"</code>.</td></tr>
+<tr><td><code>show_isco</code></td><td>True</td><td>Show the true \(6GM/c^2\) reference circle.</td></tr>
+<tr><td><code>show_periapsides</code></td><td>False</td><td>Mark detected radius minima on the plot.</td></tr>
+</tbody>
+</table>
+<p>
       The physics module uses the IAU nominal solar gravitational parameter
       \(GM_\odot=1.3271244\times10^{20}\ {\rm m^3\,s^{-2}}\) and exact SI
       \(c=299\,792\,458\ {\rm m\,s^{-1}}\).
     </p>
-  </section>
-
-  <!-- ─── Suggested Scenarios ─── -->
-  <section id="scenarios">
-    <h2>Suggested Scenarios</h2>
-    <div class="note">
-      <strong>How to use these exercises:</strong> work roughly from top to
+</section>
+<!-- ─── Suggested Scenarios ─── -->
+<section id="scenarios">
+<h2>Suggested Scenarios</h2>
+<div class="note">
+<strong>How to use these exercises:</strong> work roughly from top to
       bottom; the sequence moves from simple observation to progressively more
       demanding strong-field experiments. Here <em>periapsis</em> means the
       closest approach in a radial cycle. The plotted \(x,y\) values are diagram
       coordinates built from Schwarzschild areal radius and azimuth, not global
       flat-space Cartesian coordinates.
     </div>
-    <div class="note">
-      <strong>Choosing a starting timestep:</strong> for a near-circular orbit,
+<div class="note">
+<strong>Choosing a starting timestep:</strong> for a near-circular orbit,
       a useful first estimate for \(N\) samples per revolution is
       \[
         \Delta\tau \sim \frac{2\pi r}{uN}.
@@ -843,44 +810,39 @@ m accumulated}|}{2\pi}.
       derivatives can force repeated timestep rejection or make diagnostics
       less accurate.
     </div>
-
-    <div class="scenario-grid">
-      <div class="scenario-card">
-        <div class="sc-title">1. Default Strong-Field Rosette — Introductory</div>
+<div class="scenario-grid">
+<div class="scenario-card">
+<div class="sc-title">1. Default Strong-Field Rosette — Introductory</div>
         Run the supplied defaults. Then set
         <code>show_periapsides=True</code>. Do successive periapsides occur at
         the same angle? Compare their rotation with the printed mean apsidal
         advance. Also note whether the run stops at <code>max_steps</code> or
         <code>max_orbits</code>.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">2. Regularity of the Rosette — Introductory</div>
+<div class="scenario-card">
+<div class="sc-title">2. Regularity of the Rosette — Introductory</div>
         Inspect <code>result.periapsis_radius</code> for a bound precessing run.
         Verify that successive minimum radii remain nearly the same, within the
         numerical drift reported by the program. The orbit changes orientation
         even though its radial pattern remains regular.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">3. GR vs. Newtonian — Introductory</div>
+<div class="scenario-card">
+<div class="sc-title">3. GR vs. Newtonian — Introductory</div>
         Run identical initial conditions twice, changing only
         <code>model="schwarzschild"</code> to <code>"newtonian"</code>.
         The Newtonian bound orbit should be nearly closed, while the
         Schwarzschild orbit precesses. What changes in the orbit, and what
         remains the same about the initial data?
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">4. Fall In or Escape — Introductory</div>
+<div class="scenario-card">
+<div class="sc-title">4. Fall In or Escape — Introductory</div>
         Starting from the default data, reduce <code>u_init</code> until the
         orbit crosses the horizon, then increase it until the particle escapes
         rather than remaining bound. Use modest changes first, then narrow the
         transition. Record the termination reason in each case.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">5. Circular Geodesics — Intermediate</div>
+<div class="scenario-card">
+<div class="sc-title">5. Circular Geodesics — Intermediate</div>
         Use <code>circular_proper_time_speed(r)</code> from the physics module.
         Compare a stable circular orbit above \(6GM/c^2\) with an unstable
         circular orbit between \(3GM/c^2\) and \(6GM/c^2\). For the unstable
@@ -888,18 +850,16 @@ m accumulated}|}{2\pi}.
         departure over many steps. Try perturbations on both sides of the exact
         value.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">6. Numerical Convergence — Intermediate</div>
+<div class="scenario-card">
+<div class="sc-title">6. Numerical Convergence — Intermediate</div>
         Tighten <code>eps1</code> and <code>eps2</code> and/or reduce
         <code>dt</code>. Compare the measured apsidal advance and the reported
         angular-momentum and effective-energy drift. A trustworthy physical
         result should settle toward a stable value as the numerical controls are
         tightened.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">7. Inside the ISCO — Intermediate</div>
+<div class="scenario-card">
+<div class="sc-title">7. Inside the ISCO — Intermediate</div>
         Search for an eccentric orbit whose periapsis lies inside
         \(6GM/c^2\) but which still returns outward. A useful strategy is to
         begin just outside the ISCO and vary <code>u_init</code> above the local
@@ -908,27 +868,24 @@ m accumulated}|}{2\pi}.
         actually reached. This shows why crossing the ISCO does not by itself
         imply immediate plunge.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">8. Toward the Photon Orbit — Advanced</div>
+<div class="scenario-card">
+<div class="sc-title">8. Toward the Photon Orbit — Advanced</div>
         Explore bound or near-capture trajectories with closest approach moving
         toward \(3GM/c^2\) from above. Watch how much azimuth can accumulate
         during a close passage. Timelike circular geodesics cease to exist at
         and below \(3GM/c^2\), so this experiment becomes increasingly
         sensitive as that radius is approached.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">9. Zoom-Whirl / Plunge — Advanced</div>
+<div class="scenario-card">
+<div class="sc-title">9. Zoom-Whirl / Plunge — Advanced</div>
         Tune <code>u_init</code> near the boundary between capture (plunge) and
         a bound or escaping orbit. Some trajectories execute several
         near-circular whirls before crossing the horizon. Expect fine tuning:
         narrow the interval in <code>u_init</code> gradually and keep an eye on
         the conservation diagnostics.
       </div>
-
-      <div class="scenario-card">
-        <div class="sc-title">10. Weak-Field Precession — Advanced</div>
+<div class="scenario-card">
+<div class="sc-title">10. Weak-Field Precession — Advanced</div>
         Move the starting radius outward and choose a correspondingly weaker
         bound orbit. Verify qualitatively that Schwarzschild precession becomes
         smaller as the field weakens, while Newtonian mode remains nearly
@@ -937,15 +894,9 @@ m accumulated}|}{2\pi}.
         accurately requires carefully matched orbital elements, much tighter
         numerical tolerances, and many well-resolved radial periods.
       </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-     RESTORE TO DEFAULTS CALLOUT
-     ============================================================ -->
-
-<section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
-  <div style="
+</div>
+</section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
+<div style="
     border: 1.5px solid #b5811a;
     border-left: 5px solid #b5811a;
     border-radius: 6px;
@@ -955,12 +906,11 @@ m accumulated}|}{2\pi}.
     gap: 1em;
     align-items: flex-start;
   ">
-    <!-- Icon -->
-    <div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
-
-    <!-- Content -->
-    <div>
-      <div style="
+<!-- Icon -->
+<div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
+<!-- Content -->
+<div>
+<div style="
         font-weight: 700;
         font-size: 0.95em;
         color: #7b2d00;
@@ -968,56 +918,53 @@ m accumulated}|}{2\pi}.
         text-transform: uppercase;
         letter-spacing: 0.04em;
       ">Restoring Default Parameter Values</div>
-
-      <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        After experimenting with parameter values in <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>,
-        you can restore the originals using any of the following methods:
+<p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
+        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
+        you can restore the original program files using any of the following methods:
       </p>
-
-      <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
-        <li>
-          <strong>Same session:</strong>
+<ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
+<li>
+<strong>Same session:</strong>
           Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
           (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
           (macOS) repeatedly in your editor to undo your edits.
         </li>
-        <li>
-          <strong>If you are using PyCharm:</strong>
-          Right-click <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
-          in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
         </li>
-        <li>
-          <strong>Full reset:</strong>
+<li>
+<strong>Full reset:</strong>
           Re-download the ZIP from
-          <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank"
-             style="color:#7b2d00; text-decoration:underline;">
+          <a href="https://github.com/tomyee3-org/GFTGU-Programs" style="color:#7b2d00; text-decoration:underline;" target="_blank">
             github.com/tomyee3-org/GFTGU-Programs
           </a>
           and replace this program's folder with the fresh copy.
         </li>
-      </ul>
-
-      <p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
+</ul>
+<p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
         For additional ways to restore program files, see the corresponding
         recovery instructions in the <em>GFTGU Python Setup Guide</em>.
       </p>
-    </div>
-  </div>
+</div>
+</div>
 </section>
+<!-- ============================================================
+     RESTORE TO DEFAULTS CALLOUT
+     ============================================================ -->
 
 <!-- ============================================================
      END RESTORE TO DEFAULTS CALLOUT
      ============================================================ -->
-  
-  <!-- ─── GR vs. Newtonian ─── -->
-  <section id="vs-newtonian">
-    <h2>Schwarzschild vs. Newtonian</h2>
-    <p>
+<!-- ─── GR vs. Newtonian ─── -->
+<section id="vs-newtonian">
+<h2>Schwarzschild vs. Newtonian</h2>
+<p>
       The two modes use the same initial diagram coordinates and proper-time
       derivative values. Newtonian mode removes the relativistic
       \(3h^2/(c^2r^2)\) force factor:
     </p>
-    <div class="eq">
+<div class="eq">
       \[
         \mathbf a_{\rm N}=-\frac{GM}{r^3}\mathbf r,
         \qquad
@@ -1026,47 +973,41 @@ m accumulated}|}{2\pi}.
         \left(1+\frac{3h^2}{c^2r^2}\right)\mathbf r .
       \]
     </div>
-    <p>
+<p>
       This switch is intended as a controlled numerical experiment. In the
       Newtonian model there is no physical Schwarzschild horizon or ISCO, so
       those reference circles are omitted from the plot.
     </p>
-  </section>
-
-  <!-- ─── Related Programs ─── -->
-  <section id="related">
-    <h2>Related Programs</h2>
-    <ul style="margin-left: 24px;">
-      <li><strong>Orbit</strong> — Newtonian central-force orbital motion using a related adaptive predictor-corrector.</li>
-      <li><strong>MercPert</strong> — restricted three-body perturbations and apsidal/orbital structure in Newtonian gravity.</li>
-      <li><strong>Binary</strong> — mutual Newtonian two-body motion.</li>
-    </ul>
-  </section>
-
-  <!-- ── License ── -->
-  <section id="license">
-    <h2>License</h2>
-    <p>
+</section>
+<!-- ─── Related Programs ─── -->
+<section id="related">
+<h2>Related Programs</h2>
+<ul style="margin-left: 24px;">
+<li><strong>Orbit</strong> — Newtonian central-force orbital motion using a related adaptive predictor-corrector.</li>
+<li><strong>MercPert</strong> — restricted three-body perturbations and apsidal/orbital structure in Newtonian gravity.</li>
+<li><strong>Binary</strong> — mutual Newtonian two-body motion.</li>
+</ul>
+</section>
+<!-- ── License ── -->
+<section id="license">
+<h2>License</h2>
+<p>
       This software is based on the programs by <strong>Bernard Schutz</strong>
       accompanying <em>Gravity from the Ground Up</em> (Cambridge University
       Press, 2003) and is distributed under the
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-         target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike
       4.0 International (CC BY-NC-SA 4.0)</a> license.
     </p>
-  </section>
-
+</section>
 </main>
-
 <!-- ══════════════════════════════════════════════
      FOOTER
 ═══════════════════════════════════════════════ -->
 <footer>
-  <em>Gravity from the Ground Up</em> — Python Programs ·
+<em>Gravity from the Ground Up</em> — Python Programs ·
   Bernard Schutz, Cambridge University Press ·
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
 </footer>
-
 </div><!-- .page-wrap -->
 </body>
 </html>
