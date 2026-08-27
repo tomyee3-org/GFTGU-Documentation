@@ -371,7 +371,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.0&nbsp;&nbsp;&nbsp;&nbsp;Build c6ca9864ce76
+  Version 1.0.1&nbsp;&nbsp;&nbsp;&nbsp;Build bdd9a90c623a
 </p>
 
 <!-- ─── Overview ─── -->
@@ -559,7 +559,7 @@ python main.py</pre>
     </div>
 <p>
       Schutz's original notation defined \(K=h/2\) and
-      \(Q=12K^2/c^2=3h^2/c^2\). The revised code uses \(h\) directly but the
+      \(Q=12K^2/c^2=3h^2/c^2\). The program uses \(h\) directly, but the
       physics is identical.
     </p>
 <p>
@@ -614,13 +614,14 @@ python main.py</pre>
 <p>
       For a Schwarzschild source,
       \(r_s=2GM/c^2\) is the horizon and
-      \(r_{\rm ISCO}=6GM/c^2=3r_s\) is the innermost
+      \(r_{\rm ISCO}=6GM/c^2=3r_s\approx8.860\times10^3\ {\rm m}\) is the innermost
       <em>stable</em> timelike circular orbit.
     </p>
 <p>
       Timelike circular geodesics also exist in the interval
       \(3GM/c^2&lt;r&lt;6GM/c^2\), but they are unstable. No timelike circular
-      geodesic exists at or below the photon-orbit radius \(3GM/c^2\).
+      geodesic exists at or below the photon-orbit radius
+      \(3GM/c^2\approx4.430\times10^3\ {\rm m}\).
     </p>
 <p>
       For this program's proper-time initial derivative, the exact circular
@@ -718,9 +719,7 @@ python main.py</pre>
     </p>
 <div class="eq">
       \[
-        N_{
-m rev}=rac{|\Delta\phi_{
-m accumulated}|}{2\pi}.
+        N_{\rm rev}=\frac{|\Delta\phi_{\rm accumulated}|}{2\pi}.
       \]
     </div>
 <p>
@@ -765,6 +764,11 @@ m accumulated}|}{2\pi}.
       for Schwarzschild mode. In Newtonian mode the final \(-GMh^2/(c^2r^3)\) term is omitted. These are diagnostics of the integrated orbital
       equation; \(\mathcal E_{\rm eff}\) should not be mistaken for a local
       observer's measured kinetic-plus-potential energy.
+    </p>
+<p>
+      A fractional drift is undefined when the initial conserved value is
+      exactly zero. In that exceptional case the program reports zero if the
+      numerical value remains exactly zero and infinity if it does not.
     </p>
 </section>
 <!-- ═══════════════════════════ REFERENCE ═══════════════════════════ -->
@@ -827,7 +831,7 @@ m accumulated}|}{2\pi}.
 <div class="sc-title">2. Regularity of the Rosette — Introductory</div>
         Inspect <code>result.periapsis_radius</code> for a bound precessing run.
         Verify that successive minimum radii remain nearly the same, within the
-        numerical drift reported by the program. The orbit changes orientation
+        numerical resolution of the calculation. The orbit changes orientation
         even though its radial pattern remains regular.
       </div>
 <div class="scenario-card">
@@ -843,7 +847,10 @@ m accumulated}|}{2\pi}.
         Starting from the default data, reduce <code>u_init</code> until the
         orbit crosses the horizon, then increase it until the particle escapes
         rather than remaining bound. Use modest changes first, then narrow the
-        transition. Record the termination reason in each case.
+        transition. A plunge is labeled <code>horizon</code>; the program has no
+        separate escape detector, so an outward-moving escape trajectory
+        normally runs until <code>max_steps</code>. Confirm escape by increasing
+        <code>max_steps</code> and checking that the radius continues to grow.
       </div>
 <div class="scenario-card">
 <div class="sc-title">5. Circular Geodesics — Intermediate</div>
