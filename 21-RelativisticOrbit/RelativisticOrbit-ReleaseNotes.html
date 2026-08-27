@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>RelativisticOrbit 1.0.3 Release Notes</title>
+</head>
+<body>
+<h1>RelativisticOrbit 1.0.3 Release Notes</h1>
+<p><b>Version:</b> 1.0.3<br><b>Build:</b> 14ee4ae56c17<br><b>Date:</b> 2026-08-27</p>
+
+<h2>Release Status</h2>
+<p>Version 1.0.3 concludes a kickoff maintenance review followed by three rounds of independent review involving Codex, Copilot, and Gemini. The reviewers compared the Python implementation with Schutz's original Java source, verified the Schwarzschild and Newtonian equations, numerical behavior, validation and error handling, Help-file accuracy, Version/Build synchronization, and regression coverage. No release-blocking defect remains. The program is approved as a release candidate and is sufficiently robust and accurate for student use within the tutorial scope and limitations described below.</p>
+
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li>Verified that the Schwarzschild mode correctly implements Schutz's proper-time equation, including the equivalence of Schutz's <i>K</i> and <i>Q</i> notation to the program's specific angular momentum <i>h</i>.</li>
+<li>Made <code>main.py</code> safe to import without automatically running a simulation or opening a plot, while retaining student-editable parameters and normal script behavior.</li>
+<li>Added consistent validation for Boolean, non-real, non-finite, out-of-range, singular, overflow-prone, and underflow-prone inputs in both the public physics functions and simulation driver.</li>
+<li>Added explanatory errors for corrector exhaustion and for timesteps too small to advance floating-point proper time.</li>
+<li>Corrected zero-reference conservation-drift handling so an unchanged zero invariant reports zero and a changed zero reference reports an undefined relative error rather than a dimensionally incorrect absolute difference.</li>
+<li>Improved horizon-event handling by interpolating position, velocity, and proper time at the true Schwarzschild horizon and excluding that interpolated event record from accepted-state conservation-drift maxima.</li>
+<li>Added independent SciPy DOP853 endpoint and apsidal-advance reference values, second-order Newtonian convergence testing, adaptive rejection/recovery tests, and near-photon-orbit boundary coverage.</li>
+<li>Corrected the Help file's revolution-count equation, termination description, historical implementation wording, characteristic-radius values, horizon-event semantics, and Python requirement.</li>
+<li>Documented and regression-tested the requirement for Python 3.10 or later, matching the syntax used by the delivered source.</li>
+<li>Added BUILD_ID provenance across the four core program modules and synchronized it with the Help file and runtime output.</li>
+</ul>
+
+<h2>Test Suite Growth</h2>
+<p>A new 43-test regression suite was created at kickoff and expanded to 61 automated tests during the audit process. An additional 80-case deterministic adversarial sweep varied both physical models, starting radius, direction and magnitude of transverse velocity, and timestep.</p>
+<p>The final suite verifies equations, constants, characteristic radii, circular-orbit conditions, effective energy, input validation, numerical safety guards, adaptive predictor-corrector behavior, horizon events, orbit counting, periapsis detection, conservation diagnostics, convergence order, independent strong-field numerical oracles, plotting, command-line behavior, Help structure and scientific content, Python-version compatibility, and Build-ID reproduction. All 61 tests pass in both the canonical <code>tests/</code> layout and a flattened upload layout. All 80 adversarial cases completed through documented termination paths with finite, equal-length, strictly time-ordered state arrays.</p>
+
+<h2>Known Limitations</h2>
+<ul>
+<li>Intended for education and conceptual exploration rather than precision orbit prediction or research-grade relativistic dynamics.</li>
+<li>The model treats a negligible-mass test particle around a one-solar-mass, non-rotating Schwarzschild source. It does not include black-hole spin, radiation reaction, or back-reaction by the orbiting body.</li>
+<li>The classroom defaults preserve Schutz's original parameters and normally reach the 6,000-step safety limit after approximately 9.285 azimuthal turns, before the nominal ten-orbit limit.</li>
+<li>The accepted-step predictor-corrector method accumulates phase error under the deliberately loose classroom defaults. Quantitative work should repeat the calculation with smaller timesteps and tighter tolerances.</li>
+<li>The <code>max_orbits</code> stopping point can overshoot its target by a small fraction of one accepted step.</li>
+<li>Periapsides are estimated from local minima among accepted integration points rather than from dense-output event solutions.</li>
+<li>The final horizon record is obtained by linear interpolation along the last accepted segment. It is retained for plotting and termination reporting but is not treated as an accepted solution state in conservation-drift maxima.</li>
+<li>There is no separate escape-event classifier. An apparently escaping orbit normally terminates at <code>max_steps</code>; continued outward radial growth should be checked after increasing that limit.</li>
+<li>The Help file loads MathJax from a public CDN. Offline, its prose and raw equation source remain available, but equations appear as untypeset LaTeX.</li>
+</ul>
+
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>The source and tests parse under the Python 3.10 grammar, but the final audit environment ran Python 3.12.13. Executing the complete suite on an actual Python 3.10 interpreter remains a desirable non-blocking release check.</li>
+<li>A future documentation-wide overhaul may bundle MathJax locally if fully typeset offline Help becomes a distribution requirement.</li>
+<li>The independent DOP853 oracle values and generation settings are preserved in the regression suite, but the separate oracle-generation script is not part of this release.</li>
+</ul>
+
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.0.3<br>BUILD_ID: 14ee4ae56c17</p>
+</body>
+</html>
