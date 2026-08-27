@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Atmosphere 1.1.1 Release Notes</title>
+</head>
+<body>
+<h1>Atmosphere 1.1.1 Release Notes</h1>
+<p><b>Version:</b> 1.1.1<br><b>Build:</b> 58b6ba9b3808<br><b>Date:</b> 2026-08-27</p>
+
+<h2>Release Status</h2>
+<p>Version 1.1.1 concludes a kickoff maintenance review followed by two rounds of independent review involving Codex, Copilot, and Gemini. The reviewers verified the governing physics, numerical results, error handling, Help-file accuracy, Version/Build synchronization, and regression coverage. No release-blocking or medium-severity defect remains. The program is approved as sufficiently robust and accurate for student use, with the idealizations and minor maintenance items listed below.</p>
+
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li>Expanded the integration budget from 1,000 to 50,000 points so the default 500 km Earth profile retains the intended <i>H</i>/200 Euler step instead of silently restarting at much coarser resolution.</li>
+<li>Corrected the resulting pressure error: the former coarse calculation was approximately 53% low near 100 km and almost a factor of three low near 500 km.</li>
+<li>Added comprehensive validation for finite and physically valid pressures, temperatures, densities, gravity, mean molecular weight, surface pressure, and temperature-profile data.</li>
+<li>Added explicit overflow, underflow, altitude-step, retry-limit, and zero-pressure boundary protection.</li>
+<li>Corrected evaluation of the altitude-zero reference temperature for profiles that begin above zero or span zero altitude.</li>
+<li>Corrected state handling so a zero-pressure upper-profile query cannot corrupt a later positive-pressure calculation.</li>
+<li>Added clear, student-facing error messages for invalid parameters and model failures.</li>
+<li>Documented the 50,000-point coverage mechanism, non-positive pressure boundary, numerical limitations, result metadata, and Version/Build identification.</li>
+<li>Retained and verified nine exercises arranged from introductory output exploration through an advanced height-dependent-gravity extension.</li>
+<li>Added BUILD_ID provenance across the four core program modules and synchronized it with the Help file and runtime output.</li>
+</ul>
+
+<h2>Test Suite Growth</h2>
+<p>58 &rarr; 72 automated tests across the audit process, including 120 fixed-seed randomized model/profile cases.</p>
+<p>The final suite verifies equations, interpolation, validation, boundary behavior, build hashing, newline independence, default numerical regressions, ideal-gas consistency, analytic isothermal and linear-lapse solutions, a refined multilayer benchmark, successful restart equivalence, repeated-run stability, command-line behavior, Help metadata, and plotting. All 72 tests pass in both the canonical <code>tests/</code> layout and a flattened upload layout.</p>
+
+<h2>Known Limitations</h2>
+<ul>
+<li>Intended for education and conceptual exploration rather than operational atmospheric prediction or research-grade atmospheric modeling.</li>
+<li>Gravity and mean molecular weight remain constant with altitude; the model does not reproduce species-by-species diffusive equilibrium in the upper atmosphere.</li>
+<li>The first-order Euler method accumulates discretization error. Unusually extended profiles that exhaust the 50,000-point budget restart with a larger step and therefore have greater numerical error.</li>
+<li>The upper-atmosphere continuation <i>T</i> = &beta;<i>p</i><sup>0.5</sup> is a pedagogical closure that drives temperature toward zero; it is not a realistic exospheric-temperature law.</li>
+<li>The rounded 100&ndash;500 km NRLMSIS 2.0 temperatures are illustrative and specific to the stated date, location, and activity conditions. The archived CCMC Instant Run output is not included with this release.</li>
+<li>Extreme parameter combinations can exceed the supported floating-point domain and are rejected with explanatory errors.</li>
+</ul>
+
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>Direct API callers should not mutate <code>h_points</code> or <code>T_points</code> after constructing <code>AtmosphereModel</code>; the normal <code>main.py</code> workflow does not do so. A future revision may defensively snapshot or revalidate these sequences.</li>
+<li>The Help file's explicitly abbreviated <code>main.py</code> excerpt omits the planet name and output type from its example status line, although the delivered program prints both.</li>
+<li>Future test-suite hardening may add broader generated edge-profile families and focused assertions for additional critical Help-file statements. Existing deterministic tests cover the documented student workflows and principal boundary cases.</li>
+</ul>
+
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.1.1<br>BUILD_ID: 58b6ba9b3808</p>
+</body>
+</html>
