@@ -439,7 +439,7 @@
 <!-- ══════════════════════ MAIN ══════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.0&nbsp;&nbsp;&nbsp;&nbsp;Build f7275655e2ad
+  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build d4e4a04694d3
 </p>
 <!-- ── Description ── -->
 <section id="description">
@@ -528,9 +528,10 @@
         where \(\rho_0\) is the density computed from Eq. (7.2) at the surface pressure
         \(p_0\) and surface temperature \(T_0\). For the default Earth parameters,
         \(H \approx 8.4\;\text{km}\). The <em>initial</em> integration step size is
-        \(\Delta h = H/200\). If 1 000 steps are insufficient to reach the model's numerical
-        upper boundary, the driver restarts with a larger step; therefore the successful run
-        may use substantially fewer than 200 steps per scale height.
+        \(\Delta h = H/200\). The driver allows up to 50 000 points so that the default
+        Earth calculation—and the planetary comparisons below—retain this intended resolution.
+        Only if that point budget is insufficient does the driver restart with a larger step;
+        such an unusual successful run may use fewer than 200 steps per base scale height.
       </p>
 <h3>Temperature Profile</h3>
 <p>
@@ -585,12 +586,12 @@
 <p>
         At each altitude step the density \(\rho_{j-1}\) is obtained from the ideal gas law
         (Eq. 7.2) using the current pressure and the temperature profile at the current
-        altitude. The integration terminates as soon as \(p_j &lt; 0\). That negative-pressure point is
-        discarded, so the returned arrays end at the last valid non-negative-pressure step.
+        altitude. The integration terminates as soon as \(p_j \le 0\). That non-positive-pressure
+        point is discarded, so the returned arrays end at the last valid positive-pressure step.
       </p>
 <h3>Step-Size Restart (dh Doubling)</h3>
 <p>
-        If 1 000 Euler steps do not cross the model's zero-pressure boundary, the driver doubles
+        If 50 000 Euler steps do not reach the model's zero-pressure boundary, the driver doubles
         \(\Delta h\) and restarts the calculation from the surface. This is a coverage
         mechanism rather than an error-controlled adaptive integrator: it ensures that the
         calculation eventually spans a sufficiently large altitude range, but the successful
@@ -605,32 +606,33 @@ dh    = scale / 200.0                      # initial step
 
 last_step = 0
 while last_step == 0:
-    for j in range(1, max_steps):          # max_steps = 1000
+    profile.reached_top = False            # reset extrapolation state
+    profile.beta = 0.0                     # for this fresh attempt
+    for j in range(1, max_steps):          # max_steps = 50 000
         alt[j] = alt[j-1] + dh
         p[j] = hydrostatic_step(p[j-1], rho[j-1], g, dh)
-        if p[j] &lt; 0.0:
+        if p[j] &lt;= 0.0:
             last_step = j
             break                          # atmosphere top reached;
                                             # T[j], rho[j] never computed
                                             # for this (discarded) point
         T[j] = profile.get_temp(alt[j], p[j])
         rho[j] = ideal_gas_density(p[j], mu, T[j])
-    dh *= 2.0                              # only matters if last_step
-                                            # is still 0 -- loop then
-                                            # retries with a larger step</code></pre>
+    if last_step == 0:
+        dh *= 2.0                          # retry with a larger step</code></pre>
 <h3>Output Arrays</h3>
 <p>
         After the loop, the result arrays are trimmed to <code>[:last_step]</code>, excluding
-        the unphysical negative-pressure point. The <code>extract_output()</code> function then
+        the non-positive boundary point. The <code>extract_output()</code> function then
         selects whichever quantity the user requested (pressure, density, or temperature) and
         packages it with axis labels, units, and a title for the plotter.
       </p>
 <div class="note">
 <strong>Numerical note:</strong> This is a first-order Euler calculation intended to
-        illustrate hydrostatic equilibrium. Because the step size may be doubled repeatedly,
-        the final run can accumulate noticeable numerical error with altitude. The isothermal
-        convergence experiment below provides an exact exponential solution against which this
-        error can be measured.
+        illustrate hydrostatic equilibrium, so error accumulates with altitude even at the normal
+        \(H/200\) resolution. A coverage restart, if one is needed for an unusually extended
+        profile, increases that error further. The isothermal convergence experiment below
+        provides an exact exponential solution against which the error can be measured.
       </div>
 </section>
 <!-- ══════════════ MODULE CARDS ══════════════ -->
@@ -693,7 +695,7 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
 <h3>driver_atmosphere.py</h3>
 <p>
           Owns all integration logic: builds the temperature profile, computes the initial
-          scale height, runs the while/for adaptive loop, and packages results into
+          scale height, runs the step-size-restart integration loop, and packages results into
           structured dataclasses (<code>AtmosphereResult</code>, then <code>CurveData</code>
           via <code>extract_output()</code>) ready for the plotter.
         </p>
@@ -722,7 +724,7 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
     planet_name:  str</span>
 <p class="func-desc">
           Structured result from <code>AtmosphereModel.run()</code>. All four lists are
-          co-indexed and trimmed to the last valid (non-negative-pressure) step.
+          co-indexed and trimmed to the last valid positive-pressure step.
         </p>
 <h3>Class</h3>
 <span class="func-sig">class AtmosphereModel:<br/>
@@ -930,9 +932,11 @@ plot_atmosphere(curve_data)</code></pre>
         The <code>h_points</code> and <code>T_points</code> lists must have the same length;
         all numerical inputs must be finite, altitudes must be strictly increasing, and all
         temperatures must be positive. <code>g_accel</code>, <code>mu</code>, and <code>p0</code>
-        must also be positive. The calculation always starts at altitude 0 using
-        <code>T_points[0]</code> as the surface temperature; in normal use, set
-        <code>h_points[0] = 0.0</code>.
+        must also be positive. The calculation always starts at altitude 0. If the supplied
+        profile spans altitude 0, the reference temperature is interpolated there; if the first
+        measurement lies above 0, <code>T_points[0]</code> is held constant down to the reference
+        level. In normal use, set <code>h_points[0] = 0.0</code> so the reference condition is
+        explicit.
       </div>
 </section>
 <!-- ── Output modes ── -->
@@ -1098,10 +1102,11 @@ T_points    = [165.0, 130.0, 110.0, 150.0]</div>
           extrapolation and the atmosphere is no longer isothermal.
         </p>
 <p>
-          To test convergence, temporarily change <code>dh = scale / 200.0</code> in
-          <code>driver_atmosphere.py</code> to <code>scale / 400.0</code> and then
-          <code>scale / 800.0</code>, while increasing <code>max_steps</code> enough to reach
-          100 km without triggering the step-doubling restart. The error should decrease roughly
+          To test convergence, temporarily change
+          <code>STEPS_PER_SCALE_HEIGHT = 200</code> in <code>driver_atmosphere.py</code> to
+          <code>400</code> and then <code>800</code>. The supplied 50 000-point budget is ample
+          for these cases; if you try still finer steps, ensure that <code>MAX_STEPS</code> is large
+          enough to reach 100 km without triggering a restart. The error should decrease roughly
           in proportion to the step size, as expected for this first-order Euler update.
         </p>
 <div class="params">h_points = [0.0, 100000.0]
