@@ -926,21 +926,11 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
 <div class="scenario-card">
 <h4>6 · Advanced Programming Extension — Replace the Sphere by an Ellipsoidal Homoeoid</h4>
 <p>
-        Schutz's original Help suggested replacing the spherical shell by an "elliptical" one and
-        testing the surprising result that the field inside can still vanish. This idea is worth
-        retaining, but it needs a more precise formulation. In three dimensions the corresponding
-        result applies to a thin <em>homoeoidal</em> shell — the thin-shell limit of material
-        between similar, concentric, similarly oriented ellipsoids of uniform volume density.
-        Merely placing equal masses uniformly over an arbitrary ellipsoidal surface does not, in
-        general, reproduce that mass distribution.
-      </p>
-<p>
         Make a separate experimental copy of the program, replace the spherical geometry by an
-        axially symmetric ellipsoidal homoeoid, and calculate the field at several interior points,
-        including points off the symmetry axis. Verify that the interior field tends toward zero as
+        axially symmetric ellipsoidal homoeoid (an oblate or prolate ellipsoidal shell), and calculate the field at several interior points,
+        including points off the symmetry axis. (By a <em>homoeoidal</em> shell, we mean the thin-shell limit of material between similar, concentric, similarly oriented ellipsoids of uniform volume density.) Verify that the interior field tends toward zero as
         the tiling is refined, while the exterior field is direction-dependent and therefore cannot
-        be represented by a point mass at the center. This is a substantial extension rather than
-        a routine parameter experiment.
+        be represented by a point mass at the center.
       </p>
 <div class="sc-params">advanced · geometry, tile masses, and off-axis field components must change</div>
 </div>
