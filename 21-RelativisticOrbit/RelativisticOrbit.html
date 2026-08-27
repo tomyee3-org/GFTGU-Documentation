@@ -371,7 +371,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.1&nbsp;&nbsp;&nbsp;&nbsp;Build bdd9a90c623a
+  Version 1.0.2&nbsp;&nbsp;&nbsp;&nbsp;Build 116f1afff415
 </p>
 
 <!-- ─── Overview ─── -->
@@ -558,9 +558,8 @@ python main.py</pre>
       \]
     </div>
 <p>
-      Schutz's original notation defined \(K=h/2\) and
-      \(Q=12K^2/c^2=3h^2/c^2\). The program uses \(h\) directly, but the
-      physics is identical.
+      Let \(h=r^2d\phi/d\tau\). In the notation \(K=h/2\) and
+      \(Q=12K^2/c^2\), one has \(Q=3h^2/c^2\).
     </p>
 <p>
       The driver independently recomputes
@@ -649,11 +648,14 @@ python main.py</pre>
     </p>
 <p>
       The driver detects the first intersection of an accepted path segment
-      with the true horizon circle and stops there. The crossing point and time
-      are estimated by linear interpolation along that last accepted segment,
-      so an excessively large timestep can make the reported crossing time less
-      precise. The plot never enlarges the horizon merely to make it visible; a
-      separate central marker identifies the origin in weak-field plots.
+      with the true horizon circle and stops there. Position, velocity, and time
+      at that event are estimated by linear interpolation along the last
+      accepted segment, so an excessively large timestep can make the event
+      record less precise. Because the interpolated endpoint is not itself an
+      accepted solution state, it is excluded from the reported conservation-
+      drift maxima. The plot never enlarges the horizon merely to make it
+      visible; a separate central marker identifies the origin in weak-field
+      plots.
     </p>
 </section>
 <!-- ═══════════════════════════ NUMERICAL METHODS ═══════════════════════════ -->
