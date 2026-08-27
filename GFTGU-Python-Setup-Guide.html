@@ -4,87 +4,213 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GFTGU Python Setup Guide</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest" defer></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              navy: {
-                950: '#060a14',
-                900: '#0b1120',
-                850: '#0f172a',
-                800: '#141d34',
-                700: '#1a2744',
-                600: '#253554',
-                500: '#334a6e',
-              },
-              sky: {
-                50: '#f0f7ff',
-                100: '#dbeafe',
-                200: '#bfdbfe',
-                300: '#93bbf5',
-                400: '#6096e8',
-                500: '#3b82f6',
-                600: '#2563eb',
-                700: '#1d4ed8',
-                800: '#1e40af',
-              },
-              warm: {
-                50: '#f8fafc',
-                100: '#f1f5f9',
-                150: '#e8edf4',
-                200: '#e2e8f0',
-                300: '#cbd5e1',
-                400: '#94a3b8',
-                500: '#64748b',
-                600: '#475569',
-                700: '#334155',
-                800: '#1e293b',
-              },
-              emerald: {
-                50: '#ecfdf5',
-                100: '#d1fae5',
-                500: '#10b981',
-                600: '#059669',
-                700: '#047857',
-              },
-              amber: {
-                50: '#fffbeb',
-                100: '#fef3c7',
-                500: '#f59e0b',
-                600: '#d97706',
-                700: '#b45309',
-                800: '#92400e',
-              },
-              rose: {
-                50: '#fff1f2',
-                100: '#ffe4e6',
-                500: '#f43f5e',
-                600: '#e11d48',
-                700: '#be123c',
-              },
-            },
-            fontFamily: {
-              sans: ['Inter', 'system-ui', 'sans-serif'],
-              mono: ['Source Code Pro', 'Consolas', 'monospace'],
-            },
-          },
-        },
-      };
-    </script>
     <style>
+      /* Static, self-contained utility CSS. No network-loaded framework or fonts. */
+      *, *::before, *::after { box-sizing: border-box; }
+      html { line-height: 1.5; -webkit-text-size-adjust: 100%; }
+      body, h1, h2, h3, p, ol, ul { margin: 0; }
+      ol, ul { padding: 0; list-style: none; }
+      button, input { font: inherit; }
+      button { background: none; border: 0; }
+      a { color: inherit; text-decoration: inherit; }
+      strong { font-weight: bolder; }
+      code { font-family: Consolas, "Liberation Mono", monospace; }
+
+      .block { display: block; }
+      .fixed { position: fixed; }
+      .flex { display: flex; }
+      .grid { display: grid; }
+      .hidden { display: none; }
+      .transform { transform: translateZ(0); }
+      .inset-0 { inset: 0; }
+      .left-0 { left: 0; }
+      .right-0 { right: 0; }
+      .top-0 { top: 0; }
+      .top-\[60px\] { top: 60px; }
+      .top-\[104px\] { top: 104px; }
+      .z-30 { z-index: 30; }
+      .z-40 { z-index: 40; }
+      .z-50 { z-index: 50; }
+      .mx-auto { margin-left: auto; margin-right: auto; }
+      .ml-1 { margin-left: .25rem; }
+      .ml-12 { margin-left: 3rem; }
+      .ml-auto { margin-left: auto; }
+      .-ml-2 { margin-left: -.5rem; }
+      .mr-2 { margin-right: .5rem; }
+      .mt-0\.5 { margin-top: .125rem; }
+      .mt-2 { margin-top: .5rem; }
+      .mt-3 { margin-top: .75rem; }
+      .mt-4 { margin-top: 1rem; }
+      .mt-5 { margin-top: 1.25rem; }
+      .mt-6 { margin-top: 1.5rem; }
+      .mb-0 { margin-bottom: 0; }
+      .mb-1 { margin-bottom: .25rem; }
+      .mb-2 { margin-bottom: .5rem; }
+      .mb-3 { margin-bottom: .75rem; }
+      .mb-4 { margin-bottom: 1rem; }
+      .mb-5 { margin-bottom: 1.25rem; }
+      .mb-6 { margin-bottom: 1.5rem; }
+      .mb-8 { margin-bottom: 2rem; }
+      .mb-16 { margin-bottom: 4rem; }
+      .p-1 { padding: .25rem; }
+      .p-2 { padding: .5rem; }
+      .p-3 { padding: .75rem; }
+      .p-4 { padding: 1rem; }
+      .p-5 { padding: 1.25rem; }
+      .p-6 { padding: 1.5rem; }
+      .px-1\.5 { padding-left: .375rem; padding-right: .375rem; }
+      .px-2 { padding-left: .5rem; padding-right: .5rem; }
+      .px-2\.5 { padding-left: .625rem; padding-right: .625rem; }
+      .px-3 { padding-left: .75rem; padding-right: .75rem; }
+      .px-4 { padding-left: 1rem; padding-right: 1rem; }
+      .px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .py-0\.5 { padding-top: .125rem; padding-bottom: .125rem; }
+      .py-1 { padding-top: .25rem; padding-bottom: .25rem; }
+      .py-1\.5 { padding-top: .375rem; padding-bottom: .375rem; }
+      .py-2 { padding-top: .5rem; padding-bottom: .5rem; }
+      .py-2\.5 { padding-top: .625rem; padding-bottom: .625rem; }
+      .py-3 { padding-top: .75rem; padding-bottom: .75rem; }
+      .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+      .pt-2 { padding-top: .5rem; }
+      .pt-4 { padding-top: 1rem; }
+      .pt-\[104px\] { padding-top: 104px; }
+      .pb-2 { padding-bottom: .5rem; }
+      .h-1 { height: .25rem; }
+      .h-4 { height: 1rem; }
+      .h-5 { height: 1.25rem; }
+      .h-6 { height: 1.5rem; }
+      .h-8 { height: 2rem; }
+      .h-14 { height: 3.5rem; }
+      .h-full { height: 100%; }
+      .w-4 { width: 1rem; }
+      .w-5 { width: 1.25rem; }
+      .w-6 { width: 1.5rem; }
+      .w-8 { width: 2rem; }
+      .w-72 { width: 18rem; }
+      .w-80 { width: 20rem; }
+      .w-full { width: 100%; }
+      .max-w-3xl { max-width: 48rem; }
+      .max-w-7xl { max-width: 80rem; }
+      .max-h-\[calc\(100vh-120px\)\] { max-height: calc(100vh - 120px); }
+      .min-w-0 { min-width: 0; }
+      .flex-1 { flex: 1 1 0%; }
+      .flex-shrink-0 { flex-shrink: 0; }
+      .flex-wrap { flex-wrap: wrap; }
+      .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+      .items-center { align-items: center; }
+      .items-start { align-items: flex-start; }
+      .justify-between { justify-content: space-between; }
+      .justify-center { justify-content: center; }
+      .gap-2 { gap: .5rem; }
+      .gap-3 { gap: .75rem; }
+      .gap-4 { gap: 1rem; }
+      .space-y-2 > :not([hidden]) ~ :not([hidden]) { margin-top: .5rem; }
+      .space-y-3 > :not([hidden]) ~ :not([hidden]) { margin-top: .75rem; }
+      .space-y-4 > :not([hidden]) ~ :not([hidden]) { margin-top: 1rem; }
+      .space-y-5 > :not([hidden]) ~ :not([hidden]) { margin-top: 1.25rem; }
+      .overflow-hidden { overflow: hidden; }
+      .overflow-x-auto { overflow-x: auto; }
+      .overflow-y-auto { overflow-y: auto; }
+      .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .rounded { border-radius: .25rem; }
+      .rounded-lg { border-radius: .5rem; }
+      .rounded-xl { border-radius: .75rem; }
+      .rounded-2xl { border-radius: 1rem; }
+      .rounded-full { border-radius: 9999px; }
+      .rounded-r { border-radius: 0 .25rem .25rem 0; }
+      .border { border: 1px solid #e5e7eb; }
+      .border-2 { border: 2px solid #e5e7eb; }
+      .border-b { border-bottom: 1px solid #e5e7eb; }
+      .border-l { border-left: 1px solid #e5e7eb; }
+      .border-r { border-right: 1px solid #e5e7eb; }
+      .border-t { border-top: 1px solid #e5e7eb; }
+      .border-sky-100 { border-color: #dbeafe; }
+      .border-sky-200 { border-color: #bfdbfe; }
+      .border-warm-200 { border-color: #e2e8f0; }
+      .bg-black\/40 { background-color: rgba(0,0,0,.4); }
+      .bg-navy-700 { background-color: #1a2744; }
+      .bg-navy-850 { background-color: #0f172a; }
+      .bg-sky-50 { background-color: #f0f7ff; }
+      .bg-sky-500 { background-color: #3b82f6; }
+      .bg-warm-50 { background-color: #f8fafc; }
+      .bg-warm-100 { background-color: #f1f5f9; }
+      .bg-warm-200 { background-color: #e2e8f0; }
+      .bg-white { background-color: #fff; }
+      .text-left { text-align: left; }
+      .text-center { text-align: center; }
+      .font-mono { font-family: Consolas, "Liberation Mono", monospace; }
+      .font-normal { font-weight: 400; }
+      .font-medium { font-weight: 500; }
+      .font-semibold { font-weight: 600; }
+      .font-bold { font-weight: 700; }
+      .font-extrabold { font-weight: 800; }
+      .text-\[10px\] { font-size: 10px; }
+      .text-\[11px\] { font-size: 11px; }
+      .text-xs { font-size: .75rem; line-height: 1rem; }
+      .text-sm { font-size: .875rem; line-height: 1.25rem; }
+      .text-base { font-size: 1rem; line-height: 1.5rem; }
+      .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+      .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+      .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+      .leading-relaxed { line-height: 1.625; }
+      .tracking-widest { letter-spacing: .1em; }
+      .uppercase { text-transform: uppercase; }
+      .underline { text-decoration-line: underline; }
+      .text-amber-500 { color: #f59e0b; }
+      .text-amber-800 { color: #92400e; }
+      .text-emerald-700 { color: #047857; }
+      .text-navy-850 { color: #0f172a; }
+      .text-rose-700 { color: #be123c; }
+      .text-sky-300 { color: #93bbf5; }
+      .text-sky-400 { color: #6096e8; }
+      .text-sky-500 { color: #3b82f6; }
+      .text-sky-600 { color: #2563eb; }
+      .text-sky-700 { color: #1d4ed8; }
+      .text-warm-400 { color: #94a3b8; }
+      .text-warm-500 { color: #64748b; }
+      .text-warm-600 { color: #475569; }
+      .text-warm-700 { color: #334155; }
+      .text-white { color: #fff; }
+      .opacity-0 { opacity: 0; }
+      .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1); }
+      .-translate-x-full { transform: translateX(-100%); }
+      .translate-x-full { transform: translateX(100%); }
+      .transition-colors { transition: color .15s, background-color .15s, border-color .15s; }
+      .hover\:bg-navy-600:hover { background-color: #253554; }
+      .hover\:bg-navy-700:hover { background-color: #1a2744; }
+      .hover\:bg-sky-100:hover { background-color: #dbeafe; }
+      .hover\:bg-warm-50:hover { background-color: #f8fafc; }
+      .hover\:bg-warm-100:hover { background-color: #f1f5f9; }
+      .hover\:text-sky-700:hover { color: #1d4ed8; }
+      .group:hover .group-hover\:text-sky-800 { color: #1e40af; }
+
+      /* Small offline symbols replace the Lucide web-font/script dependency. */
+      [data-lucide] { display: inline-flex; align-items: center; justify-content: center; font-style: normal; font-weight: 700; }
+      [data-lucide]::before { line-height: 1; }
+      [data-lucide="menu"]::before { content: "☰"; }
+      [data-lucide="list-checks"]::before { content: "☑"; }
+      [data-lucide="x"]::before { content: "×"; }
+      [data-lucide="code-2"]::before { content: "</>"; font-size: .65em; }
+      [data-lucide="clipboard-check"]::before, [data-lucide="check"]::before { content: "✓"; }
+      [data-lucide="monitor"]::before { content: "▣"; }
+      [data-lucide="wifi"]::before { content: "◉"; }
+      [data-lucide="clock"]::before { content: "◷"; }
+      [data-lucide="layout-grid"]::before { content: "▦"; }
+      [data-lucide="clipboard"]::before { content: "⧉"; }
+      [data-lucide="apple"]::before { content: "●"; }
+      [data-lucide="github"]::before { content: "◆"; }
+      [data-lucide="external-link"]::before { content: "↗"; }
+      [data-lucide="rotate-ccw"]::before { content: "↻"; }
+      [data-lucide="corner-down-right"]::before { content: "↳"; }
+      [data-lucide="alert-circle"]::before { content: "!"; }
+
       :root {
         --color-navy: #0f172a;
         --color-sky: #3b82f6;
         --color-warm: #f8fafc;
       }
       html { scroll-behavior: smooth; scroll-padding-top: 120px; }
-      body { font-family: 'Inter', system-ui, sans-serif; background: #f8fafc; color: #1e293b; }
+      body { font-family: Arial, Helvetica, system-ui, sans-serif; background: #f8fafc; color: #1e293b; }
 
       /* OS toggle visibility */
       .os-win { display: none; }
@@ -193,6 +319,32 @@
       }
       @media (max-width: 767px) {
         html { scroll-padding-top: 130px; }
+      }
+      @media (min-width: 640px) {
+        .sm\:block { display: block; }
+        .sm\:inline { display: inline; }
+      }
+      @media (min-width: 768px) {
+        .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .md\:h-16 { height: 4rem; }
+        .md\:p-8 { padding: 2rem; }
+        .md\:pt-\[108px\] { padding-top: 108px; }
+        .md\:px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .md\:px-8 { padding-left: 2rem; padding-right: 2rem; }
+        .md\:py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+        .md\:text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+        .md\:text-base { font-size: 1rem; line-height: 1.5rem; }
+        .md\:text-xs { font-size: .75rem; line-height: 1rem; }
+        .md\:top-\[68px\] { top: 68px; }
+      }
+      @media (min-width: 1024px) {
+        .lg\:block { display: block; }
+        .lg\:hidden { display: none; }
+        .lg\:ml-72 { margin-left: 18rem; }
+        .lg\:top-\[104px\] { top: 104px; }
+        .md\:lg\:top-\[108px\] { top: 108px; }
+        .lg\:h-\[calc\(100vh-108px\)\] { height: calc(100vh - 108px); }
+        .lg\:translate-x-0 { transform: translateX(0); }
       }
     </style>
 </head>
@@ -465,7 +617,7 @@
                                         <code data-id="186">python --version</code>
                                         <button data-id="187" class="copy-btn" data-copy="python --version" aria-label="Copy command"><i data-id="188" data-lucide="clipboard" class="w-4 h-4"></i></button>
                                     </div>
-                                    <p data-id="189" class="text-warm-500 text-xs mt-2">You should see something like <code data-id="190" class="bg-warm-100 px-1.5 py-0.5 rounded text-navy-850 font-mono text-xs">Python 3.12.x</code> — the exact number doesn't matter.</p>
+                                    <p data-id="189" class="text-warm-500 text-xs mt-2">You should see something like <code data-id="190" class="bg-warm-100 px-1.5 py-0.5 rounded text-navy-850 font-mono text-xs">Python 3.12.x</code>. Use Python 3.10 or newer, and check each program's Help page in case it requires a later version.</p>
                                 </div>
                             </li>
                         </ol>
@@ -518,7 +670,7 @@
                                         <code data-id="231">python3 --version</code>
                                         <button data-id="232" class="copy-btn" data-copy="python3 --version" aria-label="Copy command"><i data-id="233" data-lucide="clipboard" class="w-4 h-4"></i></button>
                                     </div>
-                                    <p data-id="234" class="text-warm-500 text-xs mt-2">You should see something like <code data-id="235" class="bg-warm-100 px-1.5 py-0.5 rounded text-navy-850 font-mono text-xs">Python 3.12.x</code> — the exact number doesn't matter.</p>
+                                    <p data-id="234" class="text-warm-500 text-xs mt-2">You should see something like <code data-id="235" class="bg-warm-100 px-1.5 py-0.5 rounded text-navy-850 font-mono text-xs">Python 3.12.x</code>. Use Python 3.10 or newer, and check each program's Help page in case it requires a later version.</p>
                                 </div>
                             </li>
                         </ol>
@@ -530,12 +682,12 @@
             <section data-id="236" id="section-2" class="mb-16">
                 <div data-id="237" class="section-heading mb-6">
                     <span data-id="238" class="text-3xl">📦</span>
-                    <h2 data-id="239" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 2: Install Required Python Packages</h2>
+                    <h2 data-id="239" class="text-2xl md:text-3xl font-extrabold text-navy-850">Section 2: Required Packages and Virtual Environments</h2>
                 </div>
 
                 <div data-id="240" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
                     <p data-id="241" class="text-warm-700 leading-relaxed mb-4">
-                        Python by itself is like a bare-bones workshop. <strong data-id="242" class="text-navy-850">Packages</strong> are free add-ons that give Python extra abilities — in this case, the ability to do advanced mathematics and draw graphs. You need to install two packages:
+                        Python by itself is like a bare-bones workshop. <strong data-id="242" class="text-navy-850">Packages</strong> are free add-ons that give Python extra abilities — in this case, the ability to do advanced mathematics and draw graphs. The GFTGU programs use two packages:
                     </p>
                     <div data-id="243" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div data-id="244" class="bg-sky-50 rounded-xl p-4 border border-sky-100">
@@ -546,6 +698,14 @@
                             <p data-id="248" class="font-bold text-navy-850 text-sm mb-1">Matplotlib</p>
                             <p data-id="249" class="text-xs text-warm-600">Draws the graphs and plots you'll see when you run the programs</p>
                         </div>
+                    </div>
+                </div>
+
+                <div class="callout callout-info mb-6">
+                    <span class="callout-icon">🔒</span>
+                    <div>
+                        <p class="font-semibold text-sky-700 text-sm mb-1">Install packages inside the project's virtual environment</p>
+                        <p class="text-sm text-warm-700">Do not install these packages globally into the system Python. In Section 6, PyCharm will create a private <code>.venv</code> folder for the program and you will install NumPy and Matplotlib there. This avoids permission problems and the <code>EXTERNALLY-MANAGED-ENVIRONMENT</code> error used by PEP 668-protected Python installations.</p>
                     </div>
                 </div>
 
@@ -560,29 +720,25 @@
                             <li data-id="255" class="flex items-start gap-4">
                                 <span data-id="256" class="step-bubble">1</span>
                                 <div data-id="257">
-                                    <p data-id="258" class="text-warm-700 text-sm leading-relaxed">Open <strong data-id="259">Command Prompt</strong> (open the Start menu, search for "Command Prompt", and click it).</p>
+                                    <p data-id="258" class="text-warm-700 text-sm leading-relaxed">Do not run a global <code>pip install</code> command in Command Prompt. Continue through the guide until the program folder is open in PyCharm.</p>
                                 </div>
                             </li>
                             <li data-id="260" class="flex items-start gap-4">
                                 <span data-id="261" class="step-bubble">2</span>
                                 <div data-id="262">
-                                    <p data-id="263" class="text-warm-700 text-sm leading-relaxed mb-2">Type (or copy-paste) the following command and press <strong data-id="264">Enter</strong>:</p>
-                                    <div data-id="265" class="code-block">
-                                        <code data-id="266">pip install numpy matplotlib</code>
-                                        <button data-id="267" class="copy-btn" data-copy="pip install numpy matplotlib" aria-label="Copy command"><i data-id="268" data-lucide="clipboard" class="w-4 h-4"></i></button>
-                                    </div>
+                                    <p data-id="263" class="text-warm-700 text-sm leading-relaxed">Section 6 creates a project-specific virtual environment and opens PyCharm's Terminal with that environment active.</p>
                                 </div>
                             </li>
                             <li data-id="269" class="flex items-start gap-4">
                                 <span data-id="270" class="step-bubble">3</span>
                                 <div data-id="271">
-                                    <p data-id="272" class="text-warm-700 text-sm leading-relaxed">You'll see text scrolling by — this is normal. Wait until you see <strong data-id="273">"Successfully installed"</strong> messages. This may take a minute or two.</p>
+                                    <p data-id="272" class="text-warm-700 text-sm leading-relaxed">You will then run <code>python -m pip install numpy matplotlib</code> in that PyCharm Terminal.</p>
                                 </div>
                             </li>
                             <li data-id="274" class="flex items-start gap-4">
                                 <span data-id="275" class="step-bubble">4</span>
                                 <div data-id="276">
-                                    <p data-id="277" class="text-warm-700 text-sm leading-relaxed">That's it — the packages are now installed!</p>
+                                    <p data-id="277" class="text-warm-700 text-sm leading-relaxed">Keeping packages in <code>.venv</code> prevents one project from changing another project or the operating system's Python.</p>
                                 </div>
                             </li>
                         </ol>
@@ -600,29 +756,25 @@
                             <li data-id="283" class="flex items-start gap-4">
                                 <span data-id="284" class="step-bubble">1</span>
                                 <div data-id="285">
-                                    <p data-id="286" class="text-warm-700 text-sm leading-relaxed">Open <strong data-id="287">Terminal</strong> (press <strong data-id="288">Cmd+Space</strong>, type "Terminal", press Enter).</p>
+                                    <p data-id="286" class="text-warm-700 text-sm leading-relaxed">Do not run a global <code>pip3 install</code> command in macOS Terminal. Continue through the guide until the program folder is open in PyCharm.</p>
                                 </div>
                             </li>
                             <li data-id="289" class="flex items-start gap-4">
                                 <span data-id="290" class="step-bubble">2</span>
                                 <div data-id="291">
-                                    <p data-id="292" class="text-warm-700 text-sm leading-relaxed mb-2">Type (or copy-paste) the following command and press <strong data-id="293">Enter</strong>:</p>
-                                    <div data-id="294" class="code-block">
-                                        <code data-id="295">pip3 install numpy matplotlib</code>
-                                        <button data-id="296" class="copy-btn" data-copy="pip3 install numpy matplotlib" aria-label="Copy command"><i data-id="297" data-lucide="clipboard" class="w-4 h-4"></i></button>
-                                    </div>
+                                    <p data-id="292" class="text-warm-700 text-sm leading-relaxed">Section 6 creates a project-specific virtual environment and opens PyCharm's Terminal with that environment active.</p>
                                 </div>
                             </li>
                             <li data-id="298" class="flex items-start gap-4">
                                 <span data-id="299" class="step-bubble">3</span>
                                 <div data-id="300">
-                                    <p data-id="301" class="text-warm-700 text-sm leading-relaxed">You'll see text scrolling by — this is normal. Wait until you see <strong data-id="302">"Successfully installed"</strong> messages. This may take a minute or two.</p>
+                                    <p data-id="301" class="text-warm-700 text-sm leading-relaxed">You will then run <code>python -m pip install numpy matplotlib</code> in that PyCharm Terminal.</p>
                                 </div>
                             </li>
                             <li data-id="303" class="flex items-start gap-4">
                                 <span data-id="304" class="step-bubble">4</span>
                                 <div data-id="305">
-                                    <p data-id="306" class="text-warm-700 text-sm leading-relaxed">That's it — the packages are now installed!</p>
+                                    <p data-id="306" class="text-warm-700 text-sm leading-relaxed">Keeping packages in <code>.venv</code> prevents one project from changing another project or the operating system's Python.</p>
                                 </div>
                             </li>
                         </ol>
@@ -632,8 +784,8 @@
                 <div data-id="307" class="callout callout-trouble mt-4">
                     <span data-id="308" class="callout-icon">🔧</span>
                     <div data-id="309">
-                        <p data-id="310" class="font-semibold text-rose-700 text-sm mb-1">Troubleshooting</p>
-                        <p data-id="311" class="text-sm text-warm-700">If you see an error saying <strong data-id="312">"pip is not recognized"</strong> (Windows) or <strong data-id="313">"command not found: pip3"</strong> (macOS), try restarting your computer and opening a new Command Prompt / Terminal window. This usually fixes the problem.</p>
+                        <p data-id="310" class="font-semibold text-rose-700 text-sm mb-1">Avoid system-Python workarounds</p>
+                        <p data-id="311" class="text-sm text-warm-700">Do not use <code>sudo pip</code> or <code>--break-system-packages</code>. If you see <strong data-id="312">"EXTERNALLY-MANAGED-ENVIRONMENT"</strong>, return to Section 6 and confirm that PyCharm is using the project's <code>.venv</code> interpreter before installing packages.</p>
                     </div>
                 </div>
             </section>
@@ -992,7 +1144,7 @@
 
                 <div data-id="642" class="bg-white rounded-2xl p-6 md:p-8 mb-6" style="box-shadow: 0 1px 8px rgba(0,0,0,0.04);">
                     <p data-id="643" class="text-warm-700 leading-relaxed mb-6">
-                        This is a one-time setup. PyCharm needs to know which Python installation to use. Think of it as introducing PyCharm to the Python engine you installed in Step 1.
+                        This is a one-time setup for each program folder. PyCharm will use the Python installation from Section 1 to create a private virtual environment named <code>.venv</code>. Packages installed there belong only to this project and do not modify the system interpreter.
                     </p>
 
                     <!-- WINDOWS -->
@@ -1012,15 +1164,25 @@
                             </li>
                             <li data-id="664" class="flex items-start gap-4">
                                 <span data-id="665" class="step-bubble">4</span>
-                                <div data-id="666"><p data-id="667" class="text-warm-700 text-sm leading-relaxed">Choose <strong data-id="668">"System Interpreter"</strong> on the left.</p></div>
+                                <div data-id="666"><p data-id="667" class="text-warm-700 text-sm leading-relaxed">Choose <strong data-id="668">"Virtualenv Environment"</strong>, then choose <strong>New</strong>. Set the location to the program folder's <code>.venv</code> directory.</p></div>
                             </li>
                             <li data-id="669" class="flex items-start gap-4">
                                 <span data-id="670" class="step-bubble">5</span>
-                                <div data-id="671"><p data-id="672" class="text-warm-700 text-sm leading-relaxed">PyCharm should automatically find your Python installation. If you see a path ending in <strong data-id="673">"python.exe"</strong>, that's correct.</p></div>
+                                <div data-id="671"><p data-id="672" class="text-warm-700 text-sm leading-relaxed">For the base interpreter, select the Python 3.10-or-newer installation from Section 1 (normally a path ending in <strong data-id="673">"python.exe"</strong>). Leave <strong>Inherit global site-packages</strong> unchecked.</p></div>
                             </li>
                             <li data-id="674" class="flex items-start gap-4">
                                 <span data-id="675" class="step-bubble">6</span>
-                                <div data-id="676"><p data-id="677" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="678">OK</strong>, then <strong data-id="679">OK</strong> again.</p></div>
+                                <div data-id="676"><p data-id="677" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="678">OK</strong> or <strong>Create</strong>, then wait for PyCharm to finish creating the environment.</p></div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <span class="step-bubble">7</span>
+                                <div class="w-full"><p class="text-warm-700 text-sm leading-relaxed mb-2">Open <strong>View → Tool Windows → Terminal</strong>. The prompt should begin with <code>(.venv)</code>. Install the packages into this environment:</p>
+                                    <div class="code-block"><code>python -m pip install numpy matplotlib</code><button class="copy-btn" data-copy="python -m pip install numpy matplotlib" aria-label="Copy command"><i data-lucide="clipboard" class="w-4 h-4"></i></button></div>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <span class="step-bubble">8</span>
+                                <div><p class="text-warm-700 text-sm leading-relaxed">In Settings, confirm that the selected interpreter path contains the program folder and <code>.venv</code>. Do not select the system interpreter.</p></div>
                             </li>
                         </ol>
                     </div>
@@ -1042,15 +1204,25 @@
                             </li>
                             <li data-id="700" class="flex items-start gap-4">
                                 <span data-id="701" class="step-bubble">4</span>
-                                <div data-id="702"><p data-id="703" class="text-warm-700 text-sm leading-relaxed">Choose <strong data-id="704">"System Interpreter"</strong> on the left.</p></div>
+                                <div data-id="702"><p data-id="703" class="text-warm-700 text-sm leading-relaxed">Choose <strong data-id="704">"Virtualenv Environment"</strong>, then choose <strong>New</strong>. Set the location to the program folder's <code>.venv</code> directory.</p></div>
                             </li>
                             <li data-id="705" class="flex items-start gap-4">
                                 <span data-id="706" class="step-bubble">5</span>
-                                <div data-id="707"><p data-id="708" class="text-warm-700 text-sm leading-relaxed">PyCharm should automatically find your Python installation. If you see a path ending in <strong data-id="709">"python3"</strong>, that's correct.</p></div>
+                                <div data-id="707"><p data-id="708" class="text-warm-700 text-sm leading-relaxed">For the base interpreter, select the Python 3.10-or-newer installation from Section 1 (normally a path ending in <strong data-id="709">"python3"</strong>). Leave <strong>Inherit global site-packages</strong> unchecked.</p></div>
                             </li>
                             <li data-id="710" class="flex items-start gap-4">
                                 <span data-id="711" class="step-bubble">6</span>
-                                <div data-id="712"><p data-id="713" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="714">OK</strong>, then <strong data-id="715">OK</strong> again.</p></div>
+                                <div data-id="712"><p data-id="713" class="text-warm-700 text-sm leading-relaxed">Click <strong data-id="714">OK</strong> or <strong>Create</strong>, then wait for PyCharm to finish creating the environment.</p></div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <span class="step-bubble">7</span>
+                                <div class="w-full"><p class="text-warm-700 text-sm leading-relaxed mb-2">Open <strong>View → Tool Windows → Terminal</strong>. The prompt should begin with <code>(.venv)</code>. Install the packages into this environment:</p>
+                                    <div class="code-block"><code>python -m pip install numpy matplotlib</code><button class="copy-btn" data-copy="python -m pip install numpy matplotlib" aria-label="Copy command"><i data-lucide="clipboard" class="w-4 h-4"></i></button></div>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <span class="step-bubble">8</span>
+                                <div><p class="text-warm-700 text-sm leading-relaxed">In Settings, confirm that the selected interpreter path contains the program folder and <code>.venv</code>. Do not select the system interpreter.</p></div>
                             </li>
                         </ol>
                     </div>
@@ -1060,7 +1232,7 @@
                     <span data-id="717" class="callout-icon">ℹ️</span>
                     <div data-id="718">
                         <p data-id="719" class="font-semibold text-sky-700 text-sm mb-1">Note</p>
-                        <p data-id="720" class="text-sm text-warm-700">You may need to repeat this step the first time you open a new program folder. After the first time, PyCharm usually remembers your interpreter settings.</p>
+                        <p data-id="720" class="text-sm text-warm-700">Repeat this step the first time you open a new program folder. PyCharm normally remembers that folder's <code>.venv</code>. If the Terminal prompt does not show <code>(.venv)</code>, reselect the <code>.venv</code> interpreter before installing anything.</p>
                     </div>
                 </div>
             </section>
@@ -1429,11 +1601,6 @@
     </footer>
 
     <script>
-    // Defensive guard for Lucide icons
-    if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
-        lucide.createIcons();
-    }
-
     // ========================================
     // OS Toggle
     // ========================================
@@ -1611,14 +1778,8 @@
                 var icon = button.querySelector('i');
                 if (icon) {
                     icon.setAttribute('data-lucide', 'check');
-                    if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
-                        lucide.createIcons();
-                    }
                     setTimeout(function() {
                         icon.setAttribute('data-lucide', 'clipboard');
-                        if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
-                            lucide.createIcons();
-                        }
                     }, 2000);
                 }
             }).catch(function() {
