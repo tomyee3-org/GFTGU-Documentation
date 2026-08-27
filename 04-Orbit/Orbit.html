@@ -700,21 +700,19 @@ whether Newton's inverse-square law reproduces the observed shapes of planetary 
 <p>For several of the planetary orbits from EXP-1, set <code>maxOrbits=1</code> and compare the
 reported elapsed simulated time with the observed orbital period. You can also select
 <code>output="position_time"</code> or <code>output="velocity_time"</code> and read the period
-from the time axis. This is the period experiment suggested in Schutz's original Help.</p></div>
+from the time axis. </p></div>
 <div class="exp-card"><div class="ec-num">EXP-3 · Introductory–Intermediate</div><h4>Position and Velocity Both Repeat</h4>
 <p>A closed orbit must return not only to its starting position but also to its starting velocity.
 Run one complete bound orbit and select <code>output="velocity"</code>. The velocity-space curve
 should close just as the position-space orbit does. The console closure residuals provide a
 numerical check: after an integral number of revolutions, both the final radius and velocity should
-be close to their initial values. This restores an experiment emphasized in Schutz's original Help.</p></div>
+be close to their initial values. </p></div>
 <div class="exp-card"><div class="ec-num">EXP-4 · Intermediate</div><h4>Energy Conservation</h4>
 <p>Select <code>output="energy"</code> for a bound orbit. Kinetic and potential specific energy
 change continually, but their sum should remain nearly constant. Then make an unbound orbit and
 compare its total specific energy with that of the bound orbit. Bound Kepler orbits have negative
 specific energy, hyperbolic orbits positive specific energy, and the marginal parabolic case zero.
-The console's maximum fractional energy drift shows the remaining numerical error. This experiment,
-which Schutz associated with Chapter 6, is worth retaining explicitly rather than leaving energy
-conservation only as a numerical-accuracy diagnostic.</p></div>
+The console's maximum fractional energy drift shows the remaining numerical error and provides a quantitative check on energy conservation.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-5 · Intermediate</div><h4>Bound, Parabolic, and Hyperbolic Motion</h4>
 <p>At a fixed starting radius \(r\), vary the initial speed through the escape value
 \(v_{\rm esc}=\sqrt{2\mu/r}\). Below it the orbit is bound; at the limiting value it is parabolic;
@@ -725,7 +723,7 @@ with the sign of the initial specific energy.</p></div>
 <p>Keep \(v_x^2+v_y^2\) fixed while rotating the initial velocity vector at a fixed starting
 position. The orbit's shape and angular momentum change, but its bound/unbound classification does
 not, because the specific energy depends on the speed rather than the direction of the velocity.
-This is the second part of Schutz's original unbound-orbit experiment.</p></div>
+</p></div>
 <div class="exp-card"><div class="ec-num">EXP-7 · Intermediate</div><h4>Approximate Moon Around a Fixed Earth</h4>
 <p>Replace the solar gravitational parameter by
 \(GM_\oplus\approx3.9860\times10^{14}\ {\rm m^3\,s^{-2}}\), and try
@@ -737,8 +735,7 @@ negligible.</p></div>
 <p>Set <code>maxOrbits=2</code> or 5 and examine whether successive numerical ellipses lie on top
 of one another. This makes accumulated integration error visible. Fractional values such as 1.5
 are also allowed, although closure residuals are reported only when the requested endpoint is an
-integral number of revolutions. Schutz originally proposed extending the program to do this; the
-Python version already provides the capability through <code>maxOrbits</code>.</p></div>
+integral number of revolutions.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-9 · Intermediate–Advanced</div><h4>Numerical Convergence</h4>
 <p>Reduce <code>dt0</code> and tighten <code>eps1</code> and <code>eps2</code>. Compare the
 orbital period, energy drift, angular-momentum drift, and closure residuals rather than judging
@@ -758,22 +755,14 @@ constant specific angular momentum \(h=xv_y-yv_x\) reported by the calculation.<
 <div class="exp-card"><div class="ec-num">EXP-12 · Advanced</div><h4>Explore the Velocity Hodograph</h4>
 <p>Select <code>output="velocity"</code>. For a non-radial Kepler orbit the velocity vectors lie
 on a circle: a bound ellipse traces the full circle, whereas parabolic and hyperbolic trajectories
-trace only part of it. Compare several eccentricities and then an unbound orbit. This goes beyond
-the original Help's observation that velocity repeats and reveals a deeper geometric property of
-the inverse-square law.</p></div>
+trace only part of it. Compare several eccentricities and then an unbound orbit.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-13 · Advanced</div><h4>Point-Mass Radial Infall</h4>
 <p>Give the particle zero or nearly zero angular momentum and an inward velocity. Observe what
 happens as the trajectory approaches the mathematical point-mass singularity. The program contains
 a numerical guard to prevent evaluation at \(r=0\); that guard radius is not the physical surface
-of a star or planet. Schutz specifically suggested investigating this troublesome limiting case.</p></div>
+of a star or planet. This limiting case provides a useful test of the numerical treatment of trajectories that approach the point-mass singularity.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-14 · Advanced Programming Extension</div><h4>Try a Different Central Force Law</h4>
-<p>Schutz's original Help proposed changing the acceleration law and observing which orbits remain
-closed. As an optional programming exercise, make a copy of the program and replace the Newtonian
-inverse-square acceleration with another central-force law. A particularly instructive comparison
-is a Hooke-law acceleration proportional to \(-\mathbf r\), for which bound orbits are also closed.
-You can then try a small non-Newtonian correction and look for orbital precession. Keep this as a
-separate experimental copy so the standard <code>Orbit</code> program continues to represent
-Newtonian gravity.</p></div>
+<p>As an optional programming exercise, make a copy of the program and replace the Newtonian inverse-square acceleration with other central-force laws. A particularly instructive comparison is a Hooke-law acceleration proportional to \(-\mathbf r\). You can also try small non-Newtonian corrections and look for orbital precession. Historically, modified Newtonian force laws were proposed as explanations for Mercury's anomalous perihelion precession, while modern alternatives such as MOND have been proposed as alternatives to dark matter in some astrophysical settings. After experimenting with the code, research these topics and investigate why modified force laws have not replaced general relativity as the accepted explanation of Mercury's perihelion precession. Keep this as a separate experimental copy so the standard <code>Orbit</code> program continues to represent Newtonian gravity.</p></div>
 </div>
 </section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
 <div style="
