@@ -439,7 +439,7 @@
 <!-- ══════════════════════ MAIN ══════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build d4e4a04694d3
+  Version 1.1.1&nbsp;&nbsp;&nbsp;&nbsp;Build 58b6ba9b3808
 </p>
 <!-- ── Description ── -->
 <section id="description">
@@ -682,8 +682,8 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
 <span class="func-sig">hydrostatic_step(pressure_prev: float, rho_prev: float, g_accel: float, dh: float) -&gt; float</span>
 <p class="func-desc">
           Advances the pressure by one Euler step: \(p_j = p_{j-1} - g\,\rho_{j-1}\,\Delta h\).
-          Implements Eq. (7.7). Negative results signal that the model's zero-pressure boundary has
-          been crossed.
+          Implements Eq. (7.7). Non-positive results signal that the model's zero-pressure boundary
+          has been reached or crossed.
         </p>
 </div>
 </section>
@@ -721,10 +721,13 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
     densities:    List[float]<br/>
     temperatures: List[float]<br/>
     output_type:  OutputType<br/>
-    planet_name:  str</span>
+    planet_name:  str<br/>
+    model_version: str<br/>
+    build_id:     str</span>
 <p class="func-desc">
           Structured result from <code>AtmosphereModel.run()</code>. All four lists are
-          co-indexed and trimmed to the last valid positive-pressure step.
+          co-indexed and trimmed to the last valid positive-pressure step. The final two fields
+          identify the program version and exact four-module build that produced the result.
         </p>
 <h3>Class</h3>
 <span class="func-sig">class AtmosphereModel:<br/>
@@ -806,41 +809,43 @@ class CurveData:
 <p>
           The user-facing entry point. Sets all input parameters to Earth defaults and calls
           the driver and plotter. Edit the parameters in this file to model a different planet
-          or atmospheric scenario; the other three modules never need to be modified.
+          or atmospheric scenario; the other three modules never need to be modified. It also
+          supports <code>python main.py --version</code> and converts invalid input or model
+          failures into a concise error message.
+        </p>
+<p class="func-desc">
+          The following is an abbreviated view of the entry point; the complete temperature arrays
+          and argument-parser setup are in <code>main.py</code>.
         </p>
 <pre><code>from driver_atmosphere import AtmosphereParameters, AtmosphereModel, OutputType, extract_output
 from plot_atmosphere  import plot_atmosphere
 
-planet_name = "Earth"
-g_accel     = 9.81          # m s⁻²
-mu          = 28.97         # mean molecular weight (dry air)
-p0          = 1.013e5       # Pa  (1 atm)
+def main():
+    parse_args()             # includes --version
 
-# Hybrid Earth temperature profile:
-# U.S. Standard Atmosphere 1976 through ~86 km,
-# then representative NRLMSIS 2.0 thermospheric temperatures to 500 km.
-h_points = [
-    0.0, 11_019.0, 20_063.0, 32_162.0, 47_350.0,
-    51_412.0, 71_802.0, 86_000.0, 100_000.0,
-    150_000.0, 200_000.0, 250_000.0, 300_000.0,
-    400_000.0, 500_000.0,
-]
-T_points = [
-    288.15, 216.65, 216.65, 228.65, 270.65,
-    270.65, 214.65, 186.946, 190.0,
-    800.0, 1080.0, 1190.0, 1225.0, 1240.0, 1240.0,
-]
-output_type: OutputType = "Pressure"    # "Pressure" | "Density" | "Temperature"
+    planet_name = "Earth"
+    g_accel     = 9.81       # m s⁻²
+    mu          = 28.97      # mean molecular weight (dry air)
+    p0          = 1.013e5    # Pa  (1 atm)
 
-params = AtmosphereParameters(
-    planet_name=planet_name, g_accel=g_accel, mu=mu, p0=p0,
-    h_points=h_points, T_points=T_points, output_type=output_type
-)
+    # Full hybrid Earth h_points and T_points arrays appear here.
+    output_type: OutputType = "Pressure"
 
-model      = AtmosphereModel(params)
-result     = model.run()
-curve_data = extract_output(result)
-plot_atmosphere(curve_data)</code></pre>
+    params = AtmosphereParameters(
+        planet_name=planet_name, g_accel=g_accel, mu=mu, p0=p0,
+        h_points=h_points, T_points=T_points, output_type=output_type
+    )
+
+    try:
+        result = AtmosphereModel(params).run()
+    except (ValueError, RuntimeError) as exc:
+        raise SystemExit(f"Atmosphere input/model error: {exc}") from exc
+
+    print(f"Atmosphere {result.model_version} (build {result.build_id})")
+    plot_atmosphere(extract_output(result))
+
+if __name__ == "__main__":
+    main()</code></pre>
 </div>
 </section>
 <!-- ── Parameters table ── -->
@@ -1116,8 +1121,8 @@ output_type = "Pressure"</div>
 <div class="scenario-card">
 <h4>9 · Advanced Programming Extension — Let Gravity Decrease with Altitude</h4>
 <p>
-          Schutz's original Help suggested replacing the program's constant value of gravity with
-          a height-dependent gravitational acceleration. Make a separate experimental copy of the
+          For an advanced extension, replace the program's constant value of gravity with a
+          height-dependent gravitational acceleration. Make a separate experimental copy of the
           program and replace the constant \(g\) in the hydrostatic step by a function such as
           \(g(h)=g_0[R/(R+h)]^2\), where \(R\) is the planet's radius. Compare the resulting
           pressure profile with the constant-gravity calculation and identify the altitude range
