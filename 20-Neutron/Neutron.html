@@ -362,7 +362,7 @@
 ════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.0&nbsp;&nbsp;&nbsp;&nbsp;Build dd232b9942ae
+  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 0dcb391edd77
 </p>
 <!-- ─── Overview ─── -->
 <h2 id="overview">Overview</h2>
@@ -418,8 +418,9 @@ and the exact SI speed of light \(c=299\,792\,458\ \mathrm{m\,s^{-1}}\).
 </table>
 <p>
 <code>print_model_summary()</code> reports surface radius, total mass,
-  central density, compactness \(2GM/(Rc^2)\), the Buchdahl check, radial sample
-  count, and nominal radial spacing. Pressure and density may be shown on a
+  central density, central sound speed, compactness \(2GM/(Rc^2)\), the
+  causality and Buchdahl checks, radial sample count, and nominal radial
+  spacing. Pressure and density may be shown on a
   logarithmic scale with <code>log_y=True</code>; the exact zero-valued surface
   point is omitted from a logarithmic plot because zero cannot be represented
   on a log axis. <code>log_y</code> is ignored for mass plots.
@@ -593,11 +594,13 @@ p(r_0)\simeq p_C
 </p>
 <h2 id="doubling">Locating the Stellar Surface</h2>
 <p>
-  The surface is defined by \(p=0\). The solver integrates outward on the
-  nominal grid and shortens the final step when the local pressure slope shows
-  that the zero lies within the next interval. Surface radius and enclosed mass
-  are then estimated at that zero-pressure location using the local slope or
-  linear interpolation over the final interval.
+  The surface is defined by \(p=0\). For a polytropic EOS, the regular surface
+  variable \(q=p^{(\gamma-1)/\gamma}\) approaches zero linearly to leading
+  order. The solver integrates outward on the nominal grid and extrapolates
+  this variable across the final interval. It estimates the small remaining
+  mass from the corresponding leading-order density falloff. This avoids
+  evaluating the EOS at negative pressure and gives a more accurate surface
+  radius than extrapolating pressure itself.
 </p>
 <h2 id="experiments">Suggested Experiments</h2>
 <div class="note tip">
@@ -638,9 +641,22 @@ over the desired parameter values.
   <code>data["total_mass_solar"]</code> and
   <code>data["surface_radius_km"]</code>. Plot mass and radius against central
   pressure and locate any mass maximum. The program computes equilibria; it
-  does not dynamically collapse the unstable branch.
+  does not dynamically collapse the unstable branch. Can you choose a toy
+  polytropic EOS whose maximum mass exceeds two solar masses? Three solar
+  masses? Explain why such a result is not by itself evidence for a realistic
+  neutron-star EOS.
 </p>
-<h3>5. Buchdahl Compactness Along a Sequence</h3>
+<h3>5. Minimum-Mass Puzzle from Investigation 20.1</h3>
+<p>
+  Reduce <code>pC</code> until the computed mass falls below
+  \(0.02\,M_\odot\), the approximate minimum discussed in Investigation 20.1.
+  Does the numerical result invalidate that discussion? Examine how the model
+  extrapolates one high-density polytrope into the low-density regime, and
+  identify the crust, neutron-drip, composition, or other low-density physics
+  that the simple EOS leaves out. Distinguish a mathematical equilibrium of
+  the toy EOS from a physically credible neutron star.
+</p>
+<h3>6. Buchdahl Compactness Along a Sequence</h3>
 <p>
   Plot <code>data["compactness"]</code> for a sequence of models.
   Configurations satisfying Buchdahl's assumptions must remain at or below
@@ -648,22 +664,23 @@ over the desired parameter values.
   Numerical failure to exceed \(8/9\) is not a proof of Buchdahl's theorem;
   the theorem follows from its analytic assumptions.
 </p>
-<h3>6. Controlled EOS-Stiffness Comparison</h3>
+<h3>7. Controlled EOS-Stiffness Comparison</h3>
 <p>
   Choose a common \(p_C\) and target \(\rho_C\). For each
   \(\gamma&gt;1\), calculate \(K=p_C/\rho_C^\gamma\) and compare the
   resulting mass-radius models. This keeps the central reference state
   comparable while you explore the effect of changing EOS stiffness.
 </p>
-<h3>7. Limits of a Single Polytrope</h3>
+<h3>8. Limits of a Single Polytrope</h3>
 <p>
   Explore a wide central-pressure range. For each model, evaluate
   \(v_s^2/c^2=\gamma p/(\rho c^2)\), especially at the center, and note
-  where the simple EOS becomes acausal or produces extreme densities and
-  compactness. Explain why those results mark limitations of the assumed
-  polytrope. A realistic self-bound quark-matter EOS generally includes an
-  offset energy density and cannot be represented merely by setting
-  \(\gamma=1\) and \(K=c^2/3\) in this solver.
+  where the reported causality check fails or the model produces extreme
+  densities and compactness. Explain why those results mark limitations of the
+  assumed polytrope. Then compare the form of this EOS with a modern piecewise
+  polytrope or tabulated nuclear EOS. A realistic self-bound quark-matter EOS
+  generally includes an offset energy density and cannot be represented merely
+  by setting \(\gamma=1\) and \(K=c^2/3\) in this solver.
 </p>
 <section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
 <div style="
