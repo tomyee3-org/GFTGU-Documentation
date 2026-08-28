@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Multiple 1.1.2 Release Notes</title>
+</head>
+<body>
+<h1>Multiple 1.1.2 Release Notes</h1>
+<p><b>Version:</b> 1.1.2<br><b>Build:</b> bb853c24c69e<br><b>Date:</b> 2026-08-28</p>
+<h2>Release Status</h2>
+<p>Version 1.1.2 concludes a kickoff maintenance review followed by three rounds of independent review involving Codex, Copilot, and Gemini. The reviewers compared the Python implementation with Bernard Schutz's original Triana/Java Multiple program, verified the Newtonian N-body equations and conservation diagnostics, examined adaptive predictor-corrector behavior, animation-frame generation, public API validation, Help-file accuracy, Version/Build synchronization, and regression coverage. No release-blocking defect remains. The program is approved as a release candidate and is sufficiently robust and accurate for student use within the educational scope and limitations described below.</p>
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li>Corrected the adaptive corrector convergence test so convergence is measured using velocity increments rather than absolute coordinate velocities, making the convergence decision Galilean invariant.</li>
+<li>Improved the shipped numerical defaults from the original 40,000-step, eps1=0.05, eps2=1.0e-4 configuration to the current 60,000-step, eps1=0.005, eps2=1.0e-7 configuration, reducing default-run energy drift by several orders of magnitude.</li>
+<li>Added comprehensive validation to the public physics layer, including validation of shapes, numeric types, finite values, positive masses, coincident-body singularities, and floating-point range failures.</li>
+<li>Added defensive runtime checks for non-finite positions, velocities, accelerations, conservation diagnostics, timestep underflow, corrector exhaustion, and animation memory limits.</li>
+<li>Implemented scale-aware energy-drift normalization for near-cancellation systems using the characteristic energy scale K<sub>0</sub> + |U<sub>0</sub>| when the initial total energy is numerically indistinguishable from zero.</li>
+<li>Added explicit energy-drift normalization metadata and scale metadata so plots and external code can correctly interpret reported conservation diagnostics.</li>
+<li>Corrected conservation-vector drift calculations by replacing overflow-prone Euclidean norms with overflow-resistant hypot reductions and by rejecting non-finite diagnostics before they can be silently ignored.</li>
+<li>Added neutral momentum- and angular-momentum-drift result keys together with normalization metadata and backward-compatible aliases for older callers.</li>
+<li>Improved plotting validation by adding explicit projection validation, energy-history validation, normalization validation, and actionable public error messages.</li>
+<li>Changed animation-frame scheduling from cumulative floating-point addition to integer-index multiplication, eliminating long-run timestamp accumulation drift while preserving uniform physical-time movie playback.</li>
+<li>Added explicit accepted-step interpolation-bracket verification before cubic-Hermite frame generation, ensuring that animation interpolation never occurs outside the accepted-step interval.</li>
+<li>Added BUILD_ID provenance across the four core program modules and synchronized the Version/Build information with the Help file, runtime output, and independent regression verification.</li>
+<li>Corrected and expanded the Help file documentation, including energy equations, Galilean-invariant convergence explanations, conservation-drift normalization descriptions, output terminology, Build-ID coverage, default parameters, and educational exercises.</li>
+</ul>
+<h2>Test Suite Growth</h2>
+<p>A new regression suite containing 76 automated tests was created during the kickoff review. The suite expanded to 82 tests during Audit1 and to 87 tests during Audit2. Audit3 confirmed that all 87 tests pass and that no additional medium- or high-severity defects remain.</p>
+<p>The final suite verifies analytical force calculations, conservation diagnostics, inverse-square behavior, translational and rotational invariance, permutation symmetry, parameter validation, floating-point range handling, Galilean invariance, adaptive timestep reduction and recovery, animation frame generation, cubic-Hermite interpolation, plotting behavior, Build-ID reproduction, Python-version compatibility, command-line version reporting, Help-file synchronization, and documentation integrity. The suite passes in both the canonical <code>tests/</code> layout and a flattened upload layout.</p>
+<h2>Known Limitations</h2>
+<ul>
+<li>Intended for education and conceptual exploration rather than research-grade N-body simulations.</li>
+<li>Bodies are Newtonian mathematical point masses. The model does not include finite radii, physical collisions, mergers, tidal effects, gas dynamics, radiation, dissipative processes, or relativity.</li>
+<li>Exact coincidence of two bodies remains physically singular and terminates with a documented error condition.</li>
+<li>The predictor-corrector integrator is not symplectic. Long integrations, especially those involving close encounters, should always be accompanied by conservation-diagnostic checks and convergence testing.</li>
+<li>Chaotic N-body systems can exhibit trajectory divergence even when separate integrations are individually accurate and satisfy conservation diagnostics.</li>
+<li>Direct pairwise force evaluation scales as O(N²) and is intended for modest educational particle counts rather than very large astrophysical systems.</li>
+<li>Fractional energy drift may be less informative in frames dominated by very large center-of-mass kinetic energy. The Help file recommends center-of-mass coordinates when diagnostics are intended to assess relative-motion accuracy.</li>
+<li>Only six plotting colors are supplied by default, so colors repeat for simulations containing more than six bodies.</li>
+<li>The Help file loads MathJax from a public CDN. Offline, the documentation remains readable, but equations are displayed as raw LaTeX rather than typeset mathematics.</li>
+</ul>
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>Audit3 identified that nearly cancelling but nonzero initial momentum or angular-momentum vectors still use exact-zero detection rather than a scale-aware near-cancellation criterion. This affects diagnostic interpretation only and is not a numerical-integrator defect.</li>
+<li>Audit3 identified that <code>plot_trajectories()</code> and <code>animate_multiple()</code> still assume structurally valid result dictionaries and could benefit from the same level of public-input validation already implemented for <code>plot_energy_drift()</code>.</li>
+<li>The source and regression suite are verified against Python 3.10 grammar and were executed during review using Python 3.12.13. Running the complete suite under a native Python 3.10 environment remains a desirable non-blocking release check.</li>
+<li>Future releases may optionally expand plotting-result validation and add scale-aware normalization for nearly cancelling conservation vectors.</li>
+</ul>
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.1.2<br>BUILD_ID: bb853c24c69e</p>
+</body>
+</html>
