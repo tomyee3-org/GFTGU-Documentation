@@ -416,7 +416,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 5d3ea5416daf
+  Version 1.1.1&nbsp;&nbsp;&nbsp;&nbsp;Build 18c0fd123233
 </p>
 <!-- ─── Overview ─── -->
 <section id="overview">
@@ -528,7 +528,7 @@ python main.py</pre>
 <p>
           Provides the <code>plot_binary()</code> function and the
           <code>OutputType</code> string literal type. Accepts a
-          <code>BinaryResult</code> and renders one of seven plots via
+          <code>BinaryResult</code> and renders one of seven distinct plots through eight accepted selector strings via
           <code>matplotlib</code>: orbital trajectories in the \(xy\)-plane
           (equal aspect ratio), velocity-space diagrams, position vs. time, or
           velocity vs. time for each body individually, and the full energy
@@ -968,7 +968,9 @@ python main.py</pre>
       tolerances must lie strictly between zero and one (0 and 1 are not allowed);
       and the bodies must have nonzero initial separation. Extremely large or
       small inputs that put a derived displacement, acceleration, or energy outside the
-      reliable range of double-precision arithmetic are rejected with an error.
+      range of double-precision arithmetic are rejected with an error. For energy,
+      this includes both overflow and a nonzero result so small that it would round
+      to zero.
     </div>
 </section>
 <!-- ─── Output Types ─── -->
