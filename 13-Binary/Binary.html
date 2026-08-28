@@ -366,7 +366,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.0&nbsp;&nbsp;&nbsp;&nbsp;Build ae9687e3bc3d
+  Version 1.0.1&nbsp;&nbsp;&nbsp;&nbsp;Build 5e02faf5dcbf
 </p>
 <!-- ─── Overview ─── -->
 <section id="overview">
@@ -406,6 +406,10 @@
 <p>Clone or download the repository, then:</p>
 <pre>cd GFTGU-Programs/Binary
 python main.py</pre>
+<p>
+      To display the program version and executable-core build identifier without
+      running a simulation, use <code>python main.py --version</code>.
+    </p>
 <p>
       The default configuration uses two equal-mass bodies,
       \(M_A = M_B = 2\times10^{30}\,\mathrm{kg}\) (approximately one solar mass
@@ -750,7 +754,7 @@ python main.py</pre>
 <!-- ═══════════════════════════ EXPERIMENTS ═══════════════════════════ -->
 <section id="experiments">
 <h2>Suggested Experiments</h2>
-<h3>1 · Circular and Elliptical Equal-Mass Binaries</h3>
+<h3>1 · Circular and Elliptical Equal-Mass Binaries — Introductory</h3>
 <p>
       Run the defaults first. For equal masses \(M\) at \(x=\pm a\), each body in
       a circular orbit has radius \(a\) while the gravitational separation is
@@ -759,13 +763,13 @@ python main.py</pre>
       \(u_A=+2.69\times10^4\) m/s and \(u_B=-2.69\times10^4\) m/s, then try
       intermediate speeds and watch the eccentricity change.
     </p>
-<h3>2 · Translation Invariance</h3>
+<h3>2 · Translation Invariance — Introductory</h3>
 <p>
       Add the same constant displacement to both bodies. Their coordinate
       trajectories move to a different part of the plane, but the relative orbit
       is unchanged.
     </p>
-<h3>3 · Galilean Relativity</h3>
+<h3>3 · Galilean Relativity — Introductory</h3>
 <p>
       Add the same velocity vector to both bodies. The binary now drifts across
       the plot, but its internal orbit is unchanged. Compare the new
@@ -774,7 +778,16 @@ python main.py</pre>
       compare energy plots, remember that the kinetic energy includes the motion of
       the centre of mass.
     </p>
-<h3>4 · Unequal Masses and the Centre of Mass</h3>
+<h3>4 · Velocity-Space Hodographs — Intermediate</h3>
+<p>
+      Compare <code>"velocity space"</code> plots for the circular case in
+      Experiment 1 and for the eccentric default case. A velocity-space plot is
+      not an orbit in physical space: each point represents the two components of
+      a body's velocity. Check that each complete bound-orbit curve is circular,
+      although its radius and displacement in velocity space change with the
+      initial conditions.
+    </p>
+<h3>5 · Unequal Masses and the Centre of Mass — Intermediate</h3>
 <p>
       Make body B progressively less massive. To keep the centre of mass at rest,
       choose initial velocities satisfying
@@ -785,7 +798,7 @@ python main.py</pre>
       mass-ratio limit the result approaches the fixed-central-mass picture used
       in <em>Orbit</em>.
     </p>
-<h3>5 · Bound, Parabolic, and Unbound Motion</h3>
+<h3>6 · Bound, Parabolic, and Unbound Motion — Intermediate</h3>
 <p>
       Keep the centre of mass at rest while increasing the relative speed from the
       same starting positions. Plot <code>"energy vs time"</code>. Under this
@@ -794,15 +807,34 @@ python main.py</pre>
       motion has \(E&gt;0\). Set <code>stop_after_one_orbit = False</code> for
       unbound runs.
     </p>
-<h3>6 · Challenge: Stellar Reflex Motion — Sun and Planets</h3>
+<h3>7 · Stellar Reflex Motion — Advanced Challenge</h3>
 <p>
-      Use approximate circular-orbit data for the Sun and one planet, choosing
-      opposite transverse velocities so that the centre of mass is at rest. Start
-      with Jupiter and examine the Sun's small barycentric orbit; its radius should
-      be slightly larger than the Sun's own radius. Repeat with Saturn and then
-      Earth. Which planet produces the largest reflex motion of the Sun, and why?
+      Model the Sun as body A and one planet as body B. For an approximate circular
+      orbit with separation \(a\), use
+      \(v_{\rm rel}=\sqrt{G(M_A+M_B)/a}\), put the bodies on opposite sides of the
+      centre of mass, and divide \(v_{\rm rel}\) between their opposite transverse
+      velocities so that \(M_A\mathbf v_A+M_B\mathbf v_B=0\). One convenient
+      setup is \(x_A=-aM_B/(M_A+M_B)\), \(x_B=+aM_A/(M_A+M_B)\),
+      \(u_A=-v_{\rm rel}M_B/(M_A+M_B)\), and
+      \(u_B=+v_{\rm rel}M_A/(M_A+M_B)\), with both y-positions and x-velocities zero.
     </p>
-<h3>7 · Numerical Convergence and Energy Conservation</h3>
+<table>
+<thead><tr><th>Body</th><th>Mass (kg)</th><th>Mean Sun–planet separation (m)</th></tr></thead>
+<tbody>
+<tr><td>Sun</td><td>\(1.989\times10^{30}\)</td><td>—</td></tr>
+<tr><td>Jupiter</td><td>\(1.898\times10^{27}\)</td><td>\(7.785\times10^{11}\)</td></tr>
+<tr><td>Saturn</td><td>\(5.683\times10^{26}\)</td><td>\(1.434\times10^{12}\)</td></tr>
+<tr><td>Earth</td><td>\(5.972\times10^{24}\)</td><td>\(1.496\times10^{11}\)</td></tr>
+</tbody>
+</table>
+<p>
+      Start with Jupiter and examine the Sun's small barycentric orbit; its radius
+      should be slightly larger than the Sun's radius,
+      \(6.96\times10^8\) m. Repeat with Saturn and Earth. Which planet produces
+      the largest reflex motion of the Sun, and why? Treat the tabulated values as
+      approximate two-body data rather than a precision Solar-System ephemeris.
+    </p>
+<h3>8 · Numerical Convergence and Energy Conservation — Advanced</h3>
 <p>
       Set <code>stop_after_one_orbit = False</code> and integrate for several
       periods. Repeat the same physical initial conditions with smaller
@@ -895,7 +927,9 @@ python main.py</pre>
       All numeric inputs must be finite real numbers. Masses and <code>dt</code>
       must be positive; <code>max_steps</code> must be a positive integer; both
       tolerances must lie strictly between zero and one (0 and 1 are not allowed);
-      and the bodies may not begin at exactly the same position.
+      and the bodies must have nonzero initial separation. Extremely large or
+      small inputs that put the separation, acceleration, or energy outside the
+      reliable range of double-precision arithmetic are rejected with an error.
     </div>
 </section>
 <!-- ─── Output Types ─── -->
@@ -903,7 +937,7 @@ python main.py</pre>
 <h2>Output Types</h2>
 <p>Assign one of these strings to <code>output_type</code> in <code>main.py</code>:</p>
 <ul class="output-list">
-<li><span class="tag">"orbits"</span><span>Both trajectories in the \(xy\)-plane, with equal axis scales.</span></li>
+<li><span class="tag">"orbits"</span><span>Both coordinate trajectories in the \(xy\)-plane, with equal axis scales. The termination test instead follows the relative A-minus-B vector.</span></li>
 <li>
 <span class="tag">"velocity space"</span>
 <span>
