@@ -391,7 +391,12 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build c5615f72bbcb
+  Version 1.1.1&nbsp;&nbsp;&nbsp;&nbsp;Build 5431f489e82d
+</p>
+<p class="small">
+  The Build identifier covers the four Python program modules listed below.
+  Help-only or test-only edits do not change it; this Version/Build line is
+  updated whenever the Help file is synchronized with a program build.
 </p>
 <!-- ─── Overview ─── -->
 <section id="overview">
@@ -672,10 +677,12 @@ python main.py</pre>
       Because input masses are given in solar units, the program omits one
       common solar-mass factor from energy, momentum, and angular momentum.
       This does not affect conservation tests. The console reports the maximum
-      drift in all three quantities. If the initial energy is exactly zero, or
-      if a conserved vector's initial norm is exactly zero, its reported drift
-      is an absolute scaled drift rather than a fractional one. The energy-drift
-      plot labels that zero-energy case explicitly. In
+      drift in all three quantities. Ordinarily, energy drift is divided by
+      \(|E_0|\). If kinetic and potential energies cancel so closely that
+      \(E_0\) is numerically indistinguishable from zero, the program instead
+      uses the stable characteristic scale \(K_0+|U_0|\). If a conserved
+      vector's initial norm is exactly zero, its reported momentum or angular-
+      momentum drift is an absolute scaled drift rather than a fraction. In
       <code>'trajectories'</code> mode, the complete histories are returned and
       <code>plot_energy_drift()</code> can display the energy error versus time.
     </p>
@@ -684,6 +691,13 @@ python main.py</pre>
       whole has negative mechanical energy; it does <em>not</em> require every
       body to remain bound. A tightly bound negative-energy binary can coexist
       with an escaping third body.
+    </div>
+<div class="note">
+<strong>Choice of inertial frame:</strong> total energy is conserved in every
+      inertial frame, but a very large center-of-mass kinetic energy can make a
+      fractional total-energy drift look artificially small. Use the
+      center-of-mass frame when the conservation diagnostic is intended to
+      measure the accuracy of the relative N-body motion.
     </div>
 </section>
 <!-- ─── Computational Scaling ─── -->
@@ -862,6 +876,12 @@ python main.py</pre>
       state and plots the complete paths. <code>'animation'</code> precomputes
       uniformly timed movie frames and therefore uses memory according mainly to
       the number of frames rather than the integration-step count.
+    </p>
+<p>
+      These two values belong to <code>output_type</code>. The phrase
+      <code>'current positions'</code> is not an <code>output_type</code> value;
+      it is one of the two <code>animation_mode</code> choices. The other choice,
+      <code>'trails'</code>, adds a recent path behind each current marker.
     </p>
 <h3>Uniform Physical-Time Frames</h3>
 <p>
