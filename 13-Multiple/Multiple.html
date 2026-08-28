@@ -391,14 +391,14 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.0&nbsp;&nbsp;&nbsp;&nbsp;Build 2f90c3bb0915
+  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build c5615f72bbcb
 </p>
 <!-- ─── Overview ─── -->
 <section id="overview">
 <h2>Overview</h2>
 <p>
 <strong>Multiple</strong> simulates the Newtonian gravitational motion of
-      an arbitrary number of point masses in three dimensions. Every body is
+      two or more point masses in three dimensions. Every body is
       integrated dynamically and exerts gravity on every other body.
     </p>
 <p>
@@ -443,6 +443,14 @@ python main.py</pre>
       The default output is an animation with short trails. The integrator may
       reduce its timestep below the 2000-s maximum during close encounters, but
       animation frames remain uniformly separated by physical simulation time.
+    </p>
+<p>
+      The shipped 60,000-step run uses <code>eps1=0.005</code> and
+      <code>eps2=1.0e-7</code>. On the reference calculation used for this
+      release, it reached approximately \(1.878\times10^7\) s with maximum
+      fractional energy drift about \(3.23\times10^{-4}\). Results can vary
+      after students change the initial conditions, so the printed diagnostics
+      must still be checked for every experiment.
     </p>
 <div class="note">
 <strong>Check numerical reliability:</strong> close encounters can make a
@@ -536,6 +544,11 @@ python main.py</pre>
       The state of body \(A\) is its position
       \(\mathbf r_A=(x_A,y_A,z_A)\) and velocity
       \(\mathbf v_A=(v_{x,A},v_{y,A},v_{z,A})\).
+    </p>
+<p>
+      All positions and velocities must be expressed in one common inertial
+      Cartesian frame. A center-of-mass frame is often the clearest choice
+      because it removes an uninformative overall drift from the display.
     </p>
 <div class="note">
 <strong>Visualisation:</strong> The calculation is fully three-dimensional.
@@ -645,7 +658,9 @@ python main.py</pre>
       \[
         E =
         \frac12\sum_A m_A v_A^2
-        -\sum_{A<b}\frac{gm_am_b}{r_{ab}} .="" <="" \]="" div="">
+        -\sum_{A&lt;B}\frac{Gm_A m_B}{r_{AB}} .
+      \]
+    </div>
 <div class="eq"><span class="eq-label">(8)</span>
       \[
         \mathbf P=\sum_A m_A\mathbf v_A,
@@ -657,9 +672,10 @@ python main.py</pre>
       Because input masses are given in solar units, the program omits one
       common solar-mass factor from energy, momentum, and angular momentum.
       This does not affect conservation tests. The console reports the maximum
-      drift in all three quantities. For a conserved vector whose initial norm
-      is exactly zero, the reported momentum or angular-momentum drift is an
-      absolute scaled drift rather than a fractional one. In
+      drift in all three quantities. If the initial energy is exactly zero, or
+      if a conserved vector's initial norm is exactly zero, its reported drift
+      is an absolute scaled drift rather than a fractional one. The energy-drift
+      plot labels that zero-energy case explicitly. In
       <code>'trajectories'</code> mode, the complete histories are returned and
       <code>plot_energy_drift()</code> can display the energy error versus time.
     </p>
@@ -669,7 +685,7 @@ python main.py</pre>
       body to remain bound. A tightly bound negative-energy binary can coexist
       with an escaping third body.
     </div>
-</b}\frac{gm_am_b}{r_{ab}}></div></section>
+</section>
 <!-- ─── Computational Scaling ─── -->
 <section id="scaling">
 <h2>Computational Scaling</h2>
@@ -774,26 +790,30 @@ python main.py</pre>
 <h2>Convergence Criteria</h2>
 <p>
 <code>eps2</code> controls convergence of the iterated corrector. For each
-      body the program compares successive corrected velocity vectors,
+      body the program compares successive estimates of the velocity increment
+      over the attempted step,
     </p>
 <div class="eq"><span class="eq-label">(13)</span>
       \[
         \delta_{v,A}=
-        \frac{\|\mathbf v_{A,\mathrm{new}}-\mathbf v_{A,\mathrm{old}}\|}
-             {\max(\|\mathbf v_{A,\mathrm{new}}\|,
-                   \|\mathbf v_{A,\mathrm{old}}\|)} .
+        \frac{\|\Delta\mathbf v_{A,\mathrm{new}}-
+                    \Delta\mathbf v_{A,\mathrm{old}}\|}
+             {\max(\|\Delta\mathbf v_{A,\mathrm{new}}\|,
+                   \|\Delta\mathbf v_{A,\mathrm{old}}\|)} .
       \]
     </div>
 <p>
       The corrector has converged only when the largest \(\delta_{v,A}\) is
-      below <code>eps2</code>. The defaults require
+      below <code>eps2</code>. Using increments rather than absolute coordinate
+      velocities makes this convergence test unchanged by adding a uniform
+      velocity to the whole system. The program requires
       \(0&lt;\varepsilon_2&lt;\varepsilon_1&lt;1\).
     </p>
 <table>
 <thead><tr><th>Parameter</th><th>Default</th><th>Role</th></tr></thead>
 <tbody>
-<tr><td><code>eps1</code></td><td>0.05</td><td>Maximum per-body acceleration-vector change allowed by the predictor gate.</td></tr>
-<tr><td><code>eps2</code></td><td>0.0001</td><td>Required per-body velocity-vector convergence of the iterated corrector.</td></tr>
+<tr><td><code>eps1</code></td><td>0.005</td><td>Maximum per-body acceleration-vector change allowed by the predictor gate.</td></tr>
+<tr><td><code>eps2</code></td><td>1.0e-7</td><td>Required per-body velocity-increment convergence of the iterated corrector.</td></tr>
 </tbody>
 </table>
 </section>
@@ -809,9 +829,9 @@ python main.py</pre>
 <tr><td><code>positions_init</code></td><td>see <code>main.py</code></td><td>m</td><td>Three Cartesian coordinates per body.</td></tr>
 <tr><td><code>velocities_init</code></td><td>see <code>main.py</code></td><td>m/s</td><td>Three velocity components per body.</td></tr>
 <tr><td><code>dt</code></td><td>2000</td><td>s</td><td>Maximum adaptive timestep.</td></tr>
-<tr><td><code>max_steps</code></td><td>40000</td><td>—</td><td>Maximum accepted integration steps.</td></tr>
-<tr><td><code>eps1</code></td><td>0.05</td><td>—</td><td>Per-body acceleration-change tolerance.</td></tr>
-<tr><td><code>eps2</code></td><td>0.0001</td><td>—</td><td>Iterated-corrector convergence tolerance.</td></tr>
+<tr><td><code>max_steps</code></td><td>60000</td><td>—</td><td>Maximum accepted integration steps.</td></tr>
+<tr><td><code>eps1</code></td><td>0.005</td><td>—</td><td>Per-body acceleration-change tolerance.</td></tr>
+<tr><td><code>eps2</code></td><td>1.0e-7</td><td>—</td><td>Iterated-corrector convergence tolerance.</td></tr>
 <tr><td><code>output_type</code></td><td>'animation'</td><td>—</td><td><code>'trajectories'</code> or <code>'animation'</code>.</td></tr>
 <tr><td><code>animation_mode</code></td><td>'trails'</td><td>—</td><td><code>'current positions'</code> or <code>'trails'</code>.</td></tr>
 <tr><td><code>frame_time</code></td><td>2.0e5</td><td>s</td><td>Physical simulation time between animation frames.</td></tr>
@@ -821,6 +841,12 @@ python main.py</pre>
 <tr><td><code>axis_mode</code></td><td>'fixed'</td><td>—</td><td><code>'fixed'</code> or equal-scale <code>'auto'</code> zoom.</td></tr>
 </tbody>
 </table>
+<p class="small">
+      To prevent accidental exhaustion of memory, an animation request whose
+      maximum possible duration could require more than 1,000,000 stored frames
+      is rejected. Increase <code>frame_time</code> or reduce the requested
+      duration if this safeguard is reached.
+    </p>
 <p class="small">
       The values in the Default column are the shipped settings in
       <code>main.py</code>. Some fields, including <code>output_type</code>,
@@ -902,18 +928,30 @@ python main.py</pre>
 <div class="scenario-card">
 <div class="sc-title">Out-of-plane encounter</div>
         Add a modest \(z\)-velocity to one body and compare the <code>'xy'</code>
-        and <code>'xz'</code> projections. Choose the vertical speed so that the
+        and <code>'xz'</code> projections. Try (1\) km/s first and then
+        (5\) km/s. Choose the vertical speed so that the
         bodies' \(z\)-separations near closest approach are comparable to their
         in-plane separations. If the vertical speed is too large, the bodies may
         simply miss one another and the interesting encounter disappears.
       </div>
 <div class="scenario-card">
 <div class="sc-title">Numerical convergence</div>
-        Repeat the same physical initial conditions with smaller <code>dt</code>
-        and tighter tolerances. Compare finite-time trajectories and the
+        Repeat the same physical initial conditions with <code>dt</code>,
+        <code>dt/2</code>, and <code>dt/4</code>; then repeat with tighter
+        <code>eps1</code> and <code>eps2</code>. Compare finite-time trajectories and the
         reported conservation drift. For sensitive three-body motion, long-term
         trajectories can eventually separate even when both integrations are
         individually accurate.
+      </div>
+<div class="scenario-card">
+<div class="sc-title">Center-of-mass frame</div>
+        First add the same velocity vector to every body and observe the overall
+        drift across the plot. Then calculate
+        \(\mathbf R_{\rm CM}=\sum_A m_A\mathbf r_A/\sum_A m_A\) and
+        \(\mathbf V_{\rm CM}=\sum_A m_A\mathbf v_A/\sum_A m_A\), and subtract
+        them from all initial positions and velocities. Confirm that the
+        relative motion is unchanged while the center of mass remains at rest,
+        and relate this result to conservation of total momentum.
       </div>
 <div class="scenario-card">
 <div class="sc-title">Binary hardening</div>
@@ -1035,7 +1073,8 @@ python main.py</pre>
 <p>
       This software is based on the programs by <strong>Bernard Schutz</strong>
       accompanying <em>Gravity from the Ground Up</em> (Cambridge University
-      Press, 2003) and is distributed under the
+      Press, 2003). This Python program is a port and extension of Schutz's
+      original Triana/Java <em>Multiple</em> program. It is distributed under the
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike
       4.0 International (CC BY-NC-SA 4.0)</a> license.
     </p>
