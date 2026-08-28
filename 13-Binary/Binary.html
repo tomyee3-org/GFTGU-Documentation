@@ -416,7 +416,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.2&nbsp;&nbsp;&nbsp;&nbsp;Build d9a4c6a0c1ee
+  Version 1.1.3&nbsp;&nbsp;&nbsp;&nbsp;Build 7a48292a1a14
 </p>
 <!-- ─── Overview ─── -->
 <section id="overview">
@@ -676,7 +676,11 @@ python main.py</pre>
 <p>
       With <code>stop_after_one_orbit = True</code>, the program follows the angle
       swept by the relative vector \(\mathbf r_A-\mathbf r_B\). Signed angle
-      increments between successive accepted steps are accumulated, and the
+      increments between successive accepted steps are accumulated. Each vector
+      is scaled independently before its dot and cross products are formed, so
+      the angle does not depend on coordinate magnitude. A non-finite orbit-angle
+      diagnostic stops with a clear error rather than silently disabling this
+      termination test. The
       calculation stops when their magnitude reaches \(2\pi\), provided this occurs
       before <code>max_steps</code>. This is a geometric stopping rule for one
       relative revolution; it is independent of the coordinate origin and does not
