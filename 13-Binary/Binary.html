@@ -416,7 +416,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.1&nbsp;&nbsp;&nbsp;&nbsp;Build 18c0fd123233
+  Version 1.1.2&nbsp;&nbsp;&nbsp;&nbsp;Build d9a4c6a0c1ee
 </p>
 <!-- ─── Overview ─── -->
 <section id="overview">
@@ -968,9 +968,9 @@ python main.py</pre>
       tolerances must lie strictly between zero and one (0 and 1 are not allowed);
       and the bodies must have nonzero initial separation. Extremely large or
       small inputs that put a derived displacement, acceleration, or energy outside the
-      range of double-precision arithmetic are rejected with an error. For energy,
-      this includes both overflow and a nonzero result so small that it would round
-      to zero.
+      range of double-precision arithmetic are rejected with an error. For both
+      bodies' accelerations and for potential, kinetic, and total energy, this
+      includes overflow and a nonzero result so small that it would round to zero.
     </div>
 </section>
 <!-- ─── Output Types ─── -->
