@@ -380,7 +380,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.0&nbsp;&nbsp;&nbsp;&nbsp;Build 16dd032083c9
+  Version 1.0.1&nbsp;&nbsp;&nbsp;&nbsp;Build f6e4fc62b996
 </p>
 <!-- ─── Overview ─── -->
 <section id="overview">
@@ -794,6 +794,12 @@ python main.py</pre>
 <tr><td><code>companion_collision_radius</code></td><td>0</td><td>Optional companion stopping radius</td></tr>
 </tbody>
 </table>
+<p>
+      All numeric inputs must be finite. Masses, separation, timestep, and step
+      count must be positive; collision radii must be non-negative, and their
+      sum must be smaller than the binary separation. Invalid combinations stop
+      with a descriptive error instead of beginning an undefined calculation.
+    </p>
 <h3>Nominal Astronomical Constants</h3>
 <table>
 <thead><tr><th>Constant</th><th>Value</th><th>Unit</th></tr></thead>
@@ -908,7 +914,35 @@ python main.py</pre>
 <!-- ─── Suggestions for Playing ─── -->
 <section id="suggestions">
 <h2>Suggested Experiments</h2>
-<h3>1 · Extend the Default Run Toward a Close Encounter</h3>
+<p>
+      The experiments are arranged in approximate order of difficulty, from
+      introductory parameter changes to an advanced investigation near
+      \(L_1\). Keep a record of the parameters used for each run so that your
+      comparisons can be reproduced.
+    </p>
+<h3>1 · A Quieter Baseline Orbit <small>(Introductory)</small></h3>
+<p>
+      At \(0.3\,\mathrm{AU}\) from a solar-mass star, the isolated circular
+      speed is about \(54.4\,\mathrm{km\,s^{-1}}\). Try that Sun-relative
+      velocity and compare its perturbations with the default
+      \(59.22\,\mathrm{km\,s^{-1}}\).
+    </p>
+<h3>2 · Companion-Mass Sequence <small>(Introductory)</small></h3>
+<p>
+      Reduce <code>m_planet_solar</code> from 0.1 toward a genuine giant-planet
+      mass and observe how the stability region changes. Jupiter itself is about
+      \(9.5\times10^{-4}\,M_\odot\), giving a useful lower-end reference.
+      The default 0.1-solar-mass companion is deliberately extreme and belongs to
+      the low-mass stellar regime.
+    </p>
+<h3>3 · Retrograde Orbits <small>(Introductory–Intermediate)</small></h3>
+<p>
+      Reverse the sign of Mercury's Sun-relative transverse velocity and compare
+      the stability of retrograde trajectories with otherwise identical prograde
+      trajectories. Use the same integration length and accuracy settings for
+      each pair.
+    </p>
+<h3>4 · Extend the Default Run Toward a Close Encounter <small>(Intermediate)</small></h3>
 <p>
       Run the 10,000-step defaults first as a baseline. Then increase
       <code>max_steps</code> gradually — for example to 40,000, 60,000, and
@@ -920,44 +954,44 @@ python main.py</pre>
       strongly different long-term paths by themselves do not prove numerical
       failure.
     </p>
-<h3>2 · A Quieter Baseline Orbit</h3>
+<h3>5 · Numerical Convergence <small>(Intermediate)</small></h3>
 <p>
-      At \(0.3\,\mathrm{AU}\) from a solar-mass star, the isolated circular
-      speed is about \(54.4\,\mathrm{km\,s^{-1}}\). Try that Sun-relative
-      velocity and compare its perturbations with the default
-      \(59.22\,\mathrm{km\,s^{-1}}\).
+      Repeat the same physical setup with smaller <code>dt</code> and tighter
+      <code>eps1</code>/<code>eps2</code>; for example, try
+      <code>eps1 = 0.01</code> and <code>eps2 = 1e-5</code>. To compare the same
+      physical interval after changing <code>dt</code>, adjust
+      <code>max_steps</code> as needed and verify the final times. Compare the
+      trajectories over that common interval and compare the maximum fractional
+      Jacobi drift. Set <code>show_jacobi_diagnostic = True</code> if you also
+      want the drift plot. The Jacobi diagnostic is especially useful when later
+      portions of two sensitive trajectories diverge visibly.
     </p>
-<h3>3 · Companion-Mass Sequence</h3>
+<h3>6 · Map a Finite-Time Stability Boundary <small>(Advanced)</small></h3>
 <p>
-      Reduce <code>m_planet_solar</code> from 0.1 toward a genuine giant-planet
-      mass and observe how the stability region changes. Jupiter itself is about
-      \(9.5\times10^{-4}\,M_\odot\), giving a useful lower-end reference.
-      The default 0.1-solar-mass companion is deliberately extreme and belongs to
-      the low-mass stellar regime.
+      Hold the binary fixed and try a sequence of Mercury starting radii. For a
+      stated integration time, classify each trajectory by explicit criteria:
+      continued bounded motion, collision, or escape beyond a distance you
+      choose in advance. Estimate where the transition occurs. A handful of
+      carefully chosen manual trials is enough for a first map, but do not call
+      the result an absolute stability limit: the classification depends on the
+      integration duration, and sensitive boundaries need not be perfectly
+      sharp.
     </p>
-<h3>4 · Map a Stability Boundary</h3>
-<p>
-      Hold the binary fixed and try a sequence of Mercury starting radii. Record
-      which initial conditions remain bounded for the chosen integration time,
-      which undergo close encounters, and which are ejected. How far outside the
-      companion's orbit is it safe for Mercury to orbit without being seriously
-      disturbed? A handful of carefully chosen manual trials is enough to locate
-      the transition approximately; do not assume that a visually sharp boundary
-      remains sharp over arbitrarily long times.
-    </p>
-<h3>5 · Equal-Mass Binary and Circumbinary Orbits</h3>
+<h3>7 · Equal-Mass Binary and Circumbinary Orbits <small>(Advanced)</small></h3>
 <p>
       Set both massive bodies to \(1\,M_\odot\) and choose a separation near
-      1 AU. Search for stable orbits far outside the binary as well as unstable
-      trajectories between the two stars. Compare the smallest stable
-      circumbinary orbit you can find with the binary separation.
+      1 AU. Search for long-lived orbits far outside the binary as well as
+      unstable trajectories between the two stars. For a fixed integration
+      duration, compare the smallest long-lived circumbinary orbit you can find
+      with the binary separation. Explain why the experiment establishes
+      finite-time survival rather than permanent stability.
     </p>
-<h3>6 · Roche-Lobe / L1 Test-Particle Experiment</h3>
+<h3>8 · Roche-Lobe / L1 Test-Particle Experiment <small>(Capstone)</small></h3>
 <p>
       For an unequal-mass binary, place Mercury at different starting points on
       the line between the two bodies. Compute the binary angular velocity
       \(\omega\), set <code>y_init = 0</code> and <code>vx_init = 0</code>,
-      and give Mercury the Sun-relative co-rotation velocity
+      and assign the Sun-relative velocity required for local co-rotation,
       <code>vy_init = omega * x_init</code>. Explore the dividing region between
       trajectories that remain associated with one primary and those transferred
       toward the other. This is a test-particle analogue of motion near the inner
@@ -966,22 +1000,6 @@ python main.py</pre>
       changed from a Sun-like star to a compact object such as a black hole, set
       <code>sun_collision_radius</code> to zero or to a physically appropriate
       stopping radius rather than leaving it at <code>R_SUN</code>.
-    </p>
-<h3>7 · Retrograde Orbits</h3>
-<p>
-      Reverse the sign of Mercury's Sun-relative transverse velocity and compare
-      the stability of retrograde trajectories with otherwise similar prograde
-      ones.
-    </p>
-<h3>8 · Numerical Convergence</h3>
-<p>
-      Repeat the same physical setup with smaller <code>dt</code> and tighter
-      <code>eps1</code>/<code>eps2</code>; for example, try
-      <code>eps1 = 0.01</code> and <code>eps2 = 1e-5</code>. Compare the
-      trajectories over the same finite interval and compare the maximum
-      fractional Jacobi drift. Set <code>show_jacobi_diagnostic = True</code> if
-      you also want the drift plot. The Jacobi diagnostic is especially useful
-      when later portions of two sensitive trajectories diverge visibly.
     </p>
 </section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
 <div style="
