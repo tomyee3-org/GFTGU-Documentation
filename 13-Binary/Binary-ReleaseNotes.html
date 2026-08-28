@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Binary 1.1.4 Release Notes</title>
+</head>
+<body>
+<h1>Binary 1.1.4 Release Notes</h1>
+<p><b>Version:</b> 1.1.4<br><b>Build:</b> 83cbf117fcdb<br><b>Date:</b> 2026-08-28</p>
+
+<h2>Release Status</h2>
+<p>Version 1.1.4 concludes a kickoff maintenance review followed by six rounds of independent review involving Codex, Copilot, and Gemini. The reviewers compared the Python implementation with Schutz's original Java source, verified the Newtonian two-body equations, numerical integration, validation and error handling, plotting, Help-file accuracy, Version/Build synchronization, Python 3.10 compatibility, and regression coverage. The bounded final review found no release-blocking defect. The program is approved for release and is sufficiently robust and scientifically accurate for student use within the tutorial scope and limitations described below.</p>
+
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li>Verified the acceleration, kinetic-energy, gravitational-potential-energy, centre-of-mass, momentum, angular-momentum, circular-orbit, and relative-motion calculations against analytic results and Schutz's original Java model.</li>
+<li>Made the public physics functions consistently reject Boolean, non-real, non-finite, non-positive-mass, zero-separation, overflow-prone, and underflow-prone inputs with explanatory errors.</li>
+<li>Hardened displacement, acceleration, and energy calculations against avoidable floating-point overflow and underflow by using normalized directions and scaled mantissa/exponent arithmetic.</li>
+<li>Made kinetic-energy evaluation safe for very large velocity components and very small masses without losing representable results.</li>
+<li>Used accurate summation for the two kinetic-energy terms and total energy, preserving representable residuals when much larger positive and negative terms nearly cancel while retaining valid exact zero.</li>
+<li>Made the signed orbit-angle calculation independent of vector magnitude, robust across the <code>atan2</code> branch cut, and incapable of silently poisoning the one-revolution stopping test with a non-finite value.</li>
+<li>Added deterministic coverage for adaptive timestep rejection and recovery, corrector retry and exhaustion, timestep collapse, non-advancing time, retrograde motion, radial motion, unbound scattering, unequal masses, and moving-centre-of-mass systems.</li>
+<li>Aligned <code>relative_displacement()</code> with its documented three-value contract and retained <code>"orbit"</code> as a compatibility alias for the preferred <code>"orbits"</code> plot selector.</li>
+<li>Verified all seven distinct plot designs, eight accepted selector strings, plotted data mappings, labels, titles, legends, and equal-aspect orbit and velocity-space displays.</li>
+<li>Revised the Help file for scientific accuracy, clearer stopping and energy qualifications, reproducible exercises with approximate difficulty rankings, explicit numerical-range policy, and exact agreement with program defaults and selectors.</li>
+<li>Added BUILD_ID provenance across the four executable-core modules and synchronized it with the Help file, result metadata, command-line version output, and independent regression reproduction.</li>
+</ul>
+
+<h2>Test Suite Growth</h2>
+<p>A new 54-test regression suite was created at kickoff and expanded to 87 automated tests during six audit rounds. The suite uses <code>find_module_dir()</code> to locate the nearest directory containing all four core modules, so it works both from the canonical <code>tests/</code> directory and when flattened beside the program files for review.</p>
+<p>The final suite verifies module discovery, equations and invariances, analytic circular motion, bound and unbound behavior, adaptive predictor-corrector branches, numerical safety limits, extreme mass and velocity scaling, energy cancellation, orbit-angle accumulation, conservation diagnostics, stopping behavior, plotting contracts, command-line behavior, Help structure and scientific content, Python-version compatibility, and independent Build-ID reproduction. All 87 tests pass in the canonical layout, the flattened upload layout, and an actual Python 3.10.20 environment with Matplotlib 3.5.0 and NumPy 1.26.4.</p>
+
+<h2>Known Limitations</h2>
+<ul>
+<li>Intended for education and conceptual exploration rather than precision ephemerides or research-grade orbital dynamics.</li>
+<li>The model treats two Newtonian point masses interacting only through their mutual gravity. It does not include general relativity, gravitational radiation, tides, rotation, finite size, collisions, mass transfer, external fields, or additional bodies.</li>
+<li>Newtonian point-mass gravity is singular at zero separation. The program reports numerical-safety errors during unresolvable close approaches rather than modeling impact, merger, or passage through a softened potential.</li>
+<li>The Euler-predictor/iterated-trapezoidal-corrector method accumulates integration error. Quantitative experiments should be repeated with smaller <code>dt</code> and stricter tolerances to demonstrate convergence.</li>
+<li>The one-revolution condition follows accumulated signed angle of the relative position vector. It can pass the exact <code>2&pi;</code> point by part of one accepted timestep and does not prove that the numerical trajectory is exactly closed.</li>
+<li>Radial and unbound trajectories normally do not satisfy the one-revolution condition and therefore continue to the <code>max_steps</code> safety ceiling.</li>
+<li>Finite inputs whose derived displacement, acceleration, or energy lies outside the representable double-precision range are rejected rather than approximated.</li>
+<li>The Help file loads MathJax from a public CDN. Offline, its prose and raw equation source remain available, but equations appear as untypeset LaTeX.</li>
+</ul>
+
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>A compensated angle accumulator could be considered if a future program variant requires extremely long integrations. It is unnecessary for Binary's documented one-revolution use and 10,000-step default ceiling.</li>
+<li>The minimum supported versions are documented and were executed directly during release testing, but repository-wide CI and dependency-lock policy remain outside this module's artifact set.</li>
+<li>The regression suite intentionally covers numerous adversarial floating-point boundaries. Future maintenance should preserve focused behavioral coverage without requiring a separate test for every mathematically equivalent extreme-value permutation.</li>
+</ul>
+
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.1.4<br>BUILD_ID: 83cbf117fcdb</p>
+<p>BUILD_ID identifies the executable program core formed by <code>physics_binary.py</code>, <code>driver_binary.py</code>, <code>main.py</code>, and <code>plot_binary.py</code>. Help, tests, reports, and release notes are intentionally outside this core hash.</p>
+</body>
+</html>
