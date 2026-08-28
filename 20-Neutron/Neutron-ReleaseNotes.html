@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Neutron 1.2.0 Release Notes</title>
+</head>
+<body>
+<h1>Neutron 1.2.0 Release Notes</h1>
+<p><b>Version:</b> 1.2.0<br><b>Build:</b> 685bb0e10e01<br><b>Date:</b> 2026-08-28</p>
+<h2>Release Status</h2>
+<p>Version 1.2.0 concludes a kickoff maintenance review followed by independent adversarial review by Microsoft Copilot and Google Gemini and a final remediation pass by Codex. The reviewers examined the Tolman-Oppenheimer-Volkoff equations, equation-of-state implementation, surface-location method, numerical stability, validation and error handling, Help-file accuracy, Version/Build synchronization, regression coverage, and extreme-range behavior. All reported release-blocking defects have been corrected. The program is approved for release and is suitable for student use within the educational scope and limitations described below.</p>
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li>Corrected the stellar-surface locator by replacing a pressure-tangent extrapolation with a surface estimate based on the regular polytropic variable <i>q = p<sup>(gamma-1)/gamma</sup></i>, substantially reducing systematic radius bias.</li>
+<li>Added guarded arithmetic and controlled failure handling throughout the central expansion, TOV derivative evaluation, and RK4 integration pipeline to prevent raw floating-point exceptions from escaping the public solver interface.</li>
+<li>Added validation of the complete TOV denominator to prevent underflow-related division failures in extreme parameter regimes.</li>
+<li>Introduced a dedicated <code>SurfaceCrossingError</code> so that RK4 surface detection no longer masks unrelated numerical or validation failures.</li>
+<li>Reworked several calculations into logarithmic form, including EOS inversion, radial-scale evaluation, and central sound-speed diagnostics, reducing avoidable overflow and underflow risk.</li>
+<li>Added explicit causality diagnostics reporting the central sound speed relative to the speed of light and whether the adopted toy EOS satisfies the causality condition.</li>
+<li>Made plotting behavior more student-friendly by accepting case-insensitive output selections such as <code>"pressure"</code>, <code>" DENSITY "</code>, and <code>"mAsS"</code>.</li>
+<li>Added a warning when <code>log_y=True</code> is requested for a mass plot, eliminating the previous silent override.</li>
+<li>Documented the scientific reason that <code>gamma = 1</code> is not accepted by this solver and clarified the limitations of representing self-bound matter with a simple polytropic EOS.</li>
+<li>Added BUILD_ID verification across the four core program modules and synchronized Version/Build reporting with the Help file and runtime output.</li>
+</ul>
+<h2>Test Suite Growth</h2>
+<p>A comprehensive regression suite was created during kickoff and expanded throughout the audit process. The final release includes 107 automated tests covering physics equations, central expansions, RK4 integration, surface-location accuracy, plotting behavior, validation logic, Build-ID reproduction, Help-file synchronization, command-line execution, and Python compatibility checks.</p>
+<p>The final suite includes deterministic extreme-range parameter sweeps, exact regression tests for all audit-discovered robustness defects, independent reference integrations using the regular surface variable, and surface-verification cases spanning multiple polytropic exponents. All 107 tests pass in both the canonical <code>tests/</code> layout and a flattened upload layout. Independent audit reviews concluded that the previously reported numerical-robustness defects have been corrected and that no new release-blocking defects remain.</p>
+<h2>Known Limitations</h2>
+<ul>
+<li>Intended for education and conceptual exploration rather than precision neutron-star modeling or research-grade equation-of-state studies.</li>
+<li>The EOS is a single pedagogical polytrope and does not represent modern crust-plus-core, piecewise-polytropic, or tabulated nuclear-matter equations of state.</li>
+<li>The model is static, spherically symmetric, isotropic, nonrotating, and computes equilibrium configurations only.</li>
+<li>The program does not evolve unstable stars, model collapse, compute quasi-normal modes, or simulate black-hole formation.</li>
+<li>The reported mass is the TOV gravitational mass function. Baryonic mass, binding energy, tidal deformability, and rotational effects are not computed.</li>
+<li>A failed causality diagnostic indicates breakdown of the assumed toy EOS rather than a prediction of superluminal propagation in real neutron-star matter.</li>
+<li>The onset of instability along a sequence is inferred through the usual turning-point interpretation; no independent radial-mode stability calculation is performed.</li>
+<li>The Help file loads MathJax from a public CDN. Offline, the explanatory text remains available but equations appear as raw LaTeX source rather than typeset mathematics.</li>
+</ul>
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>The source and tests parse successfully using Python 3.10 grammar and execute successfully under the audit environment's Python 3.12 interpreter. Running the complete suite under a native Python 3.10 runtime remains a desirable non-blocking verification step.</li>
+<li>The deterministic extreme-range sweeps verify exception discipline and controlled failure behavior; they are not intended to establish physical validity across the entire sampled parameter space.</li>
+<li>The independent q-reference integration used for surface verification exists within the regression suite and is not distributed as a separate user-facing utility.</li>
+</ul>
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.2.0<br>BUILD_ID: 685bb0e10e01</p>
+</body>
+</html>
