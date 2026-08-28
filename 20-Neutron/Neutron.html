@@ -362,7 +362,7 @@
 ════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 0dcb391edd77
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 685bb0e10e01
 </p>
 <!-- ─── Overview ─── -->
 <h2 id="overview">Overview</h2>
@@ -389,13 +389,13 @@
 <table>
 <thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td>gamma</td><td>1.666667</td><td>dimensionless</td><td>Polytropic exponent in \(p=K\rho^\gamma\). Must be greater than 1.</td></tr>
+<tr><td>gamma</td><td>1.666667</td><td>dimensionless</td><td>Polytropic exponent in \(p=K\rho^\gamma\). Must be greater than 1; see the explanation below.</td></tr>
 <tr><td>pC</td><td>1.26e35</td><td>Pa</td><td>Central pressure.</td></tr>
 <tr><td>K</td><td>5.3802e3</td><td>depends on \(\gamma\)</td><td>Polytropic constant. Its dimensions depend on \(\gamma\), so changing \(\gamma\) while keeping the same numerical \(K\) is not a controlled stiffness comparison.</td></tr>
-<tr><td>output_type</td><td>"Pressure"</td><td>string</td><td><code>"Pressure"</code>, <code>"Density"</code>, or <code>"Mass"</code>.</td></tr>
-<tr><td>log_y</td><td>False</td><td>boolean</td><td>Optional logarithmic y-axis for pressure or density.</td></tr>
-<tr><td>steps_per_scale</td><td>400</td><td>—</td><td>Nominal radial resolution, \(\Delta r=\ell/\text{steps_per_scale}\). Must be an integer of at least 50.</td></tr>
-<tr><td>max_steps</td><td>200000</td><td>—</td><td>Safety limit on radial integration steps. Must be an integer of at least 100.</td></tr>
+<tr><td>output_type</td><td>"Pressure"</td><td>string</td><td><code>"Pressure"</code>, <code>"Density"</code>, or <code>"Mass"</code>. Capitalization and surrounding spaces are ignored.</td></tr>
+<tr><td>log_y</td><td>False</td><td>boolean</td><td>Optional logarithmic y-axis for pressure or density. A mass plot remains linear and emits a warning if this is set to <code>True</code>.</td></tr>
+<tr><td>steps_per_scale</td><td>400</td><td>—</td><td>Nominal radial resolution, \(\Delta r=\ell/\text{steps_per_scale}\). Must be an integer from 50 through 10000000.</td></tr>
+<tr><td>max_steps</td><td>200000</td><td>—</td><td>Safety limit on radial integration steps. Must be an integer from 100 through 10000000.</td></tr>
 </tbody>
 </table>
 <div class="note">
@@ -423,7 +423,9 @@ and the exact SI speed of light \(c=299\,792\,458\ \mathrm{m\,s^{-1}}\).
   spacing. Pressure and density may be shown on a
   logarithmic scale with <code>log_y=True</code>; the exact zero-valued surface
   point is omitted from a logarithmic plot because zero cannot be represented
-  on a log axis. <code>log_y</code> is ignored for mass plots.
+  on a log axis. Mass plots remain linear; if <code>log_y=True</code> is used
+  with <code>output_type="Mass"</code>, the program prints a warning rather than
+  silently ignoring the setting.
 </p>
 <h2 id="modules">Module Structure</h2>
 <div class="mc-grid">
@@ -498,6 +500,16 @@ For this polytrope, the local sound-speed relation is
 make the model formally acausal, with \(v_s&gt;c\). Such a result signals failure
 of the assumed polytropic EOS, not a prediction that real neutron-star matter
 transmits signals faster than light.
+</div>
+<div class="note">
+<strong>Why \(\gamma=1\) is not accepted</strong>
+With the pure EOS \(p=K\rho\), pressure and density approach zero only
+asymptotically rather than defining the finite zero-pressure surface required
+by this solver; the surface formula also contains \(\gamma/(\gamma-1)\). A
+self-bound quark-matter model avoids this problem through an offset energy
+density, not by using \(p=K\rho\) alone. The restriction \(\gamma&gt;1\) therefore
+protects the physical and numerical definition of the model rather than merely
+limiting student experimentation.
 </div>
 <h2 id="mass">Mass Integral</h2>
 <p>
