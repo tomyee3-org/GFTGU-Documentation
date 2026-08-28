@@ -391,7 +391,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.1&nbsp;&nbsp;&nbsp;&nbsp;Build 5431f489e82d
+  Version 1.1.2&nbsp;&nbsp;&nbsp;&nbsp;Build bb853c24c69e
 </p>
 <p class="small">
   The Build identifier covers the four Python program modules listed below.
@@ -686,6 +686,17 @@ python main.py</pre>
       <code>'trajectories'</code> mode, the complete histories are returned and
       <code>plot_energy_drift()</code> can display the energy error versus time.
     </p>
+<p>
+      The result dictionary uses the neutral keys
+      <code>max_momentum_drift</code> and
+      <code>max_angular_momentum_drift</code>. Their corresponding
+      <code>*_drift_normalization</code> values are <code>'initial_norm'</code>
+      for fractional drift or <code>'absolute_scaled'</code> when the initial
+      vector is zero; <code>*_drift_scale</code> gives the initial norm or
+      <code>None</code>, respectively. The older keys beginning with
+      <code>max_fractional_</code> remain aliases for compatibility but should
+      not be used to infer the normalization.
+    </p>
 <div class="note">
 <strong>Negative total energy:</strong> \(E&lt;0\) means the system as a
       whole has negative mechanical energy; it does <em>not</em> require every
@@ -892,6 +903,13 @@ python main.py</pre>
       and velocities at both ends of the bracketing accepted step. Adaptive
       timestep reductions therefore increase calculation work without changing
       the apparent movie speed.
+    </p>
+<p>
+      Requested frame times are calculated as an integer frame number times
+      <code>frame_time</code>, rather than by repeatedly adding
+      <code>frame_time</code>. This avoids cumulative timestamp drift. Before
+      interpolation, the driver verifies that each requested time lies inside
+      its accepted-step bracket.
     </p>
 <h3>Current Positions and Trails</h3>
 <p>
