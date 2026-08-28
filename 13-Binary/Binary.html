@@ -207,6 +207,56 @@
     }
     .note strong { color: var(--accent); }
 
+    /* ── Restore-defaults box ── */
+    .restore-section {
+      margin: 2.5em auto;
+      max-width: 860px;
+      font-family: inherit;
+    }
+    .restore-box {
+      border: 1.5px solid var(--gold);
+      border-left: 5px solid var(--gold);
+      border-radius: 6px;
+      background: #fffbeb;
+      padding: 1.1em 1.4em;
+      display: flex;
+      gap: 1em;
+      align-items: flex-start;
+    }
+    .restore-icon { font-size: 1.5em; line-height: 1; flex-shrink: 0; }
+    .restore-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      color: var(--accent);
+      margin-bottom: 0.35em;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .restore-intro {
+      margin: 0 0 0.5em;
+      font-size: 0.92em;
+      line-height: 1.6;
+    }
+    .restore-list {
+      margin: 0;
+      padding-left: 1.4em;
+      font-size: 0.92em;
+      line-height: 1.8;
+    }
+    .restore-box kbd {
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.88em;
+    }
+    .restore-link { color: var(--accent); text-decoration: underline; }
+    .restore-footnote {
+      margin: 0.6em 0 0;
+      font-size: 0.88em;
+      color: var(--muted);
+    }
+
     /* ── Code ── */
     pre {
       background: #2b2b2b;
@@ -366,7 +416,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.1&nbsp;&nbsp;&nbsp;&nbsp;Build 5e02faf5dcbf
+  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 5d3ea5416daf
 </p>
 <!-- ─── Overview ─── -->
 <section id="overview">
@@ -400,8 +450,8 @@
 <section id="quickstart">
 <h2>Quick Start</h2>
 <h3>Requirements</h3>
-<p>Python 3.10 or later with <code>matplotlib</code>:</p>
-<pre>pip install matplotlib</pre>
+<p>Python 3.10 or later with <code>matplotlib</code> 3.5 or later:</p>
+<pre>pip install "matplotlib&gt;=3.5"</pre>
 <h3>Running the Program</h3>
 <p>Clone or download the repository, then:</p>
 <pre>cd GFTGU-Programs/Binary
@@ -836,45 +886,34 @@ python main.py</pre>
     </p>
 <h3>8 · Numerical Convergence and Energy Conservation — Advanced</h3>
 <p>
-      Set <code>stop_after_one_orbit = False</code> and integrate for several
-      periods. Repeat the same physical initial conditions with smaller
-      <code>dt</code> and tighter <code>eps1</code>/<code>eps2</code>. Compare
+      Set <code>stop_after_one_orbit = False</code>. For a reproducible
+      three-period comparison using the default physical initial conditions, first
+      use <code>dt = 2000</code> and <code>max_steps = 7000</code>; then repeat
+      with <code>dt = 1000</code> and <code>max_steps = 14000</code>. Because the
+      default case does not trigger adaptive reduction, both runs cover the same
+      \(1.4\times10^7\) s interval. You can then repeat with tighter
+      <code>eps1</code>/<code>eps2</code>. Compare
       the total-energy curves, for example by estimating the largest fractional
       deviation \(\max|E(t)-E(0)|/|E(0)|\). A trustworthy result should change
       less and less as the numerical controls are tightened.
     </p>
-</section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
-<div style="
-    border: 1.5px solid #b5811a;
-    border-left: 5px solid #b5811a;
-    border-radius: 6px;
-    background: #fffbeb;
-    padding: 1.1em 1.4em;
-    display: flex;
-    gap: 1em;
-    align-items: flex-start;
-  ">
+</section>
+<section class="restore-section" aria-labelledby="restore-title">
+<div class="restore-box">
 <!-- Icon -->
-<div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
+<div class="restore-icon">↩️</div>
 <!-- Content -->
 <div>
-<div style="
-        font-weight: 700;
-        font-size: 0.95em;
-        color: #7b2d00;
-        margin-bottom: 0.35em;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-      ">Restoring Default Parameter Values</div>
-<p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
+<div class="restore-title" id="restore-title">Restoring Default Parameter Values</div>
+<p class="restore-intro">
+        If you edit <code>main.py</code> or another program file while experimenting,
         you can restore the original program files using any of the following methods:
       </p>
-<ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
+<ul class="restore-list">
 <li>
 <strong>Same session:</strong>
-          Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
-          (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
+          Press <kbd>Ctrl+Z</kbd>
+          (Windows) or <kbd>Cmd+Z</kbd>
           (macOS) repeatedly in your editor to undo your edits.
         </li>
 <li>
@@ -884,13 +923,13 @@ python main.py</pre>
 <li>
 <strong>Full reset:</strong>
           Re-download the ZIP from
-          <a href="https://github.com/tomyee3-org/GFTGU-Programs" style="color:#7b2d00; text-decoration:underline;" target="_blank">
+          <a class="restore-link" href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">
             github.com/tomyee3-org/GFTGU-Programs
           </a>
           and replace this program's folder with the fresh copy.
         </li>
 </ul>
-<p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
+<p class="restore-footnote">
         For additional ways to restore program files, see the corresponding
         recovery instructions in the <em>GFTGU Python Setup Guide</em>.
       </p>
@@ -928,7 +967,7 @@ python main.py</pre>
       must be positive; <code>max_steps</code> must be a positive integer; both
       tolerances must lie strictly between zero and one (0 and 1 are not allowed);
       and the bodies must have nonzero initial separation. Extremely large or
-      small inputs that put the separation, acceleration, or energy outside the
+      small inputs that put a derived displacement, acceleration, or energy outside the
       reliable range of double-precision arithmetic are rejected with an error.
     </div>
 </section>
@@ -937,6 +976,7 @@ python main.py</pre>
 <h2>Output Types</h2>
 <p>Assign one of these strings to <code>output_type</code> in <code>main.py</code>:</p>
 <ul class="output-list">
+<li><span class="tag">"orbit"</span><span>Legacy alias for <code>"orbits"</code>, retained for compatibility with the original Java selector.</span></li>
 <li><span class="tag">"orbits"</span><span>Both coordinate trajectories in the \(xy\)-plane, with equal axis scales. The termination test instead follows the relative A-minus-B vector.</span></li>
 <li>
 <span class="tag">"velocity space"</span>
