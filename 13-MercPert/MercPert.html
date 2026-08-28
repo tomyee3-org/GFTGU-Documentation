@@ -380,7 +380,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.1&nbsp;&nbsp;&nbsp;&nbsp;Build f6e4fc62b996
+  Version 1.0.2&nbsp;&nbsp;&nbsp;&nbsp;Build 9ae1fff767c9
 </p>
 <!-- ─── Overview ─── -->
 <section id="overview">
@@ -406,8 +406,8 @@
       which regions remain stable, which lead to repeated close encounters or
       ejection, and how far from a binary system long-lived planetary orbits can
       exist. This test-particle model captures the gravitational part of the
-      “cleaning out” process discussed in Chapter 13, while deliberately leaving
-      out the gas physics of a protoplanetary disk.
+      “cleaning out” process discussed in Chapter 13 of the 2003 edition, while
+      deliberately leaving out the gas physics of a protoplanetary disk.
     </p>
 <div class="note">
 <strong>What the model demonstrates:</strong> MercPert is useful for
@@ -633,7 +633,10 @@ python main.py</pre>
       accepted Mercury segment against the Sun's moving finite-radius boundary.
       This can detect a crossing even when both timestep endpoints lie outside
       the star. At the first detected crossing, integration stops and the
-      collision point is marked with a black ×.
+      collision point is marked with a black ×. The crossing time and location
+      are estimates obtained by linear interpolation of the particle and primary
+      positions across that accepted timestep; tighter timesteps improve this
+      event-location estimate.
     </p>
 <p>
 <code>companion_collision_radius</code> defaults to zero because the
@@ -822,6 +825,11 @@ python main.py</pre>
       dashed segments do not overplot and distort one another. The
       <strong>solid blue</strong> curve is Mercury's trajectory for the full
       integration.
+    </p>
+<p>
+      The axis labels explicitly say “barycentric x” and “barycentric y” to
+      distinguish the plotted coordinates from the Sun-relative initial values
+      entered in <code>main.py</code>.
     </p>
 <p>
       Small filled circles mark the Sun, companion, and Mercury positions at
