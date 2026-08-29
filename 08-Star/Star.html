@@ -391,7 +391,7 @@
 ════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.0&nbsp;&nbsp;&nbsp;&nbsp;Build 69a9e67cf22b
+  Version 1.0.2&nbsp;&nbsp;&nbsp;&nbsp;Build a3bd88fb5c1a
 </p>
 
 <!-- ── Physical Background ── -->
@@ -463,7 +463,7 @@
 <div class="note">
 <strong>Range of the one-polytrope model:</strong>
       A Lane–Emden polytrope has an ordinary finite zero-pressure radius only for
-      \(n&lt;5\), corresponding here to \(\gamma&gt;6/5\). The Python driver therefore rejects
+      \(n&lt;5\), corresponding here to \(\gamma > 6/5\). The Python driver therefore rejects
       \(\gamma\le6/5\). The familiar Newtonian radial-stability boundary is \(\gamma=4/3\)
       under the simple case in which this exponent also describes the star's adiabatic response;
       the program should not be read as claiming that every real star can be classified by one
@@ -516,7 +516,7 @@
     </div>
 <h3>Interpolated Surface</h3>
 <p>
-      When an Euler pressure step first crosses from positive to nonpositive pressure, the revised
+      When an Euler pressure step first crosses from positive to nonpositive pressure, the
       driver linearly interpolates along that final pressure segment to estimate the radius at
       which \(p=0\). It appends that surface point with \(p=\rho=T=0\), and advances the enclosed
       mass over the corresponding fractional shell. The returned arrays therefore include both
@@ -527,7 +527,10 @@
       Forward Euler has local truncation error \(O(dr^2)\) and global accumulated error
       \(O(dr)\). Agreement of the default model's total mass or radius with the observed Sun is
       therefore a combination of the simplified model parameters and the numerical discretization;
-      it should not be used as a stand-alone measure of physical accuracy.
+      it should not be used as a stand-alone measure of physical accuracy. The fractional final
+      shell uses the density at the left endpoint, consistently with the other Euler mass steps;
+      because density falls to zero across that shell, its small mass increment is overestimated
+      at first order.
     </div>
 </section>
 <!-- ── Step-Size Restart ── -->
@@ -566,13 +569,14 @@
 </div>
 <div class="module-card"><div class="mc-name">plot_star.py</div><div class="mc-role">Plot</div>
 <p>Plots pressure, density, temperature, or enclosed mass versus radius. An optional logarithmic y-axis is available for pressure, density, and temperature.</p>
-<div class="mc-sig">plot_star_structure(result, log_y=False)</div>
+<div class="mc-sig">plot_star_structure(result, log_y=False) → (fig, ax)</div>
 </div>
 <div class="module-card"><div class="mc-name">main.py</div><div class="mc-role">Entry Point</div>
 <p>Contains the user-editable physical and numerical settings for experiments. No edits to the other modules are needed for the suggested investigations.</p>
 </div>
 </div>
 </section>
+<div class="note"><strong>Build-ID scope:</strong> The Build ID shown at the top of this page is computed from the four executable core modules listed above. It identifies the program core; changes to this Help file or the regression tests alone do not change that identifier.</div>
 <!-- ── Input Parameters ── -->
 <section id="parameters">
 <h2>Input Parameters</h2>
@@ -581,13 +585,13 @@
 <tr><td><code>p_c</code></td><td><code>7.158e15</code></td><td>Pa</td><td>Central pressure. Within a family having fixed \(T_c\), \(\mu\), and \(\gamma\), increasing \(p_c\) raises the central density and makes both radius and mass smaller; the model scales as \(R,M\propto p_c^{-1/2}\).</td></tr>
 <tr><td><code>T_c</code></td><td><code>2.263e7</code></td><td>K</td><td>Central temperature used with \(p_c\) and \(\mu\) to set \(\rho_c\). At fixed \(p_c,\mu,\gamma\), the model scales as \(R\propto T_c\) and \(M\propto T_c^2\).</td></tr>
 <tr><td><code>mu</code></td><td><code>1.285</code></td><td>dimensionless</td><td>Effective mean molecular-weight parameter in proton-mass units. In this simplified default model it should not be interpreted as the actual mean molecular weight of the solar core. At fixed \(p_c,T_c,\gamma\), \(R\propto\mu^{-1}\) and \(M\propto\mu^{-2}\).</td></tr>
-<tr><td><code>gamma</code></td><td><code>1.36</code></td><td>dimensionless</td><td>Polytropic exponent in \(p=K\rho^\gamma\); it is related to the conventional polytropic index by \(n=1/(\gamma-1)\). This program requires \(\gamma&gt;1.2\) so the mathematical polytrope has a finite zero-pressure radius.</td></tr>
+<tr><td><code>gamma</code></td><td><code>1.36</code></td><td>dimensionless</td><td>Polytropic exponent in \(p=K\rho^\gamma\); it is related to the conventional polytropic index by \(n=1/(\gamma-1)\). This program requires \(\gamma > 1.2\) so the mathematical polytrope has a finite zero-pressure radius.</td></tr>
 <tr><td><code>max_points</code></td><td><code>2000</code></td><td>integer</td><td>Maximum grid points in one attempt. Increase it when an extended model would otherwise trigger step doubling; it does not by itself refine a successful run.</td></tr>
 <tr><td><code>steps_per_scale</code></td><td><code>400</code></td><td>integer</td><td>Controls the initial numerical resolution through \(dr=\ell/\text{steps_per_scale}\). Larger values give a finer calculation, provided <code>max_points</code> is large enough to avoid a restart.</td></tr>
 <tr><td><code>output_type</code></td><td><code>"pressure"</code></td><td>string</td><td>One of <code>"pressure"</code>, <code>"density"</code>, <code>"temperature"</code>, or <code>"mass"</code>.</td></tr>
 <tr><td><code>log_y</code></td><td><code>False</code></td><td>boolean</td><td>Use a logarithmic vertical axis for pressure, density, or temperature. Leave false for mass because \(m(0)=0\). On a logarithmic plot, the exact zero-valued surface point is omitted because a logarithmic axis cannot display zero.</td></tr>
 </tbody></table>
-<div class="note"><strong>Input checks:</strong> The driver rejects non-finite numerical inputs, nonpositive central pressure, temperature, or \(\mu\); \(\gamma\le1.2\); fewer than three grid points; nonpositive <code>steps_per_scale</code>; and unsupported output names with explanatory <code>ValueError</code> messages.</div>
+<div class="note"><strong>Input checks:</strong> The driver rejects non-finite numerical inputs, nonpositive central pressure, temperature, or \(\mu\); \(\gamma\le1.2\); fewer than three grid points; nonpositive <code>steps_per_scale</code>; unsupported output names; and derived values outside the finite floating-point range. Error messages identify the invalid input or derived quantity.</div>
 </section>
 <!-- ── Output Modes ── -->
 <section id="output">
@@ -648,13 +652,19 @@
       radius illustrates why simultaneous mass and radius measurements constrain stellar
       models more tightly than either observable alone.</p>
 <div class="sc-params">change T_c by 10%<br/>adjust p_c until M returns to baseline<br/>then compare R</div></div>
-<div class="scenario-card"><h4>6 · Intermediate–Advanced — Test the Chapter 8 Scaling Relations</h4><p>
-      Investigation 8.6 derives proportionalities among central conditions, radius, and mass
-      for a fixed polytropic equation of state. Build a small family of models in which one
-      input parameter is changed systematically, record \(R\) and \(M\), and test the predicted
-      power laws. The temperature-, pressure-, and \(\mu\)-scaling experiments above provide
-      three ready-made examples; combine their results into a single table or log-log plot.</p>
-<div class="sc-params">construct a table of input parameter, R, and M<br/>compare measured exponents with the Chapter 8 scalings</div></div>
+<div class="scenario-card"><h4>6 · Advanced — Compare Two Kinds of Polytropic Family</h4><p>
+      First combine Experiments 2–4 into a table or log-log plot. Those experiments hold
+      \(\gamma\) fixed but change the central normalization \(D\), and therefore change the
+      constant \(K=D^{-\gamma}\) in \(p=K\rho^\gamma\). They test the exact parameter scalings
+      of this program, but they are not a fixed-\(K\) sequence.</p><p>
+      Then construct a genuinely fixed-equation-of-state family. Keep \(\mu\), \(\gamma\), and
+      \(D\) fixed by choosing several values of \(p_c\) and setting
+      \(T_c=T_{c,0}(p_c/p_{c,0})^{1-1/\gamma}\). For this sequence, test the Lane–Emden
+      predictions \(R\propto p_c^{(\gamma-2)/(2\gamma)}\) and
+      \(M\propto p_c^{(3\gamma-4)/(2\gamma)}\). Explain why these exponents differ from the
+      one-variable experiments above, and compare them with the proportionalities developed
+      in Investigation 8.6.</p>
+<div class="sc-params">part A: combine the results of Experiments 2–4<br/>part B: vary p_c and co-vary T_c to keep D fixed<br/>record R and M; compare measured and predicted exponents</div></div>
 <div class="scenario-card"><h4>7 · Advanced — A Schematic Red-Giant Polytrope</h4><p>
       Set \(\gamma=1.335\) and try to construct a model having approximately
       one solar mass but a radius about 100 times larger than the baseline solar-like model.
