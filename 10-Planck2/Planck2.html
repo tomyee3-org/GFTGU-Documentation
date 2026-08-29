@@ -440,7 +440,7 @@
 ═══════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.1&nbsp;&nbsp;&nbsp;&nbsp;Build d711c8f80392
+  Version 1.0.2&nbsp;&nbsp;&nbsp;&nbsp;Build cd6bead7f451
 </p>
 <!-- ── Description ── -->
 <section id="description">
@@ -464,9 +464,10 @@
       integral of the plotted spectrum over its physical horizontal coordinate; it is distinct from
       the dimensionless area under \(f_p(x)\). The physical integral allows a direct numerical check
       of the Stefan–Boltzmann \(T^4\) law. Investigations 10.1, 10.2, and 10.3 are relevant to this
-      program.
+      program. The graph and console report these related diagnostics together, allowing a student
+      to compare them without repeating the same calculation.
     </p>
-<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset. If the CDN cannot be reached, the unrendered TeX source and its delimiters remain visible—for example, <code>\(x=hc/(\lambda kT)\)</code>—instead of a typeset formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
 <!-- ── Physical Background ── -->
 <section id="background">
 <h2>Physical Background</h2>
@@ -528,9 +529,10 @@
 <p>The defaults are \(x_\text{low}=0.05\) and \(x_\text{high}=20\).</p>
 <h3>Peak Finding</h3>
 <p>
-      The peak is found by direct comparison of sampled grid values. No interpolation or root-finding
-      is used, so peak-location accuracy is limited by \(\Delta x\). Increasing <code>n_steps</code>
-      refines the sampled peak.
+      The reported peak is the largest sampled point within the selected finite domain
+      \([x_\text{min},x_\text{max}]\). It may therefore be an endpoint if the mathematical peak lies
+      outside that domain. No interpolation or root-finding is used, so peak-location accuracy is
+      limited by \(\Delta x\). Increasing <code>n_steps</code> refines the sampled peak.
     </p>
 <h3>Dimensionless Area</h3>
 <p>The trapezoidal rule integrates the sampled shape over the finite x-domain. Exact references are</p>
@@ -560,6 +562,7 @@
       Comparing <code>result.physical_integral</code> at different temperatures therefore gives a
       direct numerical test of the \(T^4\) Stefan–Boltzmann scaling.
     </p>
+<div class="note"><strong>Finite numerical domain.</strong> The exact reference values above integrate from \(0\) to \(\infty\), whereas Planck2's numerical result covers only <code>x_min</code> through <code>x_max</code>. Its small remaining difference from the exact reference includes finite-domain truncation, trapezoidal discretization, and the selected asymptotic approximations. With the defaults these effects are negligible for the intended investigations.</div>
 </section>
 <!-- ── Algorithm ── -->
 <section id="algorithm">
@@ -659,7 +662,7 @@ plot_planck2(result)</div>
 <tr><td class="pname">y_frac_window</td><td class="pdefault">0.003</td><td>—</td><td>Fraction of peak used for automatic plot windowing; 0 shows the full domain.</td></tr>
 </tbody>
 </table>
-<div class="note"><strong>Input checking:</strong> Invalid quantities, non-finite or nonpositive temperatures, resolutions outside the integer range 1–1,000,000, non-finite or incorrectly ordered domain limits, domain/resolution combinations that cannot produce a representable positive step, invalid annotation corners, and window fractions outside the finite range 0–1 produce explanatory <code>ValueError</code> messages.</div>
+<div class="note"><strong>Input checking:</strong> Invalid quantities, non-finite or nonpositive temperatures, resolutions outside the integer range 1–1,000,000, non-finite or incorrectly ordered domain limits, domain/resolution combinations that cannot produce a representable positive step, invalid annotation corners, and window fractions outside the finite range 0–1 produce explanatory <code>ValueError</code> messages. Positive finite settings whose derived physical values fall outside the representable floating-point range are also rejected rather than returning infinities or unusable zero-valued results.</div>
 </section>
 <!-- ── Quantity Modes ── -->
 <section id="quantities">
@@ -717,8 +720,8 @@ plot_planck2(result)</div>
 <div class="exp-card"><div class="ec-num">EXP-4</div><h4>Wavelength vs. Frequency Peaks</h4><p>At the same temperature, run <code>"wavelength"</code> and <code>"frequency"</code>. Record the \(B_\lambda\) peak wavelength, the \(B_\nu\) peak frequency, and \(c/\nu_\text{max}\). The two wavelengths do not agree because the curves are densities with respect to different variables.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-5</div><h4>Frequency Radiance vs. Energy Density</h4><p>At one temperature, compare <code>"frequency"</code> and <code>"energy_density"</code>. Verify that <code>x_peak</code> and the peak frequency agree. Then calculate the ratios of their peak values and physical integrals, and explain why both ratios equal \(4\pi/c\), with the corresponding change of units.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-6</div><h4>Stefan–Boltzmann T⁴ Scaling</h4><p>Use, for example, <code>T = 3000, 6000, 12000</code> K and record the printed physical integral. For either radiance mode, calculate <code>physical_integral / T**4</code> and verify that it is nearly constant and agrees with \(\sigma/\pi\). Multiply a radiance integral by \(\pi\) to recover the hemispheric exitance \(\sigma T^4\). For <code>"energy_density"</code>, verify agreement with \(4\sigma/c\). When \(T\) doubles, the integral should increase by about a factor of 16.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-7</div><h4>Resolution and Peak Sampling</h4><p>Try <code>n_steps = 10, 100, 1000, 2000, 20000</code>. Make a small table of <code>n_steps</code>, <code>x_peak</code>, <code>dimensionless_area</code>, and relative area error. The trapezoidal-rule area and the sampled peak location need not converge at the same rate because the peak is chosen only from grid points, without interpolation.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-8</div><h4>Rayleigh–Jeans and Wien Limits</h4><p>First record the default peak and integrals. For small \(x\), Planck's law approaches the Rayleigh–Jeans form; for large \(x\), it approaches Wien's approximation. Move <code>x_low</code> upward and <code>x_high</code> downward, for example to 1 and 3, so that these limiting forms are deliberately used too far from their valid regimes. Compare with the defaults and explain which limiting approximation is responsible for each change.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-7</div><h4>Resolution and Peak Sampling</h4><p>Try <code>n_steps = 10, 100, 1000, 2000, 20000</code>. Make a small table of <code>n_steps</code>, <code>x_peak</code>, <code>dimensionless_area</code>, and relative area error, defined as <code>abs(numerical - reference) / abs(reference)</code>. Use \(8\pi^6/63\) as the dimensionless reference for <code>"wavelength"</code> and \(\pi^4/15\) for either frequency-based mode. The trapezoidal-rule area and the sampled peak location need not converge at the same rate because the peak is chosen only from grid points, without interpolation. For the physical integral, remember that the exact reference spans \(0&lt;x&lt;\infty\) while the numerical result uses the selected finite domain.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-8</div><h4>Rayleigh–Jeans and Wien Limits</h4><p>First record the default peak and integrals. For small \(x\), Planck's law approaches the Rayleigh–Jeans form; for large \(x\), it approaches Wien's approximation. Move <code>x_low</code> upward and <code>x_high</code> downward, for example to 1 and 3, so that these limiting forms are deliberately used too far from their valid regimes. These two settings change only the approximation-switch regions; they do not change the physical domain set by <code>x_min</code> and <code>x_max</code>. Compare with the defaults and explain which limiting approximation is responsible for each change.</p></div>
 </div>
 </section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
 <div style="
