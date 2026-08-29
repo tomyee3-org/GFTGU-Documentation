@@ -440,7 +440,7 @@
 ═══════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.2&nbsp;&nbsp;&nbsp;&nbsp;Build cd6bead7f451
+  Version 1.0.3&nbsp;&nbsp;&nbsp;&nbsp;Build 7bce8c3cd44a
 </p>
 <!-- ── Description ── -->
 <section id="description">
@@ -562,7 +562,7 @@
       Comparing <code>result.physical_integral</code> at different temperatures therefore gives a
       direct numerical test of the \(T^4\) Stefan–Boltzmann scaling.
     </p>
-<div class="note"><strong>Finite numerical domain.</strong> The exact reference values above integrate from \(0\) to \(\infty\), whereas Planck2's numerical result covers only <code>x_min</code> through <code>x_max</code>. Its small remaining difference from the exact reference includes finite-domain truncation, trapezoidal discretization, and the selected asymptotic approximations. With the defaults these effects are negligible for the intended investigations.</div>
+<div class="note"><strong>Finite numerical domain.</strong> The exact reference values above integrate from \(0\) to \(\infty\), whereas Planck2's numerical result covers only <code>x_min</code> through <code>x_max</code>. Its small remaining difference from the exact reference includes finite-domain truncation, trapezoidal discretization, and the selected asymptotic approximations. With all default settings, the relative error of the physical integral is less than \(10^{-6}\) in each of the three quantity modes. Printed digits in the sampled peak are not an uncertainty estimate; peak-location accuracy remains limited by \(\Delta x\).</div>
 </section>
 <!-- ── Algorithm ── -->
 <section id="algorithm">
