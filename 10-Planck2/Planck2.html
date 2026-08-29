@@ -440,7 +440,7 @@
 ═══════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.0&nbsp;&nbsp;&nbsp;&nbsp;Build 6cb46e6b35ad
+  Version 1.0.1&nbsp;&nbsp;&nbsp;&nbsp;Build d711c8f80392
 </p>
 <!-- ── Description ── -->
 <section id="description">
@@ -650,7 +650,7 @@ plot_planck2(result)</div>
 <tbody>
 <tr><td class="pname">T</td><td class="pdefault">5900.0</td><td>K</td><td>Black-body temperature; the default is a useful black-body approximation to the Sun's continuum.</td></tr>
 <tr><td class="pname">quantity</td><td class="pdefault">"wavelength"</td><td>—</td><td><code>"wavelength"</code>, <code>"frequency"</code>, or <code>"energy_density"</code>.</td></tr>
-<tr><td class="pname">n_steps</td><td class="pdefault">2000</td><td>—</td><td>Number of equal x-intervals; the program samples <code>n_steps + 1</code> endpoints.</td></tr>
+<tr><td class="pname">n_steps</td><td class="pdefault">2000</td><td>—</td><td>Number of equal x-intervals; the program samples <code>n_steps + 1</code> endpoints. Valid range: 1–1,000,000.</td></tr>
 <tr><td class="pname">x_min</td><td class="pdefault">0.01</td><td>—</td><td>Lower bound of the dimensionless x-domain.</td></tr>
 <tr><td class="pname">x_max</td><td class="pdefault">100.0</td><td>—</td><td>Upper bound of the dimensionless x-domain.</td></tr>
 <tr><td class="pname">x_low</td><td class="pdefault">0.05</td><td>—</td><td>Below this value, use the small-x approximation.</td></tr>
@@ -659,7 +659,7 @@ plot_planck2(result)</div>
 <tr><td class="pname">y_frac_window</td><td class="pdefault">0.003</td><td>—</td><td>Fraction of peak used for automatic plot windowing; 0 shows the full domain.</td></tr>
 </tbody>
 </table>
-<div class="note"><strong>Input checking:</strong> Invalid quantities, non-finite or nonpositive temperatures, invalid resolutions, non-finite or incorrectly ordered domain limits, invalid annotation corners, and window fractions outside the finite range 0–1 produce explanatory <code>ValueError</code> messages.</div>
+<div class="note"><strong>Input checking:</strong> Invalid quantities, non-finite or nonpositive temperatures, resolutions outside the integer range 1–1,000,000, non-finite or incorrectly ordered domain limits, domain/resolution combinations that cannot produce a representable positive step, invalid annotation corners, and window fractions outside the finite range 0–1 produce explanatory <code>ValueError</code> messages.</div>
 </section>
 <!-- ── Quantity Modes ── -->
 <section id="quantities">
@@ -713,11 +713,12 @@ plot_planck2(result)</div>
 <div class="exp-grid">
 <div class="exp-card"><div class="ec-num">EXP-1</div><h4>Solar Black-Body Approximation</h4><p>With <code>T=5900</code> and <code>quantity="wavelength"</code>, compare the sampled peak wavelength with Wien's displacement law. The result should be near 490 nm, in the visible range. A real solar spectrum also contains absorption lines and other departures from an ideal black body.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-2</div><h4>Wien's Displacement Law and Temperature</h4><p>Run <code>quantity="wavelength"</code> at <code>T = 3000, 5900, 10000</code> K. Verify that <code>x_peak</code> stays nearly constant while \(\lambda_\text{peak}T\) stays near \(2.898\times10^{-3}\,\text{m K}\). Then try <code>"frequency"</code> and verify that the peak frequency is proportional to \(T\).</p></div>
-<div class="exp-card"><div class="ec-num">EXP-3</div><h4>Wavelength vs. Frequency Peaks</h4><p>At the same temperature, run <code>"wavelength"</code> and <code>"frequency"</code>. Record the \(B_\lambda\) peak wavelength, the \(B_\nu\) peak frequency, and \(c/\nu_\text{max}\). The two wavelengths do not agree because the curves are densities with respect to different variables.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-4</div><h4>Stefan–Boltzmann T⁴ Scaling</h4><p>Use, for example, <code>T = 3000, 6000, 12000</code> K and record <code>result.physical_integral</code>. For either radiance mode, calculate <code>physical_integral / T**4</code> and verify that it is nearly constant and agrees with \(\sigma/\pi\). For <code>"energy_density"</code>, verify agreement with \(4\sigma/c\). When \(T\) doubles, the integral should increase by about a factor of 16.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-5</div><h4>Resolution and Peak Sampling</h4><p>Try <code>n_steps = 10, 100, 1000, 2000, 20000</code>. Make a small table of <code>n_steps</code>, <code>x_peak</code>, <code>dimensionless_area</code>, and relative area error. The trapezoidal-rule area and the sampled peak location need not converge at the same rate because the peak is chosen only from grid points, without interpolation.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-6</div><h4>Rayleigh–Jeans and Wien Limits</h4><p>For small \(x\), Planck's law approaches the Rayleigh–Jeans form; for large \(x\), it approaches Wien's approximation. Move <code>x_low</code> upward and <code>x_high</code> downward, for example to 1 and 3, so that these limiting forms are deliberately used too far from their valid regimes. Compare the peak and integrals with the defaults and explain which limiting approximation is responsible for the changes.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-7</div><h4>Cosmic Microwave Background</h4><p>Set <code>T=2.725</code> and <code>quantity="frequency"</code>. The peak should be near 160 GHz. As an optional extension, research why the CMB's near-perfect black-body spectrum became important evidence for a hot early universe and against classical steady-state cosmology.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-3</div><h4>Cosmic Microwave Background</h4><p>Set <code>T=2.725</code> and <code>quantity="frequency"</code>. The peak should be near 160 GHz. As an optional extension, research why the CMB's near-perfect black-body spectrum became important evidence for a hot early universe and against classical steady-state cosmology.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-4</div><h4>Wavelength vs. Frequency Peaks</h4><p>At the same temperature, run <code>"wavelength"</code> and <code>"frequency"</code>. Record the \(B_\lambda\) peak wavelength, the \(B_\nu\) peak frequency, and \(c/\nu_\text{max}\). The two wavelengths do not agree because the curves are densities with respect to different variables.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-5</div><h4>Frequency Radiance vs. Energy Density</h4><p>At one temperature, compare <code>"frequency"</code> and <code>"energy_density"</code>. Verify that <code>x_peak</code> and the peak frequency agree. Then calculate the ratios of their peak values and physical integrals, and explain why both ratios equal \(4\pi/c\), with the corresponding change of units.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-6</div><h4>Stefan–Boltzmann T⁴ Scaling</h4><p>Use, for example, <code>T = 3000, 6000, 12000</code> K and record the printed physical integral. For either radiance mode, calculate <code>physical_integral / T**4</code> and verify that it is nearly constant and agrees with \(\sigma/\pi\). Multiply a radiance integral by \(\pi\) to recover the hemispheric exitance \(\sigma T^4\). For <code>"energy_density"</code>, verify agreement with \(4\sigma/c\). When \(T\) doubles, the integral should increase by about a factor of 16.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-7</div><h4>Resolution and Peak Sampling</h4><p>Try <code>n_steps = 10, 100, 1000, 2000, 20000</code>. Make a small table of <code>n_steps</code>, <code>x_peak</code>, <code>dimensionless_area</code>, and relative area error. The trapezoidal-rule area and the sampled peak location need not converge at the same rate because the peak is chosen only from grid points, without interpolation.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-8</div><h4>Rayleigh–Jeans and Wien Limits</h4><p>First record the default peak and integrals. For small \(x\), Planck's law approaches the Rayleigh–Jeans form; for large \(x\), it approaches Wien's approximation. Move <code>x_low</code> upward and <code>x_high</code> downward, for example to 1 and 3, so that these limiting forms are deliberately used too far from their valid regimes. Compare with the defaults and explain which limiting approximation is responsible for each change.</p></div>
 </div>
 </section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
 <div style="
