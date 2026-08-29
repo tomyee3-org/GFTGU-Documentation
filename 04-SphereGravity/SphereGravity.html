@@ -318,6 +318,13 @@
       line-height: 1.55;
       margin-bottom: 6px;
     }
+    .scenario-card ol {
+      font-family: var(--sans);
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-bottom: 6px;
+    }       
     .scenario-card .sc-params {
       font-family: var(--mono);
       font-size: 0.79rem;
@@ -461,7 +468,7 @@
 <!-- ══════════════════════ MAIN ══════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.1&nbsp;&nbsp;&nbsp;&nbsp;Build aa45447eb9cb
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 35c1d2c0dd16
 </p>
 
 <!-- ── Overview ── -->
@@ -562,9 +569,9 @@
   </p>
 <h3>Distance from tile to observer</h3>
 <p>
-    By the azimuthal symmetry of the problem the observation point is placed at position
-    \(r\) along the shell's symmetry axis. The distance from a tile at latitude \(\theta\) to
-    the observer at radius \(r\) is:
+    By the azimuthal symmetry of the problem, place the observation point at coordinate
+    \(z=-r\) on the shell's symmetry axis. A tile at latitude \(\theta\) has axial coordinate
+    \(z=\sin\theta\), so its distance from the observer is:
   </p>
 <div class="eq-block">
 <div class="eq-label">Eq. 4 — Distance from tile to observer</div>
@@ -574,8 +581,8 @@
   </div>
 <h3>Axial component of acceleration</h3>
 <p>
-    The gravitational acceleration toward the center of the shell contributed by a single ring
-    of tiles is:
+    Take positive \(g\) to point in the \(+z\) direction—toward the center for an exterior
+    observer at \(z=-r\). The signed axial acceleration contributed by a single ring is:
   </p>
 <div class="eq-block">
 <div class="eq-label">Eq. 5 — Ring contribution to radial acceleration</div>
@@ -584,10 +591,10 @@
     \]
   </div>
 <p>
-    where the factor \((r + \sin\theta)\) is the projection of the tile-to-observer vector
-    onto the symmetry axis. The plotted acceleration is the signed radial component in the
-    program's convention, so small numerical residuals inside the shell may have either sign.
-    The total acceleration at radius \(r\) is:
+    where \((r + \sin\theta)\) is the axial separation between observer and tile. Thus positive
+    exterior values represent inward acceleration. Small numerical residuals inside the shell may
+    have either sign because the exact inward and outward contributions should cancel. The total
+    acceleration at radius \(r\) is:
   </p>
 <div class="eq-block">
 <div class="eq-label">Eq. 6 — Total numerical acceleration</div>
@@ -606,7 +613,7 @@
         \dfrac{g_\text{num}(r) - g_\text{Newton}(r)}{g_\text{Newton}(r)} &amp;
           r &gt; 1 \quad\bigl(g_\text{Newton} = M/r^2\bigr)\\[10pt]
         \dfrac{g_\text{num}(r)}{M} &amp;
-          r \leq 1 \quad \text{(inside: Newton predicts zero)}
+          r &lt; 1 \quad \text{(interior normalized residual)}
       \end{cases}
     \]
   </div>
@@ -614,25 +621,28 @@
     Outside the shell the Newtonian acceleration is \(g_\text{Newton} = M/r^2\) (with \(G=1\)).
     Inside the shell Newton predicts exactly zero, so the raw numerical acceleration is
     normalised by \(M\) (the Newtonian acceleration just outside the surface) to produce a
-    dimensionless measure of the residual error.
+    dimensionless normalized residual. The returned array stores <code>0.0</code> at the omitted
+    surface sample \(r=1\) for compatibility with the original program. That placeholder is not
+    part of either physical branch in Eq. 7, and the plot leaves a gap there.
   </p>
 <!-- ── Algorithm ── -->
 <h2 id="algorithm">Tiling Algorithm</h2>
 <p>
-    The computation follows a straightforward nested-loop scheme described in Investigation 4.3
-    of <em>Gravity from the Ground Up</em>:
+    The default <code>compute_acceleration_profile_textbook()</code> function deliberately follows
+    the straightforward midpoint-sum procedure described in Investigation 4.3 of
+    <em>Gravity from the Ground Up</em>. Its loops make every numerical-integration step visible:
   </p>
 <ol class="algo-steps">
 <li>
 <strong>Initialise geometry.</strong>
-      Compute the angular step sizes \(\Delta\varphi\) and \(\Delta\theta\), and set the initial
-      latitude \(\theta_0 = \tfrac{1}{2}\Delta\theta - 90°\) (centre of the first tile, just
-      above the south pole).
+      Compute the angular step sizes \(\Delta\varphi\) and \(\Delta\theta\), and set the first
+      midpoint latitude to \(\theta_0 = \tfrac{1}{2}\Delta\theta - 90°\), just above the south
+      pole.
     </li>
 <li>
 <strong>Compute total shell mass.</strong>
-      Loop over all \(n_\text{div}\) latitude rings. For each ring accumulate
-      \(\Delta M_k = n_\text{div}\;\delta m_k\). This gives the normalisation constant \(M\)
+      Loop over all \(n_\text{div}\) latitude rings. For each ring, calculate its tile mass and
+      add \(\Delta M_k = n_\text{div}\;\delta m_k\). This gives the normalisation constant \(M\)
       used in relative-difference mode.
     </li>
 <li>
@@ -644,16 +654,16 @@
     </li>
 <li>
 <strong>Skip the shell surface.</strong>
-      The step at \(j = 200\) (i.e., \(r = 1.0\)) falls exactly on the idealized thin shell.
-      The field has a discontinuity across the surface, so this point is not evaluated. Its plotted
-      value is set to zero only as a placeholder; this is not a claim that the physical surface
-      acceleration is zero.
+      The sample at \(j = 200\) (\(r = 1.0\)) lies exactly on the idealized thin shell, where the
+      field is discontinuous. Leave its returned value at the original program's <code>0.0</code>
+      placeholder. The plotting routine later substitutes <code>NaN</code> in a private copy so
+      matplotlib breaks the curve.
     </li>
 <li>
-<strong>Inner loop: tile summation.</strong>
-      For each \(r_j\), loop over all \(n_\text{div}\) latitude rings. Compute
-      \(d_k = \sqrt{1 + r_j^2 + 2\,r_j\,\sin\theta_k}\) and add the ring's contribution
-      (Eq. 5) to the running sum \(g_\text{num}(r_j)\).
+<strong>Inner loop: ring summation.</strong>
+      At each remaining radius, start again at the first latitude midpoint and loop over all
+      \(n_\text{div}\) rings. Calculate Eq. 4 and Eq. 5 for each ring and add its contribution to
+      the running acceleration total.
     </li>
 <li>
 <strong>Post-process for output mode.</strong>
@@ -662,12 +672,29 @@
     </li>
 </ol>
 <div class="note">
-<strong>Computational cost:</strong> The inner loop executes \(n_\text{div}\) times for each
-    of the 1 000 radii, so the total work scales as \(\mathcal{O}(1000 \times n_\text{div})\).
-    The mass-summation loop adds another \(\mathcal{O}(n_\text{div})\). For
-    \(n_\text{div} = 10\,000\) this is \(10^7\) floating-point operations — fast on modern
-    hardware but noticeable. 
+<strong>Computational cost:</strong> The calculation evaluates \(n_\text{div}\) ring
+    contributions at each of 1 000 radii, so the work scales as
+    \(\mathcal{O}(1000 \times n_\text{div})\). At \(n_\text{div}=10\,000\), that is
+    \(10^7\) ring contributions. The direct loops are intentionally simple rather than fast.
   </div>
+<h3>Optional optimized implementation</h3>
+<p>
+    The physics module also contains <code>compute_acceleration_profile_optimized()</code>, which
+    performs the same midpoint sum by precomputing the ring geometry and using NumPy broadcasting
+    in memory-bounded radial chunks. The optimized code is much faster but less transparent to a
+    student learning the basic integration algorithm.
+  </p>
+<p>
+    Near the end of <code>physics_spheregravity.py</code>, the following two lines select which
+    implementation the driver uses:
+  </p>
+<pre>compute_acceleration_profile = compute_acceleration_profile_textbook
+# compute_acceleration_profile = compute_acceleration_profile_optimized</pre>
+<p>
+    To compare their speed, comment out the first assignment and uncomment the second, then run
+    the same experiment again. The functions have identical signatures and return values, so no
+    other file needs to change. Reversing those two edits restores the textbook implementation.
+  </p>
 <!-- ── Accuracy ── -->
 <h2 id="accuracy">Accuracy and Convergence</h2>
 <p>
@@ -680,7 +707,7 @@
 <thead>
 <tr>
 <th>nDiv</th>
-<th>Relative error at \(r=1.1\)</th>
+<th>Signed relative difference at \(r=1.1\)</th>
 <th>Expected trend</th>
 </tr>
 </thead>
@@ -708,14 +735,16 @@
 <div class="mod-role">Physics</div>
 <h4>physics_spheregravity.py</h4>
 <p>
-        Encodes the shell-tiling algorithm, shell-mass calculation, gravitational summation,
-        and the conversion to relative-difference output. The formulas described in Eqs. 2–7
-        are implemented here.
+        Encodes two interchangeable implementations of the shell-tiling algorithm: transparent
+        textbook loops selected by default and an optional bounded-vectorization version for
+        performance comparison. Both implement the formulas described in Eqs. 2–7.
       </p>
 <div class="sig">compute_shell_mass(nDiv, epsilon=0.001) → float<br/>
         requires a positive integer nDiv and positive finite epsilon</div>
 <div class="sig" style="margin-top:6px">compute_acceleration_profile(nDiv,
         outputType='acceleration', epsilon=0.001) → (ndarray, ndarray)</div>
+<div class="sig" style="margin-top:6px">compute_acceleration_profile_textbook(...)<br/>
+        compute_acceleration_profile_optimized(...)</div>
 </div>
 <div class="module-card">
 <div class="mod-role">Driver</div>
@@ -776,8 +805,9 @@
           Number of angular divisions per coordinate. The shell is divided into
           <em>n</em><sub>div</sub> latitude rings, each representing
           <em>n</em><sub>div</sub> identical azimuthal tiles. Larger values give higher
-          angular resolution at the cost of longer computation time. The program does not impose
-          an arbitrary upper limit, so extremely large values may take a long time to run.
+          angular resolution at the cost of longer computation time. Valid values are
+          1 through 100 000; the resource-safety limit is well above the 10 000-division
+          high-resolution experiment used on this page.
         </td>
 </tr>
 <tr>
@@ -786,8 +816,8 @@
 <td>OutputType (Literal['acceleration', 'relative difference'])</td>
 <td>
           Selects what the plot displays. Either <code>'acceleration'</code> (raw
-          \(g(r)\)) or <code>'relative difference'</code> (fractional error from
-          Newton's theorem per Eq. 7).
+          \(g(r)\)) or <code>'relative difference'</code> (the exterior signed relative
+          difference or interior normalized residual defined by Eq. 7).
         </td>
 </tr>
 <tr>
@@ -814,14 +844,15 @@
         Plots the computed gravitational acceleration \(g_\text{num}(r)\) versus radius \(r\).
         Outside the shell (\(r &gt; 1\)) you will see the characteristic \(1/r^2\) falloff; inside
         (\(r &lt; 1\)) the acceleration is essentially zero. The shell radius \(R = 1\) is the
-        boundary between the two regions.
+        boundary between the two regions, and the curve has a gap at the omitted surface sample.
       </p>
 </div>
 <div class="mode-item">
 <div class="mode-pill">relative difference</div>
 <p>
-        Plots the fractional deviation between the numerical result and Newton's exact prediction
-        (Eq. 7). This mode is more informative for convergence studies: as <code>nDiv</code>
+        Outside the shell, plots the signed relative difference between the numerical result and
+        Newton's exact prediction; inside, plots the normalized residual (Eq. 7). This mode is
+        more informative for convergence studies: as <code>nDiv</code>
         increases the curve should drop closer and closer to zero at sampled points away from
         the skipped shell surface. Inside the shell, where Newton predicts \(g = 0\), the residual
         acceleration normalised by \(M\) is plotted instead.
@@ -843,8 +874,8 @@ python main.py</pre>
     With the default settings (<code>nDiv = 100</code>, <code>outputType = 'relative
     difference'</code>) the program computes the acceleration profile over 1 000 radii from
     \(r=0\) to \(r=4.995\) and opens a matplotlib window. Away from the shell surface the
-    numerical result is already close to Newton's theorem—for example, the relative error at
-    \(r=1.1\) is about \(2.5\times10^{-3}\) (0.25%). Much closer to \(r=1\), the finite angular
+    numerical result is already close to Newton's theorem—for example, the signed relative
+    difference at \(r=1.1\) is about \(2.5\times10^{-3}\) (0.25%). Much closer to \(r=1\), the finite angular
     tiling is harder to resolve and the error is larger.
   </p>
 <h3>Switching output mode</h3>
@@ -860,8 +891,9 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
 <h2 id="experiments">Suggested Experiments</h2>
 <p>
     The experiments below are arranged in approximate order of difficulty. The first four require
-    only changes to <code>nDiv</code> and <code>outputType</code>; the last two make more direct use
-    of the numerical machinery or ask for a substantial programming extension.
+    only changes to <code>nDiv</code> and <code>outputType</code>; the fifth makes more direct use
+    of the numerical machinery, and the final two are advanced code-study or programming
+    extensions.
   </p>
 <div class="scenario-grid">
 <div class="scenario-card">
@@ -870,9 +902,9 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
         Run with <code>outputType = 'acceleration'</code>. Confirm the two parts of Newton's shell
         theorem: the acceleration is essentially zero for \(r&lt;1\), while outside the shell it
         falls approximately as \(1/r^2\). Compare, for example, the acceleration near \(r=2\) with
-        that near \(r=4\); the latter should be about one quarter as large. The plotted point exactly
-        at \(r=1\) is only a zero placeholder because the ideal thin-shell surface itself is not
-        evaluated.
+        that near \(r=4\); the latter should be about one quarter as large. The graph has a gap at
+        \(r=1\) because the ideal thin-shell surface itself is not evaluated; the returned array's
+        zero at that index is only a compatibility placeholder.
       </p>
 <div class="sc-params">nDiv=100 · outputType='acceleration'</div>
 </div>
@@ -929,11 +961,29 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
 <p>
         Make a separate experimental copy of the program, replace the spherical geometry by an
         axially symmetric ellipsoidal homoeoid (an oblate or prolate ellipsoidal shell), and calculate the field at several interior points,
-        including points off the symmetry axis. (By a <em>homoeoidal</em> shell, we mean the thin-shell limit of material between similar, concentric, similarly oriented ellipsoids of uniform volume density.) Verify that the interior field tends toward zero as
+        including points off the symmetry axis. (By a <em>homoeoidal</em> shell, we mean the thin-shell limit of material between similar, concentric, similarly oriented ellipsoids of uniform volume density.) Merely deforming the spherical coordinates while retaining the spherical tile weights is not sufficient: derive the correct mass weighting and compute every vector component. Verify that the interior field tends toward zero as
         the tiling is refined, while the exterior field is direction-dependent and therefore cannot
         be represented by a point mass at the center.
       </p>
 <div class="sc-params">advanced · geometry, tile masses, and off-axis field components must change</div>
+</div>
+<div class="scenario-card">
+<h4>7 · Advanced — NumPy Vectorization and Computational Tradeoffs</h4>
+<p>
+        Compare <code>compute_acceleration_profile_textbook()</code> with
+        <code>compute_acceleration_profile_optimized()</code>. Both functions perform the same
+        physical calculation and have identical signatures and return values, but they organize
+        the numerical work very differently.
+      </p>
+<ol>
+<li>Identify which textbook loops are replaced by NumPy array operations.</li>
+<li>Explain how the arrays of latitude-ring geometry are constructed and reused.</li>
+<li>Verify numerically that the two implementations give equivalent results in both output modes.</li>
+<li>Measure their execution times for several values of <code>nDiv</code> and calculate the speedup.</li>
+<li>Explain why the optimized implementation processes radii in bounded chunks instead of constructing one array containing every radius–ring combination.</li>
+<li>Discuss the tradeoffs among algorithmic transparency, execution speed, and memory consumption. Which implementation is more useful for learning the integration method, and which is more useful for large calculations?</li>
+</ol>
+<div class="sc-params">advanced · loops, broadcasting, timing, chunking, and memory use</div>
 </div>
 </div>
 <!-- ============================================================
