@@ -461,7 +461,7 @@
 <!-- ══════════════════════ MAIN ══════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.0&nbsp;&nbsp;&nbsp;&nbsp;Build 5daee2468c31
+  Version 1.0.1&nbsp;&nbsp;&nbsp;&nbsp;Build aa45447eb9cb
 </p>
 
 <!-- ── Overview ── -->
@@ -713,7 +713,7 @@
         are implemented here.
       </p>
 <div class="sig">compute_shell_mass(nDiv, epsilon=0.001) → float<br/>
-        requires nDiv &gt; 0 and epsilon &gt; 0</div>
+        requires a positive integer nDiv and positive finite epsilon</div>
 <div class="sig" style="margin-top:6px">compute_acceleration_profile(nDiv,
         outputType='acceleration', epsilon=0.001) → (ndarray, ndarray)</div>
 </div>
@@ -725,7 +725,7 @@
         used by <code>main.py</code> and the plotting routine.
       </p>
 <div class="sig">run_spheregravity(nDiv=100,
-        outputType='acceleration') → (ndarray, ndarray)</div>
+        outputType='acceleration', epsilon=0.001) → (ndarray, ndarray)</div>
 </div>
 <div class="module-card">
 <div class="mod-role">Plot</div>
@@ -754,8 +754,9 @@
 <h2 id="parameters">Parameters</h2>
 <p>
     The two normal user settings, <code>nDiv</code> and <code>outputType</code>, are set in
-    <code>main.py</code>. The physics module also accepts <code>epsilon</code> as an advanced
-    optional keyword argument; it remains fixed at <code>0.001</code> in the normal workflow.
+    <code>main.py</code>. The driver and physics functions also accept <code>epsilon</code> as an
+    advanced optional keyword argument; it remains fixed at <code>0.001</code> in the normal
+    workflow.
   </p>
 <table class="param-table">
 <thead>
@@ -798,8 +799,8 @@
           Because every tile mass is placed on the same spherical surface, changing
           \(\varepsilon\) scales the raw acceleration and total mass but does not make the
           modeled shell geometrically thicker. It is not a normal <code>main.py</code> setting;
-          to change it, call <code>compute_acceleration_profile()</code> directly from
-          <code>physics_spheregravity.py</code>.
+          to change it, pass <code>epsilon</code> to <code>run_spheregravity()</code> or call
+          <code>compute_acceleration_profile()</code> directly.
         </td>
 </tr>
 </tbody>
@@ -853,7 +854,7 @@ outputType = 'acceleration'</pre>
 <pre>from driver_spheregravity import run_spheregravity
 from plot_spheregravity   import plot_spheregravity
 
-radius, accel = run_spheregravity(nDiv=1000, outputType='relative difference')
+radius, accel = run_spheregravity(nDiv=1000, outputType='relative difference', epsilon=0.001)
 plot_spheregravity(radius, accel, outputType='relative difference')</pre>
 <!-- ── Experiments ── -->
 <h2 id="experiments">Suggested Experiments</h2>
