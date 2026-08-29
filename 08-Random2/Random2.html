@@ -397,7 +397,7 @@
 <!-- ═══════════════════════════════════ MAIN ════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.0&nbsp;&nbsp;&nbsp;&nbsp;Build 7b8c403b52ac
+  Version 1.0.1&nbsp;&nbsp;&nbsp;&nbsp;Build 0082c0bbd773
 </p>
 
 <!-- ─── Description ─── -->
@@ -410,7 +410,7 @@
 <p><strong><code>walk2d</code></strong> is a visualization rather than a second version of the same step generator. Here every step has fixed length \(\lambda\) and an angle chosen uniformly from \(0\) to \(2\pi\). The result is genuinely isotropic in the plane: no direction is preferred. Several walks start at the center of a circular schematic star and continue until they cross its boundary or reach a safety limit.</p>
 <div class="note"><strong>Solar-model limitation:</strong> Random2 is a schematic model of <em>radiative diffusion</em>, not a numerical model of the complete Sun. In the real Sun, radiative transport dominates through the core and radiative zone, while convection becomes the principal energy-transport mechanism in the outer convection zone, whose base is about 200,000 km below the visible surface (roughly \(0.7R_\odot\)). The circle in the visualization should therefore be regarded as a pedagogical boundary, not as a literal simulation of one photon random-walking through every solar layer. See <a href="https://solarscience.msfc.nasa.gov/interior.shtml" target="_blank">NASA: The Solar Interior</a>.</div>
 <div class="note"><strong>Why is the star display 2D?</strong> The square-root exponent for random-walk displacement does not depend on whether the walk is in two or three dimensions, so a planar display preserves the qualitative scaling while making individual paths easy to see. The <code>scaled_distance</code> calculation itself is three-dimensional. Quantitative radial and first-passage statistics do depend on dimensionality, so the displayed escape-time distribution should not be interpreted as a three-dimensional solar prediction.</div>
-<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(\sqrt{N}\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
 <!-- ─── Physics ─── -->
 <section id="physics">
 <h2>Physics &amp; Equations</h2>
@@ -435,7 +435,7 @@
 <h3>Fixed-Length Isotropic Step for the Star Display</h3>
 <p>In <code>walk2d</code> mode the direction angle is uniform and every step has length \(\lambda=\)<code>mean_free_path</code>:</p>
 <div class="eq-block"><span class="eq-label">(7)</span>\[\theta_i\sim\mathrm{Uniform}(0,2\pi),\qquad \Delta x_i=\lambda\cos\theta_i,\qquad \Delta y_i=\lambda\sin\theta_i.\]</div>
-<p>This construction is isotropic in the plane. For \(N\) such independent steps, \(\langle D^2\rangle=N\lambda^2\), so the root-mean-square displacement is</p>
+<p>This construction is isotropic in the plane. Here \(D\) denotes the magnitude of the net displacement, not the diffusion coefficient. For \(N\) such independent steps, \(\langle D^2\rangle=N\lambda^2\), so the root-mean-square displacement is</p>
 <div class="eq-block"><span class="eq-label">(8)</span>\[D_{\mathrm{rms}}=\lambda\sqrt{N}.\]</div>
 </section>
 <!-- ─── Algorithm ─── -->
@@ -487,7 +487,7 @@ plot_walk2d(result, corner="upper right")</div></div></div>
 <tr><td><code>corner</code></td><td><code>"upper right"</code></td><td>Annotation-box location: upper/lower left/right.</td></tr></tbody></table>
 <div class="note">Invalid display names, distributions, corners, non-finite or out-of-range physical parameters, and nonpositive trial/step counts are rejected with explanatory <code>ValueError</code> messages rather than silently selecting another behavior.</div></section>
 <!-- ─── Output ─── -->
-<section id="output"><h2>Program Output</h2><p><strong>Scaled-distance mode</strong> produces a log-log plot of average scaled displacement versus number of steps. The points should approach a line of slope \(1/2\); finite trial counts produce visible statistical scatter.</p><p><strong>2D star mode</strong> produces a square plot of fixed-length isotropic walks within a circular schematic star. The annotation box reports the radius, mean free path, reference step count, number of escaped walks, and—when at least one walk escapes—the median escape step count. Each <code>WalkPath</code> also stores its individual <code>steps_taken</code> value for quantitative experiments. A path with no terminal ray has reached <code>step_cap</code> without escaping.</p></section>
+<section id="output"><h2>Program Output</h2><p><strong>Scaled-distance mode</strong> produces a log-log plot of average scaled displacement versus number of steps. The points should approach a line of slope \(1/2\); finite trial counts produce visible statistical scatter.</p><p><strong>2D star mode</strong> produces a square plot of fixed-length isotropic walks within a circular schematic star. The annotation box reports the radius, mean free path, reference step count, number of escaped walks, and—when at least one walk escapes—the median escape step count. Each <code>WalkPath</code> also stores its individual <code>steps_taken</code> value for quantitative experiments. If a walk reaches <code>step_cap</code> without escaping, its final point is marked with an <code>x</code>; an escaped path may have no terminal ray when <code>ray_length_factor = 0</code>.</p></section>
 <!-- ─── Suggested Experiments ─── -->
 <section id="experiments">
 <h2>Suggested Experiments</h2>
@@ -600,7 +600,8 @@ n_walks = 100
         first-passage step count proportional to \((R/\lambda)^2\). Test this by doubling \(R\):
         the characteristic escape count should increase by roughly a factor of four. Because the
         distribution is broad, use many walks and compare averages or medians rather than single
-        trajectories.
+        trajectories. Confirm that nearly all walks escape; if they do not, raise
+        <code>step_cap</code> so censoring does not bias the comparison.
       </p>
 <div class="params">radius = 30.0
 # compare with 40.0, 50.0, 60.0
