@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SphereGravity 1.2.0 Release Notes</title>
+</head>
+<body>
+<h1>SphereGravity 1.2.0 Release Notes</h1>
+<p><b>Version:</b> 1.2.0<br><b>Build:</b> 35c1d2c0dd16<br><b>Date:</b> 2026-08-29</p>
+
+<h2>Release Status</h2>
+<p>
+Version 1.2.0 concludes the kickoff review, Audit1 review cycle, and Audit2 verification process.
+The program was reviewed by Codex, Microsoft Copilot, and Gemini. Reviewers verified the
+numerical implementation of Newton's shell theorem, the Java-to-Python translation, Help-file
+accuracy, plotting behavior, version/build synchronization, input validation, and regression-test
+coverage. All identified release issues were addressed before final review. Audit2 concluded with
+release recommendations from both Copilot and Gemini and no remaining release-blocking defects.
+</p>
+
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li>Restored the transparent textbook midpoint-integration implementation as the default execution path so students can directly follow the numerical method developed in Schutz's Investigation 4.3.</li>
+<li>Added an optional optimized implementation using bounded NumPy vectorization for performance comparisons while preserving identical physics, signatures, and return values.</li>
+<li>Introduced reusable ring-geometry precomputation for the optimized implementation, eliminating repeated trigonometric evaluation and ring-mass construction.</li>
+<li>Achieved approximately 46.5× speedup at nDiv = 1000 in relative-difference mode while maintaining numerical agreement to floating-point precision.</li>
+<li>Added a resource-safety limit of 100,000 angular divisions and corresponding validation, Help documentation, and regression protection.</li>
+<li>Preserved the legacy surface placeholder value at r = 1 in returned data while introducing a plotting-only NaN gap so the graph correctly displays the shell-surface discontinuity.</li>
+<li>Strengthened plot validation by rejecting negative, duplicate, and non-monotonic radii in addition to existing shape, type, and finiteness checks.</li>
+<li>Added reproducible BUILD_ID generation with controlled-fixture verification, universal-newline normalization tests, and explicit fallback testing for damaged or unavailable source files.</li>
+<li>Added independent shell-theorem validation against the analytical continuum solution in addition to Java-reference consistency tests.</li>
+<li>Expanded the Help file with clarified sign conventions, improved discussion of the shell-surface omission, documentation of the optimized implementation, and a new advanced vectorization exercise.</li>
+</ul>
+
+<h2>Test Suite Growth</h2>
+<p>
+The original regression suite was expanded from 47 automated tests to 65 automated tests.
+The suite now verifies textbook and optimized implementation equivalence; BUILD_ID generation
+and fallback behavior; shell-mass convergence; analytical shell-theorem agreement; NumPy scalar
+validation; plotting-domain constraints; plotting discontinuity handling; Help-file structure;
+local navigation targets; MathJax integration; command-line execution; version reporting; and
+headless end-to-end execution.
+</p>
+
+<p>
+The final suite verifies that the textbook implementation remains the selected default behavior,
+confirms numerical agreement between textbook and optimized algorithms in both output modes,
+and includes a high-resolution nDiv = 10,000 regression using the optimized implementation.
+The final reported audit run completed with all 65 tests passing.
+</p>
+
+<h2>Known Limitations</h2>
+<ul>
+<li>SphereGravity is intended for education and conceptual exploration of Newton's shell theorem rather than research-grade gravitational modeling.</li>
+<li>The shell is represented by a midpoint-rule angular tiling. Numerical errors decrease with increasing angular resolution but do not vanish completely at finite nDiv.</li>
+<li>The exact shell surface at r = 1 is intentionally omitted because the idealized thin-shell field is discontinuous there. Returned arrays contain a compatibility placeholder at that radius.</li>
+<li>The default implementation prioritizes transparency and pedagogical value over execution speed.</li>
+<li>The optimized implementation is available for performance comparison but is not the default instructional pathway.</li>
+<li>The program evaluates 1000 radial sample locations from r = 0 to r = 4.995 and is not intended to provide arbitrary radial sampling.</li>
+<li>The Help file loads MathJax from a public CDN. When offline, equations remain visible as TeX source but are not typeset.</li>
+</ul>
+
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>The plotting API intentionally owns display behavior and does not return matplotlib figure or axis objects.</li>
+<li>Runtime type annotations remain intentionally conservative because the validated interface accepts both Python numeric types and NumPy scalar types.</li>
+<li>Repository-level validation of related-program documentation links remains outside the scope of the module-local regression suite.</li>
+<li>The textbook implementation still contains deliberately explicit computations that could be further optimized; maintaining instructional clarity remains the higher priority.</li>
+</ul>
+
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.2.0<br>BUILD_ID: 35c1d2c0dd16</p>
+</body>
+</html>
