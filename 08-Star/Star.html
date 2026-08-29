@@ -391,7 +391,7 @@
 ════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.3&nbsp;&nbsp;&nbsp;&nbsp;Build ed3a28ef2a2e
+  Version 1.0.3&nbsp;&nbsp;&nbsp;&nbsp;Build 019ff5e3fe2c
 </p>
 
 <!-- ── Physical Background ── -->
@@ -591,7 +591,7 @@
 <tr><td><code>output_type</code></td><td><code>"pressure"</code></td><td>string</td><td>One of <code>"pressure"</code>, <code>"density"</code>, <code>"temperature"</code>, or <code>"mass"</code>.</td></tr>
 <tr><td><code>log_y</code></td><td><code>False</code></td><td>boolean</td><td>Use the literal boolean <code>True</code> for a logarithmic vertical axis for pressure, density, or temperature; use <code>False</code> for a linear axis. Leave it false for mass because \(m(0)=0\). Strings and numbers are not accepted as substitutes for booleans. On a logarithmic plot, the exact zero-valued surface point is omitted because a logarithmic axis cannot display zero.</td></tr>
 </tbody></table>
-<div class="note"><strong>Input checks:</strong> The driver rejects non-finite numerical inputs, nonpositive central pressure, temperature, or \(\mu\); \(\gamma\le1.2\); fewer than three grid points; nonpositive <code>steps_per_scale</code>; unsupported output names; and derived values outside the finite floating-point range. Error messages identify the invalid input or derived quantity.</div>
+<div class="note"><strong>Input checks:</strong> The driver rejects non-finite numerical inputs, nonpositive central pressure, temperature, or \(\mu\); \(\gamma\le1.2\); fewer than three grid points; nonpositive <code>steps_per_scale</code>; unsupported output names; and non-finite results at key derived stages. Error messages identify the invalid input or derived quantity. These finite-range checks are selective safeguards: the program is designed for physically meaningful teaching inputs, not arbitrary extreme finite combinations throughout every Euler expression.</div>
 </section>
 <!-- ── Output Modes ── -->
 <section id="output">
