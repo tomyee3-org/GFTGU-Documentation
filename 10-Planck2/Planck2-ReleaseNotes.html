@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Planck2 1.0.4 Release Notes</title>
+</head>
+<body>
+<h1>Planck2 1.0.4 Release Notes</h1>
+<p><b>Version:</b> 1.0.4<br><b>Build:</b> 5b6ad69fefb7<br><b>Date:</b> 2026-08-29</p>
+
+<h2>Release Status</h2>
+<p>Version 1.0.4 concludes a kickoff maintenance review followed by four rounds of independent review involving Codex, Copilot, and Gemini. The reviewers compared the Python implementation with Schutz's original Java source; verified the Planck-law formulas, coordinate transformations, numerical integration, input validation, floating-point behavior, plotting, Help-file accuracy, Version/Build synchronization, and regression coverage; and tested both the canonical and flattened upload layouts. No release-blocking defect remains. Copilot and Gemini both recommend immediate release, and the program is sufficiently robust, accurate, and clear for student use within the tutorial scope and limitations described below.</p>
+
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li>Verified the defining physics for wavelength spectral radiance <i>B</i><sub>λ</sub>, frequency spectral radiance <i>B</i><sub>ν</sub>, and frequency spectral energy density <i>u</i><sub>ν</sub>, including their SI prefactors, coordinate Jacobians, units, peak locations, and Stefan–Boltzmann reference integrals.</li>
+<li>Preserved Schutz's sampled-maximum and trapezoidal-integration investigations while improving the Python program to report the peak, dimensionless shape area, numerical physical integral, and exact infinite-domain bolometric reference together.</li>
+<li>Corrected the grid semantics so <code>n_steps</code> divides the selected domain into exactly that many intervals, both endpoints are sampled, exactly <code>n_steps</code> trapezoids are accumulated, and the final sample equals <code>x_max</code>.</li>
+<li>Added stable Rayleigh–Jeans, <code>expm1</code>, and Wien evaluation branches and froze their exact <code>x_low</code>/<code>x_high</code> boundary behavior with adjacent-floating-point tests.</li>
+<li>Added normalized <code>frexp</code>/<code>ldexp</code> product evaluation so representable final results are not rejected because an intermediate temperature power or product overflows or underflows prematurely.</li>
+<li>Added systematic validation for invalid quantities, temperatures, exponents, domains, resolutions, step sizes, plot controls, derived physical values, and genuinely unrepresentable floating-point results.</li>
+<li>Made simulation results immutable and required the reported <code>x_peak</code>, physical peak coordinate, and peak value to identify the same first maximum sample before plotting.</li>
+<li>Hardened plotting against malformed arrays, scalars, labels, and units; sorted physical coordinates for left-to-right display; and repaired the legal one-point peak-window case.</li>
+<li>Clarified that the numerical physical integral covers the selected finite domain while the printed and plotted exact bolometric reference covers zero to infinity.</li>
+<li>Expanded the Help exercises into an approximately progressive sequence covering solar and CMB spectra, Wien scaling, wavelength-versus-frequency peaks, radiance versus energy density, Stefan–Boltzmann scaling, convergence, and asymptotic limits.</li>
+<li>Added a reproducible BUILD_ID across the four executable source modules, with newline-independent hashing, damaged-source fail-fast behavior, and synchronization across source, Help, runtime output, and result metadata.</li>
+</ul>
+
+<h2>Test Suite Growth</h2>
+<p>A new 59-test regression suite was created at kickoff and expanded to 94 automated tests during the audit process. The suite defines the four core module filenames and uses <code>find_module_dir(start)</code> to locate the nearest directory containing all four, so the same test file works from the canonical <code>tests/</code> directory or when flattened beside the program modules.</p>
+<p>The final suite verifies physical constants and closed forms; wavelength/frequency conversions and Jacobians; all three spectral quantities; analytic and sampled peak positions; solar and CMB reference values; temperature scaling; transformed-spectrum identities; finite-domain trapezoidal integration; small-, intermediate-, and large-<i>x</i> branches; unusual domains, endpoint peaks, one-step grids, and tied maxima; invalid and extreme finite inputs; binary64 overflow, subnormal, and underflow boundaries; immutable and internally consistent results; plotting and annotation behavior; command-line execution; Help structure and scientific content; Python 3.10 compatibility; and independent Build-ID reproduction. All 94 tests pass under CPython 3.10.20 and CPython 3.12.13 in both canonical and flattened upload layouts.</p>
+
+<h2>Known Limitations</h2>
+<ul>
+<li>Intended for education and conceptual exploration rather than precision radiometry, instrument calibration, or research-grade spectral modeling.</li>
+<li>The reported peak is the largest sampled point, not an interpolated or root-solved maximum. Its accuracy is limited by the grid spacing, and it may be a domain endpoint when the mathematical peak lies outside the selected interval.</li>
+<li>The numerical integral covers the finite <code>x_min</code>-to-<code>x_max</code> domain, whereas the exact bolometric reference covers zero to infinity. Their difference includes finite-domain truncation, trapezoidal discretization, and the selected asymptotic approximations.</li>
+<li>The default settings give physical-integral relative error below 10<sup>−6</sup> in all three modes, but this bound does not apply after the domain, resolution, or approximation thresholds are edited.</li>
+<li><code>x_low</code> and <code>x_high</code> deliberately select the Rayleigh–Jeans and Wien approximation regions. Moving them is an educational experiment and can intentionally reduce numerical accuracy.</li>
+<li>The program accepts any positive finite temperature whose derived results remain representable; it does not impose an arbitrary astrophysical temperature range. Inputs whose final physical values overflow or underflow to unusable zero are rejected.</li>
+<li>The maximum resolution of 1,000,000 intervals retains three tuples of 1,000,001 Python floating-point values and is therefore intentionally memory- and computation-intensive. Ordinary exercises use much smaller resolutions.</li>
+<li>The Help file loads MathJax from a public CDN. Offline, its prose and unrendered TeX source remain available, but equations are not typeset.</li>
+</ul>
+
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>The regression that protects removal of redundant full-array scans checks the driver's validator call pattern and may need broadening after a harmless future refactor that preserves linear performance.</li>
+<li>The plotter deliberately checks labels and integral units against the physics-layer metadata helpers. A future metadata change must remain synchronized across result construction, plotting, Help, and tests; a shared immutable quantity descriptor may become useful if additional modes are added.</li>
+<li>The isolated module suite validates the expected relative links to the Star and Random2 Help files but cannot prove that those targets exist. Repository-level link checking remains appropriate for the complete documentation tree.</li>
+<li>A future documentation-wide overhaul may bundle MathJax locally if fully typeset offline Help becomes a distribution requirement.</li>
+</ul>
+
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.0.4<br>BUILD_ID: 5b6ad69fefb7</p>
+</body>
+</html>
