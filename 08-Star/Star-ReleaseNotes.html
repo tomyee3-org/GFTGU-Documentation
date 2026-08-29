@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Star 1.0.3 Release Notes</title>
+</head>
+<body>
+<h1>Star 1.0.3 Release Notes</h1>
+<p><b>Version:</b> 1.0.3<br><b>Build:</b> 019ff5e3fe2c<br><b>Date:</b> 2026-08-29</p>
+
+<h2>Release Status</h2>
+<p>Version 1.0.3 concludes a kickoff maintenance review followed by four rounds of independent review involving Codex, Copilot, and Gemini. The reviewers compared the Python implementation with Bernard Schutz's original Java source; verified the ideal-gas normalization, polytropic equation of state, Newtonian hydrostatic-equilibrium and mass-continuity equations, central initialization, numerical integration, surface handling, input validation, floating-point behavior, plotting, Help-file accuracy, Version/Build synchronization, and regression coverage; and tested both canonical and flattened upload layouts. No release-blocking defect remains. Copilot and Gemini both give final, unconditional approval for release, and the program is sufficiently robust, accurate, and clear for student use within the tutorial scope and limitations described below.</p>
+
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li>Verified that the Python program preserves Schutz's Newtonian stellar model: central density from the ideal-gas relation, a single normalized polytropic equation of state, hydrostatic equilibrium, enclosed-mass continuity, and regularized initialization near the stellar center.</li>
+<li>Confirmed point-for-point agreement with an independent transcription of the complete positive-pressure prefix produced by the supplied Java recurrence, with five frozen numerical anchors from the first nonzero point through the final positive-pressure point.</li>
+<li>Added an independent analytic benchmark for the <i>n</i> = 1 Lane–Emden polytrope and verified that radius and mass errors decrease under radial refinement as expected for the documented first-order method.</li>
+<li>Improved the Java stopping behavior by linearly interpolating the final pressure crossing and returning an explicit modeled surface with <i>p</i> = ρ = <i>T</i> = 0.</li>
+<li>Documented that the fractional final shell retains the forward-Euler left-endpoint density and therefore slightly overestimates that small shell's mass at first order.</li>
+<li>Added systematic validation for non-finite and nonpositive central inputs, invalid polytropic exponents, malformed numerical controls, unsupported output modes, non-finite derived quantities, and genuinely unrepresentable floating-point results.</li>
+<li>Added range-aware central-density arithmetic that avoids both demonstrated intermediate overflow and intermediate underflow while preserving the exact default calculation.</li>
+<li>Bounded the step-doubling restart mechanism and added regression coverage proving that a model which never reaches zero pressure terminates with an explanatory error rather than looping indefinitely.</li>
+<li>Derived the runtime output choices from one <code>Literal</code> definition, centralized the zero-temperature surface convention in the physics layer, and retained all four profiles—pressure, density, temperature, and enclosed mass—in every result.</li>
+<li>Made <code>plot_star_structure()</code> return its Matplotlib figure and axes while preserving normal screen display; added strict boolean validation for <code>log_y</code>; and ensured rejected plot requests do not leak unused figures.</li>
+<li>Corrected the advanced scaling exercise to distinguish fixed-γ parameter variations from a genuinely fixed-<i>K</i> Lane–Emden sequence, including the correct co-variation of central temperature and pressure and the corresponding radius and mass exponents.</li>
+<li>Structurally synchronized the student-editable literal assignments in <code>main.py</code> with the named defaults in the Help parameter table by parsing Python syntax and HTML structure rather than relying on substring matches.</li>
+<li>Added a reproducible core BUILD_ID across the four executable modules, with universal-newline normalization, independent hash reproduction, a controlled damaged-source fallback, and synchronization across source, Help, command-line output, and result metadata.</li>
+</ul>
+
+<h2>Test Suite Growth</h2>
+<p>A new 54-test regression suite was created at kickoff and expanded to 70 automated tests during the audit process. The suite defines the four core module filenames and uses <code>find_module_dir(start)</code> to locate the nearest directory containing all four, so the same test file works from the canonical <code>tests/</code> directory or when flattened beside the program modules.</p>
+<p>The final suite verifies physical constants and equations; input domains and derived-value failures; central and surface conditions; array consistency and profile monotonicity; the ordinary Euler recurrences; all four output modes; successful and exhausted restarts; documented pressure, temperature, molecular-weight, and fixed-<i>K</i> scalings; the analytic <i>n</i> = 1 Lane–Emden solution and convergence; complete source-based Java recurrence agreement and frozen numeric anchors; extreme central-density range cases; plotting labels, logarithmic behavior, strict booleans, returned figure/axes objects, and figure-leak prevention; command-line execution; structural synchronization of <code>main.py</code> defaults with the Help table; Help scientific content; Python 3.10 grammar compatibility; and independent Build-ID reproduction and failure behavior. All 70 tests pass under CPython 3.12.13, and the four core files parse successfully when restricted to CPython 3.10 grammar.</p>
+
+<h2>Known Limitations</h2>
+<ul>
+<li>Intended for education and conceptual exploration rather than research-grade stellar modeling.</li>
+<li>The model is Newtonian, spherically symmetric, and governed by one polytropic equation of state. It omits nuclear energy generation, radiative and convective energy transport, composition gradients, rotation, magnetic fields, and relativistic gravity.</li>
+<li>The default parameters reproduce approximately the Sun's total mass and radius but do not constitute a high-accuracy solar-interior model. The default central temperature, central density, and effective molecular-weight parameter differ substantially from realistic solar-core values.</li>
+<li>The forward-Euler integrator has first-order global accuracy. Increasing <code>max_points</code> does not refine an already successful run; convergence studies must increase <code>steps_per_scale</code> while keeping <code>restart_count</code> at zero.</li>
+<li>The step-doubling restart increases radial coverage at the cost of resolution and is not an error-controlled adaptive integrator.</li>
+<li>The modeled surface radius is obtained by linear interpolation along the final Euler pressure segment. The fractional surface-shell mass uses the left-endpoint density and is only first-order accurate.</li>
+<li>The program requires γ &gt; 6/5 so the mathematical polytrope has an ordinary finite zero-pressure radius. The discussion of γ = 4/3 stability is deliberately qualified and should not be applied as a universal classification of real stars.</li>
+<li>The red-giant and neutron-star exercises are schematic polytropic experiments. Real red giants have differentiated interiors, and realistic neutron-star calculations require non-ideal dense-matter equations of state and general relativity.</li>
+<li>Finite-range checks are selective safeguards at important stages. The supported domain is physically meaningful teaching inputs, not every arbitrary combination of extreme finite binary64 values throughout the Euler pipeline.</li>
+<li>The Help file loads MathJax from a public CDN. Offline, its prose and unrendered TeX source remain available, but equations are not typeset.</li>
+</ul>
+
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>The Help retains scientifically useful first-edition Chapter 8 and Investigation 8.5/8.6 references. These should be updated if chapter numbering or context changes in the future second edition.</li>
+<li>The Java regression is based on an independently transcribed supplied source listing, not a preserved historical Java-runtime output artifact. If a trusted Java output is later produced, it may be added as an additional frozen fixture.</li>
+<li>The frozen Java anchors deliberately enforce exact floating-point reproducibility in the supported CPython environment. A future cross-runtime policy should use a designated hexadecimal-float fixture or explicitly justified tolerances.</li>
+<li>The structural Help synchronization relies on the student settings remaining direct literal assignments inside <code>main()</code>. Any future configuration refactor must update the extractor, Help table, and synchronization tests together.</li>
+<li>The BUILD_ID deliberately identifies only the four executable core modules. Help-only and test-only revisions do not change it, although their own version history should continue to be maintained.</li>
+<li>A future requirement for comprehensive extreme-range integration should trigger one coherent review of all compound arithmetic rather than isolated changes that would obscure the educational algorithm.</li>
+</ul>
+
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.0.3<br>BUILD_ID: 019ff5e3fe2c</p>
+</body>
+</html>
