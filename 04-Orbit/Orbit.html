@@ -442,7 +442,7 @@
 ═══════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build ef2325b4dc7e
+  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build 9adcc21df3c0
 </p>
 <!-- ── Description ── -->
 <section id="description">
@@ -600,14 +600,15 @@ N_{\rm rev}=\frac{|\Delta\phi_{\rm accumulated}|}{2\pi}.
 \]
 </div>
 <p>This works for clockwise or counter-clockwise motion and for an arbitrary starting direction.
-<code>maxOrbits</code> may be 1, 1.5, 2, or another positive value. An angular-step safeguard,
-independent of <code>eps1</code> and <code>eps2</code>, prevents any accepted step from spanning
-half a revolution and making endpoint-angle unwrapping ambiguous.</p>
+<code>maxOrbits</code> may be 1, 1.5, 2, or another positive value. A conservative angular-step
+safeguard, independent of <code>eps1</code> and <code>eps2</code>, rejects trials whose endpoint and
+chord geometry indicate angular travel above π/2. This is designed to keep endpoint-angle
+unwrapping unambiguous; it is a numerical safeguard rather than a mathematical bound on every
+point of the curved trajectory.</p>
 <p>When a converged trial step overshoots the requested angular travel, the solver retries that
-step with a shorter timestep until the corrected endpoint is within a small angular tolerance.
-Only the reported accumulated angle is then set to the exact requested value; position, velocity,
-and time remain outputs of the predictor-corrector calculation without linearly interpolating
-state components.</p>
+step with timesteps bracketed above and below the target until the corrected endpoint is within a
+small angular tolerance. Position, velocity, time, and the reported revolution count all come from
+that same predictor-corrector endpoint; state components are not linearly interpolated.</p>
 <h3>Closure Diagnostics</h3>
 <p>Crossing the starting angular ray is not, by itself, proof that a numerical orbit has closed.
 For a run ending after an integral number of revolutions, the solver therefore also reports
@@ -742,7 +743,10 @@ fractional change from zero is undefined.</p></div>
 \(v_{\rm esc}=\sqrt{2\mu/r}\). Below it the orbit is bound; at the limiting value it is parabolic;
 above it the orbit is hyperbolic. For unbound cases, increase <code>maxSteps</code> if necessary
 because the requested <code>maxOrbits</code> may never be reached. Compare the trajectory class
-with the sign of the initial specific energy.</p></div>
+with the sign of the initial specific energy. A decimal value typed for \(v_{\rm esc}\) is rounded
+to floating-point precision, so its computed energy may be slightly positive or negative rather
+than exactly zero. Inspect the absolute specific energy and test speeds just below and above the
+threshold when identifying the limiting parabolic case.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-6 · Intermediate</div><h4>Direction Independence of Binding</h4>
 <p>Keep \(v_x^2+v_y^2\) fixed while rotating the initial velocity vector at a fixed starting
 position. The orbit's shape and angular momentum change, but its bound/unbound classification does
