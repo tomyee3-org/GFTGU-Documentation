@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>EarthOrbit 1.1.1 Release Notes</title>
+</head>
+<body>
+<h1>EarthOrbit 1.1.1 Release Notes</h1>
+<p><b>Version:</b> 1.1.1<br><b>Build:</b> 77b768d3a136<br><b>Date:</b> 2026-08-30</p>
+
+<h2>Release Status</h2>
+<p>Version 1.1.1 reflects the EarthOrbit kickoff maintenance review followed by three rounds of independent review involving Codex, Copilot, and Gemini. The review process examined the Python implementation, the default constant-magnitude central-gravity model, the optional inverse-square extension, numerical integration, validation and error handling, plotting, Help-file accuracy, Version/Build synchronization, Python 3.10 grammar compatibility, and regression coverage. Audit2 reported no release-blocking executable-code defect, and the Audit3 Copilot review likewise found no release-blocking executable defect. Audit3 identified one definite low-severity Help wording issue and several low-severity test-maintenance items that remain suitable for follow-up maintenance.</p>
+
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li>Preserved Schutz's educational EarthOrbit model in which gravity has constant magnitude <i>g</i> while always pointing toward Earth's centre, with acceleration evaluated at the beginning of each step and position advanced using the average of the old and new velocities.</li>
+<li>Retained an optional <code>inverse_square</code> force law for higher-altitude and Keplerian experiments, using the JPL DE440 Earth gravitational parameter <code>MU_EARTH = 3.98600435507e14 m^3/s^2</code>.</li>
+<li>Hardened <code>compute_acceleration()</code> for extreme finite positions, invalid inputs, the Earth-centre singularity, non-finite results, and unrepresentably large inverse-square acceleration, including explicit <code>OverflowError</code>-to-<code>ValueError</code> translation.</li>
+<li>Expanded driver validation for launch parameters, timestep, <code>maxSteps</code>, force-law selection, diagnostic-output selection, impossible allocations, and non-finite integrated states.</li>
+<li>Added optional diagnostic time and velocity arrays for period, energy, and convergence experiments while preserving the original four-array return interface by default.</li>
+<li>Hardened plotting so trajectory and Earth-surface coordinates must be numeric, finite, one-dimensional, nonempty, and paired with matching lengths; the plotter also returns its matplotlib Figure and Axes objects.</li>
+<li>Added reproducible Version/Build identification across the four executable modules. The Help and command-line output identify Version 1.1.1, Build 77b768d3a136.</li>
+<li>Clarified the Help distinction between the simplified constant-magnitude model and the inverse-square model, including appropriate circular-speed, escape-speed, energy, and higher-altitude guidance.</li>
+<li>Expanded the Help to ten progressively ranked experiments covering circular speed, launch-speed sensitivity, force-law comparison, impact interpolation, radial velocity, elliptical orbits, geostationary altitude, escape, Kepler's third law, and energy/convergence analysis.</li>
+<li>Reworked EXP-9 and EXP-10 as explicitly labeled runnable starter code so the supplied blocks execute while leaving the advanced analytical steps to the student.</li>
+</ul>
+
+<h2>Test Suite Growth</h2>
+<p>The regression suite grew from 62 tests at kickoff to 66 tests after the Audit2 response. It defines the four core module filenames and uses <code>find_module_dir(start)</code> so the same test file supports both the canonical <code>tests/</code> layout and a flattened upload layout beside the program modules.</p>
+<p>The suite covers module discovery; Version/Build compatibility; Python 3.10 parsing; architecture boundaries; physical constants; both acceleration laws; invalid, huge, and tiny-radius inputs; driver validation and allocation failures; first-step calculations; legacy default-trajectory behavior; Earth-circle construction; stored-point semantics; diagnostics; force-law forwarding; inverse-square energy convergence; full-period orbital recovery; plotting validation and presentation; command-line execution; and Help-file structure and scientific/documentation contracts. Codex reported all 66 tests passing in both canonical and flattened layouts after the Audit2 changes.</p>
+
+<h2>Known Limitations</h2>
+<ul>
+<li>The default force law is a pedagogical near-surface approximation with constant acceleration magnitude <i>g</i>; it is not a realistic global model of terrestrial gravity.</li>
+<li>The fixed-step averaged-velocity integration method is not velocity Verlet/leapfrog and is not generally symplectic. Numerical error accumulates for position-dependent gravity, so quantitative experiments should be repeated with smaller timesteps to check convergence.</li>
+<li>Surface impact is detected only after a stored point has moved below the reference Earth radius. The driver does not interpolate the exact surface crossing, so the final plotted point of an impact trajectory may lie slightly inside Earth.</li>
+<li><code>maxSteps</code> counts stored trajectory points, including the initial point, and therefore permits at most <code>maxSteps - 1</code> integration updates.</li>
+<li>The inverse-square extension models idealized two-dimensional central gravity. The Help notes that the geostationary-altitude experiment reproduces the associated orbital period but does not model Earth's rotation or station-keeping.</li>
+<li>The Help file loads MathJax from a public CDN. Without access to that resource, the Python program still runs, but Help equations may appear as unrendered TeX.</li>
+</ul>
+
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>The Help Output section currently describes the Earth surface as “401 evenly spaced points.” The driver actually stores 400 evenly spaced angular samples and then repeats the first point as coordinate 401 to close the curve. This wording should be corrected in a future documentation update.</li>
+<li>The tests execute selected Help snippets in fresh namespaces but within the main test process. Subprocess isolation with timeouts would provide stronger protection against future snippets that alter module or library state.</li>
+<li>The EXP-9 and EXP-10 starter-block assertions could be strengthened with explicit finite-output checks; EXP-9 could additionally verify monotonic accumulated angular travel for its first-2π-crossing exercise.</li>
+<li>The full-period regression comment describes its numerical tolerance as a “cross-platform margin,” although the supplied review evidence records a margin above the Version 1.1.1 baseline rather than measurements across multiple platforms.</li>
+<li>The full-period test combines convergence-order checks with Version 1.1.1 absolute-error baselines. Separating those concerns would make future failures easier to diagnose.</li>
+<li>Claims about Orbit, RelativisticOrbit, Binary, and Atmosphere in Related Programs remain awaiting independent cross-module verification because those companion artifacts were not included in the EarthOrbit audit package.</li>
+</ul>
+
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.1.1<br>BUILD_ID: 77b768d3a136</p>
+</body>
+</html>
