@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Orbit 1.3.1 Release Notes</title>
+</head>
+<body>
+<h1>Orbit 1.3.1 Release Notes</h1>
+<p><b>Version:</b> 1.3.1<br><b>Build:</b> 93380f960f8e<br><b>Date:</b> 2026-08-30</p>
+
+<h2>Release Status</h2>
+<p>Version 1.3.1 concludes a kickoff maintenance review followed by four rounds of independent review involving Codex, Copilot, and Gemini. The reviewers examined the Python implementation against Schutz's original Java/Triana Orbit program; verified the Newtonian inverse-square force law, predictor-corrector integration, adaptive timestep control, revolution counting, conservation diagnostics, singularity handling, plotting, Help-file accuracy, Version/Build synchronization, and regression coverage; and tested both the canonical and flattened upload layouts. No release-blocking defect remains.</p>
+<p>During the review process, issues involving scale-invariant singularity handling, endpoint event refinement, angular-step aliasing, numerical overflow protection, diagnostic consistency, Help synchronization, and test coverage were identified and corrected. The final Audit4 reviews from both Copilot and Gemini recommend release. The resulting program is robust, scientifically consistent, and appropriate for student use within the scope and limitations described below.</p>
+
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li>Reworked singularity handling so that coarse predictor or corrector steps intersecting the numerical guard are retried with a reduced timestep rather than being incorrectly classified as physical singularity events. Accepted-state approach to the guard is now distinguished from trial-step geometry.</li>
+<li>Replaced the former fixed 1 μm singularity floor with a scale-relative and floating-point-relative guard based on the initial orbital scale and machine precision. This preserves numerical protection while allowing microscopic educational models that were previously excluded.</li>
+<li>Added an independent angular-step safeguard that limits accepted angular motion before endpoint-angle unwrapping occurs. The safeguard is documented as a conservative numerical protection mechanism rather than a mathematical proof.</li>
+<li>Replaced endpoint state interpolation with bracketed predictor-corrector event refinement. Final-orbit termination now repeatedly re-integrates from the last accepted state until the requested revolution target is reached within tolerance, avoiding the loss of integrator accuracy associated with state interpolation.</li>
+<li>Corrected a consistency issue between reported revolution counts and returned trajectory states. Position, velocity, time, and revolution-count diagnostics now correspond to the same integrated endpoint.</li>
+<li>Added overflow-safe geometry calculations for minimum-segment-radius testing and expanded validation of derived radii, speeds, accelerations, energies, and angular momenta. Finite inputs that produce non-representable derived quantities now fail with explicit diagnostic messages.</li>
+<li>Improved conservation diagnostics by distinguishing between absolute and fractional drift measures. Fractional energy drift is no longer reported for parabolic-orbit cases where the reference energy is effectively zero, and fractional angular-momentum drift is omitted when the reference angular momentum is effectively zero. Absolute diagnostics remain available in all cases.</li>
+<li>Added explicit numerical-effort diagnostics for angular-step rejections and endpoint refinement trials. These counters help students understand adaptive-control behavior during numerical experiments and tolerance studies.</li>
+<li>Restored textbook references to Investigations 4.1 and 4.2, Tables 4.2 and 4.3, and Chapter 6 while preserving compatibility with future documentation updates.</li>
+<li>Expanded and clarified the Help exercises, including guidance for direct access to returned arrays in EXP-11 and improved treatment of floating-point issues near the escape-velocity threshold in EXP-5.</li>
+<li>Added a reproducible <code>BUILD_ID</code> across the four executable source modules, with newline-independent hashing, independent verification tests, synchronization across runtime output and Help documentation, and explicit documentation of Build-ID scope.</li>
+</ul>
+
+<h2>Test Suite Growth</h2>
+<p>A 41-test regression suite was created during the kickoff review and expanded through the audit process to 60 automated tests. The suite defines the four executable-core module filenames and uses <code>find_module_dir(start)</code> so that the same test file operates correctly from either the canonical <code>tests/</code> directory or a flattened upload layout beside the program modules.</p>
+<p>The final suite verifies Newtonian acceleration, specific energy and specific angular momentum formulas; rotational invariance and sign conventions; singularity handling and radial infall; microscopic and large-scale models; adaptive timestep behavior and tolerance controls; event refinement and revolution-count consistency; angular safeguards; overflow protection; Build-ID rules; command-line execution; plotting; documentation synchronization; Python 3.10 compatibility; and both supported layouts. All 60 tests pass in both layouts.</p>
+
+<h2>Known Limitations</h2>
+<ul>
+<li>Orbit models a test particle moving in the gravitational field of a fixed central mass. The central body does not move, and the program is not a general two-body or N-body solver.</li>
+<li>The program implements Newtonian gravity only. Relativistic effects, tidal effects, finite body sizes, atmospheric drag, radiation pressure, and non-gravitational perturbations are not included.</li>
+<li>The angular-step safeguard is a conservative numerical estimate designed to prevent endpoint-angle ambiguity. It is not a rigorous mathematical proof that every accepted trajectory segment remains below a specified angular bound.</li>
+<li>Closure diagnostics are reported only when the requested termination target corresponds to an integral number of revolutions. Fractional-orbit runs intentionally omit closure residuals.</li>
+<li>The singularity guard is a numerical protection mechanism rather than a physical stellar or planetary radius. Its value depends on the initial problem scale and floating-point resolution.</li>
+<li>The Help file loads MathJax from a public CDN. Offline, explanatory text and TeX source remain available, but equations are not typeset.</li>
+</ul>
+
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>Several retry limits and iteration limits remain implemented as local constants within the driver rather than centralized module constants. This does not affect correctness but may become a future maintainability improvement.</li>
+<li>Termination reasons continue to use documented string identifiers rather than enumerated types. The current approach is functional and well tested, but stronger typing could be considered in future maintenance work.</li>
+<li>Documentation-synchronization tests intentionally verify specific Help-file wording. This provides strong protection against drift but may require updates when wording is revised without changing behavior.</li>
+</ul>
+
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.3.1<br>BUILD_ID: 93380f960f8e</p>
+</body>
+</html>
