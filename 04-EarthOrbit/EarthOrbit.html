@@ -443,14 +443,14 @@
 ══════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.0&nbsp;&nbsp;&nbsp;&nbsp;Build 2b72e8706bc3
+  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 50c51ebde573
 </p>
 <!-- ── Description ── -->
 <section id="description">
 <h2>Description</h2>
 <p>
 <strong>EarthOrbit</strong> is a numerical realisation of Newton's Cannon — the thought
-      experiment by which Isaac Newton first explained orbital motion in the <em>Principia</em>
+      experiment Isaac Newton used to illustrate orbital motion in the <em>Principia</em>
       (1687). A projectile is launched horizontally from a tower high above Earth's surface.
       In the physical inverse-square version of the thought experiment, low launch speeds produce
       impact arcs, the circular speed gives a circular orbit, speeds between circular and escape
@@ -462,8 +462,7 @@
 <p>
       The program integrates the projectile's two-dimensional trajectory using a
       fixed-timestep, averaged-velocity algorithm, plotting
-      the result against a reference circle showing Earth's surface. The default force law also
-      uses a constant-magnitude-\(g\) model; an optional
+      the result against a reference circle showing Earth's surface. An optional
       <code>"inverse_square"</code> extension is provided for realistic higher-altitude,
       Keplerian, and escape experiments. The default model is best used within a few kilometres
       of Earth's surface. All the usual launch parameters are set in <code>main.py</code>.
@@ -521,18 +520,20 @@
 <div class="eq-block">
 <div class="eq-label">Gravitational acceleration (inverse-square law) — Eq. 1</div>
       \[
-        |\mathbf{a}| \;=\; g\!\left(\frac{R_\oplus}{r}\right)^{\!2}
-                       \;=\; \frac{k}{r^2},
-        \qquad k \;\equiv\; g\,R_\oplus^2
+        |\mathbf{a}| \;=\; \frac{\mu_\oplus}{r^2}
       \]
     </div>
 <p>
       where \(g = 9.8\) m s<sup>−2</sup> and
       \(R_\oplus = 6\,378\,200\) m is a
       reference radius close to Earth's equatorial radius, not the modern mean radius.
-      Their product \(k \equiv gR_\oplus^2 \approx 3.987\times10^{14}\) m³ s<sup>−2</sup>
-      is close to, but not exactly equal to, the accepted value of \(GM_\oplus\).
-      The acceleration direction is always toward the centre.
+      The textbook values imply
+      \(gR_\oplus^2 \approx 3.9868\times10^{14}\) m³ s<sup>−2</sup>. The optional
+      inverse-square extension instead uses
+      \(\mu_\oplus = 3.98600435507\times10^{14}\) m³ s<sup>−2</sup>, the modern Earth
+      gravitational parameter from
+      <a href="https://ssd.jpl.nasa.gov/astro_par.html" target="_blank">JPL's DE440
+      astrodynamic parameters</a>. The acceleration direction is always toward the centre.
     </p>
 <h3>Circular and Escape Speeds for the Inverse-Square Law</h3>
 <p>
@@ -541,8 +542,8 @@
 <div class="eq-block">
 <div class="eq-label">Circular speed and escape speed — Eq. 2</div>
       \[
-        v_c \;=\; \sqrt{\frac{k}{r}}, \qquad
-        v_e \;=\; \sqrt{\frac{2k}{r}} \;=\; \sqrt{2}\,v_c
+        v_c \;=\; \sqrt{\frac{\mu_\oplus}{r}}, \qquad
+        v_e \;=\; \sqrt{\frac{2\mu_\oplus}{r}} \;=\; \sqrt{2}\,v_c
       \]
     </div>
 <table class="param-table" style="margin-top:.6rem;">
@@ -558,14 +559,14 @@
 <tr>
 <td>300 m (default h0)</td>
 <td>6 378 500</td>
-<td>≈ 7 906</td>
-<td>≈ 11 181</td>
+<td>≈ 7 905</td>
+<td>≈ 11 180</td>
 </tr>
 <tr>
 <td>300 km (LEO)</td>
 <td>6 678 200</td>
 <td>≈ 7 726</td>
-<td>≈ 10 927</td>
+<td>≈ 10 926</td>
 </tr>
 <tr>
 <td>35 786 km (GEO)</td>
@@ -609,7 +610,8 @@
 <div class="eq-block">
 <div class="eq-label">"inverse_square"</div>
       \[
-        a_x = -\frac{k\,x}{r^3}, \qquad a_y = -\frac{k\,y}{r^3}, \qquad k = g\,R_\oplus^2
+        a_x = -\frac{\mu_\oplus x}{r^3}, \qquad
+        a_y = -\frac{\mu_\oplus y}{r^3}
       \]
     </div>
 <h3>Initial Conditions</h3>
@@ -701,20 +703,21 @@
           force laws via the <code>force_law</code> argument to
           <code>compute_acceleration()</code>: the constant-magnitude <code>"simplified"</code>
           approximation (the default) and the physically accurate <code>"inverse_square"</code>
-          law. The only
-          literal physical inputs are rounded values for \(g\) and \(R_\oplus\);
-          <code>K_APPROX</code> is derived from them and is only approximately
-          \(GM_\oplus\).
+          law. The textbook model retains rounded values for \(g\) and \(R_\oplus\), while
+          the inverse-square extension uses the modern JPL DE440 value of
+          \(\mu_\oplus=GM_\oplus\). <code>K_APPROX</code> remains available for comparing
+          the textbook-derived value \(gR_\oplus^2\) with the modern parameter.
         </p>
 <div class="sig">G_SURFACE = 9.8
 R_EARTH   = 6_378_200.0   # m; reference radius
-K_APPROX = G_SURFACE * R_EARTH**2  # close to GM_Earth
+MU_EARTH  = 3.986_004_355_07e14  # m³/s²; JPL DE440 Earth GM
+K_APPROX  = G_SURFACE * R_EARTH**2  # textbook-derived comparison
 
 ForceLaw = Literal["simplified", "inverse_square"]
 
 def compute_acceleration(x, y, force_law="simplified") -&gt; (ax, ay)
     # "simplified":      ax = -G_SURFACE * x / r,  ay = -G_SURFACE * y / r
-    # "inverse_square":  ax = -K_APPROX * x / r³,   ay = -K_APPROX * y / r³</div>
+    # "inverse_square":  ax = -MU_EARTH * x / r³,   ay = -MU_EARTH * y / r³</div>
 </div>
 <!-- driver -->
 <div class="module-card">
@@ -747,9 +750,10 @@ def run_earth_orbit(
 <div class="mc-name">plot_earthorbit.py</div>
 <p>
           Renders the trajectory and Earth's surface circle on a single equal-aspect matplotlib
-          figure. Contains no physics or integration logic. Imports only matplotlib.
+          figure. Contains no physics or integration logic. Imports NumPy for input validation
+          and matplotlib for rendering.
         </p>
-<div class="sig">def plot_earth_orbit(xs, ys, xEarth, yEarth)
+<div class="sig">figure, axes = plot_earth_orbit(xs, ys, xEarth, yEarth)
     # Blue dashed:  Earth surface (xEarth, yEarth)
     # Red solid:    Projectile trajectory (xs, ys)
     # Equal aspect, grid, legend
@@ -819,8 +823,9 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
 <td>m s<sup>−1</sup></td>
 <td>
             Initial x-velocity (<strong>tangential/horizontal</strong> at launch, since the
-            launch point sits on the \(y\)-axis). The inverse-square circular-speed estimate
-            at 300 m altitude is \(v_c \approx 7\,906\) m s<sup>−1</sup>. The default setup
+            launch point sits on the \(y\)-axis). At 300 m altitude the simplified-law circular
+            speed is about 7 906.3 m s<sup>−1</sup>, while the modern inverse-square value is
+            about 7 905.1 m s<sup>−1</sup>. The default setup
             uses 7 900 m s<sup>−1</sup>, which is slightly sub-orbital. Try different values
             to see their effects. Because the numerical method is approximate, a trajectory that looks circular on
             the whole-Earth plot should not be interpreted as a high-precision orbit.
@@ -891,14 +896,15 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
 <code>h0</code> is in <em>metres</em>. Setting <code>h0 = 300</code> gives an altitude
       of 300 m (just above the surface), not 300 km. To simulate a realistic low-Earth orbit
       at the altitude of the International Space Station, use <code>h0 = 408_000</code>
-      (408 km = 408 000 m) with <code>uInit ≈ 7\,665</code> m s<sup>−1</sup> (tangential)
+      (408 km = 408 000 m) with <code>uInit ≈ 7\,664</code> m s<sup>−1</sup> (tangential)
       when using <code>force_law="inverse_square"</code>.
     </div>
 <div class="note">
 <strong>Accepted parameter values:</strong>
 <code>h0</code> must be non-negative, <code>dt</code> must be positive,
       <code>maxSteps</code> must be an integer of at least 2, and the altitude and velocity values
-      must be finite numbers. An unrecognised <code>force_law</code> also produces a clear
+      must be finite numbers. <code>return_diagnostics</code> must be <code>True</code> or
+      <code>False</code>. An unrecognised <code>force_law</code> also produces a clear
       <code>ValueError</code> rather than a misleading plot.
     </div>
 </section>
@@ -926,6 +932,8 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
       so that the Earth appears as a true circle and orbital ellipses are not distorted.
       A legend and grid are included; the title reads
       <em>EarthOrbit — Attempting to Achieve Orbit</em>.
+      The plotter returns its matplotlib <code>Figure</code> and <code>Axes</code> objects after
+      displaying the figure, which is convenient for further customisation.
     </p>
 <p>
       By default <code>run_earth_orbit()</code> returns the same four arrays used by the
@@ -933,6 +941,11 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
       function then additionally returns <code>ts</code>, <code>us</code>, and <code>vs</code>,
       aligned with the position arrays. These make it straightforward to estimate orbital
       periods, plot speed, or examine numerical energy error.
+    </p>
+<p>
+      Before the plot opens, <code>main.py</code> also prints the model version, executable-code
+      build identifier, and number of trajectory samples to the console. Use
+      <code>python main.py --version</code> to print only the version and build.
     </p>
 </section>
 <!-- ── Suggested Experiments ── -->
@@ -958,7 +971,7 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
         </p>
 <p>
           Repeat with <code>force_law="inverse_square"</code>. At only 300 m altitude the two
-          theoretical circular speeds differ by less than 0.4 m s<sup>−1</sup>, so the same scan
+          theoretical circular speeds differ by about 1.1 m s<sup>−1</sup>, so the same scan
           works for both models. Reduce <code>dt</code> if you want to distinguish numerical error
           from the physical difference between the two force laws.
         </p>
@@ -1020,7 +1033,8 @@ force_law="simplified"</div>
           repeat with smaller <code>dt</code>. As an optional programming exercise, modify the driver
           so that the interpolated surface crossing replaces the below-surface endpoint.
         </p>
-<div class="ep">from physics_earthorbit import R_EARTH
+<div class="ep">import numpy as np
+from physics_earthorbit import R_EARTH
 
 r = np.hypot(xs, ys)
 f = (r[-2] - R_EARTH) / (r[-2] - r[-1])
@@ -1038,8 +1052,8 @@ y_hit = ys[-2] + f * (ys[-1] - ys[-2])</div>
         </p>
 <p>
           The orbit is no longer circular even though the total launch speed is almost unchanged.
-          <strong>Use <code>force_law="inverse_square"</code></strong> for the intended Keplerian
-          interpretation.
+          <strong>Requires <code>force_law="inverse_square"</code>.</strong> This gives the
+          intended Keplerian interpretation.
         </p>
 <div class="ep">h0=1_000_000.0
 uInit=7307.0, vInit=800.0  # |v|≈7351 m/s ≈ local v_c
@@ -1077,18 +1091,22 @@ force_law="inverse_square"</div>
           This is a useful real-world check on the inverse-square extension. The simulation is
           two-dimensional and does not model Earth's rotation, so it reproduces the orbital period
           associated with geostationary altitude rather than geographic station-keeping itself.
+          Enable <code>return_diagnostics=True</code> and use the returned time array to measure
+          the period.
         </p>
+<p><strong>Requires <code>force_law="inverse_square"</code>.</strong></p>
 <div class="ep">h0=35_786_000.0, vInit=0.0
 uInit=3075.0
 dt=10.0, maxSteps=10000
-force_law="inverse_square"</div>
+force_law="inverse_square"
+return_diagnostics=True</div>
 </div>
 <div class="exp-card">
 <div class="ec-num">EXP-8 · INTERMEDIATE–ADVANCED</div>
 <h4>Approach the Escape Speed</h4>
 <p>
           At 300 km altitude the inverse-square escape speed is about
-          10 927 m s<sup>−1</sup>. Start somewhat below this value and increase the launch speed.
+          10 926 m s<sup>−1</sup>. Start somewhat below this value and increase the launch speed.
           Watch a bound ellipse become more elongated as the speed approaches escape. At or above
           the escape speed the trajectory does not return, so <code>maxSteps</code> determines how
           much of the open path is calculated.
@@ -1120,7 +1138,9 @@ force_law="inverse_square"</div>
           <code>dt</code> to check numerical convergence. As a contrast, circular orbits under the
           constant-magnitude force obey \(T^2\propto r\), not Kepler's third law.
         </p>
-<div class="ep">result = run_earth_orbit(..., return_diagnostics=True)
+<div class="ep">import numpy as np
+
+result = run_earth_orbit(..., return_diagnostics=True)
 xs, ys, xEarth, yEarth, ts, us, vs = result
 
 theta = np.unwrap(np.arctan2(ys, xs))
@@ -1135,7 +1155,7 @@ force_law="inverse_square"</div>
           Use <code>return_diagnostics=True</code> so that the position and velocity histories are
           available. At each stored point calculate \(r=\sqrt{x^2+y^2}\) and the speed squared
           \(u^2+v^2\). For <code>"inverse_square"</code>, calculate the specific mechanical energy
-          \(\mathcal{E}=\tfrac12(u^2+v^2)-k/r\); for <code>"simplified"</code>, use
+          \(\mathcal{E}=\tfrac12(u^2+v^2)-\mu_\oplus/r\); for <code>"simplified"</code>, use
           \(\mathcal{E}=\tfrac12(u^2+v^2)+gr\).
         </p>
 <p>
@@ -1145,13 +1165,14 @@ force_law="inverse_square"</div>
           duration, and verify that the energy error decreases. This experiment is the most direct
           quantitative test here of the limitations of the integration method itself.
         </p>
-<div class="ep">from physics_earthorbit import K_APPROX, G_SURFACE
+<div class="ep">import numpy as np
+from physics_earthorbit import MU_EARTH, G_SURFACE
 
 xs, ys, xEarth, yEarth, ts, us, vs = run_earth_orbit(
     ..., return_diagnostics=True)
 r = np.hypot(xs, ys)
 speed_squared = us**2 + vs**2
-# inverse_square: E = 0.5*speed_squared - K_APPROX/r
+# inverse_square: E = 0.5*speed_squared - MU_EARTH/r
 # simplified:     E = 0.5*speed_squared + G_SURFACE*r
 # Plot E - E[0] against ts.</div>
 </div>
