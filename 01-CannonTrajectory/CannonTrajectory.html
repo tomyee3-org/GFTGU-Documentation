@@ -431,7 +431,7 @@
 <!-- ═══════════════════════════════════════════════════════ MAIN -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.0&nbsp;&nbsp;&nbsp;&nbsp;Build fa25f1e1db28
+  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 46e45bb266ac
 </p>
 <!-- ── Description ─────────────────────────────────────────── -->
 <section id="description">
@@ -451,14 +451,17 @@
         timesteps gives immediate, visual intuition for the meaning of numerical accuracy and
         convergence — essential preparation for the more demanding integrators used in later chapters.
       </p>
-<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
+<div class="note-box"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
 <!-- ── Physical Background ─────────────────────────────────── -->
 <section id="background">
 <h2>Physical Background</h2>
 <h3>Near-surface approximation</h3>
 <p>
-Close to Earth's surface, gravitational acceleration is approximately constant:
-\(g \approx 9.8\;\text{m s}^{-2}\) downward. This approximation is excellent
+Close to Earth's surface, gravitational acceleration is approximately constant.
+This program uses the conventional standard value
+\(g_0 = 9.80665\;\text{m s}^{-2}\) downward. Actual local gravity varies slightly
+with latitude, altitude, and geology, but that variation is unimportant here.
+The constant-gravity approximation is excellent
 for trajectories whose dimensions are small compared with Earth's radius
 (\(R_\oplus \approx 6.4\times10^6\) m). A projectile launched at 100 m/s
 travels only about one kilometre horizontally.
@@ -536,7 +539,7 @@ discretization error.
       </div>
 <p>
         The range is maximised at \(\theta = 45°\), which is why the default firing angle is 45°.
-        For \(v_0 = 100\) m/s, the analytic range is \(R = 1020.4\) m.
+        For \(v_0 = 100\) m/s, the analytic range is \(R \approx 1019.72\) m.
       </p>
 <h3>Euler method</h3>
 <p>
@@ -625,7 +628,7 @@ positive and first negative heights.
 <div class="module-card">
 <div class="mc-head"><div class="mc-title">physics_cannon.py</div></div>
 <div class="mc-role">Physics &amp; Integrators</div>
-<p>Defines \(g=9.8\;\text{m s}^{-2}\), the state derivatives
+<p>Defines \(g=9.80665\;\text{m s}^{-2}\), the state derivatives
 \([u,v,0,-g]\), and the forward-Euler and improved-Euler (Heun) steppers.</p>
 </div>
 <div class="module-card">
@@ -655,7 +658,8 @@ axes so the parabolic shape is not visually distorted.</p>
 <section id="parameters">
 <h2>Parameters</h2>
 <p>For ordinary use, open <code>main.py</code>, edit the values below, save the
-file, and run <code>python main.py</code>.</p>
+file, and run <code>python main.py</code>. The program requires Python 3.10 or
+later, NumPy, and Matplotlib.</p>
 <table class="param-table">
 <thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
 <tbody>
@@ -664,18 +668,24 @@ file, and run <code>python main.py</code>.</p>
 <tr><td><code>dt</code></td><td>0.1</td><td>s</td><td>Positive fixed timestep.</td></tr>
 <tr><td><code>max_steps</code></td><td>100000</td><td>—</td><td>Maximum number of stored points, including launch. Reaching it before landing raises an error.</td></tr>
 <tr><td><code>method</code></td><td>"improved"</td><td>—</td><td>Exactly <code>"euler"</code> or <code>"improved"</code>.</td></tr>
-<tr><td><code>g</code></td><td>9.8</td><td>m/s²</td><td>Constant near-surface gravitational acceleration.</td></tr>
+<tr><td><code>g</code></td><td>9.80665</td><td>m/s²</td><td>Conventional standard acceleration due to gravity, treated as constant.</td></tr>
 </tbody>
 </table>
 <div class="note-box">
 <strong>Analytic check for the defaults:</strong>
 \(v_{0y}=100\sin45^\circ\approx70.71\) m/s, so
-\(T=2v_{0y}/g\approx14.4308\) s and
-\(R=v_0^2/g\approx1020.4\) m.
-With \(\Delta t=0.1\) s, \(T/\Delta t\approx144.31\), so the first sampled
+\(T=2v_{0y}/g\approx14.4210\) s and
+\(R=v_0^2/g\approx1019.72\) m.
+With \(\Delta t=0.1\) s, \(T/\Delta t\approx144.21\), so the first sampled
 time after landing occurs after <strong>145 integration steps</strong>.
 The returned arrays therefore contain <strong>146 stored points</strong>:
 the launch point plus those 145 steps.
+</div>
+<div class="note-box">
+<strong>Invalid settings:</strong> nonnumeric settings and invalid values are
+rejected with explanatory exceptions. If an extreme but individually finite
+speed and timestep make the numerical state overflow, the driver raises a
+<code>FloatingPointError</code> rather than returning non-finite trajectory data.
 </div>
 </section>
 <!-- ── Output ─────────────────────────────────────────────── -->
@@ -705,7 +715,7 @@ parameter exploration to more demanding numerical-analysis and code-modification
 Several later experiments use the interpolated landing point introduced in Experiment 5.
 </div>
 <div class="experiment-card">
-<div class="exp-num">Experiment 1 · Introductory</div>
+<div class="exp-num">Experiment 1 · Introductory–Intermediate</div>
 <div class="exp-title">Optimal firing angle</div>
 <p>
           Keep <code>speed = 100</code> m/s and <code>dt = 0.1</code> s, and try several launch
@@ -731,7 +741,7 @@ Several later experiments use the interpolated landing point introduced in Exper
         </p>
 </div>
 <div class="experiment-card">
-<div class="exp-num">Experiment 3 · Introductory–Intermediate</div>
+<div class="exp-num">Experiment 3 · Intermediate</div>
 <div class="exp-title">Effect of muzzle speed</div>
 <p>
           Fix the angle at 45° and vary <code>speed</code>, for example from 50 to 500 m/s.
@@ -782,7 +792,7 @@ Several later experiments use the interpolated landing point introduced in Exper
           Run the same trajectory with <code>method="euler"</code> and
           <code>method="improved"</code>. Use the interpolated landing point from Experiment 5
           and compare each numerical range with the analytic value
-          \(R=v_0^2\sin(2	heta)/g\). Repeat after halving <code>dt</code> and then halving it
+          \(R=v_0^2\sin(2\theta)/g\). Repeat after halving <code>dt</code> and then halving it
           again. For forward Euler, examine how the error changes when the timestep is reduced;
           its global error is first order in \(\Delta t\). For this special constant-acceleration
           problem, Heun's method reproduces the analytic state at the sampled times apart from
