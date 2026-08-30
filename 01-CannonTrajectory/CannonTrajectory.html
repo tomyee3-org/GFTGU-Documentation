@@ -443,7 +443,7 @@
 <!-- ═══════════════════════════════════════════════════════ MAIN -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 1516a0901e89
+  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build b96e71693112
 </p>
 <!-- ── Description ─────────────────────────────────────────── -->
 <section id="description">
@@ -630,7 +630,8 @@ returning an incomplete trajectory.
 <strong>Landing interpolation:</strong> the last stored point is below ground,
 not at \(h=0\). Its horizontal coordinate is therefore not the best estimate
 of the physical range. Experiment 5 shows how to interpolate between the last
-positive and first negative heights.
+non-negative and first negative heights. If the penultimate sample is exactly
+\(h=0\), it is already the landing point and no interpolation is required.
 </div>
 </section>
 <!-- ── Code Modules ────────────────────────────────────────── -->
@@ -698,7 +699,8 @@ the launch point plus those 145 steps.
 </div>
 <div class="note-box">
 <strong>Invalid settings:</strong> nonnumeric settings and invalid values are
-rejected with explanatory exceptions. If an extreme but individually finite
+rejected with explanatory exceptions. Real-valued settings must also be
+representable as finite Python floats. If an extreme but individually finite
 speed and timestep make the numerical state overflow, the driver raises a
 <code>FloatingPointError</code> rather than returning non-finite trajectory data.
 </div>
@@ -811,11 +813,13 @@ plot_cannon_overlay(trajectories)</code></pre>
 <p>
           The loop stops after storing the first point for which \(h&lt;0\), so the projectile has
           actually crossed the ground between the last two stored samples. If those heights are
-          \(h_{n-1}&gt;0\) and \(h_n&lt;0\), estimate the crossing by linear interpolation,
+          \(h_{n-1}\geq0\) and \(h_n&lt;0\), estimate the crossing by linear interpolation,
           \[
           x^* = x_{n-1} + (x_n-x_{n-1})
                  \frac{h_{n-1}}{h_{n-1}-h_n}.
           \]
+          If \(h_{n-1}=0\) exactly, that stored sample is already the landing
+          point and no interpolation is needed.
           First calculate \(x^*\) from the returned arrays without changing the driver. Then, as
           an extension, modify the driver so that it reports or stores the interpolated landing
           point. Compare the raw and interpolated ranges for several relatively large timesteps
