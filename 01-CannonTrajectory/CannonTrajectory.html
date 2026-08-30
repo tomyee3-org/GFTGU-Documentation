@@ -331,6 +331,18 @@
       padding: 1px 5px;
       border-radius: 3px;
     }
+    .code-block {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      line-height: 1.55;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      margin: 12px 0;
+      overflow-x: auto;
+    }
+    .code-block code { background: transparent; padding: 0; }
 
     /* ── Related programs ── */
     .related-grid {
@@ -431,7 +443,7 @@
 <!-- ═══════════════════════════════════════════════════════ MAIN -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 46e45bb266ac
+  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 1516a0901e89
 </p>
 <!-- ── Description ─────────────────────────────────────────── -->
 <section id="description">
@@ -592,7 +604,7 @@ discretization error.
 <h3>Initialisation</h3>
 <p>
 The launch angle is converted to radians and the initial velocity components
-are calculated. Inputs are validated before trajectory storage is allocated.
+are calculated. Inputs are validated before trajectory storage begins.
 The first stored point is the launch point \(x=h=0\).
 </p>
 <h3>Integration loop</h3>
@@ -636,14 +648,17 @@ positive and first negative heights.
 <div class="mc-role">Simulation Driver</div>
 <p>Validates inputs, converts launch angle to velocity components, selects the
 requested integrator, stores trajectory samples, and stops after the first
-below-ground point. Invalid method names are rejected.</p>
+below-ground point. Samples are appended as they are calculated, so the
+<code>max_steps</code> safety ceiling does not itself cause a large up-front
+allocation. Invalid method names are rejected.</p>
 <div class="sig">run_cannon_trajectory(...) -&gt; stored x and h arrays</div>
 </div>
 <div class="module-card">
 <div class="mc-head"><div class="mc-title">plot_cannon.py</div></div>
 <div class="mc-role">Visualisation</div>
-<p>Plots the trajectory and launch point using the same physical scale on both
-axes so the parabolic shape is not visually distorted.</p>
+<p>Plots one trajectory with <code>plot_cannon()</code>, or several labeled
+trajectories together with <code>plot_cannon_overlay()</code>. Both use the same
+physical scale on both axes so the parabolic shapes are not visually distorted.</p>
 </div>
 <div class="module-card">
 <div class="mc-head"><div class="mc-title">main.py</div></div>
@@ -705,6 +720,12 @@ speed and timestep make the numerical state overflow, the driver raises a
 through the first below-ground point. Their length is the number of
 <em>stored points</em>, not the number of completed integration steps.
 </p>
+<p>
+<code>plot_cannon(xs, hs)</code> displays one trajectory.
+<code>plot_cannon_overlay(trajectories)</code> displays several curves on one
+set of axes, where each item in <code>trajectories</code> is a
+<code>(label, xs, hs)</code> triple.
+</p>
 </section>
 <!-- ── Suggested Experiments ──────────────────────────────── -->
 <section id="experiments">
@@ -718,9 +739,10 @@ Several later experiments use the interpolated landing point introduced in Exper
 <div class="exp-num">Experiment 1 · Introductory–Intermediate</div>
 <div class="exp-title">Optimal firing angle</div>
 <p>
-          Keep <code>speed = 100</code> m/s and <code>dt = 0.1</code> s, and try several launch
-          angles between 0° and 90°. Which angle appears to give the greatest range? Then, if
-          you are comfortable modifying <code>main.py</code>, automate the test by looping over
+          <strong>Core task:</strong> Keep <code>speed = 100</code> m/s and
+          <code>dt = 0.1</code> s, and manually try several launch angles between
+          0° and 90°. Which angle appears to give the greatest range?
+          <br/><strong>Extension:</strong> If you are comfortable writing a short loop, automate the test over
           angles from 1° to 89° in 1° steps and plotting range versus angle. Confirm that the
           maximum occurs at 45° and that complementary angles, such as 30° and 60°, have the
           same analytic range. Small differences in raw numerical endpoints are a timestep
@@ -736,7 +758,10 @@ Several later experiments use the interpolated landing point introduced in Exper
           of stored points, and the final sampled point below the ground. Repeat with both
           <code>method="euler"</code> and <code>method="improved"</code>. Which visible effects are
           caused by the integration method, and which are simply caused by sampling the
-          trajectory at discrete times? This is a qualitative preview of the more quantitative
+          trajectory at discrete times? Here, <em>integration error</em> comes from the numerical
+          update formula, while <em>sampling error</em> comes from recording the otherwise
+          continuous trajectory only at separated times—most visibly when the true landing
+          occurs between two samples. This is a qualitative preview of the more quantitative
           accuracy tests in Experiments 5 and 6.
         </p>
 </div>
@@ -759,7 +784,20 @@ Several later experiments use the interpolated landing point introduced in Exper
 <div class="exp-title">Overlay several trajectories</div>
 <p>
           Call <code>run_cannon_trajectory</code> for launch angles of 15°, 30°, 45°, 60°, and 75°
-          at <code>speed = 100</code> m/s and plot all five trajectories on one matplotlib figure.
+          at <code>speed = 100</code> m/s. The overlay helper makes a single figure without
+          requiring you to manage matplotlib axes yourself. A small standalone experiment file
+          placed beside the program modules can use this pattern:
+</p>
+<pre class="code-block"><code>from driver_cannon import run_cannon_trajectory
+from plot_cannon import plot_cannon_overlay
+
+trajectories = []
+for angle in (15, 30, 45, 60, 75):
+    xs, hs = run_cannon_trajectory(speed=100, angle_deg=angle, dt=0.1)
+    trajectories.append((f"{angle} degrees", xs, hs))
+
+plot_cannon_overlay(trajectories)</code></pre>
+<p>
           Identify the complementary-angle pairs that have the same analytic range, and compare
           their maximum heights and flight times. The 15°/75° pair and the 30°/60° pair should
           land at the same analytic horizontal distance even though their paths are very
