@@ -443,7 +443,7 @@
 ══════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 50c51ebde573
+  Version 1.1.1&nbsp;&nbsp;&nbsp;&nbsp;Build 77b768d3a136
 </p>
 <!-- ── Description ── -->
 <section id="description">
@@ -1034,8 +1034,10 @@ force_law="simplified"</div>
           so that the interpolated surface crossing replaces the below-surface endpoint.
         </p>
 <div class="ep">import numpy as np
+from driver_earthorbit import run_earth_orbit
 from physics_earthorbit import R_EARTH
 
+xs, ys, xEarth, yEarth = run_earth_orbit(uInit=7800.0)
 r = np.hypot(xs, ys)
 f = (r[-2] - R_EARTH) / (r[-2] - r[-1])
 x_hit = xs[-2] + f * (xs[-1] - xs[-2])
@@ -1139,8 +1141,14 @@ force_law="inverse_square"</div>
           constant-magnitude force obey \(T^2\propto r\), not Kepler's third law.
         </p>
 <div class="ep">import numpy as np
+from driver_earthorbit import run_earth_orbit
+from physics_earthorbit import MU_EARTH, R_EARTH
 
-result = run_earth_orbit(..., return_diagnostics=True)
+h0 = 300_000.0
+uInit = np.sqrt(MU_EARTH / (R_EARTH + h0))
+result = run_earth_orbit(
+    h0=h0, uInit=uInit, dt=1.0, maxSteps=7000,
+    force_law="inverse_square", return_diagnostics=True)
 xs, ys, xEarth, yEarth, ts, us, vs = result
 
 theta = np.unwrap(np.arctan2(ys, xs))
@@ -1166,10 +1174,12 @@ force_law="inverse_square"</div>
           quantitative test here of the limitations of the integration method itself.
         </p>
 <div class="ep">import numpy as np
+from driver_earthorbit import run_earth_orbit
 from physics_earthorbit import MU_EARTH, G_SURFACE
 
 xs, ys, xEarth, yEarth, ts, us, vs = run_earth_orbit(
-    ..., return_diagnostics=True)
+    h0=300_000.0, uInit=7725.7, dt=1.0, maxSteps=2001,
+    force_law="inverse_square", return_diagnostics=True)
 r = np.hypot(xs, ys)
 speed_squared = us**2 + vs**2
 # inverse_square: E = 0.5*speed_squared - MU_EARTH/r
