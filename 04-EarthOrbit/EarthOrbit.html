@@ -1140,6 +1140,12 @@ force_law="inverse_square"</div>
           <code>dt</code> to check numerical convergence. As a contrast, circular orbits under the
           constant-magnitude force obey \(T^2\propto r\), not Kepler's third law.
         </p>
+<p>
+<strong>Runnable starter code:</strong> The block below generates one circular-orbit dataset and
+          computes its accumulated angular travel. Your task is to locate and interpolate the
+          \(2\pi\) crossing, calculate the period and \(T^2/r^3\), and then repeat the calculation
+          at additional orbital radii.
+        </p>
 <div class="ep">import numpy as np
 from driver_earthorbit import run_earth_orbit
 from physics_earthorbit import MU_EARTH, R_EARTH
@@ -1153,8 +1159,7 @@ xs, ys, xEarth, yEarth, ts, us, vs = result
 
 theta = np.unwrap(np.arctan2(ys, xs))
 angle_travelled = np.abs(theta - theta[0])
-# Find when angle_travelled first reaches 2*pi.
-force_law="inverse_square"</div>
+# Your task: find and interpolate the first 2*pi crossing.</div>
 </div>
 <div class="exp-card">
 <div class="ec-num">EXP-10 · ADVANCED</div>
@@ -1173,18 +1178,23 @@ force_law="inverse_square"</div>
           duration, and verify that the energy error decreases. This experiment is the most direct
           quantitative test here of the limitations of the integration method itself.
         </p>
+<p>
+<strong>Runnable starter code:</strong> This block produces the diagnostic arrays, radius, and
+          speed squared for a concrete inverse-square run. Complete the exercise by calculating
+          the matching energy array from the formula above and plotting its change from the
+          initial value. Then repeat at finer timesteps.
+        </p>
 <div class="ep">import numpy as np
 from driver_earthorbit import run_earth_orbit
-from physics_earthorbit import MU_EARTH, G_SURFACE
+from physics_earthorbit import MU_EARTH
 
 xs, ys, xEarth, yEarth, ts, us, vs = run_earth_orbit(
     h0=300_000.0, uInit=7725.7, dt=1.0, maxSteps=2001,
     force_law="inverse_square", return_diagnostics=True)
 r = np.hypot(xs, ys)
 speed_squared = us**2 + vs**2
-# inverse_square: E = 0.5*speed_squared - MU_EARTH/r
-# simplified:     E = 0.5*speed_squared + G_SURFACE*r
-# Plot E - E[0] against ts.</div>
+# Your task: compute E = 0.5*speed_squared - MU_EARTH/r
+# and plot E - E[0] against ts.</div>
 </div>
 </div><!-- /exp-grid -->
 </section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
