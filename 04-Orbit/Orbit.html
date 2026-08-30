@@ -442,7 +442,7 @@
 ═══════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.0&nbsp;&nbsp;&nbsp;&nbsp;Build b4bce5264708
+  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build a8f236b375e7
 </p>
 <!-- ── Description ── -->
 <section id="description">
@@ -566,9 +566,12 @@ scaled by the initial predicted increment. Successive correction estimates must 
 h=xv_y-yv_x.
 \]
 </div>
-<p>The program reports maximum fractional energy drift and, when the initial angular momentum
-is nonzero, maximum fractional angular-momentum drift. A fractional angular-momentum drift is
-not defined for exactly radial motion with zero initial angular momentum.</p>
+<p>The program always reports maximum absolute changes in specific energy and specific angular
+momentum. It also reports fractional drift when the corresponding initial conserved quantity is
+safely different from zero. Fractional energy drift is not meaningful when the initial energy is
+zero or nearly zero, as in a parabolic escape calculation; fractional angular-momentum drift is
+likewise not meaningful for radial or nearly radial motion. In those cases the console labels the
+fractional result <code>n/a</code> and the absolute diagnostic remains available.</p>
 </section>
 <!-- ── Algorithm ── -->
 <section id="algorithm">
@@ -605,7 +608,8 @@ Kepler ellipse should have small closure residuals.</p>
 <p>The mathematical field diverges at \(r=0\). The code therefore has a very small numerical
 guard radius to stop a trajectory that approaches the ideal point singularity before infinities
 or NaNs are produced. This is <em>not</em> a physical radius for the Sun, Earth, or any other
-central body.</p>
+central body. Such a run returns the explicit termination reason
+<code>central_singularity</code>.</p>
 </section>
 <!-- ── Modules ── -->
 <section id="modules">
@@ -656,6 +660,8 @@ not the integration.</p>
 <div class="note"><strong>Valid numerical inputs.</strong> The initial position must not be at
 <code>r=0</code>; <code>k</code>, <code>dt0</code>, <code>eps1</code>, <code>eps2</code>, and
 <code>maxOrbits</code> must be positive; and <code>maxSteps</code> must be a positive integer.
+All numeric inputs must be finite real numbers, and intermediate acceleration and conservation
+quantities must fit within ordinary floating-point range.
 The two tolerances are independent and need not be ordered. For experiments on the numerical
 method, a large value such as 10 for <code>eps1</code> effectively prevents ordinary timestep
 rejection, while a similarly large <code>eps2</code> makes the corrector stop after its first
@@ -675,8 +681,10 @@ correction rather than iterating further.</div>
 </tbody>
 </table>
 <p>The console summary additionally reports termination reason, elapsed simulated time,
-revolution count, maximum fractional energy drift, and—when defined—maximum fractional
-angular-momentum drift. Closure residuals are reported when the requested endpoint is an
+revolution count, maximum absolute specific-energy and specific-angular-momentum drift, and—when
+defined—fractional drift for each conserved quantity. If the initial energy is zero or nearly zero,
+or the initial angular momentum is zero or nearly zero, the corresponding fractional diagnostic is
+reported as <code>n/a</code>. Closure residuals are reported when the requested endpoint is an
 integral number of revolutions.</p>
 <p><strong>Specific energy</strong> means energy per unit mass of the orbiting body. The mass of
 the test particle is therefore not needed.</p>
@@ -712,7 +720,9 @@ be close to their initial values. </p></div>
 change continually, but their sum should remain nearly constant. Then make an unbound orbit and
 compare its total specific energy with that of the bound orbit. Bound Kepler orbits have negative
 specific energy, hyperbolic orbits positive specific energy, and the marginal parabolic case zero.
-The console's maximum fractional energy drift shows the remaining numerical error and provides a quantitative check on energy conservation.</p></div>
+The console's energy-drift diagnostics show the remaining numerical error and provide a quantitative
+check on energy conservation. Use absolute specific-energy drift for the parabolic case, where a
+fractional change from zero is undefined.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-5 · Intermediate</div><h4>Bound, Parabolic, and Hyperbolic Motion</h4>
 <p>At a fixed starting radius \(r\), vary the initial speed through the escape value
 \(v_{\rm esc}=\sqrt{2\mu/r}\). Below it the orbit is bound; at the limiting value it is parabolic;
@@ -763,6 +773,13 @@ a numerical guard to prevent evaluation at \(r=0\); that guard radius is not the
 of a star or planet. This limiting case provides a useful test of the numerical treatment of trajectories that approach the point-mass singularity.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-14 · Advanced Programming Extension</div><h4>Try a Different Central Force Law</h4>
 <p>As an optional programming exercise, make a copy of the program and replace the Newtonian inverse-square acceleration with other central-force laws. A particularly instructive comparison is a Hooke-law acceleration proportional to \(-\mathbf r\). You can also try small non-Newtonian corrections and look for orbital precession. Historically, modified Newtonian force laws were proposed as explanations for Mercury's anomalous perihelion precession, while modern alternatives such as MOND have been proposed as alternatives to dark matter in some astrophysical settings. After experimenting with the code, research these topics and investigate why modified force laws have not replaced general relativity as the accepted explanation of Mercury's perihelion precession. Keep this as a separate experimental copy so the standard <code>Orbit</code> program continues to represent Newtonian gravity.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-15 · Advanced Programming Extension</div><h4>Compare Error Measures</h4>
+<p>Make a separate experimental copy and replace the Euclidean-norm comparisons in
+<code>_relative_vector_change()</code> and <code>_relative_increment_change()</code> with sums
+of absolute component differences. Run the same eccentric orbit with each version, then compare
+accepted-step counts, period error, conservation drift, and closure residuals. Rotate the initial
+position and velocity together and repeat: which error measure is unchanged by a rotation of the
+coordinate axes, and does the difference matter at the tolerances you tested?</p></div>
 </div>
 </section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
 <div style="
@@ -842,7 +859,8 @@ of a star or planet. This limiting case provides a useful test of the numerical 
 <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003) and is distributed
 under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
 Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a>
-license.</p>
+license. The original Java program was written for the Triana workflow environment;
+this student-facing version is a Python port by Thomas Yee.</p>
 </section>
 </main><!-- /main -->
 <!-- ══════════════════════════════════════════════
