@@ -10,8 +10,10 @@
       tex: {
         inlineMath:  [['\\(','\\)']],
         displayMath: [['\\[','\\]']],
-        tags: 'ams'
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
       },
+      loader: { load: ['[tex]/textmacros'] },
       options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
@@ -394,7 +396,7 @@
 <tr><td>K</td><td>5.3802e3</td><td>depends on \(\gamma\)</td><td>Polytropic constant. Its dimensions depend on \(\gamma\), so changing \(\gamma\) while keeping the same numerical \(K\) is not a controlled stiffness comparison.</td></tr>
 <tr><td>output_type</td><td>"Pressure"</td><td>string</td><td><code>"Pressure"</code>, <code>"Density"</code>, or <code>"Mass"</code>. Capitalization and surrounding spaces are ignored.</td></tr>
 <tr><td>log_y</td><td>False</td><td>boolean</td><td>Optional logarithmic y-axis for pressure or density. A mass plot remains linear and emits a warning if this is set to <code>True</code>.</td></tr>
-<tr><td>steps_per_scale</td><td>400</td><td>—</td><td>Nominal radial resolution, \(\Delta r=\ell/\text{steps_per_scale}\). Must be an integer from 50 through 10000000.</td></tr>
+<tr><td>steps_per_scale</td><td>400</td><td>—</td><td>Nominal radial resolution, \(\Delta r=\ell/\)<code>steps_per_scale</code>. Must be an integer from 50 through 10000000.</td></tr>
 <tr><td>max_steps</td><td>200000</td><td>—</td><td>Safety limit on radial integration steps. Must be an integer from 100 through 10000000.</td></tr>
 </tbody>
 </table>

@@ -10,8 +10,10 @@
       tex: {
         inlineMath:  [['\\(','\\)']],
         displayMath: [['\\[','\\]']],
-        tags: 'ams'
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
       },
+      loader: { load: ['[tex]/textmacros'] },
       options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
@@ -446,7 +448,7 @@
 <p>The star display is a geometric visualization of diffusion. It is not intended to reproduce the Sun's radial opacity profile, changing photon mean free path, three-dimensional geometry, or transition to convective transport.</p>
 <h3>Default Radius</h3>
 <p>Because the isotropic display step has fixed length \(\lambda\), Eq. 8 provides a natural characteristic diffusion distance. The default display radius is chosen as a multiple \(f\) of that distance for a reference step count:</p>
-<div class="eq-block"><span class="eq-label">(9)</span>\[R=f\,\lambda\sqrt{N_{\mathrm{ref}}},\qquad f=\texttt{radius\_factor}.\]</div>
+<div class="eq-block"><span class="eq-label">(9)</span>\[R=f\,\lambda\sqrt{N_{\mathrm{ref}}},\qquad f=\]<code>radius_factor</code>.</div>
 <p>This formula is dimensionally consistent: \(N_{\mathrm{ref}}\) and \(f\) are dimensionless, while both \(R\) and \(\lambda\) have units of length. <code>reference_steps</code> therefore sets the diffusion scale used to size the drawing; it is <em>not</em> the maximum number of steps allowed for each displayed walk.</p>
 <h3>Exact Boundary Crossing</h3>
 <p>When a step goes from an inside point \(\mathbf p_0\) to an outside point \(\mathbf p_1\), the final plotted random-walk segment is clipped to the exact point at which it intersects the circle. With \(\mathbf p(t)=\mathbf p_0+t(\mathbf p_1-\mathbf p_0)\), the crossing satisfies</p>

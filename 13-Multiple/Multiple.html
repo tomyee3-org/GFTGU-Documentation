@@ -10,8 +10,10 @@
       tex: {
         inlineMath:  [['\\(','\\)']],
         displayMath: [['\\[','\\]']],
-        tags: 'ams'
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
       },
+      loader: { load: ['[tex]/textmacros'] },
       options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
@@ -966,8 +968,8 @@ python main.py</pre>
 <div class="scenario-card">
 <div class="sc-title">Out-of-plane encounter</div>
         Add a modest \(z\)-velocity to one body and compare the <code>'xy'</code>
-        and <code>'xz'</code> projections. Try (1\) km/s first and then
-        (5\) km/s. Choose the vertical speed so that the
+        and <code>'xz'</code> projections. Try 1 km/s first and then
+        5 km/s. Choose the vertical speed so that the
         bodies' \(z\)-separations near closest approach are comparable to their
         in-plane separations. If the vertical speed is too large, the bodies may
         simply miss one another and the interesting encounter disappears.
