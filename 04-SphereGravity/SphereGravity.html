@@ -892,10 +892,10 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
 <!-- ── Experiments ── -->
 <h2 id="experiments">Suggested Experiments</h2>
 <p>
-    The experiments below are arranged in approximate order of difficulty. The first four require
-    only changes to <code>nDiv</code> and <code>outputType</code>; the fifth makes more direct use
-    of the numerical machinery, and the final two are advanced code-study or programming
-    extensions.
+    The experiments below are arranged in approximate order of difficulty. Experiment 1 is visual
+    and needs only the two settings in <code>main.py</code>. Experiment 2 adds a short lookup of
+    one stored sample from the returned NumPy arrays; that same lookup is reused in Experiments
+    3–5. The later exercises are code-study or programming extensions.
   </p>
 <div class="scenario-grid">
 <div class="scenario-card">
@@ -918,13 +918,42 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
         observe that the numerical disagreement with Newton's theorem becomes rapidly smaller.
         For a quantitative comparison, read the value at the same exterior radius, such as
         \(r=1.1\), on each run rather than comparing different points on the three curves.
+        The graph alone is not precise enough for that comparison; print the stored sample
+        from the returned arrays.
       </p>
-<div class="sc-params">nDiv=100 / 1000 / 10000 · outputType='relative difference'</div>
+<p>
+        <code>run_spheregravity()</code> returns two NumPy arrays of equal length.
+        <code>radius[j]</code> is the sample location and <code>accel[j]</code> is the value
+        plotted at that location (raw acceleration or relative difference, according to
+        <code>outputType</code>). The radial grid is uniform:
+        \(r_j = j\times 0.005\) for \(j=0,1,\ldots,999\), so a requested radius that lies on
+        that grid, including \(r=1.1\), is stored exactly. After the existing call in
+        <code>main.py</code>, add:
+      </p>
+<pre>radius, accel = run_spheregravity(nDiv=nDiv, outputType=outputType)
+
+# r = 1.1 sits on the 0.005 grid, so this index is exact.
+i = int(round(1.1 / 0.005))
+print(radius[i], accel[i])</pre>
+<p>
+        The printed pair should be <code>1.1</code> and the relative difference at that radius.
+        Repeat for each <code>nDiv</code> above, always using the same index. If you later need
+        a radius whose grid location you do not want to compute by hand, search the array
+        instead (this needs <code>import numpy as np</code> at the top of the file):
+      </p>
+<pre>i = np.where(np.isclose(radius, 1.1))[0][0]
+print(radius[i], accel[i])</pre>
+<p>
+        Use one of these lookups whenever a later experiment asks for “the value at
+        \(r=\ldots\)”. Do not read the number off the graph.
+      </p>
+<div class="sc-params">nDiv=100 / 1000 / 10000 · outputType='relative difference' · print accel at r=1.1</div>
 </div>
 <div class="scenario-card">
 <h4>3 · Intermediate — Measure the Convergence Rate</h4>
 <p>
-        At the fixed exterior radius \(r=1.1\), compare the relative differences for
+        Using the array lookup from Experiment 2, compare the relative differences at the
+        fixed exterior radius \(r=1.1\) for
         <code>nDiv = 100, 1000, 10000</code>. They should be approximately
         \(2.5\times10^{-3}\), \(2.5\times10^{-5}\), and \(2.5\times10^{-7}\).
         Each tenfold increase in <code>nDiv</code> therefore reduces the error by roughly a factor
