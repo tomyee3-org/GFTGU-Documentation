@@ -810,7 +810,7 @@ plot_cannon_overlay(trajectories)</code></pre>
         </p>
 </div>
 <div class="experiment-card">
-<div class="exp-num">Experiment 5 · Intermediate · Schutz suggestion</div>
+<div class="exp-num">Experiment 5 · Intermediate</div>
 <div class="exp-title">Interpolate the landing point</div>
 <p>
           The loop stops after storing the first point for which \(h&lt;0\), so the projectile has
@@ -845,7 +845,7 @@ plot_cannon_overlay(trajectories)</code></pre>
         </p>
 </div>
 <div class="experiment-card">
-<div class="exp-num">Experiment 7 · Advanced · Schutz suggestion</div>
+<div class="exp-num">Experiment 7 · Advanced</div>
 <div class="exp-title">Deliberately degrade the vertical-position update</div>
 <p>
           Schutz suggested making the vertical step less accurate by advancing the height with
@@ -853,8 +853,7 @@ plot_cannon_overlay(trajectories)</code></pre>
           the interval. In <code>improved_euler_step</code>, after <code>ds2</code> has been
           calculated, construct a test version in which the new height is
           <code>state[1] + dt * ds2[1]</code> while the other state components are updated as
-          before. This is the Python equivalent of Schutz's
-          \(h\leftarrow h+w\,dt\), with \(w=v-g\,dt\).
+          before. 
           Compare this deliberately degraded method with the normal improved-Euler result for
           several timesteps. Use Experiment 5's interpolated landing point so that ground-crossing
           sampling does not obscure the integration error, and verify that the degraded update
