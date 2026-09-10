@@ -2,33 +2,62 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>CannonTrajectory 1.1.0 Release Notes</title>
+<title>CannonTrajectory 1.2.0 Release Notes</title>
 </head>
 <body>
 
-<h1>CannonTrajectory 1.1.0 Release Notes</h1>
+<h1>CannonTrajectory 1.2.0 Release Notes</h1>
 
 <p>
-<b>Version:</b> 1.1.0<br>
-<b>Build:</b> b96e71693112<br>
-<b>Date:</b> 2026-08-30
+<b>Version:</b> 1.2.0<br>
+<b>Build:</b> 03f9faff890f<br>
+<b>Date:</b> 2026-09-10
 </p>
 
 <h2>Release Status</h2>
 
 <p>
-Version 1.1.0 concludes a kickoff scientific review followed by three rounds of
-independent adversarial review involving Codex, Copilot, and Gemini. Reviewers
-verified the projectile-motion equations, Euler and improved-Euler integrators,
-input validation, numerical-overflow handling, plotting behavior, Help-file
-accuracy, Version/Build synchronization, flattened-layout execution, and
-regression coverage. All Audit2 findings were corrected, both Audit3 reviewers
-reported no remaining defects, and no release-blocking issue remains.
-CannonTrajectory is cleared for release as an instructional implementation of
-constant-gravity projectile motion.
+Version 1.2.0 is a student-facing output update on top of the 1.1.0 instructional
+release. The physical model, integrators, validation, and plotting helpers are
+unchanged. The default program now prints interpolated range and maximum height
+to the nearest tenth of a metre so Investigation 1.3's first three exercises can
+be completed by editing settings in <code>main.py</code> and reading the console
+output.
 </p>
 
-<h2>Major Improvements in This Release</h2>
+<h2>What Changed in 1.2.0</h2>
+
+<ul>
+<li>After a successful run, <code>main.py</code> prints the interpolated
+ground-crossing range and the maximum stored height, each formatted to
+one decimal place in metres.</li>
+
+<li>Added <code>interpolated_landing_range()</code> and
+<code>maximum_height()</code> in <code>driver_cannon.py</code> so the printed
+summary uses the same landing interpolation later introduced in Experiment 5,
+rather than the raw first-below-ground sample.</li>
+
+<li>Updated the Help file Output section and Experiments 1–3 to describe the
+new printout and to state that programming begins in earnest at Experiment 4.</li>
+
+<li>Updated this Release Notes file and the Sample Outputs Guide to Version
+1.2.0 and Build 03f9faff890f.</li>
+</ul>
+
+<h2>Default Printed Values</h2>
+
+<p>
+For the unchanged default settings
+(<code>speed=100</code> m/s, <code>angle_deg=45</code>, <code>dt=0.1</code> s,
+<code>method="improved"</code>):
+</p>
+<ul>
+<li>146 stored trajectory samples</li>
+<li>Printed range: 1019.7 m (interpolated ground crossing; analytic range 1019.72 m)</li>
+<li>Printed maximum height: 254.9 m (analytic maximum height 254.929 m)</li>
+</ul>
+
+<h2>Major Improvements Retained from 1.1.0</h2>
 
 <ul>
 <li>Updated the gravitational constant from the textbook-rounded
@@ -81,23 +110,24 @@ tests.</li>
 <h2>Test Suite Growth</h2>
 
 <p>
-A new regression suite was created during kickoff and expanded through three
-audit rounds. The final suite contains 63 automated tests. The suite defines
-the four executable module filenames explicitly and uses
+The 1.1.0 suite contained 63 automated tests. Version 1.2.0 extends that suite
+to 64 tests, covering the printed tenth-of-a-metre summary and the new driver helpers. The
+suite still defines the four executable module filenames explicitly and uses
 <code>find_module_dir(start)</code> to locate the nearest directory containing
 the core modules, allowing the same tests to operate from either the canonical
 <code>tests/</code> layout or a flattened upload layout.
 </p>
 
 <p>
-The final suite verifies physics constants and analytic solutions; Euler and
+The suite verifies physics constants and analytic solutions; Euler and
 improved-Euler integration behavior; numerical convergence; trajectory
 structure and landing behavior; interpolation accuracy; complementary launch
-angles; speed-squared range scaling; parameter validation; overflow detection;
+angles; speed-squared range scaling; the rounded default range and maximum
+height; parameter validation; overflow detection;
 large finite-Real edge cases; plotting behavior; overlay plotting; malformed
 input cleanup; Help-file structure and synchronization; Version/Build
 consistency; Python 3.10 grammar compatibility; flattened-layout execution; and
-independent BUILD_ID reproduction. All 63 tests pass.
+independent BUILD_ID reproduction.
 </p>
 
 <h2>Known Limitations</h2>
@@ -107,13 +137,14 @@ independent BUILD_ID reproduction. All 63 tests pass.
 resistance. It is intended for introductory numerical experiments rather than
 high-accuracy ballistic prediction.</li>
 
-<li>The trajectory terminates at the first sampled point below ground rather than
-the exact landing point. Accurate range estimates should use interpolation
-between the final non-negative and first negative height samples.</li>
+<li>The trajectory still terminates at the first sampled point below ground rather
+than the exact landing point. The new printed range interpolates that crossing;
+the raw final sample remains available in the returned arrays for Experiment 5.</li>
 
-<li>Because the simulation uses a fixed timestep, the reported landing position
-depends partially on sampling resolution. Smaller timesteps reduce this
-sampling error.</li>
+<li>Because the simulation uses a fixed timestep, both the printed range and the
+plotted landing position depend partially on sampling resolution. Smaller
+timesteps reduce this sampling error. Rounding to 0.1 m is intentional for the
+first exercises and is not a claim of centimetre-level ballistic accuracy.</li>
 
 <li>The improved-Euler method reproduces the analytic sampled solution for this
 special constant-acceleration problem. Its exceptional accuracy here should not
@@ -147,8 +178,8 @@ should maintain compatibility with existing experiments and tests.</li>
 <h2>Version Identification</h2>
 
 <p>
-MODEL_VERSION: 1.1.0<br>
-BUILD_ID: b96e71693112
+MODEL_VERSION: 1.2.0<br>
+BUILD_ID: 03f9faff890f
 </p>
 
 </body>

@@ -445,7 +445,7 @@
 <!-- ═══════════════════════════════════════════════════════ MAIN -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build b96e71693112
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 03f9faff890f
 </p>
 <!-- ── Description ─────────────────────────────────────────── -->
 <section id="description">
@@ -730,6 +730,17 @@ through the first below-ground point. Their length is the number of
 set of axes, where each item in <code>trajectories</code> is a
 <code>(label, xs, hs)</code> triple.
 </p>
+<p>
+When you run <code>python main.py</code>, the console also prints the
+interpolated landing range and the maximum stored height, each rounded to
+the nearest tenth of a metre. For the default 100&nbsp;m/s, 45° launch those
+values are <strong>1019.7&nbsp;m</strong> and <strong>254.9&nbsp;m</strong>.
+The printed range uses linear interpolation between the last non-negative
+sample and the first below-ground sample; it is not the raw final
+<code>x</code> coordinate. Experiments 1–3 can be answered from this
+printout by changing only the settings in <code>main.py</code>. From
+Experiment 4 onward you will need to write additional Python.
+</p>
 </section>
 <!-- ── Suggested Experiments ──────────────────────────────── -->
 <section id="experiments">
@@ -745,7 +756,8 @@ Several later experiments use the interpolated landing point introduced in Exper
 <p>
           <strong>Core task:</strong> Keep <code>speed = 100</code> m/s and
           <code>dt = 0.1</code> s, and manually try several launch angles between
-          0° and 90°. Which angle appears to give the greatest range?
+          0° and 90°. Use the printed range (to the nearest tenth of a metre)
+          after each run. Which angle appears to give the greatest range?
           <br/><strong>Extension:</strong> If you are comfortable writing a short loop, automate the test over
           angles from 1° to 89° in 1° steps and plotting range versus angle. Confirm that the
           maximum occurs at 45° and that complementary angles, such as 30° and 60°, have the
@@ -759,7 +771,7 @@ Several later experiments use the interpolated landing point introduced in Exper
 <p>
           Run the same 100 m/s, 45° trajectory with several values of <code>dt</code>, for example
           0.5, 0.2, 0.1, 0.05, and 0.02 s. Compare the smoothness of the plotted curve, the number
-          of stored points, and the final sampled point below the ground. Repeat with both
+          of stored points, the printed range and maximum height, and the final sampled point below the ground. Repeat with both
           <code>method="euler"</code> and <code>method="improved"</code>. Which visible effects are
           caused by the integration method, and which are simply caused by sampling the
           trajectory at discrete times? Here, <em>integration error</em> comes from the numerical
@@ -774,6 +786,7 @@ Several later experiments use the interpolated landing point introduced in Exper
 <div class="exp-title">Effect of muzzle speed</div>
 <p>
           Fix the angle at 45° and vary <code>speed</code>, for example from 50 to 500 m/s.
+          The printed range and maximum height are enough for the first comparisons.
           Compare the ranges with the prediction that, in this model, range is proportional to
           \(v_0^2\). A simple first test is to double the speed and see whether the range becomes
           four times as large. For a more quantitative test, plot range against \(v_0^2\) and
@@ -810,7 +823,7 @@ plot_cannon_overlay(trajectories)</code></pre>
         </p>
 </div>
 <div class="experiment-card">
-<div class="exp-num">Experiment 5 · Intermediate</div>
+<div class="exp-num">Experiment 5 · Intermediate · Schutz suggestion</div>
 <div class="exp-title">Interpolate the landing point</div>
 <p>
           The loop stops after storing the first point for which \(h&lt;0\), so the projectile has
@@ -845,14 +858,16 @@ plot_cannon_overlay(trajectories)</code></pre>
         </p>
 </div>
 <div class="experiment-card">
-<div class="exp-num">Experiment 7 · Advanced</div>
+<div class="exp-num">Experiment 7 · Advanced · Schutz suggestion</div>
 <div class="exp-title">Deliberately degrade the vertical-position update</div>
 <p>
           Schutz suggested making the vertical step less accurate by advancing the height with
           the velocity at the <em>end</em> of the timestep instead of the average velocity over
           the interval. In <code>improved_euler_step</code>, after <code>ds2</code> has been
           calculated, construct a test version in which the new height is
-          <code>state[1] + dt * ds2[1]</code> while the other state components are updated as
+          <code>state[1] + dt * ds2[1]</code>, that is
+          \(h\leftarrow h+w\,dt\) with \(w\) the vertical velocity at the end of the step,
+          while the other state components are updated as
           before. 
           Compare this deliberately degraded method with the normal improved-Euler result for
           several timesteps. Use Experiment 5's interpolated landing point so that ground-crossing
