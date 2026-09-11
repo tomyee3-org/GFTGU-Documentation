@@ -399,7 +399,7 @@
 <!-- ═══════════════════════════════════ MAIN ════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.2&nbsp;&nbsp;&nbsp;&nbsp;Build 0ced72c5a652
+  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 10144b08a600
 </p>
 
 <!-- ─── Description ─── -->
@@ -469,7 +469,7 @@ circle_crossing_fraction(p0, p1, radius)</div></div>
 
 run_walk2d(
     reference_steps, n_walks, ...)</div></div>
-<div class="module-card"><h4>random2_plot.py</h4><p>Produces the log-log scaling graph or the circular star visualization and reports basic escape statistics in the annotation box.</p><div class="sig">plot_scaled_distance(lengths, avg_dist)
+<div class="module-card"><h4>random2_plot.py</h4><p>Produces the log-log scaling graph with equal decade lengths on both axes, or the circular star visualization, and reports basic escape statistics in the annotation box.</p><div class="sig">plot_scaled_distance(lengths, avg_dist)
 plot_walk2d(result, corner="upper right")</div></div></div>
 <div class="note"><strong>main.py:</strong> selects <code>"scaled_distance"</code> or <code>"walk2d"</code> and exposes all parameters intended for ordinary experimentation, including <code>step_distribution</code>, <code>ray_length_factor</code>, and <code>step_cap</code>.</div></section>
 <!-- ─── Parameters ─── -->
@@ -489,7 +489,7 @@ plot_walk2d(result, corner="upper right")</div></div></div>
 <tr><td><code>corner</code></td><td><code>"upper right"</code></td><td>Annotation-box location: upper/lower left/right.</td></tr></tbody></table>
 <div class="note">Invalid display names, distributions, corners, non-finite or out-of-range physical parameters, and nonpositive trial/step counts are rejected with explanatory <code>ValueError</code> messages rather than silently selecting another behavior.</div></section>
 <!-- ─── Output ─── -->
-<section id="output"><h2>Program Output</h2><p><strong>Scaled-distance mode</strong> produces a log-log plot of average scaled displacement versus number of steps. The points should approach a line of slope \(1/2\); finite trial counts produce visible statistical scatter.</p><p><strong>2D star mode</strong> produces a square plot of fixed-length isotropic walks within a circular schematic star. The annotation box reports the radius, mean free path, reference step count, number of escaped walks, and—when at least one walk escapes—the median escape step count. Each <code>WalkPath</code> also stores its individual <code>steps_taken</code> value for quantitative experiments. If a walk reaches <code>step_cap</code> without escaping, its final point is marked with an <code>x</code>; an escaped path may have no terminal ray when <code>ray_length_factor = 0</code>.</p></section>
+<section id="output"><h2>Program Output</h2><p><strong>Scaled-distance mode</strong> produces a log-log plot of average scaled displacement versus number of steps. One decade occupies the same plotted length on both axes, independent of the output-panel shape, so a theoretical slope of \(1/2\) is readable by eye as a rise of one vertical decade over a run of two horizontal decades. Finite trial counts produce visible statistical scatter around that trend.</p><p><strong>2D star mode</strong> produces a square plot of fixed-length isotropic walks within a circular schematic star. The annotation box reports the radius, mean free path, reference step count, number of escaped walks, and—when at least one walk escapes—the median escape step count. Each <code>WalkPath</code> also stores its individual <code>steps_taken</code> value for quantitative experiments. If a walk reaches <code>step_cap</code> without escaping, its final point is marked with an <code>x</code>; an escaped path may have no terminal ray when <code>ray_length_factor = 0</code>.</p></section>
 <!-- ─── Suggested Experiments ─── -->
 <section id="experiments">
 <h2>Suggested Experiments</h2>
@@ -502,8 +502,9 @@ plot_walk2d(result, corner="upper right")</div></div></div>
 <div class="scenario-card">
 <h4>1 · Introductory — Verify the √N Law</h4>
 <p>
-        Run the default <code>scaled_distance</code> experiment. On the log-log plot, the points
-        should lie approximately along a straight line of slope \(1/2\). Do not expect an exact
+        Run the default <code>scaled_distance</code> experiment. The log-log axes use equal
+        decade lengths, so the points should lie approximately along a straight line of slope
+        \(1/2\): one vertical decade for every two horizontal decades. Do not expect an exact
         straight line from only 100 trials: the departures from it are part of the Monte Carlo
         experiment.
       </p>
