@@ -342,6 +342,28 @@
     footer a { color: #e0c090; text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
+    .scenario-card .sc-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .scenario-card .sc-head .sc-title { margin-bottom: 0; }
+    .diff {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      padding: 1px 6px;
+      white-space: nowrap;
+    }
+    .diff-intro { background: #e7f3ea; color: #215c34; border: 1px solid #b7d8c0; }
+    .diff-inter { background: #f8edd2; color: #7a5a10; border: 1px solid #e0c48a; }
+    .diff-adv { background: #f8e0d6; color: #7b2d00; border: 1px solid #e0b09a; }
+
     /* ── Responsive ── */
     @media (max-width: 720px) {
       .page-wrap { grid-template-columns: 1fr; }
@@ -386,6 +408,7 @@
 <div class="nav-label">Reference</div>
 <a href="#parameters">Parameters</a>
 <a href="#output-modes">Output Modes</a>
+<a href="#display-frame">Display Frame</a>
 <a href="#scenarios">Suggested Scenarios</a>
 <a href="#related">Related Programs</a>
 <a href="#license">License</a>
@@ -393,7 +416,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.2&nbsp;&nbsp;&nbsp;&nbsp;Build bb853c24c69e
+  Version 1.2.1&nbsp;&nbsp;&nbsp;&nbsp;Build 122476e826dc
 </p>
 <p class="small">
   The Build identifier covers the four Python program modules listed below.
@@ -447,9 +470,14 @@ python main.py</pre>
       initially planar.
     </p>
 <p>
-      The default output is an animation with short trails. The integrator may
-      reduce its timestep below the 2000-s maximum during close encounters, but
-      animation frames remain uniformly separated by physical simulation time.
+      The default output is an animation with short trails, drawn in the
+      center-of-mass (COM) display frame so a nonzero total linear momentum
+      does not sweep the system off the axes. Set
+      <code>display_frame='user'</code> to plot the raw input coordinates
+      instead. The integrator itself always uses the user-supplied inertial
+      frame. Adaptive timestep reductions may occur below the 2000-s maximum
+      during close encounters, but animation frames remain uniformly separated
+      by physical simulation time.
     </p>
 <p>
       The shipped 60,000-step run uses <code>eps1=0.005</code> and
@@ -476,12 +504,14 @@ python main.py</pre>
 <li><code>max_steps</code> — maximum accepted integration steps</li>
 <li><code>eps1</code>, <code>eps2</code> — timestep and corrector tolerances</li>
 <li><code>output_type</code> — <code>'trajectories'</code> or <code>'animation'</code></li>
+<li><code>display_frame</code> — <code>'com'</code> (default) or <code>'user'</code></li>
 <li>animation controls — mode, frame spacing, trail duration, projection, and axis behavior</li>
 </ul>
 <div class="note">
 <strong>For first experiments:</strong> change only <code>masses_solar</code>,
       <code>positions_init</code>, <code>velocities_init</code>,
-      <code>max_steps</code>, <code>output_type</code>, <code>projection</code>, and
+      <code>max_steps</code>, <code>output_type</code>, <code>projection</code>,
+      <code>display_frame</code>, and
       <code>animation_mode</code>. Leave <code>eps1</code> and <code>eps2</code>
       unchanged until you try the numerical-convergence exercise.
     </div>
@@ -501,7 +531,8 @@ python main.py</pre>
 <div class="mc-role">Entry Point &amp; Configuration</div>
 <p>
           Contains all ordinary user settings: masses, initial states, adaptive
-          integration controls, output mode, animation controls, projection, and
+          integration controls, output mode, animation controls, projection,
+          display frame (<code>'com'</code> or <code>'user'</code>), and
           the optional energy-drift plot.
         </p>
 </div>
@@ -532,8 +563,8 @@ python main.py</pre>
 <p>
           Provides static trajectory plots, an optional energy-drift plot, and
           the interactive animation with current-position or trail display,
-          three orthogonal projections, fixed or automatic equal-scale axes,
-          and keyboard playback controls.
+          three orthogonal projections, a user or COM display frame, fixed or
+          automatic equal-scale axes, and keyboard playback controls.
         </p>
 </div>
 </div>
@@ -678,8 +709,15 @@ python main.py</pre>
 <p>
       Because input masses are given in solar units, the program omits one
       common solar-mass factor from energy, momentum, and angular momentum.
-      This does not affect conservation tests. The console reports the maximum
-      drift in all three quantities. Ordinarily, energy drift is divided by
+      This does not affect conservation tests. After a run the console prints
+      the initial and final user-frame scaled total energy \(E=K+U\), the
+      three components of total linear momentum, and the three components of
+      total angular momentum, together with the maximum drift in energy,
+      momentum, and angular momentum. Those printed totals are always taken
+      from the user-supplied inertial coordinates, even when the plot uses the
+      COM display frame. Animation frames also overlay the current user-frame
+      totals.
+      Ordinarily, energy drift is divided by
       \(|E_0|\). If kinetic and potential energies cancel so closely that
       \(E_0\) is numerically indistinguishable from zero, the program instead
       uses the stable characteristic scale \(K_0+|U_0|\). If a conserved
@@ -865,6 +903,7 @@ python main.py</pre>
 <tr><td><code>frame_interval_ms</code></td><td>50</td><td>ms</td><td>Real display time between frames.</td></tr>
 <tr><td><code>trail_time</code></td><td>6.0e5</td><td>s</td><td>Physical history displayed behind each body.</td></tr>
 <tr><td><code>projection</code></td><td>'xy'</td><td>—</td><td><code>'xy'</code>, <code>'xz'</code>, or <code>'yz'</code>.</td></tr>
+<tr><td><code>display_frame</code></td><td>'com'</td><td>—</td><td><code>'com'</code> (center-of-mass plot origin) or <code>'user'</code> (input coordinates).</td></tr>
 <tr><td><code>axis_mode</code></td><td>'fixed'</td><td>—</td><td><code>'fixed'</code> or equal-scale <code>'auto'</code> zoom.</td></tr>
 </tbody>
 </table>
@@ -934,24 +973,74 @@ python main.py</pre>
       <strong>Home</strong> pauses at the first frame and <strong>End</strong>
       pauses at the last frame. Pressing Space while the final frame is
       displayed replays the movie from the beginning.
+      <strong>F</strong> toggles the display between the COM frame and the
+      user frame; a discrete on-screen note reports the active frame after
+      each switch.
     </p>
+</section>
+<!-- ─── Display Frame ─── -->
+<section id="display-frame">
+<h2>Display Frame</h2>
+<p>
+      Integration is always performed in the inertial Cartesian frame of the
+      numbers supplied in <code>positions_init</code> and
+      <code>velocities_init</code>. The plot and animation can then be drawn
+      in either of two <em>display</em> frames:
+    </p>
+<table>
+<thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>'com'</code></td><td>Default. Each plotted state is translated so the instantaneous center of mass sits at the origin. A uniform drift of the whole system disappears from the picture, but the stored integration coordinates are unchanged.</td></tr>
+<tr><td><code>'user'</code></td><td>Plot the raw integration coordinates. If the total linear momentum is large, the cluster of bodies will march across the axes.</td></tr>
+</tbody>
+</table>
+<p>
+      The center-of-mass position and the center-of-momentum velocity are
+    </p>
+<div class="eq"><span class="eq-label">(14)</span>
+      \[
+        \mathbf R_{\rm CM}=\frac{\sum_A m_A\mathbf r_A}{\sum_A m_A},\qquad
+        \mathbf V_{\rm CM}=\frac{\sum_A m_A\mathbf v_A}{\sum_A m_A}.
+      \]
+    </div>
+<p>
+      COM display subtracts \(\mathbf R_{\rm CM}\) from every body at that
+      stored time. It is a change of origin for viewing only; it is not a
+      rewrite of the initial conditions. The console prints a discrete note
+      naming the selected display frame at the start of every run. Animation
+      titles and a boxed on-figure note repeat the same information, and the
+      note is rewritten when <strong>F</strong> switches frames.
+    </p>
+<div class="note">
+<strong>Why this is the default.</strong>
+      The original Java Multiple program already referred positions and
+      velocities to a center-of-mass origin. Students should not have to
+      subtract \(\mathbf R_{\rm CM}\) and \(\mathbf V_{\rm CM}\) by hand
+      merely to keep a drifting system on the screen. Conservation
+      diagnostics remain those of the integration frame, so a large
+      center-of-mass kinetic energy can still make a fractional energy
+      drift look small; use a near-zero total momentum when the diagnostic
+      is meant to measure the relative motion.
+    </div>
 </section>
 <!-- ─── Suggested Scenarios ─── -->
 <section id="scenarios">
 <h2>Suggested Scenarios</h2>
-<p>All of these experiments can be performed by editing <code>main.py</code>.</p>
+<p>All of these experiments can be performed by editing <code>main.py</code>. Each card carries a difficulty rating: Introductory, Intermediate, or Advanced.</p>
 <div class="scenario-grid">
 <div class="scenario-card">
-<div class="sc-title">Two-body sanity check</div>
+<div class="sc-head"><div class="sc-title">Two-body sanity check</div><span class="diff diff-intro">Introductory</span></div>
         Before exploring chaotic three-body motion, test a familiar binary. For
         two equal one-solar-mass bodies separated by \(1.0\times10^{11}\) m, put
         them at \((\pm5.0\times10^{10},0,0)\) m and give them opposite
-        tangential speeds of about \(2.576\times10^4\) m/s. The center of mass
-        should remain fixed while the bodies follow nearly circular paths. Check
-        the reported energy and angular-momentum drift.
+        tangential speeds of about \(2.576\times10^4\) m/s. With the default
+        COM display the origin stays at the center of mass while the bodies
+        follow nearly circular paths. Check the printed user-frame total
+        energy, momentum components, and angular momentum, and the reported
+        energy and angular-momentum drift.
       </div>
 <div class="scenario-card">
-<div class="sc-title">Default three-body encounter</div>
+<div class="sc-head"><div class="sc-title">Default three-body encounter</div><span class="diff diff-intro">Introductory</span></div>
         Run the planar shipped example first. Record which two bodies make the
         closest sustained pair, whether the third makes a wide excursion, and
         the reported conservation drift. Extend <code>max_steps</code> if you
@@ -959,14 +1048,14 @@ python main.py</pre>
         a unique final fate.
       </div>
 <div class="scenario-card">
-<div class="sc-title">Change the masses</div>
+<div class="sc-head"><div class="sc-title">Change the masses</div><span class="diff diff-intro">Introductory</span></div>
         Keep the default positions and velocities but reassign the three masses.
         How often does a close encounter produce a bound pair? Which body is
         most often left on the widest orbit? This is a simple way to explore the
         sensitivity of three-body outcomes without changing the geometry.
       </div>
 <div class="scenario-card">
-<div class="sc-title">Out-of-plane encounter</div>
+<div class="sc-head"><div class="sc-title">Out-of-plane encounter</div><span class="diff diff-inter">Intermediate</span></div>
         Add a modest \(z\)-velocity to one body and compare the <code>'xy'</code>
         and <code>'xz'</code> projections. Try 1 km/s first and then
         5 km/s. Choose the vertical speed so that the
@@ -975,7 +1064,7 @@ python main.py</pre>
         simply miss one another and the interesting encounter disappears.
       </div>
 <div class="scenario-card">
-<div class="sc-title">Numerical convergence</div>
+<div class="sc-head"><div class="sc-title">Numerical convergence</div><span class="diff diff-inter">Intermediate</span></div>
         Repeat the same physical initial conditions with <code>dt</code>,
         <code>dt/2</code>, and <code>dt/4</code>; then repeat with tighter
         <code>eps1</code> and <code>eps2</code>. Compare finite-time trajectories and the
@@ -984,17 +1073,19 @@ python main.py</pre>
         individually accurate.
       </div>
 <div class="scenario-card">
-<div class="sc-title">Center-of-mass frame</div>
-        First add the same velocity vector to every body and observe the overall
-        drift across the plot. Then calculate
-        \(\mathbf R_{\rm CM}=\sum_A m_A\mathbf r_A/\sum_A m_A\) and
-        \(\mathbf V_{\rm CM}=\sum_A m_A\mathbf v_A/\sum_A m_A\), and subtract
-        them from all initial positions and velocities. Confirm that the
-        relative motion is unchanged while the center of mass remains at rest,
-        and relate this result to conservation of total momentum.
+<div class="sc-head"><div class="sc-title">Center-of-mass frame</div><span class="diff diff-inter">Intermediate</span></div>
+        Keep the default masses and positions, but add the same extra velocity
+        vector to every body. Set <code>display_frame='user'</code> and watch
+        the whole encounter drift across the plot. Switch back to the default
+        <code>display_frame='com'</code> (or press <strong>F</strong> during an
+        animation) and confirm that the relative motion is unchanged while the
+        system stays centered. Read the printed \(P_x,P_y,P_z\): they should
+        equal the total mass times the boost you added, and they should stay
+        constant. You do not need to subtract \(\mathbf R_{\rm CM}\) or
+        \(\mathbf V_{\rm CM}\) from the initial data by hand.
       </div>
 <div class="scenario-card">
-<div class="sc-title">Binary hardening</div>
+<div class="sc-head"><div class="sc-title">Binary hardening</div><span class="diff diff-inter">Intermediate</span></div>
         In a run where two bodies form a persistent close pair, track all three
         pair separations to identify the binary rather than relying only on the
         plot. Compare the third body's distance from that pair's center of mass
@@ -1002,27 +1093,28 @@ python main.py</pre>
         where does the corresponding orbital energy go?
       </div>
 <div class="scenario-card">
-<div class="sc-title">Small star cluster</div>
+<div class="sc-head"><div class="sc-title">Small star cluster</div><span class="diff diff-adv">Advanced</span></div>
         Place 5–10 solar-mass stars within about 0.1 pc. Contrast sub-km/s to
-        roughly 1 km/s starting speeds with several-km/s speeds. For a cleaner
-        display, subtract the initial center-of-mass position and velocity from
-        all bodies. Compare total energy, expansion of the cluster, and any
-        ejections; then try adding one or two more massive bodies.
+        roughly 1 km/s starting speeds with several-km/s speeds. Leave
+        <code>display_frame='com'</code> so a nonzero total momentum does not
+        walk the cluster off the screen. Compare the printed user-frame total
+        energy, the expansion of the cluster, and any ejections; then try
+        adding one or two more massive bodies.
       </div>
 <div class="scenario-card">
-<div class="sc-title">Compare with MercPert — advanced</div>
+<div class="sc-head"><div class="sc-title">Compare with MercPert — advanced</div><span class="diff diff-adv">Advanced</span></div>
         Recreate the same physical Sun–perturber–test-particle configuration,
         but express every body's initial state in one inertial frame for
-        Multiple. A convenient choice is the center-of-mass frame: translate
-        positions if desired and give the Sun the small compensating velocity
-        required to make total momentum zero. Give the test particle a very
+        Multiple. Keep the default COM display so the plot stays centered;
+        optionally give the Sun a small compensating velocity if you want the
+        printed total momentum to be nearly zero. Give the test particle a very
         small nonzero mass. Agreement should be approximate, because MercPert
         prescribes its primary orbit whereas Multiple integrates all masses
         mutually; simply copying Sun-relative coordinates is not an exact frame
         conversion.
       </div>
 <div class="scenario-card">
-<div class="sc-title">Galaxy collision — optional toy model</div>
+<div class="sc-head"><div class="sc-title">Galaxy collision — optional toy model</div><span class="diff diff-adv">Advanced</span></div>
         A concrete starting experiment is two \(10^{11}\,M_\odot\) core particles
         about 50 kpc apart and approaching at about 100 km/s, each surrounded by
         several orbiting particles roughly 10 kpc out with speeds of order
