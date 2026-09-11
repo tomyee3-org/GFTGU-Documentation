@@ -604,6 +604,14 @@ python main.py</pre>
       for an orbit of semimajor axis \(a\) and eccentricity \(e\).
     </p>
 <div class="note">
+<strong>Printed advance versus the weak-field formula:</strong>
+      the console value is a diagnostic of the integrated trajectory, not an
+      automatic measurement of the analytic \(6\pi GM/[a(1-e^2)c^2]\) result.
+      In the Mercury-scale weak-field regime that analytic signal is smaller
+      than the apsidal error typical of this educational integrator. See
+      exercise 10.
+    </div>
+<div class="note">
 <strong>Two different counters:</strong> <code>max_orbits</code> limits
       accumulated <em>azimuthal revolutions</em>. The periapsis detector measures
       <em>radial periods</em>. In a precessing orbit these are not identical.
@@ -903,11 +911,17 @@ python main.py</pre>
 <div class="sc-title">10. Weak-Field Precession — Advanced</div>
         Move the starting radius outward and choose a correspondingly weaker
         bound orbit. Verify qualitatively that Schwarzschild precession becomes
-        smaller as the field weakens, while Newtonian mode remains nearly
-        closed. The famous Mercury result is a much more demanding quantitative
-        test: its relativistic advance per orbit is tiny, so reproducing it
-        accurately requires carefully matched orbital elements, much tighter
-        numerical tolerances, and many well-resolved radial periods.
+        smaller as the field weakens. The goal of this exercise is that
+        trend, not a numerical recovery of Mercury's 43 arcsec/century.
+        Mercury's relativistic advance is only about
+        \(5\times10^{-7}\) rad per orbit. The educational adaptive
+        predictor-corrector used here was not designed as a weak-field precession
+        meter. On a Mercury-scale run the printed mean periapsis advance is
+        often larger than that analytic signal and can even have the wrong
+        sign. A Newtonian control at the same elements is the necessary
+        check: if that control also reports a comparable "advance," the
+        number is integrator wander (timestep truncation, periapsis sampling
+        on a discrete trajectory), not general relativity.
       </div>
 </div>
 </section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
