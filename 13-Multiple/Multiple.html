@@ -416,7 +416,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.2.1&nbsp;&nbsp;&nbsp;&nbsp;Build 122476e826dc
+  Version 1.2.2&nbsp;&nbsp;&nbsp;&nbsp;Build e29d630e7cf0
 </p>
 <p class="small">
   The Build identifier covers the four Python program modules listed below.
@@ -707,16 +707,25 @@ python main.py</pre>
       \]
     </div>
 <p>
+      Equations (7) and (8) drop the solar-unit tilde used in (3) and (6)
+      only for readability; the masses are the same \(\tilde m_A\) values.
       Because input masses are given in solar units, the program omits one
       common solar-mass factor from energy, momentum, and angular momentum.
       This does not affect conservation tests. After a run the console prints
       the initial and final user-frame scaled total energy \(E=K+U\), the
-      three components of total linear momentum, and the three components of
-      total angular momentum, together with the maximum drift in energy,
-      momentum, and angular momentum. Those printed totals are always taken
-      from the user-supplied inertial coordinates, even when the plot uses the
-      COM display frame. Animation frames also overlay the current user-frame
-      totals.
+      boost-independent internal energy
+      \(E_{\rm internal}=E-|\mathbf P|^2/(2M)\), the three components of
+      total linear momentum, and the three components of total angular
+      momentum, together with the maximum drift in energy, momentum, and
+      angular momentum. Those printed totals and the drift line are always
+      taken from accepted integration states in the user-supplied inertial
+      coordinates, even when the plot uses the COM display frame. The
+      animation box labels those values as interpolated-frame totals
+      because they are evaluated on cubic-Hermite display samples; they can
+      differ slightly from the accepted-step values, so the console drift
+      line remains the authoritative conservation diagnostic. The console
+      symbol <code>E_internal</code> is the same
+      \(E_{\rm internal}=E-|\mathbf P|^2/(2M)\).
       Ordinarily, energy drift is divided by
       \(|E_0|\). If kinetic and potential energies cancel so closely that
       \(E_0\) is numerically indistinguishable from zero, the program instead
@@ -744,11 +753,22 @@ python main.py</pre>
       with an escaping third body.
     </div>
 <div class="note">
-<strong>Choice of inertial frame:</strong> total energy is conserved in every
-      inertial frame, but a very large center-of-mass kinetic energy can make a
-      fractional total-energy drift look artificially small. Use the
-      center-of-mass frame when the conservation diagnostic is intended to
-      measure the accuracy of the relative N-body motion.
+<strong>Display frame versus diagnostic frame:</strong> total energy and
+      angular momentum about the coordinate origin are conserved in every
+      inertial frame, but a large center-of-mass kinetic energy
+      \(K_{\rm CM}=|\mathbf P|^2/(2M)\) can make a fractional total-energy
+      drift look artificially small. The same bulk motion contributes the
+      extra piece \(M(\mathbf R_{\rm CM}\times\mathbf V_{\rm CM})\) to
+      angular momentum about the origin. Setting
+      <code>display_frame='com'</code> does <em>not</em> change \(E\),
+      \(\mathbf P\), \(\mathbf L\), or the drift line; it only recenters the
+      plot. To integrate and diagnose in a zero-momentum frame, subtract
+      \(\mathbf V_{\rm CM}\) from every initial velocity in
+      <code>main.py</code>. The printed \(E_{\rm internal}\) already removes
+      the \(K_{\rm CM}\) piece without rewriting the initial data. The
+      shipped three-body example itself has
+      \(\mathbf P=(-3.0\times10^4,-3.0\times10^4,0)\) m/s in the program's
+      scaled units, so it is a mild instance of this effect.
     </div>
 </section>
 <!-- ─── Computational Scaling ─── -->
@@ -995,7 +1015,7 @@ python main.py</pre>
 </tbody>
 </table>
 <p>
-      The center-of-mass position and the center-of-momentum velocity are
+      The center-of-mass position and the center-of-mass velocity are
     </p>
 <div class="eq"><span class="eq-label">(14)</span>
       \[
@@ -1005,22 +1025,27 @@ python main.py</pre>
     </div>
 <p>
       COM display subtracts \(\mathbf R_{\rm CM}\) from every body at that
-      stored time. It is a change of origin for viewing only; it is not a
-      rewrite of the initial conditions. The console prints a discrete note
-      naming the selected display frame at the start of every run. Animation
-      titles and a boxed on-figure note repeat the same information, and the
-      note is rewritten when <strong>F</strong> switches frames.
+      stored time. Changing a spatial origin does not by itself change
+      velocities; the display transform is a translation of the plotted
+      positions only. For this isolated Newtonian system the inertial frame
+      that moves at \(\mathbf V_{\rm CM}\) is the center-of-momentum
+      (zero-momentum) frame. Reaching that frame for integration or
+      diagnostics still requires subtracting \(\mathbf V_{\rm CM}\) from the
+      initial velocities. The console prints a discrete note naming the
+      selected display frame at the start of every run. Animation titles and
+      a boxed on-figure note repeat the same information, and the note is
+      rewritten when <strong>F</strong> switches frames.
     </p>
 <div class="note">
 <strong>Why this is the default.</strong>
-      The original Java Multiple program already referred positions and
-      velocities to a center-of-mass origin. Students should not have to
-      subtract \(\mathbf R_{\rm CM}\) and \(\mathbf V_{\rm CM}\) by hand
-      merely to keep a drifting system on the screen. Conservation
-      diagnostics remain those of the integration frame, so a large
-      center-of-mass kinetic energy can still make a fractional energy
-      drift look small; use a near-zero total momentum when the diagnostic
-      is meant to measure the relative motion.
+      The original Java Multiple program already placed the plotted origin
+      at the center of mass. Students should not have to subtract
+      \(\mathbf R_{\rm CM}\) by hand merely to keep a drifting system on the
+      screen. Conservation diagnostics remain those of the integration
+      frame. Read \(E_{\rm internal}\) when the diagnostic should ignore
+      bulk kinetic energy, or subtract \(\mathbf V_{\rm CM}\) from the
+      initial velocities if you want the integrator itself to run in the
+      zero-momentum frame.
     </div>
 </section>
 <!-- ─── Suggested Scenarios ─── -->
@@ -1049,10 +1074,11 @@ python main.py</pre>
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Change the masses</div><span class="diff diff-intro">Introductory</span></div>
-        Keep the default positions and velocities but reassign the three masses.
-        How often does a close encounter produce a bound pair? Which body is
-        most often left on the widest orbit? This is a simple way to explore the
-        sensitivity of three-body outcomes without changing the geometry.
+        Keep the default positions and velocities but reassign the three masses
+        in one chosen triple, for example \((2,1,0.5)\,M_\odot\). Does that
+        run produce a bound pair, and which body is left on the widest orbit?
+        Compare that single outcome with one other mass assignment rather
+        than treating one deterministic trajectory as a frequency.
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Out-of-plane encounter</div><span class="diff diff-inter">Intermediate</span></div>
@@ -1075,14 +1101,21 @@ python main.py</pre>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Center-of-mass frame</div><span class="diff diff-inter">Intermediate</span></div>
         Keep the default masses and positions, but add the same extra velocity
-        vector to every body. Set <code>display_frame='user'</code> and watch
-        the whole encounter drift across the plot. Switch back to the default
-        <code>display_frame='com'</code> (or press <strong>F</strong> during an
-        animation) and confirm that the relative motion is unchanged while the
-        system stays centered. Read the printed \(P_x,P_y,P_z\): they should
-        equal the total mass times the boost you added, and they should stay
-        constant. You do not need to subtract \(\mathbf R_{\rm CM}\) or
-        \(\mathbf V_{\rm CM}\) from the initial data by hand.
+        \(\mathbf u\) to every body. The printed momentum must obey the
+        Galilean rule \(\mathbf P_{\rm new}=\mathbf P_{\rm old}+M\mathbf u\),
+        not \(M\mathbf u\) alone: the shipped state already has
+        \(\mathbf P_{\rm old}=(-3.0\times10^4,-3.0\times10^4,0)\) m/s in
+        scaled units. For \(\mathbf u=(1.0\times10^5,0,0)\) m/s the expected
+        printed momentum is therefore
+        \((2.7\times10^5,-3.0\times10^4,0)\) m/s. Set
+        <code>display_frame='user'</code> and watch the encounter drift
+        across the plot. Switch back to <code>display_frame='com'</code>
+        (or press <strong>F</strong> during an animation) and confirm that
+        the relative motion is unchanged while the system stays centered.
+        The printed \(E\) changes by the extra center-of-mass kinetic
+        energy; \(E_{\rm internal}\) does not. You do not need to subtract
+        \(\mathbf R_{\rm CM}\) or \(\mathbf V_{\rm CM}\) from the initial
+        data by hand in order to plot the motion.
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Binary hardening</div><span class="diff diff-inter">Intermediate</span></div>
@@ -1094,15 +1127,25 @@ python main.py</pre>
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Small star cluster</div><span class="diff diff-adv">Advanced</span></div>
-        Place 5–10 solar-mass stars within about 0.1 pc. Contrast sub-km/s to
-        roughly 1 km/s starting speeds with several-km/s speeds. Leave
-        <code>display_frame='com'</code> so a nonzero total momentum does not
-        walk the cluster off the screen. Compare the printed user-frame total
-        energy, the expansion of the cluster, and any ejections; then try
-        adding one or two more massive bodies.
+        A 0.1-pc cluster (\(0.1\,\mathrm{pc}\approx3.09\times10^{15}\) m)
+        moving at 1 km/s has a crossing time of about \(3\times10^{12}\) s
+        (\(\approx 10^5\) yr). The shipped
+        <code>dt=2000</code> s and <code>max_steps=60000</code> span only a
+        few years and will look frozen. For a first look at the physical
+        scale use <code>dt=1.0e9</code> s and
+        <code>max_steps=20000</code> (up to \(\sim 6\times10^4\) yr if the
+        adaptive step stays near the ceiling). Close encounters will force
+        much smaller steps, so start with 5–6 equal solar-mass stars and
+        stop if the run becomes slow. A compact analogue that finishes
+        quickly is a 1000-AU box with 5 km/s speeds
+        (<code>dt=1.0e7</code>, <code>max_steps=8000</code>). Leave
+        <code>display_frame='com'</code>. Compare the printed \(E\) and
+        \(E_{\rm internal}\), the expansion of the cluster, and any
+        ejections; then try adding one more massive body. These are
+        point-mass experiments, not collisional star-cluster models.
       </div>
 <div class="scenario-card">
-<div class="sc-head"><div class="sc-title">Compare with MercPert — advanced</div><span class="diff diff-adv">Advanced</span></div>
+<div class="sc-head"><div class="sc-title">Compare with MercPert</div><span class="diff diff-adv">Advanced</span></div>
         Recreate the same physical Sun–perturber–test-particle configuration,
         but express every body's initial state in one inertial frame for
         Multiple. Keep the default COM display so the plot stays centered;
@@ -1115,16 +1158,22 @@ python main.py</pre>
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Galaxy collision — optional toy model</div><span class="diff diff-adv">Advanced</span></div>
-        A concrete starting experiment is two \(10^{11}\,M_\odot\) core particles
-        about 50 kpc apart and approaching at about 100 km/s, each surrounded by
-        several orbiting particles roughly 10 kpc out with speeds of order
-        300 km/s. First make the orbiting particles negligible in mass: the two
-        cores cannot lose orbital energy to them and tend to pass through. Then
-        give the surrounding particles substantial masses, of order
-        \(10^{10}\,M_\odot\), so orbital energy can be redistributed among many
-        bodies and merger-like behavior can occur. This remains a deliberately
-        crude model: there is no gas, friction, radiation, or other true
-        dissipative physics.
+        Two \(10^{11}\,M_\odot\) cores 50 kpc apart approaching at 100 km/s
+        have a crossing time of order \(5\times10^8\) yr
+        (\(\approx 1.5\times10^{16}\) s). The shipped
+        <code>dt</code>/<code>max_steps</code> cover only a few years. A
+        first usable pair is <code>dt=1.0e12</code> s and
+        <code>max_steps=20000</code> (up to \(\sim 6\times10^8\) yr if the
+        timestep stays near the ceiling). Place a few companion particles
+        about 10 kpc from each core. At that radius a \(10^{11}\,M_\odot\)
+        point mass has a circular speed of about 207 km/s and an escape
+        speed of about 293 km/s; use \(\approx 200\) km/s for a bound
+        shell, or \(\approx 300\) km/s only if you want a marginally bound
+        experiment. First give the companions negligible mass so the cores
+        pass through; then raise them toward \(10^{10}\,M_\odot\). Adaptive
+        close-encounter steps can make the run expensive. This is a
+        handful of point masses, not a collisionless galaxy or a merger
+        with gas, friction, or radiation.
       </div>
 </div>
 </section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
