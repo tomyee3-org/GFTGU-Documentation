@@ -445,7 +445,7 @@
 <!-- ═══════════════════════════════════════════════════════ MAIN -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 03f9faff890f
+  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build 8a19fe772044
 </p>
 <!-- ── Description ─────────────────────────────────────────── -->
 <section id="description">
@@ -629,11 +629,13 @@ ground level, the function raises a <code>RuntimeError</code> instead of silentl
 returning an incomplete trajectory.
 </p>
 <div class="note-box">
-<strong>Landing interpolation:</strong> the last stored point is below ground,
-not at \(h=0\). Its horizontal coordinate is therefore not the best estimate
-of the physical range. Experiment 5 shows how to interpolate between the last
-non-negative and first negative heights. If the penultimate sample is exactly
-\(h=0\), it is already the landing point and no interpolation is required.
+<strong>Summary interpolation:</strong> the last stored point is below ground,
+not at \(h=0\). The printed range and flight time therefore use linear
+interpolation between the last non-negative and first negative heights. If the
+penultimate sample is exactly \(h=0\), it is already the landing point and no
+interpolation is required. The printed maximum height uses a quadratic through
+the highest stored sample and its two neighbours to locate the parabola's
+vertex between timesteps.
 </div>
 </section>
 <!-- ── Code Modules ────────────────────────────────────────── -->
@@ -665,27 +667,39 @@ physical scale on both axes so the parabolic shapes are not visually distorted.<
 </div>
 <div class="module-card">
 <div class="mc-head"><div class="mc-title">main.py</div></div>
-<div class="mc-role">User Settings</div>
-<p>Contains the ordinary experiment settings. Edit the values passed to
-<code>run_cannon_trajectory()</code>, save the file, and run
-<code>python main.py</code>.</p>
+<div class="mc-role">Command-Line Entry Point</div>
+<p>Defines and describes the student-facing command-line options, passes all
+five simulation settings to <code>run_cannon_trajectory()</code>, prints the
+interpolated summary, and converts invalid settings into concise errors.</p>
 </div>
 </div>
 </section>
 <!-- ── Parameters ─────────────────────────────────────────── -->
 <section id="parameters">
 <h2>Parameters</h2>
-<p>For ordinary use, open <code>main.py</code>, edit the values below, save the
-file, and run <code>python main.py</code>. The program requires Python 3.10 or
-later, NumPy, and Matplotlib.</p>
+<p>Run <code>python main.py --help</code> for the current command summary and
+<code>python main.py --version</code> for the model version and Build ID. Any
+options omitted from the command use the defaults below. The program requires
+Python 3.10 or later, NumPy, and Matplotlib.</p>
+<pre class="code-block"><code># Default launch
+python main.py
+
+# Change launch conditions
+python main.py --speed 150 --angle_deg 30
+
+# Compare forward Euler at a coarser timestep
+python main.py --method euler --dt 0.5
+
+# Combine any or all settings
+python main.py --speed 80 --angle_deg 60 --dt 0.02 --max_steps 200000 --method improved</code></pre>
 <table class="param-table">
 <thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>speed</code></td><td>100</td><td>m/s</td><td>Positive launch-speed magnitude.</td></tr>
-<tr><td><code>angle_deg</code></td><td>45</td><td>degrees</td><td>Launch angle from 0° through 90° above the horizontal.</td></tr>
-<tr><td><code>dt</code></td><td>0.1</td><td>s</td><td>Positive fixed timestep.</td></tr>
-<tr><td><code>max_steps</code></td><td>100000</td><td>—</td><td>Maximum number of stored points, including launch. Reaching it before landing raises an error.</td></tr>
-<tr><td><code>method</code></td><td>"improved"</td><td>—</td><td>Exactly <code>"euler"</code> or <code>"improved"</code>.</td></tr>
+<tr><td><code>--speed</code></td><td>100</td><td>m/s</td><td>Positive launch-speed magnitude.</td></tr>
+<tr><td><code>--angle_deg</code></td><td>45</td><td>degrees</td><td>Launch angle from 0° through 90° above the horizontal.</td></tr>
+<tr><td><code>--dt</code></td><td>0.1</td><td>s</td><td>Positive fixed timestep.</td></tr>
+<tr><td><code>--max_steps</code></td><td>100000</td><td>—</td><td>Maximum number of stored points, including launch. Reaching it before landing raises an error.</td></tr>
+<tr><td><code>--method</code></td><td>improved</td><td>—</td><td><code>euler</code> selects first-order forward Euler; <code>improved</code> selects second-order improved Euler (Heun's method).</td></tr>
 <tr><td><code>g</code></td><td>9.80665</td><td>m/s²</td><td>Conventional standard acceleration due to gravity, treated as constant.</td></tr>
 </tbody>
 </table>
@@ -731,15 +745,17 @@ set of axes, where each item in <code>trajectories</code> is a
 <code>(label, xs, hs)</code> triple.
 </p>
 <p>
-When you run <code>python main.py</code>, the console also prints the
-interpolated landing range and the maximum stored height, each rounded to
-the nearest tenth of a metre. For the default 100&nbsp;m/s, 45° launch those
-values are <strong>1019.7&nbsp;m</strong> and <strong>254.9&nbsp;m</strong>.
-The printed range uses linear interpolation between the last non-negative
-sample and the first below-ground sample; it is not the raw final
-<code>x</code> coordinate. Experiments 1–3 can be answered from this
-printout by changing only the settings in <code>main.py</code>. From
-Experiment 4 onward you will need to write additional Python.
+When you run <code>python main.py</code>, the console prints the interpolated
+range, maximum height, and flight time to five significant figures. For the
+default 100&nbsp;m/s, 45° launch they are
+<strong>1019.7&nbsp;m</strong>, <strong>254.93&nbsp;m</strong>, and
+<strong>14.421&nbsp;s</strong>. Range and flight time use linear interpolation
+at the final ground crossing; maximum height uses three-point parabolic
+interpolation around the highest sample. The reported range is therefore not
+the raw final <code>x</code> coordinate, and the reported height is not merely
+the largest stored <code>h</code>. Experiments 1–3, 5, and the ordinary runs in
+Experiment 6 can be performed with command-line options. Experiments that
+require overlays or altered integration formulas still require Python changes.
 </p>
 </section>
 <!-- ── Suggested Experiments ──────────────────────────────── -->
@@ -748,15 +764,16 @@ Experiment 4 onward you will need to write additional Python.
 <div class="note-box">
 <strong>Suggested order:</strong> the experiments below are arranged roughly from introductory
 parameter exploration to more demanding numerical-analysis and code-modification exercises.
-Several later experiments use the interpolated landing point introduced in Experiment 5.
+The standard printout already supplies interpolated range, height, and flight time;
+some experiments additionally ask you to inspect raw samples or change the code.
 </div>
 <div class="experiment-card">
 <div class="exp-num">Experiment 1 · Introductory–Intermediate</div>
 <div class="exp-title">Optimal firing angle</div>
 <p>
-          <strong>Core task:</strong> Keep <code>speed = 100</code> m/s and
-          <code>dt = 0.1</code> s, and manually try several launch angles between
-          0° and 90°. Use the printed range (to the nearest tenth of a metre)
+          <strong>Core task:</strong> Keep the default speed of 100 m/s and
+          timestep of 0.1 s, and run several launch angles, for example
+          <code>python main.py --angle_deg 30</code>. Use the printed range
           after each run. Which angle appears to give the greatest range?
           <br/><strong>Extension:</strong> If you are comfortable writing a short loop, automate the test over
           angles from 1° to 89° in 1° steps and plotting range versus angle. Confirm that the
@@ -769,10 +786,11 @@ Several later experiments use the interpolated landing point introduced in Exper
 <div class="exp-num">Experiment 2 · Introductory</div>
 <div class="exp-title">What does the timestep change?</div>
 <p>
-          Run the same 100 m/s, 45° trajectory with several values of <code>dt</code>, for example
-          0.5, 0.2, 0.1, 0.05, and 0.02 s. Compare the smoothness of the plotted curve, the number
+          Run the same 100 m/s, 45° trajectory with several timesteps, for example
+          <code>python main.py --dt 0.5</code>, then 0.2, 0.1, 0.05, and 0.02 s.
+          Compare the smoothness of the plotted curve, the number
           of stored points, the printed range and maximum height, and the final sampled point below the ground. Repeat with both
-          <code>method="euler"</code> and <code>method="improved"</code>. Which visible effects are
+          <code>--method euler</code> and <code>--method improved</code>. Which visible effects are
           caused by the integration method, and which are simply caused by sampling the
           trajectory at discrete times? Here, <em>integration error</em> comes from the numerical
           update formula, while <em>sampling error</em> comes from recording the otherwise
@@ -785,7 +803,8 @@ Several later experiments use the interpolated landing point introduced in Exper
 <div class="exp-num">Experiment 3 · Intermediate</div>
 <div class="exp-title">Effect of muzzle speed</div>
 <p>
-          Fix the angle at 45° and vary <code>speed</code>, for example from 50 to 500 m/s.
+          Fix the angle at 45° and vary <code>--speed</code>, for example with
+          <code>python main.py --speed 50</code> through <code>--speed 500</code>.
           The printed range and maximum height are enough for the first comparisons.
           Compare the ranges with the prediction that, in this model, range is proportional to
           \(v_0^2\). A simple first test is to double the speed and see whether the range becomes
@@ -803,7 +822,8 @@ Several later experiments use the interpolated landing point introduced in Exper
           Call <code>run_cannon_trajectory</code> for launch angles of 15°, 30°, 45°, 60°, and 75°
           at <code>speed = 100</code> m/s. The overlay helper makes a single figure without
           requiring you to manage matplotlib axes yourself. A small standalone experiment file
-          placed beside the program modules can use this pattern:
+          placed beside the program modules can use this pattern. A single command-line run
+          draws only one trajectory, so this multi-curve overlay still requires Python:
 </p>
 <pre class="code-block"><code>from driver_cannon import run_cannon_trajectory
 from plot_cannon import plot_cannon_overlay
@@ -835,19 +855,21 @@ plot_cannon_overlay(trajectories)</code></pre>
           \]
           If \(h_{n-1}=0\) exactly, that stored sample is already the landing
           point and no interpolation is needed.
-          First calculate \(x^*\) from the returned arrays without changing the driver. Then, as
-          an extension, modify the driver so that it reports or stores the interpolated landing
-          point. Compare the raw and interpolated ranges for several relatively large timesteps
-          and against the analytic range formula. The interpolation should substantially reduce
-          the endpoint error.
+          The standard console summary now reports \(x^*\) and the similarly
+          interpolated flight time. Run several relatively large timesteps with
+          commands such as <code>python main.py --dt 1</code> and compare the
+          printed range with the analytic range formula. To compare against the
+          raw final <code>x</code> coordinate as well, write a short experiment
+          that calls <code>run_cannon_trajectory()</code> and inspects
+          <code>xs[-1]</code>; that raw-sample comparison still requires Python.
         </p>
 </div>
 <div class="experiment-card">
 <div class="exp-num">Experiment 6 · Intermediate–Advanced</div>
 <div class="exp-title">Accuracy of the two integrators</div>
 <p>
-          Run the same trajectory with <code>method="euler"</code> and
-          <code>method="improved"</code>. Use the interpolated landing point from Experiment 5
+          Run the same trajectory with <code>--method euler</code> and
+          <code>--method improved</code>. Use the printed interpolated landing range
           and compare each numerical range with the analytic value
           \(R=v_0^2\sin(2\theta)/g\). Repeat after halving <code>dt</code> and then halving it
           again. For forward Euler, examine how the error changes when the timestep is reduced;

@@ -2,62 +2,79 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>CannonTrajectory 1.2.0 Release Notes</title>
+<title>CannonTrajectory 1.3.0 Release Notes</title>
 </head>
 <body>
 
-<h1>CannonTrajectory 1.2.0 Release Notes</h1>
+<h1>CannonTrajectory 1.3.0 Release Notes</h1>
 
 <p>
-<b>Version:</b> 1.2.0<br>
-<b>Build:</b> 03f9faff890f<br>
-<b>Date:</b> 2026-09-10
+<b>Version:</b> 1.3.0<br>
+<b>Build:</b> 8a19fe772044<br>
+<b>Date:</b> 2026-09-15
 </p>
 
 <h2>Release Status</h2>
 
 <p>
-Version 1.2.0 is a student-facing output update on top of the 1.1.0 instructional
-release. The physical model, integrators, validation, and plotting helpers are
-unchanged. The default program now prints interpolated range and maximum height
-to the nearest tenth of a metre so Investigation 1.3's first three exercises can
-be completed by editing settings in <code>main.py</code> and reading the console
-output.
+Version 1.3.0 adds a complete student-facing command-line interface and improves
+the numerical summary printed after each run. All five inputs accepted by
+<code>run_cannon_trajectory()</code> can now be set without editing source code.
+The physical model, the Euler and improved-Euler update formulas, and the plotted
+trajectory are unchanged.
 </p>
 
-<h2>What Changed in 1.2.0</h2>
+<h2>What Changed in 1.3.0</h2>
 
 <ul>
-<li>After a successful run, <code>main.py</code> prints the interpolated
-ground-crossing range and the maximum stored height, each formatted to
-one decimal place in metres.</li>
+<li>Added command-line options for every simulation input:
+<code>--speed</code>, <code>--angle_deg</code>, <code>--dt</code>,
+<code>--max_steps</code>, and <code>--method</code>.</li>
 
-<li>Added <code>interpolated_landing_range()</code> and
-<code>maximum_height()</code> in <code>driver_cannon.py</code> so the printed
-summary uses the same landing interpolation later introduced in Experiment 5,
-rather than the raw first-below-ground sample.</li>
+<li>Documented every input in <code>main.py</code> and in
+<code>python main.py --help</code>. The selector choices are described explicitly:
+<code>euler</code> uses first-order forward Euler, while <code>improved</code>
+uses second-order improved Euler (Heun's method).</li>
 
-<li>Updated the Help file Output section and Experiments 1–3 to describe the
-new printout and to state that programming begins in earnest at Experiment 4.</li>
+<li>Audited the defaults in <code>driver_cannon.py</code>. All five driver inputs
+are now represented in <code>main.py</code>; no defaulted simulation parameter is
+left inaccessible from the command line.</li>
 
-<li>Updated this Release Notes file and the Sample Outputs Guide to Version
-1.2.0 and Build 03f9faff890f.</li>
+<li>Added <code>interpolated_maximum_height()</code>, which fits a parabola to
+the largest stored height and its two neighbours and returns the vertex. A
+boundary maximum or non-concave local triple safely falls back to the largest
+stored height.</li>
+
+<li>Added <code>interpolated_flight_time()</code>, which linearly interpolates
+the final ground crossing using the same two height samples used for the
+interpolated range.</li>
+
+<li>The console now prints interpolated range, parabolically interpolated
+maximum height, and interpolated flight time to five significant figures.</li>
+
+<li>Invalid command-line values are reported as concise
+<code>CannonTrajectory: ...</code> errors instead of Python tracebacks.</li>
+
+<li>Updated the Help file exercises to use command-line examples wherever
+parameter changes are sufficient. Exercises requiring trajectory overlays or
+modified integration formulas continue to use Python.</li>
 </ul>
 
 <h2>Default Printed Values</h2>
 
 <p>
-For the unchanged default settings
-(<code>speed=100</code> m/s, <code>angle_deg=45</code>, <code>dt=0.1</code> s,
-<code>method="improved"</code>):
+For <code>python main.py</code>, whose defaults are
+<code>--speed 100</code>, <code>--angle_deg 45</code>, <code>--dt 0.1</code>,
+<code>--max_steps 100000</code>, and <code>--method improved</code>:
 </p>
 <ul>
 <li>146 stored trajectory samples</li>
-<li>Printed range: 1019.7 m (interpolated ground crossing; analytic range 1019.72 m)</li>
-<li>Printed maximum height: 254.9 m (analytic maximum height 254.929 m)</li>
+<li>Range (interpolated ground crossing): 1019.7 m</li>
+<li>Maximum height (parabolic interpolation): 254.93 m</li>
+<li>Flight time (interpolated ground crossing): 14.421 s</li>
 </ul>
 
-<h2>Major Improvements Retained from 1.1.0</h2>
+<h2>Major Improvements Retained from Earlier Releases</h2>
 
 <ul>
 <li>Updated the gravitational constant from the textbook-rounded
@@ -89,6 +106,10 @@ implicit memory-allocation request.</li>
 allowing students to investigate timestep effects and landing-point
 interpolation.</li>
 
+<li>Version 1.2.0 introduced a printed linearly interpolated landing range and
+a validated <code>interpolated_landing_range()</code> helper. Version 1.3.0
+retains both and extends the summary to height and flight time.</li>
+
 <li>Added <code>plot_cannon_overlay()</code>, allowing multiple trajectories to be
 displayed on one figure for launch-angle comparison experiments while
 preserving the existing single-trajectory plotting interface.</li>
@@ -110,12 +131,15 @@ tests.</li>
 <h2>Test Suite Growth</h2>
 
 <p>
-The 1.1.0 suite contained 63 automated tests. Version 1.2.0 extends that suite
-to 64 tests, covering the printed tenth-of-a-metre summary and the new driver helpers. The
-suite still defines the four executable module filenames explicitly and uses
+The current suite contains 68 automated tests. Version 1.3.0 adds coverage for
+all five command-line parameters, both documented integration-method choices,
+the three five-significant-figure summary values, parabolic maximum-height
+interpolation, and interpolated flight time. The suite defines the four
+executable module filenames explicitly and uses
 <code>find_module_dir(start)</code> to locate the nearest directory containing
 the core modules, allowing the same tests to operate from either the canonical
-<code>tests/</code> layout or a flattened upload layout.
+<code>tests/</code> layout or a flattened upload layout. It also locates the Help
+file correctly when the build and documentation artifacts are adjacent.
 </p>
 
 <p>
@@ -123,7 +147,8 @@ The suite verifies physics constants and analytic solutions; Euler and
 improved-Euler integration behavior; numerical convergence; trajectory
 structure and landing behavior; interpolation accuracy; complementary launch
 angles; speed-squared range scaling; the rounded default range and maximum
-height; parameter validation; overflow detection;
+height; interpolated flight time; command-line parsing and help; parameter
+validation; overflow detection;
 large finite-Real edge cases; plotting behavior; overlay plotting; malformed
 input cleanup; Help-file structure and synchronization; Version/Build
 consistency; Python 3.10 grammar compatibility; flattened-layout execution; and
@@ -137,14 +162,18 @@ independent BUILD_ID reproduction.
 resistance. It is intended for introductory numerical experiments rather than
 high-accuracy ballistic prediction.</li>
 
-<li>The trajectory still terminates at the first sampled point below ground rather
-than the exact landing point. The new printed range interpolates that crossing;
-the raw final sample remains available in the returned arrays for Experiment 5.</li>
+<li>The trajectory still terminates at the first sampled point below ground
+rather than inserting an exact landing sample into the returned arrays. The
+printed range and flight time interpolate that crossing; the raw final sample
+remains available for the landing-interpolation exercise.</li>
 
-<li>Because the simulation uses a fixed timestep, both the printed range and the
-plotted landing position depend partially on sampling resolution. Smaller
-timesteps reduce this sampling error. Rounding to 0.1 m is intentional for the
-first exercises and is not a claim of centimetre-level ballistic accuracy.</li>
+<li>Because height is quadratic in time, linear interpolation at the ground
+crossing is still approximate. Smaller timesteps reduce that event-location
+error. Five-significant-figure formatting makes convergence comparisons easier;
+it is not a claim of five-significant-figure ballistic accuracy.</li>
+
+<li>The plotted curve still includes the first below-ground sample even though
+the printed range and flight time refer to the interpolated crossing.</li>
 
 <li>The improved-Euler method reproduces the analytic sampled solution for this
 special constant-acceleration problem. Its exceptional accuracy here should not
@@ -152,6 +181,9 @@ be interpreted as representative of all differential-equation systems.</li>
 
 <li>The program models launches from ground level only. It does not currently
 include an adjustable initial height.</li>
+
+<li>A normal command-line run displays one trajectory. Multi-trajectory overlays
+still require a short Python experiment using <code>plot_cannon_overlay()</code>.</li>
 
 <li>The Help file loads MathJax from a public CDN. When offline, documentation
 remains readable but mathematical expressions are displayed as raw TeX source
@@ -178,8 +210,8 @@ should maintain compatibility with existing experiments and tests.</li>
 <h2>Version Identification</h2>
 
 <p>
-MODEL_VERSION: 1.2.0<br>
-BUILD_ID: 03f9faff890f
+MODEL_VERSION: 1.3.0<br>
+BUILD_ID: 8a19fe772044
 </p>
 
 </body>
