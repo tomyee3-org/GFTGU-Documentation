@@ -380,6 +380,7 @@
 <a href="#adaptive">Step-Size Restart</a>
 <div class="nav-label">Program Structure</div>
 <a href="#modules">Module Overview</a>
+<a href="#running">Running from the Command Line</a>
 <a href="#parameters">Input Parameters</a>
 <a href="#output">Output Modes</a>
 <div class="nav-label">Experiments</div>
@@ -393,7 +394,7 @@
 ════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.3&nbsp;&nbsp;&nbsp;&nbsp;Build 019ff5e3fe2c
+  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 35c2e676d666
 </p>
 
 <!-- ── Physical Background ── -->
@@ -566,7 +567,7 @@
 <div class="mc-sig">q_factor(mu)<br/>central_density(p_c, T_c, mu)<br/>polytropic_D(rho_c, p_c, gamma)<br/>radial_scale(p_c, rho_c)<br/>hydrostatic_step(...)<br/>mass_step(...)<br/>density_from_pressure(...)<br/>temperature_from_prho(...)</div>
 </div>
 <div class="module-card"><div class="mc-name">driver_star.py</div><div class="mc-role">Driver</div>
-<p>Validates the user parameters, performs the forward-Euler radial integration, restarts with a larger step only when necessary for radial coverage, and interpolates the zero-pressure surface.</p>
+<p>Validates the user parameters, performs the forward-Euler radial integration, restarts with a larger step only when necessary for radial coverage, interpolates the zero-pressure surface, and evaluates requested fractional-radius checkpoints.</p>
 <div class="mc-sig">integrate_star(..., max_points=2000,<br/>  steps_per_scale=400,<br/>  output_type="pressure") → StarResult</div>
 </div>
 <div class="module-card"><div class="mc-name">plot_star.py</div><div class="mc-role">Plot</div>
@@ -574,30 +575,38 @@
 <div class="mc-sig">plot_star_structure(result, log_y=False) → (fig, ax)</div>
 </div>
 <div class="module-card"><div class="mc-name">main.py</div><div class="mc-role">Entry Point</div>
-<p>Contains the user-editable physical and numerical settings for experiments. No edits to the other modules are needed for the suggested investigations.</p>
+<p>Defines and validates the command-line options, runs the selected model, prints the global and interior structure summary, and requests the selected plot.</p>
 </div>
 </div>
 </section>
 <div class="note"><strong>Build-ID scope:</strong> The Build ID shown at the top of this page is computed from the four executable core modules listed above. It identifies the program core; changes to this Help file or the regression tests alone do not change that identifier.</div>
+<!-- ── Running ── -->
+<section id="running">
+<h2>Running from the Command Line</h2>
+<p>Open a terminal in the folder containing <code>main.py</code>. Run <code>python main.py --help</code> for descriptions and current defaults, or <code>python main.py --version</code> for the synchronized model version and Build ID. Any option omitted from a command retains its default.</p>
+<div class="sc-params"># Default pressure profile and structure summary<br/>python main.py<br/><br/># Temperature profile<br/>python main.py --output_type temperature<br/><br/># Density on a logarithmic axis<br/>python main.py --output_type density --log_y<br/><br/># Finer, hotter model<br/>python main.py --T_c 2.4893e7 --steps_per_scale 800 --max_points 4000</div>
+<p>The selector <code>--output_type</code> accepts <code>pressure</code>, <code>density</code>, <code>temperature</code>, or <code>mass</code>. The <code>--log_y</code> switch requests a logarithmic vertical axis; omit it for the default linear axis. It cannot be combined with <code>--output_type mass</code> because enclosed mass is zero at the center.</p>
+</section>
 <!-- ── Input Parameters ── -->
 <section id="parameters">
 <h2>Input Parameters</h2>
-<p>Ordinary experiment settings are all in <code>main.py</code>.</p>
+<p>Every ordinary physical, numerical, and plotting input is accepted by <code>main.py</code> as a command-line option.</p>
 <table><thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead><tbody>
-<tr><td><code>p_c</code></td><td><code>7.158e15</code></td><td>Pa</td><td>Central pressure. Within a family having fixed \(T_c\), \(\mu\), and \(\gamma\), increasing \(p_c\) raises the central density and makes both radius and mass smaller; the model scales as \(R,M\propto p_c^{-1/2}\).</td></tr>
-<tr><td><code>T_c</code></td><td><code>2.263e7</code></td><td>K</td><td>Central temperature used with \(p_c\) and \(\mu\) to set \(\rho_c\). At fixed \(p_c,\mu,\gamma\), the model scales as \(R\propto T_c\) and \(M\propto T_c^2\).</td></tr>
-<tr><td><code>mu</code></td><td><code>1.285</code></td><td>dimensionless</td><td>Effective mean molecular-weight parameter in proton-mass units. In this simplified default model it should not be interpreted as the actual mean molecular weight of the solar core. At fixed \(p_c,T_c,\gamma\), \(R\propto\mu^{-1}\) and \(M\propto\mu^{-2}\).</td></tr>
-<tr><td><code>gamma</code></td><td><code>1.36</code></td><td>dimensionless</td><td>Polytropic exponent in \(p=K\rho^\gamma\); it is related to the conventional polytropic index by \(n=1/(\gamma-1)\). This program requires \(\gamma > 1.2\) so the mathematical polytrope has a finite zero-pressure radius.</td></tr>
-<tr><td><code>max_points</code></td><td><code>2000</code></td><td>integer</td><td>Maximum grid points in one attempt. Increase it when an extended model would otherwise trigger step doubling; it does not by itself refine a successful run.</td></tr>
-<tr><td><code>steps_per_scale</code></td><td><code>400</code></td><td>integer</td><td>Controls the initial numerical resolution through \(dr=\ell/\)<code>steps_per_scale</code>. Larger values give a finer calculation, provided <code>max_points</code> is large enough to avoid a restart.</td></tr>
-<tr><td><code>output_type</code></td><td><code>"pressure"</code></td><td>string</td><td>One of <code>"pressure"</code>, <code>"density"</code>, <code>"temperature"</code>, or <code>"mass"</code>.</td></tr>
-<tr><td><code>log_y</code></td><td><code>False</code></td><td>boolean</td><td>Use the literal boolean <code>True</code> for a logarithmic vertical axis for pressure, density, or temperature; use <code>False</code> for a linear axis. Leave it false for mass because \(m(0)=0\). Strings and numbers are not accepted as substitutes for booleans. On a logarithmic plot, the exact zero-valued surface point is omitted because a logarithmic axis cannot display zero.</td></tr>
+<tr><td><code>--p_c</code></td><td><code>7.158e15</code></td><td>Pa</td><td>Positive finite central pressure. Within a family having fixed \(T_c\), \(\mu\), and \(\gamma\), increasing \(p_c\) raises the central density and makes both radius and mass smaller; the model scales as \(R,M\propto p_c^{-1/2}\).</td></tr>
+<tr><td><code>--T_c</code></td><td><code>2.263e7</code></td><td>K</td><td>Positive finite central temperature used with \(p_c\) and \(\mu\) to set \(\rho_c\). At fixed \(p_c,\mu,\gamma\), the model scales as \(R\propto T_c\) and \(M\propto T_c^2\).</td></tr>
+<tr><td><code>--mu</code></td><td><code>1.285</code></td><td>dimensionless</td><td>Positive effective mean molecular-weight parameter in proton-mass units. In this simplified model it should not be interpreted as the actual mean molecular weight of the solar core.</td></tr>
+<tr><td><code>--gamma</code></td><td><code>1.36</code></td><td>dimensionless</td><td>Polytropic exponent in \(p=K\rho^\gamma\), not the conventional index \(n\). It must exceed 1.2 so the mathematical polytrope has a finite zero-pressure radius.</td></tr>
+<tr><td><code>--max_points</code></td><td><code>2000</code></td><td>integer</td><td>Grid-point capacity in one attempt, at least 3. Increase it when an extended model would otherwise trigger step doubling; it does not by itself refine a successful run.</td></tr>
+<tr><td><code>--steps_per_scale</code></td><td><code>400</code></td><td>integer</td><td>Positive number controlling initial numerical resolution through \(dr=\ell/\)<code>steps_per_scale</code>. Larger values give a finer calculation when <code>max_points</code> is large enough to avoid a restart.</td></tr>
+<tr><td><code>--output_type</code></td><td><code>"pressure"</code></td><td>selector</td><td><code>"pressure"</code> plots Pa; <code>"density"</code> plots kg m\(^{-3}\); <code>"temperature"</code> plots K; <code>"mass"</code> plots enclosed kg.</td></tr>
+<tr><td><code>--log_y</code></td><td><code>False</code></td><td>switch</td><td>When present, uses a logarithmic vertical axis for pressure, density, or temperature. Omit it for a linear axis. It is invalid for mass because \(m(0)=0\); the exact zero-valued surface point is omitted from logarithmic plots.</td></tr>
 </tbody></table>
-<div class="note"><strong>Input checks:</strong> The driver rejects non-finite numerical inputs, nonpositive central pressure, temperature, or \(\mu\); \(\gamma\le1.2\); fewer than three grid points; nonpositive <code>steps_per_scale</code>; unsupported output names; and non-finite results at key derived stages. Error messages identify the invalid input or derived quantity. These finite-range checks are selective safeguards: the program is designed for physically meaningful teaching inputs, not arbitrary extreme finite combinations throughout every Euler expression.</div>
+<div class="note"><strong>Input checks:</strong> The command-line parser rejects non-finite or nonpositive central inputs, \(\gamma\le1.2\), fewer than three grid points, nonpositive <code>--steps_per_scale</code>, unsupported output names, and logarithmic mass plots before integration. The driver retains equivalent validation for direct Python callers.</div>
 </section>
 <!-- ── Output Modes ── -->
 <section id="output">
 <h2>Output Modes</h2>
+<p>Every run prints the modeled surface radius and total mass to five significant figures. It then prints pressure, density, temperature, and mass enclosed at exactly 0%, 25%, 50%, 75%, and 90% of the modeled radius. Values between stored grid points are linearly interpolated in radius. This numerical summary is independent of the selected plot.</p>
 <p>
       All four physical profiles are computed in every run; <code>output_type</code> chooses which
       one is displayed. The horizontal axis begins at the stored center \(r=0\) and ends at the
@@ -617,7 +626,8 @@
       The experiments below are arranged in approximate order of difficulty. The early exercises
       require only parameter changes and reading the resulting radius and mass; later exercises
       test scaling relations, numerical convergence, and substantial extensions of the stellar
-      model.
+      model. Parameter-only exercises show command lines; the final programming extension still
+      requires source changes.
     </p>
 <div class="scenario-grid">
 <div class="scenario-card"><h4>1 · Introductory — Explore the Baseline Solar-Like Model</h4><p>
@@ -626,26 +636,26 @@
       zero, and record the total radius and mass there. Compare the shapes of the profiles with
       the solar model discussed in Chapter 8. Keep in mind that matching the Sun's overall mass
       and radius does not make a one-polytrope calculation a detailed solar model.</p>
-<div class="sc-params">use the default physical parameters<br/>try all four output_type values<br/>try log_y = True for pressure and density</div></div>
+<div class="sc-params">python main.py --output_type pressure<br/>python main.py --output_type density --log_y<br/>python main.py --output_type temperature<br/>python main.py --output_type mass</div></div>
 <div class="scenario-card"><h4>2 · Introductory–Intermediate — Central-Temperature Sensitivity</h4><p>
       Change \(T_c\) by ±10% while holding \(p_c\), \(\mu\), and \(\gamma\) fixed. Record the
       surface radius and total mass for each run. The hotter model should be both larger and
       more massive. For this one-polytrope family the similarity relations predict
       \(R\propto T_c\) and \(M\propto T_c^2\); check whether the numerical results agree.</p>
-<div class="sc-params">T_c = 0.9 * 2.263e7<br/>T_c = 1.1 * 2.263e7<br/>compare surface radius and mass</div></div>
+<div class="sc-params">python main.py --T_c 2.0367e7<br/>python main.py --T_c 2.263e7<br/>python main.py --T_c 2.4893e7<br/>compare the printed radius and total mass</div></div>
 <div class="scenario-card"><h4>3 · Intermediate — Pressure Scaling</h4><p>
       Hold \(T_c\), \(\mu\), and \(\gamma\) fixed and vary \(p_c\) by factors of four.
       Record the resulting stellar radius and mass. The similarity relations for this family
       give \(R\propto p_c^{-1/2}\) and \(M\propto p_c^{-1/2}\). Thus multiplying the central
       pressure by four should reduce both quantities by about a factor of two.</p>
-<div class="sc-params">p_c = baseline / 4<br/>p_c = baseline<br/>p_c = baseline * 4<br/>record R and M</div></div>
+<div class="sc-params">python main.py --p_c 1.7895e15<br/>python main.py --p_c 7.158e15<br/>python main.py --p_c 2.8632e16<br/>record the printed radius and total mass</div></div>
 <div class="scenario-card"><h4>4 · Intermediate — Composition-Parameter Scaling</h4><p>
       At fixed \(p_c\), \(T_c\), and \(\gamma\), vary the effective mean molecular-weight
       parameter \(\mu\). Verify the mathematical scalings \(R\propto\mu^{-1}\) and
       \(M\propto\mu^{-2}\). Treat this as a scaling experiment: the different values of
       \(\mu\) should not all be interpreted as realistic compositions for otherwise identical
       stars.</p>
-<div class="sc-params">mu = 0.6, 1.0, 1.285<br/>record R and M</div></div>
+<div class="sc-params">python main.py --mu 0.6<br/>python main.py --mu 1.0<br/>python main.py --mu 1.285<br/>record the printed radius and total mass</div></div>
 <div class="scenario-card"><h4>5 · Intermediate — Compensate for a Temperature Change</h4><p>
       Explore how a change in central pressure can restore the original stellar mass after
       \(T_c\) has been changed. Increase or decrease \(T_c\) by 10%, then adjust \(p_c\) until
@@ -653,7 +663,7 @@
       the original one. The fact that matching the mass does not automatically restore the
       radius illustrates why simultaneous mass and radius measurements constrain stellar
       models more tightly than either observable alone.</p>
-<div class="sc-params">change T_c by 10%<br/>adjust p_c until M returns to baseline<br/>then compare R</div></div>
+<div class="sc-params">python main.py --T_c 2.4893e7 --p_c 7.158e15<br/># Repeat with different numeric --p_c values until the printed mass<br/># returns to the baseline; then compare the printed radius.</div></div>
 <div class="scenario-card"><h4>6 · Advanced — Compare Two Kinds of Polytropic Family</h4><p>
       First combine Experiments 2–4 into a table or log-log plot. Those experiments hold
       \(\gamma\) fixed but change the central normalization \(D\), and therefore change the
@@ -666,7 +676,7 @@
       \(M\propto p_c^{(3\gamma-4)/(2\gamma)}\). Explain why these exponents differ from the
       one-variable experiments above, and compare them with the proportionalities developed
       in Investigation 8.6.</p>
-<div class="sc-params">part A: combine the results of Experiments 2–4<br/>part B: vary p_c and co-vary T_c to keep D fixed<br/>record R and M; compare measured and predicted exponents</div></div>
+<div class="sc-params"># Part A uses the commands in Experiments 2–4.<br/># Part B: three fixed-D examples for gamma = 1.36<br/>python main.py --p_c 1.7895e15 --T_c 1.5678905e7<br/>python main.py --p_c 7.158e15 --T_c 2.263e7<br/>python main.py --p_c 2.8632e16 --T_c 3.2662797e7<br/>record radius and mass; compare measured and predicted exponents</div></div>
 <div class="scenario-card"><h4>7 · Advanced — A Schematic Red-Giant Polytrope</h4><p>
       Set \(\gamma=1.335\) and try to construct a model having approximately
       one solar mass but a radius about 100 times larger than the baseline solar-like model.
@@ -674,14 +684,14 @@
       about ten solar masses using the same \(\gamma\) and \(\mu\). These are deliberately
       schematic one-polytrope models; real red giants have strongly differentiated cores and
       envelopes.</p>
-<div class="sc-params">gamma = 1.335<br/>first target: M ≈ 1 solar mass, R ≈ 100 baseline radii<br/>second target: M ≈ 10 solar masses<br/>vary p_c and T_c</div></div>
+<div class="sc-params"># Useful starting points; refine p_c and T_c if desired.<br/>python main.py --gamma 1.335 --p_c 7.158e7 --T_c 2.263e5<br/>python main.py --gamma 1.335 --p_c 7.158e9 --T_c 2.263e6</div></div>
 <div class="scenario-card"><h4>8 · Advanced — Newtonian Neutron-Star Toy Model</h4><p>
       Set \(\gamma=2\) and \(\mu=1\), then search for central
       values that give approximately \(R=10\) km and \(M=1.4M_\odot\). Very large central
       pressure and a formal ideal-gas temperature will be required. Treat those quantities only
       as parameters that normalize this Newtonian polytrope: realistic neutron-star matter is
       not an ideal gas, and relativistic gravity is essential.</p>
-<div class="sc-params">mu = 1.0<br/>gamma = 2.0<br/>target R ≈ 1.0e4 m<br/>target M ≈ 2.8e30 kg</div></div>
+<div class="sc-params">python main.py --mu 1 --gamma 2 --p_c 1.9888e34 --T_c 1.1188e12 <br/>    --max_points 5000 --steps_per_scale 400 --output_type mass<br/># This gives approximately R = 1.0e4 m and M = 2.8e30 kg.</div></div>
 <div class="scenario-card"><h4>9 · Advanced — Numerical Convergence</h4><p>
       Keep the physical inputs fixed and increase <code>steps_per_scale</code>. Increase
       <code>max_points</code> when necessary so that <code>restart_count</code> remains zero;
@@ -689,7 +699,7 @@
       Compare the surface radius and total mass. Because the integration uses forward Euler
       steps, the global error should eventually decrease approximately in proportion to
       \(dr\) as the grid is refined.</p>
-<div class="sc-params">steps_per_scale = 200, 400, 800, 1600<br/>increase max_points as needed<br/>ensure restart_count == 0</div></div>
+<div class="sc-params">python main.py --steps_per_scale 200 --max_points 2000<br/>python main.py --steps_per_scale 400 --max_points 2000<br/>python main.py --steps_per_scale 800 --max_points 4000<br/>python main.py --steps_per_scale 1600 --max_points 8000</div></div>
 <div class="scenario-card"><h4>10 · Advanced Programming Extension — Use More Than One Polytropic Region</h4><p>
       Experiment with allowing the equation of state to change from one region
       of a star to another. Make a separate experimental copy of the program and divide the
@@ -701,7 +711,7 @@
       This is a substantial extension: the purpose is not to construct a modern solar model,
       but to see how allowing different equations of state in different layers changes the
       global radius, mass distribution, and interior profiles.</p>
-<div class="sc-params">advanced: introduce two or three radial EOS regions<br/>preserve pressure continuity at each interface</div></div>
+<div class="sc-params">Programming change required: introduce two or three radial EOS regions and preserve pressure continuity at each interface. Command-line inputs alone cannot perform this extension.</div></div>
 </div>
 </section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
 <div style="
@@ -725,10 +735,11 @@
         margin-bottom: 0.35em;
         text-transform: uppercase;
         letter-spacing: 0.04em;
-      ">Restoring Default Parameter Values</div>
+      ">Restoring Defaults and Program Files</div>
 <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
-        you can restore the original program files using any of the following methods:
+        To restore the default inputs, omit the corresponding command-line options on the next run.
+        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
+        or another program file for a programming extension, restore it using one of the following methods:
       </p>
 <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
 <li>
