@@ -445,7 +445,7 @@
 ══════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.1&nbsp;&nbsp;&nbsp;&nbsp;Build 77b768d3a136
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 5d582af5ad3e
 </p>
 <!-- ── Description ── -->
 <section id="description">
@@ -467,7 +467,8 @@
       the result against a reference circle showing Earth's surface. An optional
       <code>"inverse_square"</code> extension is provided for realistic higher-altitude,
       Keplerian, and escape experiments. The default model is best used within a few kilometres
-      of Earth's surface. All the usual launch parameters are set in <code>main.py</code>.
+      of Earth's surface. All six run settings can be supplied at the command line; use
+      <code>python main.py --help</code> to see their descriptions and defaults.
     </p>
 <div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
 <!-- ── Physical Background ── -->
@@ -634,7 +635,7 @@
       <strong>tangential</strong> component and \(v\) (the \(y\)-velocity) is the
       <strong>radial</strong> component at launch. A purely horizontal (tangential) launch
       is achieved by setting \(v_\text{init} = 0\) and \(u_\text{init} \neq 0\) — this is
-      what <code>main.py</code> uses, and places the launch point at an apsis (periapsis or
+      what the command-line defaults use, and places the launch point at an apsis (periapsis or
       apoapsis, depending on whether \(u_\text{init}\) is below or above \(v_c\)).
       Setting \(v_\text{init} \neq 0\) adds a radial velocity component and rotates the
       orbit's orientation.
@@ -677,8 +678,10 @@
 <p>
       The trajectory arrays are trimmed to the number of stored points actually produced before
       being returned. If the projectile hits Earth, the final plotted point may lie slightly below
-      the surface circle because the driver stops after detecting \(r &lt; R_\oplus\); it does not
-      interpolate the exact surface-crossing point between timesteps.
+      the surface circle because the driver preserves the first inside-Earth sample. For the
+      console summary, <code>main.py</code> finds the intersection of the final straight trajectory
+      segment with the Earth circle and uses that interpolated event for flight time, angular
+      travel, and distance. The raw arrays remain unchanged for the impact-interpolation exercise.
     </p>
 <div class="note">
 <strong>Choosing dt and maxSteps:</strong>
@@ -732,7 +735,10 @@ def compute_acceleration(x, y, force_law="simplified") -&gt; (ax, ay)
           <code>compute_acceleration()</code> at every step. Builds the 401-point Earth-surface
           reference circle and advances the projectile until surface impact or
           <code>maxSteps</code> is reached. With <code>return_diagnostics=True</code>, it also
-          returns time and velocity arrays for quantitative experiments.
+          returns time and velocity arrays for quantitative experiments. The
+          <code>analyze_earth_orbit()</code> helper interpolates impact and revolution crossings,
+          estimates local altitude extrema, calculates path length and angular travel, and derives
+          osculating Keplerian elements when the inverse-square law is selected.
         </p>
 <div class="sig">from physics_earthorbit import compute_acceleration, R_EARTH, ForceLaw
 
@@ -766,25 +772,20 @@ def run_earth_orbit(
 <div class="mc-role">Entry Point</div>
 <div class="mc-name">main.py</div>
 <p>
-          The only file most users need to edit. Set the launch parameters and
-          <code>force_law</code> here, then run <code>python main.py</code>. The plot appears
-          immediately. <code>uInit</code> is the x/tangential (horizontal-at-launch)
+          Defines and describes the six student-facing command-line settings, enables the driver's
+          diagnostic arrays internally, prints a scenario-appropriate quantitative summary, and
+          displays the plot. <code>uInit</code> is the x/tangential (horizontal-at-launch)
           component, and <code>vInit</code> is the y/radial (vertical-at-launch) component.
         </p>
-<div class="sig">from driver_earthorbit import run_earth_orbit
-from plot_earthorbit  import plot_earth_orbit
+<div class="sig"># Default launch
+python main.py
 
-force_law = "simplified"
+# Higher-altitude inverse-square run
+python main.py --h0 300000 --uInit 7726 \
+    --dt 1 --maxSteps 7000 --force_law inverse_square
 
-xs, ys, xEarth, yEarth = run_earth_orbit(
-    h0=300.0,
-    uInit=7900.0,  # tangential -- not quite enough to complete an orbit at 300 m
-    vInit=0.0,
-    dt=0.4, maxSteps=15000,
-    force_law=force_law,
-)
-
-plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
+# List every option and its default
+python main.py --help</div>
 </div>
 </div><!-- /module-grid -->
 </section>
@@ -792,11 +793,18 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
 <section id="parameters">
 <h2>Parameters</h2>
 <p>
-      All ordinary launch parameters are set as arguments to <code>run_earth_orbit()</code>
-      in <code>main.py</code>. The defaults reproduce the Newton's Cannon setup:
+      Run <code>python main.py --help</code> for the current command summary and
+      <code>python main.py --version</code> for the model version and Build ID. Options omitted
+      from the command use the defaults below. The defaults reproduce the Newton's Cannon setup:
       a tangential launch at 7 900 m s<sup>−1</sup> from 300 m above the reference Earth
       radius, using the constant-magnitude-\(g\) force law.
     </p>
+<div class="ep"># Default launch
+python main.py
+
+# Supply all six run settings explicitly
+python main.py --h0 300 --uInit 7900 --vInit 0 \
+    --dt 0.4 --maxSteps 15000 --force_law simplified</div>
 <table class="param-table">
 <thead>
 <tr>
@@ -808,7 +816,7 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
 </thead>
 <tbody>
 <tr>
-<td class="pname">h0</td>
+<td class="pname">--h0</td>
 <td class="pdefault">300.0</td>
 <td>m</td>
 <td>
@@ -820,7 +828,7 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
           </td>
 </tr>
 <tr>
-<td class="pname">uInit</td>
+<td class="pname">--uInit</td>
 <td class="pdefault">7900.0</td>
 <td>m s<sup>−1</sup></td>
 <td>
@@ -834,7 +842,7 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
           </td>
 </tr>
 <tr>
-<td class="pname">vInit</td>
+<td class="pname">--vInit</td>
 <td class="pdefault">0.0</td>
 <td>m s<sup>−1</sup></td>
 <td>
@@ -845,7 +853,7 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
           </td>
 </tr>
 <tr>
-<td class="pname">dt</td>
+<td class="pname">--dt</td>
 <td class="pdefault">0.4</td>
 <td>s</td>
 <td>
@@ -856,7 +864,7 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
           </td>
 </tr>
 <tr>
-<td class="pname">maxSteps</td>
+<td class="pname">--maxSteps</td>
 <td class="pdefault">15000</td>
 <td>—</td>
 <td>
@@ -868,23 +876,24 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
           </td>
 </tr>
 <tr>
-<td class="pname">return_diagnostics</td>
+<td class="pname">return_diagnostics (Python API only)</td>
 <td class="pdefault">False</td>
 <td>—</td>
 <td>
-            Optional analysis output. When <code>True</code>, the driver returns
+            Return-format switch for direct Python callers, not a command-line setting. When
+            <code>True</code>, the driver returns
             <code>ts</code>, <code>us</code>, and <code>vs</code> after the usual four arrays.
-            This is useful for period and energy experiments and leaves the normal plotting
-            interface unchanged when <code>False</code>.
+            <code>main.py</code> enables it internally to calculate the printed summary. Direct
+            calls retain the four-array interface when it is <code>False</code>.
           </td>
 </tr>
 <tr>
-<td class="pname">force_law</td>
-<td class="pdefault">"simplified"</td>
+<td class="pname">--force_law</td>
+<td class="pdefault">simplified</td>
 <td>—</td>
 <td>
-<code>"simplified"</code> (default) runs the simulation using the constant-magnitude
-            approximation; <code>"inverse_square"</code> switches to the inverse-square
+<code>simplified</code> (default) runs the simulation using the constant-magnitude
+            approximation; <code>inverse_square</code> switches to the inverse-square
             force law. Several Suggested Experiments below (Keplerian ellipses, escape, and
             Kepler's third law) require <code>"inverse_square"</code> explicitly. Under the
             default constant-magnitude force, non-circular bounded trajectories generally
@@ -945,9 +954,43 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
       periods, plot speed, or examine numerical energy error.
     </p>
 <p>
-      Before the plot opens, <code>main.py</code> also prints the model version, executable-code
-      build identifier, and number of trajectory samples to the console. Use
-      <code>python main.py --version</code> to print only the version and build.
+      Before the plot opens, <code>main.py</code> prints the model version, executable-code
+      Build ID, number of trajectory samples, and a scenario-appropriate numerical summary.
+      Every measured real number is displayed to five significant digits. This supports
+      timestep-convergence comparisons; it is not a claim of real-world ballistic accuracy.
+    </p>
+<h3>Impact or Incomplete Trajectory</h3>
+<p>
+      If the projectile does not complete a revolution, the summary reports the fraction of a
+      revolution traversed, total flight time, total angular travel, locally interpolated maximum
+      altitude, and total path distance. For impact, the time and final path segment are
+      interpolated to the Earth circle rather than using the first inside-Earth sample. If the
+      step budget ends first, the distance is reported through the final stored sample.
+    </p>
+<h3>One or More Completed Revolutions</h3>
+<p>
+      Once the accumulated angular travel reaches \(2\pi\), the summary reports the number of
+      completed revolutions, total flight time, and total angular travel. For every complete
+      revolution it interpolates the angular boundary crossing and prints that revolution's
+      elapsed time and its minimum and maximum altitudes. A partial final revolution contributes
+      to the totals but does not receive a separate per-revolution line.
+    </p>
+<h3>Inverse-Square Elements and Escape</h3>
+<p>
+      With <code>--force_law inverse_square</code>, the initial position and velocity define
+      osculating Keplerian elements. The summary prints eccentricity and perigee altitude; a bound
+      ellipse also has an apogee altitude. At or above escape energy there is no apogee. An escape
+      run instead reports its final altitude at <code>maxSteps</code>; when that is also the largest
+      altitude reached, the two identical concepts are combined into one line.
+    </p>
+<div class="note">
+<strong>Interpolation does not alter the plotted arrays.</strong> The console analysis uses a
+      straight segment/Earth-circle intersection for impact, linear interpolation at revolution
+      boundaries, and a local three-point parabola for altitude extrema. The red plot deliberately
+      retains the original fixed-step samples, including the first point inside Earth after impact.
+    </div>
+<p>
+      Use <code>python main.py --version</code> to print only the version and Build ID.
     </p>
 </section>
 <!-- ── Suggested Experiments ── -->
@@ -955,9 +998,9 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
 <h2>Suggested Experiments</h2>
 <div class="note">
 <strong>Suggested order:</strong> The experiments below are arranged from introductory
-      parameter exploration to more demanding numerical-analysis work. Experiments 1–3 require
-      only edits to the values passed from <code>main.py</code>; later experiments progressively
-      ask for additional calculations or small code changes.
+      parameter exploration to more demanding numerical-analysis work. Experiments that only
+      change launch settings now give command-line examples. Exercises that compare multiple
+      datasets, calculate impact coordinates, or inspect energy histories still require Python.
     </div>
 <div class="exp-grid">
 <div class="exp-card">
@@ -977,9 +1020,12 @@ plot_earth_orbit(xs, ys, xEarth, yEarth)</div>
           works for both models. Reduce <code>dt</code> if you want to distinguish numerical error
           from the physical difference between the two force laws.
         </p>
-<div class="ep">h0=300.0, vInit=0.0
-uInit=7906.0  # scan upward from 7900
-force_law="simplified"</div>
+<div class="ep">python main.py --h0 300 --vInit 0 --uInit 7906 \
+    --force_law simplified
+
+# Repeat with:
+python main.py --h0 300 --vInit 0 --uInit 7905 \
+    --force_law inverse_square</div>
 </div>
 <div class="exp-card">
 <div class="ec-num">EXP-2 · INTRODUCTORY</div>
@@ -995,9 +1041,10 @@ force_law="simplified"</div>
           Very low speeds such as 5 000 m s<sup>−1</sup> strike the surface so quickly that the
           trajectory is nearly indistinguishable from a dot on a whole-Earth plot.
         </p>
-<div class="ep">h0=300.0, vInit=0.0
-uInit=7800, 7850, 7900, 7906
-force_law="simplified"</div>
+<div class="ep">python main.py --uInit 7800
+python main.py --uInit 7850
+python main.py --uInit 7900
+python main.py --uInit 7906</div>
 </div>
 <div class="exp-card">
 <div class="ec-num">EXP-3 · INTRODUCTORY–INTERMEDIATE</div>
@@ -1014,9 +1061,13 @@ force_law="simplified"</div>
           and where it ceases to represent terrestrial gravity well. At 300 km the two circular
           speeds already differ by several percent.
         </p>
-<div class="ep"># Near surface: h0=300.0
-# Higher altitude: h0=300_000.0
-# Run each case with both force laws.</div>
+<div class="ep"># Near surface
+python main.py --h0 300 --uInit 7906 --force_law simplified
+python main.py --h0 300 --uInit 7905 --force_law inverse_square
+
+# 300 km; use the appropriate circular speed for each law
+python main.py --h0 300000 --uInit 8089 --force_law simplified
+python main.py --h0 300000 --uInit 7726 --force_law inverse_square</div>
 </div>
 <div class="exp-card">
 <div class="ec-num">EXP-4 · INTERMEDIATE · SCHUTZ SUGGESTION</div>
@@ -1034,6 +1085,12 @@ force_law="simplified"</div>
           between the two samples. Compare the interpolated point with the raw final point, and
           repeat with smaller <code>dt</code>. As an optional programming exercise, modify the driver
           so that the interpolated surface crossing replaces the below-surface endpoint.
+        </p>
+<p>
+          Version 1.2.0 already uses an exact line-segment/circle intersection for the printed
+          impact time and total distance, but it intentionally leaves the raw endpoint arrays
+          unchanged. Calculating and comparing the impact coordinates themselves therefore
+          remains a useful programming exercise.
         </p>
 <div class="ep">import numpy as np
 from driver_earthorbit import run_earth_orbit
@@ -1059,10 +1116,8 @@ y_hit = ys[-2] + f * (ys[-1] - ys[-2])</div>
           <strong>Requires <code>force_law="inverse_square"</code>.</strong> This gives the
           intended Keplerian interpretation.
         </p>
-<div class="ep">h0=1_000_000.0
-uInit=7307.0, vInit=800.0  # |v|≈7351 m/s ≈ local v_c
-dt=1.0, maxSteps=10000
-force_law="inverse_square"</div>
+<div class="ep">python main.py --h0 1000000 --uInit 7307 --vInit 800 \
+    --dt 1 --maxSteps 10000 --force_law inverse_square</div>
 </div>
 <div class="exp-card">
 <div class="ec-num">EXP-6 · INTERMEDIATE</div>
@@ -1078,9 +1133,8 @@ force_law="inverse_square"</div>
           constant-magnitude force, non-circular bounded trajectories generally precess into
           rosettes instead of remaining fixed Keplerian ellipses.
         </p>
-<div class="ep">h0=300_000.0, vInit=0.0
-uInit=9000.0, maxSteps=50000
-force_law="inverse_square"</div>
+<div class="ep">python main.py --h0 300000 --uInit 9000 --vInit 0 \
+    --maxSteps 50000 --force_law inverse_square</div>
 </div>
 <div class="exp-card">
 <div class="ec-num">EXP-7 · INTERMEDIATE</div>
@@ -1095,15 +1149,13 @@ force_law="inverse_square"</div>
           This is a useful real-world check on the inverse-square extension. The simulation is
           two-dimensional and does not model Earth's rotation, so it reproduces the orbital period
           associated with geostationary altitude rather than geographic station-keeping itself.
-          Enable <code>return_diagnostics=True</code> and use the returned time array to measure
-          the period.
+          The standard console summary now interpolates and prints the time of each completed
+          revolution. Use <code>return_diagnostics=True</code> in a direct Python call only if you
+          want to reproduce the calculation yourself or inspect the full time array.
         </p>
 <p><strong>Requires <code>force_law="inverse_square"</code>.</strong></p>
-<div class="ep">h0=35_786_000.0, vInit=0.0
-uInit=3075.0
-dt=10.0, maxSteps=10000
-force_law="inverse_square"
-return_diagnostics=True</div>
+<div class="ep">python main.py --h0 35786000 --uInit 3075 --vInit 0 \
+    --dt 10 --maxSteps 10000 --force_law inverse_square</div>
 </div>
 <div class="exp-card">
 <div class="ec-num">EXP-8 · INTERMEDIATE–ADVANCED</div>
@@ -1120,9 +1172,13 @@ return_diagnostics=True</div>
           constant-magnitude central force has a potential that increases without bound with
           distance, so it has no finite escape speed.
         </p>
-<div class="ep">h0=300_000.0, vInit=0.0
-uInit=10900.0, maxSteps=100000
-force_law="inverse_square"</div>
+<div class="ep"># Bound, near escape
+python main.py --h0 300000 --uInit 10900 --vInit 0 \
+    --dt 2 --maxSteps 100000 --force_law inverse_square
+
+# Above escape; reports final altitude when maxSteps is reached
+python main.py --h0 300000 --uInit 11500 --vInit 0 \
+    --dt 2 --maxSteps 3001 --force_law inverse_square</div>
 </div>
 <div class="exp-card">
 <div class="ec-num">EXP-9 · ADVANCED</div>
@@ -1223,8 +1279,10 @@ speed_squared = us**2 + vs**2
         letter-spacing: 0.04em;
       ">Restoring Default Parameter Values</div>
 <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
-        you can restore the original program files using any of the following methods:
+        Command-line changes are temporary: run <code>python main.py</code> with no options to
+        restore all default settings. If a programming exercise leads you to edit
+        <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
+        or another program file, restore the original files using any of the following methods:
       </p>
 <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
 <li>
