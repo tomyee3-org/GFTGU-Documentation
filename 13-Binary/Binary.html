@@ -418,7 +418,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.4&nbsp;&nbsp;&nbsp;&nbsp;Build 83cbf117fcdb
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 2610688b936a
 </p>
 <!-- ─── Overview ─── -->
 <section id="overview">
@@ -437,7 +437,7 @@
     </p>
 <p>
       By default the calculation stops after the relative position vector has completed
-      one revolution. Set <code>stop_after_one_orbit = False</code> when you want a
+      one revolution. Use <code>--no-stop_after_one_orbit</code> when you want a
       long integration for energy-conservation tests or when studying an unbound orbit.
       In all cases <code>max_steps</code> remains a safety ceiling.
     </p>
@@ -457,7 +457,9 @@
 <h3>Running the Program</h3>
 <p>Clone or download the repository, then:</p>
 <pre>cd GFTGU-Programs/Binary
-python main.py</pre>
+python main.py
+python main.py --output_type velocity_space
+python main.py --help</pre>
 <p>
       To display the program version and executable-core build identifier without
       running a simulation, use <code>python main.py --version</code>.
@@ -471,8 +473,7 @@ python main.py</pre>
     </p>
 <h3>Choosing Output</h3>
 <p>
-      Edit the <code>output_type</code> variable near the bottom of
-      <code>main.py</code> to select which plot is displayed. See
+      Choose the plot with <code>--output_type</code> on the command line. See
       <a href="#output-types">Output Types</a> for the complete list of
       accepted string values.
     </p>
@@ -485,14 +486,12 @@ python main.py</pre>
 <div class="mc-name">main.py</div>
 <div class="mc-role">Entry Point &amp; Configuration</div>
 <p>
-          Defines every initial condition and simulation parameter — masses,
+          Accepts command-line initial conditions and simulation parameters — masses,
           starting positions, starting velocities, the maximum timestep <code>dt</code>, the safety limit <code>max_steps</code>,
           the tolerance thresholds <code>eps1</code> and <code>eps2</code>, and
           <code>stop_after_one_orbit</code>. After
           calling <code>integrate_binary()</code> to run the simulation it passes
-          the result to <code>plot_binary()</code> for display. All
-          user-adjustable settings live here; no other file needs editing for
-          typical use.
+          the result to <code>plot_binary()</code> for display. All user-adjustable settings are available as command-line options.
         </p>
 </div>
 <div class="mc-card">
@@ -530,7 +529,7 @@ python main.py</pre>
 <p>
           Provides the <code>plot_binary()</code> function and the
           <code>OutputType</code> string literal type. Accepts a
-          <code>BinaryResult</code> and renders one of seven distinct plots through eight accepted selector strings via
+          <code>BinaryResult</code> and renders one of seven distinct plots through seven command-line selectors (the plotter also accepts a legacy orbit alias) via
           <code>matplotlib</code>: orbital trajectories in the \(xy\)-plane
           (equal aspect ratio), velocity-space diagrams, position vs. time, or
           velocity vs. time for each body individually, and the full energy
@@ -696,7 +695,7 @@ python main.py</pre>
       by itself prove that the numerical trajectory is exactly closed.
     </p>
 <p>
-      Set <code>stop_after_one_orbit = False</code> to continue for the full
+      Use <code>--no-stop_after_one_orbit</code> to continue for the full
       <code>max_steps</code> accepted steps. This is useful for unbound trajectories
       and long-term energy-conservation tests.
     </p>
@@ -818,6 +817,8 @@ python main.py</pre>
 <section id="experiments">
 <h2>Suggested Experiments</h2>
 <h3>1 · Circular and Elliptical Equal-Mass Binaries — Introductory</h3>
+<pre><code>python main.py
+python main.py --uInitA 26934.5 --uInitB -26934.5</code></pre>
 <p>
       Run the defaults first. For equal masses \(M\) at \(x=\pm a\), each body in
       a circular orbit has radius \(a\) while the gravitational separation is
@@ -827,23 +828,27 @@ python main.py</pre>
       intermediate speeds and watch the eccentricity change.
     </p>
 <h3>2 · Translation Invariance — Introductory</h3>
+<pre><code>python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10</code></pre>
 <p>
       Add the same constant displacement to both bodies. Their coordinate
       trajectories move to a different part of the plane, but the relative orbit
       is unchanged.
     </p>
 <h3>3 · Galilean Relativity — Introductory</h3>
+<pre><code>python main.py --vInitA 500 --vInitB 500 --uInitA 13500 --uInitB -12500 --output_type velocity_space</code></pre>
 <p>
       Add the same velocity vector to both bodies. The binary now drifts across
       the plot, but its internal orbit is unchanged. Compare the new
-      <code>"velocity space"</code> plot with the default one: both hodographs have
+      <code>--output_type velocity_space</code> plot with the default one: both hodographs have
       the same shape and are simply translated by the added velocity. If you also
       compare energy plots, remember that the kinetic energy includes the motion of
       the centre of mass.
     </p>
 <h3>4 · Velocity-Space Hodographs — Intermediate</h3>
+<pre><code>python main.py --uInitA 26934.5 --uInitB -26934.5 --output_type velocity_space
+python main.py --output_type velocity_space</code></pre>
 <p>
-      Compare <code>"velocity space"</code> plots for the circular case in
+      Compare <code>--output_type velocity_space</code> plots for the circular case in
       Experiment 1 and for the eccentric default case. A velocity-space plot is
       not an orbit in physical space: each point represents the two components of
       a body's velocity. Check that each complete bound-orbit curve is circular,
@@ -851,6 +856,7 @@ python main.py</pre>
       initial conditions.
     </p>
 <h3>5 · Unequal Masses and the Centre of Mass — Intermediate</h3>
+<pre><code>python main.py --MA 2e30 --MB 1e30 --xInitA 3.0666666667e10 --xInitB -6.1333333333e10 --uInitA 15550.5265 --uInitB -31101.053</code></pre>
 <p>
       Make body B progressively less massive. To keep the centre of mass at rest,
       choose initial velocities satisfying
@@ -862,15 +868,18 @@ python main.py</pre>
       in <em>Orbit</em>.
     </p>
 <h3>6 · Bound, Parabolic, and Unbound Motion — Intermediate</h3>
+<pre><code>python main.py --uInitA 38091.14 --uInitB -38091.14 --no-stop_after_one_orbit --max_steps 1000 --output_type energy_vs_time
+python main.py --uInitA 60000 --uInitB -60000 --no-stop_after_one_orbit --max_steps 1000 --output_type energy_vs_time</code></pre>
 <p>
       Keep the centre of mass at rest while increasing the relative speed from the
-      same starting positions. Plot <code>"energy vs time"</code>. Under this
+      same starting positions. Plot <code>--output_type energy_vs_time</code>. Under this
       zero-centre-of-mass condition, verify that bound elliptical motion has
       \(E&lt;0\), the marginal parabolic case has \(E\approx0\), and hyperbolic
-      motion has \(E&gt;0\). Set <code>stop_after_one_orbit = False</code> for
+      motion has \(E&gt;0\). Use <code>--no-stop_after_one_orbit</code> for
       unbound runs.
     </p>
 <h3>7 · Stellar Reflex Motion — Advanced Challenge</h3>
+<pre><code>python main.py --MA 1.989e30 --MB 1.898e27 --xInitA -7.42174134486e8 --xInitB 7.77757825866e11 --uInitA -12.4550437189 --uInitB 13052.2033493 --dt 20000 --max_steps 30000</code></pre>
 <p>
       Model the Sun as body A and one planet as body B. For an approximate circular
       orbit with separation \(a\), use
@@ -898,11 +907,13 @@ python main.py</pre>
       approximate two-body data rather than a precision Solar-System ephemeris.
     </p>
 <h3>8 · Numerical Convergence and Energy Conservation — Advanced</h3>
+<pre><code>python main.py --no-stop_after_one_orbit --dt 2000 --max_steps 7000 --output_type energy_vs_time
+python main.py --no-stop_after_one_orbit --dt 1000 --max_steps 14000 --output_type energy_vs_time</code></pre>
 <p>
-      Set <code>stop_after_one_orbit = False</code>. For a reproducible
+      Use <code>--no-stop_after_one_orbit</code>. For a reproducible
       three-period comparison using the default physical initial conditions, first
-      use <code>dt = 2000</code> and <code>max_steps = 7000</code>; then repeat
-      with <code>dt = 1000</code> and <code>max_steps = 14000</code>. Because the
+      use <code>--dt 2000 --max_steps 7000</code>; then repeat
+      with <code>--dt 1000 --max_steps 14000</code>. Because the
       default case does not trigger adaptive reduction, both runs cover the same
       \(1.4\times10^7\) s interval. You can then repeat with tighter
       <code>eps1</code>/<code>eps2</code>. Compare
@@ -919,8 +930,7 @@ python main.py</pre>
 <div>
 <div class="restore-title" id="restore-title">Restoring Default Parameter Values</div>
 <p class="restore-intro">
-        If you edit <code>main.py</code> or another program file while experimenting,
-        you can restore the original program files using any of the following methods:
+        A new run with <code>python main.py</code> uses all default settings; options in a previous command do not carry over. If you change a program file for an exercise, restore it using any of the following methods:
       </p>
 <ul class="restore-list">
 <li>
@@ -952,66 +962,39 @@ python main.py</pre>
 <!-- ═══════════════════════════ REFERENCE ═══════════════════════════ -->
 <!-- ─── Parameters ─── -->
 <section id="parameters">
-<h2>Parameters</h2>
-<p>
-      All ordinary experiment settings are near the top of <code>main.py</code>.
-      In the program's notation, <code>v</code> is the x-velocity component and
-      <code>u</code> is the y-velocity component.
-    </p>
-<table>
-<thead><tr><th>Variable</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead>
-<tbody>
-<tr><td><code>MA</code>, <code>MB</code></td><td>\(2.0\times10^{30}\)</td><td>kg</td><td>Positive masses of A and B</td></tr>
-<tr><td><code>xInitA</code></td><td>\(+4.6\times10^{10}\)</td><td>m</td><td>Initial x-position of A</td></tr>
-<tr><td><code>xInitB</code></td><td>\(-4.6\times10^{10}\)</td><td>m</td><td>Initial x-position of B</td></tr>
-<tr><td><code>yInitA</code>, <code>yInitB</code></td><td>\(0\)</td><td>m</td><td>Initial y-positions</td></tr>
-<tr><td><code>vInitA</code>, <code>vInitB</code></td><td>\(0\)</td><td>m s<sup>−1</sup></td><td>Initial x-velocity components</td></tr>
-<tr><td><code>uInitA</code></td><td>\(+1.3\times10^4\)</td><td>m s<sup>−1</sup></td><td>Initial y-velocity of A</td></tr>
-<tr><td><code>uInitB</code></td><td>\(-1.3\times10^4\)</td><td>m s<sup>−1</sup></td><td>Initial y-velocity of B</td></tr>
-<tr><td><code>dt</code></td><td>\(2000\)</td><td>s</td><td>Maximum working timestep</td></tr>
-<tr><td><code>max_steps</code></td><td>\(10000\)</td><td>—</td><td>Safety ceiling on accepted steps</td></tr>
-<tr><td><code>eps1</code></td><td>\(0.05\)</td><td>—</td><td>Acceleration-change tolerance</td></tr>
-<tr><td><code>eps2</code></td><td>\(10^{-4}\)</td><td>—</td><td>Corrector convergence tolerance</td></tr>
-<tr><td><code>stop_after_one_orbit</code></td><td><code>True</code></td><td>—</td><td>Stop after one relative revolution when possible</td></tr>
-</tbody>
-</table>
-<div class="note">
-      All numeric inputs must be finite real numbers. Masses and <code>dt</code>
-      must be positive; <code>max_steps</code> must be a positive integer; both
-      tolerances must lie strictly between zero and one (0 and 1 are not allowed);
-      and the bodies must have nonzero initial separation. Extremely large or
-      small inputs that put a derived displacement, acceleration, or energy outside the
-      range of double-precision arithmetic are rejected with an error. For both
-      bodies' accelerations and for potential, kinetic, and total energy, this
-      includes overflow and a nonzero result so small that it would round to zero.
-    </div>
+<h2>Command-Line Parameters</h2>
+<p>Run <code>python main.py --help</code> for the current list and defaults. Set only the options you wish to change; all other values use their defaults. The x velocity is <code>v</code> and the y velocity is <code>u</code>.</p>
+<table><thead><tr><th>Option</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--MA</code>, <code>--MB</code></td><td>2e30 each</td><td>kg</td><td>Masses of A and B</td></tr>
+<tr><td><code>--xInitA</code>, <code>--xInitB</code></td><td>+4.6e10, -4.6e10</td><td>m</td><td>Initial x coordinates</td></tr>
+<tr><td><code>--yInitA</code>, <code>--yInitB</code></td><td>0, 0</td><td>m</td><td>Initial y coordinates</td></tr>
+<tr><td><code>--vInitA</code>, <code>--vInitB</code></td><td>0, 0</td><td>m/s</td><td>Initial x velocities</td></tr>
+<tr><td><code>--uInitA</code>, <code>--uInitB</code></td><td>+13000, -13000</td><td>m/s</td><td>Initial y velocities</td></tr>
+<tr><td><code>--dt</code></td><td>2000</td><td>s</td><td>Largest attempted timestep</td></tr>
+<tr><td><code>--max_steps</code></td><td>10000</td><td>steps</td><td>Maximum accepted steps</td></tr>
+<tr><td><code>--eps1</code></td><td>0.05</td><td>—</td><td>Predictor acceleration-change threshold</td></tr>
+<tr><td><code>--eps2</code></td><td>1e-4</td><td>—</td><td>Corrector velocity-change threshold</td></tr>
+<tr><td><code>--stop_after_one_orbit</code>, <code>--no-stop_after_one_orbit</code></td><td>stop</td><td>—</td><td>Stop after a relative revolution or run to max_steps</td></tr>
+<tr><td><code>--output_type</code></td><td>orbits</td><td>—</td><td>Choose one of the seven plots below</td></tr>
+</tbody></table>
+<div class="note">All numeric inputs must be finite real numbers. Masses and <code>dt</code> must be positive; <code>max_steps</code> must be a positive integer; both tolerances must lie strictly between zero and one (0 and 1 are not allowed); and the bodies must have nonzero initial separation. Extremely large or small inputs that put a derived displacement, acceleration, or energy outside the range of double-precision arithmetic are rejected with an error. For both bodies' accelerations and for potential, kinetic, and total energy, this includes overflow and a nonzero result so small that it would round to zero.</div>
+<h3>Printed results</h3>
+<p>The summary reports sampled minimum and maximum separations, accepted steps, total revolutions from the relative-position angle, and elapsed time in days. The two bodies' semi-major axes, eccentricity, period, periapsis, apoapsis and speeds at the apsides are initial Keplerian elements about their shared centre of mass. A common velocity boost changes the plotted inertial-frame kinetic energy but does not change these elements. For a hyperbola the semi-major axis is signed and negative; apoapsis and period do not exist. Parabolic and radial cases also omit undefined elements. The one-revolution stopping test can overshoot the exact full turn by one accepted step.</p>
+<p>Eleven table rows, from fraction 0.0 through 1.0 of the total simulated days, linearly interpolate the stored potential, kinetic and total mechanical energies in joules between accepted states. The final column is signed <code>(E-E0)/|E0|</code>. If initial total energy is exactly zero, that fractional departure is undefined. Interpolation between numerical states is not an independent exact-energy calculation; inspect the reported departure and repeat with tighter numerical settings when needed.</p>
 </section>
 <!-- ─── Output Types ─── -->
 <section id="output-types">
 <h2>Output Types</h2>
-<p>Assign one of these strings to <code>output_type</code> in <code>main.py</code>:</p>
+<p>Pass one of these values to <code>--output_type</code>:</p>
 <ul class="output-list">
-<li><span class="tag">"orbit"</span><span>Legacy alias for <code>"orbits"</code>, retained for compatibility with the original Java selector.</span></li>
-<li><span class="tag">"orbits"</span><span>Both coordinate trajectories in the \(xy\)-plane, with equal axis scales. The termination test instead follows the relative A-minus-B vector.</span></li>
-<li>
-<span class="tag">"velocity space"</span>
-<span>
-          The x-component of velocity is plotted horizontally and the y-component
-          vertically, showing how each velocity vector changes during the motion.
-          In inverse-square Kepler motion, the relative-motion hodograph is a circle
-          for a complete bound orbit; the individual bodies have the same form,
-          scaled according to the masses and shifted by any centre-of-mass velocity.
-          With the default equal masses and zero centre-of-mass velocity, the two
-          velocity vectors are negatives of one another at every instant.
-        </span>
-</li>
-<li><span class="tag">"position vs. time, body A"</span><span>\(x_A(t)\) and \(y_A(t)\).</span></li>
-<li><span class="tag">"position vs. time, body B"</span><span>\(x_B(t)\) and \(y_B(t)\).</span></li>
-<li><span class="tag">"velocity vs. time, body A"</span><span>\(v_A(t)\) and \(u_A(t)\).</span></li>
-<li><span class="tag">"velocity vs. time, body B"</span><span>\(v_B(t)\) and \(u_B(t)\).</span></li>
-<li><span class="tag">"energy vs time"</span><span>System kinetic \(K\), potential \(U\), and total \(E\); the principal numerical-accuracy diagnostic.</span></li>
-</ul>
-</section>
+<li><span class="tag">orbits</span><span>Both coordinate trajectories in the xy plane; the termination test follows the relative vector.</span></li>
+<li><span class="tag">velocity_space</span><span>Both velocity vectors in the velocity plane; the Kepler hodograph is circular over a complete orbit.</span></li>
+<li><span class="tag">position_vs_time_body_a</span><span>Body A x and y coordinates versus time.</span></li>
+<li><span class="tag">position_vs_time_body_b</span><span>Body B x and y coordinates versus time.</span></li>
+<li><span class="tag">velocity_vs_time_body_a</span><span>Body A x and y velocity components versus time.</span></li>
+<li><span class="tag">velocity_vs_time_body_b</span><span>Body B x and y velocity components versus time.</span></li>
+<li><span class="tag">energy_vs_time</span><span>System kinetic K, potential U, and total E versus time.</span></li>
+</ul></section>
 <!-- ── License ── -->
 <section id="license">
 <h2>License</h2>
