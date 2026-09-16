@@ -444,7 +444,7 @@
 ═══════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.3.1&nbsp;&nbsp;&nbsp;&nbsp;Build 93380f960f8e
+  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build c9fb119d6144
 </p>
 <!-- ── Description ── -->
 <section id="description">
@@ -456,6 +456,10 @@ with an adaptive predictor-corrector integrator.</p>
 <p>The supplied defaults approximate Mercury at perihelion. Five display modes show the
 x-y orbit, velocity hodograph, position versus time, velocity versus time, or specific
 kinetic/potential/total energy.</p>
+<p>All initial conditions, integration controls, and the display mode can be supplied at the
+command line. The console reports numerical diagnostics and the meaningful planar Keplerian
+elements derived from the initial state, with real-valued results displayed to five significant
+digits.</p>
 <p>The solver uses an adaptive predictor-corrector method to control numerical error while
 following the orbit. Rejected steps may shrink, successful steps can recover toward the user's
 maximum timestep, and complete revolutions are measured by accumulating the azimuthal angle
@@ -465,11 +469,20 @@ traveled. This works for clockwise or counter-clockwise motion starting from any
 <section id="using">
 <h2>How to Use</h2>
 <ol>
-<li>Open <code>main.py</code> and edit the initial position, velocity, numerical controls, or <code>output</code> mode.</li>
-<li>Run <code>main.py</code>.</li>
+<li>Run <code>python main.py --help</code> to list every command-line option and default.</li>
+<li>Run <code>python main.py</code> for the default Mercury-like orbit, or append options to change the initial state, numerical controls, or display.</li>
 <li>Read the console summary for the termination reason and numerical-accuracy diagnostics.</li>
 <li>Inspect the selected plot. Try another output mode or change one parameter at a time for comparison.</li>
 </ol>
+<div class="sig"># Default Mercury-like orbit
+python main.py
+
+# Hyperbolic escape, stopped after 600 accepted steps
+python main.py --vyInit 85000 --maxSteps 600 --output orbit
+
+# Moon-like test particle around a fixed Earth
+python main.py --xInit 3.626e8 --vyInit 1082 --k 3.986e14 \
+    --dt0 1000 --output position_time</div>
 <p>The parameter <code>k</code> is the central gravitational parameter <code>GM</code>, in
 m<sup>3</sup> s<sup>−2</sup>. Enter a gravitational parameter, not a mass in kilograms.</p>
 </section>
@@ -510,6 +523,15 @@ harmonic oscillator, whose restoring force is proportional to \(r\).</p>
 <li><strong>Second law:</strong> equal areas are swept in equal times because the specific angular momentum \(h=xv_y-yv_x\) is constant and \(dA/dt=h/2\).</li>
 <li><strong>Third law:</strong> for a fixed central mass, \(T^2\propto a^3\).</li>
 </ul>
+<h3>Planar Keplerian Elements</h3>
+<p>From the initial position and velocity, the program derives the osculating conic class,
+eccentricity (e), semimajor axis (a), semilatus rectum (p), periapsis radius,
+apoapsis radius and period when they exist, the longitude of periapsis, and the initial true
+anomaly measured counter-clockwise in the x-y plane. A parabola has no finite semimajor axis,
+apoapsis, or period; a hyperbola has a negative semimajor axis by the usual convention and no
+apoapsis or period. Periapsis direction and true anomaly are undefined for a circular orbit.</p>
+<p>Orbit is two-dimensional, so inclination and longitude of the ascending node—the 3-D elements
+that orient an orbital plane—are not represented.</p>
 </section>
 <!-- ── Governing Equations ── -->
 <section id="equations">
@@ -630,50 +652,57 @@ other central body.</p>
 <h2>Module Overview</h2>
 <div class="module-grid">
 <div class="module-card"><div class="mc-role">Physics Layer</div><div class="mc-name">physics_orbit.py</div>
-<p>Contains the inverse-square acceleration, the IAU nominal solar \(GM\), and helper functions
-for specific energy and specific angular momentum.</p>
+<p>Contains the inverse-square acceleration, the IAU nominal solar \(GM\), helper functions
+for specific energy and specific angular momentum, and the planar Keplerian-element calculation.</p>
 <div class="sig">compute_acceleration(x, y, mu)
 specific_energy(...)
-specific_angular_momentum(...)</div></div>
+specific_angular_momentum(...)
+keplerian_elements(...)</div></div>
 <div class="module-card"><div class="mc-role">Driver Layer</div><div class="mc-name">driver_orbit.py</div>
 <p>Implements adaptive predictor-corrector integration, timestep shrink/recovery, revolution
-counting, singularity protection, explicit termination reasons, and conservation/closure
-diagnostics. It returns the recorded history of accepted states.</p>
+counting, singularity protection, explicit termination reasons, conservation/closure
+diagnostics, and initial-state orbital elements. It returns the recorded history of accepted states.</p>
 <div class="sig">run_orbit(..., maxOrbits=1.0) -&gt; OrbitResult</div></div>
 <div class="module-card"><div class="mc-role">Plot Layer</div><div class="mc-name">plot_orbit.py</div>
 <p>Displays one of the five Orbit views from the already-computed
 <code>OrbitResult</code>. Orbit and hodograph plots use equal aspect ratios.</p>
 <div class="sig">plot_orbit(result, output="orbit")</div></div>
 <div class="module-card"><div class="mc-role">Entry Point</div><div class="mc-name">main.py</div>
-<p>Contains user-editable initial conditions, central \(GM\), numerical controls,
-<code>maxOrbits</code>, and output selection. It also prints the run diagnostics.</p>
-<div class="sig">result = run_orbit(...)
-plot_orbit(result, output=output)</div></div>
+<p>Defines and briefly describes every command-line option, passes those settings to the driver,
+prints five-significant-digit diagnostics and planar Keplerian elements, and selects the plot.</p>
+<div class="sig">python main.py [options]
+python main.py --help
+python main.py --version</div></div>
 </div>
 </section>
 <!-- ── Parameters ── -->
 <section id="parameters">
 <h2>Parameters</h2>
+<p>Options omitted from the command use the defaults below. Command-line settings affect only
+that run; running <code>python main.py</code> again restores all defaults.</p>
+<div class="sig"># Supply all integration settings and the display explicitly
+python main.py --xInit 4.6e10 --yInit 0 --vxInit 0 --vyInit 58980 \
+    --k 1.3271244e20 --dt0 1e4 --maxSteps 20000 \
+    --eps1 0.05 --eps2 1e-4 --maxOrbits 1 --output orbit</div>
 <table class="param-table">
 <thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td class="pname">xInit</td><td class="pdefault">4.6e10</td><td>m</td><td>Initial x-position; default approximates Mercury perihelion.</td></tr>
-<tr><td class="pname">yInit</td><td class="pdefault">0.0</td><td>m</td><td>Initial y-position.</td></tr>
-<tr><td class="pname">vxInit</td><td class="pdefault">0.0</td><td>m s⁻¹</td><td>Initial x-velocity.</td></tr>
-<tr><td class="pname">vyInit</td><td class="pdefault">58980.0</td><td>m s⁻¹</td><td>Initial y-velocity; default approximates Mercury's perihelion speed.</td></tr>
-<tr><td class="pname">k</td><td class="pdefault">1.3271244e20</td><td>m³ s⁻²</td><td>Central gravitational parameter \(GM\), not the central mass in kg; default is the IAU nominal solar mass parameter.</td></tr>
-<tr><td class="pname">dt0</td><td class="pdefault">1e4</td><td>s</td><td>Maximum timestep. The working timestep can shrink and later recover toward this value.</td></tr>
-<tr><td class="pname">maxSteps</td><td class="pdefault">20000</td><td>—</td><td>Maximum number of accepted integration steps, excluding the initial state.</td></tr>
-<tr><td class="pname">maxOrbits</td><td class="pdefault">1.0</td><td>revolutions</td><td>Maximum accumulated azimuthal travel in units of \(2\pi\). For unbound or nearly radial trajectories this target may never be reached, so the run may instead stop at <code>maxSteps</code> or the singularity guard.</td></tr>
-<tr><td class="pname">eps1</td><td class="pdefault">0.05</td><td>—</td><td>Positive acceleration-vector change threshold for timestep rejection. Smaller values demand smaller timesteps.</td></tr>
-<tr><td class="pname">eps2</td><td class="pdefault">1e-4</td><td>—</td><td>Positive convergence tolerance for successive estimates of the velocity increment. Smaller values demand tighter corrector convergence.</td></tr>
+<tr><td class="pname">--xInit</td><td class="pdefault">4.6e10</td><td>m</td><td>Initial x-position; default approximates Mercury perihelion.</td></tr>
+<tr><td class="pname">--yInit</td><td class="pdefault">0.0</td><td>m</td><td>Initial y-position.</td></tr>
+<tr><td class="pname">--vxInit</td><td class="pdefault">0.0</td><td>m s⁻¹</td><td>Initial x-velocity.</td></tr>
+<tr><td class="pname">--vyInit</td><td class="pdefault">58980.0</td><td>m s⁻¹</td><td>Initial y-velocity; default approximates Mercury's perihelion speed.</td></tr>
+<tr><td class="pname">--k</td><td class="pdefault">1.3271244e20</td><td>m³ s⁻²</td><td>Central gravitational parameter \(GM\), not the central mass in kg; default is the IAU nominal solar mass parameter.</td></tr>
+<tr><td class="pname">--dt0</td><td class="pdefault">1e4</td><td>s</td><td>Positive maximum timestep. The adaptive working timestep can shrink and later recover toward this value.</td></tr>
+<tr><td class="pname">--maxSteps</td><td class="pdefault">20000</td><td>—</td><td>Positive maximum number of accepted integration steps, excluding the initial state.</td></tr>
+<tr><td class="pname">--maxOrbits</td><td class="pdefault">1.0</td><td>revolutions</td><td>Positive requested accumulated azimuthal travel in units of \(2\pi\). For unbound or nearly radial trajectories this target may never be reached, so the run may instead stop at <code>maxSteps</code> or the singularity guard.</td></tr>
+<tr><td class="pname">--eps1</td><td class="pdefault">0.05</td><td>—</td><td>Positive acceleration-vector change threshold for timestep rejection. Smaller values demand smaller timesteps.</td></tr>
+<tr><td class="pname">--eps2</td><td class="pdefault">1e-4</td><td>—</td><td>Positive convergence tolerance for successive estimates of the velocity increment. Smaller values demand tighter corrector convergence.</td></tr>
+<tr><td class="pname">--output</td><td class="pdefault">orbit</td><td>—</td><td>Display selector. The five alternatives are described in the Output Modes table below; this option changes only the plot, not the integration.</td></tr>
 </tbody>
 </table>
-<p><code>output</code> is set separately in <code>main.py</code> and controls only the display,
-not the integration.</p>
 <div class="note"><strong>Valid numerical inputs.</strong> The initial position must not be at
-<code>r=0</code>; <code>k</code>, <code>dt0</code>, <code>eps1</code>, <code>eps2</code>, and
-<code>maxOrbits</code> must be positive; and <code>maxSteps</code> must be a positive integer.
+<code>r=0</code>; <code>--k</code>, <code>--dt0</code>, <code>--eps1</code>, <code>--eps2</code>, and
+<code>--maxOrbits</code> must be positive; and <code>--maxSteps</code> must be a positive integer.
 All numeric inputs must be finite real numbers, and intermediate acceleration and conservation
 quantities must fit within ordinary floating-point range.
 The two tolerances are independent and need not be ordered. For experiments on the numerical
@@ -700,7 +729,11 @@ maximum absolute specific-energy and specific-angular-momentum drift, and—when
 defined—fractional drift for each conserved quantity. If the initial energy is zero or nearly zero,
 or the initial angular momentum is zero or nearly zero, the corresponding fractional diagnostic is
 reported as <code>n/a</code>. Closure residuals are reported when the requested endpoint is an
-integral number of revolutions.</p>
+integral number of revolutions; otherwise both closure fields are shown as <code>n/a</code>.</p>
+<p>The summary also reports the meaningful planar Keplerian elements listed above. Real-valued
+summary results use five significant digits. For a hyperbolic trajectory ending because
+<code>--maxSteps</code> or a small <code>--maxOrbits</code> target was reached, the final radius and
+speed are printed as well.</p>
 <p><strong>Specific energy</strong> means energy per unit mass of the orbiting body. The mass of
 the test particle is therefore not needed.</p>
 </section>
@@ -709,7 +742,7 @@ the test particle is therefore not needed.</p>
 <h2>Suggested Experiments</h2>
 <p>
   The experiments below are arranged in approximate order of difficulty. The first few require
-  only changes to the parameters or display mode in <code>main.py</code>; later experiments ask
+  only command-line parameter or display changes; later experiments ask
   you to interpret conservation laws, orbital geometry, or the numerical method.
 </p>
 <div class="exp-grid">
@@ -720,64 +753,98 @@ the positive x-axis at the perihelion distance in the second column and give it 
 y-direction speed from the third column. From the plotted perihelion and aphelion distances,
 estimate the eccentricity and compare it with the first column, using the formula in the table
 caption. This directly tests whether Newton's inverse-square law reproduces the observed shapes
-of planetary orbits.</p></div>
+of planetary orbits.</p>
+<div class="ep"># Mercury defaults
+python main.py
+
+# Replace the four initial-state values with another Table 4.3 case
+python main.py --xInit PERIHELION_M --yInit 0 \
+    --vxInit 0 --vyInit MAX_SPEED_M_PER_S</div></div>
 <div class="exp-card"><div class="ec-num">EXP-2 · Introductory</div><h4>Measure Planetary Periods</h4>
-<p>For several of the planetary orbits from EXP-1, set <code>maxOrbits=1</code> and compare the
+<p>For several of the planetary orbits from EXP-1, set <code>--maxOrbits 1</code> and compare the
 reported elapsed simulated time with the observed orbital period. You can also select
-<code>output="position_time"</code> or <code>output="velocity_time"</code> and read the period
-from the time axis. Compare your results with the planetary periods in Table 4.2 of the book.</p></div>
+<code>--output position_time</code> or <code>--output velocity_time</code> and read the period
+from the time axis. Compare your results with the planetary periods in Table 4.2 of the book.</p>
+<div class="ep">python main.py --maxOrbits 1 --output position_time
+python main.py --maxOrbits 1 --output velocity_time</div></div>
 <div class="exp-card"><div class="ec-num">EXP-3 · Introductory–Intermediate</div><h4>Position and Velocity Both Repeat</h4>
 <p>A closed orbit must return not only to its starting position but also to its starting velocity.
-Run one complete bound orbit and select <code>output="velocity"</code>. The velocity-space curve
+Run one complete bound orbit and select <code>--output velocity</code>. The velocity-space curve
 should close just as the position-space orbit does. The console closure residuals provide a
 numerical check: after an integral number of revolutions, both the final radius and velocity should
-be close to their initial values. </p></div>
+be close to their initial values.</p>
+<div class="ep">python main.py --maxOrbits 1 --output velocity</div></div>
 <div class="exp-card"><div class="ec-num">EXP-4 · Intermediate</div><h4>Energy Conservation</h4>
 <p>After reading the introduction to gravitational energy in Chapter 6, select
-<code>output="energy"</code> for a bound orbit. Kinetic and potential specific energy
+<code>--output energy</code> for a bound orbit. Kinetic and potential specific energy
 change continually, but their sum should remain nearly constant. Then make an unbound orbit and
 compare its total specific energy with that of the bound orbit. Bound Kepler orbits have negative
 specific energy, hyperbolic orbits positive specific energy, and the marginal parabolic case zero.
 The console's energy-drift diagnostics show the remaining numerical error and provide a quantitative
 check on energy conservation. Use absolute specific-energy drift for the parabolic case, where a
-fractional change from zero is undefined.</p></div>
+fractional change from zero is undefined.</p>
+<div class="ep"># Bound default
+python main.py --output energy
+
+# Hyperbolic comparison
+python main.py --vyInit 85000 --maxSteps 600 --output energy</div></div>
 <div class="exp-card"><div class="ec-num">EXP-5 · Intermediate</div><h4>Bound, Parabolic, and Hyperbolic Motion</h4>
 <p>At a fixed starting radius \(r\), vary the initial speed through the escape value
 \(v_{\rm esc}=\sqrt{2\mu/r}\). Below it the orbit is bound; at the limiting value it is parabolic;
-above it the orbit is hyperbolic. For unbound cases, increase <code>maxSteps</code> if necessary
-because the requested <code>maxOrbits</code> may never be reached. Compare the trajectory class
+above it the orbit is hyperbolic. For unbound cases, increase <code>--maxSteps</code> if necessary
+because the requested <code>--maxOrbits</code> may never be reached. Compare the trajectory class
 with the sign of the initial specific energy. A decimal value typed for \(v_{\rm esc}\) is rounded
 to floating-point precision, so its computed energy may be slightly positive or negative rather
 than exactly zero. Inspect the absolute specific energy and test speeds just below and above the
-threshold when identifying the limiting parabolic case.</p></div>
+threshold when identifying the limiting parabolic case.</p>
+<div class="ep"># Bound, near the threshold, and hyperbolic
+python main.py --vyInit 70000
+python main.py --vyInit 75961 --maxSteps 600
+python main.py --vyInit 85000 --maxSteps 600</div></div>
 <div class="exp-card"><div class="ec-num">EXP-6 · Intermediate</div><h4>Direction Independence of Binding</h4>
 <p>Keep \(v_x^2+v_y^2\) fixed while rotating the initial velocity vector at a fixed starting
 position. The orbit's shape and angular momentum change, but its bound/unbound classification does
 not, because the specific energy depends on the speed rather than the direction of the velocity.
-</p></div>
+</p>
+<div class="ep"># These two velocities have the same speed
+python main.py --vxInit 0 --vyInit 58980
+python main.py --vxInit 41705.15 --vyInit 41705.15</div></div>
 <div class="exp-card"><div class="ec-num">EXP-7 · Intermediate</div><h4>Approximate Moon Around a Fixed Earth</h4>
 <p>Replace the solar gravitational parameter by
 \(GM_\oplus\approx3.9860\times10^{14}\ {\rm m^3\,s^{-2}}\), and try
 <code>xInit=3.626e8</code> m with <code>vyInit=1082</code> m/s. This fixed-Earth test-particle
 model has a Kepler period of about <strong>27.8 days</strong>. Compare the result with the model's
 prediction, remembering that the real Earth–Moon system differs because the Moon's mass is not
-negligible.</p></div>
+negligible.</p>
+<div class="ep">python main.py --xInit 3.626e8 --yInit 0 \
+    --vxInit 0 --vyInit 1082 --k 3.986e14 \
+    --dt0 1000 --maxOrbits 1</div></div>
 <div class="exp-card"><div class="ec-num">EXP-8 · Intermediate</div><h4>Repeat Several Revolutions</h4>
-<p>Set <code>maxOrbits=2</code> or 5 and examine whether successive numerical ellipses lie on top
+<p>Set <code>--maxOrbits 2</code> or 5 and examine whether successive numerical ellipses lie on top
 of one another. This makes accumulated integration error visible. Fractional values such as 1.5
 are also allowed, although closure residuals are reported only when the requested endpoint is an
-integral number of revolutions.</p></div>
+integral number of revolutions.</p>
+<div class="ep">python main.py --maxOrbits 2
+python main.py --maxOrbits 5
+python main.py --maxOrbits 1.5</div></div>
 <div class="exp-card"><div class="ec-num">EXP-9 · Intermediate–Advanced</div><h4>Numerical Convergence</h4>
-<p>Reduce <code>dt0</code> and tighten <code>eps1</code> and <code>eps2</code>. Compare the
+<p>Reduce <code>--dt0</code> and tighten <code>--eps1</code> and <code>--eps2</code>. Compare the
 orbital period, energy drift, angular-momentum drift, and closure residuals rather than judging
 accuracy from the orbit plot alone. Try changing one numerical control at a time so that you can
 tell which effect it has. You can also make either tolerance deliberately large to see what happens
-when that accuracy control is effectively relaxed.</p></div>
+when that accuracy control is effectively relaxed.</p>
+<div class="ep"># Baseline
+python main.py
+
+# Smaller maximum step and tighter tolerances
+python main.py --dt0 5000 --eps1 0.01 --eps2 1e-6</div></div>
 <div class="exp-card"><div class="ec-num">EXP-10 · Advanced</div><h4>Verify Kepler's Third Law</h4>
-<p>Run several bound planetary orbits. For each one, obtain the period \(T\) from a
-<code>maxOrbits=1</code> run and estimate the semi-major axis \(a=(r_{\rm peri}+r_{\rm apo})/2\)
-from the trajectory. Compare \(T^2/a^3\) among the different orbits. It should be approximately
-constant when the central mass is unchanged.</p></div>
+<p>Run several bound planetary orbits with <code>--maxOrbits 1</code>. For each one, use the
+printed Keplerian period \(T\) and semimajor axis \(a\), then compare \(T^2/a^3\). It should be
+approximately constant when the central mass is unchanged. The calculation itself still requires
+you to record values from several runs and compare them.</p>
+<div class="ep">python main.py
+# Repeat with the Table 4.3 perihelion position and speed for other planets.</div></div>
 <div class="exp-card"><div class="ec-num">EXP-11 · Advanced</div><h4>Verify Kepler's Second Law</h4>
 <p>Use the returned \(x,y,t\) arrays to select positions separated by equal time intervals.
 Approximate the area swept during each interval by the triangle formed by the origin and the two
@@ -786,14 +853,17 @@ constant specific angular momentum \(h=xv_y-yv_x\) reported by the calculation. 
 analysis in <code>main.py</code> immediately after <code>run_orbit()</code> returns; the arrays are
 available there as <code>result.xs</code>, <code>result.ys</code>, and <code>result.ts</code>.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-12 · Advanced</div><h4>Explore the Velocity Hodograph</h4>
-<p>Select <code>output="velocity"</code>. For a non-radial Kepler orbit the velocity vectors lie
+<p>Select <code>--output velocity</code>. For a non-radial Kepler orbit the velocity vectors lie
 on a circle: a bound ellipse traces the full circle, whereas parabolic and hyperbolic trajectories
-trace only part of it. Compare several eccentricities and then an unbound orbit.</p></div>
+trace only part of it. Compare several eccentricities and then an unbound orbit.</p>
+<div class="ep">python main.py --output velocity
+python main.py --vyInit 85000 --maxSteps 600 --output velocity</div></div>
 <div class="exp-card"><div class="ec-num">EXP-13 · Advanced</div><h4>Point-Mass Radial Infall</h4>
 <p>Give the particle zero or nearly zero angular momentum and an inward velocity. Observe what
 happens as the trajectory approaches the mathematical point-mass singularity. The program contains
 a numerical guard to prevent evaluation at \(r=0\); that guard radius is not the physical surface
-of a star or planet. This limiting case provides a useful test of the numerical treatment of trajectories that approach the point-mass singularity.</p></div>
+of a star or planet. This limiting case provides a useful test of the numerical treatment of trajectories that approach the point-mass singularity.</p>
+<div class="ep">python main.py --vxInit -1000 --vyInit 0 --maxSteps 20000</div></div>
 <div class="exp-card"><div class="ec-num">EXP-14 · Advanced Programming Extension</div><h4>Try a Different Central Force Law</h4>
 <p>As an optional programming exercise, make a copy of the program and replace the Newtonian inverse-square acceleration with other central-force laws. A particularly instructive comparison is a Hooke-law acceleration proportional to \(-\mathbf r\). You can also try small non-Newtonian corrections and look for orbital precession. Historically, modified Newtonian force laws were proposed as explanations for Mercury's anomalous perihelion precession, while modern alternatives such as MOND have been proposed as alternatives to dark matter in some astrophysical settings. After experimenting with the code, research these topics and investigate why modified force laws have not replaced general relativity as the accepted explanation of Mercury's perihelion precession. Keep this as a separate experimental copy so the standard <code>Orbit</code> program continues to represent Newtonian gravity.</p></div>
 <div class="exp-card"><div class="ec-num">EXP-15 · Advanced Programming Extension</div><h4>Compare Error Measures</h4>
@@ -828,7 +898,9 @@ coordinate axes, and does the difference matter at the tolerances you tested?</p
         letter-spacing: 0.04em;
       ">Restoring Default Parameter Values</div>
 <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
+        Command-line changes are temporary: run <code>python main.py</code> with no options to
+        restore all default settings. If a programming exercise leads you to edit
+        <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file,
         you can restore the original program files using any of the following methods:
       </p>
 <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
