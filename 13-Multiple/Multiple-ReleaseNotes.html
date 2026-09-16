@@ -1,46 +1,11 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Multiple 1.2.2 Release Notes</title>
-</head>
-<body>
-<h1>Multiple 1.2.2 Release Notes</h1>
-<p><b>Version:</b> 1.2.2<br><b>Build:</b> e29d630e7cf0<br><b>Date:</b> 2026-09-11</p>
-<h2>Release Status</h2>
-<p>Version 1.2.2 follows Kickoff2 (COM display frame, printed conservation totals, exercise ratings) and Audit2-1 review by Codex and Claude. High-priority documentation errors in the boosted-momentum exercise and the display-versus-diagnostic-frame wording are corrected. The COM display remains a viewing translation; the integrator and the printed <code>E</code>, <code>P</code>, and <code>L</code> stay in the user-supplied inertial frame. The regression suite now contains 99 tests, all passing.</p>
-<h2>Major Improvements Since 1.1.2</h2>
-<ul>
-<li>Added <code>display_frame='com'|'user'</code>, default <code>'com'</code>. Plots and animations subtract the instantaneous all-body center of mass for display only.</li>
-<li>Animation key <strong>F</strong> toggles the display frame without re-integrating and rewrites a discrete boxed note to <code>Switched — Display frame: ...</code>.</li>
-<li>Console output now prints initial and final user-frame scaled totals: total energy <code>E=K+U</code>, internal energy <code>E_internal=E-|P|^2/(2M)</code>, linear momentum components, and angular-momentum components, plus the existing maximum-drift line.</li>
-<li>Suggested scenarios carry Introductory / Intermediate / Advanced badges. The COM, cluster, and MercPert exercises no longer require hand subtraction of <code>R_CM</code> and <code>V_CM</code> merely to plot the motion.</li>
-<li>Help file distinguishes COM <em>display</em> from a zero-momentum <em>integration/diagnostic</em> frame. Changing <code>display_frame</code> does not alter conservation diagnostics.</li>
-<li>Legacy result dictionaries that omit both <code>display_frame</code> and <code>masses_solar</code> are labeled and drawn as user-frame data rather than being mislabeled COM.</li>
-</ul>
-<h2>Audit2-1 Corrections in 1.2.2</h2>
-<ul>
-<li>The Center-of-mass-frame exercise now uses <code>P_new = P_old + M u</code>. For the shipped state and <code>u=(1.0e5,0,0)</code> m/s the expected printed momentum is <code>(2.7e5, -3.0e4, 0)</code> m/s, not <code>3.0e5</code>.</li>
-<li>Animation <code>E</code>/<code>P</code>/<code>L</code> overlay is a multiline boxed block that no longer collides with the legend or runs off the default figure.</li>
-<li>Overlay values are labeled interpolated-frame totals. The accepted-step drift line remains authoritative.</li>
-<li>Terminology: <code>V_CM</code> is the center-of-mass velocity. The frame moving at <code>V_CM</code> is the center-of-momentum (zero-momentum) frame.</li>
-<li>Small-star-cluster and galaxy-collision exercises now state crossing times and give usable <code>dt</code>/<code>max_steps</code> pairs, plus a warning that they are point-mass toys.</li>
-<li>Galaxy companions at 10 kpc around a <code>1e11 M_sun</code> core are assigned ~200 km/s for a bound shell; ~300 km/s is documented as marginally bound.</li>
-<li>Help notes that the shipped default itself has nonzero net momentum, and that the same bulk-motion caveat applies to angular momentum about the origin.</li>
-</ul>
-<h2>Test Suite</h2>
-<p>The suite grew from 87 tests in 1.1.2 to 93 after Kickoff2 and to 99 in this Audit2-1 response. New tests cover Galilean momentum addition on the shipped state, COM-displayed relative trajectories before and after a uniform boost, F-key frame toggling and the switched note, legacy user-frame labeling, explicit COM-without-masses rejection, console <code>E</code>/<code>E_internal</code> formatting, and one-badge-per-scenario Help parsing.</p>
-<h2>Known Limitations</h2>
-<ul>
-<li>Intended for education rather than research-grade N-body work.</li>
-<li>Bodies are Newtonian point masses: no finite radii, collisions, tides, gas, radiation, or relativity.</li>
-<li>The predictor-corrector is not symplectic. Close encounters require conservation checks and convergence tests.</li>
-<li>Direct pairwise forces scale as O(N<sup>2</sup>).</li>
-<li>Fractional energy drift remains less informative when bulk kinetic energy dominates <code>|E|</code>. Use <code>E_internal</code> or subtract <code>V_CM</code> from the initial velocities; do not expect <code>display_frame='com'</code> to change the diagnostic.</li>
-<li>Cluster and galaxy scenarios need the longer timesteps documented in the Help file; the shipped 60,000-step ceiling is intended for the default three-body encounter.</li>
-<li>The Help file loads MathJax from a CDN. Offline, equations appear as raw LaTeX.</li>
-</ul>
-<h2>Version Identification</h2>
-<p>MODEL_VERSION: 1.2.2<br>BUILD_ID: e29d630e7cf0<br>BUILD_ID covers physics_multiple.py, driver_multiple.py, main.py, and plot_multiple.py. Help-only or test-only edits do not change it.</p>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><title>Multiple 1.3.0 Release Notes</title></head><body>
+<h1>Multiple 1.3.0 Release Notes</h1>
+<p><b>Version:</b> 1.3.0<br><b>Build:</b> 492bd8ed6eb1<br><b>Date:</b> 2026-09-16</p>
+<h2>Changes</h2><ul>
+<li><code>python main.py --help</code> lists all initial conditions, integration controls, and display settings. Use <code>--masses_solar 1,1</code>, quoted triples such as <code>--positions_init '5e10,0,0;-5e10,0,0'</code>, and the selector <code>--animation_mode current_positions</code>. Defaults reproduce the supplied three-body scenario.</li>
+<li>The console prints initial and final conservation totals and the existing maximum drifts to five significant figures. Eleven further sets at fractions 0.0 through 1.0 of the <em>actual</em> integrated run show total energy E, boost-independent internal energy E_internal, kinetic energy K, three-component linear momentum P, and three-component angular momentum L. These samples interpolate diagnostics quadratically across accepted integration states when three states exist and are available in both plot modes.</li>
+<li>Both static trajectory plots and the animation show a small gray unboxed display-frame label. Animation interpolated-frame totals remain as separate unobtrusive text; F still switches COM and user display frames.</li>
+<li>The Help and Sample Outputs guide show runnable command lines and synchronized figures and results.</li>
+</ul><h2>Scope</h2><p>Newtonian point masses only. These sample diagnostics interpolate computed totals; the maximum-drift summary continues to measure accepted states directly. Numerical integration can drift in close encounters; compare integration settings for convergence. COM is a display translation; integration diagnostics remain in user input coordinates. Binary identification and quantitative comparison to MercPert require analysis beyond parameter changes.</p>
+</body></html>

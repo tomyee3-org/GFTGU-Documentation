@@ -416,7 +416,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.2.2&nbsp;&nbsp;&nbsp;&nbsp;Build e29d630e7cf0
+  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build 492bd8ed6eb1
 </p>
 <p class="small">
   The Build identifier covers the four Python program modules listed below.
@@ -473,7 +473,7 @@ python main.py</pre>
       The default output is an animation with short trails, drawn in the
       center-of-mass (COM) display frame so a nonzero total linear momentum
       does not sweep the system off the axes. Set
-      <code>display_frame='user'</code> to plot the raw input coordinates
+      <code>--display_frame user</code> to plot the raw input coordinates
       instead. The integrator itself always uses the user-supplied inertial
       frame. Adaptive timestep reductions may occur below the 2000-s maximum
       during close encounters, but animation frames remain uniformly separated
@@ -495,6 +495,12 @@ python main.py</pre>
       the later trajectory physically.
     </div>
 <h3>Customising the Simulation</h3>
+<p>Pass parameters as <code>--name value</code>; run <code>python main.py --help</code> for every option and its default. Example:</p>
+<pre>python main.py --max_steps 8000 --output_type trajectories --display_frame user --show_energy_diagnostic</pre>
+<p>Masses are comma-separated. Quote each semicolon-separated set of position or velocity triples; for example <code>--positions_init '5e10,0,0;-5e10,0,0'</code>. The number of masses, positions, and velocities must equal <code>--n_bodies</code>. Selectors use underscores (for example <code>--animation_mode current_positions</code>); omit a parameter to keep its default.</p>
+<p>Pass parameters as <code>--name value</code>; run <code>python main.py --help</code> for every option and its default. Example:</p>
+<pre>python main.py --max_steps 8000 --output_type trajectories --display_frame user --show_energy_diagnostic</pre>
+<p>Masses are comma-separated. Quote each semicolon-separated set of position or velocity triples; for example <code>--positions_init '5e10,0,0;-5e10,0,0'</code>. The number of masses, positions, and velocities must equal <code>--n_bodies</code>. Selectors use underscores (for example <code>--animation_mode current_positions</code>); omit a parameter to keep its default.</p>
 <ul style="margin: 0 0 14px 28px; line-height: 2.1;">
 <li><code>n_bodies</code> — number of point masses</li>
 <li><code>masses_solar</code> — one mass per body, in solar units</li>
@@ -517,9 +523,9 @@ python main.py</pre>
     </div>
 <div class="note">
 <strong>Memory usage:</strong> <code>'trajectories'</code> stores every
-      accepted position and velocity state. <code>'animation'</code> stores only
-      uniformly timed movie frames, so its memory use depends mainly on the
-      number of frames rather than on the number of adaptive integration steps.
+      accepted position and velocity state. <code>'animation'</code> stores uniformly timed movie states and compact
+      conservation totals at every accepted step for eleven console samples; it
+      does not store full accepted-step trajectories.
     </div>
 </section>
 <!-- ─── Program Files ─── -->
@@ -717,10 +723,15 @@ python main.py</pre>
       \(E_{\rm internal}=E-|\mathbf P|^2/(2M)\), the three components of
       total linear momentum, and the three components of total angular
       momentum, together with the maximum drift in energy, momentum, and
-      angular momentum. Those printed totals and the drift line are always
+      angular momentum. Eleven further sets at 0.0 through 1.0 of the
+      integrated time show E, E_internal, K, P and L to five significant
+      figures. The values are interpolated quadratically from three
+      neighboring accepted steps; a one-step run uses two-point interpolation.
+      Endpoints are taken exactly. These console samples are independent of
+      animation-frame spacing. Those printed totals and the drift line are always
       taken from accepted integration states in the user-supplied inertial
       coordinates, even when the plot uses the COM display frame. The
-      animation box labels those values as interpolated-frame totals
+      animation totals text labels those values as interpolated-frame totals
       because they are evaluated on cubic-Hermite display samples; they can
       differ slightly from the accepted-step values, so the console drift
       line remains the authoritative conservation diagnostic. The console
@@ -760,7 +771,7 @@ python main.py</pre>
       drift look artificially small. The same bulk motion contributes the
       extra piece \(M(\mathbf R_{\rm CM}\times\mathbf V_{\rm CM})\) to
       angular momentum about the origin. Setting
-      <code>display_frame='com'</code> does <em>not</em> change \(E\),
+      <code>--display_frame com</code> does <em>not</em> change \(E\),
       \(\mathbf P\), \(\mathbf L\), or the drift line; it only recenters the
       plot. To integrate and diagnose in a zero-momentum frame, subtract
       \(\mathbf V_{\rm CM}\) from every initial velocity in
@@ -897,8 +908,8 @@ python main.py</pre>
 <table>
 <thead><tr><th>Parameter</th><th>Default</th><th>Role</th></tr></thead>
 <tbody>
-<tr><td><code>eps1</code></td><td>0.005</td><td>Maximum per-body acceleration-vector change allowed by the predictor gate.</td></tr>
-<tr><td><code>eps2</code></td><td>1.0e-7</td><td>Required per-body velocity-increment convergence of the iterated corrector.</td></tr>
+<tr><td><code>--eps1</code></td><td>0.005</td><td>Maximum per-body acceleration-vector change allowed by the predictor gate.</td></tr>
+<tr><td><code>--eps2</code></td><td>1.0e-7</td><td>Required per-body velocity-increment convergence of the iterated corrector.</td></tr>
 </tbody>
 </table>
 </section>
@@ -907,24 +918,25 @@ python main.py</pre>
 <section id="parameters">
 <h2>Parameters</h2>
 <table>
-<thead><tr><th>Field</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead>
+<thead><tr><th>Command-line flag</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>n_bodies</code></td><td>3</td><td>—</td><td>Number of point masses.</td></tr>
-<tr><td><code>masses_solar</code></td><td>[1,1,1]</td><td>M<sub>☉</sub></td><td>One mass per body.</td></tr>
-<tr><td><code>positions_init</code></td><td>see <code>main.py</code></td><td>m</td><td>Three Cartesian coordinates per body.</td></tr>
-<tr><td><code>velocities_init</code></td><td>see <code>main.py</code></td><td>m/s</td><td>Three velocity components per body.</td></tr>
-<tr><td><code>dt</code></td><td>2000</td><td>s</td><td>Maximum adaptive timestep.</td></tr>
-<tr><td><code>max_steps</code></td><td>60000</td><td>—</td><td>Maximum accepted integration steps.</td></tr>
-<tr><td><code>eps1</code></td><td>0.005</td><td>—</td><td>Per-body acceleration-change tolerance.</td></tr>
-<tr><td><code>eps2</code></td><td>1.0e-7</td><td>—</td><td>Iterated-corrector convergence tolerance.</td></tr>
-<tr><td><code>output_type</code></td><td>'animation'</td><td>—</td><td><code>'trajectories'</code> or <code>'animation'</code>.</td></tr>
-<tr><td><code>animation_mode</code></td><td>'trails'</td><td>—</td><td><code>'current positions'</code> or <code>'trails'</code>.</td></tr>
-<tr><td><code>frame_time</code></td><td>2.0e5</td><td>s</td><td>Physical simulation time between animation frames.</td></tr>
-<tr><td><code>frame_interval_ms</code></td><td>50</td><td>ms</td><td>Real display time between frames.</td></tr>
-<tr><td><code>trail_time</code></td><td>6.0e5</td><td>s</td><td>Physical history displayed behind each body.</td></tr>
-<tr><td><code>projection</code></td><td>'xy'</td><td>—</td><td><code>'xy'</code>, <code>'xz'</code>, or <code>'yz'</code>.</td></tr>
-<tr><td><code>display_frame</code></td><td>'com'</td><td>—</td><td><code>'com'</code> (center-of-mass plot origin) or <code>'user'</code> (input coordinates).</td></tr>
-<tr><td><code>axis_mode</code></td><td>'fixed'</td><td>—</td><td><code>'fixed'</code> or equal-scale <code>'auto'</code> zoom.</td></tr>
+<tr><td><code>--n_bodies</code></td><td>3</td><td>—</td><td>Number of point masses.</td></tr>
+<tr><td><code>--masses_solar</code></td><td>[1,1,1]</td><td>M<sub>☉</sub></td><td>One mass per body.</td></tr>
+<tr><td><code>--positions_init</code></td><td>see <code>main.py</code></td><td>m</td><td>Three Cartesian coordinates per body.</td></tr>
+<tr><td><code>--velocities_init</code></td><td>see <code>main.py</code></td><td>m/s</td><td>Three velocity components per body.</td></tr>
+<tr><td><code>--dt</code></td><td>2000</td><td>s</td><td>Maximum adaptive timestep.</td></tr>
+<tr><td><code>--max_steps</code></td><td>60000</td><td>—</td><td>Maximum accepted integration steps.</td></tr>
+<tr><td><code>--eps1</code></td><td>0.005</td><td>—</td><td>Per-body acceleration-change tolerance.</td></tr>
+<tr><td><code>--eps2</code></td><td>1.0e-7</td><td>—</td><td>Iterated-corrector convergence tolerance.</td></tr>
+<tr><td><code>--output_type</code></td><td>'animation'</td><td>—</td><td><code>'trajectories'</code> or <code>'animation'</code>.</td></tr>
+<tr><td><code>--animation_mode</code></td><td>'trails'</td><td>—</td><td><code>current_positions</code> (markers only) or <code>trails</code> (recent paths).</td></tr>
+<tr><td><code>--frame_time</code></td><td>2.0e5</td><td>s</td><td>Physical simulation time between animation frames.</td></tr>
+<tr><td><code>--frame_interval_ms</code></td><td>50</td><td>ms</td><td>Real display time between frames.</td></tr>
+<tr><td><code>--trail_time</code></td><td>6.0e5</td><td>s</td><td>Physical history displayed behind each body.</td></tr>
+<tr><td><code>--projection</code></td><td>'xy'</td><td>—</td><td><code>'xy'</code>, <code>'xz'</code>, or <code>'yz'</code>.</td></tr>
+<tr><td><code>--display_frame</code></td><td>'com'</td><td>—</td><td><code>'com'</code> (center-of-mass plot origin) or <code>'user'</code> (input coordinates).</td></tr>
+<tr><td><code>--axis_mode</code></td><td>'fixed'</td><td>—</td><td><code>'fixed'</code> or equal-scale <code>'auto'</code> zoom.</td></tr>
+<tr><td><code>--show_energy_diagnostic</code></td><td>off</td><td>—</td><td>Show an energy-drift graph with <code>--output_type trajectories</code>; use <code>--no-show_energy_diagnostic</code> to turn it off.</td></tr>
 </tbody>
 </table>
 <p class="small">
@@ -1033,7 +1045,7 @@ python main.py</pre>
       diagnostics still requires subtracting \(\mathbf V_{\rm CM}\) from the
       initial velocities. The console prints a discrete note naming the
       selected display frame at the start of every run. Animation titles and
-      a boxed on-figure note repeat the same information, and the note is
+      a small, unobtrusive unboxed on-figure label repeat the same information, and the label is
       rewritten when <strong>F</strong> switches frames.
     </p>
 <div class="note">
@@ -1051,10 +1063,11 @@ python main.py</pre>
 <!-- ─── Suggested Scenarios ─── -->
 <section id="scenarios">
 <h2>Suggested Scenarios</h2>
-<p>All of these experiments can be performed by editing <code>main.py</code>. Each card carries a difficulty rating: Introductory, Intermediate, or Advanced.</p>
+<p>Run the commands below from the <code>Multiple</code> program directory. Quoted semicolon-separated triples are single shell arguments. Each card carries a difficulty rating: Introductory, Intermediate, or Advanced. Scenarios involving pair tracking or comparisons with another program require analysis beyond changing parameters.</p>
 <div class="scenario-grid">
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Two-body sanity check</div><span class="diff diff-intro">Introductory</span></div>
+<pre><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init '5e10,0,0;-5e10,0,0' --velocities_init '0,25760,0;0,-25760,0' --max_steps 3000 --output_type trajectories</code></pre>
         Before exploring chaotic three-body motion, test a familiar binary. For
         two equal one-solar-mass bodies separated by \(1.0\times10^{11}\) m, put
         them at \((\pm5.0\times10^{10},0,0)\) m and give them opposite
@@ -1066,6 +1079,7 @@ python main.py</pre>
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Default three-body encounter</div><span class="diff diff-intro">Introductory</span></div>
+<pre><code>python main.py --max_steps 8000 --output_type trajectories</code></pre>
         Run the planar shipped example first. Record which two bodies make the
         closest sustained pair, whether the third makes a wide excursion, and
         the reported conservation drift. Extend <code>max_steps</code> if you
@@ -1074,6 +1088,7 @@ python main.py</pre>
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Change the masses</div><span class="diff diff-intro">Introductory</span></div>
+<pre><code>python main.py --masses_solar 2,1,0.5 --max_steps 2000 --output_type trajectories</code></pre>
         Keep the default positions and velocities but reassign the three masses
         in one chosen triple, for example \((2,1,0.5)\,M_\odot\). Does that
         run produce a bound pair, and which body is left on the widest orbit?
@@ -1082,6 +1097,7 @@ python main.py</pre>
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Out-of-plane encounter</div><span class="diff diff-inter">Intermediate</span></div>
+<pre><code>python main.py --velocities_init '0,0,0;0,-30000,0;-30000,0,5000' --projection xz --max_steps 8000 --output_type trajectories</code></pre>
         Add a modest \(z\)-velocity to one body and compare the <code>'xy'</code>
         and <code>'xz'</code> projections. Try 1 km/s first and then
         5 km/s. Choose the vertical speed so that the
@@ -1091,6 +1107,8 @@ python main.py</pre>
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Numerical convergence</div><span class="diff diff-inter">Intermediate</span></div>
+<pre><code>python main.py --dt 1000 --max_steps 4000 --output_type trajectories --show_energy_diagnostic
+python main.py --dt 500 --max_steps 8000 --output_type trajectories --show_energy_diagnostic</code></pre>
         Repeat the same physical initial conditions with <code>dt</code>,
         <code>dt/2</code>, and <code>dt/4</code>; then repeat with tighter
         <code>eps1</code> and <code>eps2</code>. Compare finite-time trajectories and the
@@ -1100,6 +1118,8 @@ python main.py</pre>
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Center-of-mass frame</div><span class="diff diff-inter">Intermediate</span></div>
+<pre><code>python main.py --velocities_init '100000,0,0;100000,-30000,0;70000,0,0' --max_steps 2000 --output_type trajectories --display_frame user
+python main.py --velocities_init '100000,0,0;100000,-30000,0;70000,0,0' --max_steps 2000 --output_type trajectories --display_frame com</code></pre>
         Keep the default masses and positions, but add the same extra velocity
         \(\mathbf u\) to every body. The printed momentum must obey the
         Galilean rule \(\mathbf P_{\rm new}=\mathbf P_{\rm old}+M\mathbf u\),
@@ -1108,8 +1128,8 @@ python main.py</pre>
         scaled units. For \(\mathbf u=(1.0\times10^5,0,0)\) m/s the expected
         printed momentum is therefore
         \((2.7\times10^5,-3.0\times10^4,0)\) m/s. Set
-        <code>display_frame='user'</code> and watch the encounter drift
-        across the plot. Switch back to <code>display_frame='com'</code>
+        <code>--display_frame user</code> and watch the encounter drift
+        across the plot. Switch back to <code>--display_frame com</code>
         (or press <strong>F</strong> during an animation) and confirm that
         the relative motion is unchanged while the system stays centered.
         The printed \(E\) changes by the extra center-of-mass kinetic
@@ -1119,6 +1139,7 @@ python main.py</pre>
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Binary hardening</div><span class="diff diff-inter">Intermediate</span></div>
+<pre><code>python main.py --max_steps 8000 --output_type trajectories --display_frame com</code></pre>
         In a run where two bodies form a persistent close pair, track all three
         pair separations to identify the binary rather than relying only on the
         plot. Compare the third body's distance from that pair's center of mass
@@ -1127,6 +1148,7 @@ python main.py</pre>
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Small star cluster</div><span class="diff diff-adv">Advanced</span></div>
+<pre><code>python main.py --n_bodies 4 --masses_solar 1,1,1,1 --positions_init '0,0,0;1.5e14,0,0;0,1.5e14,0;-1.5e14,0,0' --velocities_init '0,0,0;0,5000,0;-5000,0,0;0,-5000,0' --dt 1e7 --max_steps 1000 --output_type trajectories</code></pre>
         A 0.1-pc cluster (\(0.1\,\mathrm{pc}\approx3.09\times10^{15}\) m)
         moving at 1 km/s has a crossing time of about \(3\times10^{12}\) s
         (\(\approx 10^5\) yr). The shipped
@@ -1139,13 +1161,14 @@ python main.py</pre>
         stop if the run becomes slow. A compact analogue that finishes
         quickly is a 1000-AU box with 5 km/s speeds
         (<code>dt=1.0e7</code>, <code>max_steps=8000</code>). Leave
-        <code>display_frame='com'</code>. Compare the printed \(E\) and
+        <code>--display_frame com</code>. Compare the printed \(E\) and
         \(E_{\rm internal}\), the expansion of the cluster, and any
         ejections; then try adding one more massive body. These are
         point-mass experiments, not collisional star-cluster models.
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Compare with MercPert</div><span class="diff diff-adv">Advanced</span></div>
+<pre><code>python main.py --n_bodies 3 --masses_solar 1,0.1,1e-8 --positions_init '0,0,0;1e11,0,0;4e10,0,0' --velocities_init '0,-3450,0;0,34500,0;0,57500,0' --max_steps 4000 --output_type trajectories</code></pre>
         Recreate the same physical Sun–perturber–test-particle configuration,
         but express every body's initial state in one inertial frame for
         Multiple. Keep the default COM display so the plot stays centered;
@@ -1158,6 +1181,7 @@ python main.py</pre>
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Galaxy collision — optional toy model</div><span class="diff diff-adv">Advanced</span></div>
+<pre><code>python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init '-7.7e20,0,0;7.7e20,0,0' --velocities_init '50000,0,0;-50000,0,0' --dt 1e12 --max_steps 2000 --output_type trajectories</code></pre>
         Two \(10^{11}\,M_\odot\) cores 50 kpc apart approaching at 100 km/s
         have a crossing time of order \(5\times10^8\) yr
         (\(\approx 1.5\times10^{16}\) s). The shipped
