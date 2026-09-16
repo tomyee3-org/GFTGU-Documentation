@@ -382,7 +382,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.2&nbsp;&nbsp;&nbsp;&nbsp;Build 9ae1fff767c9
+  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 9852baf113f7
 </p>
 <!-- ─── Overview ─── -->
 <section id="overview">
@@ -426,7 +426,10 @@
 <pre>pip install matplotlib</pre>
 <h3>Running the Program</h3>
 <pre>cd GFTGU-Programs/MercPert
-python main.py</pre>
+python main.py
+python main.py --x_init_au 0.3 --vy_init 54400 --position_unit AU
+python main.py --help
+python main.py --version</pre>
 <p>
       The default binary contains a \(1\,M_\odot\) Sun and a
       \(0.1\,M_\odot\) companion separated by \(0.7\,\mathrm{AU}\).
@@ -441,18 +444,12 @@ python main.py</pre>
       a clean baseline run; longer integrations are useful when searching for
       strong encounters. The calculation stops earlier if Mercury enters the
       nominal solar radius, or if a positive
-      <code>companion_collision_radius</code> has been supplied and Mercury
+      <code>--companion_collision_radius</code> has been supplied and Mercury
       reaches that boundary. The final trajectory is plotted in the barycentric
       inertial frame.
     </p>
-<h3>Customising the Simulation</h3>
-<p>Normal experiments require editing only <code>main.py</code>:</p>
-<ul style="margin: 0 0 14px 24px; line-height: 2;">
-<li><code>BinarySystemParams</code> — the two masses and their separation</li>
-<li><code>MercuryInitialConditions</code> — Sun-relative starting position and velocity</li>
-<li><code>MercPertRunParams</code> — timestep, step limit, tolerances, and optional collision radii</li>
-<li>plot controls — metres or AU, annotation corner, and optional Jacobi diagnostic</li>
-</ul>
+<h3>Choose Settings at the Command Line</h3>
+<p>Use <code>python main.py --option value</code> to set any input. For example, <code>python main.py --m_planet_solar 9.5e-4 --vy_init 54400</code> compares a Jupiter-mass companion with a near-circular starting speed. Omitted options retain their defaults; a fresh <code>python main.py</code> run restores all default values. Options ending in <code>_au</code> accept astronomical units, while the corresponding options without that suffix use metres.</p>
 </section>
 <!-- ─── Program Files ─── -->
 <section id="modules">
@@ -462,8 +459,7 @@ python main.py</pre>
 <div class="mc-name">main.py</div>
 <div class="mc-role">Configuration &amp; Entry Point</div>
 <p>
-          Contains the binary parameters, Mercury's Sun-relative initial
-          conditions, numerical controls, collision radii, and plotting options.
+          Accepts the binary parameters, Mercury's Sun-relative initial conditions, numerical controls, collision radii, and plot options at the command line.
         </p>
 </div>
 <div class="mc-card">
@@ -767,44 +763,27 @@ python main.py</pre>
 <!-- ═══════════════════════════ REFERENCE ═══════════════════════════ -->
 <!-- ─── Parameters ─── -->
 <section id="parameters">
-<h2>Parameters</h2>
-<h3>Binary System</h3>
-<table>
-<thead><tr><th>Variable</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead>
-<tbody>
-<tr><td><code>m_sun_solar</code></td><td>1.0</td><td>M<sub>☉</sub></td><td>Primary mass</td></tr>
-<tr><td><code>m_planet_solar</code></td><td>0.1</td><td>M<sub>☉</sub></td><td>Companion mass; about 100 Jupiter masses and above the ≈0.08 M<sub>☉</sub> hydrogen-burning threshold</td></tr>
-<tr><td><code>binary_separation</code></td><td>0.7 × AU</td><td>m</td><td>Centre-to-centre separation of the massive bodies</td></tr>
-</tbody>
-</table>
-<h3>Mercury Initial Conditions — Relative to the Sun</h3>
-<table>
-<thead><tr><th>Variable</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead>
-<tbody>
-<tr><td><code>x_init</code></td><td>0.3 × AU</td><td>m</td><td>Initial x-position relative to the Sun</td></tr>
-<tr><td><code>y_init</code></td><td>0</td><td>m</td><td>Initial y-position relative to the Sun</td></tr>
-<tr><td><code>vx_init</code></td><td>0</td><td>m s<sup>−1</sup></td><td>Initial x-velocity relative to the Sun</td></tr>
-<tr><td><code>vy_init</code></td><td>59,220</td><td>m s<sup>−1</sup></td><td>Initial y-velocity relative to the Sun</td></tr>
-</tbody>
-</table>
-<h3>Run Parameters</h3>
-<table>
-<thead><tr><th>Variable</th><th>Default</th><th>Description</th></tr></thead>
-<tbody>
-<tr><td><code>dt</code></td><td>2000 s</td><td>Maximum working timestep</td></tr>
-<tr><td><code>max_steps</code></td><td>10,000</td><td>Maximum accepted integration steps</td></tr>
-<tr><td><code>eps1</code></td><td>0.05</td><td>Acceleration-change timestep tolerance</td></tr>
-<tr><td><code>eps2</code></td><td>0.0001</td><td>Corrector convergence tolerance</td></tr>
-<tr><td><code>sun_collision_radius</code></td><td><code>R_SUN</code></td><td>Sun-like primary stopping surface; set 0 to disable or change for a different kind of primary</td></tr>
-<tr><td><code>companion_collision_radius</code></td><td>0</td><td>Optional companion stopping radius</td></tr>
-</tbody>
-</table>
-<p>
-      All numeric inputs must be finite. Masses, separation, timestep, and step
-      count must be positive; collision radii must be non-negative, and their
-      sum must be smaller than the binary separation. Invalid combinations stop
-      with a descriptive error instead of beginning an undefined calculation.
-    </p>
+<h2>Command-Line Parameters</h2>
+<p>Run <code>python main.py --help</code> for the full option list. Initial test-particle positions and velocities are relative to the Sun, while the resulting plot is barycentric. Use either metres or AU for position and separation inputs; do not give both units for one quantity in a single run.</p>
+<table><thead><tr><th>Option</th><th>Default</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><code>--m_sun_solar</code></td><td>1.0</td><td>Sun mass in solar masses</td></tr>
+<tr><td><code>--m_planet_solar</code></td><td>0.1</td><td>Companion mass in solar masses; default is a low-mass star</td></tr>
+<tr><td><code>--binary_separation</code> or <code>--binary_separation_au</code></td><td>0.7 AU</td><td>Separation of the massive bodies, in metres or AU</td></tr>
+<tr><td><code>--x_init</code> or <code>--x_init_au</code></td><td>0.3 AU</td><td>Test-particle x coordinate relative to Sun, in metres or AU</td></tr>
+<tr><td><code>--y_init</code> or <code>--y_init_au</code></td><td>0</td><td>Test-particle y coordinate relative to Sun, in metres or AU</td></tr>
+<tr><td><code>--vx_init</code></td><td>0</td><td>Initial Sun-relative x velocity in m/s</td></tr>
+<tr><td><code>--vy_init</code></td><td>59220</td><td>Initial Sun-relative y velocity in m/s</td></tr>
+<tr><td><code>--dt</code></td><td>2000 s</td><td>Maximum adaptive controller timestep</td></tr>
+<tr><td><code>--max_steps</code></td><td>10000</td><td>Accepted-step ceiling</td></tr>
+<tr><td><code>--eps1</code></td><td>0.05</td><td>Predictor acceleration-change threshold</td></tr>
+<tr><td><code>--eps2</code></td><td>0.0001</td><td>Corrector velocity-change threshold; smaller than eps1</td></tr>
+<tr><td><code>--sun_collision_radius</code></td><td>6.957e8 m</td><td>Solar collision surface in metres; 0 disables it</td></tr>
+<tr><td><code>--companion_collision_radius</code></td><td>0</td><td>Companion collision surface in metres; 0 disables it</td></tr>
+<tr><td><code>--position_unit</code></td><td>AU</td><td>AU: astronomical units on plot; m: metres on plot</td></tr>
+<tr><td><code>--annotation_corner</code></td><td>upper_left</td><td>upper_left, upper_right, lower_left or lower_right for the initial-state label</td></tr>
+<tr><td><code>--show_jacobi_diagnostic</code></td><td>off</td><td>Also show the Jacobi drift plot; <code>--no-show_jacobi_diagnostic</code> keeps only the orbit plot</td></tr>
+</tbody></table>
+<p>All numeric inputs must be finite. Masses, separation, and timestep must be positive; the accepted-step limit must be a positive integer. Both tolerances must lie strictly between 0 and 1, with eps2 smaller than eps1. Collision radii cannot be negative and must sum to less than the massive-body separation.</p>
 <h3>Nominal Astronomical Constants</h3>
 <table>
 <thead><tr><th>Constant</th><th>Value</th><th>Unit</th></tr></thead>
@@ -818,6 +797,7 @@ python main.py</pre>
 <!-- ─── Output ─── -->
 <section id="output">
 <h2>Output</h2>
+<p>The printed summary lists the circular period of the Sun–companion pair, test-particle integration duration, sampled Sun-distance range, maximum absolute fractional Jacobi drift and the adaptive controller's minimum and maximum accepted working timesteps. Durations appear in days (the test-particle duration also in seconds), distances in AU and metres, and timesteps in seconds. Numeric diagnostics use five significant figures. An initially zero Jacobi constant has no defined fractional drift; a run with no accepted steps has no working timestep range. Collision interpolation can shorten the final elapsed step, so its controller timestep can differ from the last elapsed increment.</p>
 <p>
 <code>plot_orbits()</code> displays the calculation in the barycentric
       inertial frame with equal x/y scale. The <strong>dashed red</strong> and
@@ -831,7 +811,7 @@ python main.py</pre>
 <p>
       The axis labels explicitly say “barycentric x” and “barycentric y” to
       distinguish the plotted coordinates from the Sun-relative initial values
-      entered in <code>main.py</code>.
+      passed at the command line.
     </p>
 <p>
       Small filled circles mark the Sun, companion, and Mercury positions at
@@ -848,7 +828,7 @@ python main.py</pre>
       <code>max_steps + 1</code> samples.
     </p>
 <p>
-      Set <code>show_jacobi_diagnostic = True</code> in <code>main.py</code> to
+      Use <code>--show_jacobi_diagnostic</code> to
       display fractional Jacobi-constant drift versus time. Positions may be
       displayed in metres or AU.
     </p>
@@ -931,6 +911,7 @@ python main.py</pre>
       comparisons can be reproduced.
     </p>
 <h3>1 · A Quieter Baseline Orbit <small>(Introductory)</small></h3>
+<pre><code>python main.py --vy_init 54400</code></pre>
 <p>
       At \(0.3\,\mathrm{AU}\) from a solar-mass star, the isolated circular
       speed is about \(54.4\,\mathrm{km\,s^{-1}}\). Try that Sun-relative
@@ -938,6 +919,7 @@ python main.py</pre>
       \(59.22\,\mathrm{km\,s^{-1}}\).
     </p>
 <h3>2 · Companion-Mass Sequence <small>(Introductory)</small></h3>
+<pre><code>python main.py --m_planet_solar 9.5e-4 --vy_init 54400</code></pre>
 <p>
       Reduce <code>m_planet_solar</code> from 0.1 toward a genuine giant-planet
       mass and observe how the stability region changes. Jupiter itself is about
@@ -946,6 +928,8 @@ python main.py</pre>
       the low-mass stellar regime.
     </p>
 <h3>3 · Retrograde Orbits <small>(Introductory–Intermediate)</small></h3>
+<pre><code>python main.py --vy_init 59220
+python main.py --vy_init -59220</code></pre>
 <p>
       Reverse the sign of Mercury's Sun-relative transverse velocity and compare
       the stability of retrograde trajectories with otherwise identical prograde
@@ -953,6 +937,8 @@ python main.py</pre>
       each pair.
     </p>
 <h3>4 · Extend the Default Run Toward a Close Encounter <small>(Intermediate)</small></h3>
+<pre><code>python main.py --max_steps 40000
+python main.py --max_steps 60000</code></pre>
 <p>
       Run the 10,000-step defaults first as a baseline. Then increase
       <code>max_steps</code> gradually — for example to 40,000, 60,000, and
@@ -965,6 +951,7 @@ python main.py</pre>
       failure.
     </p>
 <h3>5 · Numerical Convergence <small>(Intermediate)</small></h3>
+<pre><code>python main.py --dt 1000 --max_steps 20000 --eps1 0.01 --eps2 1e-5 --show_jacobi_diagnostic</code></pre>
 <p>
       Repeat the same physical setup with smaller <code>dt</code> and tighter
       <code>eps1</code>/<code>eps2</code>; for example, try
@@ -972,11 +959,13 @@ python main.py</pre>
       physical interval after changing <code>dt</code>, adjust
       <code>max_steps</code> as needed and verify the final times. Compare the
       trajectories over that common interval and compare the maximum fractional
-      Jacobi drift. Set <code>show_jacobi_diagnostic = True</code> if you also
+      Jacobi drift. Use <code>--show_jacobi_diagnostic</code> if you also
       want the drift plot. The Jacobi diagnostic is especially useful when later
       portions of two sensitive trajectories diverge visibly.
     </p>
 <h3>6 · Map a Finite-Time Stability Boundary <small>(Advanced)</small></h3>
+<pre><code>python main.py --x_init_au 0.25 --max_steps 12000
+python main.py --x_init_au 0.35 --max_steps 12000</code></pre>
 <p>
       Hold the binary fixed and try a sequence of Mercury starting radii. For a
       stated integration time, classify each trajectory by explicit criteria:
@@ -988,6 +977,7 @@ python main.py</pre>
       sharp.
     </p>
 <h3>7 · Equal-Mass Binary and Circumbinary Orbits <small>(Advanced)</small></h3>
+<pre><code>python main.py --m_planet_solar 1 --binary_separation_au 1 --x_init_au 2.5 --vy_init 30000 --max_steps 15000</code></pre>
 <p>
       Set both massive bodies to \(1\,M_\odot\) and choose a separation near
       1 AU. Search for long-lived orbits far outside the binary as well as
@@ -997,6 +987,8 @@ python main.py</pre>
       finite-time survival rather than permanent stability.
     </p>
 <h3>8 · Roche-Lobe / L1 Test-Particle Experiment <small>(Capstone)</small></h3>
+<pre><code>python main.py --x_init_au 0.5 --vy_init 26669.35 --max_steps 5000
+python main.py --x_init_au 0.5 --vy_init 26669.35 --sun_collision_radius 0 --max_steps 5000</code></pre>
 <p>
       For an unequal-mass binary, place Mercury at different starting points on
       the line between the two bodies. Compute the binary angular velocity
@@ -1035,8 +1027,7 @@ python main.py</pre>
         letter-spacing: 0.04em;
       ">Restoring Default Parameter Values</div>
 <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
-        you can restore the original program files using any of the following methods:
+        Run <code>python main.py</code> again to restore all default settings: command-line options do not carry over. If you change a program file for an exercise, you can restore it using any of the following methods:
       </p>
 <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
 <li>
