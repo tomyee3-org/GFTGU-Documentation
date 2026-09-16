@@ -391,6 +391,7 @@
 <a href="#algorithm">Algorithm Overview</a>
 <a href="#starwalk">2D Star Visualization</a>
 <a href="#modules">Module Structure</a>
+<a href="#running">Running from the Command Line</a>
 <a href="#parameters">Parameters</a>
 <a href="#output">Program Output</a>
 <a href="#experiments">Suggested Experiments</a>
@@ -399,7 +400,7 @@
 <!-- ═══════════════════════════════════ MAIN ════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 10144b08a600
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 5dc294ca595d
 </p>
 
 <!-- ─── Description ─── -->
@@ -471,23 +472,42 @@ run_walk2d(
     reference_steps, n_walks, ...)</div></div>
 <div class="module-card"><h4>random2_plot.py</h4><p>Produces the log-log scaling graph with equal decade lengths on both axes, or the circular star visualization, and reports basic escape statistics in the annotation box.</p><div class="sig">plot_scaled_distance(lengths, avg_dist)
 plot_walk2d(result, corner="upper right")</div></div></div>
-<div class="note"><strong>main.py:</strong> selects <code>"scaled_distance"</code> or <code>"walk2d"</code> and exposes all parameters intended for ordinary experimentation, including <code>step_distribution</code>, <code>ray_length_factor</code>, and <code>step_cap</code>.</div></section>
+<div class="note"><strong>main.py:</strong> parses and validates every ordinary experiment parameter at the command line, selects <code>scaled_distance</code> or <code>walk2d</code>, and translates command-safe annotation choices such as <code>upper_right</code> to the plotter's internal label.</div></section>
+<!-- ─── Running ─── -->
+<section id="running"><h2>Running from the Command Line</h2>
+<p>Open a terminal in the folder containing <code>main.py</code>. Run <code>python main.py --help</code> for the current option summary and defaults, or <code>python main.py --version</code> for the model version and reproducible source Build ID. Any option omitted from a command retains the default shown below.</p>
+<h3>Examples</h3>
+<div class="params"># Default 3D scaled-distance experiment
+python main.py
+
+# More trials and Gaussian rather than uniform step components
+python main.py --display scaled_distance --max_steps 8192 --n_trials 500 \
+    --step_distribution gaussian
+
+# Six 2D walks in an explicitly sized star
+python main.py --display walk2d --n_walks 6 --radius 50 --step_cap 100000
+
+# Move the annotation and suppress outgoing rays
+python main.py --display walk2d --corner lower_left --ray_length_factor 0</div>
+<p>The underscore spellings <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code>, and <code>lower_left</code> are the accepted command-line values for <code>--corner</code>. They avoid quoted values containing spaces.</p>
+</section>
 <!-- ─── Parameters ─── -->
-<section id="parameters"><h2>Parameters</h2><p>All ordinary experiment settings are in <code>main.py</code>.</p>
+<section id="parameters"><h2>Parameters</h2><p>All ordinary experiment settings are command-line options defined and briefly described in <code>main.py</code>. The defaults also match the defaults in <code>random2_driver.py</code> and <code>random2_plot.py</code>.</p>
 <h3>Scaled-Distance Mode</h3><table class="param-table"><thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead><tbody>
-<tr><td><code>maxSteps</code></td><td><code>4096</code></td><td>Largest walk in the scaling experiment. The step count is repeatedly halved until the next value would be 1.</td></tr>
-<tr><td><code>nTrials</code></td><td><code>100</code></td><td>Independent walks averaged at each step count. Larger values reduce Monte Carlo scatter.</td></tr>
-<tr><td><code>step_distribution</code></td><td><code>"uniform"</code></td><td><code>"uniform"</code> uses independent three-dimensional components on \([-1,1]\); <code>"gaussian"</code> uses independent three-dimensional standard-normal components.</td></tr></tbody></table>
+<tr><td><code>--display</code></td><td><code>scaled_distance</code></td><td><code>scaled_distance</code> runs the 3D statistical scaling experiment; <code>walk2d</code> draws fixed-step isotropic paths in a circular schematic star.</td></tr>
+<tr><td><code>--max_steps</code></td><td><code>4096</code></td><td>Largest walk in the scaling experiment. The step count is repeatedly halved until the next value would be 1. The compatibility alias <code>--maxSteps</code> is also accepted.</td></tr>
+<tr><td><code>--n_trials</code></td><td><code>100</code></td><td>Independent walks averaged at each step count. Larger values reduce Monte Carlo scatter. The compatibility alias <code>--nTrials</code> is also accepted.</td></tr>
+<tr><td><code>--step_distribution</code></td><td><code>uniform</code></td><td><code>uniform</code> uses independent three-dimensional components on \([-1,1]\); <code>gaussian</code> uses independent three-dimensional standard-normal components.</td></tr></tbody></table>
 <h3>2D Star Visualization Mode</h3><table class="param-table"><thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead><tbody>
-<tr><td><code>reference_steps</code></td><td><code>2000</code></td><td>\(N_{\mathrm{ref}}\) in Eq. 9. It sets the diffusion scale used to compute the default radius; it is not a walk-length limit.</td></tr>
-<tr><td><code>n_walks</code></td><td><code>4</code></td><td>Number of independent paths drawn simultaneously.</td></tr>
-<tr><td><code>mean_free_path</code></td><td><code>1.0</code></td><td>Fixed length \(\lambda\) of every isotropic display step, in arbitrary distance units.</td></tr>
-<tr><td><code>radius_factor</code></td><td><code>2.0</code></td><td>Multiplier \(f\) in \(R=f\lambda\sqrt{N_{\mathrm{ref}}}\).</td></tr>
-<tr><td><code>radius</code></td><td><code>None</code></td><td>Optional positive explicit radius. When supplied, it overrides Eq. 9.</td></tr>
-<tr><td><code>ray_length_factor</code></td><td><code>0.6</code></td><td>Length of the schematic outgoing ray as a fraction of the star radius. Set to <code>0</code> to suppress the ray.</td></tr>
-<tr><td><code>step_cap</code></td><td><code>200000</code></td><td>Positive safety limit on the number of steps in any one displayed walk.</td></tr>
-<tr><td><code>corner</code></td><td><code>"upper right"</code></td><td>Annotation-box location: upper/lower left/right.</td></tr></tbody></table>
-<div class="note">Invalid display names, distributions, corners, non-finite or out-of-range physical parameters, and nonpositive trial/step counts are rejected with explanatory <code>ValueError</code> messages rather than silently selecting another behavior.</div></section>
+<tr><td><code>--reference_steps</code></td><td><code>2000</code></td><td>\(N_{\mathrm{ref}}\) in Eq. 9. It sets the diffusion scale used to compute the default radius; it is not a walk-length limit.</td></tr>
+<tr><td><code>--n_walks</code></td><td><code>4</code></td><td>Number of independent paths drawn simultaneously.</td></tr>
+<tr><td><code>--mean_free_path</code></td><td><code>1.0</code></td><td>Fixed positive length \(\lambda\) of every isotropic display step, in arbitrary distance units.</td></tr>
+<tr><td><code>--radius_factor</code></td><td><code>2.0</code></td><td>Positive multiplier \(f\) in \(R=f\lambda\sqrt{N_{\mathrm{ref}}}\).</td></tr>
+<tr><td><code>--radius</code></td><td><code>omitted</code></td><td>Optional positive explicit radius. When omitted, Eq. 9 supplies the radius.</td></tr>
+<tr><td><code>--ray_length_factor</code></td><td><code>0.6</code></td><td>Nonnegative outgoing-ray length as a fraction of the star radius. Use <code>0</code> to suppress the ray.</td></tr>
+<tr><td><code>--step_cap</code></td><td><code>200000</code></td><td>Positive safety limit on the number of steps in any one displayed walk.</td></tr>
+<tr><td><code>--corner</code></td><td><code>upper_right</code></td><td>Annotation location: <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code>, or <code>lower_left</code>.</td></tr></tbody></table>
+<div class="note">Invalid selector names, non-finite or out-of-range physical parameters, and nonpositive trial/step counts are rejected by the command-line parser before a simulation begins. Options for the unused display may be supplied, but only the selected display consumes them.</div></section>
 <!-- ─── Output ─── -->
 <section id="output"><h2>Program Output</h2><p><strong>Scaled-distance mode</strong> produces a log-log plot of average scaled displacement versus number of steps. One decade occupies the same plotted length on both axes, independent of the output-panel shape, so a theoretical slope of \(1/2\) is readable by eye as a rise of one vertical decade over a run of two horizontal decades. Finite trial counts produce visible statistical scatter around that trend.</p><p><strong>2D star mode</strong> produces a square plot of fixed-length isotropic walks within a circular schematic star. The annotation box reports the radius, mean free path, reference step count, number of escaped walks, and—when at least one walk escapes—the median escape step count. Each <code>WalkPath</code> also stores its individual <code>steps_taken</code> value for quantitative experiments. If a walk reaches <code>step_cap</code> without escaping, its final point is marked with an <code>x</code>; an escaped path may have no terminal ray when <code>ray_length_factor = 0</code>.</p></section>
 <!-- ─── Suggested Experiments ─── -->
@@ -496,7 +516,8 @@ plot_walk2d(result, corner="upper right")</div></div></div>
 <p>
     The experiments below are arranged in approximate order of difficulty. The first group explores
     the statistical square-root law; the later experiments use the 2D star visualization to study
-    first-passage behavior and geometric scaling.
+    first-passage behavior and geometric scaling. Each experiment that only changes inputs now
+    shows a complete command. The programming extension still requires a source-code change.
   </p>
 <div class="scenario-grid">
 <div class="scenario-card">
@@ -508,19 +529,19 @@ plot_walk2d(result, corner="upper right")</div></div></div>
         straight line from only 100 trials: the departures from it are part of the Monte Carlo
         experiment.
       </p>
-<div class="params">display = "scaled_distance"
-maxSteps = 4096
-nTrials = 100</div>
+<div class="params">python main.py --display scaled_distance --max_steps 4096 --n_trials 100</div>
 </div>
 <div class="scenario-card">
 <h4>2 · Introductory — Reduce Statistical Scatter</h4>
 <p>
-        Repeat the same calculation with <code>nTrials = 25, 100, 500, 1000</code>. As more
+        Repeat the same calculation with <code>--n_trials 25</code>, <code>100</code>, <code>500</code>, and <code>1000</code>. As more
         independent walks are averaged, the points should fluctuate less and the overall trend
         should become more stable. Notice the trade-off between statistical precision and run time.
       </p>
-<div class="params">nTrials = 25
-# then try 100, 500, 1000</div>
+<div class="params">python main.py --n_trials 25
+python main.py --n_trials 100
+python main.py --n_trials 500
+python main.py --n_trials 1000</div>
 </div>
 <div class="scenario-card">
 <h4>3 · Introductory–Intermediate — Measure the Log-Log Slope</h4>
@@ -528,10 +549,11 @@ nTrials = 100</div>
         Go beyond judging the graph by eye. Use two well-separated plotted points, or fit a straight
         line to all the points in \(\log N\) versus \(\log\langle d\rangle\), and estimate the
         exponent \(\alpha\) in \(\langle d\rangle\propto N^\alpha\). Repeat for several
-        <code>nTrials</code> values and see whether the estimate approaches \(1/2\) as the Monte
+        <code>--n_trials</code> values and see whether the estimate approaches \(1/2\) as the Monte
         Carlo noise is reduced.
       </p>
-<div class="params">expected exponent: alpha ≈ 0.5</div>
+<div class="params">python main.py --max_steps 4096 --n_trials 500
+# Then estimate the plotted log-log slope; expected alpha ≈ 0.5.</div>
 </div>
 <div class="scenario-card">
 <h4>4 · Intermediate — Change the Step Distribution</h4>
@@ -542,8 +564,8 @@ nTrials = 100</div>
         modifications and demonstrates that the square-root law is not peculiar to a uniform
         random-number distribution.
       </p>
-<div class="params">step_distribution = "uniform"
-# compare with "gaussian"</div>
+<div class="params">python main.py --step_distribution uniform
+python main.py --step_distribution gaussian</div>
 </div>
 <div class="scenario-card">
 <h4>5 · Intermediate Programming Extension — Change the Definition of Walk Length</h4>
@@ -555,32 +577,34 @@ nTrials = 100</div>
         vertical normalization will change, but the exponent should remain close to \(1/2\).
         This distinguishes a universal scaling law from an arbitrary choice of units.
       </p>
-<div class="params">advanced edit: average net_distance instead of net_distance / mean_step</div>
+<div class="params">Programming change required: in a separate experimental copy, average
+net_distance instead of net_distance / mean_step. Input options alone cannot do this.</div>
 </div>
 <div class="scenario-card">
 <h4>6 · Intermediate — Mean Free Path and Geometric Scaling</h4>
 <p>
-        Switch to <code>walk2d</code>. With <code>radius = None</code>, multiply
-        <code>mean_free_path</code> by a constant. Because the default radius is proportional to
+        Switch to <code>walk2d</code>. Leave <code>--radius</code> omitted and multiply
+        <code>--mean_free_path</code> by a constant. Because the default radius is proportional to
         the same mean free path, the displayed geometry should look statistically similar even
         though all distances have been rescaled. This is a useful check that changing units does
         not change the underlying dimensionless random-walk problem.
       </p>
-<div class="params">display = "walk2d"
-mean_free_path = 1.0
-# compare with 0.5 and 2.0</div>
+<div class="params">python main.py --display walk2d --mean_free_path 0.5
+python main.py --display walk2d --mean_free_path 1.0
+python main.py --display walk2d --mean_free_path 2.0</div>
 </div>
 <div class="scenario-card">
 <h4>7 · Intermediate — Individual Walks and Statistical Variety</h4>
 <p>
         Display a few walks at a time and compare their shapes and escape step counts. Then increase
-        <code>n_walks</code> moderately. Individual paths can look strikingly different even though
+        <code>--n_walks</code> moderately. Individual paths can look strikingly different even though
         they obey the same statistical rules. Keep the number small enough that the trajectories
         remain visually distinguishable; the purpose is to connect the statistical law with the
         irregular appearance of individual random walks.
       </p>
-<div class="params">n_walks = 4
-# compare with 6 and 10</div>
+<div class="params">python main.py --display walk2d --n_walks 4
+python main.py --display walk2d --n_walks 6
+python main.py --display walk2d --n_walks 10</div>
 </div>
 <div class="scenario-card">
 <h4>8 · Intermediate–Advanced — Explore the Escape-Time Distribution</h4>
@@ -591,9 +615,9 @@ mean_free_path = 1.0
         numbers of steps. Check that <code>step_cap</code> is high enough that incomplete walks do
         not bias the comparison.
       </p>
-<div class="params">display = "walk2d"
-n_walks = 100
-# inspect [w.steps_taken for w in result.walks if w.escaped]</div>
+<div class="params">python main.py --display walk2d --n_walks 100 --step_cap 200000
+# The plot summarizes escaped walks. Inspecting each steps_taken value or
+# making a histogram still requires a small programming change.</div>
 </div>
 <div class="scenario-card">
 <h4>9 · Advanced — Verify Escape Steps ∝ R²</h4>
@@ -606,9 +630,10 @@ n_walks = 100
         trajectories. Confirm that nearly all walks escape; if they do not, raise
         <code>step_cap</code> so censoring does not bias the comparison.
       </p>
-<div class="params">radius = 30.0
-# compare with 40.0, 50.0, 60.0
-# keep mean_free_path fixed</div>
+<div class="params">python main.py --display walk2d --radius 30 --mean_free_path 1 --n_walks 100
+python main.py --display walk2d --radius 40 --mean_free_path 1 --n_walks 100
+python main.py --display walk2d --radius 50 --mean_free_path 1 --n_walks 100
+python main.py --display walk2d --radius 60 --mean_free_path 1 --n_walks 100</div>
 </div>
 </div>
 </section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
@@ -633,10 +658,11 @@ n_walks = 100
         margin-bottom: 0.35em;
         text-transform: uppercase;
         letter-spacing: 0.04em;
-      ">Restoring Default Parameter Values</div>
+      ">Restoring Defaults and Program Files</div>
 <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
-        you can restore the original program files using any of the following methods:
+        To restore input defaults, omit the corresponding command-line options on the next run.
+        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
+        or another program file for a programming extension, restore it using one of the following methods:
       </p>
 <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
 <li>
