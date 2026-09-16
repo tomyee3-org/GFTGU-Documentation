@@ -271,6 +271,18 @@
       white-space: pre-wrap;
       word-break: break-all;
     }
+    #running > .sig, .exp-card .sig {
+      font-family: var(--mono);
+      font-size: 0.79rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      background: var(--code-bg);
+      border: 1px solid #ddd8cc;
+      border-radius: 3px;
+      padding: 9px 11px;
+      margin-top: 10px;
+    }
 
     /* ── Parameter table ── */
     .param-table {
@@ -429,6 +441,7 @@
 <a href="#algorithm">Algorithm</a>
 <div class="nav-label">Code</div>
 <a href="#modules">Module Overview</a>
+<a href="#running">Running from the Command Line</a>
 <a href="#parameters">Parameters</a>
 <a href="#quantities">Quantity Modes</a>
 <div class="nav-label">Experiments</div>
@@ -442,7 +455,7 @@
 ═══════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.0.4&nbsp;&nbsp;&nbsp;&nbsp;Build 5b6ad69fefb7
+  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build b0267fec4376
 </p>
 <!-- ── Description ── -->
 <section id="description">
@@ -583,7 +596,7 @@
       A uniform x-grid maps non-uniformly into physical wavelength or frequency. The plotter sorts
       the points by physical coordinate and, by default, displays the region where the curve exceeds
       a small fraction of its peak. Integration still uses the full x-domain. Set
-      <code>y_frac_window=0</code> to display the complete computed coordinate range.
+      <code>--y_frac_window 0</code> to display the complete computed coordinate range.
     </p>
 </section>
 <!-- ── Modules ── -->
@@ -635,8 +648,8 @@ def prefactor(quantity, T)
 <div class="mc-role">Entry Point</div>
 <div class="mc-name">main.py</div>
 <p>
-          User-editable entry point. Set temperature, quantity, resolution, domain boundaries,
-          approximation thresholds, and plot controls here, then run the calculation.
+          Command-line entry point. Set temperature, quantity, resolution, domain boundaries,
+          approximation thresholds, and plot controls through named options.
         </p>
 <div class="sig">from planck2_driver import run_planck2
 from planck2_plot  import plot_planck2
@@ -646,25 +659,41 @@ plot_planck2(result)</div>
 </div>
 </div>
 </section>
+<section id="running">
+<h2>Running from the Command Line</h2>
+<p>Open a terminal in the folder containing <code>main.py</code>. Run <code>python main.py --help</code> for the full option descriptions and defaults; run <code>python main.py --version</code> for the version and Build ID. Options omitted from a command keep their defaults.</p>
+<div class="sig"># Default solar-temperature wavelength radiance
+python main.py
+
+# CMB frequency radiance
+python main.py --T 2.725 --quantity frequency
+
+# Spectral energy density with the annotation at lower left
+python main.py --quantity energy_density --corner lower_left
+
+# Explore approximation switches and show the complete coordinate range
+python main.py --x_low 1 --x_high 3 --y_frac_window 0</div>
+<p>The spectrum selector accepts <code>wavelength</code> (radiance per wavelength), <code>frequency</code> (radiance per frequency), or <code>energy_density</code> (energy density per frequency). The plot-corner selector accepts <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code>, and <code>lower_left</code>. The command-line underscores map to the plotter's internal labels with spaces.</p>
+</section>
 <!-- ── Parameters ── -->
 <section id="parameters">
 <h2>Parameters</h2>
-<p>All ordinary experiment settings are exposed near the top of <code>main.py</code>. Physical quantities are expressed in SI units throughout.</p>
+<p>All ordinary experiment settings are command-line options described in <code>main.py</code>. Physical quantities are expressed in SI units throughout.</p>
 <table class="param-table">
 <thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td class="pname">T</td><td class="pdefault">5900.0</td><td>K</td><td>Black-body temperature; the default is a useful black-body approximation to the Sun's continuum.</td></tr>
-<tr><td class="pname">quantity</td><td class="pdefault">"wavelength"</td><td>—</td><td><code>"wavelength"</code>, <code>"frequency"</code>, or <code>"energy_density"</code>.</td></tr>
-<tr><td class="pname">n_steps</td><td class="pdefault">2000</td><td>—</td><td>Number of equal x-intervals; the program samples <code>n_steps + 1</code> endpoints. Valid range: 1–1,000,000.</td></tr>
-<tr><td class="pname">x_min</td><td class="pdefault">0.01</td><td>—</td><td>Lower bound of the dimensionless x-domain.</td></tr>
-<tr><td class="pname">x_max</td><td class="pdefault">100.0</td><td>—</td><td>Upper bound of the dimensionless x-domain.</td></tr>
-<tr><td class="pname">x_low</td><td class="pdefault">0.05</td><td>—</td><td>Below this value, use the small-x approximation.</td></tr>
-<tr><td class="pname">x_high</td><td class="pdefault">20.0</td><td>—</td><td>Above this value, use the large-x approximation.</td></tr>
-<tr><td class="pname">corner</td><td class="pdefault">"upper right"</td><td>—</td><td>Annotation-box location.</td></tr>
-<tr><td class="pname">y_frac_window</td><td class="pdefault">0.003</td><td>—</td><td>Fraction of peak used for automatic plot windowing; 0 shows the full domain.</td></tr>
+<tr><td class="pname">--T</td><td class="pdefault">5900.0</td><td>K</td><td>Positive finite black-body temperature; the default approximates the Sun's continuum.</td></tr>
+<tr><td class="pname">--quantity</td><td class="pdefault">"wavelength"</td><td>—</td><td><code>"wavelength"</code> plots radiance per wavelength; <code>"frequency"</code> plots radiance per frequency; <code>"energy_density"</code> plots energy density per frequency.</td></tr>
+<tr><td class="pname">--n_steps</td><td class="pdefault">2000</td><td>—</td><td>Number of equal x-intervals; the program samples <code>n_steps + 1</code> endpoints. Valid range: 1–1,000,000.</td></tr>
+<tr><td class="pname">--x_min</td><td class="pdefault">0.01</td><td>—</td><td>Positive lower bound of the dimensionless x-domain.</td></tr>
+<tr><td class="pname">--x_max</td><td class="pdefault">100.0</td><td>—</td><td>Upper bound of the dimensionless x-domain, greater than <code>--x_min</code>.</td></tr>
+<tr><td class="pname">--x_low</td><td class="pdefault">0.05</td><td>—</td><td>Below this value, use the small-x Rayleigh–Jeans approximation.</td></tr>
+<tr><td class="pname">--x_high</td><td class="pdefault">20.0</td><td>—</td><td>Above this value, use the large-x Wien approximation. Require <code>x_min ≤ x_low &lt; x_high ≤ x_max</code>.</td></tr>
+<tr><td class="pname">--corner</td><td class="pdefault">"upper_right"</td><td>—</td><td>Annotation location: <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code>, or <code>lower_left</code>.</td></tr>
+<tr><td class="pname">--y_frac_window</td><td class="pdefault">0.003</td><td>—</td><td>Finite fraction of peak for plot windowing; 0 shows the full domain. Does not affect peak search or integration.</td></tr>
 </tbody>
 </table>
-<div class="note"><strong>Input checking:</strong> Invalid quantities, non-finite or nonpositive temperatures, resolutions outside the integer range 1–1,000,000, non-finite or incorrectly ordered domain limits, domain/resolution combinations that cannot produce a representable positive step, invalid annotation corners, and window fractions outside the finite range 0–1 produce explanatory <code>ValueError</code> messages. Positive finite settings whose derived physical values fall outside the representable floating-point range are also rejected rather than returning infinities or unusable zero-valued results.</div>
+<div class="note"><strong>Input checking:</strong> The command-line parser rejects invalid selectors, non-finite or nonpositive temperatures, resolutions outside the integer range 1–1,000,000, invalid or incorrectly ordered domain limits, invalid annotation corners, and window fractions outside the finite range 0–1. The driver also rejects domain/resolution combinations that cannot produce a representable positive step and derived values outside the representable floating-point range.</div>
 </section>
 <!-- ── Quantity Modes ── -->
 <section id="quantities">
@@ -716,14 +745,28 @@ plot_planck2(result)</div>
 <section id="experiments">
 <h2>Suggested Experiments</h2>
 <div class="exp-grid">
-<div class="exp-card"><div class="ec-num">EXP-1</div><h4>Solar Black-Body Approximation</h4><p>With <code>T=5900</code> and <code>quantity="wavelength"</code>, compare the sampled peak wavelength with Wien's displacement law. The result should be near 490 nm, in the visible range. A real solar spectrum also contains absorption lines and other departures from an ideal black body.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-2</div><h4>Wien's Displacement Law and Temperature</h4><p>Run <code>quantity="wavelength"</code> at <code>T = 3000, 5900, 10000</code> K. Verify that <code>x_peak</code> stays nearly constant while \(\lambda_\text{peak}T\) stays near \(2.898\times10^{-3}\,\text{m K}\). Then try <code>"frequency"</code> and verify that the peak frequency is proportional to \(T\).</p></div>
-<div class="exp-card"><div class="ec-num">EXP-3</div><h4>Cosmic Microwave Background</h4><p>Set <code>T=2.725</code> and <code>quantity="frequency"</code>. The peak should be near 160 GHz. As an optional extension, research why the CMB's near-perfect black-body spectrum became important evidence for a hot early universe and against classical steady-state cosmology.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-4</div><h4>Wavelength vs. Frequency Peaks</h4><p>At the same temperature, run <code>"wavelength"</code> and <code>"frequency"</code>. Record the \(B_\lambda\) peak wavelength, the \(B_\nu\) peak frequency, and \(c/\nu_\text{max}\). The two wavelengths do not agree because the curves are densities with respect to different variables.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-5</div><h4>Frequency Radiance vs. Energy Density</h4><p>At one temperature, compare <code>"frequency"</code> and <code>"energy_density"</code>. Verify that <code>x_peak</code> and the peak frequency agree. Then calculate the ratios of their peak values and physical integrals, and explain why both ratios equal \(4\pi/c\), with the corresponding change of units.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-6</div><h4>Stefan–Boltzmann T⁴ Scaling</h4><p>Use, for example, <code>T = 3000, 6000, 12000</code> K and record the printed physical integral. For either radiance mode, calculate <code>physical_integral / T**4</code> and verify that it is nearly constant and agrees with \(\sigma/\pi\). Multiply a radiance integral by \(\pi\) to recover the hemispheric exitance \(\sigma T^4\). For <code>"energy_density"</code>, verify agreement with \(4\sigma/c\). When \(T\) doubles, the integral should increase by about a factor of 16.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-7</div><h4>Resolution and Peak Sampling</h4><p>Try <code>n_steps = 10, 100, 1000, 2000, 20000</code>. Make a small table of <code>n_steps</code>, <code>x_peak</code>, <code>dimensionless_area</code>, and relative area error, defined as <code>abs(numerical - reference) / abs(reference)</code>. Use \(8\pi^6/63\) as the dimensionless reference for <code>"wavelength"</code> and \(\pi^4/15\) for either frequency-based mode. The trapezoidal-rule area and the sampled peak location need not converge at the same rate because the peak is chosen only from grid points, without interpolation. For the physical integral, remember that the exact reference spans \(0&lt;x&lt;\infty\) while the numerical result uses the selected finite domain.</p></div>
-<div class="exp-card"><div class="ec-num">EXP-8</div><h4>Rayleigh–Jeans and Wien Limits</h4><p>First record the default peak and integrals. For small \(x\), Planck's law approaches the Rayleigh–Jeans form; for large \(x\), it approaches Wien's approximation. Move <code>x_low</code> upward and <code>x_high</code> downward, for example to 1 and 3, so that these limiting forms are deliberately used too far from their valid regimes. These two settings change only the approximation-switch regions; they do not change the physical domain set by <code>x_min</code> and <code>x_max</code>. Compare with the defaults and explain which limiting approximation is responsible for each change.</p></div>
+<div class="exp-card"><div class="ec-num">EXP-1</div><h4>Solar Black-Body Approximation</h4><p>Compare the sampled wavelength peak at 5900 K with Wien's displacement law. It should be near 490 nm; a real solar spectrum also has absorption lines.</p><div class="sig">python main.py --T 5900 --quantity wavelength</div></div>
+<div class="exp-card"><div class="ec-num">EXP-2</div><h4>Wien's Displacement Law and Temperature</h4><p>Verify that <code>x_peak</code> stays nearly constant while \(\lambda_\text{peak}T\) stays near \(2.898\times10^{-3}\,\text{m K}\). Compare frequency peaks at different temperatures to see their proportionality to \(T\).</p><div class="sig">python main.py --T 3000 --quantity wavelength
+python main.py --T 5900 --quantity wavelength
+python main.py --T 10000 --quantity wavelength
+python main.py --T 3000 --quantity frequency
+python main.py --T 10000 --quantity frequency</div></div>
+<div class="exp-card"><div class="ec-num">EXP-3</div><h4>Cosmic Microwave Background</h4><p>The 2.725 K frequency peak should be near 160 GHz. As an optional research extension, consider why the CMB's nearly ideal black-body spectrum supports a hot early universe.</p><div class="sig">python main.py --T 2.725 --quantity frequency</div></div>
+<div class="exp-card"><div class="ec-num">EXP-4</div><h4>Wavelength vs. Frequency Peaks</h4><p>At the same temperature, record the \(B_\lambda\) peak wavelength, the \(B_\nu\) peak frequency, and \(c/\nu_\text{max}\). The two wavelengths differ because the curves are densities with respect to different variables.</p><div class="sig">python main.py --T 5900 --quantity wavelength
+python main.py --T 5900 --quantity frequency</div></div>
+<div class="exp-card"><div class="ec-num">EXP-5</div><h4>Frequency Radiance vs. Energy Density</h4><p>Verify that <code>x_peak</code> and peak frequency agree. Compare the plotted peak values and printed physical integrals, and explain why their ratios equal \(4\pi/c\), with the corresponding change of units.</p><div class="sig">python main.py --T 5900 --quantity frequency
+python main.py --T 5900 --quantity energy_density</div></div>
+<div class="exp-card"><div class="ec-num">EXP-6</div><h4>Stefan–Boltzmann T⁴ Scaling</h4><p>Record the printed physical integrals, divide by <code>T**4</code>, and compare with \(\sigma/\pi\) for radiance or \(4\sigma/c\) for energy density. Doubling \(T\) should increase the integral by about a factor of 16.</p><div class="sig">python main.py --T 3000 --quantity frequency
+python main.py --T 6000 --quantity frequency
+python main.py --T 12000 --quantity frequency
+# Repeat with --quantity energy_density to compare 4σ/c.</div></div>
+<div class="exp-card"><div class="ec-num">EXP-7</div><h4>Resolution and Peak Sampling</h4><p>Compare printed <code>x_peak</code> and dimensionless areas with the printed exact reference values. For the physical integral, remember that its exact reference spans \(0&lt;x&lt;\infty\) while the numerical result uses the finite domain. The sampled peak need not converge at the same rate as the trapezoidal area.</p><div class="sig">python main.py --n_steps 10
+python main.py --n_steps 100
+python main.py --n_steps 1000
+python main.py --n_steps 2000
+python main.py --n_steps 20000</div></div>
+<div class="exp-card"><div class="ec-num">EXP-8</div><h4>Rayleigh–Jeans and Wien Limits</h4><p>Compare default peak and integrals with a run that applies the small- and large-\(x\) approximations well beyond their usual regimes. These thresholds change the approximation regions while preserving the physical domain.</p><div class="sig">python main.py
+python main.py --x_low 1 --x_high 3</div></div>
 </div>
 </section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
 <div style="
@@ -747,10 +790,11 @@ plot_planck2(result)</div>
         margin-bottom: 0.35em;
         text-transform: uppercase;
         letter-spacing: 0.04em;
-      ">Restoring Default Parameter Values</div>
+      ">Restoring Defaults and Program Files</div>
 <p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
-        If you edit <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code> or another program file while experimenting,
-        you can restore the original program files using any of the following methods:
+        Omit command-line options on the next run to restore their defaults. If an
+        extension requires editing <code>main.py</code> or another program file,
+        restore the program files using any of the following methods:
       </p>
 <ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
 <li>
