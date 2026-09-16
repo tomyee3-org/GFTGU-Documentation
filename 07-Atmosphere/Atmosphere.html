@@ -431,8 +431,10 @@
 <a href="#mod-plot">plot_atmosphere.py</a>
 <a href="#mod-main">main.py</a>
 <div class="nav-label">Usage</div>
+<a href="#quickstart">Quick Start</a>
 <a href="#parameters">Parameters</a>
 <a href="#output">Output Modes</a>
+<a href="#checkpoints">Printed Checkpoints</a>
 <a href="#experiments">Suggested Experiments</a>
 <div class="nav-label">Reference</div>
 <a href="#related">Related Programs</a>
@@ -441,7 +443,7 @@
 <!-- ══════════════════════ MAIN ══════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.1&nbsp;&nbsp;&nbsp;&nbsp;Build 58b6ba9b3808
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 94d7d42087d2
 </p>
 <!-- ── Description ── -->
 <section id="description">
@@ -457,6 +459,11 @@
 <p>
         It is suitable for modeling Earth's atmosphere, comparing planetary atmospheres across the
         Solar System, and exploring how scale height depends on gravity and molecular weight.
+      </p>
+<p>
+        Every run also prints pressure, (p/T), and temperature at every supplied altitude
+        checkpoint, independently of the quantity selected for the plot. Numerical table entries
+        use five significant figures.
       </p>
 <div class="note">
 <strong>Textbook reference:</strong>
@@ -731,6 +738,15 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
           co-indexed and trimmed to the last valid positive-pressure step. The final two fields
           identify the program version and exact four-module build that produced the result.
         </p>
+<span class="func-sig">@dataclass(frozen=True)<br/>class CheckpointData:<br/>
+    altitude: float<br/>
+    pressure: float | None<br/>
+    pressure_over_temperature: float | None<br/>
+    temperature: float</span>
+<p class="func-desc">
+          One row of the printed checkpoint table. Pressure fields are unavailable only when a
+          custom checkpoint falls outside the stored positive-pressure integration domain.
+        </p>
 <h3>Class</h3>
 <span class="func-sig">class AtmosphereModel:<br/>
     def __init__(self, params: AtmosphereParameters) -&gt; None<br/>
@@ -762,6 +778,13 @@ class CurveData:
           The <code>y</code> array and label depend on <code>result.output_type</code>:
           pressures (Pa), densities (kg m<sup>−3</sup>), or temperatures (K).
           The <code>x</code> array is always the altitude in meters.
+        </p>
+<span class="func-sig">extract_checkpoints(result, h_points, T_points)
+        -&gt; List[CheckpointData]</span>
+<p class="func-desc">
+          Preserves every supplied altitude-temperature checkpoint and linearly interpolates
+          pressure between adjacent integration samples. It then computes (p/T) from that
+          pressure and the defining checkpoint temperature.
         </p>
 </div>
 </section>
@@ -809,52 +832,61 @@ class CurveData:
 <span class="role-tag">Entry Point</span>
 <h3>main.py</h3>
 <p>
-          The user-facing entry point. Sets all input parameters to Earth defaults and calls
-          the driver and plotter. Edit the parameters in this file to model a different planet
-          or atmospheric scenario; the other three modules never need to be modified. It also
-          supports <code>python main.py --version</code> and converts invalid input or model
-          failures into a concise error message.
+          The user-facing command-line entry point. It defines documented Earth defaults, parses
+          and validates every model input, maps lowercase plot selectors to the driver's legacy
+          capitalized values, prints the checkpoint table, and calls the plotter. It also supports
+          <code>python main.py --help</code> and <code>python main.py --version</code>.
         </p>
 <p class="func-desc">
           The following is an abbreviated view of the entry point; the complete temperature arrays
           and argument-parser setup are in <code>main.py</code>.
         </p>
-<pre><code>from driver_atmosphere import AtmosphereParameters, AtmosphereModel, OutputType, extract_output
-from plot_atmosphere  import plot_atmosphere
-
-def main():
-    parse_args()             # includes --version
-
-    planet_name = "Earth"
-    g_accel     = 9.81       # m s⁻²
-    mu          = 28.97      # mean molecular weight (dry air)
-    p0          = 1.013e5    # Pa  (1 atm)
-
-    # Full hybrid Earth h_points and T_points arrays appear here.
-    output_type: OutputType = "Pressure"
-
+<pre><code>def main(argv=None):
+    args = parse_args(argv)
     params = AtmosphereParameters(
-        planet_name=planet_name, g_accel=g_accel, mu=mu, p0=p0,
-        h_points=h_points, T_points=T_points, output_type=output_type
+        planet_name=args.planet_name,
+        g_accel=args.g_accel,
+        mu=args.mu,
+        p0=args.p0,
+        h_points=args.h_points,
+        T_points=args.T_points,
+        output_type=OUTPUT_TYPES[args.output_type],
     )
-
-    try:
-        result = AtmosphereModel(params).run()
-    except (ValueError, RuntimeError) as exc:
-        raise SystemExit(f"Atmosphere input/model error: {exc}") from exc
-
-    print(f"Atmosphere {result.model_version} (build {result.build_id})")
+    result = AtmosphereModel(params).run()
+    print_checkpoints(result, args.h_points, args.T_points)
     plot_atmosphere(extract_output(result))
-
-if __name__ == "__main__":
-    main()</code></pre>
+</code></pre>
 </div>
+</section>
+<!-- ── Quick Start ── -->
+<section id="quickstart">
+<h2>Quick Start</h2>
+<p>
+        Run <code>python main.py --help</code> for the current command summary and defaults, or
+        <code>python main.py --version</code> for the model version and reproducible source Build
+        ID. Options omitted from a command retain their Earth defaults.
+      </p>
+<pre><code># Default Earth pressure plot and checkpoint table
+python main.py
+
+# Plot the default temperature profile
+python main.py --output_type temperature
+
+# A short illustrative Mars profile
+python main.py --planet_name Mars --g_accel 3.71 --mu 44 --p0 610 \
+  --h_points 0,10000,20000 --T_points 210,180,160 \
+  --output_type pressure</code></pre>
+<p>
+        List arguments are comma-separated with no brackets. Keep the
+        <code>--h_points</code> and <code>--T_points</code> lists the same length.
+      </p>
 </section>
 <!-- ── Parameters table ── -->
 <section id="parameters">
 <h2>Parameters</h2>
 <p>
-        All parameters are set in <code>main.py</code>. The default Earth temperature profile
+        All model parameters are accepted by <code>main.py</code> as command-line options. The
+        default Earth temperature profile
         combines U.S. Standard Atmosphere 1976 values through about 86 km with a representative
         NRLMSIS 2.0 thermospheric profile extending to 500 km.
       </p>
@@ -869,48 +901,54 @@ if __name__ == "__main__":
 </thead>
 <tbody>
 <tr>
-<td><code>planet_name</code></td>
+<td><code>--planet_name NAME</code></td>
 <td><code>"Earth"</code></td>
 <td>—</td>
 <td>Label used in plot title</td>
 </tr>
 <tr>
-<td><code>g_accel</code></td>
+<td><code>--g_accel M_S2</code></td>
 <td><code>9.81</code></td>
 <td>m s<sup>−2</sup></td>
 <td>Surface gravitational acceleration</td>
 </tr>
 <tr>
-<td><code>mu</code></td>
+<td><code>--mu PROTON_MASSES</code></td>
 <td><code>28.97</code></td>
 <td>dimensionless</td>
 <td>Mean molecular weight of atmosphere (dry air ≈ 28.97; CO₂ ≈ 44; H₂ ≈ 2)</td>
 </tr>
 <tr>
-<td><code>p0</code></td>
+<td><code>--p0 PA</code></td>
 <td><code>1.013e5</code></td>
 <td>Pa</td>
 <td>Surface (reference) pressure (1 atm = 101 325 Pa)</td>
 </tr>
 <tr>
-<td><code>h_points</code></td>
-<td><code>[0, 11019, 20063, 32162, 47350, 51412, 71802, 86000,<br/>
-                100000, 150000, 200000, 250000, 300000, 400000, 500000]</code></td>
+<td><code>--h_points LIST</code></td>
+<td><code>0,11019,20063,32162,47350,51412,71802,86000,<br/>
+                100000,150000,200000,250000,300000,400000,500000</code></td>
 <td>m</td>
 <td>Altitude breakpoints for the hybrid Earth temperature profile</td>
 </tr>
 <tr>
-<td><code>T_points</code></td>
-<td><code>[288.15, 216.65, 216.65, 228.65, 270.65, 270.65, 214.65,<br/>
-                186.946, 190, 800, 1080, 1190, 1225, 1240, 1240]</code></td>
+<td><code>--T_points LIST</code></td>
+<td><code>288.15,216.65,216.65,228.65,270.65,270.65,214.65,<br/>
+                186.946,190,800,1080,1190,1225,1240,1240</code></td>
 <td>K</td>
 <td>Temperature at each altitude breakpoint</td>
 </tr>
 <tr>
-<td><code>output_type</code></td>
-<td><code>"Pressure"</code></td>
+<td><code>--output_type MODE</code></td>
+<td><code>pressure</code></td>
 <td>—</td>
-<td>Which quantity to plot: <code>"Pressure"</code>, <code>"Density"</code>, or <code>"Temperature"</code></td>
+<td>Which quantity to plot: <code>pressure</code>, <code>density</code>, or <code>temperature</code>. Lowercase command values map to the capitalized driver values.</td>
+</tr>
+<tr>
+<td><code>--version</code></td>
+<td>—</td>
+<td>flag</td>
+<td>Print the model version and Build ID, then exit without integrating or plotting.</td>
 </tr>
 </tbody>
 </table>
@@ -950,12 +988,12 @@ if __name__ == "__main__":
 <section id="output">
 <h2>Output Modes</h2>
 <p>
-        Set <code>output_type</code> in <code>main.py</code> to select which atmospheric
+        Use <code>--output_type</code> to select which atmospheric
         quantity is plotted on the vertical axis (with altitude on the horizontal axis).
       </p>
 <div class="output-grid">
 <div class="output-card">
-<div class="out-name">"Pressure"</div>
+<div class="out-name">--output_type pressure</div>
 <div class="out-unit">y-axis unit: Pa</div>
 <p>
             Atmospheric pressure vs. altitude. Decreases roughly exponentially with
@@ -964,7 +1002,7 @@ if __name__ == "__main__":
           </p>
 </div>
 <div class="output-card">
-<div class="out-name">"Density"</div>
+<div class="out-name">--output_type density</div>
 <div class="out-unit">y-axis unit: kg m<sup>−3</sup></div>
 <p>
             Mass density vs. altitude, derived from the ideal gas law.
@@ -973,7 +1011,7 @@ if __name__ == "__main__":
           </p>
 </div>
 <div class="output-card">
-<div class="out-name">"Temperature"</div>
+<div class="out-name">--output_type temperature</div>
 <div class="out-unit">y-axis unit: K</div>
 <p>
             Temperature vs. altitude. With the default Earth data, this shows the
@@ -989,41 +1027,66 @@ if __name__ == "__main__":
         horizontal axis and the selected atmospheric quantity is on the vertical axis, use
         <code>ax.set_yscale("log")</code> in <code>plot_atmosphere.py</code> after the
         <code>ax.plot()</code> call.
-      </div>
+</div>
+</section>
+<!-- ── Printed checkpoints ── -->
+<section id="checkpoints">
+<h2>Printed Checkpoints</h2>
+<p>
+        Every run prints one row for each altitude supplied with <code>--h_points</code>. The row
+        contains the pressure interpolated from the two neighboring integration samples, the
+        ratio (p/T), and the corresponding defining temperature from
+        <code>--T_points</code>. This table is printed for every plot mode, so students can compare
+        the same numerical checkpoints while switching among pressure, density, and temperature
+        plots. Values use five significant figures.
+      </p>
+<pre><code>Atmospheric checkpoints
+  altitude (m)      pressure (Pa)          p/T (Pa/K)    temperature (K)
+             0          1.013e+05              351.55             288.15
+         11019              22263              102.76             216.65
+         20063             5272.2              24.335             216.65
+  ...</code></pre>
+<p>
+        A custom checkpoint can lie below altitude zero or above the last stored
+        positive-pressure point. The program keeps such a checkpoint in the table, prints its
+        supplied temperature, and marks pressure and (p/T) as <code>unavailable</code> rather
+        than silently dropping it.
+      </p>
 </section>
 <!-- ── Suggested Experiments ── -->
 <section id="experiments">
 <h2>Suggested Experiments</h2>
 <p>
-        The experiments below are arranged in approximate order of difficulty. Most require only
-        changes to <code>main.py</code>; experiments that require a plotting or algorithm change
-        say so explicitly.
+        The experiments below are arranged in approximate order of difficulty. Most use only
+        command-line parameters; experiments that require a plotting or algorithm change say so
+        explicitly.
       </p>
 <div class="scenario-card">
 <h4>1 · Introductory — Explore Earth's Pressure, Density, and Temperature Profiles</h4>
 <p>
-          Run the default Earth model three times, selecting <code>"Pressure"</code>,
-          <code>"Density"</code>, and <code>"Temperature"</code> in turn. Compare how the three
+          Run the default Earth model three times, selecting <code>pressure</code>,
+          <code>density</code>, and <code>temperature</code> in turn. Compare how the three
           quantities change with altitude. In the temperature plot, identify the familiar
           lower-atmosphere structure below about 86 km and the strong thermospheric temperature
           rise in the supplied 100–500 km profile. Above the highest supplied temperature point,
           remember that the program uses its simplified power-law extrapolation; do not interpret
           that far-upper-atmosphere continuation as a realistic physical temperature profile.
         </p>
-<div class="params">output_type = "Pressure"  # then "Density", then "Temperature"
-# all other parameters at their defaults</div>
+<div class="params">python main.py --output_type pressure
+python main.py --output_type density
+python main.py --output_type temperature</div>
 </div>
 <div class="scenario-card">
 <h4>2 · Introductory — Plot Pressure on a Logarithmic Scale</h4>
 <p>
-          Set <code>output_type = "Pressure"</code> and add
+          Run with <code>--output_type pressure</code> and add
           <code>ax.set_yscale("log")</code> in <code>plot_atmosphere.py</code>. Pressure spans many
           orders of magnitude, so a logarithmic vertical axis makes the structure much easier to
           inspect. For an isothermal atmosphere an exponential pressure law would appear as a
           straight line; Earth's changing temperature therefore shows up as changes in slope.
         </p>
-<div class="params">output_type = "Pressure"
-# add ax.set_yscale("log") after ax.plot(x, y)</div>
+<div class="params">python main.py --output_type pressure
+# programming change: add ax.set_yscale("log") after ax.plot(x, y)</div>
 </div>
 <div class="scenario-card">
 <h4>3 · Introductory–Intermediate — Surface Pressure Changes the Scale, Not the Scale Height</h4>
@@ -1035,7 +1098,9 @@ if __name__ == "__main__":
           this to Eq. (7.4), in which the isothermal scale height depends on temperature,
           gravity, and molecular weight but not on surface pressure.
         </p>
-<div class="params">p0 = 1.013e4   # then 1.013e5 and 1.013e6 Pa</div>
+<div class="params">python main.py --p0 1.013e4
+python main.py --p0 1.013e5
+python main.py --p0 1.013e6</div>
 </div>
 <div class="scenario-card">
 <h4>4 · Intermediate — What Controls Scale Height?</h4>
@@ -1046,8 +1111,10 @@ if __name__ == "__main__":
           vertically extended when molecular weight or gravity is reduced. For an isothermal
           atmosphere, Eq. (7.4) predicts \(H\propto T/(\mu g)\).
         </p>
-<div class="params">mu = 18.0, 28.97, 44.0
-# then vary g_accel while restoring mu = 28.97</div>
+<div class="params">python main.py --mu 18
+python main.py --mu 28.97
+python main.py --mu 44
+# then vary --g_accel while restoring --mu 28.97</div>
 </div>
 <div class="scenario-card">
 <h4>5 · Intermediate — Compare Mars and Venus</h4>
@@ -1059,14 +1126,12 @@ if __name__ == "__main__":
           molecular weight rather than attributing atmospheric "thickness" to pressure alone.
         </p>
 <div class="params"># Mars
-planet_name = "Mars";  g_accel = 3.72;  mu = 44.0;  p0 = 610.0
-h_points = [0.0, 10000.0, 25000.0, 45000.0]
-T_points = [210.0, 170.0, 145.0, 130.0]
+python main.py --planet_name Mars --g_accel 3.72 --mu 44 --p0 610 \
+  --h_points 0,10000,25000,45000 --T_points 210,170,145,130
 
 # Venus
-planet_name = "Venus"; g_accel = 8.87;  mu = 44.0;  p0 = 9.2e6
-h_points = [0.0, 10000.0, 30000.0, 60000.0]
-T_points = [735.0, 500.0, 340.0, 230.0]</div>
+python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 \
+  --h_points 0,10000,30000,60000 --T_points 735,500,340,230</div>
 </div>
 <div class="scenario-card">
 <h4>6 · Intermediate — Change the Temperature Profile</h4>
@@ -1077,8 +1142,8 @@ T_points = [735.0, 500.0, 340.0, 230.0]</div>
           This isolates the role of the supplied temperature profile from changes in gravity,
           molecular weight, or surface pressure.
         </p>
-<div class="params">h_points = [0.0, 50000.0, 100000.0]
-T_points = [288.0, 200.0, 350.0]</div>
+<div class="params">python main.py --h_points 0,50000,100000 \
+  --T_points 288,200,350</div>
 </div>
 <div class="scenario-card">
 <h4>7 · Intermediate–Advanced — Jupiter as a Local 1-Bar-Level Model</h4>
@@ -1091,12 +1156,8 @@ T_points = [288.0, 200.0, 350.0]</div>
           against applying this simple constant-gravity model to an entire gas giant; the limited
           calculation here is intended to show why that warning matters.
         </p>
-<div class="params">planet_name = "Jupiter"
-g_accel     = 24.8
-mu          = 2.2
-p0          = 1.0e5
-h_points    = [0.0, 20000.0, 50000.0, 100000.0]
-T_points    = [165.0, 130.0, 110.0, 150.0]</div>
+<div class="params">python main.py --planet_name Jupiter --g_accel 24.8 --mu 2.2 --p0 1e5 \
+  --h_points 0,20000,50000,100000 --T_points 165,130,110,150</div>
 </div>
 <div class="scenario-card">
 <h4>8 · Advanced — Test the Euler Integration Against an Exact Isothermal Atmosphere</h4>
@@ -1116,9 +1177,9 @@ T_points    = [165.0, 130.0, 110.0, 150.0]</div>
           enough to reach 100 km without triggering a restart. The error should decrease roughly
           in proportion to the step size, as expected for this first-order Euler update.
         </p>
-<div class="params">h_points = [0.0, 100000.0]
-T_points = [288.15, 288.15]
-output_type = "Pressure"</div>
+<div class="params">python main.py --h_points 0,100000 --T_points 288.15,288.15 \
+  --output_type pressure
+# programming change for convergence: edit STEPS_PER_SCALE_HEIGHT</div>
 </div>
 <div class="scenario-card">
 <h4>9 · Advanced Programming Extension — Let Gravity Decrease with Altitude</h4>
