@@ -416,7 +416,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build 492bd8ed6eb1
+  Version 1.3.1&nbsp;&nbsp;&nbsp;&nbsp;Build 43922a895093
 </p>
 <p class="small">
   The Build identifier covers the four Python program modules listed below.
@@ -731,10 +731,9 @@ python main.py</pre>
       animation-frame spacing. Those printed totals and the drift line are always
       taken from accepted integration states in the user-supplied inertial
       coordinates, even when the plot uses the COM display frame. The
-      animation totals text labels those values as interpolated-frame totals
-      because they are evaluated on cubic-Hermite display samples; they can
-      differ slightly from the accepted-step values, so the console drift
-      line remains the authoritative conservation diagnostic. The console
+      animation shows the simulated time and frame number without placing
+      duplicate totals on the plotted trajectories; the console remains the
+      place to read the accepted-step conservation diagnostics. The console
       symbol <code>E_internal</code> is the same
       \(E_{\rm internal}=E-|\mathbf P|^2/(2M)\).
       Ordinarily, energy drift is divided by
@@ -1043,10 +1042,10 @@ python main.py</pre>
       that moves at \(\mathbf V_{\rm CM}\) is the center-of-momentum
       (zero-momentum) frame. Reaching that frame for integration or
       diagnostics still requires subtracting \(\mathbf V_{\rm CM}\) from the
-      initial velocities. The console prints a discrete note naming the
-      selected display frame at the start of every run. Animation titles and
-      a small, unobtrusive unboxed on-figure label repeat the same information, and the label is
-      rewritten when <strong>F</strong> switches frames.
+      initial velocities. The console prints a note naming the selected
+      display frame at the start of every run. Both figure titles identify
+      their display frame, and the animation title changes when <strong>F</strong>
+      switches frames. The plotting area contains no repeated frame label.
     </p>
 <div class="note">
 <strong>Why this is the default.</strong>

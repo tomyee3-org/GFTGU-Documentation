@@ -2,9 +2,36 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Multiple 1.3.0 Release Notes</title>
+<title>Multiple 1.3.1 Release Notes</title>
 </head>
 <body>
+<h1>Multiple 1.3.1 Release Notes</h1>
+<p><b>Version:</b> 1.3.1<br><b>Build:</b> 43922a895093<br><b>Date:</b> 2026-09-18</p>
+<h2>Changes</h2>
+<ul>
+<li>Removed the repeated “Display frame” annotations from static trajectory plots and animations. The figure titles continue to identify the current frame, including after the <strong>F</strong> key switches animation frames.</li>
+<li>Removed the interpolated-frame <em>E</em>, <em>E_internal</em>, <em>P</em>, and <em>L</em> annotation from animation frames. Simulated time, frame number, and the body legend remain on the animation; the existing console report retains the initial and final totals, drift measurements, and eleven accepted-step diagnostic samples.</li>
+<li>Updated the Help description and regenerated the affected Sample Outputs figures. The integration and numerical conservation results are unchanged.</li>
+</ul>
+<h2>Verification</h2>
+<p>The regression suite checks that static plots have no redundant frame annotation, animation frame switching still updates the title, the animation retains its time and body legend, and the normal console conservation diagnostics remain available.</p>
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.3.1<br>BUILD_ID: 43922a895093</p>
+
+<section id="maintenance-current">
+<h2>Known Minor Maintenance Items: Historical Register and Current Status</h2>
+<p>The original maintenance wording is retained in the full earlier notes below. Resolved issues remain visible; items without verified completion remain on the follow-up list.</p>
+<ul>
+<li>Audit3 identified that nearly cancelling but nonzero initial momentum or angular-momentum vectors still use exact-zero detection rather than a scale-aware near-cancellation criterion. This affects diagnostic interpretation only and is not a numerical-integrator defect.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.1; completion has not been verified.</li>
+<li>Audit3 identified that <code>plot_trajectories()</code> and <code>animate_multiple()</code> still assume structurally valid result dictionaries and could benefit from the same level of public-input validation already implemented for <code>plot_energy_drift()</code>.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.1; completion has not been verified.</li>
+<li>The source and regression suite are verified against Python 3.10 grammar and were executed during review using Python 3.12.13. Running the complete suite under a native Python 3.10 environment remains a desirable non-blocking release check.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.1; completion has not been verified.</li>
+<li>Future releases may optionally expand plotting-result validation and add scale-aware normalization for nearly cancelling conservation vectors.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.1; completion has not been verified.</li>
+</ul>
+</section>
+
+<section id="historical-1.3.0">
+<h2>Earlier Release Notes (1.3.0, 1.2.2, and 1.1.2)</h2>
+<p>The complete previous release notes follow without omissions. The original 1.3.0 page is also provided separately in this archive.</p>
 <h1>Multiple 1.3.0 Release Notes</h1>
 <p><b>Version:</b> 1.3.0<br><b>Build:</b> 492bd8ed6eb1<br><b>Date:</b> 2026-09-16</p>
 <h2>Changes</h2><ul>
@@ -112,6 +139,7 @@
 </ul>
 <h3>Version Identification</h3>
 <p>MODEL_VERSION: 1.1.2<br>BUILD_ID: bb853c24c69e</p>
+</section>
 </section>
 </section>
 </body>
