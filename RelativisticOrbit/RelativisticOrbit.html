@@ -373,7 +373,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build f2585119b36b
+  Version 1.1.1&nbsp;&nbsp;&nbsp;&nbsp;Build 88cf3667856e
 </p>
 
 <!-- ─── Overview ─── -->
@@ -461,7 +461,8 @@ python main.py --u_init 1.044e8 --show_periapsides --max_steps 12000</pre>
 <p>
           Holds the user-editable initial conditions, numerical tolerances,
           Schwarzschild/Newtonian switch, and plotting options. It prints the
-          run summary and precession/conservation diagnostics.
+          run summary, the Schwarzschild horizon and ISCO radii (five significant figures),
+          and precession/conservation diagnostics.
         </p>
 </div>
 <div class="mc-card">
@@ -1023,7 +1024,9 @@ python main.py --model newtonian --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_s
 <p>
       This switch is intended as a controlled numerical experiment. In the
       Newtonian model there is no physical Schwarzschild horizon or ISCO, so
-      those reference circles are omitted from the plot.
+      those reference circles and their summary radii are omitted. In
+      Schwarzschild mode the printed summary reports both radii in metres to
+      five significant figures, regardless of whether the ISCO plot circle is hidden.
     </p>
 </section>
 <!-- ─── Related Programs ─── -->

@@ -2,9 +2,26 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>RelativisticOrbit 1.1.0 Release Notes</title>
+<title>RelativisticOrbit 1.1.1 Release Notes</title>
 </head>
 <body>
+<h1>RelativisticOrbit 1.1.1 Release Notes</h1><p><b>Version:</b> 1.1.1<br><b>Build:</b> 88cf3667856e<br><b>Date:</b> 2026-09-18</p>
+<h2>Changes</h2><ul>
+<li>Schwarzschild summaries now print the horizon radius (2953.3 m) and innermost stable circular orbit (ISCO) radius (8859.8 m), both to five significant figures using the program's existing one-solar-mass constants. Newtonian summaries omit these physically inapplicable radii.</li>
+<li>Updated the Help and Sample Outputs console transcripts; the numerical integration and previously embedded figures have not changed.</li>
+<li>Advanced the version and reproducible Build ID across the program and documentation.</li>
+</ul>
+<section id="maintenance-status-current">
+<h2>Known Minor Maintenance Items: Current Status</h2>
+<p>These historical items remain visible even when later resolved. The archived 1.1.0 and 1.0.3 entries below retain their original wording.</p>
+<ul>
+<li>Run the complete suite on an actual Python 3.10 interpreter; syntax is checked against the 3.10 grammar, but this environment uses a later interpreter. <strong>Status in 1.1.1:</strong> open verification item.</li>
+<li>Consider bundling MathJax locally if fully typeset Help must work offline. <strong>Status in 1.1.1:</strong> open follow-up item.</li>
+<li>Preserve or publish the standalone script that generated the independent DOP853 reference values; the regression suite already contains those values and settings. <strong>Status in 1.1.1:</strong> open follow-up item.</li>
+</ul>
+</section>
+<section id="historical-1.1.0">
+<h2>Earlier Release Notes (preserved)</h2>
 <h1>RelativisticOrbit 1.1.0 Release Notes</h1><p><b>Version:</b> 1.1.0<br><b>Build:</b> f2585119b36b<br><b>Date:</b> 2026-09-16</p>
 <h2>Changes</h2><ul><li>All eight integration inputs and both plot switches can be set with <code>python main.py --name value</code>. <code>--model schwarzschild</code> selects the timelike Schwarzschild geodesic and <code>--model newtonian</code> the matched Newtonian comparison. <code>--help</code> lists descriptions and defaults.</li>
 <li>The Help now gives runnable commands for every suggested exercise and identifies studies that also need a script or analysis of the returned arrays. The existing defaults still produce the same strong-field example.</li>
@@ -72,6 +89,7 @@
 
 <h3>Version Identification</h3>
 <p>MODEL_VERSION: 1.0.3<br>BUILD_ID: 14ee4ae56c17</p>
+</section>
 </section>
 </section>
 </body>
