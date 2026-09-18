@@ -365,7 +365,7 @@
 ════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build b2c0f0597478
+  Version 1.3.1&nbsp;&nbsp;&nbsp;&nbsp;Build 2cd414a64b3a
 </p>
 <!-- ─── Overview ─── -->
 <h2 id="overview">Overview</h2>
@@ -428,19 +428,32 @@ and the exact SI speed of light \(c=299\,792\,458\ \mathrm{m\,s^{-1}}\).
 </table>
 <p>
 <code>print_model_summary()</code> reports surface radius, total mass,
-  central density, central sound speed, compactness \(2GM/(Rc^2)\), the
-  causality and Buchdahl checks, radial sample count, and nominal radial
-  spacing. Pressure and density may be shown on a
+  central pressure, central density, central sound speed, compactness
+  \(2GM/(Rc^2)\), the causality and Buchdahl checks, radial sample count,
+  and nominal radial spacing. It then prints pressure (Pa), density
+  (kg/m³), and enclosed gravitational mass (solar masses) at 0.00, 0.25,
+  0.50, 0.75, and 0.90 of the computed surface radius. Radius, pressure,
+  and mass use linear interpolation between the stored radial steps;
+  density comes from the polytropic equation of state at that pressure.
+  Pressure and density may be shown on a
   logarithmic scale with <code>--log_y</code>; the exact zero-valued surface
   point is omitted from a logarithmic plot because zero cannot be represented
   on a log axis. Mass plots remain linear; if <code>--log_y</code> is used
   with <code>--output_type mass</code>, the program prints a warning rather than
   silently ignoring the setting.
 </p>
+<p>The default run prints these five interior checkpoints after the global model summary:</p>
+<pre><code>Radial checkpoints (fraction of surface radius)
+   r/R    radius (km)    pressure (Pa)    density (kg/m^3)    enclosed mass (M_sun)
+  0.00              0         1.26e+35          6.6335e+18                        0
+  0.25         1.9509       8.6355e+34           5.288e+18                 0.090817
+  0.50         3.9018       2.4762e+34          2.4991e+18                  0.48558
+  0.75         5.8527       2.0855e+33           5.663e+17                  0.86475
+  0.90         7.0232       1.2228e+32          1.0326e+17                  0.95255</code></pre>
 <h2 id="modules">Module Structure</h2>
 <div class="mc-grid">
 <div class="mc-card"><h4>main.py</h4><p>Entry point and user configuration.</p>
-<ul><li>Sets EOS and central pressure.</li><li>Selects output and radial resolution.</li><li>Prints the global model summary and plots the chosen profile.</li></ul></div>
+<ul><li>Sets EOS and central pressure.</li><li>Selects output and radial resolution.</li><li>Prints the global model summary and the radial checkpoints, then plots the chosen profile.</li></ul></div>
 <div class="mc-card"><h4>physics_neutron.py</h4><p>Relativistic stellar-structure equations.</p>
 <ul><li><span class="fn">eos_density()</span> — polytropic EOS inversion.</li>
 <li><span class="fn">structure_derivatives()</span> — complete TOV pressure and mass equations.</li>

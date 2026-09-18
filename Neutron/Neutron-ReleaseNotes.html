@@ -2,9 +2,33 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Neutron 1.3.0 Release Notes</title>
+<title>Neutron 1.3.1 Release Notes</title>
 </head>
 <body>
+<h1>Neutron 1.3.1 Release Notes</h1>
+<p><b>Version:</b> 1.3.1<br><b>Build:</b> 2cd414a64b3a<br><b>Date:</b> 2026-09-18</p>
+<h2>What changed</h2>
+<ul>
+<li>The model summary now names the chosen central pressure in pascals, alongside its existing central density and global properties.</li>
+<li>Five rows following the model summary report radius, pressure, density, and enclosed mass at 0.00, 0.25, 0.50, 0.75, and 0.90 of the computed surface radius. Pressure and mass are interpolated from the integrated profile; density is evaluated with the model equation of state at the interpolated pressure. Quantities in this new table use up to five significant figures.</li>
+<li>The Help file explains the interpolation and units. The Sample Outputs guide contains the full updated console transcript; the four embedded model plots remain applicable because the integration and plot rendering are unchanged.</li>
+</ul>
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.3.1<br>BUILD_ID: 2cd414a64b3a</p>
+
+<section id="maintenance-current">
+<h2>Known Minor Maintenance Items: Historical Register and Current Status</h2>
+<p>The original maintenance wording is retained in the full earlier notes below. Resolved issues remain visible; items without verified completion remain on the follow-up list.</p>
+<ul>
+<li>The source and tests parse successfully using Python 3.10 grammar and execute successfully under the audit environment's Python 3.12 interpreter. Running the complete suite under a native Python 3.10 runtime remains a desirable non-blocking verification step.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.1; completion has not been verified.</li>
+<li>The deterministic extreme-range sweeps verify exception discipline and controlled failure behavior; they are not intended to establish physical validity across the entire sampled parameter space.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.1; completion has not been verified.</li>
+<li>The independent q-reference integration used for surface verification exists within the regression suite and is not distributed as a separate user-facing utility.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.1; completion has not been verified.</li>
+</ul>
+</section>
+
+<section id="historical-1.3.0">
+<h2>Earlier Release Notes (1.3.0 and 1.2.0)</h2>
+<p>The complete earlier release notes, including minor maintenance items, follow without omissions. The original 1.3.0 file is also included separately.</p>
 <h1>Neutron 1.3.0 Release Notes</h1>
 <p><b>Version:</b> 1.3.0<br><b>Build:</b> b2c0f0597478<br><b>Date:</b> 2026-09-16</p>
 <h2>What changed</h2><ul>
@@ -67,6 +91,7 @@
 </ul>
 <h3>Version Identification</h3>
 <p>MODEL_VERSION: 1.2.0<br>BUILD_ID: 685bb0e10e01</p>
+</section>
 </section>
 </section>
 </body>
