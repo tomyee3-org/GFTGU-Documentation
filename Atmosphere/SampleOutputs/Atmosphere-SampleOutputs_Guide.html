@@ -13,10 +13,10 @@ body{font-family:Georgia,serif;line-height:1.55;color:#222;background:#f7f3ea;ma
 <header>
 <h1>Atmosphere</h1>
 <h2>Representative Sample Outputs</h2>
-<p>Version 1.2.0 &nbsp;|&nbsp; Build 94d7d42087d2 &nbsp;|&nbsp; Updated 16 September 2026</p>
+<p>Version 1.2.1 &nbsp;|&nbsp; Build 02a76a6ecc3f &nbsp;|&nbsp; Updated 18 September 2026</p>
 </header>
 
-<p class="note"><strong>Purpose.</strong> This compact, self-contained guide presents the new printed checkpoint summary plus the three plots for the default hybrid Earth atmosphere: pressure, density, and temperature versus altitude. No external image files are required.</p>
+<p class="note"><strong>Purpose.</strong> This compact, self-contained guide presents the printed checkpoint summary with density plus the three plots for the default hybrid Earth atmosphere: pressure, density, and temperature versus altitude. No external image files are required.</p>
 
 <p>The lower-atmosphere temperature points through approximately 86 km are based on U.S. Standard Atmosphere 1976 layer boundaries converted to geometric altitude. The 100–500 km portion uses rounded neutral temperatures from the documented NRLMSIS 2.0 example. Between supplied points the model interpolates temperature linearly, then combines hydrostatic equilibrium with the ideal-gas law using constant gravity and molecular weight.</p>
 
@@ -32,27 +32,27 @@ body{font-family:Georgia,serif;line-height:1.55;color:#222;background:#f7f3ea;ma
 <h2>Default checkpoint table</h2>
 <pre><code>python main.py
 
-Atmosphere 1.2.0 (build 94d7d42087d2) — Earth: Pressure
+Atmosphere 1.2.1 (build 02a76a6ecc3f) — Earth: Pressure
 
 Atmospheric checkpoints
-  altitude (m)      pressure (Pa)          p/T (Pa/K)    temperature (K)
-             0          1.013e+05              351.55             288.15
-         11019              22263              102.76             216.65
-         20063             5272.2              24.335             216.65
-         32162             808.05               3.534             228.65
-         47350             98.571              0.3642             270.65
-         51412             58.746             0.21706             270.65
-         71802             3.1973            0.014895             214.65
-         86000            0.27758           0.0014848             186.95
-        100000            0.02136          0.00011242                190
-        150000          0.0003671          4.5887e-07                800
-        200000         5.8027e-05          5.3728e-08               1080
-        250000         1.2726e-05          1.0694e-08               1190
-        300000         3.0605e-06          2.4984e-09               1225
-        400000         1.8759e-07          1.5128e-10               1240
-        500000         1.1694e-08          9.4309e-12               1240
+  altitude (m)      pressure (Pa)    density (kg/m^3)          p/T (Pa/K)    temperature (K)
+             0          1.013e+05                1.2325              351.55             288.15
+         11019              22263               0.36026              102.76             216.65
+         20063             5272.2              0.085314              24.335             216.65
+         32162             808.05              0.012389               3.534             228.65
+         47350             98.571             0.0012768              0.3642             270.65
+         51412             58.746            0.00076096             0.21706             270.65
+         71802             3.1973             5.222e-05            0.014895             214.65
+         86000            0.27758            5.2055e-06           0.0014848             186.95
+        100000            0.02136            3.9412e-07          0.00011242                190
+        150000          0.0003671            1.6087e-09          4.5887e-07                800
+        200000         5.8027e-05            1.8836e-10          5.3728e-08               1080
+        250000         1.2726e-05            3.7491e-11          1.0694e-08               1190
+        300000         3.0605e-06            8.7587e-12          2.4984e-09               1225
+        400000         1.8759e-07            5.3036e-13          1.5128e-10               1240
+        500000         1.1694e-08            3.3063e-14          9.4309e-12               1240
   (Unavailable means the checkpoint is outside the stored positive-pressure domain.)</code></pre>
-<p>Pressure is linearly interpolated from adjacent integration samples at every supplied <code>--h_points</code> altitude. Temperature is the paired defining value from <code>--T_points</code>, and <em>p</em>/<em>T</em> is calculated from those two values. All numerical table entries use five significant figures, and the table is printed regardless of the selected plot mode.</p>
+<p>Pressure is linearly interpolated from adjacent integration samples at every supplied <code>--h_points</code> altitude. Temperature is the paired defining value from <code>--T_points</code>. Density (kg/m<sup>3</sup>) follows the ideal-gas law using the interpolated pressure, the chosen <code>--mu</code>, and that temperature; <em>p</em>/<em>T</em> uses the same pressure and temperature. All numerical table entries use five significant figures, and the table is printed regardless of the selected plot mode.</p>
 </section>
 
 <section id="pressure">

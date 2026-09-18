@@ -443,7 +443,7 @@
 <!-- ══════════════════════ MAIN ══════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 94d7d42087d2
+  Version 1.2.1&nbsp;&nbsp;&nbsp;&nbsp;Build 02a76a6ecc3f
 </p>
 <!-- ── Description ── -->
 <section id="description">
@@ -461,7 +461,7 @@
         Solar System, and exploring how scale height depends on gravity and molecular weight.
       </p>
 <p>
-        Every run also prints pressure, (p/T), and temperature at every supplied altitude
+        Every run also prints pressure, density, (p/T), and temperature at every supplied altitude
         checkpoint, independently of the quantity selected for the plot. Numerical table entries
         use five significant figures.
       </p>
@@ -731,21 +731,26 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
     temperatures: List[float]<br/>
     output_type:  OutputType<br/>
     planet_name:  str<br/>
-    model_version: str<br/>
-    build_id:     str</span>
+    model_version: str<br/>
+    build_id:     str<br/>
+    mu:           float | None</span>
 <p class="func-desc">
           Structured result from <code>AtmosphereModel.run()</code>. All four lists are
           co-indexed and trimmed to the last valid positive-pressure step. The final two fields
           identify the program version and exact four-module build that produced the result.
+          The <code>mu</code> field records the model's mean molecular weight for calculating
+          ideal-gas density at a supplied checkpoint temperature; it is optional for results
+          manually assembled by API callers.
         </p>
 <span class="func-sig">@dataclass(frozen=True)<br/>class CheckpointData:<br/>
     altitude: float<br/>
     pressure: float | None<br/>
     pressure_over_temperature: float | None<br/>
-    temperature: float</span>
+    temperature: float<br/>
+    density: float | None = None</span>
 <p class="func-desc">
-          One row of the printed checkpoint table. Pressure fields are unavailable only when a
-          custom checkpoint falls outside the stored positive-pressure integration domain.
+          One row of the printed checkpoint table. Pressure, density, and (p/T) are unavailable
+          when a custom checkpoint falls outside the stored positive-pressure integration domain.
         </p>
 <h3>Class</h3>
 <span class="func-sig">class AtmosphereModel:<br/>
@@ -783,8 +788,9 @@ class CurveData:
         -&gt; List[CheckpointData]</span>
 <p class="func-desc">
           Preserves every supplied altitude-temperature checkpoint and linearly interpolates
-          pressure between adjacent integration samples. It then computes (p/T) from that
-          pressure and the defining checkpoint temperature.
+          pressure between adjacent integration samples. It uses that pressure, the model's
+          mean molecular weight, and the defining checkpoint temperature to compute
+          ideal-gas density (kg/m<sup>3</sup>) and (p/T) (Pa/K).
         </p>
 </div>
 </section>
@@ -1034,22 +1040,23 @@ python main.py --planet_name Mars --g_accel 3.71 --mu 44 --p0 610 \
 <h2>Printed Checkpoints</h2>
 <p>
         Every run prints one row for each altitude supplied with <code>--h_points</code>. The row
-        contains the pressure interpolated from the two neighboring integration samples, the
-        ratio (p/T), and the corresponding defining temperature from
+        contains pressure interpolated from the two neighboring integration samples,
+        ideal-gas density computed from that pressure and the supplied temperature,
+        the ratio (p/T), and the corresponding defining temperature from
         <code>--T_points</code>. This table is printed for every plot mode, so students can compare
         the same numerical checkpoints while switching among pressure, density, and temperature
         plots. Values use five significant figures.
       </p>
 <pre><code>Atmospheric checkpoints
-  altitude (m)      pressure (Pa)          p/T (Pa/K)    temperature (K)
-             0          1.013e+05              351.55             288.15
-         11019              22263              102.76             216.65
-         20063             5272.2              24.335             216.65
+  altitude (m)      pressure (Pa)    density (kg/m^3)          p/T (Pa/K)    temperature (K)
+             0          1.013e+05                1.2325              351.55             288.15
+         11019              22263               0.36026              102.76             216.65
+         20063             5272.2              0.085314              24.335             216.65
   ...</code></pre>
 <p>
         A custom checkpoint can lie below altitude zero or above the last stored
         positive-pressure point. The program keeps such a checkpoint in the table, prints its
-        supplied temperature, and marks pressure and (p/T) as <code>unavailable</code> rather
+        supplied temperature, and marks pressure, density, and (p/T) as <code>unavailable</code> rather
         than silently dropping it.
       </p>
 </section>

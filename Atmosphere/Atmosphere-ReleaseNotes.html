@@ -2,9 +2,40 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Atmosphere 1.2.0 Release Notes</title>
+<title>Atmosphere 1.2.1 Release Notes</title>
 </head>
 <body>
+<h1>Atmosphere 1.2.1 Release Notes</h1>
+<p><strong>Version:</strong> 1.2.1<br>
+<strong>Build:</strong> 02a76a6ecc3f<br>
+<strong>Date:</strong> 18 September 2026</p>
+
+<h2>Release summary</h2>
+<p>Version 1.2.1 adds atmospheric mass density in kg/m<sup>3</sup> to every printed checkpoint row, alongside pressure, <em>p</em>/<em>T</em>, and temperature. The established default atmosphere, integration, and three plot modes retain their previous behavior.</p>
+
+<h2>Checkpoint calculation</h2>
+<p>Pressure is interpolated between stored altitude samples. Density is calculated with the ideal-gas law from that pressure, the model's mean molecular weight, and the supplied checkpoint temperature. The row shows <code>unavailable</code> for pressure, density, and <em>p</em>/<em>T</em> when its altitude is outside the stored positive-pressure domain; its supplied temperature remains visible. Numerical values use five significant figures.</p>
+
+<h2>Documentation and verification</h2>
+<p>The Help file and complete default Sample Outputs transcript now show the density column and describe its calculation and units. Regression assertions check density against the ideal-gas equation at all default checkpoints, the exact surface density, and unavailable values outside the integration domain.</p>
+
+<h2>Version identification</h2>
+<p><strong>MODEL_VERSION:</strong> 1.2.1<br>
+<strong>BUILD_ID:</strong> 02a76a6ecc3f</p>
+
+<section id="maintenance-current">
+<h2>Known Minor Maintenance Items: Historical Register and Current Status</h2>
+<p>The original maintenance wording remains in the complete 1.2.0 and 1.1.1 notes below. Resolved issues remain visible; items without verified completion remain on the follow-up list.</p>
+<ul>
+<li>Direct API callers should not mutate <code>h_points</code> or <code>T_points</code> after constructing <code>AtmosphereModel</code>; the normal <code>main.py</code> workflow does not do so. A future revision may defensively snapshot or revalidate these sequences.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.2.1; completion has not been verified.</li>
+<li>The Help file's explicitly abbreviated <code>main.py</code> excerpt omits the planet name and output type from its example status line, although the delivered program prints both.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.2.1; completion has not been verified.</li>
+<li>Future test-suite hardening may add broader generated edge-profile families and focused assertions for additional critical Help-file statements. Existing deterministic tests cover the documented student workflows and principal boundary cases.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.2.1; completion has not been verified.</li>
+</ul>
+</section>
+
+<section id="historical-1.2.0">
+<h2>Earlier release notes (1.2.0 and 1.1.1)</h2>
+<p>The original 1.2.0 release notes, including the 1.1.1 historical record and their maintenance items, follow below without omissions. The unchanged 1.2.0 HTML file is also included in this package.</p>
 <h1>Atmosphere 1.2.0 Release Notes</h1>
 <p class="meta"><strong>Version:</strong> 1.2.0<br>
 <strong>Build:</strong> 94d7d42087d2<br>
@@ -114,6 +145,7 @@
 
 <h3>Version Identification</h3>
 <p>MODEL_VERSION: 1.1.1<br>BUILD_ID: 58b6ba9b3808</p>
+</section>
 </section>
 </section>
 </body>
