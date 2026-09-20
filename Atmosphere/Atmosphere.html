@@ -397,14 +397,49 @@
     footer a { color: #e0c090; text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
+    /* ── Beats layout additions ── */
+    .eq-block {
+      background: var(--eq-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 12px 22px 8px;
+      margin: 1.1rem 0 1.3rem;
+      overflow-x: auto;
+    }
+    .eq-label {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .warn {
+      background: #fff6e8;
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 12px 18px;
+      margin: 16px 0;
+      font-family: var(--sans);
+      font-size: 0.91rem;
+      color: var(--muted);
+    }
+    .warn strong { color: var(--accent); }
+    .compare-table td.num, .compare-table th.num { text-align: right; }
+
     /* ── Responsive ── */
     @media (max-width: 720px) {
       .page-wrap { grid-template-columns: 1fr; }
       nav { display: none; }
       main { padding: 28px 20px 40px; }
     }
-  </style>
+  
+</style>
 </head>
+
 <body>
 <div class="page-wrap">
 <!-- ══════════════════════ HEADER ══════════════════════ -->
@@ -423,9 +458,19 @@
 <nav id="sidebar">
 <div class="nav-label">Overview</div>
 <a href="#description">Description</a>
-<a href="#physics">Physics &amp; Equations</a>
-<a href="#algorithm">Algorithm</a>
+<a href="#beats">How to read this page</a>
+<div class="nav-label">Beats</div>
+<a href="#beat0">0 · Pressure is weight</a>
+<a href="#beat1">1 · The gas law</a>
+<a href="#beat2">2 · The scale height</a>
+<a href="#beat3">3 · What sets the scale height</a>
+<a href="#beat4">4 · Real temperature profiles</a>
+<a href="#beat5">5 · Other worlds</a>
+<a href="#beat6">6 · How far to trust it</a>
+<a href="#beat7">7 · The top of the model</a>
 <div class="nav-label">Code</div>
+<a href="#equations">Governing Equations</a>
+<a href="#algorithm">Algorithm</a>
 <a href="#mod-physics">physics_atmosphere.py</a>
 <a href="#mod-driver">driver_atmosphere.py</a>
 <a href="#mod-plot">plot_atmosphere.py</a>
@@ -435,6 +480,7 @@
 <a href="#parameters">Parameters</a>
 <a href="#output">Output Modes</a>
 <a href="#checkpoints">Printed Checkpoints</a>
+<div class="nav-label">Experiments</div>
 <a href="#experiments">Suggested Experiments</a>
 <div class="nav-label">Reference</div>
 <a href="#related">Related Programs</a>
@@ -443,9 +489,8 @@
 <!-- ══════════════════════ MAIN ══════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.2.1&nbsp;&nbsp;&nbsp;&nbsp;Build 02a76a6ecc3f
+  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build 508445d9ae1d
 </p>
-<!-- ── Description ── -->
 <section id="description">
 <h2>Description</h2>
 <p>
@@ -465,6 +510,7 @@
         checkpoint, independently of the quantity selected for the plot. Numerical table entries
         use five significant figures.
       </p>
+<p>The spine of the lesson is one sentence: <em>pressure holds up the weight of the air above, the gas law turns pressure into density, and the ratio of the two is a length, the scale height, that temperature, gravity and molecular weight set between them.</em> Each numbered section below is one beat: a short argument, a command whose printed table or figure is the evidence for that argument, and only then the equation the evidence has earned.</p>
 <div class="note">
 <strong>Textbook reference:</strong>
         Bernard Schutz, <em>Gravity from the Ground Up</em>, Cambridge University Press (2003),
@@ -476,111 +522,190 @@
         thermospheric portion is a representative NRLMSIS 2.0 thermospheric profile through
         500 km; see <a href="#parameters">Parameters</a> for the run conditions and limitations.
       </div>
+<div class="warn"><strong>What this program is, and what it does not model.</strong> Atmosphere is a teaching model, not a weather or research code. Gravity and the mean molecular weight are held constant with height; the air is an ideal gas; and the temperature is <em>not computed</em>: you supply it at chosen altitudes and the program interpolates. The pressure is found by a first-order (Euler) step that accumulates error with height, and the top of the atmosphere is where that calculation stops, not a physical surface. Use it for scale heights, ratios and the way pressure and density respond to gravity, molecular weight and temperature, which it captures well, rather than for absolute values high in the atmosphere. Beat 6 measures how well.</div>
 <div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
-<!-- ── Physics ── -->
-<section id="physics">
-<h2>Physics &amp; Equations</h2>
-<h3>Hydrostatic Equilibrium</h3>
-<p>
-        A column of atmosphere in static equilibrium satisfies the condition that the pressure
-        gradient exactly balances the weight per unit volume of the gas:
-      </p>
-<div class="eq-box">
+<section id="beats">
+<h2>How to read this page</h2>
+<p>Each numbered section below is one beat: a short argument in words, a command whose output is the evidence, and then the equation that the evidence has earned. Do them in order the first time. After that, any beat can be opened on its own.</p>
+<p>Every beat uses the same program and the same printed table. What changes from beat to beat is the command. Beats 0 and 1 use the default Earth atmosphere, Beat 2 an isothermal one, Beat 3 changes one dial at a time, Beat 4 changes the temperature profile, Beat 5 moves to other planets, and Beats 6 and 7 examine the numerical method and the top of the model.</p>
+<p>Every run prints the checkpoint table and then opens a plot window; close the window to end the program. Each beat names the columns and rows to look at. In several beats the table is the evidence and the plot can be left until later.</p>
+<p>Give lists with commas and no brackets. A list that contains spaces must be put in quotation marks, and a list may begin with a negative altitude, as in <code>--h_points -1000,0,10000</code>.</p>
+</section>
+<section id="beat0">
+<h2>Beat 0 · Pressure is the weight of the air above you</h2>
+<p>Stand at sea level and the whole column of air above you, all the way to space, presses down on every square meter of ground. Climb, and there is less air overhead, so the pressure is smaller. That is the entire idea of atmospheric structure: the pressure at any height is the weight of the air above it. Ask the program only to show what that looks like for the Earth.</p>
+<pre>python main.py</pre>
+<p>Look at the first two rows of the checkpoint table, altitudes 0 and 11019 m, and at the pressure curve in the plot window. Ignore the other columns for now.</p>
+<p>Three tasks, in order. First, read the surface pressure, 1.013e+05 Pa, and divide it by <em>g</em> = 9.81 m s<sup>&minus;2</sup>: about 10,300 kg. That is the mass of the air standing on each square meter of ground, roughly ten tonnes. Then read the pressure at 11019 m, the top of the lowest layer: 22263 Pa, which is 22% of the surface value, so about 78% of the atmosphere's mass lies below that height. Then look at the plot: the curve is steep near the ground and nearly flat above 50 km. Write down, before reading on, why the pressure should change fastest where the air is densest.</p>
+<p><em>Then</em> the answer, which is a weighing. Climb through a thin layer of thickness \(dh\). Per unit area that layer holds a mass \(\rho\,dh\), which weighs \(g\rho\,dh\), and the pressure you leave behind is smaller by exactly that weight.</p>
+<div class="eq-block"><div class="eq-label">Hydrostatic equilibrium</div>
         \[
           \frac{dp}{dh} = -g\,\rho \tag{7.1}
         \]
-      </div>
-<p>
-        where \(p\) is pressure (Pa), \(h\) is altitude (m), \(g\) is the local gravitational
-        acceleration (m s<sup>−2</sup>), and \(\rho\) is the mass density (kg m<sup>−3</sup>).
-        The negative sign reflects the fact that pressure decreases with increasing altitude.
-      </p>
-<h3>Ideal Gas Law</h3>
-<p>
-        The density of an ideal gas is related to its pressure and temperature by
-      </p>
-<div class="eq-box">
+</div>
+<p>Here \(p\) is pressure (Pa), \(h\) is altitude (m), \(g\) is the local gravitational acceleration (m s<sup>&minus;2</sup>), and \(\rho\) is the mass density (kg m<sup>&minus;3</sup>). The negative sign says that pressure decreases with increasing altitude, and the slope is steepest where \(\rho\) is largest.</p>
+<p>Equation (7.1) cannot be solved by itself, because it has two unknowns, \(p\) and \(\rho\). Beat 1 supplies the missing relation.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat1">
+<h2>Beat 1 · Density is not free: the gas law supplies it</h2>
+<p>Equation (7.1) needs \(\rho\) at every height, and \(\rho\) is not an independent input. Air is a gas, and for a gas the density follows from the pressure and the temperature. Run the same atmosphere again, this time plotting the density.</p>
+<pre>python main.py --output_type density</pre>
+<p>Look at the density plot and, in the table, the <code>density</code> and <code>p/T</code> columns. The table is the same as in Beat 0; only the plot has changed.</p>
+<p>Three tasks, in order. First, read the surface density: 1.2325 kg m<sup>&minus;3</sup>, the familiar figure for air at sea level. Then divide the density by <code>p/T</code> in two different rows: 1.2325 / 351.55 at the surface and 3.9412e-07 / 0.00011242 at 100 km both give 3.506&times;10<sup>&minus;3</sup> (kg K J<sup>&minus;1</sup>), and so does every other row, whatever the altitude. Then compare the rows at 71802 m and 86000 m: the pressure falls by a factor of 11.5 but the density falls only by a factor of 10.0, and the temperature ratio between the two rows is 1.148. Say in one sentence why the density falls more slowly than the pressure.</p>
+<p><em>Then</em> the relation you have just measured. For an ideal gas, density is proportional to pressure divided by temperature, and the constant is fixed by the mean molecular weight of the gas.</p>
+<div class="eq-block"><div class="eq-label">Ideal gas law</div>
         \[
           \rho = \frac{p\,\mu\,m_p}{k_B\,T} \tag{7.2}
         \]
-      </div>
-<p>
-        where \(\mu\) is the mean molecular weight (dimensionless, e.g. 28.97 for dry air),
-        \(m_p = 1.67\times10^{-27}\;\text{kg}\) is the proton mass,
-        \(k_B = 1.38\times10^{-23}\;\text{J K}^{-1}\) is the Boltzmann constant,
-        and \(T\) is the temperature in Kelvin.
-      </p>
-<p>
-        Substituting Eq. (7.2) into Eq. (7.1) gives the complete governing equation
-        for atmospheric structure:
-      </p>
-<div class="eq-box">
+</div>
+<p>Here \(\mu\) is the mean molecular weight (dimensionless, e.g. 28.97 for dry air), \(m_p = 1.67\times10^{-27}\;\text{kg}\) is the proton mass, \(k_B = 1.38\times10^{-23}\;\text{J K}^{-1}\) is the Boltzmann constant, and \(T\) is the temperature in kelvin. The constant you measured is \(\mu m_p/k_B = 3.506\times10^{-3}\) in these units, and the <code>p/T</code> column is therefore the density in different units. At a fixed pressure, colder air is denser, which is the answer to the last task.</p>
+<p>Substituting Eq. (7.2) into Eq. (7.1) eliminates the density and gives the complete governing equation for atmospheric structure:</p>
+<div class="eq-block"><div class="eq-label">Governing equation</div>
         \[
           \frac{dp}{dh} = -\frac{g\,\mu\,m_p}{k_B\,T(h)}\,p \tag{7.3}
         \]
-      </div>
-<p>
-        For an isothermal atmosphere this integrates to the barometric formula
-        \(p = p_0\,e^{-h/H}\), where \(H\) is the <em>scale height</em>.
-      </p>
-<h3>Scale Height</h3>
-<p>
-        The scale height \(H\) sets the characteristic altitude over which the pressure drops
-        by a factor of \(e\). At the base of the atmosphere it is
-      </p>
-<div class="eq-box">
+</div>
+<p>Equation (7.3) is a single first-order equation for \(p(h)\). All that remains is to say what \(T(h)\) is, and the program does not compute it: it is an input. Beat 2 solves the equation in the simplest case.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat2">
+<h2>Beat 2 · One number sets the size of an atmosphere: the scale height</h2>
+<p>If the temperature is the same at every height, Equation (7.3) has a simple solution: over any equal step upward the pressure is multiplied by the same factor. Test that with an isothermal atmosphere, sampled every 8 km.</p>
+<pre>python main.py --h_points 0,8000,16000,24000,32000 --T_points 288.15,288.15,288.15,288.15,288.15</pre>
+<p>Look at the <code>pressure</code> column and the five rows of the table. The temperature is 288.15 K in every row. Above 32 km the program switches to the closure of Beat 7, so read only the table and ignore the top of the curve.</p>
+<p>Three tasks, in order. First, divide each pressure by the one above it: 38895 / 1.013e5, 14934 / 38895 and 5734 / 14934 all equal 0.3840. It is the same factor for every 8 km. Then find the height over which the pressure falls by a factor of <em>e</em>: with a factor of 0.384 per 8000 m, \(\ln(1/0.384)\) = 0.957 per 8000 m, so the pressure falls by <em>e</em> in 8000 / 0.957 = about 8360 m. Then compute \(p_0/(g\rho_0)\) from the first row of the same table: 1.013e5 / (9.81 &times; 1.2325) = 8378 m. Two independent routes to the same length, agreeing to about 0.2%.</p>
+<p><em>Then</em> the length itself. It is called the scale height \(H\), and the pressure in an isothermal atmosphere is</p>
+<div class="eq-block"><div class="eq-label">Barometric formula, isothermal atmosphere</div>
+        \[
+          p = p_0\,e^{-h/H}
+        \]
+</div>
+<div class="eq-block"><div class="eq-label">Scale height</div>
         \[
           H = \frac{p_0}{g\,\rho_0} = \frac{k_B\,T_0}{g\,\mu\,m_p} \tag{7.4}
         \]
-      </div>
-<p>
-        where \(\rho_0\) is the density computed from Eq. (7.2) at the surface pressure
-        \(p_0\) and surface temperature \(T_0\). For the default Earth parameters,
-        \(H \approx 8.4\;\text{km}\). The <em>initial</em> integration step size is
-        \(\Delta h = H/200\). The driver allows up to 50 000 points so that the default
-        Earth calculation—and the planetary comparisons below—retain this intended resolution.
-        Only if that point budget is insufficient does the driver restart with a larger step;
-        such an unusual successful run may use fewer than 200 steps per base scale height.
-      </p>
-<h3>Temperature Profile</h3>
-<p>
-        Real atmospheres have non-uniform temperature structures driven by solar heating,
-        convection, and radiation. The program accepts an arbitrary set of
-        \((h_i,\,T_i)\) measurement pairs and constructs a piecewise temperature profile:
-      </p>
-<div class="eq-box">
+</div>
+<p>where \(\rho_0\) is the density computed from Eq. (7.2) at the surface pressure \(p_0\) and surface temperature \(T_0\). For the default Earth parameters at 288.15 K, \(H = 8.378\) km, usually quoted as about 8.4 km. The scale height is the yardstick of the whole program. It also sets the program's own step: the first altitude step is \(\Delta h = H/200\), as Beat 6 explains.</p>
+<p>A quantity that falls by the same factor over equal heights plots as a straight line when its logarithm is plotted. Experiment 2 asks you to make that plot.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> and <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat3">
+<h2>Beat 3 · What the scale height depends on, and what it does not</h2>
+<p>Equation (7.4) names three things that set the scale height: the temperature, the gravity and the mean molecular weight. It does not contain the surface pressure. That is a prediction, and this beat tests it, one dial at a time, with the default Earth temperature profile in every run.</p>
+<pre>python main.py --mu 18
+python main.py --mu 44
+python main.py --g_accel 19.62
+python main.py --p0 1.013e6</pre>
+<p>Look at the <code>pressure</code> column, rows 0 and 11019 m, in each run. Compare each run with the default run of Beat 0, where the pressure at 11019 m is 22263 Pa out of 1.013e+05 Pa at the ground.</p>
+<p>Three tasks, in order. First, compute the fraction \(p(11019\ \text{m})/p_0\) for each run. The default gives 0.2198; <code>--mu 18</code> gives 39527 / 1.013e5 = 0.390; <code>--mu 44</code> gives 10139 / 1.013e5 = 0.100; <code>--g_accel 19.62</code> gives 4888.7 / 1.013e5 = 0.0483; and <code>--p0 1.013e6</code> gives 2.2263e+05 / 1.013e6 = 0.2198 again. Then predict two of them before you look: the natural logarithm of the default fraction is &minus;1.515, and Eq. (7.4) says it is proportional to \(\mu g\), so for \(\mu = 44\) you expect \(\exp(-1.515\times 44/28.97) = 0.100\), and doubling \(g\) should square the fraction, \(0.2198^2 = 0.0483\). Both agree with the run to 0.1%. Then say which of the four dials changes the shape of the atmosphere and which one only rescales it.</p>
+<p><em>Then</em> the reading of Eq. (7.4) that the runs support:</p>
+<div class="eq-block"><div class="eq-label">Scale height as a proportionality (from Eq. 7.4)</div>
+        \[
+          H \;\propto\; \frac{T}{\mu\,g}
+        \]
+</div>
+<p>At 288.15 K the runs above correspond to \(H\) = 8.378 km (default), 13.48 km (\(\mu\) = 18), 5.516 km (\(\mu\) = 44) and 4.189 km (\(g\) = 19.62 m s<sup>&minus;2</sup>). A light gas or weak gravity gives a tall, extended atmosphere; a heavy gas or strong gravity gives a shallow one. The surface pressure \(p_0\) multiplies every pressure by the same factor and so changes no ratio of pressures: it decides how much air there is, not how tall the atmosphere is.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> and <a href="#exp4">Experiment 4</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat4">
+<h2>Beat 4 · Real air is not isothermal</h2>
+<p>The real atmosphere is not at one temperature: solar heating, convection and radiation give it a layered structure. It cools with height in the troposphere, warms in the stratosphere where ozone absorbs sunlight, cools again in the mesosphere, and warms strongly in the thermosphere. The program does not compute any of this. You give it temperatures at chosen altitudes, and it joins them with straight lines. Equation (7.3) is then the same equation with a scale height that changes with height.</p>
+<pre>python main.py --output_type temperature
+python main.py --h_points 0,50000,100000 --T_points 288,200,350</pre>
+<p>In the first run look at the temperature plot and the <code>temperature</code> column. In the second run look at the <code>pressure</code>, <code>density</code> and <code>temperature</code> columns.</p>
+<p>Three tasks, in order. First, on the temperature plot of the first run find the four layers in order: cooling to 216.65 K at 11019 m, warming to 270.65 K at 47&ndash;51 km, cooling to 186.95 K at 86 km, then the steep rise to 1240 K. Then compare the local scale heights from Eq. (7.4): at 216.65 K, \(H\) = 6.30 km, and at 1240 K, \(H\) = 36.1 km. The pressure falls by a factor of 4.55 over the first 11 km, but only by a factor of about 5000 from 200 km (5.8027e-05 Pa) to 500 km (1.1694e-08 Pa), so per kilometer it falls nearly five times more slowly in the hot thermosphere. Then turn to the second run, a cold layer below a warm one. Between 50 km and 100 km the pressure falls by a factor of 623 and the density falls by a factor of 1090. Show that the second factor is the first multiplied by the temperature ratio 350 / 200 = 1.75.</p>
+<p><em>Then</em> the rule the program uses between two supplied points:</p>
+<div class="eq-block"><div class="eq-label">Piecewise-linear temperature profile</div>
         \[
           T(h) = T_{i-1} + \frac{T_i - T_{i-1}}{h_i - h_{i-1}}\,(h - h_{i-1}),
           \qquad h_{i-1} \le h &lt; h_i \tag{7.5}
         \]
-      </div>
-<p>
-        That is, temperature is linearly interpolated between adjacent measured altitudes.
-        Below the first measurement point the temperature is held constant at \(T_0\).
-      </p>
-<h3>Upper Atmosphere Extension (Power-Law Model)</h3>
-<p>
-        When the integration surpasses the highest measured altitude, the program switches to
-        a power-law relationship between temperature and pressure.
-        On the first computed step above the highest supplied altitude, the coefficient \(\beta\)
-        is chosen so that the extrapolated temperature at that step equals the last supplied
-        temperature:
-      </p>
-<div class="eq-box">
+</div>
+<p>That is, temperature is linearly interpolated between adjacent supplied altitudes. Below the first supplied point the temperature is held constant at \(T_0\), and above the last one the program uses the closure of Beat 7. The default Earth profile combines U.S. Standard Atmosphere 1976 values through about 86 km with a representative NRLMSIS 2.0 thermospheric profile to 500 km; the Parameters section gives the sources and their limits.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat5">
+<h2>Beat 5 · Other worlds, same equations</h2>
+<p>Nothing in Eqs. (7.1) to (7.5) is specific to the Earth. Change \(g\), \(\mu\), \(p_0\) and the temperature list and the same program describes another planet. Which of these worlds has the thickest atmosphere depends on what you mean by thick.</p>
+<pre>python main.py --planet_name Mars --g_accel 3.72 --mu 44 --p0 610 \
+  --h_points 0,10000,25000,45000 --T_points 210,170,145,130
+
+python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 \
+  --h_points 0,10000,20000,30000,40000,50000,60000 \
+  --T_points 735,658,579,495,416,348,263
+
+python main.py --planet_name Jupiter --g_accel 24.8 --mu 2.2 --p0 1e5 \
+  --h_points 0,20000,50000,100000 --T_points 165,130,110,150</pre>
+<p>Look at the surface row and the <code>pressure</code> and <code>density</code> columns of each table. The plots are the same kind of curve as for the Earth and can be left for later.</p>
+<p>Three tasks, in order. First, read the surface densities: Mars 0.015467, Venus 66.649 and Jupiter 0.16135 kg m<sup>&minus;3</sup>, against 1.2325 for the Earth. Then compute each base scale height from \(p_0/(g\rho_0)\): Mars 610 / (3.72 &times; 0.015467) = 10.6 km, Venus 9.2e6 / (8.87 &times; 66.649) = 15.6 km, Jupiter 1e5 / (24.8 &times; 0.16135) = 25.0 km. Compare them with the Earth's 8.4 km, and notice that Mars, with about 1/170 of the Earth's surface pressure, has a taller scale height than the Earth. Then, for Venus only, compare the model with published values, which are 4.80 MPa at 10 km and 23.9 kPa at 60 km: the run gives 4.6595e+06 Pa (3% low) and 19003 Pa (20% low).</p>
+<p><em>Then</em> the point that the equations make, with no new equation needed: \(H \propto T/(\mu g)\), so the size of an atmosphere is set by its temperature, gravity and molecular weight, and the surface pressure says only how much air there is. Mars has little air but a large scale height; Venus has a great deal of air and a scale height less than twice the Earth's.</p>
+<div class="note"><strong>Where the numbers come from.</strong> The Venus temperatures are taken from the table of temperature and pressure against altitude in the Wikipedia article <em>Atmosphere of Venus</em> (385&nbsp;&deg;C at 10&nbsp;km, 306&nbsp;&deg;C at 20&nbsp;km, and so on to &minus;10&nbsp;&deg;C at 60&nbsp;km), rounded and converted to kelvin; the published pressures quoted above (47.39 atm and 0.2357 atm, converted to pascals) come from the same table. The Mars and Jupiter profiles are round-number illustrations, not measured profiles. The 20% deficit for Venus at 60&nbsp;km comes partly from the rounded inputs (a surface pressure of 9.2&nbsp;MPa and \(\mu\) = 44) and partly from holding the gravity and the composition constant and from the first-order step, the effects that Beat 6 examines for the Earth.</div>
+<div class="warn"><strong>Jupiter is a local model.</strong> Jupiter has no solid surface, so the run takes the 1-bar level as the reference and follows only 100 km of the atmosphere above it. The program assumes constant gravity and a fixed-composition ideal gas; it is not a model of the whole planet or of its interior.</div>
+<p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> and <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat6">
+<h2>Beat 6 · How far to trust the numbers</h2>
+<p>Every number so far has come from a finite-step calculation with a first-order step, two idealizations (constant gravity and constant composition) and physical constants rounded to three figures. The isothermal atmosphere of Beat 2 gives you something rare: an exact answer to compare with. This beat measures the error, and then compares the default Earth run with the standard atmosphere it is meant to mimic.</p>
+<pre>python main.py --h_points 0,100000 --T_points 288.15,288.15
+python main.py</pre>
+<p>In the first run look at the pressure in the row at 100000 m. In the second run look at the <code>pressure</code> column of the default table.</p>
+<p>Three tasks, in order. First, compute the exact isothermal pressure at 100 km, \(p_0\,e^{-h/H}\) with \(H\) = 8378 m, which is 0.6640 Pa, and compare it with the 0.64437 Pa the program prints: the program is 2.95% low. Then repeat the first run as in Experiment 8, temporarily setting <code>STEPS_PER_SCALE_HEIGHT</code> in <code>driver_atmosphere.py</code> to 400, 800 and 1600. The error falls to 1.5%, 0.74% and 0.37%, halving each time the step is halved. Then compare the pressures of the default run with the U.S. Standard Atmosphere 1976 values at the same altitudes:</p>
+<table class="compare-table">
+<thead><tr><th class="num">Altitude (m)</th><th class="num">Program (Pa)</th><th class="num">Standard atmosphere (Pa)</th><th class="num">Ratio</th></tr></thead>
+<tbody>
+<tr><td class="num">11019</td><td class="num">22263</td><td class="num">22632</td><td class="num">0.984</td></tr>
+<tr><td class="num">20063</td><td class="num">5272.2</td><td class="num">5474.9</td><td class="num">0.963</td></tr>
+<tr><td class="num">32162</td><td class="num">808.05</td><td class="num">868.02</td><td class="num">0.931</td></tr>
+<tr><td class="num">47350</td><td class="num">98.571</td><td class="num">110.91</td><td class="num">0.889</td></tr>
+<tr><td class="num">51412</td><td class="num">58.746</td><td class="num">66.939</td><td class="num">0.878</td></tr>
+<tr><td class="num">71802</td><td class="num">3.1973</td><td class="num">3.9564</td><td class="num">0.808</td></tr>
+<tr><td class="num">86000</td><td class="num">0.27758</td><td class="num">0.3734</td><td class="num">0.743</td></tr>
+</tbody></table>
+<p>The deficit grows steadily with height, to 26% at 86 km. Which assumptions of the model would produce an error that grows with altitude, and in which direction? Gravity falls by about 2.6% between the ground and 86 km, and the program ignores that; Experiment 9 lets you measure how much of the deficit this explains.</p>
+<p><em>Then</em> the source of the first error. At every step the program applies the forward Euler update of Eq. (7.7), shown under <a href="#algorithm">Algorithm</a>, which uses the density at the bottom of the step. In an isothermal atmosphere it multiplies the pressure by \(1-\Delta h/H\) at each step, which is \(1 - 1/200\) with the program's step, while the exact solution multiplies it by \(e^{-\Delta h/H}\). Their ratio at height \(h\) is</p>
+<div class="eq-block"><div class="eq-label">Size of the Euler error, isothermal atmosphere</div>
+        \[
+          \frac{p_{\text{Euler}}}{p_{\text{exact}}} \;\approx\; 1 - \frac{h/H}{2N},
+          \qquad N = \frac{H}{\Delta h} = 200
+        \]
+</div>
+<p>At 100 km, \(h/H = 11.94\), which gives 1 &minus; 11.94/400 = 0.970, a 3.0% deficit; the 2.95% you measured differs only by the higher-order terms that this approximation drops. The error grows in proportion to height and falls in proportion to the step, which is why Experiment 8 shows it halving. The Euler step is the smallest of three sources of the deficit against the standard atmosphere. An exact integration of Eq. (7.3), done outside the program, removes them one at a time. At 86&nbsp;km it raises the ratio to the standard atmosphere from 0.743 to 0.773 when the Euler step is replaced by the exact integral, to 0.919 when gravity is also allowed to fall as \(g_0[R/(R+h)]^2\) with \(R\) = 6371&nbsp;km, and to 1.000 when the constants of the standard atmosphere itself are used as well (\(g_0\) = 9.80665 m s<sup>&minus;2</sup>, 101325&nbsp;Pa at sea level, a mean molecular mass of 28.9644 atomic mass units, and the Boltzmann constant and the atomic mass unit to full precision). Constant gravity is the largest source, the constants come second and the Euler step third.</p>
+<p>The constants matter because the program measures \(\mu\) in units of \(m_p = 1.67\times10^{-27}\) kg, whereas 28.97 is a mass in atomic mass units (1.6605&times;10<sup>&minus;27</sup>&nbsp;kg), and because \(k_B\) and \(m_p\) are rounded to three figures. Together these make the coefficient \(g\mu m_p/k_B\) of Eq. (7.3) 0.64% too large, which the pressure, having fallen by a factor of 3.6&times;10<sup>5</sup> (\(e^{12.8}\)) at 86&nbsp;km, turns into an error of roughly 8%. None of the three is a bug; each is part of what a first-order, constant-gravity teaching model with three-figure constants means.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp8">Experiment 8</a> and <a href="#exp9">Experiment 9</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat7">
+<h2>Beat 7 · The top of the model is a stopping rule, not a discovery</h2>
+<p>A real atmosphere fades gradually into space with no sharp top. The program needs two things the physics does not give it: a temperature above the highest altitude you supplied, and a place to stop. This beat shows both, because they can be mistaken for results.</p>
+<pre>python main.py --output_type temperature
+python main.py --h_points 0,20000 --T_points 288.15,216.65 --output_type temperature</pre>
+<p>Look at the temperature plot in each run, and at the right-hand end of the curve. In the second run the last supplied altitude is 20 km.</p>
+<p>Three tasks, in order. First, in the default run see that the temperature stays at 1240 K up to 500 km, the last supplied altitude, and then falls steeply to about 1.4 K where the curve ends near 572 km. Then in the second run see that the curve follows the supplied straight line down to 216.65 K at 20 km, and then falls toward zero, ending near 32 km. The atmosphere the program computes extends about 12 km above the last supplied point. Then decide, before reading on, whether the falling curve above the last supplied altitude is a discovery about the atmosphere or an assumption of the program, and what a real atmosphere at 30 km would do.</p>
+<p><em>Then</em> the assumption. Above the highest supplied altitude the program switches to a power-law relation between temperature and pressure. On the first computed step above that altitude, the coefficient \(\beta\) is chosen so that the extrapolated temperature there equals the last supplied temperature:</p>
+<div class="eq-block"><div class="eq-label">Upper-atmosphere closure</div>
         \[
           T = \beta\,p^{\,\alpha}, \qquad \alpha = 0.5 \tag{7.6}
         \]
-      </div>
-<p>
-        The exponent \(\alpha = 0.5\) means that temperature falls as the square root of
-        pressure. This closure is a simple mathematical extrapolation, not a realistic model
-        of the upper atmosphere. The default Earth profile supplied in <code>main.py</code>
-        extends to 500 km; only above that altitude does this power-law relation take over.
-        As pressure approaches zero it also drives the modeled temperature toward zero, which
-        is a consequence of the chosen extrapolation rather than a real physical effect.
-      </p>
+</div>
+<p>The exponent \(\alpha = 0.5\) means that temperature falls as the square root of pressure. This closure is a simple mathematical extrapolation, not a model of the upper atmosphere. As pressure approaches zero it drives the modeled temperature toward zero, and with it the local scale height, so the pressure reaches zero at a finite altitude. That is the endpoint you see. It is a numerical stopping condition, not a sharply defined physical surface. If 50,000 steps do not reach it, the program doubles the step and starts again (see Algorithm), so a very extended profile can end with a coarser step than the H/200 of Beat 6. The default Earth profile extends to 500 km, so the closure takes over only above that altitude.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-<!-- ── Algorithm ── -->
+<section id="equations">
+<h2>Governing Equations</h2>
+<p>Each governing equation is introduced in the beat where the evidence for it appears. This index says where to find each one; Eq. (7.7) is in the Algorithm section.</p>
+<table>
+<thead><tr><th>Equation</th><th>What it says</th><th>Where</th></tr></thead>
+<tbody>
+<tr><td>(7.1)</td><td>Hydrostatic equilibrium: the pressure gradient balances the weight of the air</td><td><a href="#beat0">Beat 0</a></td></tr>
+<tr><td>(7.2)</td><td>Ideal gas law: density from pressure, temperature and molecular weight</td><td><a href="#beat1">Beat 1</a></td></tr>
+<tr><td>(7.3)</td><td>Complete governing equation for the pressure, with the temperature as input</td><td><a href="#beat1">Beat 1</a></td></tr>
+<tr><td>(7.4)</td><td>Scale height; the barometric formula for an isothermal atmosphere</td><td><a href="#beat2">Beat 2</a>, <a href="#beat3">Beat 3</a></td></tr>
+<tr><td>(7.5)</td><td>Piecewise-linear temperature profile</td><td><a href="#beat4">Beat 4</a></td></tr>
+<tr><td>(7.6)</td><td>Power-law closure above the highest supplied altitude</td><td><a href="#beat7">Beat 7</a></td></tr>
+<tr><td>(7.7)</td><td>The Euler step the program applies at each altitude</td><td><a href="#algorithm">Algorithm</a>, <a href="#beat6">Beat 6</a></td></tr>
+</tbody>
+</table>
+</section>
 <section id="algorithm">
 <h2>Algorithm</h2>
 <h3>Finite-Difference Integration</h3>
@@ -644,8 +769,6 @@ while last_step == 0:
         provides an exact exponential solution against which the error can be measured.
       </div>
 </section>
-<!-- ══════════════ MODULE CARDS ══════════════ -->
-<!-- physics_atmosphere.py -->
 <section id="mod-physics">
 <h2>Module: <code>physics_atmosphere.py</code></h2>
 <div class="module-card">
@@ -696,7 +819,6 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
         </p>
 </div>
 </section>
-<!-- driver_atmosphere.py -->
 <section id="mod-driver">
 <h2>Module: <code>driver_atmosphere.py</code></h2>
 <div class="module-card">
@@ -757,9 +879,12 @@ M_PROTON    = 1.67e-27   # Proton mass          (kg)</code></pre>
     def __init__(self, params: AtmosphereParameters) -&gt; None<br/>
     def run(self) -&gt; AtmosphereResult</span>
 <p class="func-desc">
-<code>__init__</code> stores the parameters and constructs a
-          <code>TemperatureProfile</code> from <code>h_points</code> and <code>T_points</code>.
-          <code>run()</code> computes the initial density and scale height, then executes the
+<code>__init__</code> validates the parameters, stores a private copy of them (including
+          copies of the <code>h_points</code> and <code>T_points</code> lists, so a later change to
+          the caller's lists does not affect the model), and constructs a
+          <code>TemperatureProfile</code> from the copies. <code>run()</code> validates the model's
+          own copy again, rebuilds the profile from it, computes the initial density and scale
+          height, then executes the
           step-size-restart while/for integration loop (described in the Algorithm section), returning
           an <code>AtmosphereResult</code> with arrays sliced to <code>[:last_step]</code>.
         </p>
@@ -794,7 +919,6 @@ class CurveData:
         </p>
 </div>
 </section>
-<!-- plot_atmosphere.py -->
 <section id="mod-plot">
 <h2>Module: <code>plot_atmosphere.py</code></h2>
 <div class="module-card">
@@ -831,7 +955,6 @@ class CurveData:
 </table>
 </div>
 </section>
-<!-- main.py -->
 <section id="mod-main">
 <h2>Module: <code>main.py</code></h2>
 <div class="module-card">
@@ -845,7 +968,9 @@ class CurveData:
         </p>
 <p class="func-desc">
           The following is an abbreviated view of the entry point; the complete temperature arrays
-          and argument-parser setup are in <code>main.py</code>.
+          and argument-parser setup are in <code>main.py</code>. The first line printed is a status
+          line giving the version, the build, the planet name and the plotted quantity, followed by
+          the checkpoint table.
         </p>
 <pre><code>def main(argv=None):
     args = parse_args(argv)
@@ -858,13 +983,19 @@ class CurveData:
         T_points=args.T_points,
         output_type=OUTPUT_TYPES[args.output_type],
     )
-    result = AtmosphereModel(params).run()
+    try:
+        result = AtmosphereModel(params).run()
+    except (ValueError, RuntimeError) as exc:
+        raise SystemExit(f"Atmosphere input/model error: {exc}") from exc
+    print(
+        f"Atmosphere {result.model_version} (build {result.build_id}) — "
+        f"{result.planet_name}: {result.output_type}"
+    )
     print_checkpoints(result, args.h_points, args.T_points)
     plot_atmosphere(extract_output(result))
 </code></pre>
 </div>
 </section>
-<!-- ── Quick Start ── -->
 <section id="quickstart">
 <h2>Quick Start</h2>
 <p>
@@ -883,11 +1014,12 @@ python main.py --planet_name Mars --g_accel 3.71 --mu 44 --p0 610 \
   --h_points 0,10000,20000 --T_points 210,180,160 \
   --output_type pressure</code></pre>
 <p>
-        List arguments are comma-separated with no brackets. Keep the
+        List arguments are comma-separated with no brackets; put a list that contains spaces in
+        quotation marks. A list may begin with a negative altitude, for example
+        <code>--h_points -1000,0,10000</code>. Keep the
         <code>--h_points</code> and <code>--T_points</code> lists the same length.
       </p>
 </section>
-<!-- ── Parameters table ── -->
 <section id="parameters">
 <h2>Parameters</h2>
 <p>
@@ -935,7 +1067,7 @@ python main.py --planet_name Mars --g_accel 3.71 --mu 44 --p0 610 \
 <td><code>0,11019,20063,32162,47350,51412,71802,86000,<br/>
                 100000,150000,200000,250000,300000,400000,500000</code></td>
 <td>m</td>
-<td>Altitude breakpoints for the hybrid Earth temperature profile</td>
+<td>Altitude breakpoints for the hybrid Earth temperature profile. The first value may be negative (<code>--h_points -1000,0,10000</code>).</td>
 </tr>
 <tr>
 <td><code>--T_points LIST</code></td>
@@ -990,7 +1122,6 @@ python main.py --planet_name Mars --g_accel 3.71 --mu 44 --p0 610 \
         explicit.
       </div>
 </section>
-<!-- ── Output modes ── -->
 <section id="output">
 <h2>Output Modes</h2>
 <p>
@@ -1003,7 +1134,7 @@ python main.py --planet_name Mars --g_accel 3.71 --mu 44 --p0 610 \
 <div class="out-unit">y-axis unit: Pa</div>
 <p>
             Atmospheric pressure vs. altitude. Decreases roughly exponentially with
-            a scale height of ~8.5 km for Earth. On a logarithmic scale, the pressure curve makes changes in effective scale height
+            a scale height of about 8.4 km near the surface for Earth. On a logarithmic scale, the pressure curve makes changes in effective scale height
             especially visible.
           </p>
 </div>
@@ -1035,7 +1166,6 @@ python main.py --planet_name Mars --g_accel 3.71 --mu 44 --p0 610 \
         <code>ax.plot()</code> call.
 </div>
 </section>
-<!-- ── Printed checkpoints ── -->
 <section id="checkpoints">
 <h2>Printed Checkpoints</h2>
 <p>
@@ -1045,7 +1175,8 @@ python main.py --planet_name Mars --g_accel 3.71 --mu 44 --p0 610 \
         the ratio (p/T), and the corresponding defining temperature from
         <code>--T_points</code>. This table is printed for every plot mode, so students can compare
         the same numerical checkpoints while switching among pressure, density, and temperature
-        plots. Values use five significant figures.
+        plots. Values use five significant figures. Because density equals \(\mu m_p/k_B\) times (p/T),
+        the (p/T) column is the density in different units (see Beat 1).
       </p>
 <pre><code>Atmospheric checkpoints
   altitude (m)      pressure (Pa)    density (kg/m^3)          p/T (Pa/K)    temperature (K)
@@ -1060,7 +1191,6 @@ python main.py --planet_name Mars --g_accel 3.71 --mu 44 --p0 610 \
         than silently dropping it.
       </p>
 </section>
-<!-- ── Suggested Experiments ── -->
 <section id="experiments">
 <h2>Suggested Experiments</h2>
 <p>
@@ -1068,7 +1198,7 @@ python main.py --planet_name Mars --g_accel 3.71 --mu 44 --p0 610 \
         command-line parameters; experiments that require a plotting or algorithm change say so
         explicitly.
       </p>
-<div class="scenario-card">
+<div class="scenario-card" id="exp1">
 <h4>1 · Introductory — Explore Earth's Pressure, Density, and Temperature Profiles</h4>
 <p>
           Run the default Earth model three times, selecting <code>pressure</code>,
@@ -1083,7 +1213,7 @@ python main.py --planet_name Mars --g_accel 3.71 --mu 44 --p0 610 \
 python main.py --output_type density
 python main.py --output_type temperature</div>
 </div>
-<div class="scenario-card">
+<div class="scenario-card" id="exp2">
 <h4>2 · Introductory — Plot Pressure on a Logarithmic Scale</h4>
 <p>
           Run with <code>--output_type pressure</code> and add
@@ -1095,7 +1225,7 @@ python main.py --output_type temperature</div>
 <div class="params">python main.py --output_type pressure
 # programming change: add ax.set_yscale("log") after ax.plot(x, y)</div>
 </div>
-<div class="scenario-card">
+<div class="scenario-card" id="exp3">
 <h4>3 · Introductory–Intermediate — Surface Pressure Changes the Scale, Not the Scale Height</h4>
 <p>
           Keep Earth's gravity, molecular weight, and temperature profile fixed, but repeat the
@@ -1109,7 +1239,7 @@ python main.py --output_type temperature</div>
 python main.py --p0 1.013e5
 python main.py --p0 1.013e6</div>
 </div>
-<div class="scenario-card">
+<div class="scenario-card" id="exp4">
 <h4>4 · Intermediate — What Controls Scale Height?</h4>
 <p>
           Change one parameter at a time while keeping the others at their Earth values. First try
@@ -1123,7 +1253,7 @@ python main.py --mu 28.97
 python main.py --mu 44
 # then vary --g_accel while restoring --mu 28.97</div>
 </div>
-<div class="scenario-card">
+<div class="scenario-card" id="exp5">
 <h4>5 · Intermediate — Compare Mars and Venus</h4>
 <p>
           Apply the same model to two very different CO₂ atmospheres. Mars has weak gravity and
@@ -1138,9 +1268,10 @@ python main.py --planet_name Mars --g_accel 3.72 --mu 44 --p0 610 \
 
 # Venus
 python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 \
-  --h_points 0,10000,30000,60000 --T_points 735,500,340,230</div>
+  --h_points 0,10000,20000,30000,40000,50000,60000 \
+  --T_points 735,658,579,495,416,348,263</div>
 </div>
-<div class="scenario-card">
+<div class="scenario-card" id="exp6">
 <h4>6 · Intermediate — Change the Temperature Profile</h4>
 <p>
           Replace the default profile with a deliberately simple temperature structure and observe
@@ -1152,7 +1283,7 @@ python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 \
 <div class="params">python main.py --h_points 0,50000,100000 \
   --T_points 288,200,350</div>
 </div>
-<div class="scenario-card">
+<div class="scenario-card" id="exp7">
 <h4>7 · Intermediate–Advanced — Jupiter as a Local 1-Bar-Level Model</h4>
 <p>
           Use the 1-bar level as a reference and model only a relatively thin region of Jupiter's
@@ -1166,7 +1297,7 @@ python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 \
 <div class="params">python main.py --planet_name Jupiter --g_accel 24.8 --mu 2.2 --p0 1e5 \
   --h_points 0,20000,50000,100000 --T_points 165,130,110,150</div>
 </div>
-<div class="scenario-card">
+<div class="scenario-card" id="exp8">
 <h4>8 · Advanced — Test the Euler Integration Against an Exact Isothermal Atmosphere</h4>
 <p>
           Use a constant temperature of 288.15 K from 0 to 100 km and plot Pressure. In that
@@ -1188,7 +1319,7 @@ python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 \
   --output_type pressure
 # programming change for convergence: edit STEPS_PER_SCALE_HEIGHT</div>
 </div>
-<div class="scenario-card">
+<div class="scenario-card" id="exp9">
 <h4>9 · Advanced Programming Extension — Let Gravity Decrease with Altitude</h4>
 <p>
           For an advanced extension, replace the program's constant value of gravity with a
@@ -1201,7 +1332,8 @@ python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 \
         </p>
 <div class="params">advanced: modify the hydrostatic integration to use g(h)</div>
 </div>
-</section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
+</section>
+<section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
 <div style="
     border: 1.5px solid #b5811a;
     border-left: 5px solid #b5811a;
@@ -1255,14 +1387,6 @@ python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 \
 </div>
 </div>
 </section>
-<!-- ============================================================
-     RESTORE TO DEFAULTS CALLOUT
-     ============================================================ -->
-
-<!-- ============================================================
-     END RESTORE TO DEFAULTS CALLOUT
-     ============================================================ -->
-<!-- ── Related Programs ── -->
 <section id="related">
 <h2>Related Programs</h2>
 <p>
@@ -1288,7 +1412,6 @@ python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 \
         </li>
 </ul>
 </section>
-<!-- ── License ── -->
 <section id="license">
 <h2>License</h2>
 <p>
