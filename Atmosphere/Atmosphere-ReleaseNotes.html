@@ -2,151 +2,74 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Atmosphere 1.2.1 Release Notes</title>
+<title>Atmosphere 1.4.0 Release Notes</title>
 </head>
 <body>
-<h1>Atmosphere 1.2.1 Release Notes</h1>
-<p><strong>Version:</strong> 1.2.1<br>
-<strong>Build:</strong> 02a76a6ecc3f<br>
-<strong>Date:</strong> 18 September 2026</p>
+<h1>Atmosphere 1.4.0 Release Notes</h1>
+<p><b>Version:</b> 1.4.0<br><b>Build:</b> 95f43226e01f<br><b>Date:</b> 2026-09-20</p>
 
-<h2>Release summary</h2>
-<p>Version 1.2.1 adds atmospheric mass density in kg/m<sup>3</sup> to every printed checkpoint row, alongside pressure, <em>p</em>/<em>T</em>, and temperature. The established default atmosphere, integration, and three plot modes retain their previous behavior.</p>
+<h2>Release Status</h2>
+<p>Version 1.4.0 follows 1.2.1 through two rounds of changes: a Beats-layout Help file with three maintenance items (1.3.0), and a response to independent review by Codex and Grok that corrected the unit of the mean molecular mass and the step used in cold layers (1.4.0). A further review by Codex and Grok reproduced the 177-test suite, confirmed the molecular-mass correction and the improvement in cold layers, and reported the three open bugs below. Grok recommended accepting 1.4.0. Codex recommended holding it until OB-1 is resolved or the Help's error statement is narrowed. None of the three bugs is reached by the default run or by any command shown in the Help. These notes replace the 1.2.1 notes; the earlier notes are not reproduced.</p>
 
-<h2>Checkpoint calculation</h2>
-<p>Pressure is interpolated between stored altitude samples. Density is calculated with the ideal-gas law from that pressure, the model's mean molecular weight, and the supplied checkpoint temperature. The row shows <code>unavailable</code> for pressure, density, and <em>p</em>/<em>T</em> when its altitude is outside the stored positive-pressure domain; its supplied temperature remains visible. Numerical values use five significant figures.</p>
-
-<h2>Documentation and verification</h2>
-<p>The Help file and complete default Sample Outputs transcript now show the density column and describe its calculation and units. Regression assertions check density against the ideal-gas equation at all default checkpoints, the exact surface density, and unavailable values outside the integration domain.</p>
-
-<h2>Version identification</h2>
-<p><strong>MODEL_VERSION:</strong> 1.2.1<br>
-<strong>BUILD_ID:</strong> 02a76a6ecc3f</p>
-
-<section id="maintenance-current">
-<h2>Known Minor Maintenance Items: Historical Register and Current Status</h2>
-<p>The original maintenance wording remains in the complete 1.2.0 and 1.1.1 notes below. Resolved issues remain visible; items without verified completion remain on the follow-up list.</p>
+<h2>Open Bugs</h2>
 <ul>
-<li>Direct API callers should not mutate <code>h_points</code> or <code>T_points</code> after constructing <code>AtmosphereModel</code>; the normal <code>main.py</code> workflow does not do so. A future revision may defensively snapshot or revalidate these sequences.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.2.1; completion has not been verified.</li>
-<li>The Help file's explicitly abbreviated <code>main.py</code> excerpt omits the planet name and output type from its example status line, although the delivered program prints both.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.2.1; completion has not been verified.</li>
-<li>Future test-suite hardening may add broader generated edge-profile families and focused assertions for additional critical Help-file statements. Existing deterministic tests cover the documented student workflows and principal boundary cases.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.2.1; completion has not been verified.</li>
-</ul>
-</section>
-
-<section id="historical-1.2.0">
-<h2>Earlier release notes (1.2.0 and 1.1.1)</h2>
-<p>The original 1.2.0 release notes, including the 1.1.1 historical record and their maintenance items, follow below without omissions. The unchanged 1.2.0 HTML file is also included in this package.</p>
-<h1>Atmosphere 1.2.0 Release Notes</h1>
-<p class="meta"><strong>Version:</strong> 1.2.0<br>
-<strong>Build:</strong> 94d7d42087d2<br>
-<strong>Date:</strong> 16 September 2026</p>
-
-<h2>Release summary</h2>
-<p>Version 1.2.0 adds a complete command-line interface and prints pressure, <em>p</em>/<em>T</em>, and temperature at every supplied atmosphere checkpoint. The atmospheric integration, default hybrid Earth profile, and plot rendering remain numerically compatible with version 1.1.1.</p>
-
-<h2>Command-line inputs</h2>
-<ul>
-<li>Added <code>--planet_name</code>, <code>--g_accel</code>, <code>--mu</code>, and <code>--p0</code> for the atmosphere label, constant gravity, mean molecular weight, and reference pressure.</li>
-<li>Added <code>--h_points</code> and <code>--T_points</code> for comma-separated altitude and temperature profiles. The model continues to require equal list lengths, strictly increasing finite altitudes, and positive finite temperatures.</li>
-<li>Added lowercase command selectors <code>--output_type pressure</code>, <code>density</code>, and <code>temperature</code>, mapped to the driver’s legacy capitalized values.</li>
-<li>Retained <code>--version</code> and added current defaults to <code>--help</code>.</li>
-<li>Expanded the <code>main.py</code> module description with the meaning, units, accepted forms, and physical effect of every input.</li>
+<li><b>OB-1 (P2, Codex A22-P2-01). Pressure can be silently far below the exact integral when temperature breakpoints are closer together than the altitude step; the Help's stated error bound does not hold for such a profile.</b><br>
+Reproduction: run <code>AtmosphereModel</code> (<i>g</i> = 9.81, &mu; = 28.97, <i>p</i><sub>0</sub> = 101300 Pa) on 100 repeated cells of 2.9256 m, each with 20 K at both edges and 2000 K at 10<sup>&minus;6</sup> of a cell in from each edge (301 points); the checkpoint at 292.56 m is 39% below the exact piecewise-linear integral of Eq. (7.3) (10 cells: 4.8% low), with no warning.</li>
+<li><b>OB-2 (P3, Codex A22-P3-01). <code>extract_checkpoints()</code> and <code>extract_output()</code> accept a physically invalid <code>AtmosphereResult</code>.</b><br>
+Reproduction: altitudes [&minus;1e308, 1e308] with pressures [10, 1] give pressure 10 at a checkpoint of 0 m (correct value 5.5); pressures [&minus;10, &minus;9] or temperatures [300, 0] are accepted by <code>extract_output()</code> without error.</li>
+<li><b>OB-3 (P3, Codex A22-P3-02). <code>TemperatureProfile.get_temp()</code> raises <code>IndexError</code> or <code>ZeroDivisionError</code>, not <code>ValueError</code>, for an invalid or later-modified profile.</b><br>
+Reproduction: <code>TemperatureProfile([], []).get_temp(0, 1e5)</code> raises <code>IndexError</code>; <code>TemperatureProfile([0, 0], [300, 200]).get_temp(0, 1e5)</code> raises <code>ZeroDivisionError</code>. <code>AtmosphereModel</code> and the command line are not affected.</li>
 </ul>
 
-<h2>Printed checkpoint results</h2>
+<h2>Major Improvements in This Release</h2>
+<p>Version 1.3.0:</p>
 <ul>
-<li>Every run prints one row for every altitude supplied through <code>--h_points</code>, independently of the plot selector.</li>
-<li>Each row contains interpolated pressure in pascals, <em>p</em>/<em>T</em> in Pa/K, and the paired defining temperature in kelvin.</li>
-<li>Pressure is linearly interpolated between adjacent stored integration samples; temperature comes directly from the supplied checkpoint profile.</li>
-<li>Custom checkpoints outside the stored positive-pressure integration domain remain visible and are marked <code>unavailable</code> for pressure and <em>p</em>/<em>T</em>.</li>
-<li>Checkpoint numerical values are formatted to five significant figures.</li>
+<li>The Help file now uses the Beats layout: eight Beats (0&ndash;7), each with a command, a table or plot to inspect, three tasks and the equation those observations lead to. Governing Equations is now an index.</li>
+<li><code>AtmosphereModel</code> keeps its own copy of the inputs and validates it again in <code>run()</code>, so later changes to the caller's lists no longer alter a run.</li>
+<li>A list option may begin with a negative altitude when given as a separate argument, for example <code>--h_points -1000,0,10000</code>.</li>
+<li>The Help's abbreviated <code>main.py</code> excerpt now shows the planet name and output type in the status line.</li>
+</ul>
+<p>Version 1.4.0:</p>
+<ul>
+<li>The mean molecular mass &mu; is now in atomic mass units; the former code multiplied the atomic-mass-unit value 28.97 by the proton mass. <i>k</i><sub>B</sub> is the exact SI value, and <code>M_PROTON</code> is replaced by <code>ATOMIC_MASS_UNIT</code>. Default surface density is 1.2249 kg m<sup>&minus;3</sup> (was 1.2325); the Earth scale height at 288.15 K is 8430 m (was 8378 m).</li>
+<li>The first altitude step is <i>H</i><sub>min</sub>/200 at the coldest temperature the profile reaches above the reference level (was <i>H</i>/200 at the surface temperature). Four cold-layer profiles tested at one scale height improve from 11&ndash;70% low to 1.1&ndash;3.6% low. After a restart, a zero pressure at or below the highest supplied altitude now stops the run with an error instead of being reported as the top.</li>
+<li>A wrong parameter object, a profile span that overflows the interpolation arithmetic, and a malformed <code>AtmosphereResult</code> (non-finite, unequal or non-increasing arrays) now raise <code>ValueError</code>. OB-2 and OB-3 record what is still accepted.</li>
+<li>Help: one Mars gravity (3.72 m s<sup>&minus;2</sup>) throughout; the statements that two scale-height readings are &ldquo;independent&rdquo; and that surface pressure &ldquo;decides how much air there is&rdquo; are corrected; every equation is tagged ODE, DERIVED, PRESCRIPTION or CLOSURE; Experiments 3, 4, 5, 8 and 9 give values to check.</li>
+<li>Behaviour change to check if you scripted an earlier version: in the default run the first step goes from 41.89 m to 27.35 m, the stored points from 13,653 to 20,933, and the last altitude from 571,913 m to 572,418 m; pressures are higher by 0.9% at 10 km, rising to 22.9% at 500 km. Sample outputs were regenerated for 1.4.0.</li>
 </ul>
 
-<h2>Driver and documentation additions</h2>
+<h2>Test Suite Growth</h2>
+<p>82 &rarr; 132 &rarr; 177 automated tests (1.2.1 &rarr; 1.3.0 &rarr; 1.4.0). The suite is run once from <code>tests/</code> with <code>RuntimeWarning</code> promoted to an error; all 177 pass under CPython 3.11 in about 35 s, and both Audit22 reviewers reproduced this result. No test was removed. Seven of the original 82 were edited for the constant rename and recomputed regression values, and one of those was re-expressed with exact powers of two while asserting the same thing.</p>
+<p>New coverage: the constants and an independent dry-air density coefficient; the step rule and fixed accuracy thresholds for cooling profiles against the exact piecewise-linear integral; the restart guard; span, parameter-object and result validation; fixtures for the U.S. Standard Atmosphere 1976, Venus and NRLMSIS values; 96 generated edge profiles; and the Help file (every command shown is run, quoted numbers are tied to live runs and to the sentence that uses them, equation tags, and exercise check values). 66 hand-made mutants of the program and Help were used to check the tests; all 66 are detected, after two tests were added for the two that were first missed.</p>
+
+<h2>Known Limitations</h2>
 <ul>
-<li>Added immutable <code>CheckpointData</code> rows and <code>extract_checkpoints()</code> for validated, reusable checkpoint extraction.</li>
-<li>Reworked Quick Start, parameter tables, selector descriptions, and non-programming exercises around command-line examples following the StellarEvolutionTracks pattern.</li>
-<li>Added a Printed Checkpoints section with the table definition, interpolation behavior, units, precision, and unavailable-value policy.</li>
-<li>Updated the Sample Outputs Guide with the complete default 15-checkpoint transcript and current command examples.</li>
-<li>Corrected the portable Help-file regression lookup so the tests support the actual packaged program-plus-documentation layout.</li>
+<li>Educational constant-gravity, constant-composition ideal-gas model. The temperature profile is supplied, not computed. Not an atmosphere forecast.</li>
+<li>The first-order Euler method accumulates error that grows with height (2.93% low at 100 km for an isothermal 288.15 K atmosphere). A profile that exhausts the 50,000-point budget restarts with a larger step.</li>
+<li>The upper continuation <i>T</i> = &beta;<i>p</i><sup>0.5</sup> is a pedagogical closure. The computed top is a stopping rule, and its altitude depends on the step (it moved 505 m in 1.4.0).</li>
+<li>The Beat 6 U.S. Standard Atmosphere 1976 layer-base pressures are a test fixture transcribed from a secondary reproduction of the layer table and checked against the standard's defining constants (agreement better than 3 parts per million). The NTRS scan of the primary tables is of poor quality and was not used as a digitization source.</li>
+<li>The Venus temperatures and the two published pressures in Beat 5 come from the Wikipedia article &ldquo;Atmosphere of Venus,&rdquo; a secondary compilation, not VIRA. The Mars and Jupiter profiles are round-number illustrations.</li>
+<li>The seven rounded 100&ndash;500 km NRLMSIS 2.0 temperatures are illustrative and specific to 15 October 2024, 12:00 UTC, 55&deg; N, 45&deg; E. The CCMC run identifier, indices and raw output are not archived. The source fixtures are consistency checks, not primary-source validation.</li>
+<li>A checkpoint outside the computed positive-pressure domain has no model pressure or <i>p</i>/<i>T</i>; the report says so.</li>
+<li>Extreme parameter combinations that exceed the floating-point domain are rejected with an error.</li>
+<li>The Help file loads MathJax from a public CDN. Offline, formulas appear as TeX source.</li>
 </ul>
 
-<h2>Verification</h2>
-<p>The regression suite now contains 82 tests. New coverage verifies every command-line model input, lowercase selector mapping, comma-separated profiles, all default checkpoints, exact surface pressure, pressure interpolation, <em>p</em>/<em>T</em>, out-of-domain rows, malformed result rejection, console headings, Help parameters, and packaged documentation discovery. Existing analytic, randomized, boundary, plotting, and Build-ID tests remain in place.</p>
-
-<h2>Known limitations</h2>
+<h2>Known Minor Maintenance Items</h2>
 <ul>
-<li>Atmosphere is an educational constant-gravity, constant-composition ideal-gas model, not an operational atmosphere forecast.</li>
-<li>The first-order Euler method accumulates discretization error. An unusually extended profile that exhausts the 50,000-point budget restarts with a larger step.</li>
-<li>The upper continuation <em>T</em> = β<em>p</em><sup>0.5</sup> is a pedagogical closure, not a realistic exospheric-temperature law.</li>
-<li>The rounded 100–500 km NRLMSIS 2.0 temperatures are illustrative and specific to the documented date, location, and activity conditions.</li>
-<li>A checkpoint outside the computed positive-pressure domain has no model pressure or <em>p</em>/<em>T</em>; the report identifies this explicitly.</li>
-<li>The Help file uses MathJax from a public CDN. Offline, formulas remain visible as TeX source but are not typeset.</li>
+<li><code>M_PROTON</code> no longer exists in <code>physics_atmosphere</code>; a direct caller importing it gets <code>AttributeError</code>. Whether this is a 1.x or a 2.0.0 change is undecided (Codex asked for the supported API to be defined; Grok considered 1.4.0 right).</li>
+<li>The Help refers to &ldquo;the six rounded temperatures&rdquo; of the NRLMSIS run (Parameters); there are seven (100, 150, 200, 250, 300, 400 and 500 km).</li>
+<li>The Help says the <i>p</i>/<i>T</i> column &ldquo;is the density in different units&rdquo; (Printed Checkpoints, Beat 1); density is <i>p</i>/<i>T</i> multiplied by &mu;<i>m</i><sub>u</sub>/<i>k</i><sub>B</sub>.</li>
+<li>Beat 6 says the coefficient of Eq. (7.3) &ldquo;carries no rounding error of its own&rdquo;; the rounded input &mu; and the measured atomic mass constant are part of it.</li>
+<li>&ldquo;Mean molecular weight&rdquo; still appears in <code>main.py</code>, <code>driver_atmosphere.py</code> and some Help passages; elsewhere the term is &ldquo;mean molecular mass.&rdquo;</li>
+<li>Experiments 6 and 7 give no numerical values to check. Experiment 8 asks for the surface-temperature step to be restored but gives no expected result.</li>
+<li>Beat 6 quotes 3.2% at 86 km (the Euler error in ln <i>p</i>) directly under a table whose 86 km ratio to the standard atmosphere is 18% low; the two can be read as one number.</li>
+<li>The Help gives <i>m</i><sub>u</sub> to four figures (1.6605&times;10<sup>&minus;27</sup> kg); the code uses the full CODATA value.</li>
+<li>There is no option to save a plot to a file or to run without a plot window.</li>
+<li>The generated-profile accuracy test bounds the error only for its own profile families, not for every accepted profile (see OB-1).</li>
 </ul>
 
-<h2>Version identification</h2>
-<p><strong>MODEL_VERSION:</strong> 1.2.0<br>
-<strong>BUILD_ID:</strong> 94d7d42087d2</p>
-
-<section id="maintenance-status">
-<h2>Known Minor Maintenance Items: Historical Register and Current Status</h2>
-<p>The earlier wording is retained below and in the original notes. Resolved issues remain visible; items without verified completion remain on the follow-up list.</p>
-<ul>
-<li>Direct API callers should not mutate <code>h_points</code> or <code>T_points</code> after constructing <code>AtmosphereModel</code>; the normal <code>main.py</code> workflow does not do so. A future revision may defensively snapshot or revalidate these sequences.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.2.0; completion has not been verified.</li>
-<li>The Help file's explicitly abbreviated <code>main.py</code> excerpt omits the planet name and output type from its example status line, although the delivered program prints both.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.2.0; completion has not been verified.</li>
-<li>Future test-suite hardening may add broader generated edge-profile families and focused assertions for additional critical Help-file statements. Existing deterministic tests cover the documented student workflows and principal boundary cases.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.2.0; completion has not been verified.</li>
-</ul>
-</section>
-
-<section id="release-history">
-<h2>Earlier Release Notes</h2>
-<p>The following release notes reproduce the archived releases. Statements about what was current then describe those versions; the status register above describes the current review.</p>
-<section id="historical-1.1.1">
-<h2>Atmosphere 1.1.1 Release Notes</h2>
-<p><b>Version:</b> 1.1.1<br><b>Build:</b> 58b6ba9b3808<br><b>Date:</b> 2026-08-27</p>
-
-<h3>Release Status</h3>
-<p>Version 1.1.1 concludes a kickoff maintenance review followed by two rounds of independent review involving Codex, Copilot, and Gemini. The reviewers verified the governing physics, numerical results, error handling, Help-file accuracy, Version/Build synchronization, and regression coverage. No release-blocking or medium-severity defect remains. The program is approved as sufficiently robust and accurate for student use, with the idealizations and minor maintenance items listed below.</p>
-
-<h3>Major Improvements in This Release</h3>
-<ul>
-<li>Expanded the integration budget from 1,000 to 50,000 points so the default 500 km Earth profile retains the intended <i>H</i>/200 Euler step instead of silently restarting at much coarser resolution.</li>
-<li>Corrected the resulting pressure error: the former coarse calculation was approximately 53% low near 100 km and almost a factor of three low near 500 km.</li>
-<li>Added comprehensive validation for finite and physically valid pressures, temperatures, densities, gravity, mean molecular weight, surface pressure, and temperature-profile data.</li>
-<li>Added explicit overflow, underflow, altitude-step, retry-limit, and zero-pressure boundary protection.</li>
-<li>Corrected evaluation of the altitude-zero reference temperature for profiles that begin above zero or span zero altitude.</li>
-<li>Corrected state handling so a zero-pressure upper-profile query cannot corrupt a later positive-pressure calculation.</li>
-<li>Added clear, student-facing error messages for invalid parameters and model failures.</li>
-<li>Documented the 50,000-point coverage mechanism, non-positive pressure boundary, numerical limitations, result metadata, and Version/Build identification.</li>
-<li>Retained and verified nine exercises arranged from introductory output exploration through an advanced height-dependent-gravity extension.</li>
-<li>Added BUILD_ID provenance across the four core program modules and synchronized it with the Help file and runtime output.</li>
-</ul>
-
-<h3>Test Suite Growth</h3>
-<p>58 &rarr; 72 automated tests across the audit process, including 120 fixed-seed randomized model/profile cases.</p>
-<p>The final suite verifies equations, interpolation, validation, boundary behavior, build hashing, newline independence, default numerical regressions, ideal-gas consistency, analytic isothermal and linear-lapse solutions, a refined multilayer benchmark, successful restart equivalence, repeated-run stability, command-line behavior, Help metadata, and plotting. All 72 tests pass in both the canonical <code>tests/</code> layout and a flattened upload layout.</p>
-
-<h3>Known Limitations</h3>
-<ul>
-<li>Intended for education and conceptual exploration rather than operational atmospheric prediction or research-grade atmospheric modeling.</li>
-<li>Gravity and mean molecular weight remain constant with altitude; the model does not reproduce species-by-species diffusive equilibrium in the upper atmosphere.</li>
-<li>The first-order Euler method accumulates discretization error. Unusually extended profiles that exhaust the 50,000-point budget restart with a larger step and therefore have greater numerical error.</li>
-<li>The upper-atmosphere continuation <i>T</i> = &beta;<i>p</i><sup>0.5</sup> is a pedagogical closure that drives temperature toward zero; it is not a realistic exospheric-temperature law.</li>
-<li>The rounded 100&ndash;500 km NRLMSIS 2.0 temperatures are illustrative and specific to the stated date, location, and activity conditions. The archived CCMC Instant Run output is not included with this release.</li>
-<li>Extreme parameter combinations can exceed the supported floating-point domain and are rejected with explanatory errors.</li>
-</ul>
-
-<h3>Known Minor Maintenance Items</h3>
-<ul>
-<li>Direct API callers should not mutate <code>h_points</code> or <code>T_points</code> after constructing <code>AtmosphereModel</code>; the normal <code>main.py</code> workflow does not do so. A future revision may defensively snapshot or revalidate these sequences.</li>
-<li>The Help file's explicitly abbreviated <code>main.py</code> excerpt omits the planet name and output type from its example status line, although the delivered program prints both.</li>
-<li>Future test-suite hardening may add broader generated edge-profile families and focused assertions for additional critical Help-file statements. Existing deterministic tests cover the documented student workflows and principal boundary cases.</li>
-</ul>
-
-<h3>Version Identification</h3>
-<p>MODEL_VERSION: 1.1.1<br>BUILD_ID: 58b6ba9b3808</p>
-</section>
-</section>
-</section>
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.4.0<br>BUILD_ID: 95f43226e01f</p>
 </body>
 </html>
