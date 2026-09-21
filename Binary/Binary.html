@@ -412,6 +412,11 @@
       font-variant-numeric: tabular-nums;
     }
     .compare-table td:not(:first-child) { font-family: var(--mono); color: var(--text); }
+    main { min-width: 0; }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
     section ul { margin: 0 0 14px 1.4em; }
     section ul li, section ol li { margin-bottom: 6px; }
     section ol { margin: 0 0 14px 1.6em; }
@@ -471,7 +476,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.2.1&nbsp;&nbsp;&nbsp;&nbsp;Build 0526600a888e
+  Version 1.2.2&nbsp;&nbsp;&nbsp;&nbsp;Build 1ef841946b74
 </p>
 <section id="overview">
 <h2>Overview</h2>
@@ -571,7 +576,7 @@
 <pre>python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10
 python main.py --vInitA 60000 --vInitB 60000</pre>
 <p>In each run look at the lines from <code>Accepted steps</code> to <code>Speed at apoapsis</code> and compare them with the same lines in Beat 0. In the second run look also at row 0.0 of the energy table and at the orbits plot, in which the pair drifts.</p>
-<p>Three tasks, in order. First, the shifted run: every number down to the Keplerian block is the one from Beat 0, which is 2284 steps, 52.87 days, a minimum separation of 1.2127e+10 m and eccentricity 0.76705. Only the plot has moved: the centre of mass is now at (4&times;10<sup>9</sup>, 1&times;10<sup>10</sup>) m, which is where the pattern is centred. Then the second run: the same printed numbers again, but in the energy table the kinetic energy at row 0.0 is 7.538e+39 J instead of 3.38e+38 J. The difference, 7.2&times;10<sup>39</sup> J, is \(\tfrac12(M_A+M_B)V^2=\tfrac12\times4\times10^{30}\times(6\times10^4)^2\), the kinetic energy of the pair as a whole, and the potential energy, &minus;2.9019e+39 J, has not changed. Then read the <code>Total E</code> column: it is +4.6361e+39 J, positive, although the orbit is exactly the same ellipse with eccentricity 0.76705, which is bound. Say why the sign of the printed total energy cannot tell you here whether the pair is bound. One printed number does change: row 0.5 of the last column reads &minus;6.7536e-04 in this run and &minus;1.2814e-03 in the first, because the same absolute change in \(E\), about \(3\times10^{36}\) J, is divided by a different \(|E_0|\).</p>
+<p>Three tasks, in order. First, the shifted run: every number down to the Keplerian block is the one from Beat 0, which is 2284 steps, 52.87 days, a minimum separation of 1.2127e+10 m and eccentricity 0.76705. Only the plot has moved: the centre of mass is now at (4&times;10<sup>9</sup>, 1&times;10<sup>10</sup>) m, which is where the pattern is centred. Then the second run: the same printed numbers again, but in the energy table the kinetic energy at row 0.0 is 7.538e+39 J instead of 3.38e+38 J. The difference, 7.2&times;10<sup>39</sup> J, is \(\tfrac12(M_A+M_B)V^2\), which is \(\tfrac12\times4\times10^{30}\times(6\times10^4)^2\), the kinetic energy of the pair as a whole, and the potential energy, &minus;2.9019e+39 J, has not changed. Then read the <code>Total E</code> column: it is +4.6361e+39 J, positive, although the orbit is exactly the same ellipse with eccentricity 0.76705, which is bound. Say why the sign of the printed total energy cannot tell you here whether the pair is bound. One printed number does change: row 0.5 of the last column reads &minus;6.7536e-04 in this run and &minus;1.2814e-03 in the first, because the same absolute change in \(E\), about \(3\times10^{36}\) J, is divided by a different \(|E_0|\).</p>
 <p><em>Then</em> the reason. Add the same vector \(\mathbf d\) to both positions and \(r\) is unchanged. Add the same velocity \(\mathbf V_0\) to both bodies and the motion \(\mathbf r_i(t)\to\mathbf r_i(t)+\mathbf V_0t\) satisfies the same Eqs. (2) and (3), because \(\mathbf V_0t\) has no acceleration. The bodies' motion relative to one another does not change; only the kinetic energy does, by exactly the amount of the motion of the whole:</p>
 <div class="eq">
 <div class="eq-kind">Kinetic energy of a pair whose centre of mass moves <span class="kind kind-der">DERIVED</span></div>
@@ -589,8 +594,8 @@ python main.py --vInitA 60000 --vInitB 60000</pre>
 <pre>python main.py --output_type energy_vs_time
 python main.py --uInitA 38091.14 --uInitB -38091.14 --no-stop_after_one_orbit --max_steps 1000 --output_type energy_vs_time
 python main.py --uInitA 60000 --uInitB -60000 --no-stop_after_one_orbit --max_steps 1000 --output_type energy_vs_time</pre>
-<p>Look, in each run, at the <code>Initial Keplerian orbit</code> line, at row 0.0 of the energy table (<code>Potential U</code>, <code>Kinetic K</code>, <code>Total E</code>), and at the last column. The plot shows U, K and E against time. The second and third runs stop at <code>max_steps</code>, because an orbit that is not closed never turns once (Beat 4).</p>
-<p>Three tasks, in order. First, read row 0.0 in all three runs. The potential energy is &minus;2.9019e+39 J in each, as it must be: the starting separation is the same, and \(-GM_AM_B/r=-6.6743\times10^{-11}\times(2\times10^{30})^2/9.2\times10^{10}\). The kinetic energy differs: 3.38e+38, 2.9019e+39 and 7.2e+39 J, for speeds of 13000, 38091.14 and 60000 m s<sup>&minus;1</sup> for each body. Add them: the totals are &minus;2.5639e+39, +3.2778e+32 and +4.2981e+39 J. Then compare each total with the <code>Initial Keplerian orbit</code> line: the negative total is <code>elliptic</code> with eccentricity 0.76705, and the large positive total is <code>hyperbolic</code> with eccentricity 3.9623. The middle run has a total of only 1.1&times;10<sup>&minus;7</sup> of its kinetic energy. It starts at the escape speed rounded to seven digits, so the program calls it <code>hyperbolic</code>, with an eccentricity that prints as 1 (it is 1.0000002). Then look at the last column, <code>(E-E0)/|E0|</code>. In the bound run it is 3.2 parts in 10<sup>6</sup> at the end. In the middle run it grows to 4.0631, that is 406%, yet <code>Total E</code> has changed by only 1.3&times;10<sup>33</sup> J, which is 4.6&times;10<sup>&minus;7</sup> of the kinetic energy. Say why a change of that size in a total that is nearly zero gives such a large printed number.</p>
+<p>Look, in each run, at the <code>Initial Keplerian orbit</code> line, at row 0.0 of the energy table (<code>Potential U</code>, <code>Kinetic K</code>, <code>Total E</code>), and at the last column. The plot shows U, K and E against time. The second and third runs stop at <code>max_steps</code> because their commands turn the one-revolution stop off; an unbound orbit would never complete a turn anyway (Beat 4).</p>
+<p>Three tasks, in order. First, read row 0.0 in all three runs. The potential energy is &minus;2.9019e+39 J in each, as it must be: the starting separation is the same, and \(-GM_AM_B/r\) is \(-6.6743\times10^{-11}\times(2\times10^{30})^2\) divided by \(9.2\times10^{10}\). The kinetic energy differs: 3.38e+38, 2.9019e+39 and 7.2e+39 J, for speeds of 13000, 38091.14 and 60000 m s<sup>&minus;1</sup> for each body. Add them: the totals are &minus;2.5639e+39, +3.2778e+32 and +4.2981e+39 J. Then compare each total with the <code>Initial Keplerian orbit</code> line: the negative total is <code>elliptic</code> with eccentricity 0.76705, and the large positive total is <code>hyperbolic</code> with eccentricity 3.9623. The middle run has a total of only 1.1&times;10<sup>&minus;7</sup> of its kinetic energy. It starts at the escape speed rounded to seven digits, so the program calls it <code>hyperbolic</code>, with an eccentricity that prints as 1 (it is 1.0000002). Then look at the last column, <code>(E-E0)/|E0|</code>. In the bound run it is 3.2 parts in 10<sup>6</sup> at the end. In the middle run it grows to 4.0631, that is 406%, yet <code>Total E</code> has changed by only 1.3&times;10<sup>33</sup> J, which is 4.6&times;10<sup>&minus;7</sup> of the kinetic energy. Say why a change of that size in a total that is nearly zero gives such a large printed number.</p>
 <p><em>Then</em> the three energies. Each body has kinetic energy, and the pair has a mutual potential energy.</p>
 <div class="eq"><span class="eq-label">(5)</span>
 <div class="eq-kind">Kinetic energy <span class="kind kind-def">DEFINITION</span></div>
@@ -609,7 +614,7 @@ python main.py --uInitA 60000 --uInitB -60000 --no-stop_after_one_orbit --max_st
         E \;=\; K + U
       \]
     </div>
-<p>Equation (6) follows from Eq. (1): \(-U\) is the work needed to pull the bodies apart to infinite separation, so \(U\) is zero at infinity and negative at any finite separation. A pair with \(E&lt;0\) has too little kinetic energy to reach infinity and stays bound. A pair with \(E&gt;0\) escapes. \(E=0\) is the marginal, parabolic case. In the centre-of-mass frame, a gravitationally bound orbit has \(E&lt;0\), and the total mechanical energy is conserved. Any systematic drift in \(E\) over the run is a direct measure of accumulated numerical error.</p>
+<p>Equation (6) follows from Eq. (1): \(-U\) is the work needed to pull the bodies apart to infinite separation, so \(U\) is zero at infinity and negative at any finite separation. A pair with \(E&lt;0\) has too little kinetic energy to reach infinity and stays bound. A pair with \(E&gt;0\) escapes. \(E=0\) is the marginal, parabolic case. In the centre-of-mass frame, a gravitationally bound orbit has \(E&lt;0\), and the total mechanical energy is conserved. Any systematic drift in \(E\) over the run is one important diagnostic of accumulated numerical error, although a small energy error does not by itself bound the error in the positions, the period or the phase.</p>
 <p>The program accurately sums the two separately computed kinetic-energy terms and the potential-energy term together. This preserves a small representable residual when much larger positive and negative terms nearly cancel. Exact zero remains valid when the floating-point component values cancel exactly.</p>
 <p>The plotted energy uses the velocities in the chosen inertial frame and therefore includes any kinetic energy of the centre of mass. When using the sign of \(E\) to classify the <em>internal</em> orbit as bound or unbound, keep the centre of mass at rest or subtract its translational kinetic energy. Two cautions about reading the energy output. The energy plot shows the exchange between \(K\) and \(U\) at a glance, and \(E\) as a nearly flat line; departures as small as those in Beats 5 to 7 are far too small to see against the scale of \(K\) and \(U\), so the printed <code>(E-E0)/|E0|</code> column is the quantitative diagnostic. And that column divides by \(|E_0|\), so it is meaningful only when \(E_0\) is not small compared with \(K\) and \(U\): for a nearly parabolic start, compare the change in \(E\) with \(K\) instead.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
@@ -620,17 +625,17 @@ python main.py --uInitA 60000 --uInitB -60000 --no-stop_after_one_orbit --max_st
 <pre>python main.py --uInitA 26934.5 --uInitB -26934.5 --output_type velocity_space
 python main.py --output_type velocity_space</pre>
 <p>Look at <code>Minimum separation (sampled)</code> and <code>Maximum separation (sampled)</code>, at <code>Initial Keplerian orbit</code> and the <code>Body A about centre of mass</code> block, and at <code>Total revolutions</code> and <code>Total time</code>. Then look at the velocity-space plot, in which each body's velocity \((v,u)\) is a point that moves as the bodies orbit.</p>
-<p>Three tasks, in order. First, the circular run. The minimum and maximum separations are both 9.2e+10 m, so the distance never changes. The Keplerian block agrees: the eccentricity is 1.393e-07, which is zero apart from the rounding of the starting speed, periapsis and apoapsis are both 4.6e+10 m, and the two speeds, 26935 and 26934 m/s, differ only by that same rounding. The period is 124.2 days, and the run took 5366 steps of 2000 s, which is the <code>Total time</code> of 124.21 days. Then the default run. The separation swings between 1.2127e+10 and 9.2e+10 m and the eccentricity is 0.76705. Body A's periapsis is 6.0643e+09 m, where it moves at 98610 m/s, and its apoapsis is 4.6e+10 m, where it moves at 13000 m/s. Multiply each distance by the speed at that distance: the product is 5.980&times;10<sup>14</sup> m<sup>2</sup> s<sup>&minus;1</sup> at periapsis and 5.980&times;10<sup>14</sup> at apoapsis, where the body is 7.585 times farther away and 7.585 times slower. Then compare the integration with the formulas. The Keplerian period is 52.874 days and the run stopped after 52.87 days. Each body's Keplerian periapsis is 6.0643&times;10<sup>9</sup> m from the centre of mass, so at closest approach the bodies are 2 &times; 6.0643&times;10<sup>9</sup> &asymp; 1.2129&times;10<sup>10</sup> m apart, and the sampled minimum separation from the integration, 1.2127e+10 m, is about 0.015% below that. Then look at the plot. The circular run gives one circle of radius 26934.5 m/s about the origin, because the two velocities are opposite and trace the same curve. The default run gives two circles, one for each body. Each has a radius of 55805 m/s, half of 98610 + 13000, and its centre is 42805 m/s from the origin, half of 98610 &minus; 13000, so the origin lies inside each circle. Divide the second number by the first: 42805/55805 = 0.76705, the eccentricity.</p>
-<p><em>Then</em> why these numbers are tied together. Measured from the centre of mass, each body lies on the line to the other body, so the force of Eq. (1) points along the body's position vector and cannot turn it. The angular momentum per unit mass of each body about the centre of mass, \(\ell\), is therefore constant. At periapsis and apoapsis the velocity is perpendicular to the position, so \(\ell\) is simply distance times speed at those two points:</p>
+<p>Three tasks, in order. First, the circular run. The minimum and maximum separations are both 9.2e+10 m, so the distance never changes. The Keplerian block agrees: the eccentricity is 1.393e-07, which is zero apart from the rounding of the starting speed, periapsis and apoapsis are both 4.6e+10 m, and the two speeds, 26935 and 26934 m/s, differ only by that same rounding. The period is 124.2 days, and the run took 5366 steps of 2000 s, which is the <code>Total time</code> of 124.21 days. Then the default run. The separation swings between 1.2127e+10 and 9.2e+10 m and the eccentricity is 0.76705. Body A's periapsis is 6.0643e+09 m, where it moves at 98610 m/s, and its apoapsis is 4.6e+10 m, where it moves at 13000 m/s. Multiply each distance by the speed at that distance: the product is 5.980&times;10<sup>14</sup> m<sup>2</sup> s<sup>&minus;1</sup> at periapsis and 5.980&times;10<sup>14</sup> at apoapsis, where the body is 7.585 times farther away and 7.585 times slower. Then compare the integration with the formulas. The Keplerian period is 52.874 days and the run stopped after 52.87 days. Each body's Keplerian periapsis is 6.0643&times;10<sup>9</sup> m from the centre of mass, so at closest approach the bodies are 2 &times; 6.0643&times;10<sup>9</sup> &asymp; 1.2129&times;10<sup>10</sup> m apart, and the sampled minimum separation from the integration, 1.2127e+10 m, is about 0.015% below that (from the unrounded values; the rounded digits printed here give about 0.013%). Then look at the plot. The circular run gives one circle of radius 26934.5 m/s about the origin, because the two velocities are opposite and trace the same curve. The default run gives two circles, one for each body. Each has a radius of 55805 m/s, half of 98610 + 13000, and its centre is 42805 m/s from the origin, half of 98610 &minus; 13000, so the origin lies inside each circle. Divide the second number by the first: 42805/55805 = 0.76705, the eccentricity.</p>
+<p><em>Then</em> why these numbers are tied together. Measured from the centre of mass, each body lies on the line to the other body, so the force of Eq. (1) points along the body's position vector. A force along the position vector exerts no torque about the centre of mass, so it cannot change the angular momentum per unit mass of each body about the centre of mass, \(\ell\), which is therefore constant. It is the cross product of the body's position and velocity measured from the centre of mass. At periapsis and apoapsis the velocity is perpendicular to the position, so \(\ell\) is simply distance times speed at those two points:</p>
 <div class="eq">
 <div class="eq-kind">Angular momentum per unit mass, body A about the centre of mass <span class="kind kind-der">DERIVED</span></div>
       \[
-        \ell_A \;=\; x_A u_A - y_A v_A \;=\; \text{constant},
+        \ell_A \;=\; (\mathbf r_A-\mathbf R_{\rm CM})\times(\mathbf v_A-\mathbf V_{\rm CM}) \;=\; \text{constant},
         \qquad
         r_p\,v_p \;=\; r_a\,v_a \;=\; \ell_A
       \]
     </div>
-<p>This is the first relation you checked: the body is fastest where it is closest. Second, the period depends only on the size of the relative orbit. The semi-major axis \(a\) of the relative orbit is the sum of the two printed body semi-major axes, 2.6032e+10 + 2.6032e+10 = 5.2064e+10 m for the default orbit and 9.2e+10 m for the circle, and Kepler's third law gives the period:</p>
+<p>In the two commands above the centre of mass is at the origin and at rest, so \(\ell_A=x_Au_A-y_Av_A\). The relation \(r_p v_p=r_a v_a\) is the first relation you checked: the body is fastest where it is closest. Second, the period depends only on the size of the relative orbit. The semi-major axis \(a\) of the relative orbit is the sum of the two printed body semi-major axes, 2.6032e+10 + 2.6032e+10 = 5.2064e+10 m for the default orbit and 9.2e+10 m for the circle, and Kepler's third law gives the period:</p>
 <div class="eq">
 <div class="eq-kind">Kepler's third law <span class="kind kind-der">DERIVED</span></div>
       \[
@@ -638,7 +643,7 @@ python main.py --output_type velocity_space</pre>
         \qquad a \;=\; a_A + a_B
       \]
     </div>
-<p>which is 52.874 days for the default orbit and 124.198 days for the circle, which the block prints as 124.2. Third, the distances at the two apsides are \(a(1-e)\) and \(a(1+e)\), so the angular-momentum relation gives \(v_p/v_a=(1+e)/(1-e)\): the two printed speeds fix the eccentricity. In velocity space they fix a circle, the <em>hodograph</em>, whose diameter is \(v_p+v_a\) and whose centre is \((v_p-v_a)/2\) from the origin:</p>
+<p>which is 52.874 days for the default orbit and 124.198 days for the circle, which the block prints as 124.2. Third, the distances at the two apsides are \(a(1-e)\) and \(a(1+e)\), so the angular-momentum relation gives \(v_p/v_a=(1+e)/(1-e)\): the two printed speeds, which are measured relative to the centre of mass, fix the eccentricity. In velocity space they fix a circle, the <em>hodograph</em>, whose diameter is \(v_p+v_a\) and whose centre is \((v_p-v_a)/2\) from the origin:</p>
 <div class="eq">
 <div class="eq-kind">The velocity-space circle <span class="kind kind-der">DERIVED</span></div>
       \[
@@ -649,7 +654,7 @@ python main.py --output_type velocity_space</pre>
         e \;=\; \frac{d_v}{R_v} \;=\; \frac{v_p-v_a}{v_p+v_a}
       \]
     </div>
-<p>The origin of velocity space lies inside the circle when \(e&lt;1\), on it when \(e=1\) and outside it when \(e&gt;1\), so a glance at the velocity-space plot tells you whether an orbit is bound. Finally, the line <code>Total revolutions</code> is the angle that the line joining the bodies has swept, divided by \(2\pi\). The program adds up the signed angle between the relative position at one accepted step and the next, and stops the first time the total reaches a full turn:</p>
+<p>The origin of velocity space lies inside the circle when \(e&lt;1\), on it when \(e=1\) and outside it when \(e&gt;1\), so, when the centre of mass is at rest, a glance at the velocity-space plot tells you whether an orbit is bound. The plot shows the velocities in the frame you supply. Adding a common velocity \(\mathbf V_0\) to both bodies moves every point of the hodograph by \(\mathbf V_0\) (Beat 2 and Experiment 3), so with a moving centre of mass the origin test applies only after \(\mathbf V_{\rm CM}\) has been subtracted, and a large enough boost puts the origin outside the circle of a bound orbit. Finally, the line <code>Total revolutions</code> is the angle that the line joining the bodies has swept, divided by \(2\pi\). The program adds up the signed angle between the relative position at one accepted step and the next, and stops the first time the total reaches a full turn:</p>
 <div class="eq">
 <div class="eq-kind">One-revolution stopping rule <span class="kind kind-alg">ALGORITHM</span></div>
       \[
@@ -665,10 +670,10 @@ python main.py --output_type velocity_space</pre>
 </section>
 <section id="beat5">
 <h2>Beat 5 · The corrector</h2>
-<p>The equations of motion, Eqs. (2) and (3), cannot be solved in closed form for a general starting state, so the program advances the bodies in small steps of time. To take one step it needs the accelerations at the end of the step, but the end positions depend on those accelerations. The program's way out has two stages. An Euler predictor makes a first estimate of where the bodies will be at the end of the step, and a trapezoidal corrector uses the average of the acceleration at the start and at the end to improve it. The improved positions give a better end acceleration, so the corrector can be repeated. The option <code>eps2</code> decides when to stop repeating. Run the default problem with a very strict <code>eps2</code> and then with one so loose that the corrector never repeats.</p>
+<p>The equations of motion, Eqs. (2) and (3), do have an exact solution for two point masses: each body moves on a conic section, and the Keplerian block of the summary is computed from that solution. Binary deliberately integrates the equations step by step instead, so that you can see a method that also works for systems with no such solution, and the Keplerian block then serves as an outside check on the integration. The program advances the bodies in small steps of time. To take one step it needs the accelerations at the end of the step, but the end positions depend on those accelerations. The program's way out has two stages. An Euler predictor makes a first estimate of where the bodies will be at the end of the step, and a trapezoidal corrector uses the average of the acceleration at the start and at the end to improve it. The improved positions give a better end acceleration, so the corrector can be repeated. The option <code>eps2</code> decides when to stop repeating. Run the default problem with a very strict <code>eps2</code> and then with one so loose that the corrector never repeats.</p>
 <pre>python main.py --eps2 1e-8
 python main.py --eps2 0.5</pre>
-<p>Look at <code>Accepted steps</code> and <code>Total time</code>, and at rows 0.5 and 1.0 of the last column of the energy table. The default run, <code>eps2</code> = 1e-4, gives &minus;1.2814e-03 in row 0.5 and &minus;3.1646e-06 in row 1.0. Row 0.5 is the row at closest approach, where the bodies move fastest and the acceleration changes fastest.</p>
+<p>Look at <code>Accepted steps</code> and <code>Total time</code>, and at rows 0.5 and 1.0 of the last column of the energy table. Row 0.5 is half way through the run; every run here starts at apoapsis, so that row falls at or near closest approach. The default run, <code>eps2</code> = 1e-4, gives &minus;1.2814e-03 in row 0.5 and &minus;3.1646e-06 in row 1.0. Row 0.5 is the row at closest approach, where the bodies move fastest and the acceleration changes fastest.</p>
 <p>Three tasks, in order. First, read <code>Accepted steps</code>: 2284 for the strict run and 2285 for the loose one, against 2284 for the default. The tolerance changed by a factor of 5&times;10<sup>7</sup> and the number of steps hardly changed. The strict run's <code>Total time</code> is 52.87 days, which is 2284 steps of 2000 s, and the loose run's is 52.894 days, which is 2285 steps of 2000 s. The option <code>eps2</code> does not set the step size. Then read row 0.5: &minus;1.1854e-03 for the strict run, &minus;1.2814e-03 for the default and &minus;1.784e-03 for the loose run. In all three the total energy has dipped by 0.1% to 0.2% at closest approach, and the loosest corrector makes the dip only 1.5 times as deep as the strictest. Then read row 1.0, the end of the orbit: 3.2091e-12 for the strict run, &minus;3.1646e-06 for the default and 8.1292e-05 for the loose one. After one orbit the strict run's energy is back to within 3 parts in 10<sup>12</sup> of its starting value, the default run's to 3 parts in 10<sup>6</sup>, and the loose run ends 8 parts in 10<sup>5</sup> above it. So <code>eps2</code> does control something, but not the depth of the dip. Say what it controls, and why the energy might come back after closest approach with a strict corrector and not with a loose one.</p>
 <p><em>Then</em> the two stages. The predictor is a straight-line (Euler) estimate of where each body will be, and how fast it will be moving, at the end of a step of length \(\Delta t\), using the acceleration at the start:</p>
 <div class="eq"><span class="eq-label">(8)</span>
@@ -732,14 +737,14 @@ python main.py --dt 500
 python main.py --dt 1000 --eps2 1e-8</pre>
 <p>Look at <code>Accepted steps</code>, <code>Minimum separation (sampled)</code> and rows 0.5 and 1.0 of the last column. The default run, <code>dt</code> = 2000, gave 2284 steps, 1.2127e+10 m, &minus;1.2814e-03 and &minus;3.1646e-06.</p>
 <p>Three tasks, in order. First, row 0.5. The first two runs give 4569 and 9137 steps, and &minus;4.5152e-04 and &minus;1.1354e-04. Halving <code>dt</code> divided the dip by 2.84, and then by 3.98, which is close to 4: the dip falls as the square of the step. Then the sampled minimum separation, 1.2128e+10 and 1.2129e+10 m, which approaches the Keplerian 1.2129&times;10<sup>10</sup> m of Beat 4 as <code>dt</code> shrinks. Then row 1.0. The first two runs give +1.0168e-05 and +1.2713e-06 and the default run gave &minus;3.1646e-06, so the end-of-orbit departure does not shrink steadily and changes sign. The third run, with <code>dt</code> = 1000 and <code>eps2</code> = 1e-8, gives &minus;2.9623e-04 in row 0.5 and &minus;9.4305e-15 in row 1.0. Say which of the two rows follows <code>dt</code> and which follows <code>eps2</code>.</p>
-<p><em>Then</em> what the numbers say. Two different approximations are at work, and each has its own setting. The first is the length of the step. A trapezoid is a straight-line approximation to how the acceleration changes across the step, and it is worst where the acceleration changes fastest, at closest approach. This is the dip in row 0.5. It falls as the square of <code>dt</code>; tightening <code>eps2</code> trims it by at most a factor of 1.5 in the table below, and a shorter step does much more. The second is how completely each step is solved, which is <code>eps2</code>. A step whose corrector stops early leaves a small error in the energy, and the errors accumulate, so what is left at the end of the orbit, row 1.0, shows what the corrector contributes. The table shows both. In the columns for <code>eps2</code> = 1e-8 the dip falls by a factor of 4.00 for each halving of <code>dt</code>, and the end-of-orbit departure is 3 parts in 10<sup>12</sup> or less. At the default <code>eps2</code> the factors are 2.84 and 3.98 and the end-of-orbit departure is 10<sup>&minus;6</sup> to 10<sup>&minus;5</sup>. The reason is that the corrector repeated at <code>dt</code> = 2000, in the steps around closest approach, and never repeats in the whole run at <code>dt</code> = 1000 or 500 (Beat 5). The default <code>eps2</code> therefore stops doing its work as <code>dt</code> falls, and the end-of-orbit departure cannot be expected to fall with <code>dt</code>.</p>
-<table class="compare-table">
+<p><em>Then</em> what the numbers say. Two different approximations are at work, and each has its own setting. The first is the length of the step. A trapezoid is a straight-line approximation to how the acceleration changes across the step, and it is worst where the acceleration changes fastest, at closest approach. This is the dip in row 0.5, which for these runs lies at or near closest approach. It falls as the square of <code>dt</code>; tightening <code>eps2</code> trims it by at most a factor of 1.5 in the table below, and a shorter step does much more. The second is how completely each step is solved, which is <code>eps2</code>. A step whose corrector stops early leaves a small error in the energy, and the errors accumulate, so what is left at the end of the orbit, row 1.0, shows in these runs what the corrector contributes. (The end of a run is also affected by the step length and by the run stopping a little past the full turn, so this is what the table shows for this orbit and not a universal separation of two sources of error.) The table shows both. In the columns for <code>eps2</code> = 1e-8 the dip falls by a factor of 4.00 for each halving of <code>dt</code>, and the end-of-orbit departure is 3 parts in 10<sup>12</sup> or less. At the default <code>eps2</code> the factors are 2.84 and 3.98 and the end-of-orbit departure is 10<sup>&minus;6</sup> to 10<sup>&minus;5</sup>. The reason is that the corrector repeated at <code>dt</code> = 2000, in the steps around closest approach, and never repeats in the whole run at <code>dt</code> = 1000 or 500 (Beat 5). The default <code>eps2</code> therefore stops doing its work as <code>dt</code> falls, and the end-of-orbit departure cannot be expected to fall with <code>dt</code>.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Energy departure against dt and eps2"><table class="compare-table">
 <thead><tr><th>dt (s)</th><th>Accepted steps<br/>eps2 = 1e-4 / 1e-8</th><th>Row 0.5<br/>eps2 = 1e-4</th><th>Row 0.5<br/>eps2 = 1e-8</th><th>Row 1.0<br/>eps2 = 1e-4</th><th>Row 1.0<br/>eps2 = 1e-8</th></tr></thead>
 <tbody>
 <tr><td>2000</td><td>2284 / 2284</td><td>&minus;1.2814e-03</td><td>&minus;1.1854e-03</td><td>&minus;3.1646e-06</td><td>3.2091e-12</td></tr>
 <tr><td>1000</td><td>4569 / 4568</td><td>&minus;4.5152e-04</td><td>&minus;2.9623e-04</td><td>1.0168e-05</td><td>&minus;9.4305e-15</td></tr>
 <tr><td>500</td><td>9137 / 9137</td><td>&minus;1.1354e-04</td><td>&minus;7.405e-05</td><td>1.2713e-06</td><td>&minus;4.7152e-16</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>A tolerance is not an error bound. Tightening a tolerance makes a test more demanding and can cost more computation (the strict corrector of Beat 5 cost 1.6 times as many acceleration evaluations), but there is no universal factor that turns a change in a tolerance into a change in the energy error. The way to know how good a number is, is to repeat the run with a shorter <code>dt</code> and a stricter <code>eps2</code> and see whether the number you care about stops changing. Choose the setting by what you care about: halve <code>dt</code> to improve the picture at closest approach, and tighten <code>eps2</code> to improve what is left in the energy after many orbits.</p>
 <p>The default orbit is a mild test, because its eccentricity is 0.767. For a much more eccentric orbit the settings that suffice here do not. With <code>--uInitA 1000 --uInitB -1000</code>, an orbit with eccentricity 0.99862 and a closest approach of 6.3451&times;10<sup>7</sup> m, the default settings finish after 2456 steps and 43.231 days, although the Keplerian period is 43.956 days, and row 1.0 of the last column is &minus;4.2836e-03: the energy dropped by 0.43% during the passage of closest approach and has not come back. The default <code>eps1</code> is too loose for that orbit; Experiment 8 tightens it. And at the extreme, a head-on start, such as <code>--uInitA 0 --uInitB 0</code>, falls to zero separation, where Eq. (1) is infinite. The step needed shrinks below the floor of Beat 6 and the program stops with a message that the required timestep has fallen below the numerical safety limit.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
@@ -747,7 +752,7 @@ python main.py --dt 1000 --eps2 1e-8</pre>
 <section id="equations">
 <h2>Governing Equations</h2>
 <p>The ten numbered equations, with the kind of statement each one is, the beat that introduces it, and where the program evaluates it. A few unnumbered relations are derived inside the beats where they are needed and are listed after the table.</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Index of the numbered equations"><table>
 <thead><tr><th>Equation</th><th>Kind</th><th>What it says</th><th>Beat</th><th>Where in the code</th></tr></thead>
 <tbody>
 <tr><td>(1)</td><td><span class="kind kind-law">LAW</span></td><td>Newton's law of gravitation</td><td>0</td><td><code>accelerations()</code>, <code>energies()</code> in <code>physics_binary.py</code></td></tr>
@@ -760,7 +765,7 @@ python main.py --dt 1000 --eps2 1e-8</pre>
 <tr><td>(8)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Euler predictor</td><td>5</td><td><code>integrate_binary()</code> in <code>driver_binary.py</code></td></tr>
 <tr><td>(9)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Iterated trapezoidal corrector</td><td>5</td><td><code>integrate_binary()</code> in <code>driver_binary.py</code></td></tr>
 <tr><td>(10)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Acceleration-change test for the step size</td><td>6</td><td><code>integrate_binary()</code> and <code>_vector_relative_change()</code> in <code>driver_binary.py</code></td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>The unnumbered relations are the kinetic energy of a pair whose centre of mass moves (Beat 2, DERIVED); the angular momentum at the two apsides, Kepler's third law, and the velocity-space circle with its eccentricity (Beat 4, DERIVED, computed by <code>orbital_elements()</code> in <code>physics_binary.py</code>); the one-revolution stopping rule (Beat 4, ALGORITHM, <code>_signed_angle_increment()</code>, <code>_compensated_add()</code> and <code>integrate_binary()</code> in <code>driver_binary.py</code>); and the corrector convergence test (Beat 5, ALGORITHM, <code>_vector_relative_change()</code> in <code>driver_binary.py</code>).</p>
 </section>
 <section id="algorithm">
@@ -829,7 +834,7 @@ python main.py --dt 1000 --eps2 1e-8</pre>
 <p>
       Use <code>--no-stop_after_one_orbit</code> to continue for the full
       <code>max_steps</code> accepted steps. This is useful for unbound trajectories
-      and long-term energy-conservation tests.
+      and long-term energy-conservation tests. A run can also end earlier with an error, for example when an inward radial start reaches the close-approach safety limit (Beat 7).
     </p>
 <div class="note">
 <strong>Safety limit:</strong> <code>max_steps</code> is always enforced.
@@ -837,7 +842,7 @@ python main.py --dt 1000 --eps2 1e-8</pre>
     </div>
 <h3>Tolerances</h3>
 <p>Two independent dimensionless tolerances control the integration.</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Tolerance parameters"><table>
 <thead><tr><th>Parameter</th><th>Default</th><th>Role</th></tr></thead>
 <tbody>
 <tr>
@@ -852,20 +857,20 @@ python main.py --dt 1000 --eps2 1e-8</pre>
               the timestep to be halved and retried.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>
       Tighter tolerances make the local acceptance and convergence tests more
       demanding and can require more computation. They do not act on the same error as <code>dt</code>:
       reducing <code>dt</code> lowers the dip in the total energy at closest approach roughly as the square of
       <code>dt</code> (Beat 7), while tightening <code>eps2</code> lowers what remains of the departure at the end
-      of the orbit (Beat 5). There is no universal factor
+      of the orbit in the runs of Beats 5 and 7. There is no universal factor
       relating a tolerance change to an energy-error change, so accuracy should be
       established by a convergence test.
     </p>
 <div class="note">
 <strong>Tip:</strong> If the total energy shows a noticeable dip or drift, first decide which it is (Beat 7).
       A dip at closest approach that returns by the end of the orbit responds mainly to a smaller <code>dt</code>.
-      A departure that remains at the end of the orbit responds to a smaller <code>eps2</code>, and the
+      In the runs of Beat 7, a departure that remains at the end of the orbit responds to a smaller <code>eps2</code>, and the
       motion of a very eccentric orbit responds to a smaller <code>eps1</code> (Experiment 8). Tightening any
       of these makes the tests more demanding, but the improvement is problem-dependent.
       The safest test is to repeat the same physical run with stricter numerical
@@ -970,7 +975,7 @@ python main.py --help</pre>
 <section id="parameters">
 <h2>Command-Line Parameters</h2>
 <p>Run <code>python main.py --help</code> for the current list and defaults. Set only the options you wish to change; all other values use their defaults. The x velocity is <code>v</code> and the y velocity is <code>u</code>.</p>
-<table><thead><tr><th>Option</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead><tbody>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Command-line options"><table><thead><tr><th>Option</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>--MA</code>, <code>--MB</code></td><td>2e30 each</td><td>kg</td><td>Masses of A and B</td></tr>
 <tr><td><code>--xInitA</code>, <code>--xInitB</code></td><td>+4.6e10, -4.6e10</td><td>m</td><td>Initial x coordinates</td></tr>
 <tr><td><code>--yInitA</code>, <code>--yInitB</code></td><td>0, 0</td><td>m</td><td>Initial y coordinates</td></tr>
@@ -982,7 +987,7 @@ python main.py --help</pre>
 <tr><td><code>--eps2</code></td><td>1e-4</td><td>—</td><td>Corrector velocity-change threshold</td></tr>
 <tr><td><code>--stop_after_one_orbit</code>, <code>--no-stop_after_one_orbit</code></td><td>stop</td><td>—</td><td>Stop after a relative revolution or run to max_steps</td></tr>
 <tr><td><code>--output_type</code></td><td>orbits</td><td>—</td><td>Choose one of the seven plots below</td></tr>
-</tbody></table>
+</tbody></table></div>
 <div class="note">All numeric inputs must be finite real numbers. Masses and <code>dt</code> must be positive; <code>max_steps</code> must be a positive integer; both tolerances must lie strictly between zero and one (0 and 1 are not allowed); and the bodies must have nonzero initial separation. Extremely large or small inputs that put a derived displacement, acceleration, or energy outside the range of double-precision arithmetic are rejected with an error. For both bodies' accelerations and for potential, kinetic, and total energy, this includes overflow and a nonzero result so small that it would round to zero.</div>
 </section>
 <section id="output-types">
@@ -1029,7 +1034,7 @@ Fraction     Day            Potential U         Kinetic K          Total E      
 <p>Line by line:</p>
 <ul>
 <li><code>Accepted steps</code> is the number of steps the program kept. Trial steps that were rejected and halved (Beat 6) are not counted.</li>
-<li><code>Termination</code> is <code>one relative revolution</code> when the stopping rule of Beat 4 ended the run and <code>max_steps</code> when the safety ceiling did. An unbound or radial orbit cannot turn through a full circle, so it always ends at <code>max_steps</code>.</li>
+<li><code>Termination</code> is <code>one relative revolution</code> when the stopping rule of Beat 4 ended the run and <code>max_steps</code> when the safety ceiling did. An unbound or radial orbit cannot turn through a full circle, so the one-revolution rule cannot stop it; if the integration stays numerically viable it runs to <code>max_steps</code>. An inward radial start can instead stop early with the close-approach safety error (Beat 7).</li>
 <li><code>Total revolutions</code> is the angle swept by the relative position, divided by 2&pi;. The one-revolution stopping test can overshoot the exact full turn by one accepted step, so a completed run can read slightly more than 1.</li>
 <li><code>Total time</code> is the simulated time in days. <code>Minimum separation (sampled)</code> and <code>Maximum separation (sampled)</code> are the smallest and largest separations among the accepted states, so the true closest approach can lie between two states when the steps are large (Beat 6).</li>
 <li><code>Initial Keplerian orbit</code> gives the kind of orbit that the starting state defines, <code>elliptic</code>, <code>parabolic</code>, <code>hyperbolic</code> or <code>radial</code>, and its eccentricity. It is computed by exact two-body formulas from the initial positions and velocities in the frame of the centre of mass. A common velocity boost changes the plotted inertial-frame kinetic energy but does not change these elements (Beat 2). A start is called parabolic when the relative speed matches the escape speed to about one part in 10<sup>12</sup>; a start only slightly above escape speed is <code>hyperbolic</code> even though its eccentricity prints as 1 (Experiment 6). A radial start, with zero angular momentum, prints an extra line saying that its apsides and period are undefined.</li>
@@ -1139,7 +1144,7 @@ python main.py --uInitA 38091.13784870039 --uInitB -38091.13784870039 --no-stop_
       \(u_A=-v_{\rm rel}M_B/(M_A+M_B)\), and
       \(u_B=+v_{\rm rel}M_A/(M_A+M_B)\), with both y-positions and x-velocities zero.
     </p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Bodies of the stellar reflex experiment"><table>
 <thead><tr><th>Body</th><th>Mass (kg)</th><th>Mean Sun–planet separation (m)</th></tr></thead>
 <tbody>
 <tr><td>Sun</td><td>\(1.989\times10^{30}\)</td><td>—</td></tr>
@@ -1147,7 +1152,7 @@ python main.py --uInitA 38091.13784870039 --uInitB -38091.13784870039 --no-stop_
 <tr><td>Saturn</td><td>\(5.683\times10^{26}\)</td><td>\(1.434\times10^{12}\)</td></tr>
 <tr><td>Earth</td><td>\(5.972\times10^{24}\)</td><td>\(1.496\times10^{11}\)</td></tr>
 </tbody>
-</table>
+</table></div>
 <p>
       Start with Jupiter and examine the Sun's small barycentric orbit; its radius
       should be slightly larger than the Sun's radius,
@@ -1177,18 +1182,33 @@ python main.py --no-stop_after_one_orbit --dt 1000 --max_steps 14000 --output_ty
 <p>
       Neither the plot nor the printed table can give that maximum. The plot shows \(E\) as an almost flat line, and the
       eleven rows of the table fall at multiples of 16.2 days, while the closest approaches are at days 26.4, 79.3 and
-      132.2. Read every stored state with a short script, run in the program's folder:
+      132.2. Read every stored state with a short script. Save it in the program's folder, for example as <code>largest_departure.py</code>, and run it with <code>python largest_departure.py</code>:
     </p>
 <pre><code>from driver_binary import integrate_binary
-r = integrate_binary(2e30, 2e30, 4.6e10, 0, 0, 13000, -4.6e10, 0, 0, -13000,
-                     2000, 7000, 0.05, 1e-4, stop_after_one_orbit=False)
-print(max(abs(e - r.E[0]) / abs(r.E[0]) for e in r.E))</code></pre>
+
+def largest_departure(**changes):
+    settings = dict(MA=2e30, MB=2e30,
+                    xInitA=4.6e10, yInitA=0, vInitA=0, uInitA=13000,
+                    xInitB=-4.6e10, yInitB=0, vInitB=0, uInitB=-13000,
+                    dt=2000, max_steps=7000, eps1=0.05, eps2=1e-4,
+                    stop_after_one_orbit=False)
+    settings.update(changes)
+    r = integrate_binary(**settings)
+    return max(abs(e - r.E[0]) / abs(r.E[0]) for e in r.E)
+
+print(largest_departure())
+print(largest_departure(dt=1000, max_steps=14000))
+print(largest_departure(dt=1000, max_steps=14000, eps2=1e-8))
+print(largest_departure(uInitA=1000, uInitB=-1000, max_steps=400000, stop_after_one_orbit=True))
+print(largest_departure(uInitA=1000, uInitB=-1000, max_steps=400000, stop_after_one_orbit=True, eps1=0.001))
+print(largest_departure(uInitA=1000, uInitB=-1000, max_steps=400000, stop_after_one_orbit=True, eps1=0.001, eps2=1e-8))</code></pre>
 <p>
-      The arguments are the two masses, the starting position and velocity of each body, <code>dt</code>,
-      <code>max_steps</code>, <code>eps1</code>, <code>eps2</code> and the stopping flag. This gives 1.2853e-03, reached at the third closest
-      approach. With <code>dt</code> 1000 and <code>max_steps</code> 14000 it gives 4.5163e-04, and with <code>eps2</code> 1e-8 as
-      well it gives 2.9623e-04, which is Beat 7's factor of 4 per halving of <code>dt</code> again. The printed <code>Total revolutions</code>
-      is 3.0136 for the first run and 3.0133 for the second.
+      The function starts from the default orbit, with the one-revolution stop off, and replaces only the settings you name.
+      The first three lines of output are the three-orbit comparison. The first, for the default settings, is 1.2853e-03,
+      reached at the third closest approach. With <code>dt</code> 1000 and <code>max_steps</code> 14000 it is 4.5163e-04, and with
+      <code>eps2</code> 1e-8 as well it is 2.9623e-04, which is Beat 7's factor of 4 per halving of <code>dt</code> again. The printed
+      <code>Total revolutions</code> is 3.0136 for the first run and 3.0133 for the second. The script prints each fraction to full precision,
+      so the first line begins 0.00128. The last three lines are for the much more eccentric orbit tried next.
     </p>
 <p>
       Then try an orbit much more eccentric than the default:
@@ -1197,9 +1217,10 @@ print(max(abs(e - r.E[0]) / abs(r.E[0]) for e in r.E))</code></pre>
 python main.py --uInitA 1000 --uInitB -1000 --max_steps 400000 --eps1 0.001</code></pre>
 <p>
       The eccentricity is 0.99862 and the Keplerian period is 43.956 days. With the default settings the run takes 2456 steps and
-      stops after 43.231 days, and the script above, with these initial conditions, reports a largest departure of 25.9%. With
-      <code>eps1</code> = 0.001 the run takes 43303 steps, stops after 43.97 days, and the largest departure is 2.0184e-04. Add
-      <code>--eps2 1e-8</code> as well and it falls to 1.0371e-04. The default <code>eps1</code> was chosen for the default orbit;
+      stops after 43.231 days, and the fourth line of the script, which uses the same settings and the one-revolution stop that
+      these commands leave on, reports a largest departure of 25.9%. With
+      <code>eps1</code> = 0.001 the run takes 43303 steps, stops after 43.97 days, and the largest departure, on the fifth line, is 2.0184e-04. Add
+      <code>--eps2 1e-8</code> as well and it falls to 1.0371e-04, the sixth line. The default <code>eps1</code> was chosen for the default orbit;
       an orbit whose acceleration changes as violently as this needs a much smaller one (Beat 7).
     </p>
 </section>
