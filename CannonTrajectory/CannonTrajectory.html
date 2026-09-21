@@ -404,6 +404,56 @@
     footer a { color: #e0c090; text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
+    /* ── Beats layout additions ── */
+    .kind {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-left: 4px;
+      vertical-align: 1px;
+    }
+    .kind-ode { background: #d9ead3; color: #274e13; border: 1px solid #a8c69a; }
+    .kind-def { background: #e4e4e4; color: #3a3a3a; border: 1px solid #b5b5b5; }
+    .kind-der { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
+    .kind-alg { background: #e6e0f8; color: #3d2c73; border: 1px solid #b7abdd; }
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .compare-table th {
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 11px;
+      letter-spacing: .04em;
+      padding: 8px 10px;
+      text-align: right;
+    }
+    .compare-table th:first-child { text-align: left; }
+    .compare-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-family: var(--mono);
+    }
+    .compare-table td:first-child { text-align: left; }
+    .compare-table tr:nth-child(even) td { background: var(--note-bg); }
+    main { min-width: 0; }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .module-grid { grid-template-columns: repeat(auto-fill, minmax(min(370px, 100%), 1fr)); }
+    .experiment-card p + p, .experiment-card p + pre + p { margin-top: 8px; }
+    .experiment-card .exp-beat { font-family: var(--sans); font-size: 0.8rem; color: var(--muted); }
+    section ul { margin: 0 0 14px 1.4em; }
+    section ul li, section ol li { margin-bottom: 6px; }
+    section ol { margin: 0 0 14px 1.6em; }
+    .code-block { max-width: 100%; }
+
     /* ── Scrollspy highlight ── */
     @media (max-width: 700px) {
       .page-wrap { grid-template-columns: 1fr; }
@@ -414,7 +464,6 @@
 </head>
 <body>
 <div class="page-wrap">
-<!-- ═══════════════════════════════════════════════════════ HEADER -->
 <header>
 <div class="badge">CHAPTER 1 · INVESTIGATION 1.3</div>
 <h1><em>CannonTrajectory</em> — Newtonian Projectile Motion</h1>
@@ -426,30 +475,40 @@
             <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
       </div>
 </header>
-<!-- ═══════════════════════════════════════════════════════ SIDEBAR NAV -->
 <nav id="sidebar">
-<div class="nav-label">Contents</div>
-<a href="#description">Description</a>
-<a href="#background">Physical Background</a>
+<div class="nav-label">Overview</div>
+<a href="#overview">Overview</a>
+<a href="#beats">How to read this page</a>
+<div class="nav-label">Beats</div>
+<a href="#beat0">0 · One launch, two motions</a>
+<a href="#beat1">1 · The angle splits the speed</a>
+<a href="#beat2">2 · The exact solution</a>
+<a href="#beat3">3 · Euler's method</a>
+<a href="#beat4">4 · Improved Euler</a>
+<a href="#beat5">5 · Between the samples</a>
+<a href="#beat6">6 · How far to trust it</a>
+<a href="#beat7">7 · Where the model stops</a>
+<div class="nav-label">Code</div>
 <a href="#equations">Governing Equations</a>
 <a href="#algorithm">Algorithm</a>
 <a href="#modules">Code Modules</a>
+<div class="nav-label">Usage</div>
+<a href="#quickstart">Quick Start</a>
 <a href="#parameters">Parameters</a>
 <a href="#output">Output</a>
+<a href="#summary">Printed Summary</a>
 <div class="nav-label">Experiments</div>
 <a href="#experiments">Suggested Experiments</a>
 <div class="nav-label">Reference</div>
 <a href="#related">Related Programs</a>
 <a href="#license">License</a>
 </nav>
-<!-- ═══════════════════════════════════════════════════════ MAIN -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build 8a19fe772044
+  Version 1.3.1&nbsp;&nbsp;&nbsp;&nbsp;Build 8f21955760d2
 </p>
-<!-- ── Description ─────────────────────────────────────────── -->
-<section id="description">
-<h2>Description</h2>
+<section id="overview">
+<h2>Overview</h2>
 <p>
 <strong>CannonTrajectory</strong> is the most elementary program in the GFtGU suite.
         It computes the trajectory of a projectile — a cannonball, a thrown ball, or any object
@@ -465,144 +524,279 @@
         timesteps gives immediate, visual intuition for the meaning of numerical accuracy and
         convergence — essential preparation for the more demanding integrators used in later chapters.
       </p>
+<p>The spine of the lesson is one sentence: <em>gravity pulls only downward, so the sideways and the vertical motion do not affect each other and the path is an exact parabola; that exactness gives formulas to check the program against, and how the program's numbers depart from them shows how a step-by-step calculation goes right and where it goes wrong.</em> Each numbered section below is one beat: a short argument, a command whose printed summary or figure illustrates it, and then the equation that the printed numbers follow from.</p>
+<div class="note-box">
+<strong>Scope:</strong> CannonTrajectory is valid for motion over distances that are small compared with Earth's radius
+      (\(R_\oplus \approx 6.4\times10^6\) m); a projectile launched at 100&nbsp;m/s travels only about one kilometre
+      horizontally. <em>EarthOrbit</em> and <em>Orbit</em> treat gravity over larger scales.
+    </div>
+<div class="warn-box"><strong>What this program is, and what it does not model.</strong> CannonTrajectory is a teaching model of a projectile in a vacuum over flat ground, with one constant gravitational acceleration \(g=9.80665\;\text{m s}^{-2}\). It has no air resistance, no wind, no curvature or rotation of the Earth, no change of gravity with height, and no launch from anywhere but ground level. Its two integrators are simple, and the printed range, maximum height and flight time are estimates made from samples that are one timestep apart, not exact values. Use it to see how a projectile's motion follows from its equations and to learn how to judge a numerical result. Beats 3 to 6 show how, and Beat 7 collects the limits.</div>
 <div class="note-box"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
-<!-- ── Physical Background ─────────────────────────────────── -->
-<section id="background">
-<h2>Physical Background</h2>
-<h3>Near-surface approximation</h3>
-<p>
-Close to Earth's surface, gravitational acceleration is approximately constant.
-This program uses the conventional standard value
-\(g_0 = 9.80665\;\text{m s}^{-2}\) downward. Actual local gravity varies slightly
-with latitude, altitude, and geology, but that variation is unimportant here.
-The constant-gravity approximation is excellent
-for trajectories whose dimensions are small compared with Earth's radius
-(\(R_\oplus \approx 6.4\times10^6\) m). A projectile launched at 100 m/s
-travels only about one kilometre horizontally.
-</p>
-<h3>No air resistance</h3>
-<p>
-The program models vacuum flight. Real aerodynamic drag can noticeably shorten
-the range even at ordinary projectile speeds, although the trajectory still has
-the same qualitative rising-and-falling form. Omitting drag keeps the equations
-simple enough to solve analytically, so the numerical result can be checked
-against an exact answer.
-</p>
-<h3>Horizontal and vertical independence</h3>
-<p>
-Because gravity acts only vertically and drag is absent, horizontal and vertical
-motion are independent. The horizontal velocity remains constant, while the
-vertical velocity changes at the constant rate \(-g\). Both numerical methods
-preserve this separation of the equations exactly. That does <em>not</em> mean
-forward Euler reproduces the exact parabola: Euler still has a vertical-position
-discretization error.
-</p>
+<section id="beats">
+<h2>How to read this page</h2>
+<p>Each numbered section below is one beat: a short argument in words, a command whose output illustrates it, and then the equation that the output follows from. Do them in order the first time. After that, any beat can be opened on its own.</p>
+<p>The program's output is a consequence of its equations, so what a beat shows is the equations at work, not independent evidence that they are right. The outside check the program offers is the exact solution of Beat 2, which is simple enough to work out by hand. Beats 3 to 6 compare the program's numbers with it.</p>
+<p>Every beat uses the same program and, unless a run stops with an error (Beat 7), the same four printed lines. What changes from beat to beat is the command. Beat 0 runs the default launch, Beat 1 changes the launch angle, Beat 2 changes the launch speed and works out the exact solution, Beat 3 changes the integration method and the timestep, Beat 4 uses the better method, Beat 5 looks at how the printed range, height and time are estimated between samples, Beat 6 tabulates the errors, and Beat 7 collects the limits of the model and of the run.</p>
+<p>Run every command from the program's folder. Each run prints a summary and then opens a plot window; close the window to end the program. Each beat names the printed lines to look at. In several beats the printed numbers are what to study and the plot can be left until later. Lengths are in metres, speeds in metres per second and times in seconds, and the printed values have five significant figures.</p>
+<div class="note-box"><strong>What kind of statement is each equation?</strong> Each displayed equation in the beats carries a tag. A green <span class="kind kind-ode">ODE</span> tag marks a differential equation that the program integrates; the constant acceleration on the right-hand side of Eqs. 1 and 2 is the assumption on which the whole model rests, and the program adopts it and does not derive it. A grey <span class="kind kind-def">DEFINITION</span> tag marks a quantity that is defined by a formula. A blue <span class="kind kind-der">DERIVED</span> tag marks a result that follows from the equations already stated. A violet <span class="kind kind-alg">ALGORITHM</span> tag marks a rule of the numerical method, which is a choice made by the program rather than physics: Eqs. 6 to 11. The tags are there so that an assumption, a definition and a numerical rule are never mistaken for one another. Eleven equations are numbered; a few unnumbered ones are derived where they are needed.</div>
 </section>
-<!-- ── Governing Equations ─────────────────────────────────── -->
-<section id="equations">
-<h2>Governing Equations</h2>
-<h3>Equations of motion</h3>
-<p>
-        With \(x\) the horizontal distance, \(h\) the height, \(u\) the horizontal velocity, and
-        \(v\) the vertical velocity, the continuous equations of motion are:
-      </p>
+<section id="beat0">
+<h2>Beat 0 · One launch, two motions</h2>
+<p>A cannonball leaves the ground at 100&nbsp;m/s, 45° above the horizontal. Gravity pulls it downward with the same strength all along its path, and nothing else acts on it: no air, no wind. Ask the program where it comes down.</p>
+<pre class="code-block"><code>python main.py</code></pre>
+<p>Look at the trajectory plot and at the four printed lines: the number of trajectory samples, the range, the maximum height and the flight time.</p>
+<p>Three tasks, in order. First, read the numbers: 146 trajectory samples, a range of 1019.7 m, a maximum height of 254.93 m and a flight time of 14.421 s. The ball travels about a kilometre sideways and climbs to about a quarter of that. Then look at the plot: one symmetric arch, highest at about 509.9 m along, halfway to the landing point, and its last plotted point lies a little below the ground line. Both axes use the same scale, so the arch is drawn true to shape. Then count: the samples are 0.1 s apart and there are 146 of them, so the last one is 145 steps after the launch, at 14.5 s. That is later than the flight time of 14.421 s because the program stops at the first sample below the ground and then estimates where the ball actually crossed it (Beat 5). Before reading on, write down what you expect to happen to the range, the height and the flight time if the launch speed is doubled.</p>
+<p><em>Then</em> the equations behind the arch. Let \(x\) be the horizontal distance, \(h\) the height, \(u\) the horizontal velocity and \(v\) the vertical velocity. Gravity has no horizontal part, so \(u\) never changes; its vertical part changes \(v\) at the constant rate \(-g\):</p>
 <div class="eq-block">
-<div class="eq-label">Eq. 1 — Horizontal kinematics</div>
+<div class="eq-label">Eq. 1 — Horizontal kinematics <span class="kind kind-ode">ODE</span></div>
         \[
           \frac{dx}{dt} = u, \qquad \frac{du}{dt} = 0.
         \]
       </div>
 <div class="eq-block">
-<div class="eq-label">Eq. 2 — Vertical kinematics</div>
+<div class="eq-label">Eq. 2 — Vertical kinematics <span class="kind kind-ode">ODE</span></div>
         \[
           \frac{dh}{dt} = v, \qquad \frac{dv}{dt} = -g.
         \]
       </div>
-<p>
-        In the code these four rates of change are returned by
-        <code>derivs_cannon(state)</code> as the NumPy array
-        \([u,\; v,\; 0,\; {-g}]\), corresponding to the state vector
-        \(\mathbf{s} = [x,\; h,\; u,\; v]\).
-      </p>
-<h3>Initial conditions</h3>
-<p>
-        The projectile is launched from the origin with speed \(v_0\) at angle \(\theta\) above
-        the horizontal:
-      </p>
+<p>The program keeps the four quantities together as the state vector \(\mathbf{s} = [x,\; h,\; u,\; v]\), and <code>derivs_cannon(state)</code> in <code>physics_cannon.py</code> returns their rates of change as the NumPy array \([u,\; v,\; 0,\; {-g}]\). The value is \(g=9.80665\;\text{m s}^{-2}\), the conventional standard acceleration due to gravity. Actual local gravity varies slightly with latitude, altitude and geology, but that variation is unimportant here. The right-hand sides of Eqs. 1 and 2 hold the model's whole physical assumption, a constant acceleration and no drag. Everything after them on this page is either a consequence of that assumption or a way of computing what it implies.</p>
+<p><strong>Notation.</strong> In the equations and in the code, \(v\) is the vertical velocity component, which changes during the flight. The launch speed, the number given to <code>--speed</code>, is written \(v_0\) with a subscript, and its vertical part is \(v_{0y}\) (Eq. 3). They are different quantities.</p>
+<p>Nothing in Eq. 1 mentions \(h\) or \(v\), and nothing in Eq. 2 mentions \(x\) or \(u\). Beat 1 asks what that independence means for a launch at an angle.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat1">
+<h2>Beat 1 · The angle splits the speed</h2>
+<p>Because the sideways and the vertical motion do not affect each other, all that a launch angle does is decide how the launch speed is shared between them: a fraction cos&thinsp;θ of it goes sideways and a fraction sin&thinsp;θ goes upward. Try four angles at the same speed.</p>
+<pre class="code-block"><code>python main.py --angle_deg 30
+python main.py --angle_deg 60
+python main.py --angle_deg 0
+python main.py --angle_deg 90</code></pre>
+<p>In each run look at the four printed lines and at the arch. Keep the default run of Beat 0 beside you: 45° gave 1019.7 m, 254.93 m and 14.421 s.</p>
+<p>Three tasks, in order. First, compare 30° and 60°. The ranges are 883.1 m and 883.09 m, the same to four figures, although the two arches are very different: at 30° the ball reaches 127.46 m in a flight of 10.197 s, and at 60° it reaches 382.39 m in a flight of 17.662 s. The steeper launch goes higher and stays up longer, yet lands at the same place. (The two printed ranges differ in the fifth figure. That is not physics; Beat 5 explains it.) Then the two limiting angles. At 0° the ball is fired along the ground and is already below it after the first step: 2 samples, and a range, height and flight time of 0. At 90° it goes straight up and comes back down: 205 samples, a height of 509.86 m and a flight time of 20.394 s. The range prints as 1.2488e-13 m, not 0. The sideways speed is \(100\cos 90°\) evaluated in floating point, 6.123e-15 m/s and not exactly zero, and the tiny drift it produces over the flight is what is printed. Then compare all four with the default: 45° gave the largest range of the five, 1019.7 m. Say how you would find out whether any other angle does better (Experiment 1).</p>
+<p><em>Then</em> what the program does with the angle. It converts the angle to radians and splits the speed into the two starting velocities. The projectile starts on the ground at the origin:</p>
 <div class="eq-block">
-<div class="eq-label">Eq. 3 — Launch conditions</div>
+<div class="eq-label">Eq. 3 — Launch conditions <span class="kind kind-def">DEFINITION</span></div>
         \[
           x_0 = 0, \quad h_0 = 0, \quad u_0 = v_0 \cos\theta, \quad v_{0y} = v_0 \sin\theta.
         \]
       </div>
-<h3>Analytic solution</h3>
-<p>
-        For this simple case an exact solution exists and can be used to verify the integrators:
-      </p>
+<p>The last two of these become the third and fourth components of the state vector, set in <code>run_cannon_trajectory()</code> in <code>driver_cannon.py</code>. The angle must lie between 0° and 90°, because the projectile starts on the ground. For the default launch \(u_0=v_{0y}=70.711\) m/s, equal because 45° splits the speed equally. Beat 2 solves Eqs. 1 to 3 exactly.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp4">Experiment 4</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat2">
+<h2>Beat 2 · The exact solution</h2>
+<p>With the sideways speed constant and the vertical speed changing at the steady rate &minus;<em>g</em>, both motions can be worked out exactly on paper. The result predicts the range, the height and the time for any launch, so the program can be checked against it. Before reading the formulas, predict what doubling the speed will do to the three printed results, then run it.</p>
+<pre class="code-block"><code>python main.py --speed 200
+python main.py --speed 50</code></pre>
+<p>Compare the three printed results in each run with those of Beat 0: 1019.7 m, 254.93 m and 14.421 s.</p>
+<p>Three tasks, in order. First, the doubled launch: a range of 4078.9 m, a height of 1019.7 m and a flight time of 28.842 s. Divide each by the default value. The range and the height are about four times as large, and the time is about twice as large. The half-speed launch does the reverse: 254.92 m, 63.732 m and 7.2104 s, about a quarter, a quarter and a half. (Its range prints as 254.92 and not as 254.93, which is a quarter of the exact range to five figures; the last digit is an interpolation effect, Beat 5.) Then ask why the range and the height depend on the square of the speed and the time only on the speed itself. Then check the default run against the formulas below. They give 1019.72 m, 254.93 m and 14.4210 s, the printed numbers to the figures shown.</p>
+<p><em>Then</em> the solution. Integrating Eq. 1 once gives a constant \(u=u_0\), and again \(x=u_0t\). Integrating Eq. 2 once gives \(v=v_{0y}-gt\), and again the height:</p>
 <div class="eq-block">
-<div class="eq-label">Eq. 4 — Analytic trajectory</div>
+<div class="eq-label">Eq. 4 — Analytic trajectory <span class="kind kind-der">DERIVED</span></div>
         \[
           x(t) = u_0\, t, \qquad h(t) = v_{0y}\, t - \tfrac{1}{2} g\, t^2.
         \]
       </div>
+<p>The ball is back on the ground when \(h=0\) again, and is highest halfway through the flight, when \(v=0\). Both follow from Eq. 4:</p>
 <div class="eq-block">
-<div class="eq-label">Eq. 5 — Range formula</div>
+<div class="eq-label">Flight time and maximum height (unnumbered) <span class="kind kind-der">DERIVED</span></div>
+        \[
+          T = \frac{2\,v_{0y}}{g}, \qquad H = \frac{v_{0y}^{\,2}}{2g}.
+        \]
+      </div>
+<p>The range is the horizontal distance covered in the time of flight, \(R=u_0T\), which with Eq. 3 is</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 5 — Range formula <span class="kind kind-der">DERIVED</span></div>
         \[
           R = \frac{v_0^2 \sin 2\theta}{g}.
         \]
       </div>
-<p>
-        The range is maximised at \(\theta = 45°\), which is why the default firing angle is 45°.
-        For \(v_0 = 100\) m/s, the analytic range is \(R \approx 1019.72\) m.
-      </p>
-<h3>Euler method</h3>
-<p>
-        The simplest time integrator advances the state by one step using only the derivative
-        at the beginning of the interval:
-      </p>
+<p>All three grow with the launch speed: \(R\) and \(H\) as \(v_0^2\) and \(T\) as \(v_0\), which is what the two runs showed. Because \(\sin 2\theta\) is largest when \(2\theta=90°\), the range is greatest at \(\theta=45°\), which is why the default firing angle is 45°. And because \(\sin 2\theta=\sin(180°-2\theta)\), the angles \(\theta\) and \(90°-\theta\) have the same range, the pair you saw at 30° and 60°. In this model nothing else enters: not the mass or the shape of the ball. A real projectile is slowed by the air, which the program does not model.</p>
+<p>For \(v_0=100\) m/s at 45° the exact values are \(u_0=v_{0y}=70.711\) m/s, \(T=14.4210\) s, \(H=254.929\) m and \(R=1019.72\) m (more precisely, \(1019.7162\) m). The next two beats show how well the two integrators reproduce them.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat3">
+<h2>Beat 3 · Stepping forward: Euler's method</h2>
+<p>The formulas of Beat 2 need someone who can integrate. The program instead advances the state a small step \(\Delta t\) at a time, using only the rates of change of Eqs. 1 and 2, and stores the state after every step. The simplest way to take a step is to assume that the rates stay as they are at its start. This is forward Euler. Run it with a coarse step and compare with the exact answer of Beat 2.</p>
+<pre class="code-block"><code>python main.py --method euler --dt 0.5</code></pre>
+<p>Look at the four printed lines and compare them with Beat 0, and look at the arch.</p>
+<p>Three tasks, in order. First, compare with the default run, which is very close to the exact answer. There are 31 samples instead of 146. The range is 1054.9 m against 1019.72 m, so 35.2 m, or 3.5%, too long. The maximum height is 272.91 m against 254.93 m, 18.0 m too high. The flight time is 14.919 s against 14.4210 s, 0.50 s too long. All three errors have the same sign: Euler's ball goes too high, stays up too long and lands too far away. Then repeat with <code>--dt 0.2</code>, <code>0.1</code>, <code>0.05</code> and <code>0.02</code>. The printed ranges are 1054.9, 1033.8, 1026.8, 1023.2 and 1021.1 m for \(\Delta t=\) 0.5, 0.2, 0.1, 0.05 and 0.02 s, so the errors are 35.2, 14.1, 7.06, 3.53 and 1.41 m. Then divide each error by its \(\Delta t\): the quotients are 70.4, 70.6, 70.6, 70.7 and 70.7 m/s. Every one is close to the sideways speed \(u_0=70.711\) m/s. Halving the step halves the error, which is what &ldquo;first-order&rdquo; means.</p>
+<p><em>Then</em> the step itself. Here \(\mathbf f(\mathbf s)=[u,\,v,\,0,\,{-g}]\) is the derivative vector of Eqs. 1 and 2:</p>
 <div class="eq-block">
-<div class="eq-label">Eq. 6 — Forward Euler step</div>
+<div class="eq-label">Eq. 6 — Forward Euler step <span class="kind kind-alg">ALGORITHM</span></div>
         \[
-          \mathbf{s}_{n+1} = \mathbf{s}_{n} + \Delta t\; \mathbf{f}(\mathbf{s}_{n}),
+          \mathbf{s}_{n+1} = \mathbf{s}_{n} + \Delta t\; \mathbf{f}(\mathbf{s}_{n}).
         \]
       </div>
-<p>
-        where \(\mathbf{f}(\mathbf{s}) = [u,\, v,\, 0,\, {-g}]\) is the derivative vector.
-        Euler is first-order accurate: the global error is \(\mathcal{O}(\Delta t)\).
-      </p>
-<h3>Improved Euler method (Heun's method)</h3>
-<p>
-        The improved Euler method uses a <em>predictor–corrector</em> pair to achieve
-        second-order accuracy \(\mathcal{O}(\Delta t^2)\):
-      </p>
+<p>Euler is first-order accurate: the global error is \(\mathcal{O}(\Delta t)\). For this problem the steps can be added up exactly. Written out, Eq. 6 says \(x_{n+1}=x_n+u_0\Delta t\), \(v_{n+1}=v_n-g\Delta t\) and \(h_{n+1}=h_n+v_n\Delta t\), so after \(n\) steps, with \(t_n=n\Delta t\), the height is \(h_n=n\Delta t\,v_{0y}-g\Delta t^2\,n(n-1)/2\), which is</p>
 <div class="eq-block">
-<div class="eq-label">Eq. 7 — Heun predictor</div>
+<div class="eq-label">Euler's samples lie on a shifted parabola (unnumbered) <span class="kind kind-der">DERIVED</span></div>
+        \[
+          h_n = \bigl(v_{0y} + \tfrac12 g\,\Delta t\bigr)\,t_n - \tfrac12 g\,t_n^{\,2}.
+        \]
+      </div>
+<p>Euler's stored samples therefore lie exactly on a parabola, but not the right one. It is the exact trajectory of a projectile launched with an extra upward speed \(\tfrac12 g\Delta t\). Everything you saw follows from that. The ball stays up longer by exactly \(\Delta t\), so \(T_E=T+\Delta t\). It lands further by \(u_0\Delta t\), so \(R_E=R+u_0\Delta t\). And it climbs higher by \(v_{0y}\Delta t/2+g\Delta t^2/8\). At \(\Delta t=0.5\) s these predict a range of 1055.07 m, a time of 14.921 s and a height of 272.91 m; the program printed 1054.9 m, 14.919 s and 272.91 m. The height agrees exactly. The printed range and time are a little smaller than predicted because the program locates the landing between two samples with a straight line (Beat 5).</p>
+<p>One more check. Run <code>python main.py --method euler --angle_deg 0</code>. The ball is fired along the ground, and the exact answer is a range of 0, but Euler prints a range of 10 m and a flight time of 0.1 s, from 3 samples. The extra upward speed \(\tfrac12 g\Delta t=0.49\) m/s keeps the ball up for one step, and in that step it covers \(u_0\Delta t=10.0\) m.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat4">
+<h2>Beat 4 · A better step: improved Euler</h2>
+<p>Euler's flaw is that it uses the vertical velocity from the start of a step for the whole step, although the velocity is changing during it. Improved Euler, also called Heun's method, first makes a trial step to find the rates at the end of the step, and then advances with the average of the rates at the start and at the end. Run it beside Euler at the coarsest step used so far, \(\Delta t=1\) s.</p>
+<pre class="code-block"><code>python main.py --dt 1
+python main.py --method euler --dt 1</code></pre>
+<p>In each run look at the four printed lines. The improved method is the default, so the first command needs no <code>--method</code>.</p>
+<p>Three tasks, in order. First, the maximum height. The improved run prints 254.93 m, the exact value, although its highest stored sample, at \(t=7\) s, is only 254.71 m: the top of the arch, at 7.210 s, falls between two samples, and the program recovered it (Beat 5). Euler prints 291.51 m, which is 36.6 m too high. Then the range and the time. The improved run prints 1018.5 m and 14.404 s, which are 1.18 m and 0.017 s short of the exact 1019.72 m and 14.4210 s. Euler prints 1089.3 m and 15.405 s, 69.6 m and 0.98 s too long. Compare the two range errors: about one metre against about seventy. Then decide how much of the improved run's small remaining error belongs to the integrator. The answer is in the next beat, and it is none of it.</p>
+<p><em>Then</em> the method. The trial step is the Euler step of Eq. 6, and the average uses the derivative at both ends:</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 7 — Heun predictor <span class="kind kind-alg">ALGORITHM</span></div>
         \[
           \mathbf{s}^* = \mathbf{s}_{n} + \Delta t\; \mathbf{f}(\mathbf{s}_{n}).
         \]
       </div>
 <div class="eq-block">
-<div class="eq-label">Eq. 8 — Heun corrector</div>
+<div class="eq-label">Eq. 8 — Heun corrector <span class="kind kind-alg">ALGORITHM</span></div>
         \[
           \mathbf{s}_{n+1} = \mathbf{s}_{n} + \frac{\Delta t}{2}\bigl[\mathbf{f}(\mathbf{s}_{n}) + \mathbf{f}(\mathbf{s}^*)\bigr].
         \]
       </div>
-<p>
-        Because the derivatives are linear in this problem,
-        \(\mathbf{f}(\mathbf{s}^*) = \mathbf{f}(\mathbf{s}_n)
-        + [0,\; -g\,\Delta t,\; 0,\; 0]^T\): only the derivative of height changes
-        during the predictor step. The corrector therefore averages the initial and final
-        vertical velocities.
-        For horizontal motion, where the derivative is constant, both methods give the same
-        result. In fact, for constant gravitational acceleration Heun's method reproduces the
-        exact analytic position and velocity at the sampled times (apart from roundoff);
-        the apparent error in the final plotted range is dominated by locating the ground
-        crossing only at discrete timesteps.
-      </p>
+<p>Here \(\mathbf f(\mathbf s^*)\) has the same \(u\) and the same \(-g\) as \(\mathbf f(\mathbf s_n)\), and its vertical velocity is the trial value \(v_n-g\Delta t\), so \(\mathbf f(\mathbf s^*)=\mathbf f(\mathbf s_n)+[0,\,-g\Delta t,\,0,\,0]^T\). Only the derivative of the height changes during the trial step, and the corrector averages the initial and final vertical velocities. Substituting into Eq. 8 gives \(x_{n+1}=x_n+u_0\Delta t\), \(v_{n+1}=v_n-g\Delta t\) and</p>
+<div class="eq-block">
+<div class="eq-label">Heun's height update is exact here (unnumbered) <span class="kind kind-der">DERIVED</span></div>
+        \[
+          h_{n+1} = h_n + \tfrac{\Delta t}{2}\bigl[v_n + (v_n - g\Delta t)\bigr] = h_n + v_n\Delta t - \tfrac12 g\,\Delta t^{2}.
+        \]
+      </div>
+<p>which are exactly the formulas that Eq. 4 gives for the times \(t_n\) and \(t_{n+1}=t_n+\Delta t\). So every stored sample of the improved method lies on the exact parabola, whatever \(\Delta t\) is, apart from rounding error. In the runs of this page the stored heights differ from Eq. 4 by less than 10<sup>&minus;9</sup> m. This is special to a constant acceleration. For a force that changes along the path Heun's method is second-order accurate, its error falling like \(\Delta t^2\), but not exact. Experiment 7 breaks the exactness on purpose by changing the height update in one line.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-<!-- ── Algorithm ───────────────────────────────────────────── -->
+<section id="beat5">
+<h2>Beat 5 · Between the samples</h2>
+<p>The stored trajectory is a list of points that are \(\Delta t\) apart. The ball lands, and reaches its peak, between two of them. The last stored point is the first one below the ground, and the printed range, height and time are not read off the samples; they are estimated from them. See what the program has to work with in the \(\Delta t=1\) s run, where the effect is largest.</p>
+<pre class="code-block"><code>python main.py --dt 1
+python -c "from driver_cannon import run_cannon_trajectory as run; xs, hs = run(dt=1.0); print(xs[-2:], hs[-2:])"</code></pre>
+<p>The first command prints the summary. The second, run from the program's folder, prints the last two stored x coordinates and then the last two stored heights. Look at the printed range and flight time and at those two pairs of numbers.</p>
+<p>Three tasks, in order. First, the raw endpoint. The last stored point is at \(x=1060.66\) m and \(h=-42.59\) m, so the ball is 42.59 m below the ground there, and its \(x\) is 40.9 m beyond the exact range. The raw endpoint is a poor estimate of the range. Then interpolate by hand. The ball was 28.90 m above the ground at \(x=989.95\) m and 42.59 m below it at \(x=1060.66\) m. If it moved in a straight line between them, it crossed the ground a fraction 28.90&nbsp;/&nbsp;(28.90&nbsp;+&nbsp;42.59) = 0.404 of the way along, at <em>x</em> = 989.95 + 0.404 &times; (1060.66 &minus; 989.95) &approx; 1018.5 m, which is the printed range. The flight time is found the same way: 14 s + 0.404 &times; 1 s = 14.404 s, which is the printed time. Then the height. The highest stored sample is 254.71 m, at 7 s, between samples of 247.74 m and 251.87 m, and the printed height is 254.93 m. Explain why a parabola drawn through those three samples gives the exact maximum (Beat 4).</p>
+<p><em>Then</em> the three rules. Let \(h_{n-1}\ge0\) and \(h_n&lt;0\) be the last two stored heights. A straight line between the two samples crosses the ground at</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 9 — Landing point by linear interpolation <span class="kind kind-alg">ALGORITHM</span></div>
+        \[
+          x^* = x_{n-1} + (x_n - x_{n-1})\,\frac{h_{n-1}}{h_{n-1}-h_n}.
+        \]
+      </div>
+<div class="eq-block">
+<div class="eq-label">Eq. 10 — Flight time by linear interpolation <span class="kind kind-alg">ALGORITHM</span></div>
+        \[
+          T^* = t_{n-1} + \frac{h_{n-1}}{h_{n-1}-h_n}\,\Delta t.
+        \]
+      </div>
+<p>Eq. 9 is the printed range, and Eq. 10 the printed flight time, where \(t_{n-1}=(n-1)\Delta t\) is the time of the last stored sample at or above the ground. If \(h_{n-1}=0\) exactly, the fraction is 0 and that stored sample is already the landing point. For the maximum height, let \(h_k\) be the largest stored height, with neighbours \(h_{k-1}\) and \(h_{k+1}\), and let \(\delta=h_{k-1}-2h_k+h_{k+1}\). If \(\delta&lt;0\), the parabola through the three samples has its peak at</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 11 — Maximum height by a three-point parabola <span class="kind kind-alg">ALGORITHM</span></div>
+        \[
+          H^* = h_k - \frac{(h_{k+1}-h_{k-1})^2}{8\,\delta}.
+        \]
+      </div>
+<p>The program falls back to \(h_k\) itself if the largest sample is the first or the last one, if \(\delta\ge0\), or if the peak of the parabola lies more than half a step from \(t_k\). Otherwise it prints the larger of \(h_k\) and \(H^*\).</p>
+<p>These rules are exact for the height and slightly wrong for the range and the time, and the reason is the same in both cases. The samples of Beat 4 lie on a parabola, so a parabola through three of them is that same parabola, and its peak is the exact one. A straight line through two of them is not: for a downward-opening arch it lies below the arch between the two samples, by \(\tfrac12 g\Delta t^2\,s(1-s)\) at a fraction \(s\) of the way along. The line therefore reaches the ground a little too early, and the printed range and time are always a little short. The size of the error is</p>
+<div class="eq-block">
+<div class="eq-label">Error of the interpolated range (unnumbered) <span class="kind kind-der">DERIVED</span></div>
+        \[
+          R^* - R \;\approx\; -\,\frac{g\,\Delta t^{2}}{2}\,\frac{u_0}{v_{0y}}\;\varphi\,(1-\varphi).
+        \]
+      </div>
+<p>where \(\varphi\) is the fractional part of \(T/\Delta t\), that is, how far between two samples the landing falls, and \(u_0/v_{0y}=1\) for a 45° launch. The formula is a first-order estimate and holds when the flight spans many steps, at least about ten; it fails when the step is comparable with the whole flight. The factor \(\varphi(1-\varphi)\) is never more than \(\tfrac14\), so the printed range is short by at most about \(g\Delta t^2u_0/(8v_{0y})\), which is 1.23 m for \(\Delta t=1\) s and 0.0123 m for the default \(\Delta t=0.1\) s. For the run above \(\varphi=0.421\), and the formula predicts &minus;1.195 m against the measured &minus;1.182 m.</p>
+<p>That also explains two small mysteries from earlier beats. The 30° and 60° ranges of Beat 1 have the same exact range, 883.10 m. Their flights last 10.197 s and 17.662 s, so \(T/\Delta t\) falls at \(\varphi=0.972\) and \(0.620\) of the way between samples, the factor \(\varphi(1-\varphi)\) is 0.028 and 0.236, and the printed ranges are short by 0.0023 m and 0.0067 m, which is why they print as 883.1 and 883.09. The 50 m/s launch of Beat 2 has \(\varphi=0.105\) and is short by 0.0046 m, which turns an exact 254.929 m into the printed 254.92 m.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat6">
+<h2>Beat 6 · How far to trust a printed number</h2>
+<p>The exact answer of Beat 2 lets the program be graded. The two tables give, for the default launch, the printed values and the errors against the exact values of Eqs. 4 and 5, for a sequence of timesteps. The errors are computed from the unrounded values, so subtracting the printed digits by hand can differ from a tabulated error in its last place. To reproduce the tables, save this script beside the program modules as <code>convergence.py</code> and run it with <code>python convergence.py</code>:</p>
+<pre class="code-block"><code>from driver_cannon import (run_cannon_trajectory, interpolated_landing_range,
+                           interpolated_maximum_height, interpolated_flight_time)
+
+g = 9.80665
+T = 2 * (100 * 0.5 ** 0.5) / g
+H = (100 * 0.5 ** 0.5) ** 2 / (2 * g)
+R = 100.0 ** 2 / g
+print("method   dt    points  range error   height error   time error")
+for method in ("euler", "improved"):
+    for dt in (1.0, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01):
+        xs, hs = run_cannon_trajectory(dt=dt, method=method)
+        print(f"{method:9s}{dt:&lt;6}{len(xs):&lt;8}"
+              f"{interpolated_landing_range(xs, hs) - R:&lt;14.6g}"
+              f"{interpolated_maximum_height(hs) - H:&lt;15.6g}"
+              f"{interpolated_flight_time(hs, dt) - T:.6g}")</code></pre>
+<p>Look at the last column of each table first, and then at how each error changes from one row to the next.</p>
+<h3>Forward Euler (<code>--method euler</code>)</h3>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Forward Euler errors against the exact solution"><table class="compare-table">
+<thead><tr><th>Δt (s)</th><th>Stored points</th><th>Printed range (m)</th><th>Range error (m)</th><th>Range error ÷ Δt (m/s)</th><th>Height error (m)</th><th>Time error (s)</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>17</td><td>1089.3</td><td>+69.6</td><td>69.6</td><td>+36.58</td><td>+0.9844</td></tr>
+<tr><td>0.5</td><td>31</td><td>1054.9</td><td>+35.19</td><td>70.39</td><td>+17.98</td><td>+0.4977</td></tr>
+<tr><td>0.2</td><td>75</td><td>1033.8</td><td>+14.12</td><td>70.62</td><td>+7.12</td><td>+0.1997</td></tr>
+<tr><td>0.1</td><td>147</td><td>1026.8</td><td>+7.063</td><td>70.63</td><td>+3.548</td><td>+0.09989</td></tr>
+<tr><td>0.05</td><td>291</td><td>1023.2</td><td>+3.533</td><td>70.65</td><td>+1.771</td><td>+0.04996</td></tr>
+<tr><td>0.02</td><td>724</td><td>1021.1</td><td>+1.414</td><td>70.71</td><td>+0.7076</td><td>+0.02</td></tr>
+<tr><td>0.01</td><td>1,445</td><td>1020.4</td><td>+0.7071</td><td>70.71</td><td>+0.3537</td><td>+0.009999</td></tr>
+</tbody></table></div>
+<h3>Improved Euler (the default method)</h3>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Improved Euler errors against the exact solution"><table class="compare-table">
+<thead><tr><th>Δt (s)</th><th>Stored points</th><th>Printed range (m)</th><th>Range error (m)</th><th>Formula of Beat 5 (m)</th><th>Printed height (m)</th><th>Time error (s)</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>16</td><td>1018.5</td><td>&minus;1.182</td><td>&minus;1.195</td><td>254.93</td><td>&minus;0.01672</td></tr>
+<tr><td>0.5</td><td>30</td><td>1019.5</td><td>&minus;0.1671</td><td>&minus;0.1631</td><td>254.93</td><td>&minus;0.002363</td></tr>
+<tr><td>0.2</td><td>74</td><td>1019.7</td><td>&minus;0.0182</td><td>&minus;0.0184</td><td>254.93</td><td>&minus;0.0002575</td></tr>
+<tr><td>0.1</td><td>146</td><td>1019.7</td><td>&minus;0.008092</td><td>&minus;0.008125</td><td>254.93</td><td>&minus;0.0001144</td></tr>
+<tr><td>0.05</td><td>290</td><td>1019.7</td><td>&minus;0.002983</td><td>&minus;0.002985</td><td>254.93</td><td>&minus;4.219e&minus;05</td></tr>
+<tr><td>0.02</td><td>723</td><td>1019.7</td><td>&minus;8.995e&minus;05</td><td>&minus;9.007e&minus;05</td><td>254.93</td><td>&minus;1.272e&minus;06</td></tr>
+<tr><td>0.01</td><td>1,444</td><td>1019.7</td><td>&minus;4.273e&minus;05</td><td>&minus;4.275e&minus;05</td><td>254.93</td><td>&minus;6.042e&minus;07</td></tr>
+</tbody></table></div>
+<p>Three tasks, in order. First, the Euler table. Divide each range error by its timestep: the quotient is close to 70.7 in every row, the sideways speed \(u_0\) of Beat 3, and the flight-time error is close to \(\Delta t\). The height error is close to \(v_{0y}\Delta t/2\). Every error is proportional to \(\Delta t\), so to gain one more figure in Euler's range you must take ten times as many steps. Then the improved table. The height is exact in every row to within rounding error. The range and time errors are much smaller, and negative, and they are not the integrator's, as Beat 5 showed, but the straight-line landing estimate of Eq. 9. They fall roughly like \(\Delta t^2\) but not steadily: between \(\Delta t=0.1\) s and 0.05 s the range error falls by a factor of about 2.7, and between 0.05 s and 0.02 s by about 33, because the factor \(\varphi(1-\varphi)\) of the error formula of Beat 5 is different for each timestep; the fifth column of the table is that formula. Then answer the question that decides how to use such a program: you would not normally know the exact answer, so how would you judge a printed number? The one test that always works is the one used here, at a smaller timestep. Halve \(\Delta t\) and see whether the answer changes in the figures you care about.</p>
+<div class="note-box"><strong>Summary for this problem.</strong> Forward Euler: range error \(\approx+u_0\Delta t\), flight-time error \(\approx+\Delta t\), height error \(\approx+v_{0y}\Delta t/2\). Improved Euler: every stored sample is exact, the printed height is exact, and the printed range is short by between 0 and \(g\Delta t^2u_0/(8v_{0y})\), by the error formula of Beat 5. These are results for a constant acceleration. A method's error for a problem with a changing force depends on the problem, and the halving test described above is the one to use there.</div>
+<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat7">
+<h2>Beat 7 · Where the model and the run stop</h2>
+<p>Everything so far assumed that the model is right and that the run finishes. Both assumptions have limits, and the program reports the second kind itself. Try three commands that reach them.</p>
+<pre class="code-block"><code>python main.py --max_steps 145
+python main.py --max_steps 146
+python main.py --speed 1000</code></pre>
+<p>Look at what each command prints. The first prints no summary at all.</p>
+<p>Three tasks, in order. First, the ceiling. <code>--max_steps 145</code> prints <code>CannonTrajectory: max_steps was reached before the projectile landed; increase max_steps or use a larger timestep</code> and stops, and <code>--max_steps 146</code> runs normally. The ceiling counts stored points, including the launch point, and the default flight needs 145 steps, which is 146 stored points (Beat 0), so 146 is the smallest ceiling that works. The program refuses to return an incomplete trajectory, which would give a wrong range without a warning; the same thing raises a <code>RuntimeError</code> when <code>run_cannon_trajectory()</code> is called from Python. Then the model. A launch at 1000 m/s prints a range of 1.0197e+05 m, about 102 km, a height of 25493 m and a flight time of 144.21 s, from 1,444 trajectory samples. The program takes the ground to be flat and gravity to be constant and vertical. Over 102 km the Earth's surface curves away from a flat plane by about \(R^2/(2R_\oplus)\approx816\) m, with \(R_\oplus=6.371\times10^6\) m, and the direction of gravity turns by about 0.9°. The number is a rough guide at that distance, and the constant-<em>g</em>, flat-Earth model is what breaks down first. The programs <em>EarthOrbit</em> and <em>Orbit</em> treat gravity over larger scales. Then the numbers themselves: try <code>python main.py --speed 1e308 --dt 1e-3</code>. The intermediate numbers overflow, and the program stops with <code>CannonTrajectory: trajectory became non-finite; reduce speed or timestep</code> rather than print infinity or not-a-number.</p>
+<p><em>Then</em> the list of what the model leaves out, which no beat can test because the program has no setting for it. Air resistance shortens the range even at ordinary projectile speeds, though the trajectory keeps its rising-and-falling form. Wind and spin change the path. The curvature and the rotation of the Earth, and the weakening of gravity with height, matter over long distances. The launch is always from the ground, at a height of 0, so a launch from a cliff or a roof cannot be set. Omitting drag is what makes the exact solution of Beat 2 possible, and that solution is the reason the numerical results here can be checked at all.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="equations">
+<h2>Governing Equations</h2>
+<p>The eleven numbered equations, with the kind of statement each one is, the beat that introduces it, and where the program evaluates it. A few unnumbered relations are derived inside the beats where they are needed and are listed after the table.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Index of the numbered equations"><table class="compare-table">
+<thead><tr><th>Equation</th><th>Kind</th><th>What it says</th><th>Beat</th><th>Where in the code</th></tr></thead>
+<tbody>
+<tr><td>Eq. 1</td><td><span class="kind kind-ode">ODE</span></td><td>Horizontal kinematics</td><td>0</td><td><code>derivs_cannon()</code> in <code>physics_cannon.py</code></td></tr>
+<tr><td>Eq. 2</td><td><span class="kind kind-ode">ODE</span></td><td>Vertical kinematics</td><td>0</td><td><code>derivs_cannon()</code> in <code>physics_cannon.py</code></td></tr>
+<tr><td>Eq. 3</td><td><span class="kind kind-def">DEFINITION</span></td><td>Launch conditions</td><td>1</td><td><code>run_cannon_trajectory()</code> in <code>driver_cannon.py</code></td></tr>
+<tr><td>Eq. 4</td><td><span class="kind kind-der">DERIVED</span></td><td>Analytic trajectory</td><td>2</td><td>not evaluated by the program; it is the check</td></tr>
+<tr><td>Eq. 5</td><td><span class="kind kind-der">DERIVED</span></td><td>Range formula</td><td>2</td><td>not evaluated by the program; it is the check</td></tr>
+<tr><td>Eq. 6</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Forward Euler step</td><td>3</td><td><code>euler_step()</code> in <code>physics_cannon.py</code></td></tr>
+<tr><td>Eq. 7</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Heun predictor</td><td>4</td><td><code>improved_euler_step()</code> in <code>physics_cannon.py</code></td></tr>
+<tr><td>Eq. 8</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Heun corrector</td><td>4</td><td><code>improved_euler_step()</code> in <code>physics_cannon.py</code></td></tr>
+<tr><td>Eq. 9</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Landing point by linear interpolation</td><td>5</td><td><code>interpolated_landing_range()</code> in <code>driver_cannon.py</code></td></tr>
+<tr><td>Eq. 10</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Flight time by linear interpolation</td><td>5</td><td><code>interpolated_flight_time()</code> in <code>driver_cannon.py</code></td></tr>
+<tr><td>Eq. 11</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Maximum height by a three-point parabola</td><td>5</td><td><code>interpolated_maximum_height()</code> in <code>driver_cannon.py</code></td></tr>
+</tbody></table></div>
+<p>The unnumbered relations are the flight time and maximum height (Beat 2, DERIVED, not evaluated by the program); the parabola on which Euler's samples lie (Beat 3, DERIVED); the exactness of Heun's height update (Beat 4, DERIVED); and the error of the interpolated range (Beat 5, DERIVED). The loop that stops after the first stored point below the ground is described under <a href="#algorithm">Algorithm</a>.</p>
+</section>
 <section id="algorithm">
 <h2>Algorithm</h2>
+<p>This section collects the rules of the program in one place. The numerical steps, Eqs. 6 to 8, are introduced in Beats 3 and 4, and the estimates made after the loop, Eqs. 9 to 11, in Beat 5.</p>
+<h3>One run, in order</h3>
+<ol>
+<li>Validate the settings: the speed and the timestep must be finite and positive, the angle must lie between 0° and 90°, <code>max_steps</code> must be an integer of at least 2, and the method must be <code>euler</code> or <code>improved</code>.</li>
+<li>Split the speed with Eq. 3 and store the launch point.</li>
+<li>While the last stored height is not negative and fewer than <code>max_steps</code> points are stored, advance the state one timestep with Eq. 6 or with Eqs. 7 and 8, check that it is finite, and store \(x\) and \(h\).</li>
+<li>If the last stored height is still not negative, raise a <code>RuntimeError</code>. Otherwise the last stored point is the first one below the ground.</li>
+<li>Estimate the range, maximum height and flight time from the stored points with Eqs. 9, 11 and 10, print them, and plot the trajectory.</li>
+</ol>
 <h3>Initialisation</h3>
 <p>
 The launch angle is converted to radians and the initial velocity components
@@ -638,7 +832,6 @@ the highest stored sample and its two neighbours to locate the parabola's
 vertex between timesteps.
 </div>
 </section>
-<!-- ── Code Modules ────────────────────────────────────────── -->
 <section id="modules">
 <h2>Code Modules</h2>
 <div class="module-grid">
@@ -673,8 +866,22 @@ five simulation settings to <code>run_cannon_trajectory()</code>, prints the
 interpolated summary, and converts invalid settings into concise errors.</p>
 </div>
 </div>
+<div class="note-box"><strong>Version and Build ID.</strong> <code>python main.py --version</code> prints the model version and the Build ID without running a simulation. The Build ID is a short hash of the four program modules above and of nothing else. This Help file, the Release Notes, the sample outputs and the test suite are not part of it, so editing any of those does not change it, and editing one of the four modules does. It appears at the top of this page and on the first line of every run's printed summary.</div>
 </section>
-<!-- ── Parameters ─────────────────────────────────────────── -->
+<section id="quickstart">
+<h2>Quick Start</h2>
+<h3>Requirements</h3>
+<p>Python 3.10 or later, with <code>numpy</code> and <code>matplotlib</code>:</p>
+<pre class="code-block"><code>pip install numpy matplotlib</code></pre>
+<h3>Running the Program</h3>
+<p>Clone or download the repository, then run the program from its folder:</p>
+<pre class="code-block"><code>cd GFTGU-Programs/CannonTrajectory
+python main.py
+python main.py --angle_deg 30
+python main.py --help
+python main.py --version</code></pre>
+<p>Each run prints a summary, described under <a href="#summary">Printed Summary</a>, and then opens the plot window. The options and their defaults are listed under <a href="#parameters">Parameters</a>.</p>
+</section>
 <section id="parameters">
 <h2>Parameters</h2>
 <p>Run <code>python main.py --help</code> for the current command summary and
@@ -692,7 +899,7 @@ python main.py --method euler --dt 0.5
 
 # Combine any or all settings
 python main.py --speed 80 --angle_deg 60 --dt 0.02 --max_steps 200000 --method improved</code></pre>
-<table class="param-table">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Command-line options"><table class="param-table">
 <thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
 <tbody>
 <tr><td><code>--speed</code></td><td>100</td><td>m/s</td><td>Positive launch-speed magnitude.</td></tr>
@@ -702,7 +909,7 @@ python main.py --speed 80 --angle_deg 60 --dt 0.02 --max_steps 200000 --method i
 <tr><td><code>--method</code></td><td>improved</td><td>—</td><td><code>euler</code> selects first-order forward Euler; <code>improved</code> selects second-order improved Euler (Heun's method).</td></tr>
 <tr><td><code>g</code></td><td>9.80665</td><td>m/s²</td><td>Conventional standard acceleration due to gravity, treated as constant.</td></tr>
 </tbody>
-</table>
+</table></div>
 <div class="note-box">
 <strong>Analytic check for the defaults:</strong>
 \(v_{0y}=100\sin45^\circ\approx70.71\) m/s, so
@@ -721,7 +928,6 @@ speed and timestep make the numerical state overflow, the driver raises a
 <code>FloatingPointError</code> rather than returning non-finite trajectory data.
 </div>
 </section>
-<!-- ── Output ─────────────────────────────────────────────── -->
 <section id="output">
 <h2>Output</h2>
 <p>The matplotlib plot displays the title
@@ -741,24 +947,24 @@ through the first below-ground point. Their length is the number of
 <p>
 <code>plot_cannon(xs, hs)</code> displays one trajectory.
 <code>plot_cannon_overlay(trajectories)</code> displays several curves on one
-set of axes, where each item in <code>trajectories</code> is a
-<code>(label, xs, hs)</code> triple.
+set of axes, where each item in <code>trajectories</code> is a <code>(label, xs, hs)</code> triple.
 </p>
-<p>
-When you run <code>python main.py</code>, the console prints the interpolated
-range, maximum height, and flight time to five significant figures. For the
-default 100&nbsp;m/s, 45° launch they are
-<strong>1019.7&nbsp;m</strong>, <strong>254.93&nbsp;m</strong>, and
-<strong>14.421&nbsp;s</strong>. Range and flight time use linear interpolation
-at the final ground crossing; maximum height uses three-point parabolic
-interpolation around the highest sample. The reported range is therefore not
-the raw final <code>x</code> coordinate, and the reported height is not merely
-the largest stored <code>h</code>. Experiments 1–3, 5, and the ordinary runs in
-Experiment 6 can be performed with command-line options. Experiments that
-require overlays or altered integration formulas still require Python changes.
-</p>
+<div class="note-box"><strong>The overlay interface.</strong> Each item passed to <code>plot_cannon_overlay()</code> must be exactly one <code>(label, xs, hs)</code> triple, and the whole collection must not be empty. Anything else, such as a bare <code>(xs, hs)</code> pair, a single triple that is not inside a list, or a string, raises a <code>ValueError</code> whose message says <code>each trajectory must be a (label, xs, hs) triple</code>, and the figure is closed. <code>plot_cannon()</code> is the same helper called with one triple. Code that extends or replaces the helper should keep accepting this form, because the exercises on this page rely on it.</div>
 </section>
-<!-- ── Suggested Experiments ──────────────────────────────── -->
+<section id="summary">
+<h2>Printed Summary</h2>
+<p>Every run prints a summary and then opens the plot. The first line gives the version, the Build ID and the number of stored trajectory samples, which for the default run is 146. This is the rest of the summary of the default run, <code>python main.py</code>:</p>
+<pre class="code-block"><code>Range (interpolated ground crossing): 1019.7 m
+Maximum height (parabolic interpolation): 254.93 m
+Flight time (interpolated ground crossing): 14.421 s</code></pre>
+<p>Line by line:</p>
+<ul>
+<li><code>Range</code> is the horizontal distance at which the trajectory crosses the ground, found by linear interpolation between the last two stored points, Eq. 9. It is not the raw final <code>x</code> coordinate, which belongs to a point below the ground.</li>
+<li><code>Maximum height</code> is found by fitting a parabola through the highest stored sample and its two neighbours, Eq. 11. It is not merely the largest stored <code>h</code>.</li>
+<li><code>Flight time</code> is the time of the same interpolated ground crossing, Eq. 10.</li>
+</ul>
+<p>All three values are printed to five significant figures. Experiments 1–3, 5, and the ordinary runs in Experiment 6 can be performed with command-line options. Experiments that require overlays or altered integration formulas still require Python changes. A run that cannot finish prints one line that begins <code>CannonTrajectory:</code> and says what was wrong, and prints no summary (Beat 7).</p>
+</section>
 <section id="experiments">
 <h2>Suggested Experiments</h2>
 <div class="note-box">
@@ -767,9 +973,10 @@ parameter exploration to more demanding numerical-analysis and code-modification
 The standard printout already supplies interpolated range, height, and flight time;
 some experiments additionally ask you to inspect raw samples or change the code.
 </div>
-<div class="experiment-card">
+<div class="experiment-card" id="exp1">
 <div class="exp-num">Experiment 1 · Introductory–Intermediate</div>
 <div class="exp-title">Optimal firing angle</div>
+<p class="exp-beat">Goes with <a href="#beat1">Beat 1</a>.</p>
 <p>
           <strong>Core task:</strong> Keep the default speed of 100 m/s and
           timestep of 0.1 s, and run several launch angles, for example
@@ -781,10 +988,12 @@ some experiments additionally ask you to inspect raw samples or change the code.
           same analytic range. Small differences in raw numerical endpoints are a timestep
           sampling effect; Experiment 5 shows how to remove most of that ambiguity.
         </p>
+<p><strong>Check:</strong> with the defaults, 30° prints a range of 883.1 m and 60° prints 883.09 m (Beat 1); 40° and 50° both print 1004.2 m; and 45° prints 1019.7 m.</p>
 </div>
-<div class="experiment-card">
+<div class="experiment-card" id="exp2">
 <div class="exp-num">Experiment 2 · Introductory</div>
 <div class="exp-title">What does the timestep change?</div>
+<p class="exp-beat">Goes with <a href="#beat3">Beat 3</a>.</p>
 <p>
           Run the same 100 m/s, 45° trajectory with several timesteps, for example
           <code>python main.py --dt 0.5</code>, then 0.2, 0.1, 0.05, and 0.02 s.
@@ -798,10 +1007,12 @@ some experiments additionally ask you to inspect raw samples or change the code.
           occurs between two samples. This is a qualitative preview of the more quantitative
           accuracy tests in Experiments 5 and 6.
         </p>
+<p><strong>Check:</strong> the numbers of stored points at 0.5, 0.2, 0.1, 0.05 and 0.02 s are 31, 75, 147, 291 and 724 with <code>--method euler</code>, and 30, 74, 146, 290 and 723 with <code>--method improved</code>. Euler lands one step later (Beat 3).</p>
 </div>
-<div class="experiment-card">
+<div class="experiment-card" id="exp3">
 <div class="exp-num">Experiment 3 · Intermediate</div>
 <div class="exp-title">Effect of muzzle speed</div>
+<p class="exp-beat">Goes with <a href="#beat2">Beat 2</a>.</p>
 <p>
           Fix the angle at 45° and vary <code>--speed</code>, for example with
           <code>python main.py --speed 50</code> through <code>--speed 500</code>.
@@ -814,10 +1025,12 @@ some experiments additionally ask you to inspect raw samples or change the code.
           the flat-Earth, constant-\(g\) approximation itself becomes inadequate; later programs
           such as <strong>EarthOrbit</strong> and <strong>Orbit</strong> treat gravity over larger scales.
         </p>
+<p><strong>Check:</strong> with the defaults, <code>--speed 50</code> prints a range of 254.92 m and <code>--speed 200</code> prints 4078.9 m, against 1019.7 m at 100 m/s (Beat 2). <code>--speed 1000</code> prints 1.0197e+05 m; at that distance the flat-Earth model is only a rough guide (Beat 7).</p>
 </div>
-<div class="experiment-card">
+<div class="experiment-card" id="exp4">
 <div class="exp-num">Experiment 4 · Intermediate</div>
 <div class="exp-title">Overlay several trajectories</div>
+<p class="exp-beat">Goes with <a href="#beat1">Beat 1</a>.</p>
 <p>
           Call <code>run_cannon_trajectory</code> for launch angles of 15°, 30°, 45°, 60°, and 75°
           at <code>speed = 100</code> m/s. The overlay helper makes a single figure without
@@ -841,10 +1054,12 @@ plot_cannon_overlay(trajectories)</code></pre>
           different. If you compare landing ranges numerically, use the interpolation method in
           Experiment 5 rather than the first sampled point below ground.
         </p>
+<p><strong>Check:</strong> with a timestep of 0.1 s, the ranges printed by the interpolation of Experiment 5 are 509.83 m at 15° and 509.86 m at 75°, and 883.1 m at 30° and 883.09 m at 60°. The maximum heights are 34.154, 475.7, 127.46 and 382.39 m, and the flight times are 5.2781, 19.699, 10.197 and 17.662 s.</p>
 </div>
-<div class="experiment-card">
+<div class="experiment-card" id="exp5">
 <div class="exp-num">Experiment 5 · Intermediate · Schutz suggestion</div>
 <div class="exp-title">Interpolate the landing point</div>
+<p class="exp-beat">Goes with <a href="#beat5">Beat 5</a>.</p>
 <p>
           The loop stops after storing the first point for which \(h&lt;0\), so the projectile has
           actually crossed the ground between the last two stored samples. If those heights are
@@ -863,10 +1078,12 @@ plot_cannon_overlay(trajectories)</code></pre>
           that calls <code>run_cannon_trajectory()</code> and inspects
           <code>xs[-1]</code>; that raw-sample comparison still requires Python.
         </p>
+<p><strong>Check:</strong> with <code>--dt 1</code> the printed range is 1018.5 m, which is 1.18 m short of the exact 1019.72 m, while <code>xs[-1]</code> is 1060.66 m, which is 40.9 m too long (Beat 5). Beware of comparing raw endpoints between timesteps: with the improved method, <code>xs[-1]</code> is 1025.3 m for both <code>--dt 0.5</code> and <code>--dt 0.1</code>, because in both runs the last stored sample is at 14.5 s.</p>
 </div>
-<div class="experiment-card">
+<div class="experiment-card" id="exp6">
 <div class="exp-num">Experiment 6 · Intermediate–Advanced</div>
 <div class="exp-title">Accuracy of the two integrators</div>
+<p class="exp-beat">Goes with <a href="#beat6">Beat 6</a>.</p>
 <p>
           Run the same trajectory with <code>--method euler</code> and
           <code>--method improved</code>. Use the printed interpolated landing range
@@ -878,10 +1095,12 @@ plot_cannon_overlay(trajectories)</code></pre>
           roundoff, so this exercise demonstrates its superior accuracy here rather than serving
           as a general measurement of second-order convergence.
         </p>
+<p><strong>Check:</strong> the errors to expect for both methods and seven timesteps are tabulated in Beat 6, together with a short script that reproduces them.</p>
 </div>
-<div class="experiment-card">
+<div class="experiment-card" id="exp7">
 <div class="exp-num">Experiment 7 · Advanced · Schutz suggestion</div>
 <div class="exp-title">Deliberately degrade the vertical-position update</div>
+<p class="exp-beat">Goes with <a href="#beat4">Beat 4</a>.</p>
 <p>
           Schutz suggested making the vertical step less accurate by advancing the height with
           the velocity at the <em>end</em> of the timestep instead of the average velocity over
@@ -896,8 +1115,10 @@ plot_cannon_overlay(trajectories)</code></pre>
           sampling does not obscure the integration error, and verify that the degraded update
           shows first-order convergence.
         </p>
+<p><strong>Check:</strong> the degraded update mirrors Euler's error. Its samples lie on the exact parabola of a projectile launched with the vertical speed <em>reduced</em> by \(\tfrac12 g\Delta t\), so the range is short by about \(u_0\Delta t\) and the flight time by about \(\Delta t\). With \(\Delta t=0.1\) s and Experiment 5's interpolation the printed values are 1012.6 m, 251.41 m and 14.321 s, against 1019.72 m, 254.93 m and 14.4210 s exact and 1026.8 m, 258.48 m and 14.521 s for forward Euler (Beat 3).</p>
 </div>
-</section><section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
+</section>
+<section class="restore-section" style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
 <div style="
     border: 1.5px solid #b5811a;
     border-left: 5px solid #b5811a;
@@ -951,14 +1172,6 @@ plot_cannon_overlay(trajectories)</code></pre>
 </div>
 </div>
 </section>
-<!-- ============================================================
-     RESTORE TO DEFAULTS CALLOUT
-     ============================================================ -->
-
-<!-- ============================================================
-     END RESTORE TO DEFAULTS CALLOUT
-     ============================================================ -->
-<!-- ── Related Programs ────────────────────────────────────── -->
 <section id="related">
 <h2>Related Programs</h2>
 <div class="related-grid">
@@ -970,7 +1183,6 @@ plot_cannon_overlay(trajectories)</code></pre>
 <p>Explores equatorial Schwarzschild geodesic motion and relativistic orbital precession.</p></div>
 </div>
 </section>
-<!-- ── License ────────────────────────────────────────────── -->
 <section id="license">
 <h2>License</h2>
 <p>
@@ -982,8 +1194,7 @@ Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
 (CC BY-NC-SA 4.0)</a> license.
 </p>
 </section>
-</main><!-- /main -->
-<!-- ═══════════════════════════════════════════════════════ FOOTER -->
+</main>
 <footer>
 <em>Gravity from the Ground Up</em> — Python Programs ·
   Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
