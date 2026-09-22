@@ -2,560 +2,210 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>CannonTrajectory 1.3.0 Release Notes</title>
+<title>CannonTrajectory 1.3.1 Release Notes</title>
 </head>
 <body>
-<h1>CannonTrajectory 1.3.0 Release Notes</h1>
+<h1>CannonTrajectory 1.3.1 Release Notes</h1>
 
 <p>
-<b>Version:</b> 1.3.0<br>
-<b>Build:</b> 8a19fe772044<br>
-<b>Date:</b> 2026-09-15
+<b>Version:</b> 1.3.1<br>
+<b>Build:</b> 983dee8256ef<br>
+<b>Date:</b> 2026-09-22
 </p>
 
 <h2>Release Status</h2>
 
 <p>
-Version 1.3.0 adds a complete student-facing command-line interface and improves
-the numerical summary printed after each run. All five inputs accepted by
-<code>run_cannon_trajectory()</code> can now be set without editing source code.
-The physical model, the Euler and improved-Euler update formulas, and the plotted
-trajectory are unchanged.
+This release reflects two code-changing rounds since the 1.3.0 notes.
+Kickoff2 (1.3.1, build 8f21955760d2) replaced the classic Help file with a
+Beats-format tutorial and extended validation of malformed overlay-plot
+input. Response-to-Audit21 (1.3.1, build 983dee8256ef) corrected two
+overstatements in Beats 5 and 6, extended the overlay-item and
+finite-result validation, improved Help accessibility, and hardened one
+test. A third round, Audit22, reviewed the Response-to-Audit21 package and
+requested no code change; it is mentioned here only because it is
+review-only. Codex's Audit22 verdict: "careful and substantially correct,"
+with two P3 items still open (below) and two P4 items noted separately.
+Grok's Audit22 verdict: accept 1.3.1 / 983dee8256ef and close the code/Help
+audit loop on this package. Neither reviewer's recommendation is a hold.
 </p>
 
-<h2>What Changed in 1.3.0</h2>
-
-<ul>
-<li>Added command-line options for every simulation input:
-<code>--speed</code>, <code>--angle_deg</code>, <code>--dt</code>,
-<code>--max_steps</code>, and <code>--method</code>.</li>
-
-<li>Documented every input in <code>main.py</code> and in
-<code>python main.py --help</code>. The selector choices are described explicitly:
-<code>euler</code> uses first-order forward Euler, while <code>improved</code>
-uses second-order improved Euler (Heun's method).</li>
-
-<li>Audited the defaults in <code>driver_cannon.py</code>. All five driver inputs
-are now represented in <code>main.py</code>; no defaulted simulation parameter is
-left inaccessible from the command line.</li>
-
-<li>Added <code>interpolated_maximum_height()</code>, which fits a parabola to
-the largest stored height and its two neighbours and returns the vertex. A
-boundary maximum or non-concave local triple safely falls back to the largest
-stored height.</li>
-
-<li>Added <code>interpolated_flight_time()</code>, which linearly interpolates
-the final ground crossing using the same two height samples used for the
-interpolated range.</li>
-
-<li>The console now prints interpolated range, parabolically interpolated
-maximum height, and interpolated flight time to five significant figures.</li>
-
-<li>Invalid command-line values are reported as concise
-<code>CannonTrajectory: ...</code> errors instead of Python tracebacks.</li>
-
-<li>Updated the Help file exercises to use command-line examples wherever
-parameter changes are sufficient. Exercises requiring trajectory overlays or
-modified integration formulas continue to use Python.</li>
-</ul>
-
-<h2>Default Printed Values</h2>
+<h2>Open Bugs</h2>
 
 <p>
-For <code>python main.py</code>, whose defaults are
-<code>--speed 100</code>, <code>--angle_deg 45</code>, <code>--dt 0.1</code>,
-<code>--max_steps 100000</code>, and <code>--method improved</code>:
+Every reviewer-reported defect of severity P1&ndash;P3 still open at release.
+No causes or fixes are given here; see the cited finding for detail.
 </p>
+
 <ul>
-<li>146 stored trajectory samples</li>
-<li>Range (interpolated ground crossing): 1019.7 m</li>
-<li>Maximum height (parabolic interpolation): 254.93 m</li>
-<li>Flight time (interpolated ground crossing): 14.421 s</li>
+<li><b>OB-1</b> (P3, Codex Audit22 P3-01). The finite-result guard added in
+Response-to-Audit21 does not catch a plain Python float overflow, so two
+interpolation helpers can still produce a non-finite or an uncaught-exception
+result from finite inputs. Reproduction:
+<code>interpolated_flight_time([0.0, 1.0, 0.0, -1.0], 1e308)</code> &mdash;
+observed: returns <code>inf</code>; expected: <code>FloatingPointError</code>,
+as already raised for the other non-finite cases the guard covers. Also
+<code>interpolated_maximum_height([-1e308, 1e308, 0.0])</code> &mdash;
+observed: raises an undocumented <code>OverflowError</code>; expected: a
+documented, caught exception.</li>
+
+<li><b>OB-2</b> (P3, Codex Audit22 P3-02). Beat 6's refinement-check paragraph
+asks whether "the errors shrink" by the method's predicted factor, although
+the paragraph's own premise is that the exact answer is normally unknown, and
+it names "rounding error" as the one cause of a failure to settle.
+Reproduction: read CannonTrajectory.html, Beat 6, the paragraph following the
+two convergence tables &mdash; observed: asks the student to judge an
+unknowable quantity ("the errors") and offers one specific cause for
+non-convergence; expected: guidance based on successive differences between
+resolutions, with a failure to settle left undiagnosed as to cause.</li>
 </ul>
 
-<h2>Major Improvements Retained from Earlier Releases</h2>
+<h2>Major Improvements in This Release</h2>
 
 <ul>
-<li>Updated the gravitational constant from the textbook-rounded
-<code>g = 9.8 m/s²</code> to the conventional standard value
-<code>g = 9.80665 m/s²</code>, with corresponding updates to all documented
-analytic results and examples.</li>
+<li>Replaced the classic Help file with a Beats-format tutorial (Beats 0
+through 7), matching the format already used for GravitationalLensing and
+BlackHoleShadow.</li>
 
-<li>Preserved Schutz's original constant-gravity, no-drag projectile model while
-adding a direct comparison between forward Euler and improved Euler (Heun)
-integration.</li>
+<li><code>plot_cannon_overlay()</code>'s item validation was rewritten: every
+malformed item now raises one <code>ValueError</code> naming the expected
+<code>(label, xs, hs)</code> triple. Strings, bytes objects, mappings and sets
+are refused explicitly, so a three-character string, a bytes object, or a
+three-key dictionary or three-member set is never silently accepted as a
+triple.</li>
 
-<li>Added robust validation for invalid parameter types and values, including
-nonnumeric inputs, invalid launch angles, invalid timesteps, invalid methods,
-and insufficient <code>max_steps</code> values.</li>
+<li><code>interpolated_landing_range()</code> and
+<code>interpolated_flight_time()</code> now wrap their arithmetic in a
+finite-result guard and raise <code>FloatingPointError</code>, naming which
+quantity is not finite, for the non-finite cases the guard catches (one
+remaining gap is Open Bug OB-1).</li>
 
-<li>Added controlled handling for extreme finite Real inputs that cannot be
-represented as Python floating-point values, producing explanatory exceptions
-instead of uncaught conversion failures.</li>
+<li>Beat 5 of the Help now states the exact landing-interpolation-error
+formula, alongside the earlier leading-order approximation, and marks the
+approximation and its bound as approximate rather than strict. Beat 6's
+refinement-check guidance no longer claims that a single check "always
+works," and states explicitly what the check does and does not show.</li>
 
-<li>Added numerical overflow and invalid-state detection so trajectories containing
-non-finite values raise a descriptive <code>FloatingPointError</code> rather
-than returning corrupted results.</li>
+<li>Accessibility: small gold-coloured text now meets WCAG AA contrast, a
+skip-to-content link was added, and a footer link no longer relies on colour
+alone to be distinguishable.</li>
 
-<li>Replaced trajectory preallocation with append-only storage, ensuring that
-<code>max_steps</code> functions as a true safety ceiling rather than an
-implicit memory-allocation request.</li>
-
-<li>Retained Schutz's pedagogically useful first-below-ground-point behavior,
-allowing students to investigate timestep effects and landing-point
-interpolation.</li>
-
-<li>Version 1.2.0 introduced a printed linearly interpolated landing range and
-a validated <code>interpolated_landing_range()</code> helper. Version 1.3.0
-retains both and extends the summary to height and flight time.</li>
-
-<li>Added <code>plot_cannon_overlay()</code>, allowing multiple trajectories to be
-displayed on one figure for launch-angle comparison experiments while
-preserving the existing single-trajectory plotting interface.</li>
-
-<li>Hardened plotting against malformed overlay input and ensured that partially
-constructed figures are cleaned up automatically if plotting fails.</li>
-
-<li>Expanded and clarified the Help documentation, including improved discussion of
-integration error versus sampling error, trajectory overlays, interpolation of
-ground crossings, and exact-ground landing behavior.</li>
-
-<li>Added reproducible BUILD_ID generation covering exactly the four executable core
-modules: <code>physics_cannon.py</code>, <code>driver_cannon.py</code>,
-<code>main.py</code>, and <code>plot_cannon.py</code>. The Build identifier is
-synchronized across runtime output, source code, documentation, and regression
-tests.</li>
+<li>No printed or plotted numeric result of a valid run changed in either
+round; the only change to program output is the version/build banner
+line.</li>
 </ul>
 
 <h2>Test Suite Growth</h2>
 
 <p>
-The current suite contains 68 automated tests. Version 1.3.0 adds coverage for
-all five command-line parameters, both documented integration-method choices,
-the three five-significant-figure summary values, parabolic maximum-height
-interpolation, and interpolated flight time. The suite defines the four
-executable module filenames explicitly and uses
-<code>find_module_dir(start)</code> to locate the nearest directory containing
-the core modules, allowing the same tests to operate from either the canonical
-<code>tests/</code> layout or a flattened upload layout. It also locates the Help
-file correctly when the build and documentation artifacts are adjacent.
+The suite grew from 68 automated tests at 1.3.0 to 135 tests in Kickoff2
+(1.3.1, build 8f21955760d2) and to 145 tests in Response-to-Audit21 (1.3.1,
+build 983dee8256ef). No test was removed, skipped, or weakened in either
+round. Kickoff2 added coverage for the Beats-format Help file (structure,
+cross-references, and ledgers of quoted numbers and words) and for the
+rewritten overlay-item validation. Response-to-Audit21 added ten tests:
+independent oracles for the two new Beat 5 equations, a numerical
+counterexample, wording guards on three revised passages, two accessibility
+checks, and a finite-result guard test.
 </p>
 
 <p>
-The suite verifies physics constants and analytic solutions; Euler and
-improved-Euler integration behavior; numerical convergence; trajectory
-structure and landing behavior; interpolation accuracy; complementary launch
-angles; speed-squared range scaling; the rounded default range and maximum
-height; interpolated flight time; command-line parsing and help; parameter
-validation; overflow detection;
-large finite-Real edge cases; plotting behavior; overlay plotting; malformed
-input cleanup; Help-file structure and synchronization; Version/Build
-consistency; Python 3.10 grammar compatibility; flattened-layout execution; and
-independent BUILD_ID reproduction.
+The suite is run once from <code>tests/</code>, with
+<code>RuntimeWarning</code> promoted to an error:
+<code>cd tests &amp;&amp; MPLBACKEND=Agg python3 -W error::RuntimeWarning -m
+unittest test_physics_cannon</code>. The Response-to-Audit21 package passed
+145/145 on a clean extraction under Python 3.11.15, and again under Python
+3.10.20 (the stated minimum), and 90/90 with 3 skipped under a classic,
+pre-Beats Help layout. Codex and Grok each independently ran the same command
+once against the same package and reported 145/145, OK.
 </p>
 
 <h2>Known Limitations</h2>
 
 <ul>
 <li>The model assumes constant gravitational acceleration and neglects air
-resistance. It is intended for introductory numerical experiments rather than
-high-accuracy ballistic prediction.</li>
+resistance. It is intended for introductory numerical experiments rather
+than high-accuracy ballistic prediction.</li>
 
 <li>The trajectory still terminates at the first sampled point below ground
 rather than inserting an exact landing sample into the returned arrays. The
-printed range and flight time interpolate that crossing; the raw final sample
-remains available for the landing-interpolation exercise.</li>
+printed range and flight time interpolate that crossing; the raw final
+sample remains available for the landing-interpolation exercise.</li>
 
 <li>Because height is quadratic in time, linear interpolation at the ground
 crossing is still approximate. Smaller timesteps reduce that event-location
-error. Five-significant-figure formatting makes convergence comparisons easier;
-it is not a claim of five-significant-figure ballistic accuracy.</li>
+error. Five-significant-figure formatting makes convergence comparisons
+easier; it is not a claim of five-significant-figure ballistic
+accuracy.</li>
 
-<li>The plotted curve still includes the first below-ground sample even though
-the printed range and flight time refer to the interpolated crossing.</li>
+<li>The displayed leading-order error formula for the interpolated range is
+an approximation, and its "at most about" figure can be exceeded slightly
+(by up to about 0.23% for flights of at least ten steps, and by more for
+shorter flights); the exact expression is given beside it.</li>
 
-<li>The improved-Euler method reproduces the analytic sampled solution for this
-special constant-acceleration problem. Its exceptional accuracy here should not
-be interpreted as representative of all differential-equation systems.</li>
+<li>The plotted curve still includes the first below-ground sample even
+though the printed range and flight time refer to the interpolated
+crossing.</li>
 
-<li>The program models launches from ground level only. It does not currently
-include an adjustable initial height.</li>
+<li>The improved-Euler method reproduces the analytic sampled solution for
+this special constant-acceleration problem; its exceptional accuracy here
+should not be interpreted as representative of all differential-equation
+systems.</li>
 
-<li>A normal command-line run displays one trajectory. Multi-trajectory overlays
-still require a short Python experiment using <code>plot_cannon_overlay()</code>.</li>
+<li>The program models launches from ground level only. It does not
+currently include an adjustable initial height.</li>
 
-<li>The Help file loads MathJax from a public CDN. When offline, documentation
-remains readable but mathematical expressions are displayed as raw TeX source
-rather than rendered equations.</li>
+<li>A normal command-line run displays one trajectory. Multi-trajectory
+overlays still require a short Python experiment using
+<code>plot_cannon_overlay()</code>.</li>
+
+<li>The Help file loads MathJax from a public CDN. When offline, its prose
+and raw equation source remain available, but equations appear as untypeset
+LaTeX rather than rendered equations.</li>
 </ul>
 
 <h2>Known Minor Maintenance Items</h2>
 
 <ul>
-<li>The BUILD_ID intentionally excludes documentation and regression tests.
-Documentation or test-only updates therefore do not alter the executable build
-identifier.</li>
+<li>(P4, Codex Audit22 P4-03) The exact-error equation label and the
+equations-index entry for it do not state that the formula is specific to
+the improved-Euler samples on the exact parabola; read alone, they could be
+misunderstood as covering forward Euler's error too.</li>
 
-<li>Help-file synchronization relies on structural regression tests that compare
-documented defaults, experiment metadata, and Version/Build identifiers against
-the executable program. Future documentation edits should preserve this
-synchronization.</li>
+<li>(P4, Codex Audit22 P4-04) The suite's two generated prose ledgers (a
+per-number and a per-word context snapshot of the Help) overlap with the
+independent semantic tests added in Response-to-Audit21. Codex recommends
+eventually replacing them with smaller per-section digests once the Beats
+text stabilizes; Grok recommends keeping them as originally designed. The two
+recommendations disagree and neither has been acted on.</li>
 
-<li>The overlay plotting interface currently accepts trajectories using the
-documented <code>(label, xs, hs)</code> format. Future plotting extensions
-should maintain compatibility with existing experiments and tests.</li>
+<li>(P4, Grok Audit22 N1) Beat 5 now carries two unnumbered derived
+equations (the exact interpolation-error expression and its leading-order
+approximation), which is more equation-dense than before; both were required
+by the Audit21 finding that led to this release.</li>
+
+<li>The <code>BUILD_ID</code> intentionally excludes documentation and
+regression tests. Documentation- or test-only updates therefore do not alter
+the executable build identifier.</li>
+
+<li>Help-file synchronization relies on structural regression tests that
+compare documented defaults, experiment metadata, and Version/Build
+identifiers against the executable program. Future documentation edits
+should preserve this synchronization.</li>
+
+<li>The overlay plotting interface accepts trajectories using the documented
+<code>(label, xs, hs)</code> triple form; strings, bytes objects, mappings and
+sets are now refused explicitly rather than silently misinterpreted. Future
+plotting extensions should maintain compatibility with existing experiments
+and tests.</li>
 </ul>
 
 <h2>Version Identification</h2>
 
 <p>
-MODEL_VERSION: 1.3.0<br>
-BUILD_ID: 8a19fe772044
+MODEL_VERSION: 1.3.1<br>
+BUILD_ID: 983dee8256ef
 </p>
 
-<section id="maintenance-status">
-<h2>Known Minor Maintenance Items: Historical Register and Current Status</h2>
-<p>The earlier wording is retained below and in the original notes. Resolved issues remain visible; items without verified completion remain on the follow-up list.</p>
-<ul>
-<li>The BUILD_ID intentionally excludes documentation and regression tests.
-Documentation or test-only updates therefore do not alter the executable build
-identifier.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.0; completion has not been verified.</li>
-<li>Help-file synchronization relies on structural regression tests that compare
-documented defaults, experiment metadata, and Version/Build identifiers against
-the executable program. Future documentation edits should preserve this
-synchronization.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.0; completion has not been verified.</li>
-<li>The overlay plotting interface currently accepts trajectories using the
-documented <code>(label, xs, hs)</code> format. Future plotting extensions
-should maintain compatibility with existing experiments and tests.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.0; completion has not been verified.</li>
-</ul>
-</section>
-
-<section id="release-history">
-<h2>Earlier Release Notes</h2>
-<p>The following release notes reproduce the archived releases. Statements about what was current then describe those versions; the status register above describes the current review.</p>
-<section id="historical-1.2.0">
-<h2>CannonTrajectory 1.2.0 Release Notes</h2>
-
-<p>
-<b>Version:</b> 1.2.0<br>
-<b>Build:</b> 03f9faff890f<br>
-<b>Date:</b> 2026-09-10
-</p>
-
-<h3>Release Status</h3>
-
-<p>
-Version 1.2.0 is a student-facing output update on top of the 1.1.0 instructional
-release. The physical model, integrators, validation, and plotting helpers are
-unchanged. The default program now prints interpolated range and maximum height
-to the nearest tenth of a metre so Investigation 1.3's first three exercises can
-be completed by editing settings in <code>main.py</code> and reading the console
-output.
-</p>
-
-<h3>What Changed in 1.2.0</h3>
-
-<ul>
-<li>After a successful run, <code>main.py</code> prints the interpolated
-ground-crossing range and the maximum stored height, each formatted to
-one decimal place in metres.</li>
-
-<li>Added <code>interpolated_landing_range()</code> and
-<code>maximum_height()</code> in <code>driver_cannon.py</code> so the printed
-summary uses the same landing interpolation later introduced in Experiment 5,
-rather than the raw first-below-ground sample.</li>
-
-<li>Updated the Help file Output section and Experiments 1–3 to describe the
-new printout and to state that programming begins in earnest at Experiment 4.</li>
-
-<li>Updated this Release Notes file and the Sample Outputs Guide to Version
-1.2.0 and Build 03f9faff890f.</li>
-</ul>
-
-<h3>Default Printed Values</h3>
-
-<p>
-For the unchanged default settings
-(<code>speed=100</code> m/s, <code>angle_deg=45</code>, <code>dt=0.1</code> s,
-<code>method="improved"</code>):
-</p>
-<ul>
-<li>146 stored trajectory samples</li>
-<li>Printed range: 1019.7 m (interpolated ground crossing; analytic range 1019.72 m)</li>
-<li>Printed maximum height: 254.9 m (analytic maximum height 254.929 m)</li>
-</ul>
-
-<h3>Major Improvements Retained from 1.1.0</h3>
-
-<ul>
-<li>Updated the gravitational constant from the textbook-rounded
-<code>g = 9.8 m/s²</code> to the conventional standard value
-<code>g = 9.80665 m/s²</code>, with corresponding updates to all documented
-analytic results and examples.</li>
-
-<li>Preserved Schutz's original constant-gravity, no-drag projectile model while
-adding a direct comparison between forward Euler and improved Euler (Heun)
-integration.</li>
-
-<li>Added robust validation for invalid parameter types and values, including
-nonnumeric inputs, invalid launch angles, invalid timesteps, invalid methods,
-and insufficient <code>max_steps</code> values.</li>
-
-<li>Added controlled handling for extreme finite Real inputs that cannot be
-represented as Python floating-point values, producing explanatory exceptions
-instead of uncaught conversion failures.</li>
-
-<li>Added numerical overflow and invalid-state detection so trajectories containing
-non-finite values raise a descriptive <code>FloatingPointError</code> rather
-than returning corrupted results.</li>
-
-<li>Replaced trajectory preallocation with append-only storage, ensuring that
-<code>max_steps</code> functions as a true safety ceiling rather than an
-implicit memory-allocation request.</li>
-
-<li>Retained Schutz's pedagogically useful first-below-ground-point behavior,
-allowing students to investigate timestep effects and landing-point
-interpolation.</li>
-
-<li>Added <code>plot_cannon_overlay()</code>, allowing multiple trajectories to be
-displayed on one figure for launch-angle comparison experiments while
-preserving the existing single-trajectory plotting interface.</li>
-
-<li>Hardened plotting against malformed overlay input and ensured that partially
-constructed figures are cleaned up automatically if plotting fails.</li>
-
-<li>Expanded and clarified the Help documentation, including improved discussion of
-integration error versus sampling error, trajectory overlays, interpolation of
-ground crossings, and exact-ground landing behavior.</li>
-
-<li>Added reproducible BUILD_ID generation covering exactly the four executable core
-modules: <code>physics_cannon.py</code>, <code>driver_cannon.py</code>,
-<code>main.py</code>, and <code>plot_cannon.py</code>. The Build identifier is
-synchronized across runtime output, source code, documentation, and regression
-tests.</li>
-</ul>
-
-<h3>Test Suite Growth</h3>
-
-<p>
-The 1.1.0 suite contained 63 automated tests. Version 1.2.0 extends that suite
-to 64 tests, covering the printed tenth-of-a-metre summary and the new driver helpers. The
-suite still defines the four executable module filenames explicitly and uses
-<code>find_module_dir(start)</code> to locate the nearest directory containing
-the core modules, allowing the same tests to operate from either the canonical
-<code>tests/</code> layout or a flattened upload layout.
-</p>
-
-<p>
-The suite verifies physics constants and analytic solutions; Euler and
-improved-Euler integration behavior; numerical convergence; trajectory
-structure and landing behavior; interpolation accuracy; complementary launch
-angles; speed-squared range scaling; the rounded default range and maximum
-height; parameter validation; overflow detection;
-large finite-Real edge cases; plotting behavior; overlay plotting; malformed
-input cleanup; Help-file structure and synchronization; Version/Build
-consistency; Python 3.10 grammar compatibility; flattened-layout execution; and
-independent BUILD_ID reproduction.
-</p>
-
-<h3>Known Limitations</h3>
-
-<ul>
-<li>The model assumes constant gravitational acceleration and neglects air
-resistance. It is intended for introductory numerical experiments rather than
-high-accuracy ballistic prediction.</li>
-
-<li>The trajectory still terminates at the first sampled point below ground rather
-than the exact landing point. The new printed range interpolates that crossing;
-the raw final sample remains available in the returned arrays for Experiment 5.</li>
-
-<li>Because the simulation uses a fixed timestep, both the printed range and the
-plotted landing position depend partially on sampling resolution. Smaller
-timesteps reduce this sampling error. Rounding to 0.1 m is intentional for the
-first exercises and is not a claim of centimetre-level ballistic accuracy.</li>
-
-<li>The improved-Euler method reproduces the analytic sampled solution for this
-special constant-acceleration problem. Its exceptional accuracy here should not
-be interpreted as representative of all differential-equation systems.</li>
-
-<li>The program models launches from ground level only. It does not currently
-include an adjustable initial height.</li>
-
-<li>The Help file loads MathJax from a public CDN. When offline, documentation
-remains readable but mathematical expressions are displayed as raw TeX source
-rather than rendered equations.</li>
-</ul>
-
-<h3>Known Minor Maintenance Items</h3>
-
-<ul>
-<li>The BUILD_ID intentionally excludes documentation and regression tests.
-Documentation or test-only updates therefore do not alter the executable build
-identifier.</li>
-
-<li>Help-file synchronization relies on structural regression tests that compare
-documented defaults, experiment metadata, and Version/Build identifiers against
-the executable program. Future documentation edits should preserve this
-synchronization.</li>
-
-<li>The overlay plotting interface currently accepts trajectories using the
-documented <code>(label, xs, hs)</code> format. Future plotting extensions
-should maintain compatibility with existing experiments and tests.</li>
-</ul>
-
-<h3>Version Identification</h3>
-
-<p>
-MODEL_VERSION: 1.2.0<br>
-BUILD_ID: 03f9faff890f
-</p>
-</section>
-<section id="historical-1.1.0">
-<h2>CannonTrajectory 1.1.0 Release Notes</h2>
-
-<p>
-<b>Version:</b> 1.1.0<br>
-<b>Build:</b> b96e71693112<br>
-<b>Date:</b> 2026-08-30
-</p>
-
-<h3>Release Status</h3>
-
-<p>
-Version 1.1.0 concludes a kickoff scientific review followed by three rounds of
-independent adversarial review involving Codex, Copilot, and Gemini. Reviewers
-verified the projectile-motion equations, Euler and improved-Euler integrators,
-input validation, numerical-overflow handling, plotting behavior, Help-file
-accuracy, Version/Build synchronization, flattened-layout execution, and
-regression coverage. All Audit2 findings were corrected, both Audit3 reviewers
-reported no remaining defects, and no release-blocking issue remains.
-CannonTrajectory is cleared for release as an instructional implementation of
-constant-gravity projectile motion.
-</p>
-
-<h3>Major Improvements in This Release</h3>
-
-<ul>
-<li>Updated the gravitational constant from the textbook-rounded
-<code>g = 9.8 m/s²</code> to the conventional standard value
-<code>g = 9.80665 m/s²</code>, with corresponding updates to all documented
-analytic results and examples.</li>
-
-<li>Preserved Schutz's original constant-gravity, no-drag projectile model while
-adding a direct comparison between forward Euler and improved Euler (Heun)
-integration.</li>
-
-<li>Added robust validation for invalid parameter types and values, including
-nonnumeric inputs, invalid launch angles, invalid timesteps, invalid methods,
-and insufficient <code>max_steps</code> values.</li>
-
-<li>Added controlled handling for extreme finite Real inputs that cannot be
-represented as Python floating-point values, producing explanatory exceptions
-instead of uncaught conversion failures.</li>
-
-<li>Added numerical overflow and invalid-state detection so trajectories containing
-non-finite values raise a descriptive <code>FloatingPointError</code> rather
-than returning corrupted results.</li>
-
-<li>Replaced trajectory preallocation with append-only storage, ensuring that
-<code>max_steps</code> functions as a true safety ceiling rather than an
-implicit memory-allocation request.</li>
-
-<li>Retained Schutz's pedagogically useful first-below-ground-point behavior,
-allowing students to investigate timestep effects and landing-point
-interpolation.</li>
-
-<li>Added <code>plot_cannon_overlay()</code>, allowing multiple trajectories to be
-displayed on one figure for launch-angle comparison experiments while
-preserving the existing single-trajectory plotting interface.</li>
-
-<li>Hardened plotting against malformed overlay input and ensured that partially
-constructed figures are cleaned up automatically if plotting fails.</li>
-
-<li>Expanded and clarified the Help documentation, including improved discussion of
-integration error versus sampling error, trajectory overlays, interpolation of
-ground crossings, and exact-ground landing behavior.</li>
-
-<li>Added reproducible BUILD_ID generation covering exactly the four executable core
-modules: <code>physics_cannon.py</code>, <code>driver_cannon.py</code>,
-<code>main.py</code>, and <code>plot_cannon.py</code>. The Build identifier is
-synchronized across runtime output, source code, documentation, and regression
-tests.</li>
-</ul>
-
-<h3>Test Suite Growth</h3>
-
-<p>
-A new regression suite was created during kickoff and expanded through three
-audit rounds. The final suite contains 63 automated tests. The suite defines
-the four executable module filenames explicitly and uses
-<code>find_module_dir(start)</code> to locate the nearest directory containing
-the core modules, allowing the same tests to operate from either the canonical
-<code>tests/</code> layout or a flattened upload layout.
-</p>
-
-<p>
-The final suite verifies physics constants and analytic solutions; Euler and
-improved-Euler integration behavior; numerical convergence; trajectory
-structure and landing behavior; interpolation accuracy; complementary launch
-angles; speed-squared range scaling; parameter validation; overflow detection;
-large finite-Real edge cases; plotting behavior; overlay plotting; malformed
-input cleanup; Help-file structure and synchronization; Version/Build
-consistency; Python 3.10 grammar compatibility; flattened-layout execution; and
-independent BUILD_ID reproduction. All 63 tests pass.
-</p>
-
-<h3>Known Limitations</h3>
-
-<ul>
-<li>The model assumes constant gravitational acceleration and neglects air
-resistance. It is intended for introductory numerical experiments rather than
-high-accuracy ballistic prediction.</li>
-
-<li>The trajectory terminates at the first sampled point below ground rather than
-the exact landing point. Accurate range estimates should use interpolation
-between the final non-negative and first negative height samples.</li>
-
-<li>Because the simulation uses a fixed timestep, the reported landing position
-depends partially on sampling resolution. Smaller timesteps reduce this
-sampling error.</li>
-
-<li>The improved-Euler method reproduces the analytic sampled solution for this
-special constant-acceleration problem. Its exceptional accuracy here should not
-be interpreted as representative of all differential-equation systems.</li>
-
-<li>The program models launches from ground level only. It does not currently
-include an adjustable initial height.</li>
-
-<li>The Help file loads MathJax from a public CDN. When offline, documentation
-remains readable but mathematical expressions are displayed as raw TeX source
-rather than rendered equations.</li>
-</ul>
-
-<h3>Known Minor Maintenance Items</h3>
-
-<ul>
-<li>The BUILD_ID intentionally excludes documentation and regression tests.
-Documentation or test-only updates therefore do not alter the executable build
-identifier.</li>
-
-<li>Help-file synchronization relies on structural regression tests that compare
-documented defaults, experiment metadata, and Version/Build identifiers against
-the executable program. Future documentation edits should preserve this
-synchronization.</li>
-
-<li>The overlay plotting interface currently accepts trajectories using the
-documented <code>(label, xs, hs)</code> format. Future plotting extensions
-should maintain compatibility with existing experiments and tests.</li>
-</ul>
-
-<h3>Version Identification</h3>
-
-<p>
-MODEL_VERSION: 1.1.0<br>
-BUILD_ID: b96e71693112
-</p>
-</section>
-</section>
 </body>
 </html>
