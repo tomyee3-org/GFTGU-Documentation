@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Binary – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+    /* ── Reset & custom properties ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #fdf5e6;
+      --surface:  #ffffff;
+      --border:   #c8bfa0;
+      --accent:   #7b2d00;
+      --accent2:  #a04010;
+      --gold:     #b5811a;
+      --text:     #1c1c1c;
+      --muted:    #5a4a3a;
+      --code-bg:  #f0ede4;
+      --note-bg:  #f4f0e8;
+      --eq-bg:    #f7f2e8;
+      --radius:   5px;
+      --shadow:   0 2px 8px rgba(0,0,0,0.10);
+      --mono:     "Courier New", Courier, monospace;
+      --sans:     "Helvetica Neue", Arial, sans-serif;
+      --serif:    Georgia, "Times New Roman", Times, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Page grid ── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.95rem;
+      font-weight: normal;
+      letter-spacing: -.02em;
+    }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub {
+      margin-top: 6px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: #f0d0b8;
+      line-height: 1.55;
+    }
+    header .sub a {
+      color: #ffd8b8;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,200,150,.4);
+    }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+
+    /* ── Sidebar ── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      padding: 14px 18px 4px;
+    }
+    nav a {
+      display: block;
+      padding: 6px 18px 6px 22px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background .15s, border-color .15s;
+    }
+    nav a:hover {
+      background: var(--bg);
+      border-left-color: var(--accent2);
+      color: var(--accent);
+    }
+    nav a.active {
+      background: var(--note-bg);
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    nav hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 14px;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 38px 48px 60px;
+      max-width: 860px;
+    }
+
+    section { margin-bottom: 52px; }
+
+    h2 {
+      font-size: 1.30rem;
+      font-weight: normal;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 6px;
+      margin-bottom: 18px;
+      letter-spacing: -.01em;
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--accent2);
+      margin: 24px 0 8px;
+    }
+    h4 {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin: 18px 0 6px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    /* ── Equation block ── */
+    .eq {
+      background: var(--eq-bg);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 20px;
+      margin: 18px 0;
+      overflow-x: auto;
+      font-size: 1.05em;
+    }
+    .eq-label {
+      float: right;
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 2px;
+    }
+
+    /* ── Note / tip box ── */
+    .note {
+      background: var(--note-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      margin: 18px 0;
+      font-size: 0.93rem;
+    }
+    .note strong { color: var(--accent); }
+
+    /* ── Restore-defaults box ── */
+    .restore-section {
+      margin: 2.5em auto;
+      max-width: 860px;
+      font-family: inherit;
+    }
+    .restore-box {
+      border: 1.5px solid var(--gold);
+      border-left: 5px solid var(--gold);
+      border-radius: 6px;
+      background: #fffbeb;
+      padding: 1.1em 1.4em;
+      display: flex;
+      gap: 1em;
+      align-items: flex-start;
+    }
+    .restore-icon { font-size: 1.5em; line-height: 1; flex-shrink: 0; }
+    .restore-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      color: var(--accent);
+      margin-bottom: 0.35em;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .restore-intro {
+      margin: 0 0 0.5em;
+      font-size: 0.92em;
+      line-height: 1.6;
+    }
+    .restore-list {
+      margin: 0;
+      padding-left: 1.4em;
+      font-size: 0.92em;
+      line-height: 1.8;
+    }
+    .restore-box kbd {
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.88em;
+    }
+    .restore-link { color: var(--accent); text-decoration: underline; }
+    .restore-footnote {
+      margin: 0.6em 0 0;
+      font-size: 0.88em;
+      color: var(--muted);
+    }
+
+    /* ── Code ── */
+    pre {
+      background: #2b2b2b;
+      color: #f0ede4;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.55;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 0.91em;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    pre code { background: none; padding: 0; font-size: inherit; }
+
+    /* ── Module cards ── */
+    .mc { display: grid; gap: 14px; margin: 18px 0; }
+    .mc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+    }
+    .mc-card .mc-name {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .mc-card .mc-role {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .mc-card p { font-size: 0.92rem; margin-bottom: 0; color: var(--muted); }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 16px 0;
+    }
+    th {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      background: var(--note-bg);
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { font-family: var(--mono); color: var(--accent2); }
+
+    /* ── Output type list ── */
+    .output-list { list-style: none; margin: 14px 0; }
+    .output-list li {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .output-list li:last-child { border-bottom: none; }
+    .output-list .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      white-space: nowrap;
+      color: var(--accent2);
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
+    }
+    footer a { color: #e0c090; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 48px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+<div class="badge">GFtGU Programs</div>
+<h1><em>Binary</em> —  Orbital Motion of a Binary System</h1>
+<div class="sub">
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+</div>
+</header>
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<nav id="sidebar">
+<div class="nav-label">Contents</div>
+<a href="#overview">Overview</a>
+<a href="#quickstart">Quick Start</a>
+<a href="#modules">Program Files</a>
+<hr/>
+<div class="nav-label">Physics</div>
+<a href="#two-body">Two-Body Problem</a>
+<a href="#eom">Equations of Motion</a>
+<a href="#energy">Energy Conservation</a>
+<a href="#closure">Termination Condition</a>
+<hr/>
+<div class="nav-label">Numerical Methods</div>
+<a href="#predictor-corrector">Predictor–Corrector</a>
+<a href="#timestep">Adaptive Timestep</a>
+<a href="#convergence">Convergence Criteria</a>
+<hr/>
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
+<hr/>
+<div class="nav-label">Reference</div>
+<a href="#parameters">Parameters</a>
+<a href="#output-types">Output Types</a>
+<a href="#license">License</a>
+</nav>
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main>
+<p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 2610688b936a
+</p>
+<!-- ─── Overview ─── -->
+<section id="overview">
+<h2>Overview</h2>
+<p>
+<strong>Binary</strong> simulates two point masses interacting only through
+      Newtonian gravity. The masses, initial positions, and initial velocities are
+      all editable, so the same program can represent bound binaries, extreme
+      mass-ratio systems, and unbound gravitational encounters.
+    </p>
+<p>
+      The program integrates the coupled equations of motion with an Euler predictor
+      and an iterated trapezoidal corrector. It records both bodies' positions and
+      velocities together with the system's kinetic, gravitational potential, and
+      total mechanical energy.
+    </p>
+<p>
+      By default the calculation stops after the relative position vector has completed
+      one revolution. Use <code>--no-stop_after_one_orbit</code> when you want a
+      long integration for energy-conservation tests or when studying an unbound orbit.
+      In all cases <code>max_steps</code> remains a safety ceiling.
+    </p>
+<div class="note">
+<strong>Scope:</strong> Binary is a Newtonian two-body program.
+      <em>Multiple</em> extends the Newtonian calculation to many gravitating bodies,
+      while <em>RelativisticOrbit</em> treats relativistic orbital motion later in
+      the book.
+    </div>
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
+<!-- ─── Quick Start ─── -->
+<section id="quickstart">
+<h2>Quick Start</h2>
+<h3>Requirements</h3>
+<p>Python 3.10 or later with <code>matplotlib</code> 3.5 or later:</p>
+<pre>pip install "matplotlib&gt;=3.5"</pre>
+<h3>Running the Program</h3>
+<p>Clone or download the repository, then:</p>
+<pre>cd GFTGU-Programs/Binary
+python main.py
+python main.py --output_type velocity_space
+python main.py --help</pre>
+<p>
+      To display the program version and executable-core build identifier without
+      running a simulation, use <code>python main.py --version</code>.
+    </p>
+<p>
+      The default configuration uses two equal-mass bodies,
+      \(M_A = M_B = 2\times10^{30}\,\mathrm{kg}\) (approximately one solar mass
+      each), placed symmetrically at \(x = \pm\,4.6\times10^{10}\,\mathrm{m}\)
+      with equal and opposite transverse velocities of
+      \(\pm\,1.3\times10^{4}\,\mathrm{m\,s^{-1}}\). This produces a visibly eccentric elliptical orbit.
+    </p>
+<h3>Choosing Output</h3>
+<p>
+      Choose the plot with <code>--output_type</code> on the command line. See
+      <a href="#output-types">Output Types</a> for the complete list of
+      accepted string values.
+    </p>
+</section>
+<!-- ─── Program Files ─── -->
+<section id="modules">
+<h2>Program Files</h2>
+<div class="mc">
+<div class="mc-card">
+<div class="mc-name">main.py</div>
+<div class="mc-role">Entry Point &amp; Configuration</div>
+<p>
+          Accepts command-line initial conditions and simulation parameters — masses,
+          starting positions, starting velocities, the maximum timestep <code>dt</code>, the safety limit <code>max_steps</code>,
+          the tolerance thresholds <code>eps1</code> and <code>eps2</code>, and
+          <code>stop_after_one_orbit</code>. After
+          calling <code>integrate_binary()</code> to run the simulation it passes
+          the result to <code>plot_binary()</code> for display. All user-adjustable settings are available as command-line options.
+        </p>
+</div>
+<div class="mc-card">
+<div class="mc-name">physics_binary.py</div>
+<div class="mc-role">Physics Engine</div>
+<p>
+          Defines the <code>BinaryState</code> dataclass, which stores the
+          current time together with the positions
+          \((x_A, y_A,\, x_B, y_B)\) and velocities
+          \((v_A, u_A,\, v_B, u_B)\) of both bodies. Provides three functions:
+          <code>relative_displacement()</code> returns the separation vector
+          \((\Delta x,\,\Delta y)\) and scalar distance \(r\);
+          <code>accelerations()</code> evaluates the Newtonian gravitational
+          acceleration on each body; and <code>energies()</code> computes the
+          instantaneous kinetic, gravitational potential, and total mechanical
+          energy of the system.
+        </p>
+</div>
+<div class="mc-card">
+<div class="mc-name">driver_binary.py</div>
+<div class="mc-role">Integration Driver</div>
+<p>
+          Defines the <code>BinaryResult</code> dataclass (time-series lists of
+          positions, velocities, and energies for both bodies) and the function
+          <code>integrate_binary()</code>. The driver advances the system step
+          by step using the Euler predictor followed by the averaged-acceleration
+          corrector, with vector-based convergence testing and adaptive timestep control. It can
+          stop after one relative revolution or continue to the <code>max_steps</code>
+          safety ceiling. All numerical-method logic lives in this module.
+        </p>
+</div>
+<div class="mc-card">
+<div class="mc-name">plot_binary.py</div>
+<div class="mc-role">Visualisation</div>
+<p>
+          Provides the <code>plot_binary()</code> function and the
+          <code>OutputType</code> string literal type. Accepts a
+          <code>BinaryResult</code> and renders one of seven distinct plots through seven command-line selectors (the plotter also accepts a legacy orbit alias) via
+          <code>matplotlib</code>: orbital trajectories in the \(xy\)-plane
+          (equal aspect ratio), velocity-space diagrams, position vs. time, or
+          velocity vs. time for each body individually, and the full energy
+          budget vs. time. All plots carry axis labels, titles, and legends.
+        </p>
+</div>
+</div><!-- .mc -->
+</section>
+<!-- ═══════════════════════════ PHYSICS ═══════════════════════════ -->
+<!-- ─── Two-Body Problem ─── -->
+<section id="two-body">
+<h2>Two-Body Problem</h2>
+<p>
+      Two point masses \(M_A\) and \(M_B\) interact solely through Newtonian
+      gravitational attraction:
+    </p>
+<div class="eq"><span class="eq-label">(1)</span>
+      \[
+        F=\frac{GM_AM_B}{r^2},
+        \qquad
+        r=\sqrt{(x_A-x_B)^2+(y_A-y_B)^2}.
+      \]
+    </div>
+<p>
+      The program uses \(G=6.67430\times10^{-11}\,
+      \mathrm{m^3\,kg^{-1}\,s^{-2}}\). Following the notation used in the
+      program, \(v=\dot x\) and \(u=\dot y\).
+    </p>
+<h3>Centre of Mass</h3>
+<div class="eq"><span class="eq-label">(2)</span>
+      \[
+        \mathbf R_{\rm CM}=
+        \frac{M_A\mathbf r_A+M_B\mathbf r_B}{M_A+M_B},
+        \qquad
+        \mathbf V_{\rm CM}=
+        \frac{M_A\mathbf v_A+M_B\mathbf v_B}{M_A+M_B}.
+      \]
+    </div>
+<p>
+      Because the system is isolated, \(\mathbf V_{\rm CM}\) is constant. With the
+      default equal masses and equal-and-opposite velocities it is zero, so the
+      centre of mass remains at the origin. Equal masses alone do <em>not</em>
+      require \(\mathbf v_A=-\mathbf v_B\); that relation additionally requires
+      zero centre-of-mass velocity.
+    </p>
+<p>
+      Only the relative separation controls the mutual force. Translating both
+      positions by the same vector therefore leaves the relative orbit unchanged,
+      and adding the same constant velocity to both bodies produces a Galilean
+      boost without changing their motion relative to one another.
+    </p>
+</section>
+<!-- ─── Equations of Motion ─── -->
+<section id="eom">
+<h2>Equations of Motion</h2>
+<p>
+      Applying Newton's second law component by component, with the force
+      directed along the line joining the two bodies, yields four coupled
+      second-order ODEs. Define the displacement of A relative to B:
+      \(\Delta x = x_A - x_B\), \(\Delta y = y_A - y_B\).
+    </p>
+<h3>Body A</h3>
+<div class="eq">
+<span class="eq-label">(3)</span>
+      \[
+        \ddot x_A \;=\; -\frac{G\,M_B\,\Delta x}{r^3}, \qquad
+        \ddot y_A \;=\; -\frac{G\,M_B\,\Delta y}{r^3}
+      \]
+    </div>
+<h3>Body B</h3>
+<div class="eq">
+<span class="eq-label">(4)</span>
+      \[
+        \ddot x_B \;=\; +\frac{G\,M_A\,\Delta x}{r^3}, \qquad
+        \ddot y_B \;=\; +\frac{G\,M_A\,\Delta y}{r^3}
+      \]
+    </div>
+<p>
+      The sign flip between bodies reflects Newton's third law: the force on B
+      is equal and opposite to the force on A. These accelerations are computed
+      by <code>accelerations()</code> in <code>physics_binary.py</code> and
+      evaluated at every stage of the predictor–corrector loop.
+    </p>
+<p>
+      The complete system state at any instant is the eight-component vector
+      \((x_A,\,y_A,\,v_A,\,u_A,\,x_B,\,y_B,\,v_B,\,u_B)\), stored in the
+      <code>BinaryState</code> dataclass and advanced one accepted timestep at
+      a time by <code>integrate_binary()</code>.
+    </p>
+</section>
+<!-- ─── Energy Conservation ─── -->
+<section id="energy">
+<h2>Energy Conservation</h2>
+<p>
+      The total mechanical energy is the sum of the kinetic energies of both
+      bodies and their mutual gravitational potential energy.
+    </p>
+<h3>Kinetic Energy</h3>
+<div class="eq">
+<span class="eq-label">(5)</span>
+      \[
+        K \;=\; \tfrac{1}{2}\,M_A\!\left(v_A^2 + u_A^2\right)
+              + \tfrac{1}{2}\,M_B\!\left(v_B^2 + u_B^2\right)
+      \]
+    </div>
+<h3>Gravitational Potential Energy</h3>
+<div class="eq">
+<span class="eq-label">(6)</span>
+      \[
+        U \;=\; -\frac{G\,M_A\,M_B}{r}
+      \]
+    </div>
+<h3>Total Mechanical Energy</h3>
+<div class="eq">
+<span class="eq-label">(7)</span>
+      \[
+        E \;=\; K + U
+      \]
+    </div>
+<p>
+      The program accurately sums the two separately computed kinetic-energy
+      terms and the potential-energy term together. This preserves a small
+      representable residual when much larger positive and negative terms nearly
+      cancel. Exact zero remains valid when the floating-point component values
+      cancel exactly.
+    </p>
+<p>
+      In the centre-of-mass frame, a gravitationally bound orbit has \(E &lt; 0\),
+      and the total mechanical energy is conserved. Any systematic drift in \(E\)
+      over the run is a direct measure of accumulated numerical error. The
+      <em>energy vs. time</em> plot is therefore the primary diagnostic for assessing
+      integration quality.
+    </p>
+<p>
+      The plotted energy uses the velocities in the chosen inertial frame and
+      therefore includes any kinetic energy of the centre of mass. When using the
+      sign of \(E\) to classify the <em>internal</em> orbit as bound or unbound, keep
+      the centre of mass at rest or subtract its translational kinetic energy.
+    </p>
+<div class="note">
+<strong>Tip:</strong> If the total energy shows a noticeable drift, reducing
+      <code>dt</code> is usually the most effective remedy. Tightening
+      <code>eps1</code> or <code>eps2</code> can also make the step acceptance and
+      corrector tests more demanding, but the improvement is problem-dependent.
+      The safest test is to repeat the same physical run with stricter numerical
+      controls and check that the result changes less and less.
+    </div>
+</section>
+<!-- ─── Termination Condition ─── -->
+<section id="closure">
+<h2>Termination Condition</h2>
+<p>
+      With <code>stop_after_one_orbit = True</code>, the program follows the angle
+      swept by the relative vector \(\mathbf r_A-\mathbf r_B\). Signed angle
+      increments between successive accepted steps are accumulated. Each vector
+      is scaled independently before its dot and cross products are formed, so
+      the angle does not depend on coordinate magnitude. A non-finite orbit-angle
+      diagnostic stops with a clear error rather than silently disabling this
+      termination test. The
+      calculation stops when their magnitude reaches \(2\pi\), provided this occurs
+      before <code>max_steps</code>. This is a geometric stopping rule for one
+      relative revolution; it is independent of the coordinate origin and does not
+      by itself prove that the numerical trajectory is exactly closed.
+    </p>
+<p>
+      Use <code>--no-stop_after_one_orbit</code> to continue for the full
+      <code>max_steps</code> accepted steps. This is useful for unbound trajectories
+      and long-term energy-conservation tests.
+    </p>
+<div class="note">
+<strong>Safety limit:</strong> <code>max_steps</code> is always enforced.
+      An unbound orbit will generally never satisfy the one-revolution condition.
+    </div>
+</section>
+<!-- ═══════════════════════════ NUMERICAL METHODS ═══════════════════════════ -->
+<!-- ─── Predictor–Corrector ─── -->
+<section id="predictor-corrector">
+<h2>Predictor–Corrector</h2>
+<p>
+      Each accepted step begins with an explicit Euler predictor. The program then
+      evaluates gravity at the predicted positions and, if the timestep passes the
+      accuracy gate described below, refines the result using an iterated
+      trapezoidal corrector.
+    </p>
+<h3>Euler Predictor</h3>
+<div class="eq"><span class="eq-label">(8)</span>
+      \[
+        \tilde{\mathbf r}_A=\mathbf r_A^n+\mathbf v_A^n\Delta t,
+        \qquad
+        \tilde{\mathbf v}_A=\mathbf v_A^n+\mathbf a_A^n\Delta t,
+      \]
+    </div>
+<p>with equivalent equations for body B.</p>
+<h3>Iterated Trapezoidal Corrector</h3>
+<div class="eq"><span class="eq-label">(9)</span>
+      \[
+        \mathbf v_A^{n+1}
+        =\mathbf v_A^n+
+        \frac{\mathbf a_A^n+\mathbf a_A^{n+1}}{2}\Delta t,
+      \]
+      \[
+        \mathbf r_A^{n+1}
+        =\mathbf r_A^n+
+        \frac{\mathbf v_A^n+\mathbf v_A^{n+1}}{2}\Delta t.
+      \]
+    </div>
+<p>
+      The end-of-step acceleration is recomputed from the refined positions and the
+      corrector is iterated. Convergence is tested from the dimensionless relative
+      change of each body's <em>velocity vector</em>, rather than from individual
+      Cartesian components.
+    </p>
+<p>
+      If ten corrector iterations are insufficient to meet <code>eps2</code>, the
+      timestep is halved and the same step is retried instead of silently accepting
+      a non-converged result. <code>eps2</code> is a convergence test within one
+      trial step; it is not a direct tolerance on the global position, period, or
+      energy error.
+    </p>
+</section>
+<!-- ─── Adaptive Timestep ─── -->
+<section id="timestep">
+<h2>Adaptive Timestep</h2>
+<p>
+      Before the corrector is run, the program compares body A's acceleration at
+      the beginning of the step with the acceleration at the Euler-predicted
+      position. Since the two bodies' accelerations are proportional in an isolated
+      two-body system, their fractional changes are identical and testing one body
+      is sufficient.
+    </p>
+<div class="eq"><span class="eq-label">(10)</span>
+      \[
+        \Delta_a=
+        \frac{\left\lVert\tilde{\mathbf a}_A-\mathbf a_A^n\right\rVert}
+             {\max\!\left(\left\lVert\tilde{\mathbf a}_A\right\rVert,
+                         \left\lVert\mathbf a_A^n\right\rVert\right)}.
+      \]
+    </div>
+<p>
+      If \(\Delta_a&gt;\varepsilon_1\), the attempt is rejected and the working
+      timestep is halved. After an accepted step, the working timestep is allowed
+      to grow by 10% toward the user-specified ceiling <code>dt</code>. If repeated
+      halving would drive the working timestep below a tiny numerical safety floor,
+      the program stops with a clear error instead of continuing with effectively
+      zero time advance.
+    </p>
+<div class="note">
+<strong>Interpretation:</strong> For sufficiently eccentric or rapidly
+      varying trajectories this mechanism normally uses smaller steps near
+      periapsis. With the current default parameters, no timestep reduction is
+      needed; increasing the eccentricity or choosing a larger <code>dt</code> makes
+      the controller easier to observe.
+    </div>
+</section>
+<!-- ─── Convergence Criteria ─── -->
+<section id="convergence">
+<h2>Convergence Criteria</h2>
+<p>Two independent dimensionless tolerances control the integration.</p>
+<table>
+<thead><tr><th>Parameter</th><th>Default</th><th>Role</th></tr></thead>
+<tbody>
+<tr>
+<td><code>eps1</code></td><td>\(0.05\)</td>
+<td>Rejects a predictor step when the relative change in the acceleration
+              vector is too large.</td>
+</tr>
+<tr>
+<td><code>eps2</code></td><td>\(10^{-4}\)</td>
+<td>Requires successive corrected velocity vectors to agree to this
+              relative tolerance. Failure to converge after ten iterations causes
+              the timestep to be halved and retried.</td>
+</tr>
+</tbody>
+</table>
+<p>
+      Tighter tolerances make the local acceptance and convergence tests more
+      demanding and can require more computation. Once the corrector is already
+      converging reliably, reducing <code>dt</code> often has a much larger effect on
+      the global error than tightening <code>eps2</code>. There is no universal factor
+      relating a tolerance change to an energy-error change, so accuracy should be
+      established by a convergence test.
+    </p>
+</section>
+<!-- ═══════════════════════════ EXPERIMENTS ═══════════════════════════ -->
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<h3>1 · Circular and Elliptical Equal-Mass Binaries — Introductory</h3>
+<pre><code>python main.py
+python main.py --uInitA 26934.5 --uInitB -26934.5</code></pre>
+<p>
+      Run the defaults first. For equal masses \(M\) at \(x=\pm a\), each body in
+      a circular orbit has radius \(a\) while the gravitational separation is
+      \(2a\), giving \(v_{\rm circ}=\sqrt{GM/(4a)}\). With the default values this
+      is about \(2.69\times10^4\) m/s. Try
+      \(u_A=+2.69\times10^4\) m/s and \(u_B=-2.69\times10^4\) m/s, then try
+      intermediate speeds and watch the eccentricity change.
+    </p>
+<h3>2 · Translation Invariance — Introductory</h3>
+<pre><code>python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10</code></pre>
+<p>
+      Add the same constant displacement to both bodies. Their coordinate
+      trajectories move to a different part of the plane, but the relative orbit
+      is unchanged.
+    </p>
+<h3>3 · Galilean Relativity — Introductory</h3>
+<pre><code>python main.py --vInitA 500 --vInitB 500 --uInitA 13500 --uInitB -12500 --output_type velocity_space</code></pre>
+<p>
+      Add the same velocity vector to both bodies. The binary now drifts across
+      the plot, but its internal orbit is unchanged. Compare the new
+      <code>--output_type velocity_space</code> plot with the default one: both hodographs have
+      the same shape and are simply translated by the added velocity. If you also
+      compare energy plots, remember that the kinetic energy includes the motion of
+      the centre of mass.
+    </p>
+<h3>4 · Velocity-Space Hodographs — Intermediate</h3>
+<pre><code>python main.py --uInitA 26934.5 --uInitB -26934.5 --output_type velocity_space
+python main.py --output_type velocity_space</code></pre>
+<p>
+      Compare <code>--output_type velocity_space</code> plots for the circular case in
+      Experiment 1 and for the eccentric default case. A velocity-space plot is
+      not an orbit in physical space: each point represents the two components of
+      a body's velocity. Check that each complete bound-orbit curve is circular,
+      although its radius and displacement in velocity space change with the
+      initial conditions.
+    </p>
+<h3>5 · Unequal Masses and the Centre of Mass — Intermediate</h3>
+<pre><code>python main.py --MA 2e30 --MB 1e30 --xInitA 3.0666666667e10 --xInitB -6.1333333333e10 --uInitA 15550.5265 --uInitB -31101.053</code></pre>
+<p>
+      Make body B progressively less massive. To keep the centre of mass at rest,
+      choose initial velocities satisfying
+      \(M_A\mathbf v_A+M_B\mathbf v_B=0\). A convenient method is to choose the
+      lighter body's velocity first and then set the heavier body's velocity to
+      balance its momentum component by component. Observe that the more massive
+      body makes the smaller orbit about the common centre of mass. In the extreme
+      mass-ratio limit the result approaches the fixed-central-mass picture used
+      in <em>Orbit</em>.
+    </p>
+<h3>6 · Bound, Parabolic, and Unbound Motion — Intermediate</h3>
+<pre><code>python main.py --uInitA 38091.14 --uInitB -38091.14 --no-stop_after_one_orbit --max_steps 1000 --output_type energy_vs_time
+python main.py --uInitA 60000 --uInitB -60000 --no-stop_after_one_orbit --max_steps 1000 --output_type energy_vs_time</code></pre>
+<p>
+      Keep the centre of mass at rest while increasing the relative speed from the
+      same starting positions. Plot <code>--output_type energy_vs_time</code>. Under this
+      zero-centre-of-mass condition, verify that bound elliptical motion has
+      \(E&lt;0\), the marginal parabolic case has \(E\approx0\), and hyperbolic
+      motion has \(E&gt;0\). Use <code>--no-stop_after_one_orbit</code> for
+      unbound runs.
+    </p>
+<h3>7 · Stellar Reflex Motion — Advanced Challenge</h3>
+<pre><code>python main.py --MA 1.989e30 --MB 1.898e27 --xInitA -7.42174134486e8 --xInitB 7.77757825866e11 --uInitA -12.4550437189 --uInitB 13052.2033493 --dt 20000 --max_steps 30000</code></pre>
+<p>
+      Model the Sun as body A and one planet as body B. For an approximate circular
+      orbit with separation \(a\), use
+      \(v_{\rm rel}=\sqrt{G(M_A+M_B)/a}\), put the bodies on opposite sides of the
+      centre of mass, and divide \(v_{\rm rel}\) between their opposite transverse
+      velocities so that \(M_A\mathbf v_A+M_B\mathbf v_B=0\). One convenient
+      setup is \(x_A=-aM_B/(M_A+M_B)\), \(x_B=+aM_A/(M_A+M_B)\),
+      \(u_A=-v_{\rm rel}M_B/(M_A+M_B)\), and
+      \(u_B=+v_{\rm rel}M_A/(M_A+M_B)\), with both y-positions and x-velocities zero.
+    </p>
+<table>
+<thead><tr><th>Body</th><th>Mass (kg)</th><th>Mean Sun–planet separation (m)</th></tr></thead>
+<tbody>
+<tr><td>Sun</td><td>\(1.989\times10^{30}\)</td><td>—</td></tr>
+<tr><td>Jupiter</td><td>\(1.898\times10^{27}\)</td><td>\(7.785\times10^{11}\)</td></tr>
+<tr><td>Saturn</td><td>\(5.683\times10^{26}\)</td><td>\(1.434\times10^{12}\)</td></tr>
+<tr><td>Earth</td><td>\(5.972\times10^{24}\)</td><td>\(1.496\times10^{11}\)</td></tr>
+</tbody>
+</table>
+<p>
+      Start with Jupiter and examine the Sun's small barycentric orbit; its radius
+      should be slightly larger than the Sun's radius,
+      \(6.96\times10^8\) m. Repeat with Saturn and Earth. Which planet produces
+      the largest reflex motion of the Sun, and why? Treat the tabulated values as
+      approximate two-body data rather than a precision Solar-System ephemeris.
+    </p>
+<h3>8 · Numerical Convergence and Energy Conservation — Advanced</h3>
+<pre><code>python main.py --no-stop_after_one_orbit --dt 2000 --max_steps 7000 --output_type energy_vs_time
+python main.py --no-stop_after_one_orbit --dt 1000 --max_steps 14000 --output_type energy_vs_time</code></pre>
+<p>
+      Use <code>--no-stop_after_one_orbit</code>. For a reproducible
+      three-period comparison using the default physical initial conditions, first
+      use <code>--dt 2000 --max_steps 7000</code>; then repeat
+      with <code>--dt 1000 --max_steps 14000</code>. Because the
+      default case does not trigger adaptive reduction, both runs cover the same
+      \(1.4\times10^7\) s interval. You can then repeat with tighter
+      <code>eps1</code>/<code>eps2</code>. Compare
+      the total-energy curves, for example by estimating the largest fractional
+      deviation \(\max|E(t)-E(0)|/|E(0)|\). A trustworthy result should change
+      less and less as the numerical controls are tightened.
+    </p>
+</section>
+<section class="restore-section" aria-labelledby="restore-title">
+<div class="restore-box">
+<!-- Icon -->
+<div class="restore-icon">↩️</div>
+<!-- Content -->
+<div>
+<div class="restore-title" id="restore-title">Restoring Default Parameter Values</div>
+<p class="restore-intro">
+        A new run with <code>python main.py</code> uses all default settings; options in a previous command do not carry over. If you change a program file for an exercise, restore it using any of the following methods:
+      </p>
+<ul class="restore-list">
+<li>
+<strong>Same session:</strong>
+          Press <kbd>Ctrl+Z</kbd>
+          (Windows) or <kbd>Cmd+Z</kbd>
+          (macOS) repeatedly in your editor to undo your edits.
+        </li>
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+        </li>
+<li>
+<strong>Full reset:</strong>
+          Re-download the ZIP from
+          <a class="restore-link" href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">
+            github.com/tomyee3-org/GFTGU-Programs
+          </a>
+          and replace this program's folder with the fresh copy.
+        </li>
+</ul>
+<p class="restore-footnote">
+        For additional ways to restore program files, see the corresponding
+        recovery instructions in the <em>GFTGU Python Setup Guide</em>.
+      </p>
+</div>
+</div>
+</section>
+<!-- ═══════════════════════════ REFERENCE ═══════════════════════════ -->
+<!-- ─── Parameters ─── -->
+<section id="parameters">
+<h2>Command-Line Parameters</h2>
+<p>Run <code>python main.py --help</code> for the current list and defaults. Set only the options you wish to change; all other values use their defaults. The x velocity is <code>v</code> and the y velocity is <code>u</code>.</p>
+<table><thead><tr><th>Option</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--MA</code>, <code>--MB</code></td><td>2e30 each</td><td>kg</td><td>Masses of A and B</td></tr>
+<tr><td><code>--xInitA</code>, <code>--xInitB</code></td><td>+4.6e10, -4.6e10</td><td>m</td><td>Initial x coordinates</td></tr>
+<tr><td><code>--yInitA</code>, <code>--yInitB</code></td><td>0, 0</td><td>m</td><td>Initial y coordinates</td></tr>
+<tr><td><code>--vInitA</code>, <code>--vInitB</code></td><td>0, 0</td><td>m/s</td><td>Initial x velocities</td></tr>
+<tr><td><code>--uInitA</code>, <code>--uInitB</code></td><td>+13000, -13000</td><td>m/s</td><td>Initial y velocities</td></tr>
+<tr><td><code>--dt</code></td><td>2000</td><td>s</td><td>Largest attempted timestep</td></tr>
+<tr><td><code>--max_steps</code></td><td>10000</td><td>steps</td><td>Maximum accepted steps</td></tr>
+<tr><td><code>--eps1</code></td><td>0.05</td><td>—</td><td>Predictor acceleration-change threshold</td></tr>
+<tr><td><code>--eps2</code></td><td>1e-4</td><td>—</td><td>Corrector velocity-change threshold</td></tr>
+<tr><td><code>--stop_after_one_orbit</code>, <code>--no-stop_after_one_orbit</code></td><td>stop</td><td>—</td><td>Stop after a relative revolution or run to max_steps</td></tr>
+<tr><td><code>--output_type</code></td><td>orbits</td><td>—</td><td>Choose one of the seven plots below</td></tr>
+</tbody></table>
+<div class="note">All numeric inputs must be finite real numbers. Masses and <code>dt</code> must be positive; <code>max_steps</code> must be a positive integer; both tolerances must lie strictly between zero and one (0 and 1 are not allowed); and the bodies must have nonzero initial separation. Extremely large or small inputs that put a derived displacement, acceleration, or energy outside the range of double-precision arithmetic are rejected with an error. For both bodies' accelerations and for potential, kinetic, and total energy, this includes overflow and a nonzero result so small that it would round to zero.</div>
+<h3>Printed results</h3>
+<p>The summary reports sampled minimum and maximum separations, accepted steps, total revolutions from the relative-position angle, and elapsed time in days. The two bodies' semi-major axes, eccentricity, period, periapsis, apoapsis and speeds at the apsides are initial Keplerian elements about their shared centre of mass. A common velocity boost changes the plotted inertial-frame kinetic energy but does not change these elements. For a hyperbola the semi-major axis is signed and negative; apoapsis and period do not exist. Parabolic and radial cases also omit undefined elements. The one-revolution stopping test can overshoot the exact full turn by one accepted step.</p>
+<p>Eleven table rows, from fraction 0.0 through 1.0 of the total simulated days, linearly interpolate the stored potential, kinetic and total mechanical energies in joules between accepted states. The final column is signed <code>(E-E0)/|E0|</code>. If initial total energy is exactly zero, that fractional departure is undefined. Interpolation between numerical states is not an independent exact-energy calculation; inspect the reported departure and repeat with tighter numerical settings when needed.</p>
+</section>
+<!-- ─── Output Types ─── -->
+<section id="output-types">
+<h2>Output Types</h2>
+<p>Pass one of these values to <code>--output_type</code>:</p>
+<ul class="output-list">
+<li><span class="tag">orbits</span><span>Both coordinate trajectories in the xy plane; the termination test follows the relative vector.</span></li>
+<li><span class="tag">velocity_space</span><span>Both velocity vectors in the velocity plane; the Kepler hodograph is circular over a complete orbit.</span></li>
+<li><span class="tag">position_vs_time_body_a</span><span>Body A x and y coordinates versus time.</span></li>
+<li><span class="tag">position_vs_time_body_b</span><span>Body B x and y coordinates versus time.</span></li>
+<li><span class="tag">velocity_vs_time_body_a</span><span>Body A x and y velocity components versus time.</span></li>
+<li><span class="tag">velocity_vs_time_body_b</span><span>Body B x and y velocity components versus time.</span></li>
+<li><span class="tag">energy_vs_time</span><span>System kinetic K, potential U, and total E versus time.</span></li>
+</ul></section>
+<!-- ── License ── -->
+<section id="license">
+<h2>License</h2>
+<p>
+      This software is based on the programs by <strong>Bernard Schutz</strong>
+      accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press,
+      2003) and is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+      (CC BY-NC-SA 4.0)</a> license.
+    </p>
+</section>
+</main>
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+<em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
+</footer>
+</div><!-- .page-wrap -->
+<!-- Sidebar active-link highlight on scroll -->
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const hit = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+        if (hit) hit.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
