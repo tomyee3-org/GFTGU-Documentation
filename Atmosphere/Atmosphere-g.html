@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atmosphere – Help File | GFTGU Programs</title>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+          id="MathJax-script" async></script>
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #fdf5e6; --surface: #ffffff; --border: #c8bfa0; --accent: #7b2d00;
+      --accent2: #a04010; --gold: #b5811a; --text: #1c1c1c; --muted: #5a4a3a;
+      --code-bg: #f0ede4; --note-bg: #f4f0e8; --eq-bg: #f7f2e8; --radius: 5px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.10);
+      --mono: "Courier New", Courier, monospace;
+      --sans: "Helvetica Neue", Arial, sans-serif;
+      --serif: Georgia, "Times New Roman", Times, serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--serif); font-size: 16px; line-height: 1.80; color: var(--text); background: var(--bg); }
+    .page-wrap { display: grid; grid-template-columns: 230px 1fr; grid-template-rows: auto 1fr auto; min-height: 100vh; }
+    header { grid-column: 1 / -1; background: var(--accent); color: #fff; padding: 26px 38px 20px; border-bottom: 4px solid var(--gold); }
+    header .badge { display: inline-block; font-family: var(--mono); font-size: 10.5px; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.35); border-radius: 3px; padding: 2px 7px; letter-spacing: .06em; margin-bottom: 10px; }
+    header h1 { font-size: 1.95rem; font-weight: normal; letter-spacing: -.02em; }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub { margin-top: 6px; font-family: var(--sans); font-size: 0.88rem; color: #f0d0b8; line-height: 1.55; }
+    header .sub a { color: #ffd8b8; text-decoration: none; border-bottom: 1px solid rgba(255,200,150,.4); }
+    nav { background: var(--surface); border-right: 1px solid var(--border); padding: 24px 0 40px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .nav-label { font-family: var(--sans); font-size: 10px; font-weight: 700; letter-spacing: .10em; text-transform: uppercase; color: var(--gold); padding: 14px 18px 4px; }
+    nav a { display: block; font-family: var(--sans); font-size: 13px; color: var(--muted); text-decoration: none; padding: 5px 18px 5px 22px; border-left: 3px solid transparent; }
+    nav a:hover { color: var(--accent); background: #fdf0e0; border-left-color: var(--gold); }
+    main { padding: 38px 52px 60px; max-width: 900px; }
+    h2 { font-size: 1.40rem; font-weight: normal; color: var(--accent); border-bottom: 2px solid var(--gold); padding-bottom: 6px; margin: 2.2rem 0 1.0rem; }
+    h3 { font-size: 1.08rem; font-weight: 700; color: var(--accent2); margin: 1.6rem 0 .5rem; }
+    p { margin-bottom: .85rem; }
+    ul, ol { margin: .4rem 0 .85rem 1.5rem; }
+    li { margin-bottom: .28rem; }
+    .eq-block { background: var(--eq-bg); border-left: 4px solid var(--gold); border-radius: 0 var(--radius) var(--radius) 0; padding: 14px 22px 10px; margin: 1.1rem 0 1.3rem; overflow-x: auto; }
+    .eq-label { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    code { font-family: var(--mono); font-size: 0.865em; background: var(--code-bg); border: 1px solid #ddd8cc; border-radius: 3px; padding: 1px 5px; }
+    pre { font-family: var(--mono); font-size: 0.855em; background: var(--code-bg); border: 1px solid #ddd8cc; border-radius: var(--radius); padding: 14px 18px; overflow-x: auto; margin: .8rem 0 1.1rem; line-height: 1.55; }
+    .note, .warn { border-radius: 0 var(--radius) var(--radius) 0; padding: 11px 16px; margin: 1.0rem 0 1.2rem; font-size: 0.93rem; color: var(--muted); }
+    .note { background: var(--note-bg); border: 1px solid var(--border); border-left: 4px solid var(--accent2); }
+    .warn { background: #fff6e8; border: 1px solid var(--gold); border-left: 4px solid var(--gold); }
+    .note strong { color: var(--accent2); }
+    .warn strong { color: var(--accent); }
+    .param-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1rem 0 1.4rem; }
+    .param-table th { color: #fff; font-family: var(--sans); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 8px 12px; text-align: left; background: var(--accent); }
+    .param-table td { padding: 7px 12px; border-bottom: 1px solid #e0d8c8; vertical-align: top; }
+    .param-table tr:nth-child(even) td { background: #faf5ec; }
+    .param-table .pname { font-family: var(--mono); font-size: 0.83rem; color: var(--accent2); font-weight: 700; }
+    .param-table .pdefault { font-family: var(--mono); font-size: 0.83rem; }
+    .related-list { list-style: none; margin: .6rem 0 1.2rem; padding: 0; }
+    .related-list li { padding: 8px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 7px; font-size: 0.90rem; }
+    .related-list li strong { font-family: var(--mono); color: var(--accent2); }
+    .exp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin: 1.0rem 0 1.4rem; }
+    .exp-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 15px 17px; box-shadow: var(--shadow); }
+    .exp-card .ec-num { display: inline-block; background: var(--accent); color: #fff; font-family: var(--mono); font-size: 11px; border-radius: 3px; padding: 1px 6px; margin-bottom: 7px; }
+    .exp-card h4 { font-size: 0.94rem; color: var(--accent2); margin: 0 0 5px; }
+    .exp-card p { font-size: 0.855rem; color: var(--muted); margin: 0; }
+    footer { grid-column: 1 / -1; background: var(--accent); color: #fff; font-family: var(--sans); font-size: 12.5px; text-align: center; padding: 18px 24px; line-height: 1.7; }
+    footer a { color: #e0c090; text-decoration: none; }
+    @media (max-width: 740px) { .page-wrap { grid-template-columns: 1fr; } nav { position: static; height: auto; } main { padding: 24px 20px 48px; } }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+<header>
+  <div class="badge">Chapter 7 · Atmospheres</div>
+  <h1><em>Atmosphere</em> — Pressure, Density, and a Length</h1>
+  <div class="sub">
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    Documentation:
+    <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+  </div>
+</header>
+<nav>
+  <div class="nav-label">Start here</div>
+  <a href="#description">Description</a>
+  <a href="#setup">Before the first run</a>
+  <div class="nav-label">Beats</div>
+  <a href="#beat0">0 · Pressure is weight</a>
+  <a href="#beat1">1 · The gas law</a>
+  <a href="#beat2">2 · The scale height</a>
+  <a href="#beat3">3 · What sets H</a>
+  <a href="#beat4">4 · Real temperature</a>
+  <a href="#beat5">5 · Other worlds</a>
+  <a href="#beat6">6 · How far to trust it</a>
+  <a href="#beat7">7 · The top of the model</a>
+  <div class="nav-label">Reference</div>
+  <a href="#parameters">Parameters</a>
+  <a href="#output">Output</a>
+  <a href="#experiments">Experiments</a>
+  <a href="#validity">Domain of Validity</a>
+  <a href="#related">Related Programs</a>
+  <a href="#license">License</a>
+</nav>
+<main>
+  <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
+    Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 95f43226e01f
+  </p>
+
+  <section id="description">
+    <h2>Description</h2>
+    <p><strong>Atmosphere</strong> is the Chapter&nbsp;7 teaching model of a planetary atmosphere in hydrostatic equilibrium (Investigations 7.1 and 7.3). You supply a temperature profile. The program integrates pressure upward from a reference surface and plots pressure, density, or temperature.</p>
+    <p>The spine of the lesson is one sentence:</p>
+    <p><em>Pressure holds up the weight of the air above; the gas law turns that pressure into a density; their ratio is a length — the scale height — set by temperature, gravity and molecular weight.</em></p>
+    <div class="warn"><strong>What this program is not.</strong> It is not a weather code and not a research atmosphere. Gravity and mean molecular weight are constant with height. Temperature is an input, linearly interpolated between the altitudes you give. Pressure is advanced by a first-order Euler step. The altitude where pressure hits zero is a stopping rule, not a physical top of the air.</div>
+    <div class="note"><strong>Reading this page.</strong> Equations are rendered by MathJax from a public CDN. Without a network connection the raw \(\LaTeX\) remains visible as text. The program itself needs no internet access.</div>
+  </section>
+
+  <section id="setup">
+    <h2>Before the first run</h2>
+    <p>Unpack the program zip so you have a folder named <code>Atmosphere</code> that contains <code>main.py</code>. Open a terminal in that folder. You need <strong>Python 3.10 or newer</strong> with NumPy and Matplotlib. If you do not already have that environment, follow the project-wide <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank"><em>GFTGU Python Setup Guide</em></a>. Then:</p>
+<pre>python main.py --version
+python main.py</pre>
+    <p>Every command on this page assumes that working directory. Give altitude and temperature lists with commas and no brackets. A list that starts with a negative altitude can be typed as <code>--h_points -1000,0,10000</code>.</p>
+  </section>
+
+  <section id="beat0">
+    <h2>Beat 0 · Pressure is the weight of the air above you</h2>
+    <p>Climb, and there is less air overhead. That is the whole idea of atmospheric structure. Ask the program only to show it for the Earth.</p>
+<pre>python main.py</pre>
+    <p>Look at the first two rows of the checkpoint table — altitudes 0 and 11019&nbsp;m — and at the pressure curve. Ignore the other columns. Surface pressure over \(g\) is the mass sitting on each square metre of ground. The pressure at 11&nbsp;km is already a fraction of the surface value; most of the column is below that height. The curve is steepest near the ground. Write one sentence that says why, before you read the equation.</p>
+    <div class="eq-block">
+      <div class="eq-label">Hydrostatic equilibrium — the ODE</div>
+\[
+\frac{dp}{dh} = -g\,\rho.
+\]
+    </div>
+    <p>The slope is steepest where \(\rho\) is largest. Gravity is held constant. The equation cannot be solved alone: it has two unknowns. Beat 1 supplies the missing relation.</p>
+  </section>
+
+  <section id="beat1">
+    <h2>Beat 1 · Density is not free: the gas law supplies it</h2>
+    <p>Air is a gas. Density follows from pressure and temperature. Plot density this time; the printed table is the same as Beat 0.</p>
+<pre>python main.py --output_type density</pre>
+    <p>Read the surface density (it should sit next to \(1.225\,\mathrm{kg\,m^{-3}}\), the U.S. Standard Atmosphere 1976 value). Then divide density by the <code>p/T</code> column in two different rows. The ratio does not move. That constant is \(\mu m_u/k_B\).</p>
+    <div class="eq-block">
+      <div class="eq-label">Ideal gas — derived; governing equation — the ODE</div>
+\[
+\rho = \frac{p\,\mu\,m_u}{k_B\,T},
+\qquad
+\frac{dp}{dh} = -\frac{g\,\mu\,m_u}{k_B\,T(h)}\,p.
+\]
+    </div>
+    <p>At fixed pressure, colder air is denser, so density need not fall as fast as pressure. \(T(h)\) is an input. Beat 2 solves the equation when that input is a constant.</p>
+  </section>
+
+  <section id="beat2">
+    <h2>Beat 2 · One number sets the size of an atmosphere</h2>
+    <p>If the temperature is the same at every height, equal steps upward multiply the pressure by the same factor.</p>
+<pre>python main.py --h_points 0,8000,16000,24000,32000 --T_points 288.15,288.15,288.15,288.15,288.15</pre>
+    <p>Read only the table; above the last supplied altitude the program switches to the closure of Beat 7. Divide each pressure by the one below it. Find the height over which the pressure falls by a factor of \(e\). Then compute \(p_0/(g\rho_0)\) from the first row. Those two lengths are two readings of the same model, not an independent check.</p>
+    <div class="eq-block">
+      <div class="eq-label">Barometric formula and scale height — derived</div>
+\[
+p = p_0\,e^{-h/H},
+\qquad
+H = \frac{p_0}{g\,\rho_0} = \frac{k_B\,T_0}{g\,\mu\,m_u}.
+\]
+    </div>
+    <p>For the default Earth numbers at 288.15&nbsp;K, \(H\approx 8.43\,\mathrm{km}\). The first integration step is \(H_{\min}/200\), sized from the coldest temperature on the profile so a cold layer is not stepped through too coarsely.</p>
+  </section>
+
+  <section id="beat3">
+    <h2>Beat 3 · What the scale height depends on — and what it does not</h2>
+    <p>\(H\) contains \(T\), \(g\) and \(\mu\). It does not contain the surface pressure. Test that, one dial at a time, on the default Earth temperature profile.</p>
+<pre>python main.py --mu 18
+python main.py --mu 44
+python main.py --g_accel 19.62
+python main.py --p0 1.013e6</pre>
+    <p>Compare the fraction \(p(11019\,\mathrm{m})/p_0\) with the default run. Light gas or weak gravity stretches the atmosphere; heavy gas or strong gravity flattens it. Raising \(p_0\) by ten multiplies every pressure by ten and leaves the fraction alone. \(p_0/g\) is the column mass; \(H\) is the height.</p>
+    <div class="eq-block">
+      <div class="eq-label">From the scale-height formula</div>
+\[
+H \propto \frac{T}{\mu\,g}.
+\]
+    </div>
+  </section>
+
+  <section id="beat4">
+    <h2>Beat 4 · Real air is not isothermal</h2>
+    <p>The program does not compute the layered temperature of a real atmosphere. You give temperatures at chosen altitudes; it joins them with straight lines. The scale height then changes with height.</p>
+<pre>python main.py --output_type temperature
+python main.py --h_points 0,50000,100000 --T_points 288,200,350</pre>
+    <p>On the default temperature plot find the four layers: troposphere cooling, stratosphere warming, mesosphere cooling, thermosphere rising. Local \(H\) tracks \(T\). In the second run, check that the density ratio between 50 and 100&nbsp;km is the pressure ratio multiplied by the temperature ratio.</p>
+    <div class="eq-block">
+      <div class="eq-label">Piecewise-linear temperature — prescribed</div>
+\[
+T(h) = T_{i-1} + \frac{T_i-T_{i-1}}{h_i-h_{i-1}}\,(h-h_{i-1}),
+\qquad h_{i-1}\le h&lt;h_i.
+\]
+    </div>
+    <p>Below the first supplied point the temperature is held at \(T_0\). Above the last one, Beat 7 takes over. The default Earth list combines U.S. Standard Atmosphere 1976 values through about 86&nbsp;km with a representative NRLMSIS 2.0 thermosphere to 500&nbsp;km.</p>
+  </section>
+
+  <section id="beat5">
+    <h2>Beat 5 · Other worlds, same equations</h2>
+    <p>Nothing so far is specific to the Earth. Change \(g\), \(\mu\), \(p_0\) and the temperature list. “Thick” can mean column mass \(p_0/g\), or it can mean scale height. Those two rankings need not agree.</p>
+<pre>python main.py --planet_name Mars --g_accel 3.72 --mu 44 --p0 610 \
+  --h_points 0,10000,25000,45000 --T_points 210,170,145,130
+
+python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 \
+  --h_points 0,10000,20000,30000,40000,50000,60000 \
+  --T_points 735,658,579,495,416,348,263
+
+python main.py --planet_name Jupiter --g_accel 24.8 --mu 2.2 --p0 1e5 \
+  --h_points 0,20000,50000,100000 --T_points 165,130,110,150</pre>
+    <p>Compute \(H=p_0/(g\rho_0)\) and the column mass \(p_0/g\) from the surface row of each table. Jupiter’s scale height is the largest of the four because \(\mu\) is so small. Venus’s column is about a hundred Earth columns; Mars has little air and a taller scale height than Earth. Jupiter has no solid surface: the run takes the 1-bar level as the reference and follows only 100&nbsp;km above it.</p>
+  </section>
+
+  <section id="beat6">
+    <h2>Beat 6 · How far to trust the numbers</h2>
+    <p>The isothermal atmosphere of Beat 2 has an exact answer. Use it, then compare the default Earth run with the standard atmosphere it is meant to mimic.</p>
+<pre>python main.py --h_points 0,100000 --T_points 288.15,288.15
+python main.py</pre>
+    <p>At 100&nbsp;km the exact isothermal pressure is \(p_0 e^{-h/H}\). The printed value will be a few per cent low. That is the Euler step: each increment multiplies \(p\) by \(1-\Delta h/H\) instead of by \(e^{-\Delta h/H}\). With \(N=H/\Delta h=200\),</p>
+    <div class="eq-block">
+      <div class="eq-label">Size of the Euler error, isothermal case — derived</div>
+\[
+\frac{p_{\mathrm{Euler}}}{p_{\mathrm{exact}}}\approx 1-\frac{h/H}{2N}.
+\]
+    </div>
+    <p>Against the U.S. Standard Atmosphere the default run is already a fraction of a per cent low at 11&nbsp;km and about 18&nbsp;per cent low at 86&nbsp;km. Most of that growing deficit is constant gravity, not the Euler step: real \(g\) falls by about 2.6&nbsp;per cent to 86&nbsp;km. Rounded inputs (\(g=9.81\), \(p_0=101300\,\mathrm{Pa}\), \(\mu=28.97\)) take a smaller third share. Use the program for scale heights and ratios, not for an 86&nbsp;km pressure to three figures.</p>
+  </section>
+
+  <section id="beat7">
+    <h2>Beat 7 · The top of the model is a stopping rule</h2>
+    <p>A real atmosphere fades into space. The program needs a temperature above the last altitude you supplied, and a place to stop. Neither is a discovery about the air.</p>
+<pre>python main.py --output_type temperature
+python main.py --h_points 0,20000 --T_points 288.15,216.65 --output_type temperature</pre>
+    <p>In the default run the temperature holds at 1240&nbsp;K to 500&nbsp;km and then falls toward zero where the curve ends. In the short profile the fall begins at 20&nbsp;km. That falling tail is the closure, not the mesosphere.</p>
+    <div class="eq-block">
+      <div class="eq-label">Upper-atmosphere closure — not a physical model</div>
+\[
+T=\beta\,p^{\alpha},\qquad \alpha=0.5.
+\]
+    </div>
+    <p>\(\beta\) is chosen so the first step above the last supplied altitude matches that last temperature. As \(p\to 0\), \(T\to 0\) and the local scale height collapses, so pressure reaches zero at a finite height. If 50,000 steps do not get there, the program doubles \(\Delta h\) and starts again. A zero pressure reached by that coarser step at or below the last supplied altitude is refused as a numerical failure.</p>
+  </section>
+
+  <section id="parameters">
+    <h2>Parameters</h2>
+    <p>Run <code>python main.py --help</code> for the live list.</p>
+    <table class="param-table">
+      <thead><tr><th>Flag</th><th>Default</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td class="pname">--planet_name</td><td class="pdefault">Earth</td><td>Label on the plot and in the heading.</td></tr>
+        <tr><td class="pname">--g_accel</td><td class="pdefault">9.81</td><td>Constant gravity, m&nbsp;s\(^{-2}\).</td></tr>
+        <tr><td class="pname">--mu</td><td class="pdefault">28.97</td><td>Mean molecular weight in atomic mass units. Dry air.</td></tr>
+        <tr><td class="pname">--p0</td><td class="pdefault">1.013e5</td><td>Pressure at altitude zero, Pa.</td></tr>
+        <tr><td class="pname">--h_points</td><td class="pdefault">0 … 500000</td><td>Strictly increasing altitudes in metres. May start below zero.</td></tr>
+        <tr><td class="pname">--T_points</td><td class="pdefault">288.15 … 1240</td><td>Matching positive temperatures in kelvin. Same length as <code>--h_points</code>.</td></tr>
+        <tr><td class="pname">--output_type</td><td class="pdefault">pressure</td><td>pressure, density, or temperature. The checkpoint table always prints all four columns.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="output">
+    <h2>Output</h2>
+    <p>Every run prints a heading with version and build, then a checkpoint table of altitude, pressure, density, \(p/T\), and temperature at every supplied altitude that still lies in the positive-pressure domain. Numbers use five significant figures. A plot window then opens; close it to end the program. The plotted quantity is the only thing <code>--output_type</code> changes.</p>
+  </section>
+
+  <section id="experiments">
+    <h2>Experiments</h2>
+    <div class="exp-grid">
+      <div class="exp-card"><div class="ec-num">EXP-1 · First run</div>
+        <h4>Weigh the column</h4>
+        <p>From the default table, compute \(p_0/g\). What fraction of that mass sits below 11&nbsp;km? Why is the pressure curve steepest near the ground?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-2 · Beginner</div>
+        <h4>A straight line on log paper</h4>
+        <p>Run Beat 2’s isothermal command. Plot \(\ln p\) against \(h\) from the table. What slope do you expect, and what length is minus one over that slope?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-3 · Beginner</div>
+        <h4>One dial at a time</h4>
+        <p>From Beat 3, which change moves \(p(11\,\mathrm{km})/p_0\), and which one only rescales every pressure? Predict the \(\mu=44\) fraction from the default fraction before you look.</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-4 · Intermediate</div>
+        <h4>Column versus height</h4>
+        <p>For Earth, Mars, Venus and the Jupiter slice, tabulate \(p_0/g\) and \(H\). Which world is “thickest” on each ranking? Why do the rankings disagree?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-5 · Intermediate</div>
+        <h4>Cold layer, warm layer</h4>
+        <p>Run the three-point profile of Beat 4. Show from the table that \(\rho_2/\rho_1=(p_2/p_1)\,(T_1/T_2)\) between 50 and 100&nbsp;km.</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-6 · Intermediate</div>
+        <h4>Grade the Euler step</h4>
+        <p>Compare the isothermal 100&nbsp;km pressure with \(p_0 e^{-h/H}\). Does the Beat 6 formula account for most of the deficit?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-7 · Advanced</div>
+        <h4>What constant \(g\) costs</h4>
+        <p>At 86&nbsp;km, \(g\) has fallen by about 2.6&nbsp;per cent. Argue, without writing a new integrator, why holding \(g\) fixed makes the model pressure run low, and in which direction the deficit should grow.</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-8 · Advanced</div>
+        <h4>Do not name the tail</h4>
+        <p>Run Beat 7’s short profile. Where does the supplied line end, and where does the curve end? Invent one sentence that uses the word “top” only for the stopping rule.</p></div>
+    </div>
+  </section>
+
+  <section id="validity">
+    <h2>Domain of Validity</h2>
+    <ul>
+      <li>Constant \(g\), constant \(\mu\), ideal gas. Composition does not change with height.</li>
+      <li>Temperature is prescribed, not computed. Linear interpolation between checkpoints; a power-law closure above the last one.</li>
+      <li>Forward Euler on \(p(h)\). Absolute pressures high in the atmosphere are not the point of the program.</li>
+      <li>Planetary examples are teaching profiles. Jupiter is a local 100&nbsp;km slice above 1&nbsp;bar, not a model of the planet.</li>
+      <li>No winds, no photochemistry, no escape, no magnetic field.</li>
+    </ul>
+  </section>
+
+  <section id="related">
+    <h2>Related Programs</h2>
+    <ul class="related-list">
+      <li><strong>Star</strong> — hydrostatic equilibrium for a self-gravitating polytrope. Gravity now varies with radius; mass continuity replaces the ideal-gas closure.</li>
+      <li><strong>Neutron</strong> — the same idea under the TOV equation. Neighbour in Chapter 20, not a prerequisite.</li>
+    </ul>
+  </section>
+
+  <section id="license">
+    <h2>License</h2>
+    <p>Based on programs by Bernard Schutz accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003). Distributed under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license.</p>
+  </section>
+</main>
+<footer>
+  Atmosphere — GFTGU Chapter 7 —
+  <a href="https://github.com/tomyee3-org/GFTGU-Programs">GFTGU-Programs</a>
+  · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
+</footer>
+</div>
+</body>
+</html>

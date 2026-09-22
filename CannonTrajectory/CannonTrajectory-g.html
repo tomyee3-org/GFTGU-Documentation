@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CannonTrajectory – Help File | GFTGU Programs</title>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+          id="MathJax-script" async></script>
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #fdf5e6; --surface: #ffffff; --border: #c8bfa0; --accent: #7b2d00;
+      --accent2: #a04010; --gold: #b5811a; --text: #1c1c1c; --muted: #5a4a3a;
+      --code-bg: #f0ede4; --note-bg: #f4f0e8; --eq-bg: #f7f2e8; --radius: 5px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.10);
+      --mono: "Courier New", Courier, monospace;
+      --sans: "Helvetica Neue", Arial, sans-serif;
+      --serif: Georgia, "Times New Roman", Times, serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--serif); font-size: 16px; line-height: 1.80; color: var(--text); background: var(--bg); }
+    .page-wrap { display: grid; grid-template-columns: 230px 1fr; grid-template-rows: auto 1fr auto; min-height: 100vh; }
+    header { grid-column: 1 / -1; background: var(--accent); color: #fff; padding: 26px 38px 20px; border-bottom: 4px solid var(--gold); }
+    header .badge { display: inline-block; font-family: var(--mono); font-size: 10.5px; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.35); border-radius: 3px; padding: 2px 7px; letter-spacing: .06em; margin-bottom: 10px; }
+    header h1 { font-size: 1.95rem; font-weight: normal; letter-spacing: -.02em; }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub { margin-top: 6px; font-family: var(--sans); font-size: 0.88rem; color: #f0d0b8; line-height: 1.55; }
+    header .sub a { color: #ffd8b8; text-decoration: none; border-bottom: 1px solid rgba(255,200,150,.4); }
+    nav { background: var(--surface); border-right: 1px solid var(--border); padding: 24px 0 40px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .nav-label { font-family: var(--sans); font-size: 10px; font-weight: 700; letter-spacing: .10em; text-transform: uppercase; color: var(--gold); padding: 14px 18px 4px; }
+    nav a { display: block; font-family: var(--sans); font-size: 13px; color: var(--muted); text-decoration: none; padding: 5px 18px 5px 22px; border-left: 3px solid transparent; }
+    nav a:hover { color: var(--accent); background: #fdf0e0; border-left-color: var(--gold); }
+    main { padding: 38px 52px 60px; max-width: 900px; }
+    h2 { font-size: 1.40rem; font-weight: normal; color: var(--accent); border-bottom: 2px solid var(--gold); padding-bottom: 6px; margin: 2.2rem 0 1.0rem; }
+    h3 { font-size: 1.08rem; font-weight: 700; color: var(--accent2); margin: 1.6rem 0 .5rem; }
+    p { margin-bottom: .85rem; }
+    ul, ol { margin: .4rem 0 .85rem 1.5rem; }
+    li { margin-bottom: .28rem; }
+    .eq-block { background: var(--eq-bg); border-left: 4px solid var(--gold); border-radius: 0 var(--radius) var(--radius) 0; padding: 14px 22px 10px; margin: 1.1rem 0 1.3rem; overflow-x: auto; }
+    .eq-label { font-family: var(--sans); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; font-weight: 700; }
+    code { font-family: var(--mono); font-size: 0.865em; background: var(--code-bg); border: 1px solid #ddd8cc; border-radius: 3px; padding: 1px 5px; }
+    pre { font-family: var(--mono); font-size: 0.855em; background: var(--code-bg); border: 1px solid #ddd8cc; border-radius: var(--radius); padding: 14px 18px; overflow-x: auto; margin: .8rem 0 1.1rem; line-height: 1.55; }
+    .note, .warn { border-radius: 0 var(--radius) var(--radius) 0; padding: 11px 16px; margin: 1.0rem 0 1.2rem; font-size: 0.93rem; color: var(--muted); }
+    .note { background: var(--note-bg); border: 1px solid var(--border); border-left: 4px solid var(--accent2); }
+    .warn { background: #fff6e8; border: 1px solid var(--gold); border-left: 4px solid var(--gold); }
+    .note strong { color: var(--accent2); }
+    .warn strong { color: var(--accent); }
+    .param-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1rem 0 1.4rem; }
+    .param-table th { color: #fff; font-family: var(--sans); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 8px 12px; text-align: left; background: var(--accent); }
+    .param-table td { padding: 7px 12px; border-bottom: 1px solid #e0d8c8; vertical-align: top; }
+    .param-table tr:nth-child(even) td { background: #faf5ec; }
+    .param-table .pname { font-family: var(--mono); font-size: 0.83rem; color: var(--accent2); font-weight: 700; }
+    .param-table .pdefault { font-family: var(--mono); font-size: 0.83rem; }
+    .related-list { list-style: none; margin: .6rem 0 1.2rem; padding: 0; }
+    .related-list li { padding: 8px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 7px; font-size: 0.90rem; }
+    .related-list li strong { font-family: var(--mono); color: var(--accent2); }
+    .exp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin: 1.0rem 0 1.4rem; }
+    .exp-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 15px 17px; box-shadow: var(--shadow); }
+    .exp-card .ec-num { display: inline-block; background: var(--accent); color: #fff; font-family: var(--mono); font-size: 11px; border-radius: 3px; padding: 1px 6px; margin-bottom: 7px; }
+    .exp-card h4 { font-size: 0.94rem; color: var(--accent2); margin: 0 0 5px; }
+    .exp-card p { font-size: 0.855rem; color: var(--muted); margin: 0; }
+    footer { grid-column: 1 / -1; background: var(--accent); color: #fff; font-family: var(--sans); font-size: 12.5px; text-align: center; padding: 18px 24px; line-height: 1.7; }
+    footer a { color: #e0c090; text-decoration: none; }
+    @media (max-width: 740px) { .page-wrap { grid-template-columns: 1fr; } nav { position: static; height: auto; } main { padding: 24px 20px 48px; } }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+<header>
+  <div class="badge">Chapter 1 · Investigation 1.3</div>
+  <h1><em>CannonTrajectory</em> — A Parabola You Can Grade</h1>
+  <div class="sub">
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    Documentation:
+    <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+  </div>
+</header>
+<nav>
+  <div class="nav-label">Start here</div>
+  <a href="#description">Description</a>
+  <a href="#setup">Before the first run</a>
+  <div class="nav-label">Beats</div>
+  <a href="#beat0">0 · One launch, two motions</a>
+  <a href="#beat1">1 · The angle splits the speed</a>
+  <a href="#beat2">2 · The exact solution</a>
+  <a href="#beat3">3 · Euler’s method</a>
+  <a href="#beat4">4 · Improved Euler</a>
+  <a href="#beat5">5 · Between the samples</a>
+  <a href="#beat6">6 · How far to trust it</a>
+  <a href="#beat7">7 · Where the model stops</a>
+  <div class="nav-label">Reference</div>
+  <a href="#parameters">Parameters</a>
+  <a href="#output">Output</a>
+  <a href="#experiments">Experiments</a>
+  <a href="#validity">Domain of Validity</a>
+  <a href="#related">Related Programs</a>
+  <a href="#license">License</a>
+</nav>
+<main>
+  <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
+    Version 1.3.1&nbsp;&nbsp;&nbsp;&nbsp;Build 983dee8256ef
+  </p>
+
+  <section id="description">
+    <h2>Description</h2>
+    <p><strong>CannonTrajectory</strong> is the first numerical-integration program in the suite (Investigation 1.3). A projectile leaves the ground under constant gravity, with no air. Two integrators share one command line: forward Euler and improved Euler (Heun).</p>
+    <p>The spine of the lesson is one sentence:</p>
+    <p><em>Gravity pulls only downward, so the sideways and vertical motions do not talk to each other and the path is an exact parabola; that exactness is the grade for a step-by-step calculation.</em></p>
+    <div class="warn"><strong>What this program is not.</strong> No air resistance, wind, spin, curvature or rotation of the Earth, and no change of \(g\) with height. Launch is always from ground level. The printed range, height and flight time are estimates from samples one timestep apart, not the last stored point.</div>
+    <div class="note"><strong>Reading this page.</strong> Equations are rendered by MathJax from a public CDN. Without a network connection the raw \(\LaTeX\) remains visible as text. The program itself needs no internet access.</div>
+  </section>
+
+  <section id="setup">
+    <h2>Before the first run</h2>
+    <p>Unpack the program zip so you have a folder named <code>CannonTrajectory</code> that contains <code>main.py</code>. Open a terminal in that folder. You need <strong>Python 3.10 or newer</strong> with NumPy and Matplotlib. If you do not already have that environment, follow the project-wide <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank"><em>GFTGU Python Setup Guide</em></a>. Then:</p>
+<pre>python main.py --version
+python main.py</pre>
+    <p>The conventional standard gravity \(g=9.80665\,\mathrm{m\,s^{-2}}\) is built in. In the equations, \(v\) is the vertical velocity during flight; the launch speed given to <code>--speed</code> is \(v_0\).</p>
+  </section>
+
+  <section id="beat0">
+    <h2>Beat 0 · One launch, two motions</h2>
+    <p>A ball leaves the ground at 100&nbsp;m&nbsp;s\(^{-1}\), 45° above the horizontal. Nothing acts on it but a constant downward acceleration.</p>
+<pre>python main.py</pre>
+    <p>Read the four printed lines — sample count, range, maximum height, flight time — and look at the arch. Both axes use the same scale. The last plotted point sits a little below the ground: the program stops at the first sample that has crossed, then estimates the crossing (Beat 5). Before reading on, write down what you expect doubling the launch speed to do to range, height and time.</p>
+    <div class="eq-block">
+      <div class="eq-label">Horizontal and vertical kinematics — the ODE</div>
+\[
+\frac{dx}{dt}=u,\quad \frac{du}{dt}=0,
+\qquad
+\frac{dh}{dt}=v,\quad \frac{dv}{dt}=-g.
+\]
+    </div>
+    <p>Nothing in the first pair mentions \(h\) or \(v\); nothing in the second pair mentions \(x\) or \(u\). That independence is the whole physical content of the model.</p>
+  </section>
+
+  <section id="beat1">
+    <h2>Beat 1 · The angle splits the speed</h2>
+    <p>All a launch angle does is share \(v_0\) between the two motions. Try four angles at the same speed.</p>
+<pre>python main.py --angle_deg 30
+python main.py --angle_deg 60
+python main.py --angle_deg 0
+python main.py --angle_deg 90</pre>
+    <p>Keep Beat 0 beside you. 30° and 60° should land in the same place and climb to very different heights. 0° is already below the ground after one step. 90° comes back down on top of the muzzle; the printed range is a floating-point crumb of \(\cos 90^\circ\), not physics. 45° is the longest of these five. Experiment 1 asks whether any other angle does better.</p>
+    <div class="eq-block">
+      <div class="eq-label">Launch conditions</div>
+\[
+x_0=0,\quad h_0=0,\quad u_0=v_0\cos\theta,\quad v_{0y}=v_0\sin\theta.
+\]
+    </div>
+  </section>
+
+  <section id="beat2">
+    <h2>Beat 2 · The exact solution</h2>
+    <p>Constant sideways speed and a vertical speed that changes at a steady rate can be integrated on paper. Predict what doubling \(v_0\) does, then run it.</p>
+<pre>python main.py --speed 200
+python main.py --speed 50</pre>
+    <p>Range and height should scale as \(v_0^2\); flight time as \(v_0\). The default 100&nbsp;m&nbsp;s\(^{-1}\) at 45° has exact values \(T=2v_{0y}/g=14.4210\,\mathrm{s}\), \(H=v_{0y}^2/(2g)=254.929\,\mathrm{m}\), \(R=v_0^2/g=1019.72\,\mathrm{m}\). The printed default run should match those to the figures shown. That is the grade for every later beat.</p>
+    <div class="eq-block">
+      <div class="eq-label">Analytic trajectory and the range formula — derived</div>
+\[
+x(t)=u_0 t,\qquad h(t)=v_{0y}t-\tfrac12 g t^2,
+\]
+\[
+T=\frac{2v_{0y}}{g},\qquad H=\frac{v_{0y}^2}{2g},\qquad
+R=\frac{v_0^2\sin 2\theta}{g}.
+\]
+    </div>
+    <p>\(\sin 2\theta\) is largest at 45°, and \(\sin 2\theta=\sin(180^\circ-2\theta)\), which is why 30° and 60° share a range. Mass and shape never enter. A real projectile is slowed by the air; this program has none.</p>
+  </section>
+
+  <section id="beat3">
+    <h2>Beat 3 · Stepping forward: Euler’s method</h2>
+    <p>The program does not use Beat 2. It advances the state by \(\Delta t\), using the rates at the start of the step. That is forward Euler. Run it coarse.</p>
+<pre>python main.py --method euler --dt 0.5</pre>
+    <p>Compare with Beat 0. Euler’s ball goes too high, stays up too long and lands too far away. Repeat at <code>--dt 0.2</code>, <code>0.1</code>, <code>0.05</code>. Halving the step should roughly halve the range error. Divide each range error by its \(\Delta t\): the quotient sits next to the sideways speed \(u_0\).</p>
+    <div class="eq-block">
+      <div class="eq-label">Forward Euler — algorithm</div>
+\[
+\mathbf s_{n+1}=\mathbf s_n+\Delta t\,\mathbf f(\mathbf s_n).
+\]
+    </div>
+    <p>For this problem the stored Euler heights lie exactly on a parabola — the exact trajectory of a ball launched with an extra upward speed \(\tfrac12 g\Delta t\). So \(T_E=T+\Delta t\) and \(R_E=R+u_0\Delta t\), before interpolation. That is what “first-order” means here. Fire along the ground with <code>--method euler --angle_deg 0</code> and Euler still prints a small range: the phantom upward speed keeps the ball up for one step.</p>
+  </section>
+
+  <section id="beat4">
+    <h2>Beat 4 · A better step: improved Euler</h2>
+    <p>Euler uses the vertical velocity from the start of the step for the whole step. Improved Euler (Heun) takes a trial step, then advances with the average of the rates at the two ends. Compare the two methods at a coarse \(\Delta t=1\,\mathrm{s}\).</p>
+<pre>python main.py --dt 1
+python main.py --method euler --dt 1</pre>
+    <p>Improved Euler is the default, so the first command needs no <code>--method</code>. The printed height should already be the exact 254.93&nbsp;m, even though the highest stored sample is a little low — the peak falls between samples (Beat 5). The printed range is short by about a metre. Euler at the same step is tens of metres long.</p>
+    <div class="eq-block">
+      <div class="eq-label">Heun predictor and corrector — algorithm</div>
+\[
+\mathbf s^*=\mathbf s_n+\Delta t\,\mathbf f(\mathbf s_n),
+\qquad
+\mathbf s_{n+1}=\mathbf s_n+\frac{\Delta t}{2}\bigl[\mathbf f(\mathbf s_n)+\mathbf f(\mathbf s^*)\bigr].
+\]
+    </div>
+    <p>For constant acceleration the height update is exactly \(h_{n+1}=h_n+v_n\Delta t-\tfrac12 g\Delta t^2\). Every stored Heun sample lies on the exact parabola, whatever \(\Delta t\) is. That exactness is special to constant \(g\). For a force that changes along the path, Heun is second-order, not exact.</p>
+  </section>
+
+  <section id="beat5">
+    <h2>Beat 5 · Between the samples</h2>
+    <p>The ball lands, and reaches its peak, between two stored points. The printed numbers are interpolations. Look at what the program has to work with when \(\Delta t=1\,\mathrm{s}\).</p>
+<pre>python main.py --dt 1
+python -c "from driver_cannon import run_cannon_trajectory as run; xs, hs = run(dt=1.0); print(xs[-2:], hs[-2:])"</pre>
+    <p>The last stored point is below the ground and past the true range. A straight line between the last two samples crosses \(h=0\) at the printed range and the printed flight time. A parabola through the three samples around the peak is, for Heun, the exact parabola, so the printed height is exact.</p>
+    <div class="eq-block">
+      <div class="eq-label">Landing by a straight line; peak by a three-point parabola — algorithm</div>
+\[
+x^*=x_{n-1}+(x_n-x_{n-1})\,\frac{h_{n-1}}{h_{n-1}-h_n},
+\qquad
+T^*=t_{n-1}+\frac{h_{n-1}}{h_{n-1}-h_n}\,\Delta t.
+\]
+    </div>
+    <p>A chord of a downward arch lies below the arch, so the printed Heun range and time are a little short unless the landing falls on a sample. That is why 30° and 60° can print ranges that differ in the fifth figure although they share an exact range. The leftover Heun error is interpolation, not the integrator.</p>
+  </section>
+
+  <section id="beat6">
+    <h2>Beat 6 · How far to trust a printed number</h2>
+    <p>You will not usually have Beat 2 in your pocket. The practical check is the same one the exact solution makes possible here: change only \(\Delta t\), at least three times, and watch the figures you care about.</p>
+<pre>python main.py --method euler --dt 0.5
+python main.py --method euler --dt 0.1
+python main.py --dt 0.5
+python main.py --dt 0.1</pre>
+    <p>Euler’s range error tracks \(+u_0\Delta t\); its time error tracks \(+\Delta t\). Heun’s printed height does not move. Heun’s printed range is short by an amount that shrinks faster than \(\Delta t\), and not always by the same factor, because the landing sits a different fraction of the way between samples at each step. If the figures settle into the trend the method predicts, the numerical answer is converging. If they wander, something other than the step is at work. Convergence is not a proof that the model is right. That is Beat 7.</p>
+  </section>
+
+  <section id="beat7">
+    <h2>Beat 7 · Where the model and the run stop</h2>
+    <p>The program reports a failed run itself. The model’s limits it cannot report, because it has no setting for them.</p>
+<pre>python main.py --max_steps 145
+python main.py --max_steps 146
+python main.py --speed 1000</pre>
+    <p>The first command prints no summary: 145 stored points is one short of a default landing, and the program refuses to hand back an incomplete trajectory. The second command runs. A 1000&nbsp;m&nbsp;s\(^{-1}\) launch prints a range of about 102&nbsp;km. Over that distance a flat Earth has already dropped by hundreds of metres and the direction of \(g\) has turned by about a degree. <code>EarthOrbit</code> and <code>Orbit</code> are the programs for that scale. An overflowing state stops with a clear error rather than printing infinity.</p>
+    <p>Air resistance shortens a real range even at ordinary speeds. Wind, spin, curvature, rotation, and the weakening of gravity with height are all absent. Omitting drag is what makes Beat 2 possible, and Beat 2 is what makes the numerical grades possible.</p>
+  </section>
+
+  <section id="parameters">
+    <h2>Parameters</h2>
+    <table class="param-table">
+      <thead><tr><th>Flag</th><th>Default</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td class="pname">--speed</td><td class="pdefault">100</td><td>Launch speed in m&nbsp;s\(^{-1}\). Must be positive.</td></tr>
+        <tr><td class="pname">--angle_deg</td><td class="pdefault">45</td><td>Launch angle above the horizontal, 0 through 90.</td></tr>
+        <tr><td class="pname">--dt</td><td class="pdefault">0.1</td><td>Fixed timestep in seconds. Must be positive.</td></tr>
+        <tr><td class="pname">--max_steps</td><td class="pdefault">100000</td><td>Stored-point ceiling, including launch. At least 2.</td></tr>
+        <tr><td class="pname">--method</td><td class="pdefault">improved</td><td>euler (first-order) or improved (Heun).</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="output">
+    <h2>Output</h2>
+    <p>Every finished run prints version and build, the number of stored samples, then range, maximum height and flight time, each to five significant figures. A plot window opens; close it to end the program. Range and time are linear interpolations of the ground crossing. Height is a three-point parabola around the highest sample, falling back to that sample if the peak cannot be placed.</p>
+  </section>
+
+  <section id="experiments">
+    <h2>Experiments</h2>
+    <div class="exp-grid">
+      <div class="exp-card"><div class="ec-num">EXP-1 · First run</div>
+        <h4>Best angle</h4>
+        <p>From Beat 1, 45° beat 30° and 60°. Try 40° and 50°. Does any angle beat 45° in this model? What does the range formula say before you run?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-2 · Beginner</div>
+        <h4>Speed squared</h4>
+        <p>Tabulate range, height and time at 50, 100 and 200&nbsp;m&nbsp;s\(^{-1}\). Which two scale as \(v_0^2\), and which as \(v_0\)?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-3 · Beginner</div>
+        <h4>Euler’s extra kick</h4>
+        <p>Run <code>--method euler --angle_deg 0 --dt 0.1</code>. Why is the printed range not zero? What extra vertical speed is \(\tfrac12 g\Delta t\)?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-4 · Intermediate</div>
+        <h4>Halve the step</h4>
+        <p>For Euler at 45°, record the range error at \(\Delta t=0.5\), 0.2 and 0.1&nbsp;s. Does each halving halve the error? What quotient should error\(/\Delta t\) approach?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-5 · Intermediate</div>
+        <h4>Who owns the leftover?</h4>
+        <p>At \(\Delta t=1\,\mathrm{s}\), Heun’s printed height is exact and the printed range is short. Using Beat 5’s last two samples, reproduce the printed range by hand. Whose error is that?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-6 · Intermediate</div>
+        <h4>A ceiling that tells the truth</h4>
+        <p>Find the smallest <code>--max_steps</code> that lets the default launch finish. What does the program do one count below that, and why is that better than a silent short range?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-7 · Advanced</div>
+        <h4>When Heun stops being exact</h4>
+        <p>Heun is exact here because \(g\) is constant. In one sentence, say what would have to change in \(\mathbf f(\mathbf s)\) for the stored samples to leave the analytic parabola.</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-8 · Advanced</div>
+        <h4>The model breaks first</h4>
+        <p>At what launch speed does a 45° range become a few per cent of Earth’s radius? Which missing effect do you judge would spoil the number first — drag, or curvature?</p></div>
+    </div>
+  </section>
+
+  <section id="validity">
+    <h2>Domain of Validity</h2>
+    <ul>
+      <li>Flat ground, constant vertical \(g\), vacuum, launch from \(h=0\).</li>
+      <li>Valid while the range is a tiny fraction of Earth’s radius (\(\approx 6.4\times 10^6\,\mathrm{m}\)). The default 100&nbsp;m&nbsp;s\(^{-1}\) launch travels about a kilometre.</li>
+      <li>Euler’s stored path is a shifted parabola. Heun’s stored path is the exact parabola. Printed range and time always carry the interpolation of Beat 5.</li>
+      <li>An unfinished trajectory is refused. Overflow is refused.</li>
+    </ul>
+  </section>
+
+  <section id="related">
+    <h2>Related Programs</h2>
+    <ul class="related-list">
+      <li><strong>EarthOrbit</strong> — gravity over distances where a flat Earth has already failed. Chapter 4.</li>
+      <li><strong>Orbit</strong> — the Newtonian orbit integrator this program is preparing you to trust. Chapter 4.</li>
+      <li><strong>RelativisticOrbit</strong> — Schwarzschild motion, much later. Not this \(g\).</li>
+      <li><strong>Binary</strong> — two masses, a predictor–corrector, and an energy diagnostic. The grown-up version of Beats 3–6.</li>
+    </ul>
+  </section>
+
+  <section id="license">
+    <h2>License</h2>
+    <p>Based on programs by Bernard Schutz accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003). Distributed under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license.</p>
+  </section>
+</main>
+<footer>
+  CannonTrajectory — GFTGU Investigation 1.3 —
+  <a href="https://github.com/tomyee3-org/GFTGU-Programs">GFTGU-Programs</a>
+  · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
+</footer>
+</div>
+</body>
+</html>

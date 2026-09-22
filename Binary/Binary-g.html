@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Binary – Help File | GFTGU Programs</title>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+          id="MathJax-script" async></script>
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #fdf5e6; --surface: #ffffff; --border: #c8bfa0; --accent: #7b2d00;
+      --accent2: #a04010; --gold: #b5811a; --text: #1c1c1c; --muted: #5a4a3a;
+      --code-bg: #f0ede4; --note-bg: #f4f0e8; --eq-bg: #f7f2e8; --radius: 5px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.10);
+      --mono: "Courier New", Courier, monospace;
+      --sans: "Helvetica Neue", Arial, sans-serif;
+      --serif: Georgia, "Times New Roman", Times, serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--serif); font-size: 16px; line-height: 1.80; color: var(--text); background: var(--bg); }
+    .page-wrap { display: grid; grid-template-columns: 230px 1fr; grid-template-rows: auto 1fr auto; min-height: 100vh; }
+    header { grid-column: 1 / -1; background: var(--accent); color: #fff; padding: 26px 38px 20px; border-bottom: 4px solid var(--gold); }
+    header .badge { display: inline-block; font-family: var(--mono); font-size: 10.5px; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.35); border-radius: 3px; padding: 2px 7px; letter-spacing: .06em; margin-bottom: 10px; }
+    header h1 { font-size: 1.95rem; font-weight: normal; letter-spacing: -.02em; }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub { margin-top: 6px; font-family: var(--sans); font-size: 0.88rem; color: #f0d0b8; line-height: 1.55; }
+    header .sub a { color: #ffd8b8; text-decoration: none; border-bottom: 1px solid rgba(255,200,150,.4); }
+    nav { background: var(--surface); border-right: 1px solid var(--border); padding: 24px 0 40px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .nav-label { font-family: var(--sans); font-size: 10px; font-weight: 700; letter-spacing: .10em; text-transform: uppercase; color: var(--gold); padding: 14px 18px 4px; }
+    nav a { display: block; font-family: var(--sans); font-size: 13px; color: var(--muted); text-decoration: none; padding: 5px 18px 5px 22px; border-left: 3px solid transparent; }
+    nav a:hover { color: var(--accent); background: #fdf0e0; border-left-color: var(--gold); }
+    main { padding: 38px 52px 60px; max-width: 900px; }
+    h2 { font-size: 1.40rem; font-weight: normal; color: var(--accent); border-bottom: 2px solid var(--gold); padding-bottom: 6px; margin: 2.2rem 0 1.0rem; }
+    h3 { font-size: 1.08rem; font-weight: 700; color: var(--accent2); margin: 1.6rem 0 .5rem; }
+    p { margin-bottom: .85rem; }
+    ul, ol { margin: .4rem 0 .85rem 1.5rem; }
+    li { margin-bottom: .28rem; }
+    .eq-block { background: var(--eq-bg); border-left: 4px solid var(--gold); border-radius: 0 var(--radius) var(--radius) 0; padding: 14px 22px 10px; margin: 1.1rem 0 1.3rem; overflow-x: auto; }
+    .eq-label { font-family: var(--sans); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; font-weight: 700; }
+    code { font-family: var(--mono); font-size: 0.865em; background: var(--code-bg); border: 1px solid #ddd8cc; border-radius: 3px; padding: 1px 5px; }
+    pre { font-family: var(--mono); font-size: 0.855em; background: var(--code-bg); border: 1px solid #ddd8cc; border-radius: var(--radius); padding: 14px 18px; overflow-x: auto; margin: .8rem 0 1.1rem; line-height: 1.55; }
+    .note, .warn { border-radius: 0 var(--radius) var(--radius) 0; padding: 11px 16px; margin: 1.0rem 0 1.2rem; font-size: 0.93rem; color: var(--muted); }
+    .note { background: var(--note-bg); border: 1px solid var(--border); border-left: 4px solid var(--accent2); }
+    .warn { background: #fff6e8; border: 1px solid var(--gold); border-left: 4px solid var(--gold); }
+    .note strong { color: var(--accent2); }
+    .warn strong { color: var(--accent); }
+    .param-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1rem 0 1.4rem; }
+    .param-table th { color: #fff; font-family: var(--sans); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 8px 12px; text-align: left; background: var(--accent); }
+    .param-table td { padding: 7px 12px; border-bottom: 1px solid #e0d8c8; vertical-align: top; }
+    .param-table tr:nth-child(even) td { background: #faf5ec; }
+    .param-table .pname { font-family: var(--mono); font-size: 0.83rem; color: var(--accent2); font-weight: 700; }
+    .param-table .pdefault { font-family: var(--mono); font-size: 0.83rem; }
+    .related-list { list-style: none; margin: .6rem 0 1.2rem; padding: 0; }
+    .related-list li { padding: 8px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 7px; font-size: 0.90rem; }
+    .related-list li strong { font-family: var(--mono); color: var(--accent2); }
+    .exp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin: 1.0rem 0 1.4rem; }
+    .exp-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 15px 17px; box-shadow: var(--shadow); }
+    .exp-card .ec-num { display: inline-block; background: var(--accent); color: #fff; font-family: var(--mono); font-size: 11px; border-radius: 3px; padding: 1px 6px; margin-bottom: 7px; }
+    .exp-card h4 { font-size: 0.94rem; color: var(--accent2); margin: 0 0 5px; }
+    .exp-card p { font-size: 0.855rem; color: var(--muted); margin: 0; }
+    footer { grid-column: 1 / -1; background: var(--accent); color: #fff; font-family: var(--sans); font-size: 12.5px; text-align: center; padding: 18px 24px; line-height: 1.7; }
+    footer a { color: #e0c090; text-decoration: none; }
+    @media (max-width: 740px) { .page-wrap { grid-template-columns: 1fr; } nav { position: static; height: auto; } main { padding: 24px 20px 48px; } }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+<header>
+  <div class="badge">GFtGU Programs</div>
+  <h1><em>Binary</em> — Two Masses, One Force, One Check</h1>
+  <div class="sub">
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    Documentation:
+    <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+  </div>
+</header>
+<nav>
+  <div class="nav-label">Start here</div>
+  <a href="#description">Description</a>
+  <a href="#setup">Before the first run</a>
+  <div class="nav-label">Beats</div>
+  <a href="#beat0">0 · Two bodies, one force</a>
+  <a href="#beat1">1 · Who moves</a>
+  <a href="#beat2">2 · Only the separation</a>
+  <a href="#beat3">3 · Bound or not</a>
+  <a href="#beat4">4 · Reading the shape</a>
+  <a href="#beat5">5 · The corrector</a>
+  <a href="#beat6">6 · The step control</a>
+  <a href="#beat7">7 · How far to trust it</a>
+  <div class="nav-label">Reference</div>
+  <a href="#parameters">Parameters</a>
+  <a href="#output">Output</a>
+  <a href="#experiments">Experiments</a>
+  <a href="#validity">Domain of Validity</a>
+  <a href="#related">Related Programs</a>
+  <a href="#license">License</a>
+</nav>
+<main>
+  <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
+    Version 1.2.2&nbsp;&nbsp;&nbsp;&nbsp;Build 1ef841946b74
+  </p>
+
+  <section id="description">
+    <h2>Description</h2>
+    <p><strong>Binary</strong> integrates two point masses in a plane that interact only through Newtonian gravity. The same command line covers equal-mass ellipses, extreme mass ratios, and unbound encounters.</p>
+    <p>The spine of the lesson is one sentence:</p>
+    <p><em>One force law accelerates both bodies; exact motion under it conserves energy; the printed energy is how you tell how far to trust a step-by-step calculation of that motion.</em></p>
+    <div class="warn"><strong>What this program is not.</strong> No tides, collisions, relativity, or third body. The integrator is an Euler predictor plus an iterated trapezoidal corrector; error is largest at close approach. A head-on plunge can hit the timestep floor and stop with an error. The one-revolution stop is a geometric rule about the angle swept by the line joining the bodies, not a proof that the path has closed.</div>
+    <div class="note"><strong>Reading this page.</strong> Equations are rendered by MathJax from a public CDN. Without a network connection the raw \(\LaTeX\) remains visible as text. The program itself needs no internet access.</div>
+  </section>
+
+  <section id="setup">
+    <h2>Before the first run</h2>
+    <p>Unpack the program zip so you have a folder named <code>Binary</code> that contains <code>main.py</code>. Open a terminal in that folder. You need <strong>Python 3.10 or newer</strong> with NumPy and Matplotlib. If you do not already have that environment, follow the project-wide <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank"><em>GFTGU Python Setup Guide</em></a>. Then:</p>
+<pre>python main.py --version
+python main.py</pre>
+    <p>Lengths are metres, speeds metres per second, energies joules. Times in the summary are days. Following the code, \(v=\dot x\) and \(u=\dot y\).</p>
+  </section>
+
+  <section id="beat0">
+    <h2>Beat 0 · Two bodies, one force</h2>
+    <p>Two solar-mass bodies start \(9.2\times 10^{10}\,\mathrm{m}\) apart. Each is given 13&nbsp;km&nbsp;s\(^{-1}\) sideways, in opposite directions.</p>
+<pre>python main.py</pre>
+    <p>Look at the orbits plot and at the six summary lines from <code>Accepted steps</code> to <code>Maximum separation (sampled)</code>. The maximum separation is the starting separation, so they begin as far apart as they ever get. The minimum is a fraction of that, so the paths are not circles. The two curves are mirror images through the origin. <code>Termination: one relative revolution</code> is the geometric stop. Write one sentence about how the pull should change if you doubled the separation.</p>
+    <div class="eq-block">
+      <div class="eq-label">Newton’s law of gravitation</div>
+\[
+F=\frac{GM_A M_B}{r^2},
+\qquad
+r=\sqrt{(x_A-x_B)^2+(y_A-y_B)^2}.
+\]
+    </div>
+    <p>The program uses \(G=6.67430\times 10^{-11}\,\mathrm{m^3\,kg^{-1}\,s^{-2}}\). The force is attractive, acts along the joining line, and is equally strong on both bodies. Doubling \(r\) cuts it to a quarter. That is the whole physical model.</p>
+  </section>
+
+  <section id="beat1">
+    <h2>Beat 1 · Who moves, and how much</h2>
+    <p>The force on A equals the force on B. The accelerations do not. Make A twice B and start them circling a common point.</p>
+<pre>python main.py --MA 2e30 --MB 1e30 --xInitA 3.0666666667e10 --xInitB -6.1333333333e10 \
+  --uInitA 15550.5265 --uInitB -31101.053</pre>
+    <p>Read the two <code>Body A/B about centre of mass</code> blocks. The semi-major axes should sit in the inverse mass ratio. The periods should match. The plot is two circles about the origin: the centre of mass.</p>
+    <div class="eq-block">
+      <div class="eq-label">Equations of motion — integrated</div>
+\[
+\ddot x_A=-\frac{G M_B\,\Delta x}{r^3},\quad
+\ddot y_A=-\frac{G M_B\,\Delta y}{r^3},
+\]
+\[
+\ddot x_B=+\frac{G M_A\,\Delta x}{r^3},\quad
+\ddot y_B=+\frac{G M_A\,\Delta y}{r^3}.
+\]
+    </div>
+    <p>Each body accelerates in proportion to the <em>other</em> mass. Adding \(M_A\mathbf a_A+M_B\mathbf a_B\) gives zero, so the centre of mass moves without acceleration. Measured from it, A sits the fraction \(M_B/(M_A+M_B)\) of the separation away. Equal masses alone do not force \(\mathbf v_A=-\mathbf v_B\); that also needs a centre of mass at rest.</p>
+  </section>
+
+  <section id="beat2">
+    <h2>Beat 2 · Only the separation matters</h2>
+    <p>The force depends on the two positions only through \(r\). Shift the pair, then give both bodies the same extra velocity.</p>
+<pre>python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10
+python main.py --vInitA 60000 --vInitB 60000</pre>
+    <p>The Keplerian block and the sampled separations should match Beat 0. The shifted run only moves the pattern on the plot. The boosted run adds \(\tfrac12(M_A+M_B)V_{\mathrm{CM}}^2\) to the printed kinetic energy and can make the printed total energy positive even though the relative orbit is still the same bound ellipse. The energy that classifies the orbit is the energy in the centre-of-mass frame.</p>
+    <div class="note"><strong>A numerical caveat, not a new law.</strong> A large boost changes the speeds the corrector compares to, so the two relative paths agree only to the accuracy of the integrator, not to rounding error. A modest boost agrees far more closely.</div>
+  </section>
+
+  <section id="beat3">
+    <h2>Beat 3 · Energy separates bound from unbound</h2>
+    <p>Three starting speeds, same masses and same separation. Plot energy against time. Unbound runs never complete a turn, so the one-revolution stop has to come off.</p>
+<pre>python main.py --output_type energy_vs_time
+python main.py --uInitA 38091.14 --uInitB -38091.14 --no-stop_after_one_orbit --max_steps 1000 --output_type energy_vs_time
+python main.py --uInitA 60000 --uInitB -60000 --no-stop_after_one_orbit --max_steps 1000 --output_type energy_vs_time</pre>
+    <p>Read row 0.0 of the energy table and the <code>Initial Keplerian orbit</code> line. \(U\) is the same in all three runs. \(K\) is not. The sign of \(E=K+U\) in the centre-of-mass frame is elliptic, parabolic, or hyperbolic. The middle speed is escape rounded to seven digits; treat the printed eccentricity of 1 as “that rounding.”</p>
+    <div class="eq-block">
+      <div class="eq-label">Mechanical energy</div>
+\[
+K=\tfrac12 M_A(v_A^2+u_A^2)+\tfrac12 M_B(v_B^2+u_B^2),
+\qquad
+U=-\frac{G M_A M_B}{r},
+\qquad
+E=K+U.
+\]
+    </div>
+    <p>The plot of \(E\) looks flat; the column <code>(E-E0)/|E0|</code> is the diagnostic. That column is misleading when \(E_0\) is nearly zero: compare the change in \(E\) with \(K\) instead.</p>
+  </section>
+
+  <section id="beat4">
+    <h2>Beat 4 · Reading the shape of an orbit</h2>
+    <p>Before any step is taken, the program computes the exact two-body orbit of the starting data and prints it as the Keplerian block. That block is the outside check. Compare a near-circle with the default ellipse, in velocity space.</p>
+<pre>python main.py --uInitA 26934.5 --uInitB -26934.5 --output_type velocity_space
+python main.py --output_type velocity_space</pre>
+    <p>On a circle the sampled min and max separations agree. On the default ellipse they do not, and \(r_p v_p=r_a v_a\) at the two apsides. The Keplerian period should match <code>Total time</code> to the figures printed. In velocity space a bound orbit with the centre of mass at rest is a circle whose origin sits inside it; \(e=(v_p-v_a)/(v_p+v_a)\).</p>
+    <div class="eq-block">
+      <div class="eq-label">Kepler III, and the hodograph</div>
+\[
+T=2\pi\sqrt{\frac{a^3}{G(M_A+M_B)}},\qquad a=a_A+a_B,
+\]
+\[
+e=\frac{v_p-v_a}{v_p+v_a}.
+\]
+    </div>
+    <p><code>Total revolutions</code> is the signed angle swept by \(\mathbf r_A-\mathbf r_B\), divided by \(2\pi\). The run stops at the first accepted step that reaches a full turn, so it can overshoot by up to one <code>dt</code>. That is geometry, not closure of the path.</p>
+  </section>
+
+  <section id="beat5">
+    <h2>Beat 5 · The corrector</h2>
+    <p>Two point masses have an exact conic-section solution. The program integrates anyway, so you can see a method that still works when there is no such solution. Each step is an Euler predictor plus an iterated trapezoidal corrector. <code>--eps2</code> decides when to stop iterating. It is not the step size.</p>
+<pre>python main.py --eps2 1e-8
+python main.py --eps2 0.5</pre>
+    <p>Compare <code>Accepted steps</code> and rows 0.5 and 1.0 of <code>(E-E0)/|E0|</code> with the default <code>eps2=1e-4</code>. Row 0.5 sits at closest approach. The dip there barely moves when you change <code>eps2</code>. What does move is how completely the energy returns at the end of the orbit. A corrector that actually solves the trapezoid is time-symmetric; an orbit that starts at apoapsis then undoes on the way out much of the error it made on the way in.</p>
+    <div class="eq-block">
+      <div class="eq-label">Predictor, then trapezoidal corrector — algorithm</div>
+\[
+\tilde{\mathbf r}=\mathbf r^n+\mathbf v^n\Delta t,\qquad
+\tilde{\mathbf v}=\mathbf v^n+\mathbf a^n\Delta t,
+\]
+\[
+\mathbf v^{n+1}=\mathbf v^n+\tfrac12(\mathbf a^n+\mathbf a^{n+1})\Delta t,\qquad
+\mathbf r^{n+1}=\mathbf r^n+\tfrac12(\mathbf v^n+\mathbf v^{n+1})\Delta t.
+\]
+    </div>
+    <p>The end acceleration depends on the end position, so the corrector repeats, at most ten times, until both bodies’ velocities have changed by less than <code>eps2</code> between passes. If ten passes fail, the step is halved and retried.</p>
+  </section>
+
+  <section id="beat6">
+    <h2>Beat 6 · The step control</h2>
+    <p>No accepted step is longer than <code>--dt</code>. A step is shortened when the acceleration changes too much across the trial. With the default 2000&nbsp;s that never happens on this orbit. Make <code>dt</code> ten times larger and watch the controller work.</p>
+<pre>python main.py --dt 20000
+python main.py --dt 20000 --eps1 0.5</pre>
+    <p>The first run takes more steps than \(T/\Delta t\) because many steps around periapsis are shorter than 20,000&nbsp;s. The second run takes steps of exactly 20,000&nbsp;s; the dip in row 0.5 and the error in the sampled minimum separation both get worse.</p>
+    <div class="eq-block">
+      <div class="eq-label">Acceleration-change test — algorithm</div>
+\[
+\Delta_a=\frac{\lVert\tilde{\mathbf a}_A-\mathbf a_A^n\rVert}
+{\max(\lVert\tilde{\mathbf a}_A\rVert,\lVert\mathbf a_A^n\rVert)}.
+\]
+    </div>
+    <p>If \(\Delta_a>\varepsilon_1\), the trial is rejected and \(\Delta t\) is halved. After an accepted step the working step may grow 10&nbsp;per cent toward the ceiling <code>dt</code>. Forty halvings in a row hit a floor of \(\mathrm{dt}\times 10^{-12}\) and the run stops with an error. Testing body A is enough: the two accelerations are proportional.</p>
+  </section>
+
+  <section id="beat7">
+    <h2>Beat 7 · How far to trust it</h2>
+    <p>Halve <code>dt</code>, then tighten <code>eps2</code> as well. Watch the number you care about, not the tolerance.</p>
+<pre>python main.py --dt 1000
+python main.py --dt 500
+python main.py --dt 1000 --eps2 1e-8</pre>
+    <p>The dip at closest approach (row 0.5) falls roughly as \((\Delta t)^2\). The leftover at the end of the orbit (row 1.0) follows <code>eps2</code> more than <code>dt</code> on this ellipse. A tolerance is not an error bound. Choose the setting by the question: shorter <code>dt</code> for the picture at periapsis, tighter <code>eps2</code> for what remains in \(E\) after many turns.</p>
+    <p>The default eccentricity 0.767 is a mild test. An orbit with \(e\approx 0.999\) at the default settings finishes early and drops a few parts in a thousand of its energy at periapsis. A head-on start, <code>--uInitA 0 --uInitB 0</code>, hits the timestep floor.</p>
+  </section>
+
+  <section id="parameters">
+    <h2>Parameters</h2>
+    <table class="param-table">
+      <thead><tr><th>Flag</th><th>Default</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td class="pname">--MA, --MB</td><td class="pdefault">2e30, 2e30</td><td>Masses in kg.</td></tr>
+        <tr><td class="pname">--xInitA/B, --yInitA/B</td><td class="pdefault">±4.6e10, 0</td><td>Initial coordinates in m.</td></tr>
+        <tr><td class="pname">--vInitA/B, --uInitA/B</td><td class="pdefault">0, ±13000</td><td>Initial \(\dot x\), \(\dot y\) in m&nbsp;s\(^{-1}\).</td></tr>
+        <tr><td class="pname">--dt</td><td class="pdefault">2000</td><td>Maximum attempted timestep in s.</td></tr>
+        <tr><td class="pname">--max_steps</td><td class="pdefault">10000</td><td>Safety ceiling on accepted steps.</td></tr>
+        <tr><td class="pname">--eps1</td><td class="pdefault">0.05</td><td>Predictor acceleration-change threshold, in (0, 1).</td></tr>
+        <tr><td class="pname">--eps2</td><td class="pdefault">1e-4</td><td>Corrector velocity-change threshold, in (0, 1).</td></tr>
+        <tr><td class="pname">--stop_after_one_orbit</td><td class="pdefault">on</td><td>Stop after one relative turn. Off: <code>--no-stop_after_one_orbit</code>.</td></tr>
+        <tr><td class="pname">--output_type</td><td class="pdefault">orbits</td><td>orbits, velocity_space, position_vs_time_body_a/b, velocity_vs_time_body_a/b, energy_vs_time.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="output">
+    <h2>Output</h2>
+    <p>Every run prints version and build, accepted steps, how it stopped, total revolutions and time, sampled min/max separation, the Keplerian classification of the <em>starting</em> data, a centre-of-mass block for each body, and an energy table at tenths of the run. A plot window then opens. Close it to end the program. The Keplerian block is not the integrated orbit; compare the two when you want a check.</p>
+  </section>
+
+  <section id="experiments">
+    <h2>Experiments</h2>
+    <div class="exp-grid">
+      <div class="exp-card"><div class="ec-num">EXP-1 · First run</div>
+        <h4>Not a circle</h4>
+        <p>From the default summary, what fraction of the starting separation is the closest approach? Why does that already rule out a circular orbit?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-2 · Beginner</div>
+        <h4>Who circles whom</h4>
+        <p>Run Beat 1. Confirm that \(a_A/a_B=M_B/M_A\) and that the two periods agree. Where is the origin on the plot?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-3 · Beginner</div>
+        <h4>A boost is not unbinding</h4>
+        <p>Run Beat 2’s second command. Why is the printed total energy positive while the Keplerian line still says elliptic?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-4 · Intermediate</div>
+        <h4>Escape</h4>
+        <p>From Beat 3, compute \(v_{\mathrm{esc}}=\sqrt{2GM/r}\) for one body about the other reduced mass, or equivalently the speed that makes \(E=0\) in the CM frame. How close is 38091.14&nbsp;m&nbsp;s\(^{-1}\)?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-5 · Intermediate</div>
+        <h4>The hodograph</h4>
+        <p>On the default velocity-space plot, estimate \(e\) from the radius and offset of one body’s circle. Compare with the printed eccentricity.</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-6 · Intermediate</div>
+        <h4>Fixed star</h4>
+        <p>Set <code>--MB 2e32</code> and put B at the origin at rest. How close is A’s path to the one-body problem that <code>Orbit</code> integrates?</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-7 · Advanced</div>
+        <h4>Two knobs, two errors</h4>
+        <p>From Beats 5–7, which printed diagnostic follows <code>dt</code>, and which follows <code>eps2</code>? Halve each once and say what you would spend computer time on if you cared about periapsis, or about many orbits.</p></div>
+      <div class="exp-card"><div class="ec-num">EXP-8 · Advanced</div>
+        <h4>When the controller wakes up</h4>
+        <p>Run <code>--uInitA 1000 --uInitB -1000</code> at the defaults, then tighten <code>--eps1</code>. What does the default controller miss on that orbit?</p></div>
+    </div>
+  </section>
+
+  <section id="validity">
+    <h2>Domain of Validity</h2>
+    <ul>
+      <li>Newtonian point masses in a plane. No finite size, tides, radiation, or relativity.</li>
+      <li>The Keplerian block classifies the starting data, not the integrated path.</li>
+      <li>Energy conservation is a diagnostic of the integrator. A small \(\Delta E\) does not bound the error in period or phase.</li>
+      <li>Very close encounters can hit the timestep floor. Head-on starts will.</li>
+      <li>The printed \(E\) includes centre-of-mass kinetic energy. Classify bound versus unbound in the CM frame.</li>
+    </ul>
+  </section>
+
+  <section id="related">
+    <h2>Related Programs</h2>
+    <ul class="related-list">
+      <li><strong>Orbit</strong> — one body around a fixed mass. The limit of this program when one mass dominates.</li>
+      <li><strong>Multiple</strong> — the same Newtonian idea with more than two bodies. Neighbour.</li>
+      <li><strong>RelativisticOrbit</strong> — Schwarzschild orbits later in the book. Not this force law.</li>
+      <li><strong>CannonTrajectory</strong> — the first look at stepping an ODE. The integrator here is the grown-up version of that lesson.</li>
+    </ul>
+  </section>
+
+  <section id="license">
+    <h2>License</h2>
+    <p>Based on programs by Bernard Schutz accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003). Distributed under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license.</p>
+  </section>
+</main>
+<footer>
+  Binary — GFTGU —
+  <a href="https://github.com/tomyee3-org/GFTGU-Programs">GFTGU-Programs</a>
+  · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
+</footer>
+</div>
+</body>
+</html>
