@@ -6,73 +6,145 @@
 </head>
 <body>
 <h1>MercPert 1.1.0 Release Notes</h1>
-<p><b>Version:</b> 1.1.0<br><b>Build:</b> 9852baf113f7<br><b>Date:</b> 2026-09-16</p>
-<h2>New in This Release</h2><ul>
-<li>Masses, binary separation, test-particle initial conditions, integrator controls, collision radii, plotting units and annotation corner are command-line options; Sun-relative distances also accept AU. <code>--show_jacobi_diagnostic</code> enables the second plot.</li>
-<li>The printed summary reports circular Sun–companion period, test-particle integration time, sampled Sun-distance limits, maximum fractional Jacobi drift and accepted adaptive controller timestep range to five significant figures.</li>
-<li>The Help exercises use executable command examples, and the Sample Outputs include the current default console summary and commands for each plot.</li>
-</ul><p>Try <code>python main.py --m_planet_solar 9.5e-4 --vy_init 54400</code> to compare a Jupiter-mass companion with the default low-mass star.</p><h2>Interpretation</h2><p>The Sun and companion follow prescribed circular orbits; only the test particle is integrated. The Sun-distance limits are sampled at accepted states. The controller timestep range excludes rejected trial steps and is measured before a collision can shorten the final elapsed step. If no step is accepted there is no timestep range. Fractional Jacobi drift is undefined when the initial Jacobi constant is zero. A collision event is estimated by linear interpolation across an accepted step; the model does not determine long-term stability or escape automatically.</p>
-<h2>Model Scope</h2><p>This planar circular restricted three-body model omits the test particle's back-reaction, gas dynamics, relativity and impact physics. Close encounters merit smaller timesteps and tighter convergence settings.</p>
-<h2>Identification</h2><p>MODEL_VERSION: 1.1.0<br>BUILD_ID: 9852baf113f7</p><p>The Build ID covers <code>physics_mercpert.py</code>, <code>driver_mercpert.py</code>, <code>main.py</code> and <code>plot_mercpert.py</code>.</p>
 
-<section id="maintenance-status">
-<h2>Known Minor Maintenance Items: Historical Register and Current Status</h2>
-<p>The earlier wording is retained below and in the original notes. Resolved issues remain visible; items without verified completion remain on the follow-up list.</p>
-<ul>
-<li>The four core modules parse under Python 3.10 grammar, but execution on every supported Python runtime remains a useful release check.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.1.0; completion has not been verified.</li>
-<li>Future regression rounds may add more degenerate plotting cases, long-duration timestep-recovery checks, and further terminology-consistency checks.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.1.0; completion has not been verified.</li>
-<li>Historical references to “Jupiter” describe example configurations; the secondary body is more generally a user-selectable companion.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.1.0; completion has not been verified.</li>
-<li>The reference to Chapter 13 is explicitly identified as referring to the 2003 edition and should be revisited when the second-edition organization is known.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.1.0; completion has not been verified.</li>
-</ul>
-</section>
+<p>
+<b>Version:</b> 1.1.0<br>
+<b>Build:</b> 9852baf113f7<br>
+<b>Date:</b> 2026-09-23
+</p>
 
-<section id="release-history">
-<h2>Earlier Release Notes</h2>
-<p>The following release notes reproduce the archived releases. Statements about what was current then describe those versions; the status register above describes the current review.</p>
-<section id="historical-1.0.2">
-<h2>MercPert 1.0.2 Release Notes</h2>
-<p><b>Version:</b> 1.0.2<br><b>Build:</b> 9ae1fff767c9<br><b>Date:</b> 2026-08-28</p>
-<h3>Release Status</h3>
-<p>Version 1.0.2 concludes a kickoff maintenance review followed by two rounds of independent review involving Codex, Copilot, and Gemini. The reviewers examined the Python port against Schutz's original Java implementation, the planar circular restricted three-body physics, numerical behavior, validation and error handling, Help-file accuracy, Version/Build synchronization, plotting, and regression coverage. The reviews reported no unresolved scientific or release-blocking defect. The program is suitable as a release candidate for student use within the tutorial model and limitations described below.</p>
-<h3>Major Improvements in This Release</h3>
+<h2>Release Status</h2>
+
+<p>
+These notes cover Version 1.1.0, unchanged in code since the previous notes
+of 2026-09-16. Three documentation-and-test rounds followed: Kickoff2 added
+a new Beats-format Help file and fixed two issues in the classic Help;
+Audit21 fixed two P2 and one P3 issue found in the new Beats Help; Audit22
+was a review-only confirmation pass that changed nothing. None of the three
+rounds changed the four core program modules.
+</p>
+
 <ul>
-<li>Verified the prescribed barycentric circular motion of the two massive bodies, the Sun-relative input convention for Mercury, conversion to barycentric inertial coordinates, and the simultaneous Newtonian acceleration from both primaries.</li>
-<li>Retained the adaptive Euler-predictor and iterated trapezoidal-corrector method while replacing componentwise change tests with rotation-invariant vector-relative measures.</li>
-<li>Added gradual timestep recovery after difficult encounters, growing the accepted working timestep toward the configured maximum.</li>
-<li>Added validation for Boolean, non-real, non-finite, non-positive, singular, overflow-prone, and underflow-prone inputs and derived values.</li>
-<li>Added clear failures for corrector exhaustion and timesteps too small to advance floating-point time.</li>
-<li>Added optional finite-radius collision surfaces, whole-segment moving-boundary detection, termination reporting, and a dedicated collision marker.</li>
-<li>Added the Jacobi constant and an optional fractional-drift diagnostic for monitoring numerical accuracy.</li>
-<li>Improved orbit plots with explicit barycentric axis labels, selectable meter or AU units, Sun-relative initial-condition annotation, and one-period reference tracks for the massive bodies.</li>
-<li>Added executable-core version/build identification across <code>physics_mercpert.py</code>, <code>driver_mercpert.py</code>, <code>main.py</code>, and <code>plot_mercpert.py</code>, synchronized with the Help file and runtime output.</li>
-<li>Expanded and clarified the Help file, including model limits, collision-event accuracy, finite-time interpretation of orbital outcomes, and a difficulty-ordered set of eight exercises.</li>
+<li><b>Codex (Audit22):</b> no new actionable findings in the revised Beats
+Help or the program files. All three Audit21 findings were correctly
+addressed; the canonical test suite passes.</li>
+<li><b>Grok (Audit22):</b> the Beats Help file is factually clean enough to
+freeze. Recommends not opening another Beats quote-checking cycle unless a
+new science sentence is added. Lists items for this Release Notes and
+Sample Outputs Guide pass (now done), an optional 1.1.1 code list, and two
+policy questions left to Schutz and Higgs.</li>
 </ul>
-<h3>Regression Testing</h3>
-<p>A 61-test regression suite was created and verified in both the canonical <code>tests/</code> layout and a flattened upload layout. All 61 tests pass in both layouts.</p>
-<p>The suite covers program discovery, Build-ID reproduction, Python 3.10 grammar, Help-file structure and synchronization, numeric validation, binary geometry, coordinate conversion, force calculations, singularities, Jacobi behavior, collision geometry, integration invariants, timestep convergence, plotting, command-line version output, and a complete default subprocess run.</p>
-<p>An independent SciPy DOP853 comparison over 2,000,000 seconds showed approximately fourfold reductions in position and velocity endpoint error when the timestep was halved from 2000 to 1000 to 500 seconds, consistent with second-order convergence. The 10,000-step default run reached 20,000,000 seconds with a reported maximum fractional Jacobi drift of approximately 1.23e-6.</p>
-<h3>Known Limitations</h3>
+
+<h2>Open Bugs</h2>
+
+<p>None reported as of this release.</p>
+
+<h2>Major Improvements in This Release</h2>
+
 <ul>
-<li>MercPert is intended for education and conceptual exploration, not precision orbit prediction or research-grade celestial mechanics.</li>
-<li>The model is planar, circular, and restricted. Mercury has negligible mass and does not affect the two massive bodies.</li>
-<li>The model does not include gas, disk hydrodynamics, migration, pressure, shocks, planet formation, tides, relativity, accretion, or physical impact evolution.</li>
-<li>Collision radii are numerical termination surfaces, not models of impact physics. A radius of zero disables the corresponding collision test.</li>
-<li>Collision times, positions, and velocities are estimated by linear interpolation along the accepted particle and primary segments. Smaller accepted timesteps improve these estimates.</li>
-<li>The companion can represent different physical objects, so the program does not infer a companion radius from its mass. Users must select a physically appropriate positive radius when collision stopping is required.</li>
-<li>The program does not automatically classify trajectories as stable or ejected. Such conclusions require explicit distance criteria and a finite observation interval.</li>
-<li>Severe encounters can produce substantial Jacobi drift under loose settings. Quantitative work should be repeated with smaller timesteps and tighter tolerances.</li>
-<li>The executable-core BUILD_ID intentionally covers only the four Python program modules. Help-only and test-only edits do not change it, while regression tests verify that the Help file displays the Version/Build pair of the core it documents.</li>
+<li><b>Help.</b> Added a Beats-format tutorial Help file,
+<code>MercPert-claude.html</code> (ten numbered beats, ten governing
+equations, eight Suggested Experiments), alongside the existing classic
+Help. No core module changed.</li>
+<li><b>Classic Help fix.</b> Experiment 7's example command used a
+Sun-relative launch speed of 30,000 m/s, only 8,939 m/s in the barycentric
+frame the orbit is actually measured in, far below the roughly 29,785 m/s a
+circumbinary orbit at that distance needs; Mercury fell into the binary
+instead of orbiting outside it. The command now reads
+<code>--vy_init 50846 --max_steps 40000</code>, with a new paragraph
+explaining the Sun-relative-versus-barycentric distinction.</li>
+<li><b>Terminology.</b> Both Help files now describe the second body as a
+user-selectable companion throughout; "Jupiter" appears only as a mass
+reference (for example, "about 100 Jupiter masses").</li>
 </ul>
-<h3>Known Minor Maintenance Items</h3>
+
+<h2>Test Suite Growth</h2>
+
 <ul>
-<li>The four core modules parse under Python 3.10 grammar, but execution on every supported Python runtime remains a useful release check.</li>
-<li>Future regression rounds may add more degenerate plotting cases, long-duration timestep-recovery checks, and further terminology-consistency checks.</li>
-<li>Historical references to “Jupiter” describe example configurations; the secondary body is more generally a user-selectable companion.</li>
-<li>The reference to Chapter 13 is explicitly identified as referring to the 2003 edition and should be revisited when the second-edition organization is known.</li>
+<li>1.1.0 as released (2026-09-16): 68 tests.</li>
+<li>Kickoff2 (no code change): 82 tests, adding degenerate-plotting,
+long-duration timestep-recovery, terminology-consistency, and Beats-Help
+checks.</li>
+<li>Audit21 (no code change): 84 tests, adding two further Beats-Help
+regression checks: that Beat 4 quotes the signed Jacobi-drift range of the
+default run, and that a positive instantaneous energy is not presented as
+proof of permanent escape.</li>
+<li>To run the suite, use <code>python -m unittest discover -s tests -v</code>
+from the program folder. The sibling <code>GFTGU-Documentation/MercPert/</code>
+folder must hold <code>MercPert.html</code>, <code>MercPert-claude.html</code>,
+these notes, and <code>SampleOutputs/MercPert-SampleOutputs_Guide.html</code>.
+With this documentation set, 84 of 84 pass, confirmed on CPython 3.10, 3.11,
+3.12 and 3.13.</li>
 </ul>
-<h3>Version Identification</h3>
-<p>MODEL_VERSION: 1.0.2<br>BUILD_ID: 9ae1fff767c9</p>
-</section>
-</section>
+
+<h2>Known Limitations</h2>
+
+<ul>
+<li>MercPert is intended for education and conceptual exploration, not
+precision orbit prediction or research-grade celestial mechanics.</li>
+<li>The model is planar, circular, and restricted. Mercury has negligible
+mass and does not affect the two massive bodies.</li>
+<li>The model does not include gas, disk hydrodynamics, migration, pressure,
+shocks, planet formation, tides, relativity, accretion, or physical impact
+evolution.</li>
+<li>Collision radii are numerical termination surfaces, not models of impact
+physics. A radius of zero disables the corresponding collision test, and the
+companion's default radius is zero: for example, the default system's test
+particle passes within 11,504 km of the companion's centre near day 1448.8
+of a 100,000-step run, with fractional Jacobi drift already 0.090 by then,
+without triggering a stop.</li>
+<li>Collision times, positions, and velocities are estimated by linear
+interpolation along the accepted particle and primary segments; smaller
+accepted timesteps improve these estimates. In a run that ends in a
+collision, the printed maximum fractional Jacobi drift includes this
+interpolated endpoint and so can be larger than the integrator's own drift
+over its accepted steps.</li>
+<li>The companion can represent different physical objects, so the program
+does not infer a companion radius from its mass. Users must select a
+physically appropriate positive radius when collision stopping is
+required.</li>
+<li>The program does not automatically classify trajectories as stable or
+ejected. Such conclusions require an explicit distance-and-energy criterion
+and a finite observation interval.</li>
+<li>Severe encounters can produce substantial Jacobi drift under loose
+settings. Quantitative work should be repeated with smaller timesteps and
+tighter tolerances.</li>
+<li>An initial position exactly at the Sun's centre raises a singular-force
+error rather than a defined result.</li>
+<li>The executable-core BUILD_ID intentionally covers only the four Python
+program modules. Help-only and test-only edits do not change it, while
+regression tests verify that each Help file displays the Version/Build pair
+of the core it documents.</li>
+</ul>
+
+<h2>Known Minor Maintenance Items</h2>
+
+<ul>
+<li>The reference to Chapter 13 in both Help files names the 2003 first
+edition and should be revisited when the second edition's chapter
+organization is known.</li>
+<li>Optional 1.1.1 code changes, not made this release: an initial position
+exactly at the Sun's centre could take the documented zero-step collision
+path instead of raising an error; the drift maximum could be computed over
+accepted integration steps only, excluding an interpolated collision
+endpoint; a mass-based default companion collision radius, only if
+Prof. Schutz wants that behavior change.</li>
+<li>Which Help file, classic or Beats, the regression tests should treat as
+canonical is undecided; both are currently checked independently.</li>
+<li>Whether students are given the long Beats Help or a shorter cut is
+undecided.</li>
+</ul>
+
+<h2>Version Identification</h2>
+
+<p>
+MODEL_VERSION: 1.1.0<br>
+BUILD_ID: 9852baf113f7<br>
+BUILD_ID is computed from <code>physics_mercpert.py</code>,
+<code>driver_mercpert.py</code>, <code>main.py</code> and
+<code>plot_mercpert.py</code> only. <code>python main.py --version</code>
+prints <code>MercPert 1.1.0 (build 9852baf113f7)</code>, and both Help files
+show the same version and build.
+</p>
 </body>
 </html>
