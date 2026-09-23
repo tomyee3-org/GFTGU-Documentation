@@ -237,27 +237,34 @@
 </nav>
 <main id="content" tabindex="-1">
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build fc33b69c1a98
+  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 08cdcf30c04d
 </p>
 <section id="description">
 <h2>Description</h2>
 <p>
 <strong>EarthOrbit</strong> is a numerical realisation of Newton's cannon, the thought experiment
 Newton used in the <em>Principia</em> (1687) to argue that falling and orbiting are the same
-motion. A projectile is launched horizontally from a tower above Earth's surface. Fire it slowly
-and it falls back to the ground on a curve; fire it fast enough and it falls at exactly the rate
-the ground curves away beneath it, and never lands. The program integrates the projectile's
-two-dimensional trajectory step by step and reports which of these outcomes a given launch
-produces: impact, a closed orbit, or escape.
+motion. A projectile is launched horizontally from a tower above Earth's surface. Launched with
+too large a shortfall from the local circular speed, it falls back to the ground on a curve;
+launched fast enough, it falls at exactly the rate the ground curves away beneath it, tracing a
+path that never lands. Exactly how large a shortfall counts as "too large" depends on how high
+above the surface the tower stands — Experiment 6 works this out precisely, including how the
+answer differs from the program's own numerically integrated outcome. The program integrates the
+projectile's two-dimensional trajectory step by step and reports which of these outcomes a given
+launch produces: impact, a closed orbit, or escape.
 </p>
 <p>
 Two gravity models are available. The default, <code>simplified</code>, is the near-surface
 teaching approximation used for this exercise: the acceleration has the fixed magnitude
 \(g=9.8\) m s<sup>&minus;2</sup> and always points toward Earth's centre. The optional
 <code>inverse_square</code> model instead uses the real \(1/r^2\) law, with the modern JPL DE440
-value of Earth's gravitational parameter, and is required for the circular, elliptical and
-escape behaviour that makes Newton's cannon interesting. All six run settings can be supplied at
-the command line; use <code>python main.py --help</code> to see their descriptions and defaults.
+value of Earth's gravitational parameter. Both force laws admit an exact circular orbit at the
+matching launch speed, but <code>inverse_square</code> is needed for the Keplerian ellipse and
+escape behaviour that makes Newton's cannon interesting beyond that one case: only
+<code>inverse_square</code> makes a non-circular bound orbit close on itself and repeat, rather
+than drift into a rosette (see the spine sentence below and Beat 5). All six run settings can be
+supplied at the command line; use <code>python main.py --help</code> to see their descriptions
+and defaults.
 </p>
 <p>The spine of the lesson is one sentence: <em>launch speed relative to the local circular speed
 decides whether the launch point becomes the near side or the far side of an orbit, and only the
@@ -384,8 +391,8 @@ the rounded \(g=9.8\); going the other way, \(gR_\oplus^2\approx3.98678\times10^
 parts in 10,000 <em>above</em> \(\mu_\oplus\) (<code>K_APPROX</code> in
 <code>physics_earthorbit.py</code> is exactly this product, kept only for this comparison). Then
 ask which law a real satellite obeys: only <code>inverse_square</code> is real physics; the
-default is an approximation that happens to agree with it near the surface, to about four
-significant figures, not by construction.</p>
+default is an approximation that happens to agree with it near the surface, to about 0.02% (the
+1.95-parts-in-10,000 figure above), not by construction.</p>
 <p><em>Then</em> the two laws themselves. Both point from \((x,y)\) toward the origin, along the
 unit vector \((-x/r,-y/r)\); they differ only in the scalar multiplying it:</p>
 <div class="eq-block">
@@ -714,7 +721,7 @@ python main.py --h0 1500000 --uInit 8786.7150 --force_law simplified     --dt 1 
 <code>Revolution 1: time 5460.9 s</code> at \(r=6{,}678{,}200\) m and
 <code>Revolution 1: time 6988.7 s</code> at \(r=7{,}878{,}200\) m. Divide \(T^2\) by \(r^3\) for
 each, using these printed, numerically integrated periods: \(1.0013\times10^{-13}\) and
-\(9.9889\times10^{-14}\) — close to each other (within about 1.2%) but not identical, because
+\(9.9888\times10^{-14}\) — close to each other (within about 1.2%) but not identical, because
 these periods carry the same first-order drift Beat 7 measured; the run was only stepped to
 \(\Delta t=1\) s, not the finer step a precise test would need. Then the two <code>simplified</code>
 periods: <code>Revolution 1: time 5189.8 s</code> and <code>Revolution 1: time 5636.6 s</code> at
@@ -744,8 +751,11 @@ speed and the corresponding entry in Eq. 4 or its analogue:</p>
 \]
 </div>
 <p>The inverse-square case is Kepler's third law exactly, with the constant of proportionality
-\(4\pi^2/\mu_\oplus\) independent of which planet's satellites are compared, provided \(\mu\) is
-used rather than mass directly. The simplified case is not a law of nature at all — it is what
+\(4\pi^2/\mu_\oplus\) the same for every satellite of <em>Earth</em> regardless of its orbit's
+size, because it depends only on \(\mu_\oplus\) — not on which planet the satellites orbit. A
+satellite of a different body uses that body's own \(\mu\) and gets a different constant; using
+\(\mu\) rather than mass directly is what makes the constant depend on the central body alone and
+not on the satellite's own mass. The simplified case is not a law of nature at all — it is what
 follows from assuming, incorrectly, that gravity keeps the surface value \(g\) at every altitude —
 and the very different \(r\)-dependence is one more way (besides Eq. 6) of seeing that the two
 force laws are not the same physics at different levels of approximation, but genuinely different
@@ -779,9 +789,15 @@ report whatever the far side of Earth happens to look like — an ordinary orbit
 instead of the impact that actually occurred partway through it; the driver instead raises
 <code>EarthOrbit: this step's straight-line displacement passed through Earth's reference surface
 without either endpoint landing inside it; dt is too coarse to resolve the surface crossing --
-reduce dt</code>. Every command on this page uses a <code>dt</code> far below the size that would
-trigger this, but a very large <code>--dt</code> paired with a fast inward <code>vInit</code> can
-reach it. Then notice what EarthOrbit does
+reduce dt</code>. This check tests the stored straight-line chord between two consecutive samples
+-- the same chord the averaged-velocity update in Eq. 7 actually advances along, so it is
+consistent with what the integrator itself does, not with the true curved path between samples.
+That means it can only see a chord that clips the sphere; a genuinely curved trajectory that stays
+outside Earth the whole time while its straight-line chord dips inside would still be rejected as
+if it had crossed, which is the conservative direction for a safety check to err in. Every command
+on this page uses a <code>dt</code> far below the size that would trigger this, but a very large
+<code>--dt</code> paired with a fast inward <code>vInit</code> can reach it. Then notice what
+EarthOrbit does
 <em>not</em> do: unlike some other GFTGU programs, it never raises an error merely because
 <code>maxSteps</code> is reached before impact or before a full revolution — reaching the step
 budget is treated as a normal, if incomplete, outcome, and the summary says so explicitly
@@ -1013,7 +1029,7 @@ range and flight time report the interpolated crossing.</div>
 <p>Every run prints a summary and then opens the plot. The first line gives the version, the Build
 ID, and the number of trajectory samples. This is the full summary of the default run,
 <code>python main.py</code>:</p>
-<pre class="code-block"><code>EarthOrbit 1.3.0 (build fc33b69c1a98) — 503 trajectory samples
+<pre class="code-block"><code>EarthOrbit 1.4.0 (build 08cdcf30c04d) — 503 trajectory samples
 Outcome: Surface impact before one revolution
 Fraction of a revolution: 0.039512
 Total flight time: 200.44 s
@@ -1139,28 +1155,54 @@ extra time before the surface is reached again.</p>
 </div>
 <div class="experiment-card" id="exp6">
 <div class="exp-num">Experiment 6 · Intermediate</div>
-<div class="exp-title">Map outcome against launch speed, and find the real impact boundary</div>
+<div class="exp-title">Two impact boundaries, not one: the analytic threshold versus the numerical
+threshold</div>
 <p class="exp-beat">Goes with <a href="#beat2">Beat 2</a>, <a href="#beat3">Beat 3</a>, and
 <a href="#beat4">Beat 4</a>.</p>
 <p>At \(h_0=300\) km under <code>inverse_square</code>, run a sequence of launch speeds spanning
 well below \(v_c=7725.7\) m/s to well above \(v_e=10{,}925.8\) m/s — for example every 500 m/s
 from 6000 to 12000 — and record each run's outcome and, when printed, its osculating eccentricity.
-Plot eccentricity against launch speed and identify the orbit-versus-escape boundary at \(v_e\).
-Then, separately, narrow in on the impact-versus-orbit boundary itself: it is <em>not</em> at
-\(v_c\). A launch below \(v_c\) makes the launch point an apogee (Beat 3's note under Eq. 5); the
-projectile only impacts if the resulting perigee — printed as <code>Osculating perigee
-altitude</code> — is negative, i.e. below Earth's surface. Bisect on launch speed, watching that
-one printed line, to find the speed at which the perigee altitude crosses zero.</p>
+Plot eccentricity against launch speed and identify the orbit-versus-escape boundary at \(v_e\).</p>
+<p>Now narrow in on the impact boundary. This is not one question but two, and they have different
+answers. The <strong>analytic threshold</strong> comes from the launch state alone: below \(v_c\)
+the launch point is an apogee (Beat 3's note under Eq. 5), so bisect on launch speed watching only
+the printed <code>Osculating perigee altitude</code> line, and find where it crosses zero. That
+line is computed from Eq. 5 using \(h_0\), \(u_0\), \(v_0\) alone — no <code>dt</code>, no
+<code>maxSteps</code>, no integration. The <strong>numerical threshold</strong> is a different
+bisection at a fixed \(\Delta t\) and <code>maxSteps</code>: watch the printed <code>Outcome</code>
+line (impact or not) instead, and find where <em>that</em> flips. This one uses the actual stepped
+trajectory — the same first-order, non-symplectic stepper Beat 7 and Beat 9 already show drifting
+away from the exact orbit.</p>
+<p>Near the ground the two do not agree. At \(u_0=7635\) m/s the analytic osculating perigee
+altitude is \(-4{,}733.5\) m — the ideal two-body orbit passes under the ground — yet at
+\(\Delta t=1\) s the program reports a completed orbit with no impact at all (minimum stored
+altitude \(+18{,}102\) m); only at the finer \(\Delta t=0.1\) s does the identical launch actually
+strike the surface. The stepper can carry the projectile past a perigee the ideal orbit would have
+put underground, simply because it samples position too coarsely to register the dip — the same
+kind of error Beat 9's coarse-step guard exists to catch when it is large enough to tunnel clean
+through the reference sphere, but here it is small enough to just miss the ground instead.</p>
+<p>Bisect the numerical threshold at a few step sizes and watch it converge on the analytic one:</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Numerical impact-boundary launch speed converging on the analytic threshold as the timestep shrinks"><table class="compare-table">
+<thead><tr><th>Δt (s)</th><th>Numerical impact-boundary u₀ (m/s)</th><th>Gap below analytic 7636.45 m/s</th></tr></thead>
+<tbody>
+<tr><td>1.0</td><td>7629.44</td><td>7.01</td></tr>
+<tr><td>0.5</td><td>7632.89</td><td>3.56</td></tr>
+<tr><td>0.1</td><td>7635.73</td><td>0.72</td></tr>
+</tbody></table></div>
+<p>The numerical boundary rises toward the analytic one as \(\Delta t\) shrinks, and roughly in
+proportion to \(\Delta t\) — halving the step roughly halves the remaining gap — consistent with
+the first-order local error this same stepper shows everywhere else in this file. The analytic
+7636.45 m/s answers "where is the ideal perigee at the ground"; the \(\Delta t\)-dependent numbers
+answer "where does this program, at this step size, actually report an impact" — and the second
+question is the only one this program can answer without also choosing a \(\Delta t\).</p>
 <p><strong>Check:</strong> 9000 m/s gives eccentricity 0.35708 (bound ellipse); 11,500 m/s gives
-eccentricity 1.2157 (unbound); the bound/unbound transition occurs exactly at \(e=1\), which Eq. 5
-places at \(v_0=v_e\), and Experiment 1 already confirms this program-wide. The impact boundary is
-a different question: 7700 m/s, itself already 25.7 m/s below \(v_c\), completes a full orbit
-(<code>Osculating perigee altitude: 2.1179e+05 m</code>, comfortably above ground), and the true
-impact threshold is close to 7636.45 m/s — about 89 m/s, not a few tens of centimetres, below
-\(v_c\). Contrast this with Beat 0's near-surface default launch, where the same calculation puts
-the threshold only about 0.09 m/s below the local circular speed; the "how far below circular is
-safe" margin depends entirely on altitude, which is exactly the point this experiment is meant to
-make concrete.</p>
+eccentricity 1.2157 (unbound); Eq. 5 places the bound/unbound transition exactly at \(e=1\), i.e.
+\(v_0=v_e\), and Beat 4's own 11,500 m/s run is the concrete case that crosses it. Contrast the
+300 km case above with Beat 0's near-surface default launch, where the analytic threshold sits
+only about 0.09 m/s below the local circular speed instead of 89 m/s — the "how far below circular
+is safe" margin depends entirely on altitude, which is exactly the point this experiment is meant
+to make concrete, and the analytic/numerical split above is the reminder that "safe" also depends
+on \(\Delta t\) near the ground.</p>
 </div>
 <div class="experiment-card" id="exp7">
 <div class="exp-num">Experiment 7 · Intermediate–Advanced</div>
