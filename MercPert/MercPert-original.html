@@ -395,10 +395,10 @@
     </p>
 <p>
       The default primary is Sun-like. The default companion has a mass of
-      \(0.1\,M_\odot\), about 100 Jupiter masses; despite the historical
-      “Jupiter” label, an object this massive is above the roughly
-      \(0.08\,M_\odot\) hydrogen-burning threshold and is therefore in the
-      low-mass stellar regime. The exaggerated companion mass makes strong
+      \(0.1\,M_\odot\), about 100 Jupiter masses. An object this massive is
+      above the roughly \(0.08\,M_\odot\) hydrogen-burning threshold, so the
+      default companion is a low-mass star rather than a planet; the program
+      calls the second massive body the <em>companion</em> whatever its mass. The exaggerated companion mass makes strong
       scattering and orbital instability easy to see.
     </p>
 <p>
@@ -977,10 +977,18 @@ python main.py --x_init_au 0.35 --max_steps 12000</code></pre>
       sharp.
     </p>
 <h3>7 · Equal-Mass Binary and Circumbinary Orbits <small>(Advanced)</small></h3>
-<pre><code>python main.py --m_planet_solar 1 --binary_separation_au 1 --x_init_au 2.5 --vy_init 30000 --max_steps 15000</code></pre>
+<pre><code>python main.py --m_planet_solar 1 --binary_separation_au 1 --x_init_au 2.5 --vy_init 50846 --max_steps 40000</code></pre>
 <p>
       Set both massive bodies to \(1\,M_\odot\) and choose a separation near
-      1 AU. Search for long-lived orbits far outside the binary as well as
+      1 AU. Remember that <code>vy_init</code> is measured relative to the Sun,
+      which is itself moving. In this binary the Sun starts 0.5 AU from the
+      centre of mass, moving at about \(21.06\,\mathrm{km\,s^{-1}}\) in the
+      \(-y\) direction, so a test particle meant to circle the whole binary at
+      2 AU from its centre of mass needs the barycentric circular speed
+      \(\sqrt{G(2M_\odot)/2\,\mathrm{AU}}\approx29.78\,\mathrm{km\,s^{-1}}\)
+      <em>plus</em> the Sun's 21.06 km/s: about 50,846 m/s relative to the Sun,
+      as in the command above. Entering only 30,000 m/s leaves the particle far
+      too slow in the barycentric frame, and it falls into the binary. Search for long-lived orbits far outside the binary as well as
       unstable trajectories between the two stars. For a fixed integration
       duration, compare the smallest long-lived circumbinary orbit you can find
       with the binary separation. Explain why the experiment establishes
