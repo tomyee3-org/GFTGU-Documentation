@@ -490,8 +490,8 @@ frame, as a fraction of its starting value.</p>
 <p>Three tasks, in order. First, read the energy result: 0.3110. Mercury's energy wanders by 31%
 over the run, so it is not even approximately conserved. Then read the printed
 <code>Maximum fractional Jacobi drift</code>: 1.2305e-06, about one part in a million, and look at
-the second plot, where the drift wanders between about +0.1 and &minus;1.2 &times;
-10<sup>&minus;6</sup> without a steady trend. Then compare the two: the same run, the same calculated path, and one
+the second plot, where the drift wanders between about &minus;1.23 &times; 10<sup>&minus;6</sup>
+and +6.6 &times; 10<sup>&minus;8</sup> without a steady trend. Then compare the two: the same run, the same calculated path, and one
 quantity changes 250,000 times more than the other. The Jacobi constant is the conserved one, and
 its tiny drift is entirely numerical error.</p>
 <p><em>Then</em> why. Mercury's energy is not conserved because the stars move, so the gravity it
@@ -590,10 +590,13 @@ than one binary period. Then the second run keeps the default companion but star
 Sun alone would send Mercury out to 3.6 AU on a long ellipse (Eq. 4), right across the companion's
 circle. After 694.44 days its Sun distance has reached 11.531 AU, more than sixteen times the
 binary separation, and the plot shows the blue path heading away to the upper left, far outside
-both stars' circles: the companion has thrown it out. Then notice what the program does <em>not</em> say. The first line reads <code>max_steps
-reached</code>, not "escaped". The program has no rule for deciding that Mercury has left for good.
-You have to supply one, for example that Mercury's energy measured from the centre of mass is
-positive (Experiment 6).</p>
+both stars' circles. Over the 694 simulated days, the companion has thrown it far out of the
+system; the run by itself cannot promise it will never come back. Then notice what the program
+does <em>not</em> say. The first line reads <code>max_steps reached</code>, not "escaped". The
+program has no rule for deciding that Mercury has left for good, and a simple one is harder to
+state than it looks: Mercury's energy is not conserved while it is near the moving stars (Beat 4),
+so a positive energy can turn negative again after the next encounter. Experiment 6 builds a
+finite-time criterion that allows for this.</p>
 <p><em>Then</em> how a collision is found. Point masses have no surface, so the program stops Mercury
 at a <em>collision radius</em> that you choose: by default the Sun's is its nominal radius,
 \(R_\odot=6.957\times10^{8}\) m, and the companion's is zero, meaning "never stop". After each
@@ -660,9 +663,13 @@ about 1.3 orbits; Experiment 7 looks for the smallest orbit that survives.</p>
 
 <section id="beat8">
 <h2>Beat 8 · How far to trust a run</h2>
-<p>Every printed number comes from a calculation with a finite step. The Jacobi constant tells you
-how large the resulting error is, because the exact equations keep it fixed. Use it twice: once on
-the smooth default orbit, once on the close encounter of Beat 5.</p>
+<p>Every printed number comes from a calculation with a finite step. The Jacobi drift is one
+check on the resulting error: the exact equations keep \(C\) fixed, so any change in it is
+numerical. It is not a bound on every error, though. Different points on the same exact orbit
+share the same \(C\), so a run can keep \(C\) well and still be early or late on its path, or
+differ in where an encounter sends it; for those, compare runs at tighter settings over the same
+stretch of time. Use the drift twice here: once on the smooth default orbit, once on the close
+encounter of Beat 5.</p>
 <pre class="code-block"><code>python main.py
 python main.py --dt 1000 --max_steps 20000
 python main.py --dt 500 --max_steps 40000
@@ -943,7 +950,10 @@ companion</code>.</li>
 <li><strong>Sun-distance range:</strong> Mercury's smallest and largest distance from the Sun
 among the stored states.</li>
 <li><strong>Maximum fractional Jacobi drift:</strong> the largest \(|C-C_0|/|C_0|\) over the run
-(Eq. 6); it is reported as undefined if \(C_0\) happens to be exactly zero.</li>
+(Eq. 6); it is reported as undefined if \(C_0\) happens to be exactly zero. In a run that ends in
+a collision, the final stored state is the linearly interpolated collision point (Eq. 9), and it
+is included, so the printed drift can be somewhat larger than the integrator's own drift over the
+accepted steps.</li>
 <li><strong>Working timestep range:</strong> the smallest and largest accepted controller step,
 or <code>none (no accepted steps)</code> if the run stopped at once.</li>
 </ul>
@@ -1031,14 +1041,21 @@ it is the other way round (Beat 8): halving <code>--dt</code> leaves the drift n
 <p>Hold the default binary fixed and vary Mercury's starting distance from the Sun, for example
 <code>python main.py --x_init_au 0.25 --max_steps 30000</code>, then 0.35 and 0.45, and more
 values in between. Decide in advance how you will classify each run after 30,000 steps: still
-close to the Sun, strongly disturbed, collided, or escaped. For "escaped", write a few lines of
-Python that call <code>run_mercpert()</code> and compute Mercury's energy per unit mass,
-\(\tfrac12v^2-GM_\odot/r_\odot-GM_c/r_c\), at the last stored state; a positive value means it is
-no longer bound to the binary.</p>
+close to the Sun, strongly disturbed, collided, or a candidate escape. For the last, write a few
+lines of Python that call <code>run_mercpert()</code> and compute Mercury's energy per unit mass,
+\(E=\tfrac12v^2-GM_\odot/r_\odot-GM_c/r_c\), at every stored state. Near the stars \(E\) is not
+conserved (Beat 4), so its sign at one moment proves nothing; far from the binary, where the two
+stars pull almost like one fixed mass at the centre, \(E\) barely changes. A reasonable
+<em>finite-time</em> criterion is therefore: Mercury is many binary separations from the centre of
+mass, \(E\) is positive, and \(E\) has stayed nearly constant since it got there. Even that
+describes only the time simulated; confirm it with a longer run.</p>
 <p><strong>Check:</strong> at 0.25 AU Mercury stays between 0.23209 and 0.25319 AU. At 0.35 AU it
 ranges from 0.032654 to 0.67442 AU but its energy stays negative. At 0.45 AU it passes about
-0.045 AU from the companion on day 56, its energy turns positive, and it ends 11.531 AU from the
-Sun. The boundary you find depends on the run length and on your criteria; it is not an absolute
+0.045 AU from the companion on day 56. Its energy turns positive then, negative again on day 62,
+and positive once more on day 228. From day 501, when it is more than ten binary separations from
+the centre of mass, its energy stays at about \(+7.107\times10^{8}\) J/kg, changing by only about
+0.02% through the end of the run, 11.531 AU from the Sun: a candidate escape by the criterion
+above. The boundary you find depends on the run length and on your criteria; it is not an absolute
 stability limit.</p>
 </div>
 <div class="experiment-card" id="exp7">
@@ -1052,8 +1069,9 @@ steps and find the smallest \(R\) at which Mercury stays near its starting orbit
 multiple of the binary separation.</p>
 <p><strong>Check:</strong> at \(R=2.0\) AU (<code>--x_init_au 2.5 --vy_init 50846</code>)
 Mercury's Sun distance stays between 1.5095 and 2.6554 AU for 1388.9 days. At \(R=1.5\) AU
-(<code>--x_init_au 2.0 --vy_init 55453</code>) it is thrown out, becoming unbound after about 128
-days and reaching 17.893 AU. The boundary lies between 1.5 and 2 times the separation for runs of
+(<code>--x_init_au 2.0 --vy_init 55453</code>) it is thrown out: its energy turns positive at
+about day 128 and stays positive for the rest of the run, and it reaches 17.893 AU from the Sun,
+a candidate escape by Experiment 6's criterion. The boundary lies between 1.5 and 2 times the separation for runs of
 this length.</p>
 </div>
 <div class="experiment-card" id="exp8">
@@ -1071,8 +1089,8 @@ around the companion.</p>
 0.50226 AU from the Sun. <code>python main.py --x_init_au 0.50226 --vy_init 26789.83 --max_steps
 5000</code> stays within 0.01 AU of its start for about 93 days and then drifts toward the companion
 (Sun distance 0.50226 to 0.63380 AU), while <code>python main.py --x_init_au 0.5 --vy_init 26669.35
---max_steps 5000</code>, just 0.0023 AU nearer the Sun, falls toward the Sun within about 22 days
-(0.096849 to 0.50000 AU). \(L_1\) is an equilibrium, but an unstable one.</p>
+--max_steps 5000</code>, just 0.0023 AU nearer the Sun, starts to peel away sunward after
+about 22 days and later comes as close as 0.096849 AU to the Sun (range 0.096849 to 0.50000 AU). \(L_1\) is an equilibrium, but an unstable one.</p>
 </div>
 </section>
 <section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
