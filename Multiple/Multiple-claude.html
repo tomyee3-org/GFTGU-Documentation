@@ -237,7 +237,7 @@
 </nav>
 <main id="content" tabindex="-1">
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build d926f8b8be68
+  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 412f37f02fdc
 </p>
 <p class="small" style="font-size:0.8em; color:#666;">
   The Build identifier covers the four Python program modules listed below. Help-only or test-only
@@ -357,7 +357,7 @@ total acceleration is the vector sum of every such pull acting on it:</p>
 \times10^{20}\ \mathrm{m^3\,s^{-2}}\) is factored out, so <code>compute_accelerations()</code> in
 <code>physics_multiple.py</code> evaluates Eq. 2 with \(G m_B\) replaced by
 \(GM_\odot\,\tilde m_B\), where \(\tilde m_B\) is body B's mass in solar units. Every unordered pair
-is evaluated once, and Newton's third law lets the same evaluation update both bodies" running
+is evaluated once, and Newton's third law lets the same evaluation update both bodies' running
 accelerations at once:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 3 — Pair-loop acceleration <span class="tag tag-alg">ALGORITHM</span></div>
@@ -398,17 +398,16 @@ energy drift is \(8.0878\times10^{-6}\), even smaller than Beat 0's, because thi
 steps instead of 8000) has not yet reached the encounter that eventually stresses Beat 0's
 integration (Beat 6). Then evaluate the three initial accelerations directly from Eq. 2 &mdash; not
 from the program's plot, but from the same formula it uses:</p>
-<div class="code-block"><code>python3 -c "
-import physics_multiple as phys, numpy as np
-pos = np.array([[4.6e10,0.,0.],[-4.6e10,0.,0.],[0.,4.6e10,0.]])
-masses = np.array([2.,1.,0.5])
-print(phys.compute_accelerations(pos, masses))
-"</code></div>
+<div class="code-block"><code>python -c "import physics_multiple as phys, numpy as np; pos = np.array([[4.6e10,0.,0.],[-4.6e10,0.,0.],[0.,4.6e10,0.]]); masses = np.array([2.,1.,0.5]); print(phys.compute_accelerations(pos, masses))"</code></div>
+<p>One line, so it pastes safely into cmd.exe as well as a POSIX shell &mdash; a version
+broken across several physical lines inside one quoted string would have cmd.exe treat each line
+break as its own command. The same trick (<code>import ...; statement; statement; print(...)</code>)
+applies to any short diagnostic query like this one.</p>
 <p>which prints accelerations of magnitude 0.028972, 0.043871 and 0.070121 m/s\(^2\) for the
 2, 1 and 0.5 solar-mass bodies respectively. The heaviest body has the <em>smallest</em>
 acceleration and the lightest has the largest &mdash; the opposite of what "more force on a bigger
 mass" might suggest at first, and Eq. 2 explains why: body A's own mass, \(m_A\), does not appear
-anywhere on the right-hand side. A body's acceleration depends only on the <em>other</em> bodies"
+anywhere on the right-hand side. A body's acceleration depends only on the <em>other</em> bodies'
 masses and positions, never on its own; the same cancellation Binary's Beat 1 finds for two bodies
 holds pair by pair here too. Then check that the three bodies still push back on one another exactly
 as hard as they are pushed. Multiply each acceleration by its own body's mass and add the three
@@ -598,19 +597,7 @@ program does instead.</p>
 \(2.576\times10^4\) m/s: a near-circular two-body orbit. Look at the printed momentum and at the
 result dictionary's <code>momentum_drift_normalization</code>, which the console summary does not
 print directly.</p>
-<pre class="code-block"><code>python3 -c "
-from driver_multiple import SimulationParams, run_simulation
-p = SimulationParams(n_bodies=2, masses_solar=[1,1],
-    positions_init=[[5e10,0,0],[-5e10,0,0]],
-    velocities_init=[[0,25760,0],[0,-25760,0]],
-    dt=2000., max_steps=3000, eps1=.005, eps2=1e-7,
-    output_type='trajectories', animation_mode='trails',
-    frame_time=2e5, frame_interval_ms=50, trail_time=6e5,
-    projection='xy', axis_mode='fixed', display_frame='com')
-r = run_simulation(p)
-print(r['momentum_drift_normalization'], r['momentum_drift_scale'])
-print(r['angular_momentum_drift_normalization'], r['angular_momentum_drift_scale'])
-"</code></pre>
+<pre class="code-block"><code>python -c "from driver_multiple import SimulationParams, run_simulation; p = SimulationParams(n_bodies=2, masses_solar=[1,1], positions_init=[[5e10,0,0],[-5e10,0,0]], velocities_init=[[0,25760,0],[0,-25760,0]], dt=2000., max_steps=3000, eps1=.005, eps2=1e-7, output_type='trajectories', animation_mode='trails', frame_time=2e5, frame_interval_ms=50, trail_time=6e5, projection='xy', axis_mode='fixed', display_frame='com'); r = run_simulation(p); print(r['momentum_drift_normalization'], r['momentum_drift_scale']); print(r['angular_momentum_drift_normalization'], r['angular_momentum_drift_scale'])"</code></pre>
 <p>Three tasks, in order. First, the printed momentum: \(\mathbf P=(0,0,0)\) exactly, both at the
 start and at the end, because the two opposite momenta, each of magnitude \(2.576\times10^4\) m/s,
 cancel exactly by construction. Then the query above, which prints
@@ -873,9 +860,17 @@ drift somewhere in a different stretch of the trajectory, not the same stretch m
 <p><em>Then</em> compare them properly, over a stretch both runs actually share. Restricted to the
 first 17.5 days &mdash; before either run's reported maximum &mdash; the two integrations agree
 closely: \(7.0649\times10^{-6}\) for \(\Delta t=1000\) against \(7.1182\times10^{-6}\) for
-\(\Delta t=500\), both at essentially the same moment, day 14.851. That is ordinary, well-behaved
-convergence, and the whole-run comparison above hides it. The two runs land at different final days
-(17.559 against 17.608) despite spending the same nominal step budget
+\(\Delta t=500\), both at essentially the same moment, day 14.851. A third, independently finer run,
+\(\Delta t=250\) s (16000 steps, reaching day 26.25), gives \(9.1482\times10^{-6}\) over the same
+window, at day 17.49986 &mdash; right at the window's edge, and slightly <em>larger</em> than either
+of the first two, not smaller. All three agree to within about thirty percent of one another, which
+is what closes the eighteen-fold gap above; but agreement over a shared stretch is not the same claim
+as convergence to a fixed value, and this finer run's own maximum going up rather than down is the
+reminder why: a "maximum drift somewhere in this window" is a spiky statistic that depends on
+exactly which instants a run happens to sample near a close encounter, not a quantity that need
+shrink monotonically as \(\Delta t\) shrinks. The whole-run comparison in the previous paragraph
+hides all of this. The two runs also land at different final days (17.559 against 17.608) despite
+spending the same nominal step budget
 (\(4000\times1000\,\mathrm{s}=8000\times500\,\mathrm{s}=4\times10^{6}\) s) because, once the
 adaptive controller starts shrinking the step for a close encounter (Beat 6), it is largely the
 <em>number</em> of accepted steps still available, not the ceiling <code>dt</code>, that decides how
@@ -897,12 +892,18 @@ run, not evidence that halving <code>dt</code> made the integration worse.</p>
 but that a single <code>Maximum conservation drift</code> figure from two runs is only comparable
 when both runs cover the same stretch of simulated time. A run that happens to reach further into,
 or through, a close encounter will usually report a larger maximum than one that stops just short of
-it, whatever the step size; that says where the encounter is, not which run is more accurate. To
-judge convergence near a close encounter, compare over a specified common time (as above), extend the
-shorter run to the same endpoint, or check with a tighter third calculation, as this beat just did
-&mdash; not the printed summary line alone. Three or more bodies can still separate onto genuinely
-different trajectories after enough close encounters (the warning at the top of this page), but
-establishing that takes exactly this kind of matched comparison, never a mismatched one. At the far
+it, whatever the step size; that says where the encounter is, not which run is more accurate. Near a
+close encounter, compare over a specified common time (as above) and extend the shorter run to the
+same endpoint (as this beat did, \(\Delta t=1000\) to 6000 steps) rather than trusting a single
+whole-run maximum &mdash; and do not expect an additional, independently finer run to make that
+maximum shrink monotonically, because it may not (as this beat's own \(\Delta t=250\) comparison just
+showed). A window maximum that stays roughly the same size across several step sizes is evidence the
+runs agree; establishing genuine convergence to a fixed answer takes comparing a specific observable,
+such as a position, at matched times across at least three step sizes, or checking against an
+independently accurate reference &mdash; not the printed summary line alone. Three or more bodies can
+still separate onto genuinely different trajectories after enough close encounters (the warning at
+the top of this page), but establishing that takes exactly this kind of matched comparison, never a
+mismatched one. At the far
 end of this scale sits an exact singularity. Two \(10^{11}\,M_\odot\)
 point masses, 50 kpc apart, launched directly at one another with zero impact parameter (the classic
 Help's "Galaxy collision" scenario) head for \(r=0\), where Eq. 1 is infinite:</p>
@@ -1146,7 +1147,7 @@ run.</p>
 <h2>Printed Summary</h2>
 <p>Every run prints a summary before opening a plot. This is Beat 0's default run,
 <code>python main.py --max_steps 8000 --output_type trajectories</code>:</p>
-<pre class="code-block"><code>Multiple 1.4.0 (build d926f8b8be68) — accepted steps: 8000; simulated time: 1.8094e+01 days
+<pre class="code-block"><code>Multiple 1.4.0 (build 412f37f02fdc) — accepted steps: 8000; simulated time: 1.8094e+01 days
 Display frame: COM (center of mass). Plots subtract the instantaneous center-of-mass position R_CM; printed E, P and L use input coordinates.
 Initial user-frame totals (scaled by one solar mass): E=-4.6226e+09 m^2/s^2; E_internal=-4.9226e+09 m^2/s^2; P=(-3.0000e+04, -3.0000e+04, 0.0000e+00) m/s; L=(0.0000e+00, 0.0000e+00, 2.7600e+15) m^2/s
 Final user-frame totals (scaled by one solar mass): E=-4.6226e+09 m^2/s^2; E_internal=-4.9226e+09 m^2/s^2; P=(-3.0000e+04, -3.0000e+04, 0.0000e+00) m/s; L=(0.0000e+00, 0.0000e+00, 2.7600e+15) m^2/s
