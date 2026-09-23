@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EarthOrbit – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:          #fdf5e6;
+      --surface:     #ffffff;
+      --border:      #c8bfa0;
+      --accent:      #7b2d00;
+      --accent2:     #a04010;
+      --gold:        #b5811a;
+      --text:        #1c1c1c;
+      --muted:       #5a4a3a;
+      --code-bg:     #f0ede4;
+      --note-bg:     #f4f0e8;
+      --eq-bg:       #f7f2e8;
+      --warn-bg:     #fef8ec;
+      --warn-border: #c08020;
+      --radius:      5px;
+      --shadow:      0 2px 8px rgba(0,0,0,0.10);
+      --mono:        "Courier New", Courier, monospace;
+      --sans:        "Helvetica Neue", Arial, sans-serif;
+      --serif:       Georgia, "Times New Roman", Times, serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 { font-size: 1.95rem; font-weight: normal; letter-spacing: -.02em; }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub { margin-top: 6px; font-family: var(--sans); font-size: 0.88rem; color: #f0d0b8; line-height: 1.55; }
+    header .sub a { color: #ffd8b8; text-decoration: none; border-bottom: 1px solid rgba(255,200,150,.4); }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 16px 20px 4px;
+      margin-top: 8px;
+    }
+    nav a {
+      display: block;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      padding: 5px 20px 5px 26px;
+      border-left: 3px solid transparent;
+      line-height: 1.4;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    nav a:hover { color: var(--accent); border-left-color: var(--accent2); background: #f5ede0; }
+    nav a.active { color: var(--accent); border-left-color: var(--accent); font-weight: 600; background: #f5ede0; }
+    main { padding: 40px 50px 60px; max-width: 900px; min-width: 0; }
+    h2 {
+      font-family: var(--sans);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 5px;
+      margin: 44px 0 16px;
+      letter-spacing: -.01em;
+    }
+    h2:first-of-type { margin-top: 0; }
+    h3 { font-family: var(--sans); font-size: 1.02rem; font-weight: 700; color: var(--accent2); margin: 26px 0 8px; }
+    p { margin-bottom: 0.9em; }
+    section ul, section ol { margin: 0 0 14px 1.5em; }
+    section ul li, section ol li { margin-bottom: 6px; }
+    .eq-block {
+      background: var(--eq-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 14px 20px 14px 18px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .eq-label { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--gold-text); margin-bottom: 6px; }
+    .module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(370px, 100%), 1fr)); gap: 18px; margin-top: 18px; }
+    .module-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px 20px 16px; }
+    .module-card .mc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .module-card .mc-title { font-family: var(--mono); font-size: 0.93rem; font-weight: bold; color: var(--accent); }
+    .module-card .mc-role { font-family: var(--sans); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .module-card p { font-size: 0.88rem; margin-bottom: 10px; color: var(--text); }
+    .module-card .sig { font-family: var(--mono); font-size: 0.80rem; background: var(--code-bg); border: 1px solid var(--border); border-radius: 3px; padding: 7px 10px; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--accent2); line-height: 1.5; }
+    .param-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 12px; }
+    .param-table th { background: var(--accent); color: #fff; font-family: var(--sans); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 8px 12px; text-align: left; }
+    .param-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .param-table tr:nth-child(even) td { background: var(--note-bg); }
+    .param-table code { font-family: var(--mono); font-size: 0.85em; background: var(--code-bg); padding: 1px 4px; border-radius: 2px; }
+    .experiment-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 20px; margin-bottom: 14px; }
+    .experiment-card .exp-num { font-family: var(--sans); font-size: 10px; font-weight: bold; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-text); margin-bottom: 4px; }
+    .experiment-card .exp-title { font-family: var(--sans); font-weight: 700; font-size: 0.96rem; color: var(--accent2); margin-bottom: 6px; }
+    .experiment-card p { font-size: 0.88rem; margin-bottom: 0; }
+    .experiment-card p + p { margin-top: 8px; }
+    .experiment-card .exp-beat { font-family: var(--sans); font-size: 0.8rem; color: var(--muted); }
+    .note-box { background: var(--note-bg); border: 1px solid var(--border); border-left: 4px solid var(--gold); border-radius: var(--radius); padding: 12px 16px; font-size: 0.88rem; margin: 16px 0; }
+    .warn-box { background: var(--warn-bg); border: 1px solid var(--warn-border); border-left: 4px solid var(--warn-border); border-radius: var(--radius); padding: 12px 16px; font-size: 0.88rem; margin: 16px 0; }
+    code { font-family: var(--mono); font-size: 0.87em; background: var(--code-bg); padding: 1px 5px; border-radius: 3px; }
+    .code-block { font-family: var(--mono); font-size: 0.82rem; line-height: 1.55; background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; margin: 12px 0; overflow-x: auto; max-width: 100%; }
+    .code-block code { background: transparent; padding: 0; }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-top: 14px; }
+    .related-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; text-decoration: none; color: var(--text); display: block; transition: box-shadow .15s, border-color .15s; }
+    .related-card:hover { border-color: var(--accent2); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+    .related-card .rc-name { font-family: var(--mono); font-size: 0.85rem; font-weight: bold; color: var(--accent); margin-bottom: 4px; }
+    .related-card .rc-ch { font-family: var(--sans); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--gold-text); margin-bottom: 5px; }
+    .related-card p { font-family: var(--sans); font-size: 0.80rem; color: var(--muted); margin-bottom: 0; line-height: 1.4; }
+    footer { grid-column: 1 / -1; background: var(--accent); color: #fff; font-family: var(--sans); font-size: 12.5px; text-align: center; padding: 18px 24px; line-height: 1.7; }
+    footer a { color: #e0c090; text-decoration: underline; }
+    .tag { display: inline-block; font-family: var(--sans); font-size: 9.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border-radius: 3px; padding: 1px 6px; margin-left: 4px; vertical-align: 1px; }
+    .tag-ode  { background: #d9ead3; color: #274e13; border: 1px solid #a8c69a; }
+    .tag-der  { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
+    .tag-rule { background: #e4e9ea; color: #33454a; border: 1px solid #b2c0c4; }
+    :root { --gold-text: #805a12; }
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .compare-table th { background: var(--accent); color: #fff; font-family: var(--sans); font-size: 11px; letter-spacing: .04em; padding: 8px 10px; text-align: right; }
+    .compare-table th:first-child { text-align: left; }
+    .compare-table td { padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); }
+    .compare-table td:first-child { text-align: left; font-family: var(--sans); }
+    .compare-table tr:nth-child(even) td { background: var(--note-bg); }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .skip-link { position: absolute; left: 8px; top: -80px; z-index: 100; background: var(--surface); color: var(--accent); border: 2px solid var(--accent); border-radius: var(--radius); padding: 8px 14px; font-family: var(--sans); font-size: 0.9rem; font-weight: bold; }
+    .skip-link:focus { top: 8px; }
+    main:focus { outline: none; }
+    @media (max-width: 700px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 40px; }
+    }
+  </style>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to the tutorial</a>
+<div class="page-wrap">
+<header>
+<div class="badge">CHAPTER 4 · INVESTIGATIONS 4.1–4.2</div>
+<h1><em>EarthOrbit</em> — Newton's Cannon</h1>
+<div class="sub">
+        Source Code:
+        <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a> ·
+        <br/>
+        Documentation:
+            <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a> ·
+      </div>
+</header>
+<nav id="sidebar">
+<div class="nav-label">Overview</div>
+<a href="#description">Description</a>
+<a href="#beats">How to read this page</a>
+<div class="nav-label">Beats</div>
+<a href="#beat0">0 · Newton's cannon, launched</a>
+<a href="#beat1">1 · Two ways to point at the centre</a>
+<a href="#beat2">2 · The speed that never lands</a>
+<a href="#beat3">3 · Between circular and escape</a>
+<a href="#beat4">4 · Leaving for good</a>
+<a href="#beat5">5 · Why the simplified law can't close an ellipse</a>
+<a href="#beat6">6 · Between the samples</a>
+<a href="#beat7">7 · How far to trust a printed number</a>
+<a href="#beat8">8 · Kepler's third law, and its absence</a>
+<a href="#beat9">9 · Where the model and the run stop</a>
+<div class="nav-label">Code</div>
+<a href="#equations">Governing Equations</a>
+<a href="#algorithm">Algorithm</a>
+<a href="#modules">Code Modules</a>
+<div class="nav-label">Usage</div>
+<a href="#quickstart">Quick Start</a>
+<a href="#parameters">Parameters</a>
+<a href="#output">Output</a>
+<a href="#summary">Printed Summary</a>
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
+<div class="nav-label">Reference</div>
+<a href="#related">Related Programs</a>
+<a href="#license">License</a>
+</nav>
+<main id="content" tabindex="-1">
+<p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
+  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build fc33b69c1a98
+</p>
+<section id="description">
+<h2>Description</h2>
+<p>
+<strong>EarthOrbit</strong> is a numerical realisation of Newton's cannon, the thought experiment
+Newton used in the <em>Principia</em> (1687) to argue that falling and orbiting are the same
+motion. A projectile is launched horizontally from a tower above Earth's surface. Fire it slowly
+and it falls back to the ground on a curve; fire it fast enough and it falls at exactly the rate
+the ground curves away beneath it, and never lands. The program integrates the projectile's
+two-dimensional trajectory step by step and reports which of these outcomes a given launch
+produces: impact, a closed orbit, or escape.
+</p>
+<p>
+Two gravity models are available. The default, <code>simplified</code>, is the near-surface
+teaching approximation used for this exercise: the acceleration has the fixed magnitude
+\(g=9.8\) m s<sup>&minus;2</sup> and always points toward Earth's centre. The optional
+<code>inverse_square</code> model instead uses the real \(1/r^2\) law, with the modern JPL DE440
+value of Earth's gravitational parameter, and is required for the circular, elliptical and
+escape behaviour that makes Newton's cannon interesting. All six run settings can be supplied at
+the command line; use <code>python main.py --help</code> to see their descriptions and defaults.
+</p>
+<p>The spine of the lesson is one sentence: <em>launch speed relative to the local circular speed
+decides whether the launch point becomes the near side or the far side of an orbit, and only the
+inverse-square law makes that orbit close on itself and repeat forever.</em> Below circular, the
+launch point is the orbit's apogee and the projectile dips toward a lower perigee it has not yet
+reached; above circular, the launch point is the perigee and the projectile rises toward a higher
+apogee. Whether a sub-circular launch actually strikes the ground depends on how far that lower
+perigee sits below Earth's surface — close to the surface, where this program's default launch
+sits, even a tiny deficit sends the perigee underground almost at once; far from the surface, a
+sizeable deficit can still leave the perigee comfortably above ground, so the projectile completes
+an orbit instead of impacting (Experiment 6 maps exactly where that boundary sits). Each numbered
+section below is one beat: a short argument, a command whose printed summary illustrates it, and
+then the equation the summary follows from.</p>
+<div class="note-box"><strong>Textbook reference:</strong> Bernard Schutz, <em>Gravity from the
+Ground Up</em>, Cambridge University Press (2003), Chapter 4 — Investigations 4.1 and 4.2.</div>
+<div class="warn-box"><strong>What this program is, and what it does not model.</strong> EarthOrbit
+is a teaching model of a point projectile over an airless, non-rotating, spherical Earth. It has
+no atmosphere or drag, no wind, no oblateness or third-body forces, and no station-keeping; its
+one fixed-step integrator is not symplectic, so it does not conserve energy exactly even for an
+orbit that should be perfectly circular. The <code>simplified</code> force law is a genuine
+physical approximation, not the real law of gravity, and it does not share the inverse-square
+law's special property that every bound orbit closes into a repeating ellipse. Use the program to
+see how launch speed decides an outcome and to learn where a fixed-step calculation can and
+cannot be trusted; Beats 5 and 7 say exactly where it cannot.</div>
+<div class="note-box"><strong>Reading this page.</strong> The equations on this page are rendered
+by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset;
+with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text
+instead of a formula. This has no effect on the program itself, which needs no internet access to
+run.</div>
+</section>
+<section id="beats">
+<h2>How to read this page</h2>
+<p>Each numbered section below is one beat: a short argument in words, a command whose output
+illustrates it, and then the equation the output follows from. Do them in order the first time.
+After that, any beat can be opened on its own.</p>
+<p>The program's output is a consequence of its equations, so what a beat shows is the equations
+at work, not independent evidence that they are right. The outside check this page uses is the
+exact two-body formulas of Beats 2 through 4 and 8, which the <code>inverse_square</code> runs can
+be compared against by hand.</p>
+<p>Every beat uses the same program. What changes from beat to beat is the command. Beat 0 runs
+the default launch, Beat 1 compares the two force laws side by side, Beats 2 through 4 walk the
+circular/elliptical/escape sequence under <code>inverse_square</code>, Beat 5 shows what the
+<code>simplified</code> law does instead, Beat 6 looks at how the printed numbers are estimated
+between stored samples, Beat 7 asks how far a printed number can be trusted, Beat 8 checks
+Kepler's third law, and Beat 9 collects the limits of the model and of a run.</p>
+<p>Run every command from the program's folder. Each run prints a summary and then opens a plot
+window; close the window to end the program. Each beat names the printed lines to look at. In
+several beats the printed numbers are what to study and the plot can be left until later.
+Altitudes and radii are in metres, speeds in metres per second, angles in degrees, and printed
+real numbers have five significant figures.</p>
+<div class="note-box"><strong>What kind of statement is each equation?</strong> Each displayed
+equation in the beats carries a tag saying what kind of statement it is. A green
+<span class="tag tag-ode">ODE</span> tag marks a differential equation that the program integrates;
+Eq. 1 is the equation of motion itself, and Eq. 3 is the physical force law that is the honest
+answer to "what really makes the projectile accelerate." A grey
+<span class="tag tag-rule">PRESCRIPTION</span> tag marks a rule the program adopts by choice
+rather than derives; Eq. 2, the constant-magnitude force, is the clearest example, since it is
+close to gravity only near the surface and is not Newton's actual inverse-square law. A blue
+<span class="tag tag-der">DERIVED</span> tag marks a result that follows algebraically from
+equations already stated. The numerical method itself — the averaged-velocity step of Eq. 7 and
+the interpolation formulas of Eqs. 8 and 9, all under <a href="#algorithm">Algorithm</a> — is an
+algorithm rather than physics and is not tagged. Ten equations are numbered; a few unnumbered
+ones are derived inside the beats where they are needed.</div>
+</section>
+
+<section id="beat0">
+<h2>Beat 0 · Newton's cannon, launched</h2>
+<p>Launch a projectile 300 m over Newton's mountain at 7900 m/s, sideways, with the default
+near-surface gravity model. Ask the program what happens.</p>
+<pre class="code-block"><code>python main.py</code></pre>
+<p>Look at the four printed lines below the sample count, and at the plot: a blue dashed circle
+for Earth's surface and a red trajectory line.</p>
+<p>Three tasks, in order. First, read the numbers: 503 trajectory samples, and an outcome of
+<code>Surface impact before one revolution</code>, after only 0.039512 of a full turn — 14.224°
+of arc — in a flight of 200.44 s, covering 1.5835e+06 m. The projectile does not get far. Then
+compare that launch speed with the speed that would hold a circular path at this altitude under
+this same force law, \(v_c=\sqrt{gr}\) with \(r=R_\oplus+300\) m (Beat 1 derives this). It comes to
+7906.3 m/s. The default launch, 7900 m/s, is 99.92% of that value — a deficit of about 0.08%, one
+part in roughly 1250. Write down what you expect a 0.08% speed deficit to do to a nearly circular path before
+reading on: does 14° of arc before impact strike you as a lot, or a little, for such a small
+shortfall? Then look at the plot: rather than a broad, shallow near-miss, the trajectory curves
+sharply back to the ground well within the first quarter-turn. Beat 5 explains why a small speed
+deficit does not buy nearly as much margin here as it would under real gravity.</p>
+<p><em>Then</em> the equations behind the run. Let \((x,y)\) be the projectile's position with the
+origin at Earth's centre, and \((u,v)\) its velocity. Newton's second law gives four coupled
+first-order ODEs:</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 1 — Equations of motion <span class="tag tag-ode">ODE</span></div>
+\[
+  \dot{x}=u,\qquad \dot{y}=v,\qquad \dot{u}=a_x,\qquad \dot{v}=a_y,\qquad r=\sqrt{x^2+y^2}.
+\]
+</div>
+<p>The launch point is \((x_0,y_0)=(0,\,R_\oplus+h_0)\) with velocity \((u_0,v_0)=(\texttt{uInit},
+\texttt{vInit})\); by default \(v_0=0\), a purely horizontal (tangential) launch. What
+\((a_x,a_y)\) are depends on the chosen <code>force_law</code>, and that choice is Beat 1's
+subject. The program keeps \((x,y,u,v)\) as its state, and <code>compute_acceleration(x, y,
+force_law)</code> in <code>physics_earthorbit.py</code> returns \((a_x,a_y)\) at every step.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat1">
+<h2>Beat 1 · Two ways to point at the centre</h2>
+<p>Both force laws point straight at Earth's centre; they disagree only about how the magnitude
+changes with distance. Run the same launch under both.</p>
+<pre class="code-block"><code>python main.py
+python main.py --force_law inverse_square</code></pre>
+<p>Compare the printed outcome lines of the two runs.</p>
+<p>Three tasks, in order. First, compare the sample counts: 503 for the default
+<code>simplified</code> run against 556 for <code>inverse_square</code>, and the outcome lines
+shift to match — 0.039512 of a revolution in 200.44 s against 0.043687 of a revolution in
+221.62 s. Even at only 300 m altitude and 200-odd seconds of flight, the two force laws are
+already measurably different, not identical (Experiment 3 tracks how that difference grows with
+altitude). Then read the <code>inverse_square</code> run's two extra lines: an osculating
+eccentricity of 0.0013002 and a perigee altitude of &minus;16,265 m, meaningfully below the
+surface, consistent with a run that ends in impact. Then read
+\(g\) and \(\mu_\oplus\): \(g=9.8\) m s<sup>&minus;2</sup> is the conventional, rounded textbook
+surface value, and \(\mu_\oplus=3.986\,004\,355\,07\times10^{14}\) m<sup>3</sup> s<sup>&minus;2</sup>
+is the modern JPL DE440 Earth gravitational parameter. Neither one is defined from the other; they
+merely happen to approximately agree at Earth's reference radius, because \(g\) was chosen, long
+before JPL DE440, to match the measured surface acceleration. Dividing \(\mu_\oplus\) by
+\(R_\oplus^2\) gives 9.798092 m s<sup>&minus;2</sup>, about 1.95 parts in 10,000 <em>below</em>
+the rounded \(g=9.8\); going the other way, \(gR_\oplus^2\approx3.98678\times10^{14}\), about 1.95
+parts in 10,000 <em>above</em> \(\mu_\oplus\) (<code>K_APPROX</code> in
+<code>physics_earthorbit.py</code> is exactly this product, kept only for this comparison). Then
+ask which law a real satellite obeys: only <code>inverse_square</code> is real physics; the
+default is an approximation that happens to agree with it near the surface, to about four
+significant figures, not by construction.</p>
+<p><em>Then</em> the two laws themselves. Both point from \((x,y)\) toward the origin, along the
+unit vector \((-x/r,-y/r)\); they differ only in the scalar multiplying it:</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 2 — Simplified force law <span class="tag tag-rule">PRESCRIPTION</span></div>
+\[
+  a_x=-\frac{g\,x}{r},\qquad a_y=-\frac{g\,y}{r},\qquad |\mathbf a|=g \text{ at every } r.
+\]
+</div>
+<div class="eq-block">
+<div class="eq-label">Eq. 3 — Inverse-square force law <span class="tag tag-ode">ODE</span></div>
+\[
+  a_x=-\frac{\mu_\oplus\,x}{r^3},\qquad a_y=-\frac{\mu_\oplus\,y}{r^3},\qquad
+  |\mathbf a|=\frac{\mu_\oplus}{r^2}.
+\]
+</div>
+<p>Eq. 2 is tagged as a prescription rather than a physical law because it is a teaching choice:
+holding \(|\mathbf a|\) fixed at every radius is not how gravity behaves anywhere except, by
+construction, at \(r=R_\oplus\). Eq. 3 is Newton's actual law of universal gravitation, and it is
+what the rest of this page's orbital-mechanics content (Beats 2 through 4 and 8) is built on.
+<code>compute_acceleration()</code> validates \(x\) and \(y\) as finite, rejects the
+Earth-centre singularity \(r=0\), and translates an unrepresentable inverse-square magnitude into
+a clear <code>ValueError</code> instead of a silent overflow.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> and
+<a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat2">
+<h2>Beat 2 · The speed that never lands</h2>
+<p>Newton's cannon predicts one exact speed, at any given altitude, for which the projectile's
+fall matches the curvature of the ground beneath it: a circular orbit. Launch at that speed, 300
+km up, under the real inverse-square law.</p>
+<pre class="code-block"><code>python main.py --h0 300000 --uInit 7725.7 --force_law inverse_square --dt 1 --maxSteps 7000</code></pre>
+<p>Look at the outcome line, the per-revolution line, and the three osculating-element lines.</p>
+<p>Three tasks, in order. First, the outcome: <code>Orbit completed; termination: maxSteps
+reached</code>, with <code>Completed revolutions: 1</code>. The projectile never touches the
+ground in the 7000 s simulated. Then the per-revolution line: <code>Revolution 1: time 5460.9 s;
+minimum altitude 3.0000e+05 m; maximum altitude 3.4847e+05 m</code>. The minimum altitude is
+exactly the launch altitude, as it should be for a circular orbit, but the maximum has crept up by
+48.5 km over one turn — Beat 7 explains that drift; it is numerical, not physical. Then the three
+osculating-element lines: <code>Osculating eccentricity: 6.1431e-06</code>,
+<code>Osculating perigee altitude: 2.9992e+05 m</code>,
+<code>Osculating apogee altitude: 3.0000e+05 m</code> — very nearly, but not quite, a circle,
+computed from the launch state alone (Eq. 5 explains how). The command above rounds the circular
+speed to <code>--uInit 7725.7</code>, and that 0.0237 m/s rounding is exactly what the tiny but
+nonzero eccentricity is picking up: an osculating ellipse whose perigee sits about 82 m below the
+launch altitude and whose apogee sits exactly on it. Compare the revolution time, 5460.9 s, with the exact
+orbital period below: 5431.3 s, a difference of about 0.5%, consistent with the drift already
+noticed.</p>
+<p><em>Then</em> where 7725.7 m/s comes from. At orbital radius \(r=R_\oplus+h_0\), the circular
+condition balances centripetal acceleration against gravity, \(v_c^2/r=\mu_\oplus/r^2\); the
+escape speed, defined by zero total energy, is \(\sqrt2\) times that:</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 4 — Circular and escape speed <span class="tag tag-der">DERIVED</span></div>
+\[
+  v_c=\sqrt{\frac{\mu_\oplus}{r}},\qquad v_e=\sqrt{\frac{2\mu_\oplus}{r}}=\sqrt2\,v_c.
+\]
+</div>
+<p>At \(h_0=300\) km, \(r=6\,678\,200\) m, Eq. 4 gives \(v_c=7725.72\) m/s and
+\(v_e=10\,925.8\) m/s — the command above rounds \(v_c\) to one decimal place, which is why the
+computed orbit is very slightly non-circular in principle, though not at the five-figure
+precision the console prints. The orbital period follows from the circumference divided by the
+speed, \(T=2\pi r/v_c=2\pi\sqrt{r^3/\mu_\oplus}\), which is 5431.3 s — Beat 8 returns to this
+formula. Beats 3 and 4 use the same two speeds as landmarks: below \(v_c\), the projectile
+returns to \(r=r_0\) as an apogee rather than staying there; between \(v_c\) and \(v_e\), the
+orbit is a bound ellipse; at or above \(v_e\), it never returns.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and
+<a href="#exp4">Experiment 4</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat3">
+<h2>Beat 3 · Between circular and escape</h2>
+<p>A launch speed between \(v_c\) and \(v_e\) should trace a closed ellipse with the launch point
+as one of its two apsides. Launch faster than circular at the same 300 km altitude.</p>
+<pre class="code-block"><code>python main.py --h0 300000 --uInit 9000 --force_law inverse_square --dt 1 --maxSteps 10585</code></pre>
+<p>Look at the per-revolution line and the three osculating-element lines.</p>
+<p>Three tasks, in order. First, the per-revolution line: <code>Revolution 1: time 10580 s;
+minimum altitude 3.0000e+05 m; maximum altitude 7.7644e+06 m</code>. The minimum altitude is again
+the launch altitude — this launch is tangential, so \(r_0\) is an apsis — but now the maximum is
+far higher, about 7.76 million metres, roughly the radius of Earth itself above the launch point.
+Then the osculating elements: <code>Osculating eccentricity: 0.35708</code>,
+<code>Osculating perigee altitude: 3.0000e+05 m</code>,
+<code>Osculating apogee altitude: 7.7183e+06 m</code>. The perigee altitude matches the launch
+altitude to five figures, confirming the launch point is the perigee, and the apogee is close to
+but not exactly the per-revolution maximum, because the two are computed differently: the
+osculating apogee is an exact two-body formula evaluated once from the launch state (Eq. 5), while
+the per-revolution maximum is a three-point parabola fit to the numerically integrated samples
+(Beat 6). Then ask why 9000 m/s, only 16.5% above the 7725.7 m/s circular speed, produces an
+apogee altitude more than 25 times the perigee altitude: orbital energy and eccentricity both grow
+quickly with speed near circular, which Eq. 5 makes precise.</p>
+<p><em>Then</em> the two-body formulas the console evaluates once, from \((x_0,y_0,u_0,v_0)\)
+alone, to get the osculating elements — the exact ellipse the projectile would follow from this
+instant onward under ideal two-body gravity:</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 5 — Specific orbital energy and eccentricity <span class="tag tag-der">DERIVED</span></div>
+\[
+  \mathcal E=\tfrac12(u_0^2+v_0^2)-\frac{\mu_\oplus}{r_0},\qquad
+  h=x_0v_0-y_0u_0,\qquad
+  e=\sqrt{1+\frac{2\mathcal Eh^2}{\mu_\oplus^2}}.
+\]
+</div>
+<p>Here \(h\) is the specific angular momentum (not to be confused with altitude, also written
+\(h\) elsewhere on this page and in the program's <code>h0</code>). For a bound orbit,
+\(\mathcal E&lt;0\), and the semimajor axis is \(a=-\mu_\oplus/(2\mathcal E)\), giving perigee and
+apogee radii \(a(1-e)\) and \(a(1+e)\); when the launch is tangential and at radius \(r_0\), one
+of the two apsides is exactly \(r_0\) itself, which is the perigee here because 9000 m/s exceeds
+the circular speed. These are the formulas
+<code>_inverse_square_elements()</code> in <code>driver_earthorbit.py</code> evaluates; the
+per-revolution minimum and maximum altitude, by contrast, come from the stored numerical samples
+and are described under <a href="#algorithm">Algorithm</a>.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat4">
+<h2>Beat 4 · Leaving for good</h2>
+<p>At or above the escape speed \(v_e\), Eq. 4 predicts the projectile never returns. Launch above
+it.</p>
+<pre class="code-block"><code>python main.py --h0 300000 --uInit 11500 --vInit 0 --dt 2 --maxSteps 3001 --force_law inverse_square</code></pre>
+<p>Look at the outcome line and the osculating-element lines.</p>
+<p>Three tasks, in order. First, the outcome: <code>Escape trajectory; maxSteps reached</code>,
+with 0.33682 of a revolution completed in 6000 s of flight — 121.26° of arc — reaching an
+interpolated maximum altitude of 3.3678e+07 m, about 33,700 km, more than five Earth radii above
+the surface, and still climbing when the run ends. Then the eccentricity:
+<code>Osculating eccentricity: 1.2157</code> — greater than 1, the signature of an unbound
+(hyperbolic) orbit, for which Eq. 5's apogee formula does not apply; the perigee altitude still
+prints, 3.0000e+05 m, because a hyperbola has exactly one perigee and no apogee. Then the last
+line: <code>Final/maximum altitude at maxSteps: 3.3678e+07 m</code>. This combines what would
+otherwise be two separate lines — a final altitude and a maximum altitude — into one, because for
+<em>this</em> tangential, outward launch the projectile is still climbing when the run ends, so its
+final altitude and its maximum altitude to that point happen to be the same number; printing both
+would say the same thing twice. This is a property of this particular launch, not of every escape:
+an unbound trajectory aimed inward or with a nonzero <code>vInit</code> can descend first, swing
+past a perigee, and only then climb away, in which case its final and maximum altitudes differ and
+the summary prints them as two separate lines instead (see the Printed Summary section, which
+states this conditionally rather than as a rule).</p>
+<p><em>Then</em> why 11,500 m/s escapes. Eq. 4 gives \(v_e=10\,925.8\) m/s at 300 km altitude, so
+11,500 m/s is 5.3% above it, and Eq. 5's energy \(\mathcal E=\tfrac12v_0^2-\mu_\oplus/r_0\) is
+positive whenever \(v_0&gt;v_e\), which is exactly the condition \(e&gt;1\) in the same equation.
+A positive-energy orbit is not a closed curve at all, so "orbit" is the wrong word for it; the
+program instead tracks how far it has climbed and reports that. The <code>elements["unbound"]</code>
+flag records \(\mathcal E\ge0\) directly, and <code>escaped</code> additionally requires that the
+run did not end in surface impact, so a launch that is technically unbound but happens to be aimed
+back at the ground (Experiment 5 explores non-tangential launches) is still reported as an impact,
+not an escape.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat5">
+<h2>Beat 5 · Why the simplified law can't close an ellipse</h2>
+<p>Beat 0's puzzle was that a launch just 0.08% below the local circular speed impacted after
+only 14° of arc under the <code>simplified</code> force law. Try the same absolute launch speed,
+7500 m/s, under both laws at 300 km altitude, where the two circular speeds are far enough apart
+to see clearly: 7725.7 m/s for <code>inverse_square</code>, 8089.9 m/s for <code>simplified</code>
+(Eq. 6 explains why these differ).</p>
+<pre class="code-block"><code>python main.py --h0 300000 --uInit 7500 --force_law inverse_square --dt 1 --maxSteps 15000
+python main.py --h0 300000 --uInit 7500 --force_law simplified --dt 1 --maxSteps 15000</code></pre>
+<p>Compare the two outcome lines and the angular travel before impact.</p>
+<p>Three tasks, in order. First, <code>inverse_square</code>: impact after 0.21440 of a
+revolution, 77.183° of arc, in 1160.5 s, with an osculating eccentricity of only 0.057581 — a
+gently eccentric ellipse whose perigee happens to lie 427 km below the surface. Then
+<code>simplified</code>: impact after just 0.13321 of a revolution, 47.954° of arc, in only
+720.81 s — noticeably less arc and less time. Then check whether that is a fair comparison before
+reading anything into it: 7500 m/s is only 2.92% below the <code>inverse_square</code> circular
+speed but 7.29% below the <code>simplified</code> one — the same absolute speed is <em>not</em>
+the same fractional shortfall, so <code>simplified</code> starting from more than twice the
+relative deficit is at least part of why it impacts sooner. This run, by itself, has not yet
+isolated the effect Eq. 6 describes.</p>
+<p>A controlled comparison needs the <em>same</em> fractional deficit under both laws. 7500 m/s is
+2.9217% below <code>inverse_square</code>'s circular speed; the equivalent 2.9217%-below-circular
+launch under <code>simplified</code> is <code>--uInit 7853.53</code>:</p>
+<pre class="code-block"><code>python main.py --h0 300000 --uInit 7853.53 --force_law simplified --dt 1 --maxSteps 15000</code></pre>
+<p>This run does not impact at all within 15,000 steps: <code>Completed revolutions: 2</code>, with
+a first-revolution minimum altitude of just 46,686 m — deep, but still above ground — and a second
+revolution that dips only to 65,796 m, again drifting shallower rather than deeper (the same
+energy-gain drift Beat 7 measures and Experiment 3 revisits). So at matched fractional deficits the
+two laws' behaviour is not simply "simplified impacts sooner": here it is <code>inverse_square</code>
+that impacts and <code>simplified</code> that survives two full revolutions. The 7500 m/s comparison
+above and this matched-fraction comparison disagree on which law looks more forgiving, which is
+itself the lesson: Eq. 6 is a property of each law near exactly circular, not a promise about which
+law's projectile falls back to Earth first at some particular finite deficit, and a demonstration
+that "looks different" is not automatically evidence for a specific claimed reason unless the setup
+actually isolates that reason.</p>
+<p><em>Then</em> the reason a "circular-ish" launch behaves so differently under the two laws.
+Perturb a circular orbit of radius \(r\) very slightly and ask how fast the radius oscillates
+compared with how fast the angle advances. For a central force of magnitude \(f(r)\) (directed
+inward), the ratio of the two frequencies — the epicyclic frequency \(\kappa\) to the orbital
+angular frequency \(\omega\) — is a standard result of orbital mechanics:</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 6 — Epicyclic-to-orbital frequency ratio <span class="tag tag-der">DERIVED</span></div>
+\[
+  \frac{\kappa^2}{\omega^2}=3+\frac{r}{f}\frac{df}{dr}.
+\]
+</div>
+<p>For the inverse-square law, \(f=\mu_\oplus/r^2\), so \(r f'/f=-2\) and \(\kappa^2/\omega^2=1\):
+the radial wobble and the angular revolution keep exact step, which is precisely why every bound
+inverse-square orbit closes into a repeating ellipse (this is Bertrand's theorem; the isotropic
+harmonic oscillator is the only other force law with the same property). For the simplified law,
+\(f=g\) is constant, so \(f'=0\) and \(\kappa^2/\omega^2=3\): the radial oscillation runs
+\(\sqrt3\approx1.732\) times faster than the orbital revolution, so a perturbed "circular" orbit
+does not retrace a fixed ellipse — it precesses into a rosette, and the radial excursion reaches
+its low point well before a full turn is complete, consistent with impact arriving at a smaller
+fraction of a revolution than the inverse-square case above. This is why the warning under
+<a href="#description">Description</a> says the simplified law does not share the inverse-square
+law's special closure property, and why a small speed deficit near "circular" is riskier under it
+than the inverse-square intuition suggests.</p>
+<div class="note-box"><strong>A circular orbit itself is exact under either law.</strong> Eq. 6's
+mismatch only affects <em>perturbed</em> orbits. A launch at exactly the local circular speed
+stays exactly circular under any central force, including the simplified one, because the
+centripetal balance \(v^2/r=f(r)\) holds at every point of a circle regardless of how \(f\) varies
+elsewhere. The near-circular <code>simplified</code> runs in Beat 7 slowly gain altitude for a
+different, purely numerical reason — the fixed-step integrator's own energy drift — not because
+of Eq. 6.</div>
+<p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> and
+<a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat6">
+<h2>Beat 6 · Between the samples</h2>
+<p>The stored trajectory is a list of points \(\Delta t\) apart. Surface impact, revolution
+boundaries, and altitude extrema almost never land exactly on a stored sample, so the printed
+summary estimates them between samples rather than reading them off directly. See what the
+default run has to work with.</p>
+<pre class="code-block"><code>python main.py
+python -c "from driver_earthorbit import run_earth_orbit as run; r = run(dt=0.4, maxSteps=15000, return_diagnostics=True); import math; print([math.hypot(x,y) for x,y in zip(r[0][-2:], r[1][-2:])])"</code></pre>
+<p>The first command prints the summary. The second, run from the program's folder, prints the
+radii of the last two stored points. Look at the printed range and the printed flight time, and
+at those two radii.</p>
+<p>Three tasks, in order. First, the raw endpoint. The last two stored radii are 6,378,200.17 m
+and 6,378,199.01 m against \(R_\oplus=6{,}378{,}200\) m — the second-to-last sample is still
+0.172 m above the surface, and the last is 0.991 m below it. The loop stops at the first point
+below the surface, so the raw final sample already lies inside the ground, but only by about a
+metre here because \(\Delta t=0.4\) s is fine relative to the impact speed. Then interpolate by
+hand: a fraction \(0.172/(0.172+0.991)=0.1479\) of the way from the second-to-last sample to the
+last would land exactly on the surface — but the program's printed impact fraction is 0.09183,
+not 0.1479, because the interpolation is not along radius but along the straight chord between
+the two \((x,y)\) points and where that chord crosses the circle \(r=R_\oplus\) (Eq. 8), which is
+close to but not identical to a linear interpolation of radius alone. Then the printed flight
+time, 200.44 s (200.4367 s unrounded): the second-to-last sample is at \(t=200.4\) s, one step
+short of \(t=200.8\) s, and \(0.4\times0.09183\approx0.0367\) s, which is exactly the extra
+0.0367 s the printed flight time adds to 200.4 s — the same 0.09183 interpolation fraction used
+for position, applied to time (Eq. 8).</p>
+<p><em>Then</em> the three estimation rules, described in full under
+<a href="#algorithm">Algorithm</a>: a straight-chord/circle intersection for surface impact
+(Eq. 8), linear interpolation in accumulated angle for revolution boundaries, and a local
+three-point parabola for altitude extrema (Eq. 9). All three use the raw stored samples only;
+none of them alters the arrays the plot draws, so the red trajectory line always shows the actual
+integrated points, including the one sample that lies fractionally inside Earth after an impact
+run.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp8">Experiment 8</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat7">
+<h2>Beat 7 · How far to trust a printed number</h2>
+<p>Beat 2's circular orbit drifted outward by 48.5 km over one revolution at \(\Delta t=1\) s. Is
+that a lot? Repeat the same circular launch at several timesteps, sized generously enough that each
+run completes its first revolution, and watch the drift in the <code>Revolution 1</code> line's
+maximum altitude. The numerically integrated period always comes out a little longer than the
+exact \(T=5431.3\) s (Eq. 4) — that is itself part of the same drift this beat measures — so each
+<code>--maxSteps</code> below allows some room beyond the exact-period estimate.</p>
+<pre class="code-block"><code>python main.py --h0 300000 --uInit 7725.7237298314685 --force_law inverse_square --dt 4 --maxSteps 1450
+python main.py --h0 300000 --uInit 7725.7237298314685 --force_law inverse_square --dt 2 --maxSteps 2890
+python main.py --h0 300000 --uInit 7725.7237298314685 --force_law inverse_square --dt 1 --maxSteps 5481
+python main.py --h0 300000 --uInit 7725.7237298314685 --force_law inverse_square --dt 0.5 --maxSteps 10950
+python main.py --h0 300000 --uInit 7725.7237298314685 --force_law inverse_square --dt 0.25 --maxSteps 21890</code></pre>
+<p>Look at each run's <code>Revolution 1</code> line.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Altitude drift over one orbital period at five timesteps"><table class="compare-table">
+<thead><tr><th>Δt (s)</th><th>Revolution 1 time (s)</th><th>Max. altitude (m)</th><th>Drift above 300 km (km)</th><th>Drift ÷ previous row</th></tr></thead>
+<tbody>
+<tr><td>4</td><td>5550.8</td><td>4.9324e+05</td><td>193.24</td><td>—</td></tr>
+<tr><td>2</td><td>5490.8</td><td>3.9682e+05</td><td>96.82</td><td>0.501</td></tr>
+<tr><td>1</td><td>5460.9</td><td>3.4847e+05</td><td>48.47</td><td>0.501</td></tr>
+<tr><td>0.5</td><td>5446.1</td><td>3.2425e+05</td><td>24.25</td><td>0.500</td></tr>
+<tr><td>0.25</td><td>5438.7</td><td>3.1213e+05</td><td>12.13</td><td>0.500</td></tr>
+</tbody></table></div>
+<p>Three tasks, in order. First, read the drift column: each time \(\Delta t\) is halved, the
+drift in maximum altitude very nearly halves too — a clean signature of a first-order numerical
+method. Then read the revolution-time column the same way: it too converges toward the exact
+5431.3 s as \(\Delta t\) shrinks — 5550.8, 5490.8, 5460.9, 5446.1, 5438.7 s — the same drift
+showing up as a period error instead of an altitude error. Then ask what "first order" costs here:
+to cut either error in half you double the number of stored points, and each additional decimal
+figure of accuracy costs roughly another factor of ten in step count. Beat 2's 300 km circular
+orbit was run at \(\Delta t=1\) s specifically to make the drift visible for teaching purposes; a
+student measuring an orbit quantitatively should use a finer step, such as \(\Delta t=0.1\) s or
+smaller, and confirm the answer stops changing by repeating at an even finer step.</p>
+<p><em>Then</em> the source of the drift: the integration step the driver applies at every
+iteration, described in full under <a href="#algorithm">Algorithm</a>:</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 7 — Averaged-velocity integration step (numerical method, untagged)</div>
+\[
+  u_{n+1}=u_n+a_x(x_n,y_n)\,\Delta t,\qquad v_{n+1}=v_n+a_y(x_n,y_n)\,\Delta t,
+\]
+\[
+  x_{n+1}=x_n+\tfrac12(u_n+u_{n+1})\,\Delta t,\qquad y_{n+1}=y_n+\tfrac12(v_n+v_{n+1})\,\Delta t.
+\]
+</div>
+<p>Acceleration is evaluated once per step, at the position the step started from, not at its
+midpoint or end; only the position update uses the average of the two velocities. This is not
+velocity Verlet or leapfrog, and it is not symplectic, so it does not conserve the orbit's energy
+exactly even when the exact orbit is a circle. A coarse enough step makes this dramatic: try
+<code>--dt 10 --maxSteps 15000</code> at the same launch as the default (300 m altitude, 7900
+m/s, <code>simplified</code>). It completes 25 full revolutions rather than impacting, and its
+per-revolution altitude climbs from a minimum of about 192 m to a maximum of 4.78 million metres
+by the 25th — a runaway numerical energy gain, not a physical one, for a launch that impacted
+almost immediately at the default \(\Delta t=0.4\) s. This is the sharpest illustration on this
+page of why <a href="#beat9">Beat 9</a> and the warning under <a href="#description">Description</a>
+say the algorithm is not symplectic: two runs that differ only in timestep can disagree not just
+in a few digits but in the entire qualitative outcome.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp9">Experiment 9</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat8">
+<h2>Beat 8 · Kepler's third law, and its absence</h2>
+<p>Kepler's third law, \(T^2\propto r^3\), is a signature of the inverse-square law specifically —
+Eq. 6 already showed the simplified law does not share the inverse-square law's closed-orbit
+property, so it should not share this one either. Compare circular periods at two different
+altitudes under each force law.</p>
+<pre class="code-block"><code>python main.py --h0 300000  --uInit 7725.7237 --force_law inverse_square --dt 1 --maxSteps 5481
+python main.py --h0 1500000 --uInit 7113.0422 --force_law inverse_square --dt 1 --maxSteps 7009
+python main.py --h0 300000  --uInit 8089.8925 --force_law simplified     --dt 1 --maxSteps 5216
+python main.py --h0 1500000 --uInit 8786.7150 --force_law simplified     --dt 1 --maxSteps 5683</code></pre>
+<p>Look at each run's per-revolution-time line.</p>
+<p>Three tasks, in order. First, the two <code>inverse_square</code> periods:
+<code>Revolution 1: time 5460.9 s</code> at \(r=6{,}678{,}200\) m and
+<code>Revolution 1: time 6988.7 s</code> at \(r=7{,}878{,}200\) m. Divide \(T^2\) by \(r^3\) for
+each, using these printed, numerically integrated periods: \(1.0013\times10^{-13}\) and
+\(9.9889\times10^{-14}\) — close to each other (within about 1.2%) but not identical, because
+these periods carry the same first-order drift Beat 7 measured; the run was only stepped to
+\(\Delta t=1\) s, not the finer step a precise test would need. Then the two <code>simplified</code>
+periods: <code>Revolution 1: time 5189.8 s</code> and <code>Revolution 1: time 5636.6 s</code> at
+the same two radii. Divide \(T^2\) by \(r\) instead of \(r^3\): \(4.0331\) and \(4.0328\) — much
+closer to each other than the <code>inverse_square</code> pair, simply because the
+<code>simplified</code> circular periods here are shorter and so accumulate less drift per orbit at
+the same \(\Delta t\), not because the underlying law is being tested more precisely. Then compare
+these <em>measured</em> constants with the <em>exact</em> values Eq. 10 predicts from \(r\) and
+\(\mu_\oplus\) or \(g\) alone, with no integration involved: \(4\pi^2/\mu_\oplus=9.9043\times
+10^{-14}\) s<sup>2</sup> m<sup>&minus;3</sup>, about 0.85&ndash;1.10% below the two measured
+inverse-square ratios; \(4\pi^2/g=4.0284\) s<sup>2</sup> m<sup>&minus;1</sup>, about 0.11&ndash;0.12%
+below the two measured simplified ratios. Both force laws show the same pattern — the printed,
+integrated period always comes out a little long, which is why its \(T^2/r^n\) always comes out a
+little high — and the inverse-square case shows it about ten times more strongly than the
+simplified case at this \(\Delta t\), consistent with Beat 7's absolute drift table. Neither run
+used the same launch speed at both altitudes — each used its own circular speed from Eq. 4 or its
+simplified-law analogue — which is exactly what a fair test of "does period depend only on radius,
+in this fixed way" requires.</p>
+<p><em>Then</em> the two period formulas, both following from circumference divided by circular
+speed and the corresponding entry in Eq. 4 or its analogue:</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 10 — Circular period, inverse-square versus simplified <span class="tag tag-der">DERIVED</span></div>
+\[
+  T_{\text{inv-sq}}=2\pi\sqrt{\frac{r^3}{\mu_\oplus}}\ \Rightarrow\ T^2\propto r^3,
+  \qquad
+  T_{\text{simplified}}=2\pi\sqrt{\frac{r}{g}}\ \Rightarrow\ T^2\propto r.
+\]
+</div>
+<p>The inverse-square case is Kepler's third law exactly, with the constant of proportionality
+\(4\pi^2/\mu_\oplus\) independent of which planet's satellites are compared, provided \(\mu\) is
+used rather than mass directly. The simplified case is not a law of nature at all — it is what
+follows from assuming, incorrectly, that gravity keeps the surface value \(g\) at every altitude —
+and the very different \(r\)-dependence is one more way (besides Eq. 6) of seeing that the two
+force laws are not the same physics at different levels of approximation, but genuinely different
+force laws that happen to agree at one radius.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp10">Experiment 10</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat9">
+<h2>Beat 9 · Where the model and the run stop</h2>
+<p>Everything so far assumed the settings were physically sensible and the run had room to finish.
+Both assumptions have limits. Try a few commands that reach them.</p>
+<pre class="code-block"><code>python main.py --h0 -1
+python main.py --dt 0
+python main.py --maxSteps 1
+python main.py --uInit 1e308 --dt 10</code></pre>
+<p>Look at what each command prints.</p>
+<p>Three tasks, in order. First, the input checks: <code>--h0 -1</code> prints
+<code>EarthOrbit: h0 must be non-negative for this Earth-surface launch model</code>;
+<code>--dt 0</code> prints <code>EarthOrbit: dt must be a positive finite timestep in seconds</code>;
+<code>--maxSteps 1</code> prints <code>EarthOrbit: maxSteps must be an integer &gt;= 2</code>. Each
+stops the program with a one-line, prefixed message rather than a Python traceback, and none of
+them opens a plot. Then the overflow guard: an extreme but individually finite <code>uInit</code>
+and <code>dt</code> can make the integrated state overflow; the driver detects this and prints
+<code>EarthOrbit: integration produced a non-finite state; reduce the timestep or use less extreme
+initial values</code> rather than silently returning infinities. A related, more subtle guard
+covers a different failure of a large <code>dt</code>: a single step large enough that its
+straight-line displacement passes all the way through Earth, entering on one side and exiting the
+other, with neither endpoint landing inside the reference sphere. Left undetected, that step would
+report whatever the far side of Earth happens to look like — an ordinary orbit or an escape —
+instead of the impact that actually occurred partway through it; the driver instead raises
+<code>EarthOrbit: this step's straight-line displacement passed through Earth's reference surface
+without either endpoint landing inside it; dt is too coarse to resolve the surface crossing --
+reduce dt</code>. Every command on this page uses a <code>dt</code> far below the size that would
+trigger this, but a very large <code>--dt</code> paired with a fast inward <code>vInit</code> can
+reach it. Then notice what EarthOrbit does
+<em>not</em> do: unlike some other GFTGU programs, it never raises an error merely because
+<code>maxSteps</code> is reached before impact or before a full revolution — reaching the step
+budget is treated as a normal, if incomplete, outcome, and the summary says so explicitly
+(<code>"No complete revolution before maxSteps"</code> or
+<code>"Escape trajectory; maxSteps reached"</code>), which is why every escape example on this page
+supplied a generous <code>--maxSteps</code> rather than needing the program to detect and reject a
+too-small one.</p>
+<p><em>Then</em> the list of what the model leaves out, which no command-line setting can restore
+because the program has no parameter for it. The simulation is two-dimensional: it cannot
+represent inclined or out-of-plane orbits. It has no atmosphere or drag, so no re-entry heating or
+deceleration; no wind; no Earth rotation, so no Coriolis effect and no distinction between a
+launch to the east and a launch to the west; no oblateness, so no J<sub>2</sub> precession; no
+third-body forces from the Moon or Sun; and no station-keeping. The fixed-step, non-adaptive,
+non-symplectic integrator of Eq. 7 accumulates first-order error and does not exactly conserve
+energy (Beat 7); the osculating elements of Eq. 5 describe the ideal two-body orbit implied by the
+launch state, not necessarily the numerically integrated trajectory's actual long-term behaviour,
+especially at large \(\Delta t\) or after many revolutions. Impact and revolution-boundary
+interpolation (Eqs. 8 and 9) converge to the true crossing as \(\Delta t\to0\) but are not exact
+at finite \(\Delta t\). Five-significant-figure display supports comparisons between runs; it is
+not a claim that the underlying physical model or numerical method is accurate to five figures.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="equations">
+<h2>Governing Equations</h2>
+<p>The ten numbered equations, with the kind of statement each one is, the beat that introduces
+it, and where the program evaluates it. A few unnumbered relations are derived inside the beats
+where they are needed.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Index of the numbered equations"><table class="compare-table">
+<thead><tr><th>Equation</th><th>Kind</th><th>What it says</th><th>Beat</th><th>Where in the code</th></tr></thead>
+<tbody>
+<tr><td>Eq. 1</td><td><span class="tag tag-ode">ODE</span></td><td>Equations of motion</td><td>0</td><td><code>compute_acceleration()</code> is called by <code>run_earth_orbit()</code> in <code>driver_earthorbit.py</code></td></tr>
+<tr><td>Eq. 2</td><td><span class="tag tag-rule">PRESCRIPTION</span></td><td>Simplified (constant-magnitude) force law</td><td>1</td><td><code>compute_acceleration()</code> in <code>physics_earthorbit.py</code></td></tr>
+<tr><td>Eq. 3</td><td><span class="tag tag-ode">ODE</span></td><td>Inverse-square force law</td><td>1</td><td><code>compute_acceleration()</code> in <code>physics_earthorbit.py</code></td></tr>
+<tr><td>Eq. 4</td><td><span class="tag tag-der">DERIVED</span></td><td>Circular and escape speed</td><td>2</td><td>not evaluated by the program; it is the check</td></tr>
+<tr><td>Eq. 5</td><td><span class="tag tag-der">DERIVED</span></td><td>Specific orbital energy and eccentricity</td><td>3</td><td><code>_inverse_square_elements()</code> in <code>driver_earthorbit.py</code></td></tr>
+<tr><td>Eq. 6</td><td><span class="tag tag-der">DERIVED</span></td><td>Epicyclic-to-orbital frequency ratio</td><td>5</td><td>not evaluated by the program; it is the explanation</td></tr>
+<tr><td>Eq. 7</td><td>numerical method</td><td>Averaged-velocity integration step</td><td>7</td><td><code>run_earth_orbit()</code> in <code>driver_earthorbit.py</code></td></tr>
+<tr><td>Eq. 8</td><td>numerical method</td><td>Surface-impact interpolation</td><td>6</td><td><code>_surface_crossing_fraction()</code> in <code>driver_earthorbit.py</code></td></tr>
+<tr><td>Eq. 9</td><td>numerical method</td><td>Revolution-boundary crossing and three-point parabola extremum</td><td>6</td><td><code>_progress_crossing()</code> and <code>_parabolic_candidate()</code> in <code>driver_earthorbit.py</code></td></tr>
+<tr><td>Eq. 10</td><td><span class="tag tag-der">DERIVED</span></td><td>Circular period, inverse-square versus simplified</td><td>8</td><td>not evaluated by the program; it is the check</td></tr>
+</tbody></table></div>
+<p>Eqs. 7 through 9 are numerical method, not physics, and so carry no ODE/DERIVED/PRESCRIPTION tag,
+exactly as the note under <a href="#beats">How to read this page</a> explains.</p>
+</section>
+
+<section id="algorithm">
+<h2>Algorithm</h2>
+<p>This section collects the program's numerical rules in one place. Eq. 7 is introduced in
+Beat 7; Eqs. 8 and 9 in Beat 6.</p>
+<h3>One run, in order</h3>
+<ol>
+<li>Validate the settings: <code>h0</code> must be non-negative and finite, <code>uInit</code>,
+<code>vInit</code>, and <code>dt</code> must be finite with <code>dt&gt;0</code>,
+<code>maxSteps</code> must be an integer of at least 2, and <code>force_law</code> must be
+<code>"simplified"</code> or <code>"inverse_square"</code>.</li>
+<li>Store the launch point \((0,\,R_\oplus+h_0)\) with velocity \((\texttt{uInit},\texttt{vInit})\).</li>
+<li>While the last stored radius is at least \(R_\oplus\) and fewer than <code>maxSteps</code>
+points are stored, advance the state one timestep with Eq. 7, using the acceleration law selected
+by <code>force_law</code>, and store the new \(x\) and \(y\) (and, if diagnostics are requested,
+\(t\), \(u\), and \(v\)). Each step also checks whether its straight-line displacement passed
+through Earth's reference sphere without landing inside it — a coarse-\(\Delta t\) failure mode
+distinct from ending inside the sphere — and stops with a clear error if so (Beat 9).</li>
+<li>Build a 401-point closed reference circle for Earth's surface: 400 evenly spaced angular
+samples, with the first point repeated as coordinate 401 to close the curve.</li>
+<li>Analyze the stored trajectory (below), print the summary, and plot the trajectory against the
+reference circle.</li>
+</ol>
+<p>Unlike some other GFTGU programs, this loop never raises an error for reaching
+<code>maxSteps</code> before impact or before a full revolution; that is a normal, reported
+outcome (Beat 9). It does validate that <code>maxSteps</code> is large enough to hold at least the
+launch point and one advance.</p>
+<h3>Surface-impact interpolation</h3>
+<p>When the trajectory ends in impact, the console analysis does not use the raw final sample,
+which already lies below the surface; it finds where the straight chord between the last two
+stored points crosses the reference circle \(r=R_\oplus\):</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 8 — Surface-impact interpolation (numerical method, untagged)</div>
+\[
+  \text{solve } |\,(x_{n-1},y_{n-1})+s\,[(x_n,y_n)-(x_{n-1},y_{n-1})]\,|=R_\oplus
+  \text{ for } s\in[0,1],
+\]
+\[
+  \text{then } t^*=t_{n-1}+s(t_n-t_{n-1}).
+\]
+</div>
+<p>This is a quadratic in \(s\); the program keeps the smaller root that lies in \([0,1]\) (with a
+small numerical tolerance), which is the first crossing along the segment. The interpolated
+position, time, and distance travelled all use this same \(s\); the plotted trajectory is
+unaffected and still shows the raw stored point below the surface.</p>
+<h3>Revolution boundaries and altitude extrema</h3>
+<p>Accumulated angular progress is tracked from the launch direction, unwrapped and made
+monotonic. A completed revolution's start and end times and positions are found by linear
+interpolation in progress against the target angles \(2\pi(n-1)\) and \(2\pi n\); each
+revolution's minimum and maximum altitude then use a local three-point parabola through the
+extreme stored sample and its two neighbours, falling back to the stored sample itself when the
+parabola's vertex would fall outside the surrounding interval:</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 9 — Three-point parabola for a local altitude extremum (numerical method, untagged)</div>
+\[
+  \delta=h_{k-1}-2h_k+h_{k+1},\qquad
+  H^*=h_k-\frac{(h_{k+1}-h_{k-1})^2}{8\delta}\quad\text{when } \delta\ne0
+  \text{ and the vertex lies within the samples.}
+\]
+</div>
+<p>The same three-point parabola locates the overall maximum altitude reported for a run that does
+not complete a revolution. All of Eqs. 8 and 9 are implemented in <code>analyze_earth_orbit()</code>
+and its helpers in <code>driver_earthorbit.py</code>, and none of them alters the arrays returned
+to the plotter.</p>
+<div class="note-box"><strong>Version and Build ID.</strong> <code>python main.py --version</code>
+prints the model version and the Build ID without running a simulation. The Build ID is a short
+hash of the four program modules listed under <a href="#modules">Code Modules</a> and of nothing
+else — this Help file, the Release Notes, the sample outputs, and the test suite are not part of
+it. It appears at the top of this page and on the first line of every run's printed summary.</div>
+</section>
+
+<section id="modules">
+<h2>Code Modules</h2>
+<div class="module-grid">
+<div class="module-card">
+<div class="mc-head"><div class="mc-title">physics_earthorbit.py</div></div>
+<div class="mc-role">Physics Layer</div>
+<p>Defines the physical constants \(g=9.8\) m s<sup>&minus;2</sup>,
+\(R_\oplus=6{,}378{,}200\) m, and \(\mu_\oplus=3.986\,004\,355\,07\times10^{14}\)
+m<sup>3</sup> s<sup>&minus;2</sup> (JPL DE440), and <code>compute_acceleration()</code>,
+implementing Eqs. 2 and 3. Has no NumPy or plotting dependency.</p>
+<div class="sig">compute_acceleration(x, y, force_law) -&gt; (ax, ay)</div>
+</div>
+<div class="module-card">
+<div class="mc-head"><div class="mc-title">driver_earthorbit.py</div></div>
+<div class="mc-role">Simulation Driver</div>
+<p>Implements the fixed-step averaged-velocity integration loop (Eq. 7), builds the 401-point
+Earth-surface reference circle, and analyzes a completed trajectory into the printed summary,
+including surface-impact interpolation (Eq. 8), per-revolution reporting, and osculating elements
+(Eq. 5, <code>inverse_square</code> only).</p>
+<div class="sig">run_earth_orbit(...) -&gt; xs, ys, xEarth, yEarth[, ts, us, vs]
+analyze_earth_orbit(...) -&gt; dict with "lines" (console text) and structured fields</div>
+</div>
+<div class="module-card">
+<div class="mc-head"><div class="mc-title">plot_earthorbit.py</div></div>
+<div class="mc-role">Visualisation</div>
+<p>Plots the Earth-surface reference circle and the projectile trajectory on shared equal-aspect
+axes, validating that all coordinates are finite, one-dimensional, and paired in length before
+drawing. Returns its matplotlib <code>Figure</code> and <code>Axes</code>.</p>
+</div>
+<div class="module-card">
+<div class="mc-head"><div class="mc-title">main.py</div></div>
+<div class="mc-role">Command-Line Entry Point</div>
+<p>Defines and describes all six command-line options, always requests diagnostics internally so
+the console summary can be computed, prints the version/Build ID line and the summary, and
+converts invalid settings into concise <code>EarthOrbit: ...</code> errors instead of Python
+tracebacks.</p>
+</div>
+</div>
+</section>
+
+<section id="quickstart">
+<h2>Quick Start</h2>
+<h3>Requirements</h3>
+<p>Python 3.10 or later, with <code>numpy</code> and <code>matplotlib</code>:</p>
+<pre class="code-block"><code>pip install numpy matplotlib</code></pre>
+<h3>Running the Program</h3>
+<p>Clone or download the repository, then run the program from its folder:</p>
+<pre class="code-block"><code>cd GFTGU-Programs/EarthOrbit
+python main.py
+python main.py --force_law inverse_square --uInit 7726 --h0 300000 --dt 1 --maxSteps 7000
+python main.py --help
+python main.py --version</code></pre>
+<p>Each run prints a summary, described under <a href="#summary">Printed Summary</a>, and then
+opens the plot window. The options and their defaults are listed under
+<a href="#parameters">Parameters</a>.</p>
+</section>
+
+<section id="parameters">
+<h2>Parameters</h2>
+<p>Run <code>python main.py --help</code> for the current command summary and
+<code>python main.py --version</code> for the model version and Build ID. Any option omitted from
+the command uses the default below. <code>return_diagnostics</code> is a Python-API return-format
+switch, not a physical setting; it has no command-line flag, and <code>main.py</code> always
+enables it internally so it can compute the console summary.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Command-line options"><table class="param-table">
+<thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>--h0</code></td><td>300.0</td><td>m</td><td>Initial altitude above the reference Earth surface. Must be non-negative.</td></tr>
+<tr><td><code>--uInit</code></td><td>7900.0</td><td>m/s</td><td>Initial tangential (horizontal) velocity.</td></tr>
+<tr><td><code>--vInit</code></td><td>0.0</td><td>m/s</td><td>Initial radial (vertical) velocity; positive is away from Earth's centre.</td></tr>
+<tr><td><code>--dt</code></td><td>0.4</td><td>s</td><td>Positive fixed integration timestep.</td></tr>
+<tr><td><code>--maxSteps</code></td><td>15000</td><td>—</td><td>Maximum stored trajectory points, including the launch point; at least 2.</td></tr>
+<tr><td><code>--force_law</code></td><td>simplified</td><td>—</td><td><code>simplified</code> keeps \(|\mathbf a|=g\); <code>inverse_square</code> uses \(\mu_\oplus/r^2\) for Keplerian motion.</td></tr>
+<tr><td><code>g</code></td><td>9.8</td><td>m/s²</td><td>Conventional near-surface gravitational acceleration, used only by the simplified law.</td></tr>
+<tr><td><code>MU_EARTH</code></td><td>3.986_004_355_07e14</td><td>m³/s²</td><td>JPL DE440 Earth gravitational parameter, used only by the inverse-square law.</td></tr>
+</tbody>
+</table></div>
+<div class="note-box"><strong>Accepted parameter values.</strong> <code>h0</code> must be a
+non-negative finite real number; <code>uInit</code> and <code>vInit</code> may be any finite real
+number; <code>dt</code> must be a positive finite real number; <code>maxSteps</code> must be an
+integer of at least 2. Values outside these ranges, or of the wrong type, are rejected with a
+one-line <code>EarthOrbit: ...</code> message rather than a Python traceback (Beat 9).</div>
+</section>
+
+<section id="output">
+<h2>Output</h2>
+<p>The matplotlib plot displays the title <strong>EarthOrbit — Attempting to Achieve Orbit</strong>
+and shows:</p>
+<ul>
+<li>a blue dashed circle for Earth's surface, from the 401-point reference curve,</li>
+<li>a red trajectory line through every stored sample, including the first one below the surface
+after an impact run,</li>
+<li>equal horizontal and vertical physical scales, so circles and ellipses are not visually
+distorted,</li>
+<li>grid lines and a legend.</li>
+</ul>
+<p><code>run_earth_orbit()</code> returns NumPy arrays <code>xs</code>, <code>ys</code>,
+<code>xEarth</code>, <code>yEarth</code> by default; with <code>return_diagnostics=True</code> it
+additionally returns <code>ts</code>, <code>us</code>, and <code>vs</code>, aligned with the
+position arrays, for period, energy, and convergence experiments. <code>plot_earth_orbit(xs, ys,
+xEarth, yEarth)</code> displays the figure and returns its matplotlib <code>Figure</code> and
+<code>Axes</code>.</p>
+<div class="note-box"><strong>Interpolation does not alter the plotted arrays.</strong> The console
+summary's surface-impact, revolution-boundary, and altitude-extremum estimates (Eqs. 8 and 9) are
+computed alongside the raw stored trajectory, never in place of it; the final plotted point may
+lie slightly below the surface after an impact run, exactly as stored, even though the printed
+range and flight time report the interpolated crossing.</div>
+</section>
+
+<section id="summary">
+<h2>Printed Summary</h2>
+<p>Every run prints a summary and then opens the plot. The first line gives the version, the Build
+ID, and the number of trajectory samples. This is the full summary of the default run,
+<code>python main.py</code>:</p>
+<pre class="code-block"><code>EarthOrbit 1.3.0 (build fc33b69c1a98) — 503 trajectory samples
+Outcome: Surface impact before one revolution
+Fraction of a revolution: 0.039512
+Total flight time: 200.44 s
+Total angular travel: 14.224 deg
+Maximum altitude (interpolated): 300.00 m
+Total distance traveled (interpolated to impact): 1.5835e+06 m</code></pre>
+<p>The summary's shape depends on the outcome (Beats 0 through 4 show each in turn):</p>
+<h3>Impact or Incomplete Trajectory</h3>
+<p>If the projectile does not complete a revolution, the summary reports the fraction of a
+revolution traversed, total flight time, total angular travel, interpolated maximum altitude, and
+total path distance. For impact, the time and final path segment are interpolated to the Earth
+circle (Eq. 8) rather than using the raw first below-surface sample. If <code>maxSteps</code> ends
+the run first, the distance is reported through the final stored sample instead.</p>
+<h3>One or More Completed Revolutions</h3>
+<p>Once accumulated angular travel reaches \(2\pi\), the summary reports the number of completed
+revolutions, total flight time, and total angular travel, and for every completed revolution its
+interpolated duration and its minimum and maximum altitude (Eq. 9). A partial final revolution
+contributes to the totals but gets no separate per-revolution line.</p>
+<h3>Inverse-Square Elements and Escape</h3>
+<p>With <code>--force_law inverse_square</code>, the launch state defines osculating Keplerian
+elements (Eq. 5): eccentricity and perigee altitude always print, and a bound ellipse
+(\(e&lt;1\)) also prints an apogee altitude. An unbound trajectory (\(e\ge1\)) has no apogee and
+instead prints its final altitude at <code>maxSteps</code>; when that altitude is also the largest
+reached, the two identical concepts are combined into one line rather than printed twice.</p>
+<p>All real numbers are printed to five significant figures. Use
+<code>python main.py --version</code> to print only the version and Build ID, with no simulation.</p>
+</section>
+
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<div class="note-box">
+<strong>Suggested order:</strong> the experiments below run roughly from introductory parameter
+exploration to more demanding numerical-analysis and code-modification exercises. The standard
+printout already supplies most quantities discussed on this page; a few experiments additionally
+ask you to inspect raw diagnostic arrays or vary a setting the console summary does not sweep for
+you.
+</div>
+<div class="experiment-card" id="exp1">
+<div class="exp-num">Experiment 1 · Introductory</div>
+<div class="exp-title">Find the circular speed by bisection</div>
+<p class="exp-beat">Goes with <a href="#beat0">Beat 0</a> and <a href="#beat2">Beat 2</a>.</p>
+<p><strong>Core task:</strong> Without using Eq. 4, find the inverse-square circular speed at
+\(h_0=300\) km by bisection: run <code>python main.py --h0 300000 --uInit &lt;guess&gt;
+--force_law inverse_square --dt 1 --maxSteps 8000</code> at a few guessed speeds. The osculating
+eccentricity alone cannot tell you which way to move your guess — it is zero only exactly at
+circular and grows the same way on both sides of it — so read the perigee and apogee altitude
+lines instead: for a tangential launch, whichever one equals your launch altitude \(h_0\) tells you
+where the launch point sits on the orbit. If the printed <em>apogee</em> altitude matches \(h_0\),
+your guess is below circular (the launch point is the far side of the orbit) and you should raise
+it; if the <em>perigee</em> altitude matches \(h_0\), your guess is above circular and you should
+lower it; narrow the bracket until the eccentricity itself is small. <strong>Extension:</strong>
+Automate this bisection in Python using <code>run_earth_orbit()</code> and
+<code>analyze_earth_orbit()</code> directly — the sign test above is exactly
+<code>elements["apogee_altitude"]</code> versus <code>elements["perigee_altitude"]</code> compared
+with <code>h0</code> — and confirm your answer against Eq. 4 to five figures.</p>
+<p><strong>Check:</strong> Eq. 4 gives 7725.72 m/s at 300 km altitude. At 7700 m/s, below circular,
+the printed apogee altitude (3.0000e+05 m) matches \(h_0\) while the perigee altitude
+(2.1179e+05 m) does not — the sign the bisection needs. A guess within a few m/s of 7725.72 should
+print an eccentricity below 0.001, with both perigee and apogee close to \(h_0\).</p>
+</div>
+<div class="experiment-card" id="exp2">
+<div class="exp-num">Experiment 2 · Introductory</div>
+<div class="exp-title">Push maxSteps and dt to their edges</div>
+<p class="exp-beat">Goes with <a href="#beat9">Beat 9</a>.</p>
+<p>Run <code>python main.py --maxSteps 2</code>, then <code>--maxSteps 1</code>, then
+<code>--dt 0</code>, then <code>--h0 -1</code>. Read each program's response and identify, for
+each, which validation rule in <a href="#algorithm">Algorithm</a> step 1 it triggers. Then run
+<code>python main.py --maxSteps 3</code> and describe, in your own words, what a trajectory of
+only three stored points can and cannot tell you about a launch.</p>
+<p><strong>Check:</strong> <code>--maxSteps 2</code> runs (the minimum allowed) and reports the
+first step's outcome; <code>--maxSteps 1</code> prints <code>EarthOrbit: maxSteps must be an
+integer &gt;= 2</code>.</p>
+</div>
+<div class="experiment-card" id="exp3">
+<div class="exp-num">Experiment 3 · Introductory–Intermediate</div>
+<div class="exp-title">Where the two force laws start to disagree</div>
+<p class="exp-beat">Goes with <a href="#beat1">Beat 1</a> and <a href="#beat5">Beat 5</a>.</p>
+<p>Beat 1 already found the two laws measurably different at 300 m altitude over 200 s — different
+sample counts, different flight times — even though both still end in impact. This experiment asks
+a different question: not <em>when</em> the two laws first differ, but when that difference starts
+to change the <em>outcome</em> itself. Raise <code>--h0</code> (try 30,000, then 300,000) at the
+default <code>uInit</code> and compare the two force laws' outcome lines at each altitude. At what
+altitude does the choice of force law start to change which of impact, orbit, or escape the program
+reports?</p>
+<p><strong>Check:</strong> at \(h_0=300{,}000\) m, <code>uInit=7900</code> completes revolutions
+under both force laws within <code>maxSteps=15000</code> at \(\Delta t=1\) s, but very
+differently: <code>inverse_square</code> gives a mildly eccentric ellipse (eccentricity 0.045625,
+apogee altitude 9.3851e+05 m) while <code>simplified</code> dips to a first-revolution minimum
+altitude of only 97,103 m — more than 200 km below the 300 km launch altitude — and then, in its
+second revolution, dips to a shallower 116,306 m rather than a deeper one: the fixed-step drift
+Beat 7 measures is an energy <em>gain</em>, so successive close approaches under
+<code>simplified</code> trend higher, not lower, even as the orbit keeps precessing.</p>
+</div>
+<div class="experiment-card" id="exp4">
+<div class="exp-num">Experiment 4 · Intermediate</div>
+<div class="exp-title">Geostationary altitude</div>
+<p class="exp-beat">Goes with <a href="#beat2">Beat 2</a> and <a href="#beat8">Beat 8</a>.</p>
+<p>Use Eq. 4 to find the circular speed at geostationary altitude,
+\(h_0=35{,}786{,}000\) m, where the orbital period should equal one sidereal day. Run
+<code>python main.py --h0 35786000 --uInit &lt;your value&gt; --force_law inverse_square --dt 5
+--maxSteps 18000</code> and check the reported per-revolution time against 86,164 s (one sidereal
+day) rather than 86,400 s (one solar day) — Investigation 4.2 in the textbook distinguishes the
+two.</p>
+<p><strong>Check:</strong> Eq. 4 gives \(v_c\approx3074.66\) m/s at this altitude; the run in this
+Help's own testing reported <code>Revolution 1: time 86312 s</code> at that speed and
+\(\Delta t=5\) s, about 0.17% above the sidereal day, consistent with the drift measured in
+Beat 7.</p>
+</div>
+<div class="experiment-card" id="exp5">
+<div class="exp-num">Experiment 5 · Intermediate</div>
+<div class="exp-title">Add a radial launch velocity</div>
+<p class="exp-beat">Goes with <a href="#beat3">Beat 3</a>.</p>
+<p>All the orbital examples on this page use a purely tangential launch, <code>vInit=0</code>. Add
+a nonzero <code>--vInit</code> to the default near-surface launch, for example
+<code>python main.py --vInit 50</code>, and compare the outcome with Beat 0's default. Then try a
+negative <code>vInit</code> (aimed inward) at the same <code>uInit</code>. For the
+<code>inverse_square</code> elliptical launch of Beat 3, adding <code>vInit</code> moves the
+launch point off both apsides; the osculating perigee altitude then differs from \(h_0\).</p>
+<p><strong>Check:</strong> <code>python main.py --vInit 50</code> (default <code>h0</code>,
+<code>uInit</code>, <code>dt</code>) impacts after 0.26947 of a revolution, 97.010° of arc, in
+1372.4 s — noticeably further than Beat 0's default, since the outward radial kick buys a little
+extra time before the surface is reached again.</p>
+</div>
+<div class="experiment-card" id="exp6">
+<div class="exp-num">Experiment 6 · Intermediate</div>
+<div class="exp-title">Map outcome against launch speed, and find the real impact boundary</div>
+<p class="exp-beat">Goes with <a href="#beat2">Beat 2</a>, <a href="#beat3">Beat 3</a>, and
+<a href="#beat4">Beat 4</a>.</p>
+<p>At \(h_0=300\) km under <code>inverse_square</code>, run a sequence of launch speeds spanning
+well below \(v_c=7725.7\) m/s to well above \(v_e=10{,}925.8\) m/s — for example every 500 m/s
+from 6000 to 12000 — and record each run's outcome and, when printed, its osculating eccentricity.
+Plot eccentricity against launch speed and identify the orbit-versus-escape boundary at \(v_e\).
+Then, separately, narrow in on the impact-versus-orbit boundary itself: it is <em>not</em> at
+\(v_c\). A launch below \(v_c\) makes the launch point an apogee (Beat 3's note under Eq. 5); the
+projectile only impacts if the resulting perigee — printed as <code>Osculating perigee
+altitude</code> — is negative, i.e. below Earth's surface. Bisect on launch speed, watching that
+one printed line, to find the speed at which the perigee altitude crosses zero.</p>
+<p><strong>Check:</strong> 9000 m/s gives eccentricity 0.35708 (bound ellipse); 11,500 m/s gives
+eccentricity 1.2157 (unbound); the bound/unbound transition occurs exactly at \(e=1\), which Eq. 5
+places at \(v_0=v_e\), and Experiment 1 already confirms this program-wide. The impact boundary is
+a different question: 7700 m/s, itself already 25.7 m/s below \(v_c\), completes a full orbit
+(<code>Osculating perigee altitude: 2.1179e+05 m</code>, comfortably above ground), and the true
+impact threshold is close to 7636.45 m/s — about 89 m/s, not a few tens of centimetres, below
+\(v_c\). Contrast this with Beat 0's near-surface default launch, where the same calculation puts
+the threshold only about 0.09 m/s below the local circular speed; the "how far below circular is
+safe" margin depends entirely on altitude, which is exactly the point this experiment is meant to
+make concrete.</p>
+</div>
+<div class="experiment-card" id="exp7">
+<div class="exp-num">Experiment 7 · Intermediate–Advanced</div>
+<div class="exp-title">Plot the rosette</div>
+<p class="exp-beat">Goes with <a href="#beat5">Beat 5</a>.</p>
+<p>Call <code>run_earth_orbit()</code> directly with <code>force_law="simplified"</code> at a
+speed noticeably below the local simplified-law circular speed (Beat 5 uses 7500 m/s against
+8089.9 m/s at 300 km) but small enough not to impact within a few thousand stored points, and plot
+the trajectory with <code>plot_earthorbit.plot_earth_orbit()</code>. Identify, by eye, that the
+point of closest approach to Earth does not recur at the same angle on successive inward swings —
+the rosette pattern Eq. 6 predicts. Repeat with <code>force_law="inverse_square"</code> at the
+corresponding fraction of its own circular speed and confirm the perigee angle stays fixed
+instead.</p>
+<p><strong>Check:</strong> a launch speed below either circular speed makes the launch altitude an
+apogee, not a perigee, so look for the closest-approach point elsewhere in the orbit, not at the
+launch point itself.</p>
+</div>
+<div class="experiment-card" id="exp8">
+<div class="exp-num">Experiment 8 · Intermediate–Advanced</div>
+<div class="exp-title">Interpolate the impact point by hand</div>
+<p class="exp-beat">Goes with <a href="#beat6">Beat 6</a>.</p>
+<p>Write a short script that calls <code>run_earth_orbit(return_diagnostics=True)</code> for the
+default launch, takes the last two stored \((x,y)\) points, and solves Eq. 8's quadratic in
+\(s\) yourself with <code>numpy</code> or the quadratic formula. Compare your \(s\) and the
+resulting impact point with <code>analyze_earth_orbit()</code>'s <code>impact_fraction</code> and
+with the printed range and flight time.</p>
+<p><strong>Check:</strong> for the default run, the last two stored radii are 6,378,200.17 m and
+6,378,199.01 m, and the correct impact fraction is 0.09183, not the naive radius-only
+interpolation 0.1479 (Beat 6 explains the difference).</p>
+</div>
+<div class="experiment-card" id="exp9">
+<div class="exp-num">Experiment 9 · Advanced</div>
+<div class="exp-title">Reproduce the drift table</div>
+<p class="exp-beat">Goes with <a href="#beat7">Beat 7</a>.</p>
+<p>Reproduce Beat 7's five-row table yourself: run the 300 km circular launch at
+\(\Delta t=4,\,2,\,1,\,0.5,\,0.25\) s (or add a finer \(\Delta t=0.1\) s row of your own), record
+each run's interpolated maximum altitude, and confirm that the drift above 300 km very nearly
+halves each time \(\Delta t\) halves. Then reproduce the dt=10 catastrophic case from the same
+beat under the default near-surface launch and describe, in your own words, why a numerical
+"orbit" at that timestep should not be trusted.</p>
+<p><strong>Check:</strong> Beat 7's table gives drifts of 193.24, 96.82, 48.47, 24.25 and 12.13 km
+above 300 km at \(\Delta t=4,\,2,\,1,\,0.5,\,0.25\) s; each halving of \(\Delta t\) should roughly
+halve the drift.</p>
+</div>
+<div class="experiment-card" id="exp10">
+<div class="exp-num">Experiment 10 · Advanced</div>
+<div class="exp-title">Verify Kepler's third law numerically</div>
+<p class="exp-beat">Goes with <a href="#beat8">Beat 8</a>.</p>
+<p>Run circular orbits under <code>inverse_square</code> at three or more altitudes of your
+choosing, each at its own circular speed from Eq. 4, using a small enough \(\Delta t\) that
+Beat 7's drift does not confuse the comparison. Record each run's per-revolution time and compute
+\(T^2/r^3\) for each. Then repeat the same three altitudes under <code>simplified</code> and
+compute \(T^2/r\) instead. Plot \(\log T\) against \(\log r\) for both force laws on the same
+axes and read the slope: 3/2 for inverse-square, 1/2 for simplified.</p>
+<p><strong>Check:</strong> the exact target values, from \(4\pi^2/\mu_\oplus\) and \(4\pi^2/g\)
+with no integration involved, are \(T^2/r^3=9.9043\times10^{-14}\) s<sup>2</sup> m<sup>&minus;3</sup>
+for <code>inverse_square</code> and \(T^2/r=4.0284\) s<sup>2</sup> m<sup>&minus;1</sup> for
+<code>simplified</code>. Beat 8's own two altitudes, run at only \(\Delta t=1\) s, land close but
+not exact — \(1.0013\times10^{-13}\) and \(9.9889\times10^{-14}\) for <code>inverse_square</code>,
+about 0.85&ndash;1.10% high; \(4.0331\) and \(4.0328\) for <code>simplified</code>, about
+0.11&ndash;0.12% high — so a small \(\Delta t\) here matters more for a clean Kepler's-third-law
+check than it might first appear; that is the whole point of choosing "a small enough
+\(\Delta t\)" in the core task above.</p>
+</div>
+</section>
+<section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
+<div style="
+    border: 1.5px solid #b5811a;
+    border-left: 5px solid #b5811a;
+    border-radius: 6px;
+    background: #fffbeb;
+    padding: 1.1em 1.4em;
+    display: flex;
+    gap: 1em;
+    align-items: flex-start;
+  ">
+<div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
+<div>
+<div style="
+        font-weight: 700;
+        font-size: 0.95em;
+        color: #7b2d00;
+        margin-bottom: 0.35em;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      ">Restoring Default Parameter Values</div>
+<p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
+        Command-line changes are temporary: run <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">python main.py</code>
+        with no options to restore all default settings. If an exercise leads you to edit
+        <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
+        or another program file, restore the original files using any of the following methods:
+      </p>
+<ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
+<li>
+<strong>Same session:</strong>
+          Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
+          (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
+          (macOS) repeatedly in your editor to undo your edits.
+        </li>
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+        </li>
+<li>
+<strong>Full reset:</strong>
+          Re-download the ZIP from
+          <a href="https://github.com/tomyee3-org/GFTGU-Programs" style="color:#7b2d00; text-decoration:underline;" target="_blank">
+            github.com/tomyee3-org/GFTGU-Programs
+          </a>
+          and replace this program's folder with the fresh copy.
+        </li>
+</ul>
+<p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
+        For additional ways to restore program files, see the corresponding recovery instructions
+        in the <em>GFTGU Python Setup Guide</em>.
+      </p>
+</div>
+</div>
+</section>
+<section id="related">
+<h2>Related Programs</h2>
+<div class="related-grid">
+<div class="related-card"><div class="rc-name">CannonTrajectory</div><div class="rc-ch">Investigation 1.3</div>
+<p>The simpler near-surface projectile calculation EarthOrbit builds on. EarthOrbit adds the
+essential new feature that the direction of gravitational acceleration changes with position, so
+it always points toward Earth's centre.</p></div>
+<div class="related-card"><div class="rc-name">Orbit</div><div class="rc-ch">Chapter 4</div>
+<p>The general planetary-orbit program. Uses a predictor-corrector scheme with adaptive timestep
+rather than EarthOrbit's simple fixed-step algorithm, and supports additional output modes.
+EarthOrbit is the pedagogically simpler version focused specifically on Newton's cannon.</p></div>
+<div class="related-card"><div class="rc-name">RelativisticOrbit</div><div class="rc-ch">Chapter 21</div>
+<p>Explores strong-field orbital behaviour with an effective relativistic correction to the
+orbital acceleration, sharing Orbit's predictor-corrector integration core.</p></div>
+<div class="related-card"><div class="rc-name">Binary</div><div class="rc-ch">Chapter 13</div>
+<p>Extends the Orbit integrator to a two-body system with mutual gravitational interaction; both
+bodies move under Newton's law.</p></div>
+<div class="related-card"><div class="rc-name">Atmosphere</div><div class="rc-ch">Chapter 7</div>
+<p>A companion problem in vertical hydrostatic equilibrium, where the same constant-<em>g</em>
+versus inverse-square distinction of Beats 1 and 5 arises again.</p></div>
+</div>
+</section>
+<section id="license">
+<h2>License</h2>
+<p>
+This software is based on the programs by <strong>Bernard Schutz</strong>
+accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press,
+2003) and is distributed under the
+<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+(CC BY-NC-SA 4.0)</a> license.
+</p>
+</section>
+</main>
+<footer>
+<em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+</footer>
+</div><!-- /page-wrap -->
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
