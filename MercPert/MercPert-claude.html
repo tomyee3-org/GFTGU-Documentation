@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MercPert – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:          #fdf5e6;
+      --surface:     #ffffff;
+      --border:      #c8bfa0;
+      --accent:      #7b2d00;
+      --accent2:     #a04010;
+      --gold:        #b5811a;
+      --text:        #1c1c1c;
+      --muted:       #5a4a3a;
+      --code-bg:     #f0ede4;
+      --note-bg:     #f4f0e8;
+      --eq-bg:       #f7f2e8;
+      --warn-bg:     #fef8ec;
+      --warn-border: #c08020;
+      --radius:      5px;
+      --shadow:      0 2px 8px rgba(0,0,0,0.10);
+      --mono:        "Courier New", Courier, monospace;
+      --sans:        "Helvetica Neue", Arial, sans-serif;
+      --serif:       Georgia, "Times New Roman", Times, serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 { font-size: 1.95rem; font-weight: normal; letter-spacing: -.02em; }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub { margin-top: 6px; font-family: var(--sans); font-size: 0.88rem; color: #f0d0b8; line-height: 1.55; }
+    header .sub a { color: #ffd8b8; text-decoration: none; border-bottom: 1px solid rgba(255,200,150,.4); }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 16px 20px 4px;
+      margin-top: 8px;
+    }
+    nav a {
+      display: block;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      padding: 5px 20px 5px 26px;
+      border-left: 3px solid transparent;
+      line-height: 1.4;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    nav a:hover { color: var(--accent); border-left-color: var(--accent2); background: #f5ede0; }
+    nav a.active { color: var(--accent); border-left-color: var(--accent); font-weight: 600; background: #f5ede0; }
+    main { padding: 40px 50px 60px; max-width: 900px; min-width: 0; }
+    h2 {
+      font-family: var(--sans);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 5px;
+      margin: 44px 0 16px;
+      letter-spacing: -.01em;
+    }
+    h2:first-of-type { margin-top: 0; }
+    h3 { font-family: var(--sans); font-size: 1.02rem; font-weight: 700; color: var(--accent2); margin: 26px 0 8px; }
+    p { margin-bottom: 0.9em; }
+    section ul, section ol { margin: 0 0 14px 1.5em; }
+    section ul li, section ol li { margin-bottom: 6px; }
+    .eq-block {
+      background: var(--eq-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 14px 20px 14px 18px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .eq-label { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--gold-text); margin-bottom: 6px; }
+    .module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(370px, 100%), 1fr)); gap: 18px; margin-top: 18px; }
+    .module-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px 20px 16px; }
+    .module-card .mc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .module-card .mc-title { font-family: var(--mono); font-size: 0.93rem; font-weight: bold; color: var(--accent); }
+    .module-card .mc-role { font-family: var(--sans); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .module-card p { font-size: 0.88rem; margin-bottom: 10px; color: var(--text); }
+    .module-card .sig { font-family: var(--mono); font-size: 0.80rem; background: var(--code-bg); border: 1px solid var(--border); border-radius: 3px; padding: 7px 10px; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--accent2); line-height: 1.5; }
+    .param-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 12px; }
+    .param-table th { background: var(--accent); color: #fff; font-family: var(--sans); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 8px 12px; text-align: left; }
+    .param-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .param-table tr:nth-child(even) td { background: var(--note-bg); }
+    .param-table code { font-family: var(--mono); font-size: 0.85em; background: var(--code-bg); padding: 1px 4px; border-radius: 2px; }
+    .experiment-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 20px; margin-bottom: 14px; }
+    .experiment-card .exp-num { font-family: var(--sans); font-size: 10px; font-weight: bold; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-text); margin-bottom: 4px; }
+    .experiment-card .exp-title { font-family: var(--sans); font-weight: 700; font-size: 0.96rem; color: var(--accent2); margin-bottom: 6px; }
+    .experiment-card p { font-size: 0.88rem; margin-bottom: 0; }
+    .experiment-card p + p { margin-top: 8px; }
+    .experiment-card .exp-beat { font-family: var(--sans); font-size: 0.8rem; color: var(--muted); }
+    .note-box { background: var(--note-bg); border: 1px solid var(--border); border-left: 4px solid var(--gold); border-radius: var(--radius); padding: 12px 16px; font-size: 0.88rem; margin: 16px 0; }
+    .warn-box { background: var(--warn-bg); border: 1px solid var(--warn-border); border-left: 4px solid var(--warn-border); border-radius: var(--radius); padding: 12px 16px; font-size: 0.88rem; margin: 16px 0; }
+    code { font-family: var(--mono); font-size: 0.87em; background: var(--code-bg); padding: 1px 5px; border-radius: 3px; }
+    .code-block { font-family: var(--mono); font-size: 0.82rem; line-height: 1.55; background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; margin: 12px 0; overflow-x: auto; max-width: 100%; }
+    .code-block code { background: transparent; padding: 0; }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-top: 14px; }
+    .related-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; text-decoration: none; color: var(--text); display: block; transition: box-shadow .15s, border-color .15s; }
+    .related-card:hover { border-color: var(--accent2); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+    .related-card .rc-name { font-family: var(--mono); font-size: 0.85rem; font-weight: bold; color: var(--accent); margin-bottom: 4px; }
+    .related-card .rc-ch { font-family: var(--sans); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--gold-text); margin-bottom: 5px; }
+    .related-card p { font-family: var(--sans); font-size: 0.80rem; color: var(--muted); margin-bottom: 0; line-height: 1.4; }
+    footer { grid-column: 1 / -1; background: var(--accent); color: #fff; font-family: var(--sans); font-size: 12.5px; text-align: center; padding: 18px 24px; line-height: 1.7; }
+    footer a { color: #e0c090; text-decoration: underline; }
+    .tag { display: inline-block; font-family: var(--sans); font-size: 9.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border-radius: 3px; padding: 1px 6px; margin-left: 4px; vertical-align: 1px; }
+    .tag-ode  { background: #d9ead3; color: #274e13; border: 1px solid #a8c69a; }
+    .tag-der  { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
+    .tag-rule { background: #e4e9ea; color: #33454a; border: 1px solid #b2c0c4; }
+    :root { --gold-text: #805a12; }
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .compare-table th { background: var(--accent); color: #fff; font-family: var(--sans); font-size: 11px; letter-spacing: .04em; padding: 8px 10px; text-align: right; }
+    .compare-table th:first-child { text-align: left; }
+    .compare-table td { padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); }
+    .compare-table td:first-child { text-align: left; font-family: var(--sans); }
+    .compare-table tr:nth-child(even) td { background: var(--note-bg); }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .skip-link { position: absolute; left: 8px; top: -80px; z-index: 100; background: var(--surface); color: var(--accent); border: 2px solid var(--accent); border-radius: var(--radius); padding: 8px 14px; font-family: var(--sans); font-size: 0.9rem; font-weight: bold; }
+    .skip-link:focus { top: 8px; }
+    main:focus { outline: none; }
+    @media (max-width: 700px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 40px; }
+    }
+  </style>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to the tutorial</a>
+<div class="page-wrap">
+<header>
+<div class="badge">GFtGU Programs</div>
+<h1><em>MercPert</em> — A Planet in a Binary Star System</h1>
+<div class="sub">
+        Source Code:
+        <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a> ·
+        <br/>
+        Documentation:
+            <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a> ·
+      </div>
+</header>
+<nav id="sidebar">
+<div class="nav-label">Overview</div>
+<a href="#description">Description</a>
+<a href="#beats">How to read this page</a>
+<div class="nav-label">Beats</div>
+<a href="#beat0">0 · A test particle in a binary</a>
+<a href="#beat1">1 · The binary is prescribed</a>
+<a href="#beat2">2 · Switch the companion off</a>
+<a href="#beat3">3 · Turn the companion back up</a>
+<a href="#beat4">4 · The one number that is conserved</a>
+<a href="#beat5">5 · Close encounters and the step controller</a>
+<a href="#beat6">6 · Collision and escape</a>
+<a href="#beat7">7 · Outside the binary</a>
+<a href="#beat8">8 · How far to trust a run</a>
+<a href="#beat9">9 · Where the model and the run stop</a>
+<div class="nav-label">Code</div>
+<a href="#equations">Governing Equations</a>
+<a href="#algorithm">Algorithm</a>
+<a href="#modules">Code Modules</a>
+<div class="nav-label">Usage</div>
+<a href="#quickstart">Quick Start</a>
+<a href="#parameters">Parameters</a>
+<a href="#output">Output</a>
+<a href="#summary">Printed Summary</a>
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
+<div class="nav-label">Reference</div>
+<a href="#related">Related Programs</a>
+<a href="#license">License</a>
+</nav>
+<main id="content" tabindex="-1">
+<p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
+  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 9852baf113f7
+</p>
+<section id="description">
+<h2>Description</h2>
+<p>
+<strong>MercPert</strong> follows a small body — called "Mercury" here, though it can stand for
+any planet, asteroid, or dust grain — as it moves under the gravity of two stars that orbit each
+other. The two massive bodies are a Sun-like <em>primary</em> and a <em>companion</em> whose mass
+you choose; by default the companion has 0.1 solar mass, about 100 Jupiter masses, which puts it
+just above the hydrogen-burning limit: a small red dwarf, not a planet. The two stars move on
+circles about their common centre of mass. Mercury feels both of them but is too light to pull on
+either, so this is the <em>planar circular restricted three-body problem</em>.
+</p>
+<p>
+The question MercPert lets you ask is how much a companion disturbs a planet's orbit, and when the
+disturbance stops being a small correction and becomes the whole story. A light, distant
+companion barely changes a Kepler orbit. A heavy or nearby one makes the orbit precess, drives the
+planet into close encounters with either star, throws it out of the system, or lets it survive
+only far outside the binary. The same test-particle calculation is the gravitational part of the
+"cleaning out" of a young planetary system's inner regions discussed in Chapter 13 of the 2003
+edition; the program deliberately leaves out the gas of a protoplanetary disk.
+</p>
+<p>The spine of the lesson is one sentence: <em>a companion's pull is a perturbation whose size
+grows with its mass and with how close it comes, and although Mercury's ordinary energy is not
+conserved, one combination of energy and angular momentum measured in the frame rotating with the
+binary — the Jacobi constant — is, which both limits where Mercury can go and tells you how far to
+trust the calculation.</em> Beats 2 and 3 measure the perturbation, Beat 4 introduces the Jacobi
+constant, Beats 5 through 7 show what strong perturbations do, and Beat 8 uses the Jacobi constant
+to judge the numbers.</p>
+<div class="note-box"><strong>Textbook reference:</strong> Bernard Schutz, <em>Gravity from the
+Ground Up</em>, Cambridge University Press (2003), Chapter 13.</div>
+<div class="warn-box"><strong>What this program is, and what it does not model.</strong> MercPert
+is a teaching model. It is planar and uses Newtonian point masses. The two stars are made to move
+on an exact circle, and Mercury has no effect on them. There is no gas, disk, migration, tides,
+relativity, radiation, or physics of impacts. The collision radii are stopping surfaces you
+choose, not models of stars' surfaces, and the program never decides by itself whether an orbit is
+"stable" or "ejected"; you have to choose a criterion and a time span. Its adaptive
+predictor-corrector integrator is second-order and very accurate on smooth orbits, but close
+encounters demand small steps and tight tolerances; Beat 8 says how to tell when they are
+needed.</div>
+<div class="note-box"><strong>Reading this page.</strong> The equations on this page are rendered
+by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset;
+with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text
+instead of a formula. This has no effect on the program itself, which needs no internet access to
+run.</div>
+</section>
+<section id="beats">
+<h2>How to read this page</h2>
+<p>Each numbered section below is one beat: a short argument in words, a command whose output
+illustrates it, and then the equation the output follows from. Do them in order the first time.
+After that, any beat can be opened on its own.</p>
+<p>The program's output is a consequence of its equations, so what a beat shows is the equations
+at work, not independent evidence that they are right. The outside checks this page uses are
+Kepler's laws (Beats 1 and 2), which the runs can be compared with by hand, and the Jacobi constant
+(Beats 4 and 8), which the exact equations conserve and a correct calculation must very nearly
+conserve too.</p>
+<p>Every beat uses the same program. What changes from beat to beat is the command. Beat 0 runs
+the default system, Beat 1 looks at the two stars, Beats 2 and 3 switch the companion off and turn
+it back up, Beat 4 introduces the Jacobi constant, Beat 5 follows a close encounter and the
+adaptive step control, Beat 6 shows a collision and an ejection, Beat 7 moves Mercury outside the
+binary, Beat 8 asks how far a run can be trusted, and Beat 9 collects the limits of the model and
+of a run.</p>
+<p>Run every command from the program's folder. Each run prints a six-line summary and then opens
+an orbit plot; close the window to end the program. The plot is drawn in the <em>barycentric</em>
+frame, centred on the two stars' centre of mass: the dashed red curve is the Sun's circle, the
+dashed green curve is the companion's, and the solid blue curve is Mercury. Distances are printed
+in AU (and metres), times in days (and seconds), speeds are in metres per second, and printed
+numbers have five significant figures.</p>
+<div class="note-box"><strong>Mercury's starting values are measured from the Sun.</strong>
+<code>--x_init</code>, <code>--y_init</code>, <code>--vx_init</code> and <code>--vy_init</code>
+give Mercury's position and velocity <em>relative to the Sun</em>, while the calculation and the
+plot use the barycentric frame. At the start the Sun is on the negative \(x\)-axis and moving in
+the \(-y\) direction, so a Mercury placed on the \(+x\) side of the Sun with positive
+<code>vy_init</code> is launched in the same, counter-clockwise, sense as the binary. The program
+does the conversion for you (Beat 7 shows when it matters).</div>
+<div class="note-box"><strong>What kind of statement is each equation?</strong> Each displayed
+equation in the beats carries a tag saying what kind of statement it is. A green
+<span class="tag tag-ode">ODE</span> tag marks the differential equation the program integrates:
+Eq. 1, Newton's law of gravity applied to Mercury. A blue
+<span class="tag tag-der">DERIVED</span> tag marks a result that follows from equations already
+stated, such as Kepler's third law for the binary or the Jacobi constant. A grey
+<span class="tag tag-rule">PRESCRIPTION</span> tag marks a rule the program adopts rather than
+derives; the clearest example is Eq. 3, the stars' circular motion, which is imposed rather than
+integrated. The predictor, corrector and collision-crossing formulas (Eqs. 7 to 9) are numerical
+method, not physics, and are not tagged. Ten equations are numbered.</div>
+</section>
+
+<section id="beat0">
+<h2>Beat 0 · A test particle in a binary</h2>
+<p>Put a Sun and a 0.1-solar-mass companion 0.7 AU apart, and start Mercury 0.3 AU from the Sun,
+on the side facing the companion, moving sideways at 59,220 m/s. Run it.</p>
+<pre class="code-block"><code>python main.py</code></pre>
+<p>Look at the six printed lines and at the orbit plot.</p>
+<p>Three tasks, in order. First, read the numbers: the run took its full 10,000 steps
+(<code>termination: max_steps reached</code>), covering 231.48 days, while the two stars go round
+each other once every 203.96 days, so the run is 1.13 binary periods long. Mercury's distance from
+the Sun stayed between 0.30000 and 0.40762 AU. Then compare the launch speed with the speed of a
+circular orbit at 0.3 AU around the Sun alone, \(v_c=\sqrt{GM_\odot/r}\) (Beat 2 derives this):
+54,379 m/s. The launch is 8.90% faster than that, so the Sun alone would put Mercury at the
+<em>perihelion</em> of an ellipse, and 0.3 AU is the closest it gets. Write down how far out you
+expect such an ellipse to reach before reading Beat 2, which works it out; then compare with the
+0.40762 AU the run actually reached. Then look at the plot: a small dashed red circle for the Sun,
+a large dashed green circle for the companion, and Mercury's blue path looping around the Sun
+while the whole pattern turns. The loops do not close on themselves.</p>
+<p><em>Then</em> the equation behind the run. Let \(\mathbf r=(x,y)\) be Mercury's position in the
+barycentric frame, \(\mathbf r_\odot(t)\) and \(\mathbf r_c(t)\) the positions of the Sun and the
+companion, and \(M_\odot\), \(M_c\) their masses. Newton's law of gravity from both bodies at
+once gives</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 1 — Mercury's equation of motion <span class="tag tag-ode">ODE</span></div>
+\[
+  \ddot{\mathbf r}=-\frac{GM_\odot\,(\mathbf r-\mathbf r_\odot(t))}{|\mathbf r-\mathbf r_\odot(t)|^3}
+  -\frac{GM_c\,(\mathbf r-\mathbf r_c(t))}{|\mathbf r-\mathbf r_c(t)|^3}.
+\]
+</div>
+<p>The positions of the two stars depend on time, so Mercury's acceleration depends on time as well
+as on where Mercury is: this is the feature that makes the problem harder than a single-star
+orbit. <code>mercury_acceleration(t, x, y, binary_params)</code> in
+<code>physics_mercpert.py</code> evaluates Eq. 1. The program uses the IAU 2015 nominal value
+\(GM_\odot=1.3271244\times10^{20}\) m<sup>3</sup> s<sup>&minus;2</sup> and gives both masses in
+solar-mass units.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat1">
+<h2>Beat 1 · The binary is prescribed</h2>
+<p>The two stars are not integrated at all. The program puts them on circles about their centre of
+mass and moves them at a fixed rate. Make the companion heavier, so the Sun's own circle is big
+enough to see.</p>
+<pre class="code-block"><code>python main.py --m_planet_solar 0.5 --vy_init 54400</code></pre>
+<p>Look at the <code>Circular period</code> line and at the two dashed circles on the plot.</p>
+<p>Three tasks, in order. First, read the printed period, 174.66 days, and check it by hand from
+Kepler's third law for two bodies of total mass \(1.5\,M_\odot\) a distance 0.7 AU apart
+(Eq. 2): it agrees. Then work out the radii of the two circles about the centre of mass. The Sun is
+twice as heavy as the companion here, so the centre of mass lies one third of the way from the Sun
+to the companion: the Sun circles at \(0.7\times0.5/1.5=0.23333\) AU from it and the companion
+at 0.46667 AU. Read the
+dashed red and green circles off the plot's axes and check both. Then work out how fast the Sun is
+moving: \(r_\odot\omega=14{,}533\) m/s. Mercury's starting velocity of 54,400 m/s is measured
+<em>from the Sun</em>, so Mercury's speed in the frame of the plot is quite different, and its
+blue path, swinging between 0.14420 and 0.31804 AU from the Sun, makes loops around a Sun that
+is itself going round in a circle.</p>
+<p><em>Then</em> the equations. For two bodies of masses \(M_\odot\) and \(M_c\) a distance \(d\)
+apart moving on circles, Newton's laws give one common angular velocity and two radii:</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 2 — Binary angular velocity and radii <span class="tag tag-der">DERIVED</span></div>
+\[
+  \omega=\sqrt{\frac{G(M_\odot+M_c)}{d^{3}}},\qquad P=\frac{2\pi}{\omega},\qquad
+  r_\odot=\frac{M_c}{M_\odot+M_c}\,d,\qquad r_c=\frac{M_\odot}{M_\odot+M_c}\,d.
+\]
+</div>
+<div class="eq-block">
+<div class="eq-label">Eq. 3 — Prescribed motion of the two stars <span class="tag tag-rule">PRESCRIPTION</span></div>
+\[
+  \mathbf r_\odot(t)=-r_\odot\,(\cos\omega t,\ \sin\omega t),\qquad
+  \mathbf r_c(t)=+r_c\,(\cos\omega t,\ \sin\omega t).
+\]
+</div>
+<p>Eq. 3 is tagged as a prescription because the program imposes it: the circle is an exact
+solution of the two-body problem, but it is only the right motion because Mercury is assumed to
+have no mass. A real planet pulls back on both stars a little; the <em>restricted</em> problem
+drops that pull. At \(t=0\) the Sun is on the negative \(x\)-axis and the companion on the
+positive \(x\)-axis, and the pair turns counter-clockwise. <code>binary_positions()</code> and
+<code>binary_velocities()</code> in <code>physics_mercpert.py</code> evaluate Eq. 3 and its time
+derivative. The option names <code>--m_sun_solar</code> and <code>--m_planet_solar</code> are
+historical; the second is simply the companion's mass.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat2">
+<h2>Beat 2 · Switch the companion off</h2>
+<p>Before measuring what the companion does, take it away and check that the program reproduces a
+plain Kepler orbit. The companion mass must be positive, so make it tiny instead of zero.</p>
+<pre class="code-block"><code>python main.py --m_planet_solar 1e-12 --vy_init 54379.16
+python main.py --m_planet_solar 1e-12</code></pre>
+<p>Look at the <code>Sun-distance range</code> line of each run.</p>
+<p>Three tasks, in order. First, the first run launches Mercury at exactly the circular speed
+54,379.16 m/s, and the Sun-distance range prints as 0.30000 to 0.30000 AU: a circle, to the precision printed in AU (the
+metre values differ only in their fifth figure), over more than 230 days. Then take the second run, which keeps the default
+59,220 m/s. Use Eq. 4 to predict how far out the resulting ellipse should reach, starting from
+\(v/v_c=1.0890\): 0.43707 AU. The run prints 0.30000 to 0.43707 AU, in agreement to five figures.
+Then go back to Beat 0, which was the same launch <em>with</em> the default companion: there
+Mercury never got beyond 0.40762 AU. The companion, not the numerical method, is what kept it
+0.03 AU closer in.</p>
+<p><em>Then</em> the equations. For one star alone, a circular orbit of radius \(r\) needs gravity
+to supply exactly the centripetal acceleration, \(GM_\odot/r^2=v_c^2/r\). A launch at a
+perihelion \(r_p\) with speed \(v\) larger than \(v_c\) reaches out to the aphelion \(r_a\) given
+by energy and angular-momentum conservation:</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 4 — Circular speed and the aphelion of an unperturbed orbit <span class="tag tag-der">DERIVED</span></div>
+\[
+  v_c=\sqrt{\frac{GM_\odot}{r}},\qquad
+  r_a=r_p\,\frac{(v/v_c)^2}{2-(v/v_c)^2}\quad\text{for a launch at perihelion, } v_c&lt;v&lt;\sqrt2\,v_c.
+\]
+</div>
+<p>At \(r_p=0.3\) AU, \(v_c=54{,}379\) m/s, and with \(v/v_c=1.0890\) Eq. 4 gives
+\(r_a=0.43707\) AU. The <code>Circular period</code> line still prints a value, 213.92 days,
+because a companion of \(10^{-12}\) solar mass still goes round on its circle; it simply has no
+measurable effect.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat3">
+<h2>Beat 3 · Turn the companion back up</h2>
+<p>Now keep Mercury on the circular-speed launch of Beat 2 and bring the companion back in steps of
+a factor of ten in mass: roughly one Jupiter mass, ten, and then the default 0.1 solar mass.</p>
+<pre class="code-block"><code>python main.py --m_planet_solar 0.001 --vy_init 54379.16
+python main.py --m_planet_solar 0.01 --vy_init 54379.16
+python main.py --m_planet_solar 0.1 --vy_init 54379.16</code></pre>
+<p>Look at the <code>Sun-distance range</code> line of each run.</p>
+<p>Three tasks, in order. First, for each run subtract the smallest Sun distance from the largest:
+0.30014 &minus; 0.29965 = 0.00049 AU, then 0.30140 &minus; 0.29649 = 0.00491 AU, then
+0.31291 &minus; 0.26271 = 0.05020 AU. Then divide each spread by the one before it: 10.0 and 10.2.
+Ten times the companion mass gives, to within a few per cent, ten times the disturbance. That is
+the signature of a <em>perturbation</em>: a small extra force whose effect is proportional to its
+size. Then look at the last run's plot: even at 0.1 solar mass the orbit is still recognisably a
+slightly off-centre, slowly turning ellipse around the Sun, not yet the tangle of Beat 5.</p>
+<p><em>Then</em> the size of the extra force. At Mercury's distance \(r\) from the Sun and a
+distance \(\Delta\) from the companion, the companion's direct pull compared with the Sun's is</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 5 — The companion's pull as a fraction of the Sun's <span class="tag tag-der">DERIVED</span></div>
+\[
+  \frac{GM_c/\Delta^{2}}{GM_\odot/r^{2}}=\frac{M_c}{M_\odot}\left(\frac{r}{\Delta}\right)^{2}.
+\]
+</div>
+<p>With the default system at the start, \(r=0.3\) AU and \(\Delta=0.4\) AU, this ratio is
+\(0.1\times(0.75)^2=0.056\): a few-per-cent force, proportional to \(M_c\), which is why the
+spreads above scale in step with the mass. Two things make the real effect smaller and more
+complicated than this one number. The Sun is pulled by the companion too, so what disturbs Mercury's
+orbit <em>around the Sun</em> is only the difference between the two pulls; and \(\Delta\) changes
+as both Mercury and the companion move. Both effects are in Eq. 1, which is why the program
+integrates it rather than using Eq. 5.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> and
+<a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat4">
+<h2>Beat 4 · The one number that is conserved</h2>
+<p>With a single star, Mercury's energy would stay fixed. With a moving companion, the gravity
+Mercury feels changes with time, so its energy does not stay fixed. Measure that, and then
+measure what does stay fixed.</p>
+<pre class="code-block"><code>python main.py --show_jacobi_diagnostic
+python -c "import math, physics_mercpert as p, driver_mercpert as d; b=p.BinarySystemParams(1.0, 0.1, 0.7*p.AU); o=d.run_mercpert(b, p.MercuryInitialConditions(0.3*p.AU, 0.0, 0.0, 59220.0), d.MercPertRunParams(2000.0, 10000, 0.05, 1e-4, p.R_SUN)); E=[0.5*(u*u+v*v) - p.GM_SUN*(1.0/math.hypot(x-sx, y-sy) + 0.1/math.hypot(x-cx, y-cy)) for x, y, u, v, sx, sy, cx, cy in zip(o.merc_x, o.merc_y, o.merc_vx, o.merc_vy, o.sun_x, o.sun_y, o.planet_x, o.planet_y)]; print(f'{(max(E)-min(E))/abs(E[0]):.4f}')"</code></pre>
+<p>The first command is the default run with a second plot, of the Jacobi constant's fractional
+change against time. The second repeats the same default run inside Python and prints the largest
+change of Mercury's ordinary energy per unit mass, kinetic plus potential in the barycentric
+frame, as a fraction of its starting value.</p>
+<p>Three tasks, in order. First, read the energy result: 0.3110. Mercury's energy wanders by 31%
+over the run, so it is not even approximately conserved. Then read the printed
+<code>Maximum fractional Jacobi drift</code>: 1.2305e-06, about one part in a million, and look at
+the second plot, where the drift wanders between about +0.1 and &minus;1.2 &times;
+10<sup>&minus;6</sup> without a steady trend. Then compare the two: the same run, the same calculated path, and one
+quantity changes 250,000 times more than the other. The Jacobi constant is the conserved one, and
+its tiny drift is entirely numerical error.</p>
+<p><em>Then</em> why. Mercury's energy is not conserved because the stars move, so the gravity it
+feels at a given point changes with time. But in a frame that <em>turns with the binary</em> at
+angular velocity \(\omega\), the two stars stand still, the gravitational field no longer changes
+with time, and there is again a conserved quantity. In the barycentric frame it reads</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 6 — The Jacobi constant <span class="tag tag-der">DERIVED</span></div>
+\[
+  C=\omega^{2}(x^{2}+y^{2})+2\left(\frac{GM_\odot}{|\mathbf r-\mathbf r_\odot|}
+  +\frac{GM_c}{|\mathbf r-\mathbf r_c|}\right)-|\mathbf v_{\rm rot}|^{2},\qquad
+  \mathbf v_{\rm rot}=\mathbf v-\boldsymbol\omega\times\mathbf r=(v_x+\omega y,\ v_y-\omega x).
+\]
+</div>
+<p>The first term comes from the centrifugal effect of the turning frame, the second from the two
+stars' gravity, and the third is Mercury's speed measured in the turning frame. The exact
+equations keep \(C\) fixed, so \(C\) can do two jobs. Physically, because \(|\mathbf v_{\rm
+rot}|^2\) cannot be negative, a given \(C\) forbids Mercury from some regions of space altogether
+(Experiment 8). Numerically, any change in the calculated \(C\) is error, which is how Beat 8 uses
+it. <code>jacobi_constant()</code> in <code>physics_mercpert.py</code> evaluates Eq. 6 at every
+stored step, and the printed drift is the largest \(|C-C_0|/|C_0|\) over the run.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp8">Experiment 8</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat5">
+<h2>Beat 5 · Close encounters and the step controller</h2>
+<p>Beat 0's run was short. Let the default system run four times longer and see what the companion
+does to Mercury over two and a half years. Then run it again with a stricter accuracy setting.</p>
+<pre class="code-block"><code>python main.py --max_steps 40000
+python main.py --max_steps 40000 --eps1 0.01 --eps2 1e-5</code></pre>
+<p>Look at the <code>Sun-distance range</code> and <code>Adaptive controller working timestep
+range</code> lines of each run.</p>
+<p>Three tasks, in order. First, read the first run's closest approach to the Sun: 0.016704 AU,
+which is 3.6 solar radii from the Sun's centre. In Beat 0 Mercury never came closer than 0.3 AU;
+over 919.20 days the companion has pumped its orbit into a Sun-grazing one. The plot shows the
+change: the neat loops of Beat 0 have become a tangle. Then read the timestep range: 199.63 to
+2000.0 s. The default run never needed anything shorter than its 2000 s maximum; this one needed a
+step ten times shorter near the Sun, which is also why 40,000 steps covered 919.20 days rather than
+the 925.93 days that 40,000 full steps would. Then compare the second run, which makes <code>eps1</code> five times
+smaller and <code>eps2</code> tighter: its smallest step is 39.907 s, and 199.63 / 39.907 = 5.00.
+The shortest step the controller allows has shrunk in direct proportion to <code>eps1</code>. The second run also meets the Sun at almost the same distance,
+0.016877 AU, and its Jacobi drift is 23 times smaller; Beat 8 returns to that.</p>
+<p><em>Then</em> the rules the controller follows. Each step starts with a cheap Euler guess at the
+end of the step, and checks how much the acceleration would change over it:</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 7 — Euler predictor and acceleration-change gate (numerical method, untagged)</div>
+\[
+  \mathbf r_{\rm pred}=\mathbf r_n+\mathbf v_n\,\Delta t,\qquad
+  \mathbf v_{\rm pred}=\mathbf v_n+\mathbf a_n\,\Delta t,\qquad
+  \frac{|\mathbf a_{\rm pred}-\mathbf a_n|}{\max(|\mathbf a_{\rm pred}|,|\mathbf a_n|)}\le\varepsilon_1,
+\]
+</div>
+<p>where \(\mathbf a_{\rm pred}\) is Eq. 1 evaluated at \(\mathbf r_{\rm pred}\) and at the later
+time \(t_n+\Delta t\), with the stars moved on. If the gate fails, \(\Delta t\) is halved and the
+step tried again. A step that passes the gate is then refined by averaging the start and end of the
+step, repeatedly, until the end-of-step velocity stops changing:</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 8 — Iterated trapezoidal corrector (numerical method, untagged)</div>
+\[
+  \mathbf v_{n+1}=\mathbf v_n+\tfrac12(\mathbf a_n+\mathbf a_{n+1})\,\Delta t,\qquad
+  \mathbf r_{n+1}=\mathbf r_n+\tfrac12(\mathbf v_n+\mathbf v_{n+1})\,\Delta t,
+\]
+\[
+  \text{repeat until }\ \frac{|\mathbf v_{n+1}^{\rm new}-\mathbf v_{n+1}^{\rm old}|}
+  {\max(|\mathbf v_{n+1}^{\rm new}|,|\mathbf v_{n+1}^{\rm old}|)}&lt;\varepsilon_2 .
+\]
+</div>
+<p>If ten passes of Eq. 8 do not meet <code>eps2</code>, \(\Delta t\) is halved and the step is
+tried again. After each accepted step the working step grows by 10%, back toward the
+<code>--dt</code> maximum, so one close encounter does not slow down the whole rest of the run.
+Near the Sun the direction of the Sun's pull swings round at a rate of about Mercury's speed divided
+by its distance, so the fractional change in Eq. 7 is roughly that rate times \(\Delta t\): the gate
+therefore lets through a step roughly proportional to \(\varepsilon_1\), which is what the ratio of
+5.00 above shows. Both tests compare whole vectors, not separate \(x\) and \(y\) components, so
+they do not misbehave when one component passes through zero.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat6">
+<h2>Beat 6 · Collision and escape</h2>
+<p>Strong perturbations end in one of two dramatic ways: Mercury hits a star, or it leaves.
+Here is one of each.</p>
+<pre class="code-block"><code>python main.py --m_planet_solar 1
+python main.py --x_init_au 0.45 --max_steps 30000</code></pre>
+<p>Look at the first printed line of the first run, and at the <code>Sun-distance range</code>
+line of both.</p>
+<p>Three tasks, in order. First, the first run makes the companion as heavy as the Sun and changes
+nothing else. It stops after 1920 steps and 41.543 days with <code>termination: collision with
+Sun</code>, and its closest Sun distance, 0.0046505 AU (6.9570e+08 m), is exactly one nominal
+solar radius: the run ends where Mercury first reaches the Sun's collision surface, marked on the
+plot with a black &times;. The Sun's dashed circle is only partly drawn, because the run lasted less
+than one binary period. Then the second run keeps the default companion but starts Mercury at
+0.45 AU instead of 0.3 AU. There the default 59,220 m/s is 33% faster than circular, so even the
+Sun alone would send Mercury out to 3.6 AU on a long ellipse (Eq. 4), right across the companion's
+circle. After 694.44 days its Sun distance has reached 11.531 AU, more than sixteen times the
+binary separation, and the plot shows the blue path heading away to the upper left, far outside
+both stars' circles: the companion has thrown it out. Then notice what the program does <em>not</em> say. The first line reads <code>max_steps
+reached</code>, not "escaped". The program has no rule for deciding that Mercury has left for good.
+You have to supply one, for example that Mercury's energy measured from the centre of mass is
+positive (Experiment 6).</p>
+<p><em>Then</em> how a collision is found. Point masses have no surface, so the program stops Mercury
+at a <em>collision radius</em> that you choose: by default the Sun's is its nominal radius,
+\(R_\odot=6.957\times10^{8}\) m, and the companion's is zero, meaning "never stop". After each
+accepted step, before keeping it, the program checks whether Mercury's straight path relative to
+the moving star crossed that radius at any point during the step, not only at its end:</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 9 — Crossing a moving collision radius (numerical method, untagged)</div>
+\[
+  \bigl|\,\boldsymbol\rho_n+s\,(\boldsymbol\rho_{n+1}-\boldsymbol\rho_n)\,\bigr|=R_{\rm coll},
+  \qquad \boldsymbol\rho=\mathbf r-\mathbf r_\star,\qquad 0\le s\le1 ,
+\]
+</div>
+<p>where \(\mathbf r_\star\) is the star's position at the start and at the end of the step. The
+smallest root \(s\) gives the collision time \(t_n+s\,\Delta t\), and Mercury's position and
+velocity are interpolated linearly to it. A collision radius is a stopping rule, not a model of what
+happens on impact, and <code>R_SUN</code> suits only a Sun-like primary. Leaving the companion's
+radius at zero lets Mercury pass through the companion's position as if it were a point: the
+default system run for 100,000 steps comes within about 11,500 km of it, well inside where a real
+red dwarf's surface would be (Experiment 4).</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> and
+<a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat7">
+<h2>Beat 7 · Outside the binary</h2>
+<p>Planets exist around binary stars, orbiting both at once. Try one: two equal suns 1 AU apart,
+and Mercury started 2.5 AU from the Sun, on the same side as the companion but well beyond it. First with a
+plausible-looking speed, then with the right one.</p>
+<pre class="code-block"><code>python main.py --m_planet_solar 1 --binary_separation_au 1 --x_init_au 2.5 --vy_init 30000 --max_steps 40000
+python main.py --m_planet_solar 1 --binary_separation_au 1 --x_init_au 2.5 --vy_init 50846 --max_steps 40000</code></pre>
+<p>Look at the <code>Sun-distance range</code> line of each run and at the two plots.</p>
+<p>Three tasks, in order. First, find where Mercury really starts. With equal masses the Sun circles
+0.5 AU from the centre of mass, on the \(-x\) side, so a Mercury 2.5 AU from the Sun is 2.0 AU
+from the centre of mass. A circular orbit around the whole \(2\,M_\odot\) binary at that distance
+needs about \(\sqrt{G(2M_\odot)/2\ \text{AU}}=29{,}785\) m/s. Then remember that
+<code>vy_init</code> is measured from the Sun, which is itself moving at \(r_\odot\omega=21{,}061\)
+m/s in the \(-y\) direction at the start. The first run's 30,000 m/s is therefore only 8,939 m/s in
+the frame of the centre of mass, far too slow for a circular orbit: Mercury falls into the binary,
+reaches 0.27651 AU from the Sun, and wanders through and around the binary. The second run adds the Sun's
+speed to the circular speed, \(29{,}785+21{,}061=50{,}846\) m/s, and Mercury goes round the outside
+of the binary, as the plot shows. Then check the second run's Sun-distance range, 1.5463 to
+2.6554 AU, against what an exact 2 AU circle would give, 1.5 to 2.5 AU, because the Sun swings 0.5 AU
+either way. It is close but not exact: a binary is not a point mass, and its pull on a nearby orbit
+is not quite that of \(2\,M_\odot\) at the centre. Its Jacobi drift is 1.4107e-09, the smallest on
+this page, because this orbit never comes near either star.</p>
+<p><em>Then</em> the conversion the program makes before it starts. With the Sun at
+\(\mathbf r_\odot(0)=(-r_\odot,0)\) moving with \(\mathbf v_\odot(0)=(0,-r_\odot\omega)\), from
+Eq. 3,</p>
+<div class="eq-block">
+<div class="eq-label">Eq. 10 — From Sun-relative input to the barycentric start <span class="tag tag-der">DERIVED</span></div>
+\[
+  \mathbf r(0)=\mathbf r_\odot(0)+(x_{\rm init},\,y_{\rm init}),\qquad
+  \mathbf v(0)=\mathbf v_\odot(0)+(v_{x,\rm init},\,v_{y,\rm init}).
+\]
+</div>
+<p>For an orbit around the Sun alone, as in Beats 0 to 5, measuring from the Sun is what you want.
+For an orbit around the whole binary it means adding the Sun's own velocity by hand, as above.
+<code>mercury_initial_barycentric_state()</code> in <code>physics_mercpert.py</code> performs
+Eq. 10. The circumbinary orbit takes about 730 days to go round once, so the 925.93-day run covers
+about 1.3 orbits; Experiment 7 looks for the smallest orbit that survives.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat8">
+<h2>Beat 8 · How far to trust a run</h2>
+<p>Every printed number comes from a calculation with a finite step. The Jacobi constant tells you
+how large the resulting error is, because the exact equations keep it fixed. Use it twice: once on
+the smooth default orbit, once on the close encounter of Beat 5.</p>
+<pre class="code-block"><code>python main.py
+python main.py --dt 1000 --max_steps 20000
+python main.py --dt 500 --max_steps 40000
+python main.py --max_steps 80000 --dt 1000</code></pre>
+<p>Look at the <code>Maximum fractional Jacobi drift</code> line of each run.</p>
+<p>Three tasks, in order. First, the first three runs cover the same 231.48 days with maximum
+steps of 2000, 1000 and 500 s. Their drifts are 1.2305e-06, 3.0312e-07 and 7.5216e-08. Divide
+each by the next: 4.06 and 4.03. Halving the step divides the error by four, so the error goes as
+\(\Delta t^{2}\): the method is second order. Then look at their Sun-distance ranges: all three
+print 0.30000 to 0.40762 AU. On a smooth orbit the default settings are already accurate to five
+figures, and apart from the timestep line itself, the drift is the only line that changes. Then compare the fourth run
+with the first command of Beat 5. It halves the maximum step for the Sun-grazing run, and its drift,
+0.0051786, is no better than Beat 5's 0.0051623. Near the Sun the step was already being set by
+<code>eps1</code>, not by <code>--dt</code>, so shrinking <code>--dt</code> changes nothing there;
+tightening <code>eps1</code>, as in Beat 5's second run, cut the drift 23-fold, to 0.00022738.</p>
+<p><em>Then</em> the rule this suggests. The corrector of Eq. 8 converges to the trapezoidal rule,
+whose error over a fixed time span shrinks as the square of the step:</p>
+<div class="eq-block">
+<div class="eq-label">Second-order global convergence (unnumbered)</div>
+\[
+  \text{error}\propto\Delta t^{2}\quad\Longrightarrow\quad
+  \frac{\text{drift}(\Delta t)}{\text{drift}(\Delta t/2)}\approx4 .
+\]
+</div>
+<p>So: read the Jacobi drift for every run you intend to quote. On smooth orbits reduce
+<code>--dt</code>; when the run includes a close encounter, reduce <code>--eps1</code> and
+<code>--eps2</code>. All three Sun-grazing runs agree that the closest approach is about 0.017 AU
+(0.016704, 0.016877 and 0.017065 AU), so that result is robust. What is not robust is the exact
+path after a close encounter: small differences grow quickly there, so two accurate runs can end in
+different places. Compare such runs by what they have in common, such as whether Mercury stays
+bound or how close it comes, not point by point.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat9">
+<h2>Beat 9 · Where the model and the run stop</h2>
+<p>Everything so far used sensible settings. Try a few that are not.</p>
+<pre class="code-block"><code>python main.py --m_planet_solar 0
+python main.py --eps2 0.1
+python main.py --binary_separation_au 0.001
+python main.py --x_init 0</code></pre>
+<p>Look at what each command prints.</p>
+<p>Three tasks, in order. First, the input checks. After a short usage reminder, the first three
+print <code>MercPert: error: argument --m_planet_solar: enter a number greater than zero</code>,
+<code>MercPert: error: --eps2 must be smaller than --eps1</code>, and <code>MercPert: error:
+collision radii must sum to less than binary separation</code>. The last one arises because the
+two stars, 0.001 AU apart, would be closer than the Sun's 6.957e8 m collision radius. None of them
+starts a run. Then the fourth, which passes the input checks but places Mercury exactly at the
+Sun's centre. The run cannot begin, because the point-mass force is infinite there, and the
+program prints <code>MercPert error: Mercury has reached the Sun's point-mass position; the
+Newtonian point-mass force is singular there.</code> instead of a Python traceback. Then notice
+what MercPert does <em>not</em> treat as an error: running out of steps. Every run on this page
+that did not hit a collision surface ended with <code>max_steps reached</code>, a normal outcome,
+so a longer look always means a larger <code>--max_steps</code>.</p>
+<p><em>Then</em> the list of what the model leaves out, which no setting can put back. The problem
+is two-dimensional, so inclined orbits are impossible. The two stars are points on an exact
+circle, with no eccentric binaries, tides, or stellar sizes except the stopping radii. Mercury has
+no mass, so it never disturbs the stars, and there is no gas, disk, migration, radiation pressure
+or relativity. The integrator is accurate but not exact: its error grows during close encounters
+(Beat 8), and a long run through several encounters can follow a quite different path from the
+exact one while remaining physically typical. A collision is located by linear interpolation
+within one step, and the printed Sun-distance range uses only the stored steps, so a very brief
+closest approach can fall between them. Five-figure printing supports comparisons between runs;
+it is not a claim that the model is accurate to five figures.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="equations">
+<h2>Governing Equations</h2>
+<p>The ten numbered equations, with the kind of statement each one is, the beat that introduces
+it, and where the program evaluates it.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Index of the numbered equations"><table class="compare-table">
+<thead><tr><th>Equation</th><th>Kind</th><th>What it says</th><th>Beat</th><th>Where in the code</th></tr></thead>
+<tbody>
+<tr><td>Eq. 1</td><td><span class="tag tag-ode">ODE</span></td><td>Mercury's equation of motion</td><td>0</td><td><code>mercury_acceleration()</code> in <code>physics_mercpert.py</code></td></tr>
+<tr><td>Eq. 2</td><td><span class="tag tag-der">DERIVED</span></td><td>Binary angular velocity, period, and radii</td><td>1</td><td><code>compute_binary_angular_velocity()</code> and <code>compute_binary_radii()</code> in <code>physics_mercpert.py</code></td></tr>
+<tr><td>Eq. 3</td><td><span class="tag tag-rule">PRESCRIPTION</span></td><td>Circular motion of the two stars</td><td>1</td><td><code>binary_positions()</code> and <code>binary_velocities()</code> in <code>physics_mercpert.py</code></td></tr>
+<tr><td>Eq. 4</td><td><span class="tag tag-der">DERIVED</span></td><td>Circular speed and aphelion of an unperturbed orbit</td><td>2</td><td>not evaluated by the program; it is the check</td></tr>
+<tr><td>Eq. 5</td><td><span class="tag tag-der">DERIVED</span></td><td>Companion's pull as a fraction of the Sun's</td><td>3</td><td>not evaluated by the program; it is the estimate</td></tr>
+<tr><td>Eq. 6</td><td><span class="tag tag-der">DERIVED</span></td><td>Jacobi constant</td><td>4</td><td><code>jacobi_constant()</code> in <code>physics_mercpert.py</code></td></tr>
+<tr><td>Eq. 7</td><td>numerical method</td><td>Euler predictor and acceleration-change gate</td><td>5</td><td><code>run_mercpert()</code> in <code>driver_mercpert.py</code></td></tr>
+<tr><td>Eq. 8</td><td>numerical method</td><td>Iterated trapezoidal corrector</td><td>5</td><td><code>run_mercpert()</code> in <code>driver_mercpert.py</code></td></tr>
+<tr><td>Eq. 9</td><td>numerical method</td><td>Crossing a moving collision radius</td><td>6</td><td><code>_moving_circle_crossing_fraction()</code> in <code>driver_mercpert.py</code></td></tr>
+<tr><td>Eq. 10</td><td><span class="tag tag-der">DERIVED</span></td><td>Sun-relative input to barycentric start</td><td>7</td><td><code>mercury_initial_barycentric_state()</code> in <code>physics_mercpert.py</code></td></tr>
+</tbody></table></div>
+<p>Eqs. 7 to 9 are numerical method, not physics, and so carry no ODE/DERIVED/PRESCRIPTION tag,
+exactly as the note under <a href="#beats">How to read this page</a> explains.</p>
+</section>
+
+<section id="algorithm">
+<h2>Algorithm</h2>
+<p>This section collects the program's numerical rules in one place. Eqs. 7 and 8 are introduced
+in Beat 5, Eq. 9 in Beat 6, and Eq. 10 in Beat 7.</p>
+<h3>One run, in order</h3>
+<ol>
+<li>Check the settings. Masses, separation and <code>dt</code> must be positive and finite,
+<code>max_steps</code> a positive integer, <code>eps1</code> and <code>eps2</code> strictly
+between 0 and 1 with <code>eps2</code> smaller than <code>eps1</code>, and the collision radii
+non-negative with a sum smaller than the separation.</li>
+<li>Convert Mercury's Sun-relative start to the barycentric frame (Eq. 10) and store the starting
+state and its Jacobi constant. If Mercury already starts inside a collision radius, stop at once
+with zero accepted steps.</li>
+<li>Repeat until <code>max_steps</code> steps have been accepted:
+<ol>
+<li>Evaluate Mercury's acceleration at the start of the step (Eq. 1).</li>
+<li>Try the step with the current working \(\Delta t\): make the Euler prediction and apply the
+acceleration-change gate (Eq. 7), then iterate the corrector (Eq. 8) up to ten times. If the gate
+fails, if the corrector has not converged after ten passes, or if a trial state is not finite,
+halve \(\Delta t\) and try again, up to 80 times. If all 80 fail, or if \(\Delta t\) becomes too
+small to advance the clock, stop with a clear error.</li>
+<li>Before keeping the accepted step, test the whole step against each star's moving collision
+radius (Eq. 9). If it crosses one, interpolate to the crossing, store that state, and stop.</li>
+<li>Otherwise store the new state and its Jacobi constant, and let \(\Delta t\) grow by 10%, up to
+the <code>--dt</code> maximum.</li>
+</ol></li>
+<li>Print the summary and draw the plot or plots.</li>
+</ol>
+<p>Only accepted steps are stored; rejected trial steps leave no trace in the output. The printed
+working-timestep range covers the accepted steps before any collision shortened the final one, so
+its minimum can be larger than the last stored time increment. Reaching <code>max_steps</code> is a
+normal outcome, not an error.</p>
+<h3>Collision interpolation</h3>
+<p>Over one accepted step, both Mercury and the star are taken to move in straight lines, so their
+separation changes linearly in the fraction \(s\) of the step, and Eq. 9 is a quadratic in \(s\).
+The smaller root in \([0,1]\) is the first crossing. The time, position and velocity at the
+collision are all interpolated linearly with that \(s\). Because the adaptive step is already short
+near a star, this estimate improves automatically in a close approach, and it improves further with
+smaller <code>eps1</code>.</p>
+<div class="note-box"><strong>Version and Build ID.</strong> <code>python main.py --version</code>
+prints the model version and the Build ID without running a simulation. The Build ID is a short
+hash of the four program modules listed under <a href="#modules">Code Modules</a> and of nothing
+else — this Help file, the Release Notes, the sample outputs, and the test suite are not part of
+it. It appears at the top of this page and on the first line of every run's printed summary.</div>
+</section>
+
+<section id="modules">
+<h2>Code Modules</h2>
+<div class="module-grid">
+<div class="module-card">
+<div class="mc-head"><div class="mc-title">physics_mercpert.py</div></div>
+<div class="mc-role">Physics Layer</div>
+<p>Defines the IAU 2015 nominal constants \(GM_\odot=1.3271244\times10^{20}\)
+m<sup>3</sup> s<sup>&minus;2</sup> and \(R_\odot=6.957\times10^{8}\) m, the astronomical unit
+\(1.495978707\times10^{11}\) m, and the two input records. It evaluates the binary's geometry
+(Eqs. 2 and 3), the conversion of Mercury's start (Eq. 10), Mercury's acceleration (Eq. 1), its
+distances from both stars, and the Jacobi constant (Eq. 6). It rejects non-finite or Boolean
+inputs and the point-mass singularities.</p>
+<div class="sig">BinarySystemParams(m_sun_solar, m_planet_solar, binary_separation)
+MercuryInitialConditions(x_init, y_init, vx_init, vy_init)   # relative to the Sun
+mercury_acceleration(t, x, y, binary_params) -&gt; (ax, ay)
+jacobi_constant(t, x, y, vx, vy, binary_params) -&gt; C</div>
+</div>
+<div class="module-card">
+<div class="mc-head"><div class="mc-title">driver_mercpert.py</div></div>
+<div class="mc-role">Simulation Driver</div>
+<p>Runs the adaptive predictor-corrector (Eqs. 7 and 8), the timestep control and recovery, and
+the moving-collision test (Eq. 9), and returns every accepted state. In the Python interface
+both collision radii default to zero; the command line sets the Sun's to \(R_\odot\).</p>
+<div class="sig">MercPertRunParams(dt, max_steps, eps1, eps2,
+                  sun_collision_radius=0.0, companion_collision_radius=0.0)
+run_mercpert(binary_params, merc_ic, run_params) -&gt; MercPertOutput</div>
+</div>
+<div class="module-card">
+<div class="mc-head"><div class="mc-title">plot_mercpert.py</div></div>
+<div class="mc-role">Visualisation</div>
+<p>Draws the barycentric orbit plot, with the two stars' circles limited to one binary period,
+Mercury's full path, start markers, a collision marker, and a label of Mercury's Sun-relative
+start, and, on request, the Jacobi-drift plot.</p>
+<div class="sig">plot_orbits(output, title, merc_ic, binary_params, corner, position_unit)
+plot_jacobi_drift(output)</div>
+</div>
+<div class="module-card">
+<div class="mc-head"><div class="mc-title">main.py</div></div>
+<div class="mc-role">Command-Line Entry Point</div>
+<p>Defines every command-line option, accepts distances in metres or AU, prints the six-line
+summary, and turns invalid settings or failed runs into one-line <code>MercPert: error: ...</code>
+or <code>MercPert error: ...</code> messages instead of Python tracebacks.</p>
+</div>
+</div>
+</section>
+
+<section id="quickstart">
+<h2>Quick Start</h2>
+<h3>Requirements</h3>
+<p>Python 3.10 or later, with <code>matplotlib</code>:</p>
+<pre class="code-block"><code>pip install matplotlib</code></pre>
+<h3>Running the Program</h3>
+<p>Clone or download the repository, then run the program from its folder:</p>
+<pre class="code-block"><code>cd GFTGU-Programs/MercPert
+python main.py
+python main.py --m_planet_solar 9.5e-4 --vy_init 54400
+python main.py --help
+python main.py --version</code></pre>
+<p>Each run prints a summary, described under <a href="#summary">Printed Summary</a>, and then
+opens the plot window. The options and their defaults are listed under
+<a href="#parameters">Parameters</a>.</p>
+</section>
+
+<section id="parameters">
+<h2>Parameters</h2>
+<p>Run <code>python main.py --help</code> for the current command summary and
+<code>python main.py --version</code> for the model version and Build ID. Any option omitted from
+the command uses the default below. Mercury's starting position and velocity are measured
+<em>from the Sun</em>; the plot is barycentric. A distance can be given in metres or, with the
+<code>_au</code> form of the option, in AU, but not both for the same quantity.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Command-line options"><table class="param-table">
+<thead><tr><th>Option</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>--m_sun_solar</code></td><td>1.0</td><td>M☉</td><td>Mass of the primary (the "Sun").</td></tr>
+<tr><td><code>--m_planet_solar</code></td><td>0.1</td><td>M☉</td><td>Mass of the companion. The option name is historical; 0.1 M☉ is a low-mass star, and one Jupiter mass is about 9.5e-4.</td></tr>
+<tr><td><code>--binary_separation</code> or <code>--binary_separation_au</code></td><td>0.7 AU</td><td>m or AU</td><td>Distance between the two stars.</td></tr>
+<tr><td><code>--x_init</code> or <code>--x_init_au</code></td><td>0.3 AU</td><td>m or AU</td><td>Mercury's starting \(x\), measured from the Sun.</td></tr>
+<tr><td><code>--y_init</code> or <code>--y_init_au</code></td><td>0</td><td>m or AU</td><td>Mercury's starting \(y\), measured from the Sun.</td></tr>
+<tr><td><code>--vx_init</code></td><td>0</td><td>m/s</td><td>Mercury's starting \(x\)-velocity, relative to the Sun.</td></tr>
+<tr><td><code>--vy_init</code></td><td>59220</td><td>m/s</td><td>Mercury's starting \(y\)-velocity, relative to the Sun; negative gives a retrograde launch.</td></tr>
+<tr><td><code>--dt</code></td><td>2000</td><td>s</td><td>Largest working timestep the controller may use.</td></tr>
+<tr><td><code>--max_steps</code></td><td>10000</td><td>—</td><td>Number of accepted steps; a collision can stop the run sooner.</td></tr>
+<tr><td><code>--eps1</code></td><td>0.05</td><td>—</td><td>Largest relative change in acceleration allowed over a step (Eq. 7).</td></tr>
+<tr><td><code>--eps2</code></td><td>0.0001</td><td>—</td><td>Corrector convergence threshold (Eq. 8); must be smaller than <code>eps1</code>.</td></tr>
+<tr><td><code>--sun_collision_radius</code></td><td>6.957e8</td><td>m</td><td>Distance from the Sun's centre at which the run stops; 0 disables it.</td></tr>
+<tr><td><code>--companion_collision_radius</code></td><td>0</td><td>m</td><td>Distance from the companion's centre at which the run stops; 0 disables it.</td></tr>
+<tr><td><code>--position_unit</code></td><td>AU</td><td>—</td><td>Units of the orbit plot's axes: <code>AU</code> or <code>m</code>.</td></tr>
+<tr><td><code>--annotation_corner</code></td><td>upper_left</td><td>—</td><td>Corner for the starting-state label: <code>upper_left</code>, <code>upper_right</code>, <code>lower_left</code> or <code>lower_right</code>.</td></tr>
+<tr><td><code>--show_jacobi_diagnostic</code></td><td>off</td><td>—</td><td>Also draw the Jacobi-drift plot; <code>--no-show_jacobi_diagnostic</code> draws only the orbit plot.</td></tr>
+</tbody>
+</table></div>
+<div class="note-box"><strong>Accepted parameter values.</strong> Every number must be finite.
+Masses, separation and <code>dt</code> must be positive, <code>max_steps</code> a positive integer,
+<code>eps1</code> and <code>eps2</code> strictly between 0 and 1 with <code>eps2</code> smaller,
+and the collision radii non-negative with a sum smaller than the separation. Negative values,
+including ones in exponent form such as <code>--y_init -1.5e10</code>, are accepted after the
+option name. Anything else is rejected with a one-line <code>MercPert: error: ...</code> message
+(Beat 9).</div>
+</section>
+
+<section id="output">
+<h2>Output</h2>
+<p>The orbit plot, titled <strong>MercPert orbits</strong>, is drawn in the barycentric frame with
+equal scales on both axes, labelled "barycentric x" and "barycentric y", and shows:</p>
+<ul>
+<li>the Sun's circle as a dashed red curve and the companion's as a dashed green curve, each drawn
+for at most one binary period so that repeated circles do not overlap,</li>
+<li>Mercury's path for the whole run as a solid blue curve,</li>
+<li>small filled circles at the three starting positions,</li>
+<li>a black &times; at the end of the path only when a collision stopped the run,</li>
+<li>a label giving Mercury's starting position and velocity <em>relative to the Sun</em>, in the
+corner chosen by <code>--annotation_corner</code>, with the legend in the opposite corner.</li>
+</ul>
+<p>Where two plotted curves cross, the bodies were not necessarily there at the same time; only
+the black &times; marks a real meeting. With <code>--show_jacobi_diagnostic</code> a second window,
+<strong>MercPert Jacobi-constant drift</strong>, plots \((C-C_0)/|C_0|\) against time in days.</p>
+<p><code>run_mercpert()</code> returns a <code>MercPertOutput</code> record with lists of the times,
+both stars' positions, Mercury's position and velocity, the Jacobi constant, and the time increment
+of each stored step, together with the number of accepted steps, the reason the run stopped, the
+body hit (if any), the working-timestep range, and the version and Build ID. The starting state is
+stored first, so a run that reaches <code>max_steps</code> returns <code>max_steps + 1</code>
+states.</p>
+</section>
+
+<section id="summary">
+<h2>Printed Summary</h2>
+<p>Every run prints six lines and then opens the plot. This is the full summary of the default
+run, <code>python main.py</code>:</p>
+<pre class="code-block"><code>MercPert 1.1.0 (build 9852baf113f7) — accepted steps: 10000; termination: max_steps reached
+Circular period of Sun–companion pair: 203.96 days
+Test particle integration time: 231.48 days (2.0000e+07 s)
+Test particle Sun-distance range: 0.30000 to 0.40762 AU (4.4879e+10 to 6.0979e+10 m)
+Maximum fractional Jacobi drift: 1.2305e-06
+Adaptive controller working timestep range: 2000.0 to 2000.0 s (accepted steps before collision truncation)</code></pre>
+<ul>
+<li><strong>First line:</strong> version, Build ID, accepted steps, and why the run stopped:
+<code>max_steps reached</code>, <code>collision with Sun</code> or <code>collision with
+companion</code>.</li>
+<li><strong>Circular period</strong> of the two stars, from Eq. 2.</li>
+<li><strong>Integration time</strong> of the run, in days and seconds.</li>
+<li><strong>Sun-distance range:</strong> Mercury's smallest and largest distance from the Sun
+among the stored states.</li>
+<li><strong>Maximum fractional Jacobi drift:</strong> the largest \(|C-C_0|/|C_0|\) over the run
+(Eq. 6); it is reported as undefined if \(C_0\) happens to be exactly zero.</li>
+<li><strong>Working timestep range:</strong> the smallest and largest accepted controller step,
+or <code>none (no accepted steps)</code> if the run stopped at once.</li>
+</ul>
+<p>All numbers are printed to five significant figures. Use <code>python main.py --version</code>
+to print only the version and Build ID, with no simulation.</p>
+</section>
+
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<div class="note-box">
+<strong>Suggested order:</strong> the experiments run from introductory changes of one setting to
+open-ended investigations. Keep a note of the exact command for every run you compare, and read
+the Jacobi drift of any run whose numbers you intend to quote (Beat 8).
+</div>
+<div class="experiment-card" id="exp1">
+<div class="exp-num">Experiment 1 · Introductory</div>
+<div class="exp-title">A quieter orbit</div>
+<p class="exp-beat">Goes with <a href="#beat0">Beat 0</a> and <a href="#beat2">Beat 2</a>.</p>
+<p>The default launch is 8.9% faster than circular, so Mercury starts on an ellipse. Launch it at
+close to the circular speed instead, with <code>python main.py --vy_init 54400</code>, and compare
+the Sun-distance range and the plot with the default run. Then try a few speeds between 50,000 and
+60,000 m/s and find the one that makes the range narrowest.</p>
+<p><strong>Check:</strong> <code>--vy_init 54400</code> gives 0.26300 to 0.31302 AU, a spread of
+0.050 AU, against 0.30000 to 0.40762 AU (0.108 AU) for the default. Even a launch at the
+isolated-star circular speed is not circular here: the default companion alone produces a spread of
+about 0.05 AU (Beat 3).</p>
+</div>
+<div class="experiment-card" id="exp2">
+<div class="exp-num">Experiment 2 · Introductory</div>
+<div class="exp-title">Where does the perturbation stop being small?</div>
+<p class="exp-beat">Goes with <a href="#beat3">Beat 3</a>.</p>
+<p>Extend Beat 3's sequence to heavier companions, keeping <code>--vy_init 54379.16</code>: try
+<code>--m_planet_solar</code> 0.3 and 0.5 as well as 0.001, 0.01 and 0.1. Plot the spread of the
+Sun-distance range against companion mass on logarithmic axes. Where does the straight line of
+slope one, the mark of a small perturbation, stop fitting?</p>
+<p><strong>Check:</strong> the spreads are 0.00049, 0.00491 and 0.05020 AU for 0.001, 0.01 and
+0.1 M☉, then 0.12144 AU at 0.3 M☉ (0.20721 to 0.32865 AU) and 0.17373 AU at 0.5 M☉ (0.14417 to
+0.31790 AU). Three and five times the mass of 0.1 M☉ give only 2.4 and 3.5 times the spread: the
+simple proportion has broken down by a few tenths of a solar mass.</p>
+</div>
+<div class="experiment-card" id="exp3">
+<div class="exp-num">Experiment 3 · Introductory–Intermediate</div>
+<div class="exp-title">Prograde and retrograde</div>
+<p class="exp-beat">Goes with <a href="#beat3">Beat 3</a>.</p>
+<p>Reverse the direction of Mercury's orbit by changing the sign of its starting velocity, so that
+it goes round the Sun against the binary's motion: compare <code>python main.py --vy_init
+54400</code> with <code>python main.py --vy_init -54400</code>, and then the same pair at other
+starting distances. Use the same number of steps and the same tolerances for each pair.</p>
+<p><strong>Check:</strong> the prograde run ranges over 0.26300 to 0.31302 AU and the retrograde
+run over 0.28457 to 0.30606 AU: the retrograde orbit is disturbed less than half as much. A
+retrograde orbit passes the companion faster, so each encounter lasts a shorter time.</p>
+</div>
+<div class="experiment-card" id="exp4">
+<div class="exp-num">Experiment 4 · Intermediate</div>
+<div class="exp-title">Longer runs, and giving the companion a size</div>
+<p class="exp-beat">Goes with <a href="#beat5">Beat 5</a> and <a href="#beat6">Beat 6</a>.</p>
+<p>Continue Beat 5's run further, with <code>--max_steps 60000</code> and then 100,000, and watch
+the closest Sun distance, the smallest working step and the Jacobi drift. At 100,000 steps
+Mercury also passes extremely close to the companion, which by default has no collision radius.
+Give it one about the size of a real 0.1 M☉ red dwarf, roughly 0.12 solar radii:
+<code>python main.py --max_steps 100000 --companion_collision_radius 8.4e7</code>.</p>
+<p><strong>Check:</strong> at 60,000 steps the Sun-distance range is 0.013970 to 0.82179 AU, the
+smallest step 3.6155 s and the drift 0.014880. With the companion's collision radius set, the run
+stops after 59365 steps and 1344.2 days with <code>collision with companion</code>. A result that
+depended on Mercury passing through a star is not a result, so choose collision radii before
+trusting a long run.</p>
+</div>
+<div class="experiment-card" id="exp5">
+<div class="exp-num">Experiment 5 · Intermediate</div>
+<div class="exp-title">Which setting controls the error?</div>
+<p class="exp-beat">Goes with <a href="#beat8">Beat 8</a>.</p>
+<p>On the smooth default orbit, compare <code>python main.py --dt 1000 --max_steps 20000</code>
+with <code>python main.py --dt 1000 --max_steps 20000 --eps1 0.01 --eps2 1e-5</code>. On the
+Sun-grazing run of Beat 5, compare changing <code>--dt</code> with changing <code>--eps1</code>.
+Write a one-sentence rule for which setting to change, and when.</p>
+<p><strong>Check:</strong> both smooth runs print a drift of 3.0312e-07: with no close encounter the
+tolerances are never the limiting factor and only <code>--dt</code> matters. On the Sun-grazing run
+it is the other way round (Beat 8): halving <code>--dt</code> leaves the drift near 0.0052, while
+<code>--eps1 0.01 --eps2 1e-5</code> reduces it to 0.00022738.</p>
+</div>
+<div class="experiment-card" id="exp6">
+<div class="exp-num">Experiment 6 · Advanced</div>
+<div class="exp-title">Map a finite-time stability boundary</div>
+<p class="exp-beat">Goes with <a href="#beat6">Beat 6</a> and <a href="#beat9">Beat 9</a>.</p>
+<p>Hold the default binary fixed and vary Mercury's starting distance from the Sun, for example
+<code>python main.py --x_init_au 0.25 --max_steps 30000</code>, then 0.35 and 0.45, and more
+values in between. Decide in advance how you will classify each run after 30,000 steps: still
+close to the Sun, strongly disturbed, collided, or escaped. For "escaped", write a few lines of
+Python that call <code>run_mercpert()</code> and compute Mercury's energy per unit mass,
+\(\tfrac12v^2-GM_\odot/r_\odot-GM_c/r_c\), at the last stored state; a positive value means it is
+no longer bound to the binary.</p>
+<p><strong>Check:</strong> at 0.25 AU Mercury stays between 0.23209 and 0.25319 AU. At 0.35 AU it
+ranges from 0.032654 to 0.67442 AU but its energy stays negative. At 0.45 AU it passes about
+0.045 AU from the companion on day 56, its energy turns positive, and it ends 11.531 AU from the
+Sun. The boundary you find depends on the run length and on your criteria; it is not an absolute
+stability limit.</p>
+</div>
+<div class="experiment-card" id="exp7">
+<div class="exp-num">Experiment 7 · Advanced</div>
+<div class="exp-title">The smallest orbit around both stars</div>
+<p class="exp-beat">Goes with <a href="#beat1">Beat 1</a> and <a href="#beat7">Beat 7</a>.</p>
+<p>Using Beat 7's equal-mass binary, launch Mercury on circular orbits around the centre of mass at
+different distances \(R\) from it. For each, <code>--x_init_au</code> is \(R+0.5\) and
+<code>--vy_init</code> is \(\sqrt{G(2M_\odot)/R}\) plus the Sun's 21,061 m/s. Run each for 60,000
+steps and find the smallest \(R\) at which Mercury stays near its starting orbit. Express it as a
+multiple of the binary separation.</p>
+<p><strong>Check:</strong> at \(R=2.0\) AU (<code>--x_init_au 2.5 --vy_init 50846</code>)
+Mercury's Sun distance stays between 1.5095 and 2.6554 AU for 1388.9 days. At \(R=1.5\) AU
+(<code>--x_init_au 2.0 --vy_init 55453</code>) it is thrown out, becoming unbound after about 128
+days and reaching 17.893 AU. The boundary lies between 1.5 and 2 times the separation for runs of
+this length.</p>
+</div>
+<div class="experiment-card" id="exp8">
+<div class="exp-num">Experiment 8 · Capstone</div>
+<div class="exp-title">Balancing at the inner Lagrange point</div>
+<p class="exp-beat">Goes with <a href="#beat4">Beat 4</a>.</p>
+<p>Between the two stars there is a point, \(L_1\), where a body turning with the binary feels no
+net force in the rotating frame. With the default binary, find it: put Mercury on the line between
+the stars (<code>--y_init 0 --vx_init 0</code>), give it the speed that turns with the binary,
+<code>vy_init</code> = \(\omega\times\) <code>x_init</code> (measured from the Sun, as in Eq. 10),
+and adjust <code>x_init</code> until it lingers longest. Then explain, using the Jacobi constant,
+why Mercury at \(L_1\) marks the narrowest opening between the region around the Sun and the region
+around the companion.</p>
+<p><strong>Check:</strong> \(\omega=3.5655\times10^{-7}\) s<sup>&minus;1</sup> and \(L_1\) lies
+0.50226 AU from the Sun. <code>python main.py --x_init_au 0.50226 --vy_init 26789.83 --max_steps
+5000</code> stays within 0.01 AU of its start for about 93 days and then drifts toward the companion
+(Sun distance 0.50226 to 0.63380 AU), while <code>python main.py --x_init_au 0.5 --vy_init 26669.35
+--max_steps 5000</code>, just 0.0023 AU nearer the Sun, falls toward the Sun within about 22 days
+(0.096849 to 0.50000 AU). \(L_1\) is an equilibrium, but an unstable one.</p>
+</div>
+</section>
+<section style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
+<div style="
+    border: 1.5px solid #b5811a;
+    border-left: 5px solid #b5811a;
+    border-radius: 6px;
+    background: #fffbeb;
+    padding: 1.1em 1.4em;
+    display: flex;
+    gap: 1em;
+    align-items: flex-start;
+  ">
+<div style="font-size: 1.5em; line-height: 1; flex-shrink: 0;">↩️</div>
+<div>
+<div style="
+        font-weight: 700;
+        font-size: 0.95em;
+        color: #7b2d00;
+        margin-bottom: 0.35em;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      ">Restoring Default Parameter Values</div>
+<p style="margin: 0 0 0.5em 0; font-size: 0.92em; color: #1c1c1c; line-height: 1.6;">
+        Command-line changes are temporary: run <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">python main.py</code>
+        with no options to restore all default settings. If an exercise leads you to edit
+        <code style="background:#f0ede4; padding:1px 5px; border-radius:3px; font-size:0.9em;">main.py</code>
+        or another program file, restore the original files using any of the following methods:
+      </p>
+<ul style="margin: 0; padding-left: 1.4em; font-size: 0.92em; color: #1c1c1c; line-height: 1.8;">
+<li>
+<strong>Same session:</strong>
+          Press <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Ctrl+Z</kbd>
+          (Windows) or <kbd style="background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; font-size:0.88em;">Cmd+Z</kbd>
+          (macOS) repeatedly in your editor to undo your edits.
+        </li>
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+        </li>
+<li>
+<strong>Full reset:</strong>
+          Re-download the ZIP from
+          <a href="https://github.com/tomyee3-org/GFTGU-Programs" style="color:#7b2d00; text-decoration:underline;" target="_blank">
+            github.com/tomyee3-org/GFTGU-Programs
+          </a>
+          and replace this program's folder with the fresh copy.
+        </li>
+</ul>
+<p style="margin: 0.6em 0 0 0; font-size: 0.88em; color: #5a4a3a;">
+        For additional ways to restore program files, see the corresponding recovery instructions
+        in the <em>GFTGU Python Setup Guide</em>.
+      </p>
+</div>
+</div>
+</section>
+<section id="related">
+<h2>Related Programs</h2>
+<div class="related-grid">
+<div class="related-card"><div class="rc-name">Binary</div><div class="rc-ch">Two bodies, both moving</div>
+<p>Integrates the mutual orbit of two massive bodies. MercPert takes the circular case of that
+motion as given (Eq. 3) and adds a massless third body.</p></div>
+<div class="related-card"><div class="rc-name">Multiple</div><div class="rc-ch">Many bodies, all moving</div>
+<p>Integrates several mutually gravitating bodies with no prescribed orbits. Giving one body a very
+small mass there reproduces MercPert's restricted problem approximately.</p></div>
+<div class="related-card"><div class="rc-name">Orbit</div><div class="rc-ch">One body, one fixed star</div>
+<p>The single-star orbit that Beat 2 recovers when the companion's mass is made negligible.</p></div>
+<div class="related-card"><div class="rc-name">RelativisticOrbit</div><div class="rc-ch">One star, relativistic</div>
+<p>A different cause of orbital precession: relativity instead of a companion's pull.</p></div>
+</div>
+</section>
+<section id="license">
+<h2>License</h2>
+<p>
+This software is based on the programs by <strong>Bernard Schutz</strong>
+accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press,
+2003) and is distributed under the
+<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+(CC BY-NC-SA 4.0)</a> license.
+</p>
+</section>
+</main>
+<footer>
+<em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+</footer>
+</div><!-- /page-wrap -->
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
