@@ -237,7 +237,7 @@
 </nav>
 <main id="content" tabindex="-1">
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build f166d2b70ae6
+  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build d926f8b8be68
 </p>
 <p class="small" style="font-size:0.8em; color:#666;">
   The Build identifier covers the four Python program modules listed below. Help-only or test-only
@@ -323,12 +323,17 @@ drift</code>, and at fraction 0.0 of the conservation table.</p>
 days</code>: 8000 accepted steps cover 18.094 days. Then read the initial totals:
 \(E=-4.6226\times10^9\), \(P=(-3.0\times10^4,-3.0\times10^4,0)\) m/s,
 \(L=(0,0,2.76\times10^{15})\) m\(^2\)/s. Then read the final totals, printed to the same four
-digits: identical. The <code>Maximum conservation drift</code> line says how identical they really
-are underneath that rounding: energy drift \(3.2235\times10^{-4}\), momentum drift
-\(6.8454\times10^{-14}\), angular-momentum drift \(3.7074\times10^{-6}\) &mdash; all far smaller
-than the four-digit rounding that made the totals look exactly equal. Before reading on, count how
-many distinct pairs of bodies there are among the three, and guess how that count would grow if a
-fourth body joined.</p>
+digits: identical. The <code>Maximum conservation drift</code> line does not mean the run stayed
+that quiet throughout: energy drift \(3.2235\times10^{-4}\), momentum drift
+\(6.8454\times10^{-14}\), angular-momentum drift \(3.7074\times10^{-6}\). The energy figure alone is
+an absolute swing of about \(1.4901\times10^{6}\) m\(^2\)/s\(^2\) &mdash; roughly fifteen times the
+last printed digit of \(E_0=-4.6226\times10^9\), not a fraction of it. That swing happens partway
+through the run, around day 17.59 (a close pass this page returns to in Beat 8), well after the
+initial state and well before the final one, so neither printed total, nor any of the eleven rows of
+the conservation table (Beat 3), samples it directly. The initial and final totals agree because the
+run happens to start and end away from that excursion, not because the excursion is too small to
+show up. Before reading on, count how many distinct pairs of bodies there are among the three, and
+guess how that count would grow if a fourth body joined.</p>
 <p><em>Then</em> the law that moves all three. Each body pulls on each other body with a force that
 grows with both masses and falls as the square of their separation, directed along the line between
 them:</p>
@@ -352,7 +357,7 @@ total acceleration is the vector sum of every such pull acting on it:</p>
 \times10^{20}\ \mathrm{m^3\,s^{-2}}\) is factored out, so <code>compute_accelerations()</code> in
 <code>physics_multiple.py</code> evaluates Eq. 2 with \(G m_B\) replaced by
 \(GM_\odot\,\tilde m_B\), where \(\tilde m_B\) is body B's mass in solar units. Every unordered pair
-is evaluated once, and Newton's third law lets the same evaluation update both bodies' running
+is evaluated once, and Newton's third law lets the same evaluation update both bodies" running
 accelerations at once:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 3 — Pair-loop acceleration <span class="tag tag-alg">ALGORITHM</span></div>
@@ -403,7 +408,7 @@ print(phys.compute_accelerations(pos, masses))
 2, 1 and 0.5 solar-mass bodies respectively. The heaviest body has the <em>smallest</em>
 acceleration and the lightest has the largest &mdash; the opposite of what "more force on a bigger
 mass" might suggest at first, and Eq. 2 explains why: body A's own mass, \(m_A\), does not appear
-anywhere on the right-hand side. A body's acceleration depends only on the <em>other</em> bodies'
+anywhere on the right-hand side. A body's acceleration depends only on the <em>other</em> bodies"
 masses and positions, never on its own; the same cancellation Binary's Beat 1 finds for two bodies
 holds pair by pair here too. Then check that the three bodies still push back on one another exactly
 as hard as they are pushed. Multiply each acceleration by its own body's mass and add the three
@@ -439,8 +444,8 @@ center of mass, the main subject.</p>
 <p>Beat 1 showed that the total momentum \(\mathbf P\) of an isolated system never changes. Test
 what happens to \(\mathbf P\), and to the plot, when every body is given the same extra velocity
 &mdash; a Galilean boost &mdash; and compare the program's two ways of displaying the result.</p>
-<pre class="code-block"><code>python main.py --velocities_init '100000,0,0;100000,-30000,0;70000,0,0' --max_steps 2000 --output_type trajectories --display_frame user
-python main.py --velocities_init '100000,0,0;100000,-30000,0;70000,0,0' --max_steps 2000 --output_type trajectories --display_frame com</code></pre>
+<pre class="code-block"><code>python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_steps 2000 --output_type trajectories --display_frame user
+python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_steps 2000 --output_type trajectories --display_frame com</code></pre>
 <p>The velocities above are Beat 0's default \((0,0,0)\), \((0,-30000,0)\), \((-30000,0,0)\) with
 \(\mathbf u=(1.0\times10^5,0,0)\) m/s added to every body. Look at the printed totals and the
 <code>Display frame</code> line in both runs, and at the orbit plot.</p>
@@ -472,12 +477,21 @@ centered on the moving center of mass.</p>
 <p>Adding a common velocity \(\mathbf u\) to every body's velocity adds \(\mathbf u\) to
 \(\mathbf V_{\rm CM}\) and, from Eq. 5, adds \(M\mathbf u\) to \(\mathbf P=\sum_A m_A\mathbf v_A\)
 &mdash; the relation checked by hand above. Positions, and therefore the relative geometry that Eq.
-2 depends on, are untouched, so the boosted system evolves exactly like the unboosted one, just with
-every position additionally drifting at \(\mathbf V_{\rm CM}\). The kinetic energy is not
-translation-invariant the way momentum is, because it is quadratic in velocity: writing each body's
-velocity as \(\mathbf V_{\rm CM}\) plus its velocity relative to the center of mass splits the total
-kinetic energy into a center-of-mass piece and an internal piece, and the internal energy
-\(E_{\rm internal}\) used throughout this program's console output subtracts exactly the
+2 depends on, are untouched, so the boosted system evolves exactly like the unboosted one, with
+every position simply gaining \(\mathbf u t\) relative to the unboosted run (the unboosted center of
+mass was already moving at its own \(\mathbf V_{\rm CM}\), so this describes the difference between
+the two runs, not the boosted run's total drift). A common velocity boost changes <em>both</em>
+conserved totals: \(\mathbf P\) by \(M\mathbf u\), and \(E\) by
+\(\mathbf P_{\rm old}\!\cdot\!\mathbf u+\tfrac12 M|\mathbf u|^2\) &mdash; exactly the
+\(1.2\times10^{10}\) computed above. Neither ordinary kinetic energy nor total momentum is invariant
+under this kind of boost; a boost is a change of velocity, not of coordinate origin. (A spatial
+translation of the origin, with no change to any velocity, leaves both \(K\) and \(\mathbf P\)
+unchanged &mdash; a different symmetry from the one exercised here.) What Eq. 6 below shows is
+narrower and more useful: a specific combination of \(E\) and \(\mathbf P\), the internal energy
+\(E_{\rm internal}\), is unchanged by a boost even though \(E\) and \(\mathbf P\) separately are
+not. Splitting each body's velocity into \(\mathbf V_{\rm CM}\) plus its velocity relative to the
+center of mass splits the total kinetic energy into a center-of-mass piece and an internal piece,
+and \(E_{\rm internal}\) used throughout this program's console output subtracts exactly the
 center-of-mass piece:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 6 — Boost-independent internal energy <span class="tag tag-der">DERIVED</span></div>
@@ -501,8 +515,10 @@ the frame you supplied in <code>positions_init</code> and <code>velocities_init<
 
 <section id="beat3">
 <h2>Beat 3 · Energy, internal energy, and angular momentum</h2>
-<p>Beat 0's exact totals held to four printed digits from start to finish. Read the full
-conservation table for that same run to see what happens in between, not just at the two ends.</p>
+<p>Beat 0's printed totals agreed to four digits at the start and the end of that run, even though
+its <code>Maximum conservation drift</code> line reported an excursion far larger than that
+precision, hidden between the two printed totals. Read the full conservation table for that same
+run to see more of what happens in between, not just at the two ends.</p>
 <pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories</code></pre>
 <p>Look at all eleven rows of <code>Conservation over ten equal time intervals</code>, in
 particular the <code>K</code> column and the <code>E</code> and <code>E_internal</code> columns.</p>
@@ -511,9 +527,13 @@ particular the <code>K</code> column and the <code>E</code> and <code>E_internal
 \(K\) is not monotonic and swings by more than a factor of 18 over the run, largest near the end.
 Then read \(E\) and \(E_{\rm internal}\) down the same eleven rows: both stay at \(-4.6226\times
 10^9\) and \(-4.9226\times10^9\) to the four digits printed, in every row, even while \(K\) is
-swinging. Since \(E=K+U\) is constant and \(K\) is not, \(U\) must swing oppositely and by the same
-amount: kinetic and potential energy are trading back and forth as the bodies move closer together
-and farther apart, exactly compensating so the total stays fixed. Then read \(L_z\), the only
+swinging. \(E=K+U\) (Eq. 9 below) is exactly constant for the true motion, as the next paragraph
+shows, so if \(K\) is not, \(U\) must swing oppositely by very nearly the same amount: kinetic and
+potential energy are trading back and forth as the bodies move closer together and farther apart.
+That trade is exact for the true solution; the program's computed \(E\) carries the same small
+numerical drift Beat 0 already found (up to \(3.2235\times10^{-4}\) at its worst), so the computed
+\(K\) and \(U\) trade off only as exactly as that drift allows &mdash; closely, at every printed row,
+but not perfectly at every accepted step. Then read \(L_z\), the only
 nonzero component here, down the same rows: 2.7600e+15 in every row printed, though the
 <code>Maximum conservation drift</code> line for this run already reported a nonzero angular
 momentum drift of \(3.7074\times10^{-6}\) &mdash; a real, if tiny, departure that eleven rows at
@@ -573,7 +593,7 @@ rewriting the initial data by hand.</p>
 \(|E_0|\), momentum drift divided by \(|\mathbf P_0|\). That works as long as the initial total is
 not itself close to zero. Build a system whose total momentum cancels exactly and see what the
 program does instead.</p>
-<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init '5e10,0,0;-5e10,0,0' --velocities_init '0,25760,0;0,-25760,0' --max_steps 3000 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "5e10,0,0;-5e10,0,0" --velocities_init "0,25760,0;0,-25760,0" --max_steps 3000 --output_type trajectories</code></pre>
 <p>Two equal one-solar-mass bodies, \(1.0\times10^{11}\) m apart, with opposite tangential speeds of
 \(2.576\times10^4\) m/s: a near-circular two-body orbit. Look at the printed momentum and at the
 result dictionary's <code>momentum_drift_normalization</code>, which the console summary does not
@@ -667,10 +687,12 @@ acceleration at the start of the step, one for the predicted acceleration, and, 
 corrector pass already satisfies <code>eps2</code>, no further call is needed, because the
 convergence test compares the corrector's own output to the predictor's, not to a fresh force
 evaluation.</p>
-<p><em>Then</em> the two stages that cost those calls. An explicit Euler predictor estimates the end
-of the step from the start-of-step acceleration alone:</p>
+<p><em>Then</em> the two stages that cost those calls. The predictor estimates the end of the step
+from the start-of-step acceleration alone, holding that acceleration constant over the step: a
+second-order (constant-acceleration) Taylor prediction for position, paired with a first-order
+(explicit Euler) prediction for velocity:</p>
 <div class="eq-block">
-<div class="eq-label">Eq. 12 — Euler predictor <span class="tag tag-alg">ALGORITHM</span></div>
+<div class="eq-label">Eq. 12 — Constant-acceleration predictor <span class="tag tag-alg">ALGORITHM</span></div>
 \[
   \tilde{\mathbf r}_A=\mathbf r_A^n+\mathbf v_A^n\Delta t+\tfrac12\mathbf a_A^n\Delta t^2,
   \qquad
@@ -772,24 +794,32 @@ Beat 0 eventually reaches (Beat 8 returns to this run for exactly that reason).<
 state at whatever irregular times the adaptive controller of Beat 6 produced. A movie needs frames
 at regular intervals instead. Run the Beat-4 two-body configuration as an animation and see how the
 program gets from one to the other.</p>
-<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init '5e10,0,0;-5e10,0,0' --velocities_init '0,25760,0;0,-25760,0' --max_steps 3000 --output_type animation --frame_time 2e5</code></pre>
+<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "5e10,0,0;-5e10,0,0" --velocities_init "0,25760,0;0,-25760,0" --max_steps 3000 --output_type animation --frame_time 2e5</code></pre>
 <p>Look at the <code>Animation frames</code> line the console prints just before the plot window
 opens.</p>
-<p>Three tasks, in order. First, with <code>--max_steps 2000</code> in place of 3000 (so the run
+<p>Three tasks, in order. First, with <code>--max_steps 600</code> in place of 3000 (so the run
 finishes quickly for this check), the console prints <code>Animation frames: 7; frame spacing:
 2.0000e+05 simulated s; approximate playback time: 3.5000e-01 real s</code>: seven frames at
 \(t=0,\,2\times10^5,\,4\times10^5,\dots\) s, each 50 ms apart in real playback time by default, for
-0.35 s of total real playback. Then compare a stored accepted step's time with a requested frame
-time directly: in this run the accepted step at \(t=198000\) s is immediately followed by one at
-\(t=200000\) s, a full \(\Delta t=2000\) s apart, and the second requested frame falls exactly on
-the later of those two, so no interpolation is actually needed there. Then pick a frame time that
-does <em>not</em> land on an accepted state, \(t=199000\) s, exactly halfway between the same two
-bracketing steps, and compare the program's cubic-Hermite estimate of body 0's position with a naive
-straight-line (linear) interpolation between the same two bracketing states: the two estimates are
+0.35 s of total real playback. (The full 3000-step run above has ten times the accepted steps and
+gives 31 frames, 1.55 s of playback; the count scales with how much simulated time the run covers,
+not with anything about interpolation.) Then compare a stored accepted step's time with a requested
+frame time directly: in the 3000-step run, the accepted step at \(t=198000\) s is immediately
+followed by one at \(t=200000\) s, a full \(\Delta t=2000\) s apart, and the requested frame at
+\(t=2\times10^5\) s falls exactly on the later of those two, so no interpolation is actually needed
+there. Then pick a frame time that does <em>not</em> land on an accepted state, \(t=199000\) s,
+exactly halfway between the same two bracketing steps, and compare the program's cubic-Hermite
+estimate of body 0's position with a naive straight-line (linear) interpolation between the same two
+bracketing states: the two estimates are
 \((4.973745\times10^{10},\,5.117264\times10^9,0)\) and \((4.973745\times10^{10},\,5.117263\times10^9,0)\)
 m, differing by about 6636 m out of a \(10^{11}\)-m orbit &mdash; small over one 2000-s step at this
-gentle a speed, but systematic, and it grows for a larger requested <code>frame_time</code> or a
-faster-curving orbit.</p>
+gentle a speed, but systematic. This discrepancy is not a property of <code>frame_time</code> itself;
+it depends only on how far apart the two <em>bracketing accepted states</em> are in time and how much
+the true path curves between them (a longer accepted step, or a tighter orbit, both make it larger).
+Choosing a different <code>frame_time</code> only moves which requested sample times fall where
+between the same bracketing states &mdash; it can even land exactly on an accepted state, as the
+\(t=2\times10^5\) s frame above does, making the discrepancy zero for that frame &mdash; it never
+changes the accepted steps the integrator actually took (Beat 6).</p>
 <p><em>Then</em> why a curve, not a straight line, is used to bridge two accepted states. The
 program stores both the position <em>and</em> the velocity at every accepted step, so it can match
 not just the endpoints but the slope at each endpoint too, using the standard cubic-Hermite basis:</p>
@@ -833,34 +863,51 @@ numerical controls and see whether the number changes. Do that with the classic 
 python main.py --dt 500 --max_steps 8000 --output_type trajectories --show_energy_diagnostic</code></pre>
 <p>Look at <code>Maximum conservation drift</code>'s energy figure in both runs.</p>
 <p>Three tasks, in order. First, the smaller-<code>dt</code> run: \(\Delta t=1000\) s,
-\(\varepsilon_1\) and \(\varepsilon_2\) at their defaults, reaches 4000 accepted steps and
-17.559 days, with a maximum energy drift of \(1.7950\times10^{-5}\). Then the even smaller step,
-\(\Delta t=500\) s, 8000 steps, 17.608 days: a maximum energy drift of \(3.2449\times10^{-4}\)
-&mdash; <em>eighteen times larger</em>, not smaller, than the \(\Delta t=1000\) run. On a fixed
-two-body orbit (Binary's Beat 7), halving the step reliably quarters the dip in energy at closest
-approach; here it does the opposite. Then look at why: both runs reach almost the same simulated
-time, about 17.6 days, which is inside the encounter Beat 6 found starting around day 15.5 to 16
-(step 426 onward at \(\Delta t=2000\)). A finer step does not retrace the coarser run's path through
-that encounter more accurately; it follows the same equations from the same start but accumulates
-different rounding and truncation choices along the way, and because the three-body problem is
-chaotically sensitive to those differences once a close encounter is underway, the two integrations
-can be pulled onto measurably different trajectories through it. Neither run is simply "wrong"; they
-are two different numerical approximations to a physical system whose own sensitivity to
-infinitesimal differences is real, not a numerical-method artifact.</p>
-<p><em>Then</em> what that means for judging a result, and where trust runs out completely. The
-lesson is not that finer settings are useless &mdash; away from a close encounter, Beat 5's
+\(\varepsilon_1\) and \(\varepsilon_2\) at their defaults, reaches 4000 accepted steps and day
+17.559. The even smaller step, \(\Delta t=500\) s, 8000 steps, reaches day 17.608. Their reported
+<code>Maximum conservation drift</code> energy figures are \(1.7950\times10^{-5}\) and
+\(3.2449\times10^{-4}\) &mdash; more than eighteen times larger for the finer step, which looks like
+the opposite of ordinary convergence. Before concluding anything from that, notice what it actually
+compares: the two runs do not reach the same simulated time, so the two maxima are each the largest
+drift somewhere in a different stretch of the trajectory, not the same stretch measured twice.</p>
+<p><em>Then</em> compare them properly, over a stretch both runs actually share. Restricted to the
+first 17.5 days &mdash; before either run's reported maximum &mdash; the two integrations agree
+closely: \(7.0649\times10^{-6}\) for \(\Delta t=1000\) against \(7.1182\times10^{-6}\) for
+\(\Delta t=500\), both at essentially the same moment, day 14.851. That is ordinary, well-behaved
+convergence, and the whole-run comparison above hides it. The two runs land at different final days
+(17.559 against 17.608) despite spending the same nominal step budget
+(\(4000\times1000\,\mathrm{s}=8000\times500\,\mathrm{s}=4\times10^{6}\) s) because, once the
+adaptive controller starts shrinking the step for a close encounter (Beat 6), it is largely the
+<em>number</em> of accepted steps still available, not the ceiling <code>dt</code>, that decides how
+far a run can push into that encounter; the run with twice as many steps in its budget simply goes
+further before running out.</p>
+<p><em>Then</em> look at what each run's own maximum actually is. The \(\Delta t=500\) run's
+\(3.2449\times10^{-4}\) occurs at day 17.59335, during a sharp, brief close pass where the two
+nearest bodies come within \(1.6394\times10^{8}\) m of each other &mdash; far closer than anything in
+the common stretch above. The \(\Delta t=1000\) run never reaches that pass; it simply runs out of
+steps at day 17.559, shortly before it. Extended by 2000 more accepted steps
+(<code>--max_steps 6000</code>, no other change), the \(\Delta t=1000\) run reaches day 17.595 and
+reports a maximum drift of \(3.2472\times10^{-4}\) at day 17.59336 &mdash; matching the
+\(\Delta t=500\) run's own \(3.2449\times10^{-4}\) at day 17.59335 to within two parts in a thousand.
+The two step sizes agree well at the same point in the trajectory; the eighteen-fold gap in the
+original whole-run comparison was entirely a consequence of comparing two different stretches of the
+run, not evidence that halving <code>dt</code> made the integration worse.</p>
+<p>The lesson is not that finer settings are useless &mdash; away from a close encounter, Beat 5's
 \(\varepsilon_2\) comparison and Binary's Beat 7 both show the expected, orderly improvement &mdash;
-but that near a genuine close encounter in a chaotic system, a single convergence test on one
-summary number is not enough. Repeat a run of interest at smaller <code>dt</code> and tighter
-<code>eps1</code>/<code>eps2</code>, and check whether the <em>specific quantities that matter to
-your question</em> (which two bodies pair up, whether a body escapes, the approximate time of a
-close approach) stabilize, rather than trusting a single drift figure to fall monotonically. Beat 6's
-default run and the two commands above show what that stabilization looks like away from, and inside,
-one encounter. At the far end of this scale sits an exact singularity. Two \(10^{11}\,M_\odot\)
+but that a single <code>Maximum conservation drift</code> figure from two runs is only comparable
+when both runs cover the same stretch of simulated time. A run that happens to reach further into,
+or through, a close encounter will usually report a larger maximum than one that stops just short of
+it, whatever the step size; that says where the encounter is, not which run is more accurate. To
+judge convergence near a close encounter, compare over a specified common time (as above), extend the
+shorter run to the same endpoint, or check with a tighter third calculation, as this beat just did
+&mdash; not the printed summary line alone. Three or more bodies can still separate onto genuinely
+different trajectories after enough close encounters (the warning at the top of this page), but
+establishing that takes exactly this kind of matched comparison, never a mismatched one. At the far
+end of this scale sits an exact singularity. Two \(10^{11}\,M_\odot\)
 point masses, 50 kpc apart, launched directly at one another with zero impact parameter (the classic
 Help's "Galaxy collision" scenario) head for \(r=0\), where Eq. 1 is infinite:</p>
-<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init '-7.7e20,0,0;7.7e20,0,0' --velocities_init '50000,0,0;-50000,0,0' --dt 1e12 --max_steps 17500 --output_type trajectories
-python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init '-7.7e20,0,0;7.7e20,0,0' --velocities_init '50000,0,0;-50000,0,0' --dt 1e12 --max_steps 17800 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 17500 --output_type trajectories
+python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 17800 --output_type trajectories</code></pre>
 <p>The first command, <code>max_steps=17500</code>, completes normally. The second,
 <code>max_steps=17800</code>, only 300 steps further into the same head-on approach, stops with
 <code>Multiple error: The adaptive timestep became too small to advance simulation time in
@@ -897,7 +944,7 @@ and where the program evaluates it.</p>
 <tr><td>9</td><td><span class="tag tag-def">DEFINITION</span></td><td>Total mechanical energy</td><td>3</td><td><code>conservation_state()</code> in <code>physics_multiple.py</code></td></tr>
 <tr><td>10</td><td><span class="tag tag-def">DEFINITION</span></td><td>Total angular momentum</td><td>3</td><td><code>conservation_state()</code> in <code>physics_multiple.py</code></td></tr>
 <tr><td>11</td><td><span class="tag tag-alg">ALGORITHM</span></td><td>Characteristic scale for a near-cancelling vector total</td><td>4</td><td><code>scaled_characteristic_momentum()</code>, <code>scaled_characteristic_angular_momentum()</code> in <code>physics_multiple.py</code>; <code>_vector_drift_metadata()</code> in <code>driver_multiple.py</code></td></tr>
-<tr><td>12</td><td><span class="tag tag-alg">ALGORITHM</span></td><td>Euler predictor</td><td>5</td><td><code>run_simulation()</code> in <code>driver_multiple.py</code></td></tr>
+<tr><td>12</td><td><span class="tag tag-alg">ALGORITHM</span></td><td>Constant-acceleration predictor</td><td>5</td><td><code>run_simulation()</code> in <code>driver_multiple.py</code></td></tr>
 <tr><td>13</td><td><span class="tag tag-alg">ALGORITHM</span></td><td>Iterated trapezoidal corrector</td><td>5</td><td><code>run_simulation()</code> in <code>driver_multiple.py</code></td></tr>
 <tr><td>14</td><td><span class="tag tag-alg">ALGORITHM</span></td><td>Corrector convergence test, worst body</td><td>5</td><td><code>_max_relative_vector_change()</code>, <code>run_simulation()</code> in <code>driver_multiple.py</code></td></tr>
 <tr><td>15</td><td><span class="tag tag-alg">ALGORITHM</span></td><td>Per-body acceleration-change gate and 10% step recovery</td><td>6</td><td><code>_max_relative_vector_change()</code>, <code>run_simulation()</code> in <code>driver_multiple.py</code></td></tr>
@@ -920,7 +967,7 @@ introduced one at a time.</p>
 <ol>
 <li>Evaluate every body's acceleration at the start of the step from Eq. 2 (equivalently, the
 pair-loop of Eq. 3).</li>
-<li>Take a trial step of the working length \(\Delta t\) with the Euler predictor, Eq. 12, and
+<li>Take a trial step of the working length \(\Delta t\) with the constant-acceleration predictor, Eq. 12, and
 evaluate the accelerations at the predicted positions.</li>
 <li>Form \(\delta_{a,A}\) from Eq. 15 for every body. If the worst exceeds <code>eps1</code>, halve
 \(\Delta t\) and return to step 2.</li>
@@ -975,8 +1022,9 @@ controller actually used. A guard limits any single animation request to 1,000,0
 Neither tolerance is a direct bound on the position, energy, or momentum error; both only gate one
 local decision per attempted step. Beat 5 shows that loosening <code>eps2</code> by orders of
 magnitude changes the reported drift only slightly while noticeably reducing cost, and Beat 8 shows
-that for a genuinely chaotic three-body encounter, no fixed tolerance guarantees a monotonically
-improving answer &mdash; only a repeated convergence test on the specific quantity of interest does.
+that a whole-run maximum drift is only comparable between two settings when both runs cover the same
+stretch of simulated time &mdash; a convergence test near a close encounter needs a matched common
+interval, not just a single summary number from each run.
 </p>
 </section>
 
@@ -1036,7 +1084,7 @@ and executable-core build identifier without running a simulation, use
 <h3>Customising the Simulation</h3>
 <p>Pass parameters as <code>--name value</code>; run <code>python main.py --help</code> for every
 option and its default. Masses are comma-separated; quote each semicolon-separated set of position
-or velocity triples, for example <code>--positions_init '5e10,0,0;-5e10,0,0'</code>. The number of
+or velocity triples, for example <code>--positions_init "5e10,0,0;-5e10,0,0"</code>. The number of
 masses, positions, and velocities must equal <code>--n_bodies</code>. Selectors use underscores
 (for example <code>--animation_mode current_positions</code>); omit a parameter to keep its
 default.</p>
@@ -1098,7 +1146,7 @@ run.</p>
 <h2>Printed Summary</h2>
 <p>Every run prints a summary before opening a plot. This is Beat 0's default run,
 <code>python main.py --max_steps 8000 --output_type trajectories</code>:</p>
-<pre class="code-block"><code>Multiple 1.4.0 (build f166d2b70ae6) — accepted steps: 8000; simulated time: 1.8094e+01 days
+<pre class="code-block"><code>Multiple 1.4.0 (build d926f8b8be68) — accepted steps: 8000; simulated time: 1.8094e+01 days
 Display frame: COM (center of mass). Plots subtract the instantaneous center-of-mass position R_CM; printed E, P and L use input coordinates.
 Initial user-frame totals (scaled by one solar mass): E=-4.6226e+09 m^2/s^2; E_internal=-4.9226e+09 m^2/s^2; P=(-3.0000e+04, -3.0000e+04, 0.0000e+00) m/s; L=(0.0000e+00, 0.0000e+00, 2.7600e+15) m^2/s
 Final user-frame totals (scaled by one solar mass): E=-4.6226e+09 m^2/s^2; E_internal=-4.9226e+09 m^2/s^2; P=(-3.0000e+04, -3.0000e+04, 0.0000e+00) m/s; L=(0.0000e+00, 0.0000e+00, 2.7600e+15) m^2/s
@@ -1145,7 +1193,7 @@ triples are single shell arguments. Each card names the beat it extends and a di
 <div class="experiment-card">
 <div class="exp-num" id="exp1">Experiment 1 — Introductory</div>
 <div class="exp-title">Two-Body Sanity Check</div>
-<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init '5e10,0,0;-5e10,0,0' --velocities_init '0,25760,0;0,-25760,0' --max_steps 3000 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "5e10,0,0;-5e10,0,0" --velocities_init "0,25760,0;0,-25760,0" --max_steps 3000 --output_type trajectories</code></pre>
 <p>Before exploring chaotic three-body motion, test a familiar binary. Two equal one-solar-mass
 bodies \(1.0\times10^{11}\) m apart, with opposite tangential speeds of about \(2.576\times10^4\)
 m/s, follow nearly circular paths about their shared center of mass. Their two opposite momenta
@@ -1186,7 +1234,7 @@ initial accelerations.</p>
 <div class="experiment-card">
 <div class="exp-num" id="exp4">Experiment 4 — Intermediate</div>
 <div class="exp-title">Out-of-Plane Encounter</div>
-<pre class="code-block"><code>python main.py --velocities_init '0,0,0;0,-30000,0;-30000,0,5000' --projection xz --max_steps 8000 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --velocities_init "0,0,0;0,-30000,0;-30000,0,5000" --projection xz --max_steps 8000 --output_type trajectories</code></pre>
 <p>Add a modest \(z\)-velocity to one body and compare the <code>'xy'</code> and <code>'xz'</code>
 projections; the calculation itself is always fully three-dimensional (Beat 0), and choosing a
 projection only changes what is plotted, the same idea as Beat 2's display frame acting only on the
@@ -1205,19 +1253,24 @@ component that the default in-plane run (Beat 0) does not, and the maximum repor
 python main.py --dt 500 --max_steps 8000 --output_type trajectories --show_energy_diagnostic</code></pre>
 <p>Repeat the same physical initial conditions with <code>dt</code>, <code>dt</code>/2, and
 optionally <code>dt</code>/4, then repeat with tighter <code>eps1</code> and <code>eps2</code>.
-Compare the reported conservation drift; for sensitive three-body motion, a finer step is not
-guaranteed to reduce it.</p>
-<p><strong>Check:</strong> \(\Delta t=1000\) s gives a maximum energy drift of
-\(1.7950\times10^{-5}\); the finer \(\Delta t=500\) s gives \(3.2449\times10^{-4}\), eighteen times
-larger, because both runs land inside the same chaotically sensitive close encounter (Beat 8).</p>
+Compare the reported conservation drift only over a stretch of simulated time that every run actually
+reaches; near a close encounter (Beat 6) a finer step's run often stops at a different final time
+than a coarser one, so their whole-run maxima can differ for reasons that have nothing to do with
+which run is more accurate.</p>
+<p><strong>Check:</strong> \(\Delta t=1000\) s (4000 steps) reaches day 17.559 with a maximum energy
+drift of \(1.7950\times10^{-5}\); \(\Delta t=500\) s (8000 steps) reaches day 17.608 with
+\(3.2449\times10^{-4}\). Restricted to the first 17.5 days both runs share, the two agree closely
+(\(7.0649\times10^{-6}\) against \(7.1182\times10^{-6}\)); the larger whole-run figure for
+\(\Delta t=500\) comes from a sharp close pass near day 17.593 that the shorter \(\Delta t=1000\) run
+has not yet reached (Beat 8).</p>
 <div class="exp-beat">Extends Beats 5 and 8.</div>
 </div>
 
 <div class="experiment-card">
 <div class="exp-num" id="exp6">Experiment 6 — Intermediate</div>
 <div class="exp-title">Center-of-Mass Frame</div>
-<pre class="code-block"><code>python main.py --velocities_init '100000,0,0;100000,-30000,0;70000,0,0' --max_steps 2000 --output_type trajectories --display_frame user
-python main.py --velocities_init '100000,0,0;100000,-30000,0;70000,0,0' --max_steps 2000 --output_type trajectories --display_frame com</code></pre>
+<pre class="code-block"><code>python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_steps 2000 --output_type trajectories --display_frame user
+python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_steps 2000 --output_type trajectories --display_frame com</code></pre>
 <p>Add the same extra velocity \(\mathbf u=(1.0\times10^5,0,0)\) m/s to every body. Set
 <code>--display_frame user</code> and watch the encounter drift across the plot; switch to
 <code>--display_frame com</code> (or press <strong>F</strong> during an animation) and confirm the
@@ -1247,7 +1300,7 @@ pair.</p>
 <div class="experiment-card">
 <div class="exp-num" id="exp8">Experiment 8 — Advanced</div>
 <div class="exp-title">Small Star Cluster</div>
-<pre class="code-block"><code>python main.py --n_bodies 4 --masses_solar 1,1,1,1 --positions_init '0,0,0;1.5e14,0,0;0,1.5e14,0;-1.5e14,0,0' --velocities_init '0,0,0;0,5000,0;-5000,0,0;0,-5000,0' --dt 1e7 --max_steps 8000 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --n_bodies 4 --masses_solar 1,1,1,1 --positions_init "0,0,0;1.5e14,0,0;0,1.5e14,0;-1.5e14,0,0" --velocities_init "0,0,0;0,5000,0;-5000,0,0;0,-5000,0" --dt 1e7 --max_steps 8000 --output_type trajectories</code></pre>
 <p>A 1000-AU box (\(1.5\times10^{14}\) m \(\approx1003\) AU) of four equal solar-mass stars moving
 at up to 5 km/s has a crossing time of order \(3\times10^{10}\) s (roughly 950 years). Leave
 <code>--display_frame com</code>. Compare the printed \(E\) and \(E_{\rm internal}\), the expansion
@@ -1263,7 +1316,7 @@ default encounter, because this configuration never brings two bodies as close t
 <div class="experiment-card">
 <div class="exp-num" id="exp9">Experiment 9 — Advanced</div>
 <div class="exp-title">Compare with MercPert</div>
-<pre class="code-block"><code>python main.py --n_bodies 3 --masses_solar 1,0.1,1e-8 --positions_init '0,0,0;1e11,0,0;4e10,0,0' --velocities_init '0,-3450,0;0,34500,0;0,57500,0' --max_steps 4000 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --n_bodies 3 --masses_solar 1,0.1,1e-8 --positions_init "0,0,0;1e11,0,0;4e10,0,0" --velocities_init "0,-3450,0;0,34500,0;0,57500,0" --max_steps 4000 --output_type trajectories</code></pre>
 <p>Recreate the same physical Sun&ndash;perturber&ndash;test-particle configuration as MercPert, but
 express every body's initial state in one inertial frame here. Keep the default COM display so the
 plot stays centered. Agreement should be approximate, because MercPert prescribes its primary orbit
@@ -1277,7 +1330,7 @@ printed momentum, \(\mathbf P\approx(0,5.75\times10^{-4},0)\) m/s, and maximum r
 <div class="experiment-card">
 <div class="exp-num" id="exp10">Experiment 10 — Advanced</div>
 <div class="exp-title">Galaxy Collision — Optional Toy Model, and Past the Trust Limit</div>
-<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init '-7.7e20,0,0;7.7e20,0,0' --velocities_init '50000,0,0;-50000,0,0' --dt 1e12 --max_steps 10000 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 10000 --output_type trajectories</code></pre>
 <p>Two \(10^{11}\,M_\odot\) cores 50 kpc apart approaching at 100 km/s would take order
 \(5\times10^8\) yr to cross that separation at constant speed, but their mutual gravity accelerates
 the infall, so this exactly radial pair reaches closest approach sooner, near \(2.4\times10^8\) yr.
@@ -1288,7 +1341,7 @@ toward \(10^{10}\,M_\odot\). This is a handful of point masses, not a collisionl
 merger with gas, friction, or radiation.</p>
 <p>Then push the same head-on pair, with no companions and no softening, past where the program can
 still integrate it:</p>
-<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init '-7.7e20,0,0;7.7e20,0,0' --velocities_init '50000,0,0;-50000,0,0' --dt 1e12 --max_steps 17800 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 17800 --output_type trajectories</code></pre>
 <p><strong>Check:</strong> <code>--max_steps 10000</code> and <code>17500</code> both complete
 normally; <code>--max_steps 17800</code>, only 300 steps further into the same approach, stops with
 <code>Multiple error: The adaptive timestep became too small to advance simulation time in
@@ -1366,16 +1419,16 @@ Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> lic
 <!-- Sidebar active-link highlight on scroll -->
 <script>
   const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('nav a');
+  const navLinks = document.querySelectorAll("nav a");
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        navLinks.forEach(a => a.classList.remove('active'));
+        navLinks.forEach(a => a.classList.remove("active"));
         const hit = document.querySelector(`nav a[href="#${entry.target.id}"]`);
-        if (hit) hit.classList.add('active');
+        if (hit) hit.classList.add("active");
       }
     });
-  }, { rootMargin: '-15% 0px -70% 0px' });
+  }, { rootMargin: "-15% 0px -70% 0px" });
   sections.forEach(s => observer.observe(s));
 </script>
 </body>

@@ -416,7 +416,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build f166d2b70ae6
+  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build d926f8b8be68
 </p>
 <p class="small">
   The Build identifier covers the four Python program modules listed below.
@@ -497,7 +497,7 @@ python main.py</pre>
 <h3>Customising the Simulation</h3>
 <p>Pass parameters as <code>--name value</code>; run <code>python main.py --help</code> for every option and its default. Example:</p>
 <pre>python main.py --max_steps 8000 --output_type trajectories --display_frame user --show_energy_diagnostic</pre>
-<p>Masses are comma-separated. Quote each semicolon-separated set of position or velocity triples; for example <code>--positions_init '5e10,0,0;-5e10,0,0'</code>. The number of masses, positions, and velocities must equal <code>--n_bodies</code>. Selectors use underscores (for example <code>--animation_mode current_positions</code>); omit a parameter to keep its default.</p>
+<p>Masses are comma-separated. Quote each semicolon-separated set of position or velocity triples; for example <code>--positions_init "5e10,0,0;-5e10,0,0"</code>. The number of masses, positions, and velocities must equal <code>--n_bodies</code>. Selectors use underscores (for example <code>--animation_mode current_positions</code>); omit a parameter to keep its default.</p>
 <ul style="margin: 0 0 14px 28px; line-height: 2.1;">
 <li><code>n_bodies</code> — number of point masses</li>
 <li><code>masses_solar</code> — one mass per body, in solar units</li>
@@ -1075,7 +1075,7 @@ python main.py</pre>
 <div class="scenario-grid">
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Two-body sanity check</div><span class="diff diff-intro">Introductory</span></div>
-<pre><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init '5e10,0,0;-5e10,0,0' --velocities_init '0,25760,0;0,-25760,0' --max_steps 3000 --output_type trajectories</code></pre>
+<pre><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "5e10,0,0;-5e10,0,0" --velocities_init "0,25760,0;0,-25760,0" --max_steps 3000 --output_type trajectories</code></pre>
         Before exploring chaotic three-body motion, test a familiar binary. For
         two equal one-solar-mass bodies separated by \(1.0\times10^{11}\) m, put
         them at \((\pm5.0\times10^{10},0,0)\) m and give them opposite
@@ -1109,11 +1109,11 @@ python main.py</pre>
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Out-of-plane encounter</div><span class="diff diff-inter">Intermediate</span></div>
-<pre><code>python main.py --velocities_init '0,0,0;0,-30000,0;-30000,0,5000' --projection xz --max_steps 8000 --output_type trajectories</code></pre>
+<pre><code>python main.py --velocities_init "0,0,0;0,-30000,0;-30000,0,5000" --projection xz --max_steps 8000 --output_type trajectories</code></pre>
         Add a modest \(z\)-velocity to one body and compare the <code>'xy'</code>
         and <code>'xz'</code> projections. Try 1 km/s first and then
         5 km/s. Choose the vertical speed so that the
-        bodies' \(z\)-separations near closest approach are comparable to their
+        bodies" \(z\)-separations near closest approach are comparable to their
         in-plane separations. If the vertical speed is too large, the bodies may
         simply miss one another and the interesting encounter disappears.
       </div>
@@ -1130,8 +1130,8 @@ python main.py --dt 500 --max_steps 8000 --output_type trajectories --show_energ
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Center-of-mass frame</div><span class="diff diff-inter">Intermediate</span></div>
-<pre><code>python main.py --velocities_init '100000,0,0;100000,-30000,0;70000,0,0' --max_steps 2000 --output_type trajectories --display_frame user
-python main.py --velocities_init '100000,0,0;100000,-30000,0;70000,0,0' --max_steps 2000 --output_type trajectories --display_frame com</code></pre>
+<pre><code>python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_steps 2000 --output_type trajectories --display_frame user
+python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_steps 2000 --output_type trajectories --display_frame com</code></pre>
         Keep the default masses and positions, but add the same extra velocity
         \(\mathbf u\) to every body. The printed momentum must obey the
         Galilean rule \(\mathbf P_{\rm new}=\mathbf P_{\rm old}+M\mathbf u\),
@@ -1160,7 +1160,7 @@ python main.py --velocities_init '100000,0,0;100000,-30000,0;70000,0,0' --max_st
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Small star cluster</div><span class="diff diff-adv">Advanced</span></div>
-<pre><code>python main.py --n_bodies 4 --masses_solar 1,1,1,1 --positions_init '0,0,0;1.5e14,0,0;0,1.5e14,0;-1.5e14,0,0' --velocities_init '0,0,0;0,5000,0;-5000,0,0;0,-5000,0' --dt 1e7 --max_steps 8000 --output_type trajectories</code></pre>
+<pre><code>python main.py --n_bodies 4 --masses_solar 1,1,1,1 --positions_init "0,0,0;1.5e14,0,0;0,1.5e14,0;-1.5e14,0,0" --velocities_init "0,0,0;0,5000,0;-5000,0,0;0,-5000,0" --dt 1e7 --max_steps 8000 --output_type trajectories</code></pre>
         A 0.1-pc cluster (\(0.1\,\mathrm{pc}\approx3.09\times10^{15}\) m)
         moving at 1 km/s has a crossing time of about \(3\times10^{12}\) s
         (\(\approx 10^5\) yr). The shipped
@@ -1180,7 +1180,7 @@ python main.py --velocities_init '100000,0,0;100000,-30000,0;70000,0,0' --max_st
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Compare with MercPert</div><span class="diff diff-adv">Advanced</span></div>
-<pre><code>python main.py --n_bodies 3 --masses_solar 1,0.1,1e-8 --positions_init '0,0,0;1e11,0,0;4e10,0,0' --velocities_init '0,-3450,0;0,34500,0;0,57500,0' --max_steps 4000 --output_type trajectories</code></pre>
+<pre><code>python main.py --n_bodies 3 --masses_solar 1,0.1,1e-8 --positions_init "0,0,0;1e11,0,0;4e10,0,0" --velocities_init "0,-3450,0;0,34500,0;0,57500,0" --max_steps 4000 --output_type trajectories</code></pre>
         Recreate the same physical Sun–perturber–test-particle configuration,
         but express every body's initial state in one inertial frame for
         Multiple. Keep the default COM display so the plot stays centered;
@@ -1193,7 +1193,7 @@ python main.py --velocities_init '100000,0,0;100000,-30000,0;70000,0,0' --max_st
       </div>
 <div class="scenario-card">
 <div class="sc-head"><div class="sc-title">Galaxy collision — optional toy model</div><span class="diff diff-adv">Advanced</span></div>
-<pre><code>python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init '-7.7e20,0,0;7.7e20,0,0' --velocities_init '50000,0,0;-50000,0,0' --dt 1e12 --max_steps 10000 --output_type trajectories</code></pre>
+<pre><code>python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 10000 --output_type trajectories</code></pre>
         Two \(10^{11}\,M_\odot\) cores 50 kpc apart approaching at 100 km/s
         would take order \(5\times10^8\) yr (\(\approx 1.5\times10^{16}\) s)
         to cross that separation at constant speed, but their mutual
