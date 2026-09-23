@@ -260,15 +260,18 @@ teaching approximation used for this exercise: the acceleration has the fixed ma
 <code>inverse_square</code> model instead uses the real \(1/r^2\) law, with the modern JPL DE440
 value of Earth's gravitational parameter. Both force laws admit an exact circular orbit at the
 matching launch speed, but <code>inverse_square</code> is needed for the Keplerian ellipse and
-escape behaviour that makes Newton's cannon interesting beyond that one case: only
-<code>inverse_square</code> makes a non-circular bound orbit close on itself and repeat, rather
-than drift into a rosette (see the spine sentence below and Beat 5). All six run settings can be
+escape behaviour that makes Newton's cannon interesting beyond that one case. Under
+<code>inverse_square</code> every ideal bound orbit that misses the ground closes on itself and
+repeats; under <code>simplified</code> a non-circular orbit generally drifts into a precessing
+rosette instead, with exact circular orbits and a few special resonant shapes as the exceptions
+(see the spine sentence below and Beat 5). Neither statement is a promise about the numerical
+path, which drifts slightly even for an ideal closed orbit (Beat 7). All six run settings can be
 supplied at the command line; use <code>python main.py --help</code> to see their descriptions
 and defaults.
 </p>
 <p>The spine of the lesson is one sentence: <em>launch speed relative to the local circular speed
-decides whether the launch point becomes the near side or the far side of an orbit, and only the
-inverse-square law makes that orbit close on itself and repeat forever.</em> Below circular, the
+decides whether the launch point becomes the near side or the far side of an orbit, and the
+inverse-square law is the one that makes every such bound orbit close on itself and repeat.</em> Below circular, the
 launch point is the orbit's apogee and the projectile dips toward a lower perigee it has not yet
 reached; above circular, the launch point is the perigee and the projectile rises toward a higher
 apogee. Whether a sub-circular launch actually strikes the ground depends on how far that lower
@@ -1168,33 +1171,52 @@ answers. The <strong>analytic threshold</strong> comes from the launch state alo
 the launch point is an apogee (Beat 3's note under Eq. 5), so bisect on launch speed watching only
 the printed <code>Osculating perigee altitude</code> line, and find where it crosses zero. That
 line is computed from Eq. 5 using \(h_0\), \(u_0\), \(v_0\) alone — no <code>dt</code>, no
-<code>maxSteps</code>, no integration. The <strong>numerical threshold</strong> is a different
-bisection at a fixed \(\Delta t\) and <code>maxSteps</code>: watch the printed <code>Outcome</code>
-line (impact or not) instead, and find where <em>that</em> flips. This one uses the actual stepped
-trajectory — the same first-order, non-symplectic stepper Beat 7 and Beat 9 already show drifting
-away from the exact orbit.</p>
-<p>Near the ground the two do not agree. At \(u_0=7635\) m/s the analytic osculating perigee
-altitude is \(-4{,}733.5\) m — the ideal two-body orbit passes under the ground — yet at
-\(\Delta t=1\) s the program reports a completed orbit with no impact at all (minimum stored
-altitude \(+18{,}102\) m); only at the finer \(\Delta t=0.1\) s does the identical launch actually
-strike the surface. The stepper can carry the projectile past a perigee the ideal orbit would have
-put underground, simply because it samples position too coarsely to register the dip — the same
-kind of error Beat 9's coarse-step guard exists to catch when it is large enough to tunnel clean
-through the reference sphere, but here it is small enough to just miss the ground instead.</p>
-<p>Bisect the numerical threshold at a few step sizes and watch it converge on the analytic one:</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Numerical impact-boundary launch speed converging on the analytic threshold as the timestep shrinks"><table class="compare-table">
-<thead><tr><th>Δt (s)</th><th>Numerical impact-boundary u₀ (m/s)</th><th>Gap below analytic 7636.45 m/s</th></tr></thead>
+<code>maxSteps</code>, no integration — and the crossing is at 7636.45 m/s. The <strong>numerical
+threshold</strong> is a different bisection at a fixed \(\Delta t\): watch the printed
+<code>Outcome</code> line instead, and find where <em>that</em> flips. This one uses the actual
+stepped trajectory — the same first-order, non-symplectic stepper Beat 7 and Beat 9 already show
+drifting away from the exact orbit.</p>
+<p>For the numerical bisection, <code>maxSteps</code> matters as much as \(\Delta t\). Give every
+run enough steps to cover about 6000 s of flight — longer than one orbital period at this
+altitude — which means <code>--maxSteps 6001</code> at \(\Delta t=1\) s, <code>12001</code> at
+0.5 s, and <code>60001</code> at 0.1 s:</p>
+<pre class="code-block"><code>python main.py --h0 300000 --uInit 7635 --force_law inverse_square --dt 1   --maxSteps 6001
+python main.py --h0 300000 --uInit 7635 --force_law inverse_square --dt 0.5 --maxSteps 12001
+python main.py --h0 300000 --uInit 7635 --force_law inverse_square --dt 0.1 --maxSteps 60001</code></pre>
+<p>Count a speed as surviving only when the Outcome line says <code>Orbit completed</code>. The
+default <code>maxSteps=15000</code> is not enough at \(\Delta t=0.1\) s: it stops after 1499.9 s
+with <code>No complete revolution before maxSteps</code>, which says nothing about whether an
+impact would have come later. At 7635.72 m/s, for example, that short run stops there, while the
+60001-step run reports <code>Surface impact before one revolution</code> after 2599.2 s.</p>
+<p>Near the ground the two thresholds do not agree. At \(u_0=7635\) m/s the analytic osculating
+perigee altitude is \(-4{,}733.5\) m, so the ideal two-body orbit passes under the ground. Yet the
+first command above (\(\Delta t=1\) s) reports a completed orbit with no impact at all (minimum
+altitude \(+18{,}102\) m). The second (\(\Delta t=0.5\) s) also completes an orbit, with its
+minimum down to \(+6{,}872.2\) m, and only the third (\(\Delta t=0.1\) s) actually strikes the
+surface.
+The stepper can carry the projectile past a perigee the ideal orbit would have put underground,
+because it samples position too coarsely to register the dip.</p>
+<p>Scanning launch speed in steps of 0.01 m/s with those three commands gives the flip points
+below. At \(\Delta t=1\) s there is also a third outcome between the two Outcome dialects: at
+7629.44 m/s the program stops with Beat 9's Earth-crossing error (<code>EarthOrbit: this step's
+straight-line displacement passed through Earth's reference surface ...</code>) instead of printing
+an Outcome line, because one coarse step's chord passes through the reference sphere. Treat that
+as "reduce \(\Delta t\)", not as either impact or orbit.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Numerical impact threshold at three timesteps, compared with the analytic threshold"><table class="compare-table">
+<thead><tr><th>Δt (s)</th><th>maxSteps</th><th>Highest speed printing Surface impact (m/s)</th><th>Lowest speed printing Orbit completed (m/s)</th><th>In between</th><th>Gap below analytic 7636.45 m/s</th></tr></thead>
 <tbody>
-<tr><td>1.0</td><td>7629.44</td><td>7.01</td></tr>
-<tr><td>0.5</td><td>7632.89</td><td>3.56</td></tr>
-<tr><td>0.1</td><td>7635.73</td><td>0.72</td></tr>
+<tr><td>1.0</td><td>6001</td><td>7629.43</td><td>7629.45</td><td>7629.44: Earth-crossing error</td><td>7.00</td></tr>
+<tr><td>0.5</td><td>12001</td><td>7632.89</td><td>7632.90</td><td>—</td><td>3.55</td></tr>
+<tr><td>0.1</td><td>60001</td><td>7635.72</td><td>7635.73</td><td>—</td><td>0.72</td></tr>
 </tbody></table></div>
-<p>The numerical boundary rises toward the analytic one as \(\Delta t\) shrinks, and roughly in
-proportion to \(\Delta t\) — halving the step roughly halves the remaining gap — consistent with
-the first-order local error this same stepper shows everywhere else in this file. The analytic
-7636.45 m/s answers "where is the ideal perigee at the ground"; the \(\Delta t\)-dependent numbers
-answer "where does this program, at this step size, actually report an impact" — and the second
-question is the only one this program can answer without also choosing a \(\Delta t\).</p>
+<p>The gap is measured from the lowest surviving speed. It shrinks roughly in proportion to
+\(\Delta t\): halving the step from 1 s to 0.5 s roughly halves it, and cutting the step by five
+from 0.5 s to 0.1 s cuts it by about five. That is the signature of first-order global
+convergence, the same behaviour Beat 7's drift table shows. The analytic 7636.45 m/s answers
+"where is the ideal perigee at the ground", a question that needs no \(\Delta t\) at all. The
+numbers in the table answer "where does this program, at this step size, report an impact", which
+cannot be asked without choosing a \(\Delta t\), and they approach the analytic value from below
+as \(\Delta t\) shrinks.</p>
 <p><strong>Check:</strong> 9000 m/s gives eccentricity 0.35708 (bound ellipse); 11,500 m/s gives
 eccentricity 1.2157 (unbound); Eq. 5 places the bound/unbound transition exactly at \(e=1\), i.e.
 \(v_0=v_e\), and Beat 4's own 11,500 m/s run is the concrete case that crosses it. Contrast the
@@ -1261,7 +1283,7 @@ axes and read the slope: 3/2 for inverse-square, 1/2 for simplified.</p>
 with no integration involved, are \(T^2/r^3=9.9043\times10^{-14}\) s<sup>2</sup> m<sup>&minus;3</sup>
 for <code>inverse_square</code> and \(T^2/r=4.0284\) s<sup>2</sup> m<sup>&minus;1</sup> for
 <code>simplified</code>. Beat 8's own two altitudes, run at only \(\Delta t=1\) s, land close but
-not exact — \(1.0013\times10^{-13}\) and \(9.9889\times10^{-14}\) for <code>inverse_square</code>,
+not exact — \(1.0013\times10^{-13}\) and \(9.9888\times10^{-14}\) for <code>inverse_square</code>,
 about 0.85&ndash;1.10% high; \(4.0331\) and \(4.0328\) for <code>simplified</code>, about
 0.11&ndash;0.12% high — so a small \(\Delta t\) here matters more for a clean Kepler's-third-law
 check than it might first appear; that is the whole point of choosing "a small enough
