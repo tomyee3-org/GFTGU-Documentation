@@ -421,6 +421,7 @@
     .kind-def { background: #e4e4e4; color: #3a3a3a; border: 1px solid #b5b5b5; }
     .kind-der { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
     .kind-alg { background: #e6e0f8; color: #3d2c73; border: 1px solid #b7abdd; }
+    .kind-clo { background: #fde8d2; color: #7a3e0a; border: 1px solid #e9bd8c; }
     .compare-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
     .compare-table th {
       background: var(--accent);
@@ -555,7 +556,7 @@ not simulate collapse; it computes static equilibrium configurations only.
 <p>Each numbered section below is one beat: a short argument in words, a command whose output illustrates it, and then the equation that the output follows from. Do them in order the first time. After that, any beat can be opened on its own.</p>
 <p>The program's output is a consequence of its equations, so what a beat shows is the equations at work, not independent evidence that they are right. The outside checks this page offers are an independent fine-grid reference integration (Beat 5) and the weak-field limit in which the relativistic and Newtonian equations must agree (Beat 1).</p>
 <p>Every beat uses the same program and, unless a run stops with an error (Beat 7), the same two-part printed summary: nine global properties, then a five-row table of radial checkpoints at 0, &frac14;, &frac12;, &frac34; and 0.90 of the surface radius. What changes from beat to beat is the command. Run every command from the program's folder. Radii are printed in kilometres, masses in solar masses, pressures in pascals and densities in kg/m&sup3;, and the global summary lines use five to seven significant figures (see <a href="#summary">Printed Summary</a>).</p>
-<div class="note-box"><strong>What kind of statement is each equation?</strong> Each displayed equation in the beats carries a tag. A green <span class="kind kind-ode">ODE</span> tag marks a differential equation the program integrates; the program adopts it and does not derive it. A grey <span class="kind kind-def">DEFINITION</span> tag marks a quantity defined by a formula, such as the equation of state itself. A blue <span class="kind kind-der">DERIVED</span> tag marks a result that follows from equations already stated. A violet <span class="kind kind-alg">ALGORITHM</span> tag marks a rule of the numerical method &mdash; a choice made by the program, not a law of physics. The tags are there so that a physical assumption, a definition and a numerical rule are never mistaken for one another. Eight equations are numbered; one unnumbered comparison equation appears in Beat 1.</div>
+<div class="note-box"><strong>What kind of statement is each equation?</strong> Each displayed equation in the beats carries a tag. A green <span class="kind kind-ode">ODE</span> tag marks a differential equation the program integrates; the program adopts it and does not derive it. A grey <span class="kind kind-def">DEFINITION</span> tag marks a quantity defined by a formula, such as the numerical scale height. A blue <span class="kind kind-der">DERIVED</span> tag marks a result that follows from equations already stated. A violet <span class="kind kind-alg">ALGORITHM</span> tag marks a rule of the numerical method &mdash; a choice made by the program, not a law of physics. An orange <span class="kind kind-clo">CLOSURE</span> tag marks a relation that is physically motivated but chosen for teaching purposes rather than derived from the TOV equations themselves &mdash; the polytropic equation of state is this page's only example. The tags are there so that a physical assumption, a definition, a numerical rule and a closure choice are never mistaken for one another. Eight equations are numbered and carry one of these five tags; one unnumbered comparison equation appears in Beat 1 and carries none of them, since the program never integrates it and it is not offered as a definition, a derivation or an algorithm &mdash; it exists only so the weak-field check in Beat 1 has something to compare against.</div>
 </section>
 <section id="beat0">
 <h2>Beat 0 · A star held up by its own pressure</h2>
@@ -580,10 +581,10 @@ Radial checkpoints (fraction of surface radius)
   0.50         3.9018       2.4762e+34          2.4991e+18                  0.48558
   0.75         5.8527       2.0855e+33           5.663e+17                  0.86475
   0.90         7.0232       1.2228e+32          1.0326e+17                  0.95255</code></pre>
-<p>Three tasks, in order. First, put the global numbers in perspective. The star is 7.804 km in radius and 0.9626 solar masses &mdash; a solar mass of matter packed into a sphere about the size of a city. Its central density, 6.633451&times;10<sup>18</sup> kg/m&sup3;, is about 6.63&times;10<sup>15</sup> times the density of water. Its compactness, \(2GM/(Rc^2)=0.364\), is roughly 86,000 times the Sun's own compactness of about \(4.25\times10^{-6}\): the Sun is a diffuse gas cloud by comparison, and this star is a genuinely relativistic object. Both the causality and Buchdahl checks (Beat 6) say <code>satisfied</code>, meaning nothing about this particular model has gone unphysical. Then look at how the checkpoint table's mass column grows: 0.0908 solar masses inside a quarter of the radius, then 0.3947 more between a quarter and a half, 0.3792 more between a half and three quarters, and only 0.0878 more in the belt from three quarters out to nine tenths. Most of the star's mass lives in its middle shells, not squeezed into the very center the way the pressure and density columns are. Then look at the plot: with no <code>--output_type</code> given, the default is <code>"pressure"</code>, so the window shows pressure falling smoothly and monotonically from 1.26&times;10<sup>35</sup> Pa at the center to exactly zero at 7.804 km &mdash; the definition of the surface used throughout this page.</p>
+<p>Three tasks, in order. First, put the global numbers in perspective. The star is 7.804 km in radius and 0.9626 solar masses &mdash; a solar mass of matter packed into a sphere about the size of a city. Its central density, 6.633451&times;10<sup>18</sup> kg/m&sup3;, is about 6.63&times;10<sup>15</sup> times the density of water. Its compactness, \(2GM/(Rc^2)=0.364\), is roughly 86,000 times the Sun's own compactness of about \(4.25\times10^{-6}\): the Sun is a diffuse gas cloud by comparison, and this star is a genuinely relativistic object. Both the causality and Buchdahl checks (Beat 6) say <code>satisfied</code> for this default model, meaning its central sound speed stays below \(c\) and its compactness stays below Buchdahl's geometric bound &mdash; the two specific limits this program tests. Passing them says nothing about whether the polytropic equation of state itself is realistic, whether the star would be dynamically stable, or what it is made of; Beats 2 and 7 return to those limits. Then look at how the checkpoint table's mass column grows: 0.0908 solar masses inside a quarter of the radius, then 0.3947 more between a quarter and a half, 0.3792 more between a half and three quarters, and only 0.0878 more in the belt from three quarters out to nine tenths. Most of the star's mass lives in its middle shells, not squeezed into the very center the way the pressure and density columns are. Then look at the plot: with no <code>--output_type</code> given, the default is <code>"pressure"</code>, so the window shows pressure falling smoothly and monotonically from 1.26&times;10<sup>35</sup> Pa at the center to zero, by construction, at the program's estimated surface radius of 7.804 km &mdash; the stored endpoint pressure is set to exactly zero there, but Beat 5 shows this estimated radius is close to, and not identical with, the star's true zero-pressure radius.</p>
 <p><em>Then</em> the equation this run is not using. In ordinary Newtonian gravity, a static spherical fluid in hydrostatic equilibrium obeys</p>
 <div class="eq-block">
-<div class="eq-label">Newtonian hydrostatic equilibrium (for later comparison, unnumbered) <span class="kind kind-ode">ODE</span></div>
+<div class="eq-label">Newtonian hydrostatic equilibrium (for later comparison, unnumbered, untagged &mdash; the program never integrates this equation)</div>
         \[
           \frac{dp}{dr} = -\frac{G\,m(r)\,\rho(r)}{r^2}.
         \]
@@ -601,19 +602,26 @@ Radial checkpoints (fraction of surface radius)
 <section id="beat1">
 <h2>Beat 1 · Why relativity: pressure gravitates too</h2>
 <p>The Newtonian equation of Beat 0 says gravity is sourced by mass density alone, and pressure only pushes back against it. General relativity says pressure does both: it still resists gravity, but it also adds to the very gravity it is resisting. Check whether that correction matters by comparing the two equations directly, first somewhere gravity is weak.</p>
-<pre class="code-block"><code>python -c "
+<pre class="code-block"><code>import math
 import physics_neutron as phys
+
 r, p, m, K, gamma = 1.0e6, 1.0, 1.0e20, 1.0e-12, 2.0
 rho = phys.eos_density(p, K, gamma)
 newtonian = -phys.G * rho * m / r**2
 relativistic, _ = phys.structure_derivatives(r, p, m, K, gamma)
+
+compactness = 2 * phys.G * m / (r * phys.C2)
+pressure_energy_ratio = p / (rho * phys.C2)
+pressure_source_ratio = 4 * math.pi * r**3 * p / (m * phys.C2)
+
 print('Newtonian dp/dr:', newtonian)
 print('TOV dp/dr      :', relativistic)
-print('relative diff  :', abs(relativistic/newtonian - 1))
-print('compactness    :', 2*phys.G*m/(r*phys.C2))
-"</code></pre>
-<p>Run it, run from the program's folder, and read the three printed numbers together with the default run of Beat 0.</p>
-<p>Three tasks, in order. First, compare the two derivatives: Newtonian dp/dr is &minus;6674.3, and TOV dp/dr is &minus;6674.300000000989 &mdash; the same to nine significant figures. Then compare the relative difference, 1.4855&times;10<sup>&minus;13</sup>, with the compactness of that hand-built state, 2Gm/(rc&sup2;)=1.4852&times;10<sup>&minus;13</sup>, printed on the next line. They agree to four figures, which is not a coincidence: every relativistic correction to Eq. 2 below is one more factor of compactness smaller than the leading Newtonian term, so a state this diffuse reproduces Newton almost exactly. Then contrast that with the default star of Beat 0, whose compactness is 0.3643 &mdash; twelve orders of magnitude larger than the toy state used here. At that compactness the relativistic corrections are not a fine print footnote; they change the pressure gradient by tens of percent, which is why the classical equation of Beat 0 is not what the program solves.</p>
+print('relative diff  :', abs(relativistic / newtonian - 1))
+print('compactness            2Gm/(rc^2)        :', compactness)
+print('pressure/energy ratio  p/(rho c^2)       :', pressure_energy_ratio)
+print('pressure source ratio  4pi r^3 p/(m c^2) :', pressure_source_ratio)</code></pre>
+<p>Save this as <code>weak_field_check.py</code> beside the program's four modules and run it with <code>python weak_field_check.py</code>. (A single-line command is easier to reuse across shells than a multi-line <code>python -c</code> string, which some shells &mdash; including Windows' <code>cmd.exe</code> &mdash; do not accept pasted as several physical lines.)</p>
+<p>Three tasks, in order. First, compare the two derivatives: Newtonian dp/dr is &minus;6674.3, and TOV dp/dr is &minus;6674.300000000989 &mdash; the same to nine significant figures, with a relative difference of 1.4855&times;10<sup>&minus;13</sup>. Then look at the three printed factors that make up that difference, computed separately: the compactness 2Gm/(rc&sup2;)=1.4852&times;10<sup>&minus;13</sup> accounts for nearly all of it by itself, while the pressure/energy-density ratio p/(&rho;c&sup2;)=1.1127&times;10<sup>&minus;23</sup> and the pressure-source ratio 4&pi;r&sup3;p/(mc&sup2;)=1.3982&times;10<sup>&minus;18</sup> are ten and five orders of magnitude smaller still. All three factors appear in Eq. 2 below, but at this hand-picked state only the compactness correction is doing any of the observable work here &mdash; the chosen pressure is small enough that its own two corrections are negligible by comparison, not merely of similar size and both small. Then contrast that with the default star of Beat 0, whose compactness is 0.3643 &mdash; twelve orders of magnitude larger than the toy state used here, and large enough that the pressure corrections stop being negligible too. At that compactness the relativistic corrections are not a fine-print footnote; they change the pressure gradient by tens of percent, which is why the classical equation of Beat 0 is not what the program solves.</p>
 <p><em>Then</em> the real equation, in full. With \(\rho\) again denoting mass density so that the energy density is \(\rho c^2\),</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 2 &mdash; Tolman&ndash;Oppenheimer&ndash;Volkoff pressure equation <span class="kind kind-ode">ODE</span></div>
@@ -624,7 +632,7 @@ print('compactness    :', 2*phys.G*m/(r*phys.C2))
           {r\left(r-\dfrac{2Gm}{c^2}\right)}.
         \]
       </div>
-<p>Set every explicit \(p/c^2\) term to zero and this collapses back to the Newtonian equation of Beat 0 &mdash; which is exactly the weak-field check the command above just performed numerically. Three relativistic corrections are visible, and none of them is optional once compactness is not tiny. The factor \(\rho+p/c^2\) is the inertial mass-energy density, larger than \(\rho\) alone because pressure itself carries energy. The factor \(m+4\pi r^3p/c^2\) is the active gravitational source enclosed within \(r\): pressure inside the star adds to the mass that gravitates, which is the "pressure gravitates too" of this beat's title. The denominator's compactness factor \(1-2Gm/(rc^2)\) is what a purely Newtonian equation has no room for at all; <code>structure_derivatives()</code> raises a <code>RuntimeError</code> if this factor is ever driven to zero or below, because the coordinates the program uses cannot describe a horizon. \(K\) and \(\gamma\) enter only through \(\rho\), which Beat 2 defines.</p>
+<p>Set every explicit \(p/c^2\) term to zero and the numerator becomes exactly the Newtonian source \(-G\rho m\); the denominator, though, still carries \(r(r-2Gm/c^2)\) rather than plain \(r^2\), so fully recovering the Newtonian equation of Beat 0 also needs the compactness \(2Gm/(rc^2)\) to vanish. The weak-field check above tested both limits at once, not only the explicit pressure terms, which is why its one printed relative difference tracked the compactness factor rather than the pressure factors. Three relativistic corrections are visible in Eq. 2, and none of them is optional once compactness is not tiny. The factor \(\rho+p/c^2\) is the inertial mass-energy density, larger than \(\rho\) alone because pressure itself carries energy. The factor \(m+4\pi r^3p/c^2\) is the active gravitational source enclosed within \(r\): pressure inside the star adds to the mass that gravitates, which is the "pressure gravitates too" of this beat's title. The denominator's compactness factor \(1-2Gm/(rc^2)\) is what a purely Newtonian equation has no room for at all, and, as the check above shows, it is typically the largest of the three corrections; <code>structure_derivatives()</code> raises a <code>RuntimeError</code> if this factor is ever driven to zero or below, because the coordinates the program uses cannot describe a horizon. \(K\) and \(\gamma\) enter only through \(\rho\), which Beat 2 defines.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 <section id="beat2">
@@ -635,7 +643,7 @@ print('compactness    :', 2*phys.G*m/(r*phys.C2))
 <p>Three tasks, in order. First, the rejection itself: the program exits immediately with <code>Neutron: error: --gamma must be greater than 1</code> and never reaches <code>compute_neutron_star()</code>. Then call the underlying solver directly from Python with the same exponent, <code>compute_neutron_star(1.0, 1.26e35, 5.3802e3)</code>, and the message changes to <code>gamma must be finite and greater than 1.</code> &mdash; the same restriction enforced a second time, independently, inside the physics layer rather than only in the command-line parser. Then ask why: with the pure choice \(\gamma=1\), pressure and density in Eq. 3 below are proportional, so a star built from it has no finite radius at all &mdash; pressure only approaches zero asymptotically as \(r\to\infty\) &mdash; and the surface-locating algorithm of Beat 5 divides by \(\gamma-1\), which would be a division by zero. The restriction \(\gamma&gt;1\) protects the model's physical and numerical definition; it is not merely limiting how far a student may push the exponent.</p>
 <p><em>Then</em> the equation of state itself, and its inverse for recovering density from pressure:</p>
 <div class="eq-block">
-<div class="eq-label">Eq. 3 &mdash; Polytropic equation of state <span class="kind kind-def">DEFINITION</span></div>
+<div class="eq-label">Eq. 3 &mdash; Polytropic equation of state <span class="kind kind-clo">CLOSURE</span></div>
         \[
           p = K\rho^\gamma, \qquad \rho = \left(\frac{p}{K}\right)^{1/\gamma}.
         \]
@@ -646,14 +654,13 @@ print('compactness    :', 2*phys.G*m/(r*phys.C2))
 <section id="beat3">
 <h2>Beat 3 · Starting from the center</h2>
 <p>Eq. 2 has \(r\) in its denominator twice, so it cannot be evaluated exactly at \(r=0\), even though the physical star is perfectly regular there. The solver starts a small distance out instead, using a hand-derived series that is accurate near the center. See how much that starting point matters.</p>
-<pre class="code-block"><code>python -c "
-from physics_neutron import central_state
+<pre class="code-block"><code>from physics_neutron import central_state
+
 for r0 in (16.375, 1.0):
     p0, rho0, m0 = central_state(1.26e35, 5.3802e3, 1.666667, r0)
-    print(f'r0={r0:8.3f} m   p0={p0:.10e} Pa   rho0={rho0:.10e} kg/m^3   m0={m0:.10e} kg')
-"</code></pre>
-<p>Compare the two rows, and compare both with the central pressure and density printed by Beat 0.</p>
-<p>Three tasks, in order. First, the default run's own starting radius: with <code>steps_per_scale=400</code>, the nominal step for the default model is 16.375 m (Beat 0's last printed line), so that is the first row's \(r_0\). Its pressure, 1.2599673537&times;10<sup>35</sup> Pa, is already extremely close to the true central pressure of 1.26&times;10<sup>35</sup> Pa &mdash; different in only the fifth significant figure. Then the second row, computed at \(r_0=1\) m, ten times closer to the center: its pressure, 1.2599998782&times;10<sup>35</sup> Pa, differs from the true center by less than one part in 10<sup>6</sup>, confirming that the series is a genuine local approximation that improves as \(r_0\) shrinks, not an arbitrary fudge. Then the enclosed mass column: \(m_0\) is 1.22&times;10<sup>23</sup> kg at 16.375 m but only 2.78&times;10<sup>19</sup> kg at 1 m &mdash; four orders of magnitude smaller, because \(m_0\propto r_0^3\) and \(1/16.375\approx1/16\) cubed is close to \(1/4100\). A smaller starting radius is a better pressure approximation but an even smaller, and therefore even safer to neglect, starting mass.</p>
+    print(f'r0={r0:8.3f} m   p0={p0:.10e} Pa   rho0={rho0:.10e} kg/m^3   m0={m0:.10e} kg')</code></pre>
+<p>Save this as <code>central_state_check.py</code> beside the program's four modules and run it with <code>python central_state_check.py</code>. Compare the two printed rows, and compare both with the central pressure and density printed by Beat 0.</p>
+<p>Three tasks, in order. First, the default run's own starting radius: with <code>steps_per_scale=400</code>, the nominal step for the default model is 16.375 m (Beat 0's last printed line), so that is the first row's \(r_0\). Its pressure, 1.2599673537&times;10<sup>35</sup> Pa, is already extremely close to the true central pressure of 1.26&times;10<sup>35</sup> Pa &mdash; different in only the fifth significant figure. Then the second row, computed at \(r_0=1\) m, which is 16.375 times closer to the center (16.375&nbsp;m / 1&nbsp;m = 16.375): its pressure, 1.2599998782&times;10<sup>35</sup> Pa, differs from the true center by less than one part in 10<sup>6</sup>, confirming that the series is a genuine local approximation that improves as \(r_0\) shrinks, not an arbitrary fudge. Then the enclosed mass column: \(m_0\) is 1.22&times;10<sup>23</sup> kg at 16.375 m but only 2.78&times;10<sup>19</sup> kg at 1 m &mdash; four orders of magnitude smaller, because \(m_0\propto r_0^3\) and \(16.375^3\approx4390\). A smaller starting radius is a better pressure approximation but an even smaller, and therefore even safer to neglect, starting mass.</p>
 <p><em>Then</em> the series itself. Near \(r=0\), the enclosed mass grows as the density times the volume of a small sphere, and substituting that leading mass into Eq. 2 gives a pressure correction quadratic in \(r\):</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 4 &mdash; Regular central expansion <span class="kind kind-der">DERIVED</span></div>
@@ -674,8 +681,15 @@ for r0 in (16.375, 1.0):
 python main.py --steps_per_scale 400 --output_type mass
 python main.py --steps_per_scale 800 --output_type mass
 python main.py --steps_per_scale 1600 --output_type mass</code></pre>
-<p>Compare the printed surface radius and total mass across the four runs.</p>
-<p>Three tasks, in order. First, the raw numbers: surface radius is 7.803970, 7.803563, 7.803543 and 7.803139 km, and total mass is 0.96259066, 0.96259065, 0.96259064 and 0.96259064 solar masses, at <code>steps_per_scale</code> 200, 400, 800 and 1600. The mass has already stabilized to eight figures by the default resolution; the radius keeps drifting, but only in the fourth decimal of a kilometre. Then compare both against Beat 5's independent fine-grid reference, 7802.758706219183 m: the radius error is +1.21 m, +0.80 m, +0.78 m and +0.38 m at the four resolutions, shrinking as the grid refines, while the mass's relative error shrinks even faster, from 1.6&times;10<sup>&minus;8</sup> down to 2.1&times;10<sup>&minus;10</sup>. Then note what does not change: the number of stored radial samples is 240, 479, 955 and 1908, each roughly double the last, tracking <code>steps_per_scale</code> almost exactly as Eq. 6 below predicts.</p>
+<p>Compare the printed surface radius and total mass across the four runs: at this console precision they read 7.804, 7.804, 7.804 and 7.803 km, and 0.962591 solar masses all four times. That rounding (the summary prints <code>surface_radius_km</code> to three decimals and <code>total_mass_solar</code> to six) hides exactly the refinement this beat is about, so see it with the full-precision values the program actually computed:</p>
+<pre class="code-block"><code>from driver_neutron import compute_neutron_star
+
+for n in (200, 400, 800, 1600):
+    d = compute_neutron_star(1.666667, 1.26e35, 5.3802e3, steps_per_scale=n)
+    print(f'steps_per_scale={n:5d}  R={d["surface_radius_km"]:.6f} km  '
+          f'M={d["total_mass_solar"]:.8f} Msun  samples={len(d["radius"])}')</code></pre>
+<p>Save this as <code>convergence_check.py</code> beside the program's four modules and run it with <code>python convergence_check.py</code>.</p>
+<p>Three tasks, in order. First, the raw numbers: surface radius is 7.803970, 7.803563, 7.803543 and 7.803139 km, and total mass is 0.96259066, 0.96259065, 0.96259064 and 0.96259064 solar masses, at <code>steps_per_scale</code> 200, 400, 800 and 1600 &mdash; the digits the console line rounds away. The mass has already stabilized to eight figures by the default resolution; the radius keeps drifting, but only in the fourth decimal of a kilometre. Then compare both against Beat 5's independent fine-grid reference, 7802.758706219183 m: the radius error is +1.21 m, +0.80 m, +0.78 m and +0.38 m at the four resolutions, shrinking as the grid refines, while the mass's relative error shrinks even faster, from 1.6&times;10<sup>&minus;8</sup> down to 2.1&times;10<sup>&minus;10</sup>. Then note what does not change: the number of stored radial samples is 240, 479, 955 and 1908, each roughly double the last, tracking <code>steps_per_scale</code> almost exactly as Eq. 6 below predicts.</p>
 <p><em>Then</em> the step itself. Each radial step advances the coupled pair \(\mathbf s=[p,m]\) with \(\mathbf f(r,\mathbf s)=[dp/dr,\,dm/dr]\) from Eqs. 1 and 2 using classical fourth-order Runge&ndash;Kutta:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 5 &mdash; Classical RK4 step <span class="kind kind-alg">ALGORITHM</span></div>
@@ -689,7 +703,7 @@ python main.py --steps_per_scale 1600 --output_type mass</code></pre>
           \mathbf s_{n+1} = \mathbf s_n + \frac{h}{6}\left(\mathbf k_1+2\mathbf k_2+2\mathbf k_3+\mathbf k_4\right).
         \]
       </div>
-<p>Classical RK4 is fourth-order accurate: halving the step should shrink the local error by a factor of about 16. <code>rk4_step()</code> in <code>physics_neutron.py</code> implements exactly this; taking one step of size 2 m and two of size 1 m from the same starting state agree to 1.4&times;10<sup>&minus;13</sup> in pressure and 9.2&times;10<sup>&minus;13</sup> in mass, which is roundoff, not truncation error &mdash; consistent with a fourth-order method at a step this small relative to the local scale. If any trial evaluation of \(\mathbf f\) would need a pressure below zero, <code>rk4_step()</code> raises the dedicated <code>SurfaceCrossingError</code> rather than evaluating the equation of state at a nonphysical pressure, and the driver halves \(h\) and retries.</p>
+<p>"Fourth-order" describes two different ratios, and it matters which one is meant. A single RK4 step has local truncation error \(O(h^5)\), so halving that one step's size shrinks its own error by a factor of about 32. Accumulated over a fixed radial distance &mdash; more, smaller steps covering the same span, which is what refining <code>steps_per_scale</code> actually does &mdash; the errors accumulate and the global error over that span is \(O(h^4)\), a factor of about 16 per halving; that is the convergence the <code>steps_per_scale</code> sweep above and Beat 5's error table are measuring. <code>rk4_step()</code> in <code>physics_neutron.py</code> implements the single step of Eq. 5; taking one step of size 2 m and two of size 1 m from the same starting state agree to 1.4&times;10<sup>&minus;13</sup> in pressure and 9.2&times;10<sup>&minus;13</sup> in mass, but that is floating-point roundoff, not a measurement of either error order &mdash; a 1&ndash;2 m step is far too short next to the star's roughly 6550 m scale height for its truncation error to be visible above roundoff. If any trial evaluation of \(\mathbf f\) would need a pressure below zero, <code>rk4_step()</code> raises the dedicated <code>SurfaceCrossingError</code> rather than evaluating the equation of state at a nonphysical pressure, and the driver halves \(h\) and retries.</p>
 <p>The step size itself is set from a characteristic length, not chosen by hand:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 6 &mdash; Scale height and nominal radial spacing <span class="kind kind-def">DEFINITION</span></div>
@@ -704,16 +718,15 @@ python main.py --steps_per_scale 1600 --output_type mass</code></pre>
 </section>
 <section id="beat5">
 <h2>Beat 5 · Finding the surface without crossing it</h2>
-<p>The equation of state is not defined for negative pressure, so the integration must stop at exactly \(p=0\) &mdash; not one step early, and never one step late. Neither is generally a stored sample. See how the program locates that point, and how well it does so.</p>
-<pre class="code-block"><code>python -c "
-from driver_neutron import compute_neutron_star
+<p>The equation of state is not defined for negative pressure, so the integration must never continue into negative pressure &mdash; but the star's true physical surface, where pressure reaches exactly zero, generally falls between two stored radial samples, not on either one of them. The program therefore avoids stepping past zero pressure, estimates where between the last two samples the true surface lies, and appends that estimate to the output with its pressure and density set to zero by construction. See how it makes that estimate, and how close it comes to the star's true zero-pressure radius.</p>
+<pre class="code-block"><code>from driver_neutron import compute_neutron_star
+
 REF_R = 7802.758706219183
 for n in (200, 400, 800, 1600):
     d = compute_neutron_star(1.666667, 1.26e35, 5.3802e3, steps_per_scale=n)
-    print(n, 'R_err(m) =', d['surface_radius_m'] - REF_R)
-"</code></pre>
-<p>These are the same runs as Beat 4, now compared directly against an independent fine-grid reference: a second, hand-written integrator in the test suite that evolves the regular surface variable \(q=p^{(\gamma-1)/\gamma}\) itself, rather than only extrapolating it once at the end, and stops when \(q\) crosses zero.</p>
-<p>Three tasks, in order. First, the errors: +1.21 m, +0.80 m, +0.78 m and +0.38 m at <code>steps_per_scale</code> 200, 400, 800 and 1600, all positive, meaning the production solver's extrapolated surface is consistently a little further out than the reference. Then compare the size of these errors with the star itself: even the coarsest, 1.21 m, is about \(1.6\times10^{-4}\) of the 7.804 km radius. Then ask why extrapolating pressure directly would do worse: near the surface, \(p^{(\gamma-1)/\gamma}\), not \(p\) itself, is the quantity that falls linearly in \(r\) to leading order, so extrapolating \(p\) linearly instead would introduce a systematic bias that the independent reference is specifically built to expose. That bias is what an earlier release of this program corrected.</p>
+    print(n, 'R_err(m) =', d['surface_radius_m'] - REF_R)</code></pre>
+<p>Save this as <code>surface_convergence_check.py</code> beside the program's four modules and run it with <code>python surface_convergence_check.py</code>. These are the same runs as Beat 4, now compared directly against an independent fine-grid reference: a second, hand-written integrator in the test suite that evolves the regular surface variable \(q=p^{(\gamma-1)/\gamma}\) itself, rather than only extrapolating it once at the end, and stops when \(q\) crosses zero &mdash; the closest this program comes to the true physical surface, and the standard the production estimate is checked against.</p>
+<p>Three tasks, in order. First, the errors: +1.21 m, +0.80 m, +0.78 m and +0.38 m at <code>steps_per_scale</code> 200, 400, 800 and 1600, all positive, meaning the production solver's estimated surface is consistently a little further out than the reference &mdash; confirming it is an estimate with a small, quantifiable bias, not the exact zero-pressure location. Then compare the size of these errors with the star itself: even the coarsest, 1.21 m, is about \(1.6\times10^{-4}\) of the 7.804 km radius, and the error shrinks as the grid refines, as any consistent estimate should. Then ask why extrapolating pressure directly would do worse: near the surface, \(p^{(\gamma-1)/\gamma}\), not \(p\) itself, is the quantity that falls linearly in \(r\) to leading order, so extrapolating \(p\) linearly instead would introduce a larger systematic bias, which is exactly what the independent reference above is built to expose and measure.</p>
 <p><em>Then</em> the rule. On the last nominal step before the surface, the loop tests whether the regular variable's linear extrapolation reaches zero within the current step:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 7 &mdash; Surface location by extrapolating the regular variable <span class="kind kind-alg">ALGORITHM</span></div>
@@ -767,7 +780,7 @@ python main.py --gamma 1</code></pre>
 <tbody>
 <tr><td>Eq. 1</td><td><span class="kind kind-ode">ODE</span></td><td>Enclosed-mass equation</td><td>0</td><td><code>structure_derivatives()</code> in <code>physics_neutron.py</code></td></tr>
 <tr><td>Eq. 2</td><td><span class="kind kind-ode">ODE</span></td><td>TOV pressure equation</td><td>1</td><td><code>structure_derivatives()</code> in <code>physics_neutron.py</code></td></tr>
-<tr><td>Eq. 3</td><td><span class="kind kind-def">DEFINITION</span></td><td>Polytropic equation of state</td><td>2</td><td><code>eos_density()</code> in <code>physics_neutron.py</code></td></tr>
+<tr><td>Eq. 3</td><td><span class="kind kind-clo">CLOSURE</span></td><td>Polytropic equation of state</td><td>2</td><td><code>eos_density()</code> in <code>physics_neutron.py</code></td></tr>
 <tr><td>Eq. 4</td><td><span class="kind kind-der">DERIVED</span></td><td>Regular central expansion</td><td>3</td><td><code>central_state()</code> in <code>physics_neutron.py</code></td></tr>
 <tr><td>Eq. 5</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Classical RK4 step</td><td>4</td><td><code>rk4_step()</code> in <code>physics_neutron.py</code></td></tr>
 <tr><td>Eq. 6</td><td><span class="kind kind-def">DEFINITION</span></td><td>Scale height and nominal radial spacing</td><td>4</td><td><code>compute_neutron_star()</code> in <code>driver_neutron.py</code></td></tr>
@@ -885,17 +898,14 @@ python main.py --version</code></pre>
 <code>python main.py --version</code> for the model version and Build ID. Any
 options omitted from the command use the defaults below. The program requires
 Python 3.10 or later, NumPy, and Matplotlib.</p>
-<pre class="code-block"><code># Default model
-python main.py
-
-# Change the central pressure and equation of state
-python main.py --pC 1e35 --gamma 2 --K 2.863463e-3
-
-# Refine the radial resolution
-python main.py --steps_per_scale 1600 --output_type mass
-
-# Combine any or all settings
-python main.py --gamma 1.8 --pC 5e35 --K 100 --steps_per_scale 800 --output_type density --log_y</code></pre>
+<p>The default model:</p>
+<pre class="code-block"><code>python main.py</code></pre>
+<p>Changing the central pressure and equation of state:</p>
+<pre class="code-block"><code>python main.py --pC 1e35 --gamma 2 --K 2.863463e-3</code></pre>
+<p>Refining the radial resolution:</p>
+<pre class="code-block"><code>python main.py --steps_per_scale 1600 --output_type mass</code></pre>
+<p>Combining any or all settings:</p>
+<pre class="code-block"><code>python main.py --gamma 1.8 --pC 5e35 --K 100 --steps_per_scale 800 --output_type density --log_y</code></pre>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Command-line options"><table class="param-table">
 <thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
 <tbody>
