@@ -2,114 +2,121 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Planck2 1.1.0 Release Notes</title>
+<title>Planck2 1.5.1 Release Notes</title>
 </head>
 <body>
-<h1>Planck2 1.1.0 Release Notes</h1>
-<p class="meta"><b>Version:</b> 1.1.0<br><b>Build:</b> b0267fec4376<br><b>Date:</b> 2026-09-16</p>
+<h1>Planck2 1.5.1 Release Notes</h1>
 
-<h2>Release Summary</h2>
-<p>Planck2 now accepts every ordinary calculation and plotting setting at the command line. The default numerical model, spectra, and plotting routines retain their prior behavior.</p>
+<p>
+<b>Version:</b> 1.5.1<br>
+<b>Build:</b> 1107bea3441f<br>
+<b>Date:</b> 2026-09-24
+</p>
 
-<h2>Command-Line Inputs</h2>
+<h2>Release Status</h2>
+
+<p>
+These notes cover Version 1.5.1 and the two code-changing rounds that produced it: the Audit 23 response (1.5.0) and
+the Audit 24 response (1.5.1). Audit 25 changed nothing and only reviewed 1.5.1. Versions 1.2.0 to 1.5.0 were never
+released separately; the last published notes were for 1.1.0.
+</p>
+
 <ul>
-<li><code>--T</code> sets positive finite temperature in kelvin. <code>--quantity</code> chooses wavelength radiance, frequency radiance, or frequency energy density; <code>main.py</code> explains the three physical quantities.</li>
-<li><code>--n_steps</code> accepts 1 through 1,000,000 dimensionless intervals. The selected grid includes both endpoints.</li>
-<li><code>--x_min</code> and <code>--x_max</code> set the dimensionless integration domain. <code>--x_low</code> and <code>--x_high</code> set the Rayleigh–Jeans and Wien approximation switches within that domain.</li>
-<li><code>--corner</code> accepts <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code>, or <code>lower_left</code>. These values map to the plotter's spaced labels.</li>
-<li><code>--y_frac_window</code> accepts a finite fraction from 0 through 1. Zero displays the full physical coordinate domain; windowing does not change the sampled peak or integral.</li>
-<li>The parser checks individual values and domain ordering; model errors are reported with a short input/model message.</li>
+<li>Codex, Audit 25: no change to the program or the Help required. No hold.</li>
+<li>Grok, Audit 25: accept 1.5.1; no new defect. No hold. Grok notes that relabelling the release 1.6.0 is an
+optional house decision, because the 1.5.1 change is a visible plot change.</li>
 </ul>
 
-<h2>Documentation and Tests</h2>
+<h2>Open Bugs</h2>
+
 <ul>
-<li>The Help file contains a command-line quick start, option defaults, physical selector meanings, and runnable commands for all eight suggested experiments.</li>
-<li>The Sample Outputs Guide supplies commands for all four illustrated spectra and retains its embedded images.</li>
-<li>The regression suite checks parsing, input rejection, driver forwarding, plot-corner translation, Build-ID reproduction, physical results, and the packaged Help location.</li>
+<li><b>OB-1</b> (P3; Grok Audit 22 section 5). The height of the sampled peak is printed only in the plot's annotation
+box, not in the console summary.<br>
+Reproduction: <code>python main.py</code>. Observed: the five-line summary gives the peak position
+(<code>peak at x = 4.959505</code>, <code>Peak wavelength = 4.917033e-07 m</code>) but no peak value; only the plot
+annotation shows <code>Peak value = 2.9281e+13</code>. Expected (reviewer, optional): the summary and the annotation
+report the same set of peak quantities.</li>
 </ul>
 
-<h2>Example Commands</h2>
-<pre><code>python main.py
-python main.py --T 2.725 --quantity frequency
-python main.py --quantity energy_density --corner lower_left
-python main.py --n_steps 20000 --x_low 1 --x_high 3 --y_frac_window 0</code></pre>
+<h2>Major Improvements in This Release</h2>
 
-<h2>Scientific Scope</h2>
+<p>Version 1.5.1 (Audit 24 response):</p>
 <ul>
-<li>The peak is the largest sampled point, so its position is limited by the grid spacing and may lie at a domain endpoint.</li>
-<li>Numerical integrals cover the finite <code>--x_min</code> to <code>--x_max</code> interval. Exact bolometric references cover zero to infinity. The difference includes domain truncation, trapezoidal error, and approximation choices.</li>
-<li>The default physical integral agrees with its infinite-domain reference to better than 10<sup>−6</sup> in all three modes; that bound does not automatically apply to changed domains or approximation thresholds.</li>
-<li>Planck2 is for educational black-body investigations, not precision radiometry or instrument calibration.</li>
-<li>The Help page uses an online MathJax service for typeset formulas; its prose and equation source remain readable offline.</li>
+<li>The plot's vertical axis now starts at zero in every mode; it previously extended about 5% of the peak below zero.</li>
+<li>The Help no longer claims that the sampled peak is within half a grid step of the true peak; it states the
+one-step bound and that the nearest grid point is not always the one selected.</li>
+</ul>
+
+<p>Version 1.5.0 (Audit 23 response):</p>
+<ul>
+<li>A grid whose neighbouring points convert to the same wavelength or frequency is rejected with advice to widen the
+range or lower <code>--n_steps</code>; previously it could produce a plot with no horizontal extent.</li>
+<li>The Help's Beat 7 names the fourth and fifth runs correctly, and the Help describes the overflow-safe evaluation
+used above <i>x</i> = 700.</li>
+</ul>
+
+<p>Also new in the unreleased 1.2.0 to 1.4.0 steps:</p>
+<ul>
+<li>The console summary has a second line, <code>Peak wavelength = ... m</code> or <code>Peak frequency = ... Hz</code>
+(1.3.0). The other four lines and their numbers are unchanged.</li>
+<li>New Beats tutorial Help, <code>Planck2-claude.html</code>, with nine beats and 11 experiments; the Reference Guide
+Help is retained as <code>Planck2-original.html</code> (1.2.0).</li>
+<li>The Help distinguishes the printed radiance integral (W m<sup>-2</sup> sr<sup>-1</sup>) from the emitted flux, which is
+<i>&pi;</i> times it (1.3.0).</li>
+<li>With <code>--y_frac_window 0</code> the horizontal axis ends at the first and last computed wavelength or frequency
+instead of extending to negative values (1.2.0).</li>
+<li>An out-of-order domain now reports the four values it was given, for example <code>--x_max 10</code> alone (1.2.0).</li>
+<li>Runs with <code>--x_high</code> above about 710 complete instead of stopping with <code>OverflowError</code> (1.4.0).</li>
+<li>A grid whose points are not distinct in floating point is rejected with advice (1.4.0).</li>
+<li>Labels, units, exponents and prefactors of the three quantities come from one read-only descriptor,
+<code>QuantitySpec</code>, and the parser is available as <code>build_parser()</code> (1.2.0, 1.3.0).</li>
+</ul>
+
+<h2>Test Suite Growth</h2>
+
+<ul>
+<li>1.1.0: 96 tests. 1.2.0: 138. 1.3.0: 146. 1.4.0: 154. 1.5.0: 161. 1.5.1: 172 (164 in the Audit 24 response, plus eight checks of these two documents).</li>
+<li>Run from the program folder with <code>python -m unittest discover -s tests</code>. In the full repository layout
+all 172 tests run and pass with no skips. In a flat folder that holds only the program, the tests and
+<code>Planck2-claude.html</code>, the link check, the <code>Planck2-original.html</code> tests and these document checks
+are skipped (10 skips, with the three <code>Planck2-original.html</code> tests reported as one), and the rest pass.</li>
+<li>New coverage since 1.1.0 includes every command shown in the Help, the numbers the Help and the Sample Outputs Guide
+quote, per-run attribution in Beat 7, input rejection at the floating-point limits, and the plot's axis limits.</li>
+</ul>
+
+<h2>Known Limitations</h2>
+
+<ul>
+<li>An ideal black body at one temperature; no absorption lines, emissivity below one or radiative transfer.</li>
+<li>Integrals are trapezoidal sums over a finite <i>x</i>-range; the default results differ from the exact values by less than 10<sup>-6</sup>.</li>
+<li>The printed peak is the largest grid sample, within one grid step of the true peak only for the exact curve on a range that contains it.</li>
+<li>Moving <code>--x_low</code> or <code>--x_high</code> into the curve can create false maxima and wrong integrals by design; the exact reference line is the check.</li>
+<li>The physical integral of the radiances is integrated radiance, not emitted flux.</li>
+<li>The equations in the Help are typeset by MathJax and need an internet connection.</li>
+</ul>
+
+<h2>Known Minor Maintenance Items</h2>
+
+<ul>
+<li>MathJax is not bundled for offline use; this awaits a decision for the whole program set.</li>
+<li>The Related Programs links point to <code>Star.html</code> and <code>Random2.html</code> and will need updating if those Help files are renamed.</li>
+<li><code>Planck2-original.html</code> and <code>Planck2-claude.html</code> are both present, and neither is marked as the current Help.</li>
+<li><code>Planck2-claude.html</code> is the Claude-style Help, which quotes run results; the Grok-style alternative is a separate file not yet written.</li>
+<li>The annotation prints the peak <i>x</i> to four decimals and the console to six.</li>
+<li>The <code>--help</code> text for <code>--x_max</code> does not mention that <code>--x_high</code> must not exceed it.</li>
+<li>There is no option to save a figure to a file.</li>
 </ul>
 
 <h2>Version Identification</h2>
-<p><code>MODEL_VERSION = "1.1.0"</code><br><code>BUILD_ID = "b0267fec4376"</code></p>
-<p>The reproducible Build ID covers <code>planck2_physics.py</code>, <code>planck2_driver.py</code>, <code>main.py</code>, and <code>planck2_plot.py</code>. Documentation and tests are excluded.</p>
 
-<section id="maintenance-status">
-<h2>Known Minor Maintenance Items: Historical Register and Current Status</h2>
-<p>The earlier wording is retained below and in the original notes. Resolved issues remain visible; items without verified completion remain on the follow-up list.</p>
 <ul>
-<li>The regression that protects removal of redundant full-array scans checks the driver's validator call pattern and may need broadening after a harmless future refactor that preserves linear performance.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.1.0; completion has not been verified.</li>
-<li>The plotter deliberately checks labels and integral units against the physics-layer metadata helpers. A future metadata change must remain synchronized across result construction, plotting, Help, and tests; a shared immutable quantity descriptor may become useful if additional modes are added.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.1.0; completion has not been verified.</li>
-<li>The isolated module suite validates the expected relative links to the Star and Random2 Help files but cannot prove that those targets exist. Repository-level link checking remains appropriate for the complete documentation tree.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.1.0; completion has not been verified.</li>
-<li>A future documentation-wide overhaul may bundle MathJax locally if fully typeset offline Help becomes a distribution requirement.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.1.0; completion has not been verified.</li>
-</ul>
-</section>
-
-<section id="release-history">
-<h2>Earlier Release Notes</h2>
-<p>The following release notes reproduce the archived releases. Statements about what was current then describe those versions; the status register above describes the current review.</p>
-<section id="historical-1.0.4">
-<h2>Planck2 1.0.4 Release Notes</h2>
-<p><b>Version:</b> 1.0.4<br><b>Build:</b> 5b6ad69fefb7<br><b>Date:</b> 2026-08-29</p>
-
-<h3>Release Status</h3>
-<p>Version 1.0.4 concludes a kickoff maintenance review followed by four rounds of independent review involving Codex, Copilot, and Gemini. The reviewers compared the Python implementation with Schutz's original Java source; verified the Planck-law formulas, coordinate transformations, numerical integration, input validation, floating-point behavior, plotting, Help-file accuracy, Version/Build synchronization, and regression coverage; and tested both the canonical and flattened upload layouts. No release-blocking defect remains. Copilot and Gemini both recommend immediate release, and the program is sufficiently robust, accurate, and clear for student use within the tutorial scope and limitations described below.</p>
-
-<h3>Major Improvements in This Release</h3>
-<ul>
-<li>Verified the defining physics for wavelength spectral radiance <i>B</i><sub>λ</sub>, frequency spectral radiance <i>B</i><sub>ν</sub>, and frequency spectral energy density <i>u</i><sub>ν</sub>, including their SI prefactors, coordinate Jacobians, units, peak locations, and Stefan–Boltzmann reference integrals.</li>
-<li>Preserved Schutz's sampled-maximum and trapezoidal-integration investigations while improving the Python program to report the peak, dimensionless shape area, numerical physical integral, and exact infinite-domain bolometric reference together.</li>
-<li>Corrected the grid semantics so <code>n_steps</code> divides the selected domain into exactly that many intervals, both endpoints are sampled, exactly <code>n_steps</code> trapezoids are accumulated, and the final sample equals <code>x_max</code>.</li>
-<li>Added stable Rayleigh–Jeans, <code>expm1</code>, and Wien evaluation branches and froze their exact <code>x_low</code>/<code>x_high</code> boundary behavior with adjacent-floating-point tests.</li>
-<li>Added normalized <code>frexp</code>/<code>ldexp</code> product evaluation so representable final results are not rejected because an intermediate temperature power or product overflows or underflows prematurely.</li>
-<li>Added systematic validation for invalid quantities, temperatures, exponents, domains, resolutions, step sizes, plot controls, derived physical values, and genuinely unrepresentable floating-point results.</li>
-<li>Made simulation results immutable and required the reported <code>x_peak</code>, physical peak coordinate, and peak value to identify the same first maximum sample before plotting.</li>
-<li>Hardened plotting against malformed arrays, scalars, labels, and units; sorted physical coordinates for left-to-right display; and repaired the legal one-point peak-window case.</li>
-<li>Clarified that the numerical physical integral covers the selected finite domain while the printed and plotted exact bolometric reference covers zero to infinity.</li>
-<li>Expanded the Help exercises into an approximately progressive sequence covering solar and CMB spectra, Wien scaling, wavelength-versus-frequency peaks, radiance versus energy density, Stefan–Boltzmann scaling, convergence, and asymptotic limits.</li>
-<li>Added a reproducible BUILD_ID across the four executable source modules, with newline-independent hashing, damaged-source fail-fast behavior, and synchronization across source, Help, runtime output, and result metadata.</li>
+<li><b>Version:</b> 1.5.1 (<code>MODEL_VERSION</code> in <code>planck2_physics.py</code>).</li>
+<li><b>Build:</b> 1107bea3441f, the first 12 hexadecimal digits of the SHA-256 of the four modules
+<code>planck2_physics.py</code>, <code>planck2_driver.py</code>, <code>main.py</code> and <code>planck2_plot.py</code>.</li>
+<li><b>Date:</b> 2026-09-24. Python 3.10 or later.</li>
+<li>Printed by <code>python main.py --version</code>, in the first line of every run, and in the version stamp of
+<code>Planck2-claude.html</code> and <code>Planck2-original.html</code>.</li>
 </ul>
 
-<h3>Test Suite Growth</h3>
-<p>A new 59-test regression suite was created at kickoff and expanded to 94 automated tests during the audit process. The suite defines the four core module filenames and uses <code>find_module_dir(start)</code> to locate the nearest directory containing all four, so the same test file works from the canonical <code>tests/</code> directory or when flattened beside the program modules.</p>
-<p>The final suite verifies physical constants and closed forms; wavelength/frequency conversions and Jacobians; all three spectral quantities; analytic and sampled peak positions; solar and CMB reference values; temperature scaling; transformed-spectrum identities; finite-domain trapezoidal integration; small-, intermediate-, and large-<i>x</i> branches; unusual domains, endpoint peaks, one-step grids, and tied maxima; invalid and extreme finite inputs; binary64 overflow, subnormal, and underflow boundaries; immutable and internally consistent results; plotting and annotation behavior; command-line execution; Help structure and scientific content; Python 3.10 compatibility; and independent Build-ID reproduction. All 94 tests pass under CPython 3.10.20 and CPython 3.12.13 in both canonical and flattened upload layouts.</p>
-
-<h3>Known Limitations</h3>
-<ul>
-<li>Intended for education and conceptual exploration rather than precision radiometry, instrument calibration, or research-grade spectral modeling.</li>
-<li>The reported peak is the largest sampled point, not an interpolated or root-solved maximum. Its accuracy is limited by the grid spacing, and it may be a domain endpoint when the mathematical peak lies outside the selected interval.</li>
-<li>The numerical integral covers the finite <code>x_min</code>-to-<code>x_max</code> domain, whereas the exact bolometric reference covers zero to infinity. Their difference includes finite-domain truncation, trapezoidal discretization, and the selected asymptotic approximations.</li>
-<li>The default settings give physical-integral relative error below 10<sup>−6</sup> in all three modes, but this bound does not apply after the domain, resolution, or approximation thresholds are edited.</li>
-<li><code>x_low</code> and <code>x_high</code> deliberately select the Rayleigh–Jeans and Wien approximation regions. Moving them is an educational experiment and can intentionally reduce numerical accuracy.</li>
-<li>The program accepts any positive finite temperature whose derived results remain representable; it does not impose an arbitrary astrophysical temperature range. Inputs whose final physical values overflow or underflow to unusable zero are rejected.</li>
-<li>The maximum resolution of 1,000,000 intervals retains three tuples of 1,000,001 Python floating-point values and is therefore intentionally memory- and computation-intensive. Ordinary exercises use much smaller resolutions.</li>
-<li>The Help file loads MathJax from a public CDN. Offline, its prose and unrendered TeX source remain available, but equations are not typeset.</li>
-</ul>
-
-<h3>Known Minor Maintenance Items</h3>
-<ul>
-<li>The regression that protects removal of redundant full-array scans checks the driver's validator call pattern and may need broadening after a harmless future refactor that preserves linear performance.</li>
-<li>The plotter deliberately checks labels and integral units against the physics-layer metadata helpers. A future metadata change must remain synchronized across result construction, plotting, Help, and tests; a shared immutable quantity descriptor may become useful if additional modes are added.</li>
-<li>The isolated module suite validates the expected relative links to the Star and Random2 Help files but cannot prove that those targets exist. Repository-level link checking remains appropriate for the complete documentation tree.</li>
-<li>A future documentation-wide overhaul may bundle MathJax locally if fully typeset offline Help becomes a distribution requirement.</li>
-</ul>
-
-<h3>Version Identification</h3>
-<p>MODEL_VERSION: 1.0.4<br>BUILD_ID: 5b6ad69fefb7</p>
-</section>
-</section>
 </body>
 </html>
