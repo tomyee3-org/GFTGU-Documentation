@@ -399,17 +399,17 @@ steps instead of 8000) has not yet reached the encounter that eventually stresse
 integration (Beat 6). Then evaluate the three initial accelerations directly from Eq. 2 &mdash; not
 from the program's plot, but from the same formula it uses:</p>
 <div class="code-block"><code>python -c "import physics_multiple as phys, numpy as np; pos = np.array([[4.6e10,0.,0.],[-4.6e10,0.,0.],[0.,4.6e10,0.]]); masses = np.array([2.,1.,0.5]); print(phys.compute_accelerations(pos, masses))"</code></div>
-<p>One line, so it pastes safely into cmd.exe as well as a POSIX shell &mdash; a version
-broken across several physical lines inside one quoted string would have cmd.exe treat each line
-break as its own command. The same trick (<code>import ...; statement; statement; print(...)</code>)
-applies to any short diagnostic query like this one.</p>
-<p>which prints accelerations of magnitude 0.028972, 0.043871 and 0.070121 m/s\(^2\) for the
+<p>The command prints accelerations of magnitude 0.028972, 0.043871 and 0.070121 m/s\(^2\) for the
 2, 1 and 0.5 solar-mass bodies respectively. The heaviest body has the <em>smallest</em>
 acceleration and the lightest has the largest &mdash; the opposite of what "more force on a bigger
 mass" might suggest at first, and Eq. 2 explains why: body A's own mass, \(m_A\), does not appear
 anywhere on the right-hand side. A body's acceleration depends only on the <em>other</em> bodies'
 masses and positions, never on its own; the same cancellation Binary's Beat 1 finds for two bodies
-holds pair by pair here too. Then check that the three bodies still push back on one another exactly
+holds pair by pair here too. (The command is one line, so it pastes safely into cmd.exe as well as a
+POSIX shell &mdash; a version broken across several physical lines inside one quoted string would
+have cmd.exe treat each line break as its own command. The same trick,
+<code>import ...; statement; statement; print(...)</code>, applies to any short diagnostic query like
+this one.) Then check that the three bodies still push back on one another exactly
 as hard as they are pushed. Multiply each acceleration by its own body's mass and add the three
 vectors: \(2\times(-0.026767,0.011087,0)+1\times(0.042446,0.011087,0)+0.5\times(0.022174,-0.066523,0)\)
 comes to \((0,\,0,\,0)\) to six decimal places. That is Newton's third law summed over every pair at
@@ -747,8 +747,8 @@ short steps for as long as the run continues. Despite all of this the run's maxi
 energy drift was still only \(3.2235\times10^{-4}\) (Beat 0): the controller is doing exactly what
 it is meant to, buying the accuracy that the encounter needs without being asked.</p>
 <p><em>Then</em> the rule that produces that behavior. Before the corrector runs at all, the program
-compares one trial body's Euler-predicted acceleration with its acceleration at the start of the
-step:</p>
+compares one trial body's acceleration at its predicted position with its acceleration at the start
+of the step:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 15 — Per-body acceleration-change gate and step recovery <span class="tag tag-alg">ALGORITHM</span></div>
 \[
@@ -830,11 +830,15 @@ it never feeds back into the integration, which always advances by the adaptive
 <code>driver_multiple.py</code> implements Eq. 16, and <code>run_simulation()</code> calls it once
 for every requested frame time that a newly accepted step's bracket newly covers &mdash; one
 accepted step can cross several requested frame times at once if the step is long relative to
-<code>frame_time</code>. Because <code>'animation'</code> stores only these uniformly spaced frames
-plus the accepted-step conservation samples of Beat 3, not every accepted state, it can use far less
-memory than <code>'trajectories'</code> for a long run; a guard rejects any request whose maximum
-possible duration would need more than 1,000,000 stored frames, asking for a larger
-<code>frame_time</code> instead.</p>
+<code>frame_time</code>. Animation stores far fewer position and velocity states than trajectories does &mdash; the uniformly
+spaced frames above, not one entry per accepted step &mdash; but both output modes keep one
+energy/momentum/angular-momentum record per accepted step for the run's whole duration; that record
+is only reduced to the eleven console rows of Beat 3 after the run finishes. Requesting a coarser
+<code>frame_time</code> therefore bounds the stored frame count, not this accepted-step conservation
+history, so a long run at tight tolerances still grows in memory with its accepted-step count
+regardless of <code>output_type</code>. A guard rejects any animation request whose maximum possible
+duration would need more than 1,000,000 stored frames, asking for a larger <code>frame_time</code>
+instead; it does not bound the conservation history.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> in
 <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
@@ -866,10 +870,12 @@ window, at day 17.49986 &mdash; right at the window's edge, and slightly <em>lar
 of the first two, not smaller. All three agree to within about thirty percent of one another, which
 is what closes the eighteen-fold gap above; but agreement over a shared stretch is not the same claim
 as convergence to a fixed value, and this finer run's own maximum going up rather than down is the
-reminder why: a "maximum drift somewhere in this window" is a spiky statistic that depends on
-exactly which instants a run happens to sample near a close encounter, not a quantity that need
-shrink monotonically as \(\Delta t\) shrinks. The whole-run comparison in the previous paragraph
-hides all of this. The two runs also land at different final days (17.559 against 17.608) despite
+reminder why: a "maximum drift somewhere in this window" can change from one numerical run to the
+next without shrinking monotonically as \(\Delta t\) shrinks, so it is not by itself a
+trajectory-convergence test. (Pinning down exactly why this particular window maximum moved the way
+it did would take comparing matched-time states directly, or checking against an independently
+accurate reference &mdash; a step beyond what this beat does.) The whole-run comparison in the
+previous paragraph hides all of this. The two runs also land at different final days (17.559 against 17.608) despite
 spending the same nominal step budget
 (\(4000\times1000\,\mathrm{s}=8000\times500\,\mathrm{s}=4\times10^{6}\) s) because, once the
 adaptive controller starts shrinking the step for a close encounter (Beat 6), it is largely the
@@ -992,7 +998,7 @@ never silently accepted unconverged.
 <h3>Adaptive Timestep</h3>
 <p>
 Before the corrector runs at all, the program compares every body's acceleration at the start of
-the step with its Euler-predicted end-of-step acceleration (Eq. 15). Testing every body
+the step with its acceleration at the predicted end-of-step position (Eq. 15). Testing every body
 independently, and rejecting the step whenever the single worst body's fractional change exceeds
 <code>eps1</code>, means one body's close encounter cannot be diluted by many quiet bodies
 elsewhere in the system (Beat 6). After an accepted step the working timestep may grow by 10%
@@ -1004,10 +1010,13 @@ as a change, the program raises a clear error rather than looping or silently co
 <h3>Output Modes</h3>
 <p>
 <code>'trajectories'</code> stores every accepted position, velocity, and per-step conservation
-value; nothing is discarded. <code>'animation'</code> instead stores frames at uniformly spaced
-physical times, obtained from Eq. 16 applied to the bracketing accepted states, plus the eleven
-console conservation samples of Beat 3, independent of how many accepted steps the adaptive
-controller actually used. A guard limits any single animation request to 1,000,000 stored frames.
+value; nothing is discarded. <code>'animation'</code> stores far fewer position and velocity states
+&mdash; uniformly spaced frames obtained from Eq. 16 applied to the bracketing accepted states,
+rather than one state per accepted step &mdash; but keeps the same per-accepted-step conservation
+history as <code>'trajectories'</code> for the run's whole duration; that history is reduced to the
+eleven console samples of Beat 3 only after the run finishes. Animation's own memory use therefore
+still grows with the accepted-step count, not only with the requested frame count. A guard limits
+any single animation request to 1,000,000 stored frames; it does not bound the conservation history.
 </p>
 <h3>Tolerances</h3>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Tolerance parameters">
@@ -1133,8 +1142,10 @@ required when constructing <code>SimulationParams</code> directly rather than th
 <h2>Output Modes</h2>
 <p><code>'trajectories'</code> stores every accepted position and velocity state and plots the
 complete paths (Beats 0 to 6, 8). <code>'animation'</code> precomputes uniformly timed movie frames
-by cubic-Hermite interpolation (Beat 7) and uses memory according mainly to the number of frames
-rather than the accepted-step count. <code>'current positions'</code> is not an
+by cubic-Hermite interpolation (Beat 7), which keeps its stored position and velocity data far
+smaller than <code>'trajectories'</code>' for a long run; its per-accepted-step conservation history,
+however, grows the same way <code>'trajectories'</code>' does regardless of frame count (Beat 7,
+Output Modes above). <code>'current positions'</code> is not an
 <code>output_type</code> value; it is one of the two <code>animation_mode</code> choices, alongside
 <code>'trails'</code>, which adds a recent path behind each current marker.</p>
 <p>During an animation, <strong>Space</strong> pauses or resumes; <strong>Left</strong>/<strong>Right</strong>
