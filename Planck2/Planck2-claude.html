@@ -477,7 +477,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.5.0&nbsp;&nbsp;&nbsp;&nbsp;Build 70038dcec989
+  Version 1.5.1&nbsp;&nbsp;&nbsp;&nbsp;Build 1107bea3441f
 </p>
 <section id="overview">
 <h2>Overview</h2>
@@ -720,7 +720,7 @@ python main.py --n_steps 20000</pre>
       \]
     </div>
 <p>The last bound holds for the exact curve sampled on a range that contains its peak. Beat 8 shows a range that cuts the peak off: the sampled peak is then the end point of the range, 0.965 from the true peak on a step of 0.002. With the switches of Beat 7 the printed sum is not the exact curve, and the bound holds only if no switched grid point <em>anywhere</em> in the range rises above the two grid points around the true peak. A check that the curve is unaltered near the peak is not enough: Beat 7 shows a switch below the peak that produces a higher, false maximum elsewhere.</p>
-<p>With the default limits 0.01 and 100, \(\Delta x=(100-0.01)/N\), which is 9.999, 0.9999, 0.09999, 0.049995 and 0.0049995 for the five runs. The sampled peak is the first grid point with the largest value, with no interpolation, so it can be off by as much as one step (by less than half a step once the grid is fine enough for the curve to look symmetric about its peak), and it can only take values that the grid contains. That is why 100 and 1000 steps agree: the point \(x=5.0095\) is on both grids (\(0.01+5\times0.9999\) and \(0.01+50\times0.09999\)), and is the closest one to the peak on both. The 10-step grid has no point near the peak at all, and the largest of its eleven samples is at 10.009. The error of the trapezoidal sum of Eq. (15) falls as \(\Delta x^{2}\) once the step is small enough, which is the factor of about 4 from 1000 to 2000 steps, and it does not follow that rule at 100 steps, where the step is too large. The 0.11% error in Beat 1's \(\lambda T\) is this sampling: \(x=4.959505\) instead of 4.965114 makes the wavelength 0.11% too large. The limit on the number of steps is <code>MAX_STEPS</code> in <code>planck2_driver.py</code>, and one million steps is allowed.</p>
+<p>With the default limits 0.01 and 100, \(\Delta x=(100-0.01)/N\), which is 9.999, 0.9999, 0.09999, 0.049995 and 0.0049995 for the five runs. The sampled peak is the first grid point with the largest value, with no interpolation, so it can be off by as much as one step, and it can only take values that the grid contains. It is often, but not always, the grid point nearest the true peak: the curve is not symmetric about its peak, so the taller of the two neighbouring grid points can be the farther one, however fine the grid. That is why 100 and 1000 steps agree: the point \(x=5.0095\) is on both grids (\(0.01+5\times0.9999\) and \(0.01+50\times0.09999\)), and is the closest one to the peak on both. The 10-step grid has no point near the peak at all, and the largest of its eleven samples is at 10.009. The error of the trapezoidal sum of Eq. (15) falls as \(\Delta x^{2}\) once the step is small enough, which is the factor of about 4 from 1000 to 2000 steps, and it does not follow that rule at 100 steps, where the step is too large. The 0.11% error in Beat 1's \(\lambda T\) is this sampling: \(x=4.959505\) instead of 4.965114 makes the wavelength 0.11% too large. The limit on the number of steps is <code>MAX_STEPS</code> in <code>planck2_driver.py</code>, and one million steps is allowed.</p>
 <p>The reason the error at 20000 steps is not smaller is not the grid. Beat 7 shows that the approximation switches and the finite range of \(x\) leave an error of about 7&times;10<sup>&minus;8</sup> that no grid can remove.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
@@ -835,7 +835,7 @@ python main.py --y_frac_window 0</pre>
 <li>Report the exact references of Eqs. (12) and (14) beside the sums.</li>
 </ol>
 <h3>Plot windowing</h3>
-<p>A uniform grid in \(x\) maps non-uniformly into wavelength or frequency, so the plotter sorts the points by physical coordinate. By default it shows only the region where the curve exceeds the fraction <code>--y_frac_window</code>, 0.003, of its peak, with a 5% margin, so the hump fills the plot. Integration and the peak search always use the full \(x\)-range. Set <code>--y_frac_window 0</code> to display the whole computed coordinate range, which then ends exactly at its first and last points.</p>
+<p>A uniform grid in \(x\) maps non-uniformly into wavelength or frequency, so the plotter sorts the points by physical coordinate. By default it shows only the region where the curve exceeds the fraction <code>--y_frac_window</code>, 0.003, of its peak, with a 5% margin, so the hump fills the plot. Integration and the peak search always use the full \(x\)-range. Set <code>--y_frac_window 0</code> to display the whole computed coordinate range, which then ends exactly at its first and last points. The vertical axis always starts at zero, since every plotted spectral value is positive.</p>
 <h3>Named constants and defaults</h3>
 <p>The physical constants are the exact SI defining values, and the domain defaults are those of <code>PlanckDomain</code>. They are part of the model and not options, except the four domain values, which are the options <code>--x_min</code>, <code>--x_max</code>, <code>--x_low</code> and <code>--x_high</code>.</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Constants and defaults"><table>
@@ -984,7 +984,7 @@ python main.py --x_low 1 --x_high 3 --y_frac_window 0</pre>
 <section id="summary">
 <h2>Printed Summary</h2>
 <p>Every run prints these five lines before it opens the plot. The numbers are those of the default run of Beat 0.</p>
-<pre>Planck2 1.5.0 (build 70038dcec989) — peak at x = 4.959505
+<pre>Planck2 1.5.1 (build 1107bea3441f) — peak at x = 4.959505
 Peak wavelength = 4.917033e-07 m
 Dimensionless area = 122.081167 (0..infinity exact value: 122.081167)
 Physical integral = 2.187105e+07 W m^-2 sr^-1
