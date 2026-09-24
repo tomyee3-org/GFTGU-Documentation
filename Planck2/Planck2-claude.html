@@ -477,7 +477,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build c7f04ac72375
+  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 7b6f2f48d5c9
 </p>
 <section id="overview">
 <h2>Overview</h2>
@@ -716,23 +716,24 @@ python main.py --n_steps 20000</pre>
         \qquad
         \Delta x=\frac{x_{\max}-x_{\min}}{N},
         \qquad
-        \bigl\lvert x_{\rm peak}-x_{\rm exact}\bigr\rvert<\Delta x\quad\text{(only if the exact peak lies in the range and the switches leave the curve unchanged there)} .
+        \bigl\lvert x_{\rm peak}-x_{\rm exact}\bigr\rvert<\Delta x\quad\text{(exact curve, peak inside the range; see the text for the switched sum)} .
       \]
     </div>
-<p>The last bound holds only when the exact peak of the curve lies inside the sampled range and the two switches of Beat 7 leave the curve unchanged near it. Beat 8 shows a range that cuts the peak off: the sampled peak is then the end point of the range, 0.965 from the true peak on a step of 0.002. Beat 7 shows switches that reshape the curve near the peak: the sampled peak is then wherever the altered curve is largest.</p>
+<p>The last bound holds for the exact curve sampled on a range that contains its peak. Beat 8 shows a range that cuts the peak off: the sampled peak is then the end point of the range, 0.965 from the true peak on a step of 0.002. With the switches of Beat 7 the printed sum is not the exact curve, and the bound holds only if no switched grid point <em>anywhere</em> in the range rises above the two grid points around the true peak. A check that the curve is unaltered near the peak is not enough: Beat 7 shows a switch below the peak that produces a higher, false maximum elsewhere.</p>
 <p>With the default limits 0.01 and 100, \(\Delta x=(100-0.01)/N\), which is 9.999, 0.9999, 0.09999, 0.049995 and 0.0049995 for the five runs. The sampled peak is the first grid point with the largest value, with no interpolation, so it can be off by as much as one step (by less than half a step once the grid is fine enough for the curve to look symmetric about its peak), and it can only take values that the grid contains. That is why 100 and 1000 steps agree: the point \(x=5.0095\) is on both grids (\(0.01+5\times0.9999\) and \(0.01+50\times0.09999\)), and is the closest one to the peak on both. The 10-step grid has no point near the peak at all, and the largest of its eleven samples is at 10.009. The error of the trapezoidal sum of Eq. (15) falls as \(\Delta x^{2}\) once the step is small enough, which is the factor of about 4 from 1000 to 2000 steps, and it does not follow that rule at 100 steps, where the step is too large. The 0.11% error in Beat 1's \(\lambda T\) is this sampling: \(x=4.959505\) instead of 4.965114 makes the wavelength 0.11% too large. The limit on the number of steps is <code>MAX_STEPS</code> in <code>planck2_driver.py</code>, and one million steps is allowed.</p>
 <p>The reason the error at 20000 steps is not smaller is not the grid. Beat 7 shows that the approximation switches and the finite range of \(x\) leave an error of about 7&times;10<sup>&minus;8</sup> that no grid can remove.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 <section id="beat7">
 <h2>Beat 7 · The approximation switches</h2>
-<p>The program does not evaluate \(x^p/(e^x-1)\) directly across the whole range. For very small \(x\), \(e^x-1\) is nearly \(x\); for very large \(x\), \(e^x\) is so big that the &minus;1 does not matter, and the exponential would overflow. Two options set where the program switches: <code>--x_low</code> and <code>--x_high</code>. The first command below turns both switches off. The second and third move them inwards, and the fourth moves them to the middle of the peak.</p>
+<p>The program does not evaluate \(x^p/(e^x-1)\) directly across the whole range. For very small \(x\), \(e^x-1\) is nearly \(x\); for very large \(x\), \(e^x\) is so big that the &minus;1 does not matter, and the exponential would overflow. Two options set where the program switches: <code>--x_low</code> and <code>--x_high</code>. The first command below turns both switches off. The second and third move them inwards, the fourth moves them to the middle of the peak, and the fifth moves only the lower one to just below it.</p>
 <pre>python main.py --x_low 0.01 --x_high 100
 python main.py --x_low 1 --x_high 3
 python main.py --quantity frequency --x_low 1 --x_high 3
-python main.py --x_low 5 --x_high 6</pre>
+python main.py --x_low 5 --x_high 6
+python main.py --x_low 4</pre>
 <p>Look at <code>peak at x</code>, <code>Dimensionless area</code> and its bracketed exact value, and <code>Physical integral</code> and the exact value below it. Compare each run with the default of Beat 0. In the annotation box of the last run, look at <code>Peak value</code>.</p>
-<p>Three tasks, in order. First, read the run with no approximations. <code>Dimensionless area = 122.081167</code> and <code>Physical integral = 2.187105e+07</code> are the printed values of the default run, so at the default thresholds 0.05 and 20 the approximations cost nothing that is visible in seven digits. Then read the run with the thresholds at 1 and 3. The area is 121.281452, low by 0.66%, and the physical integral is <code>2.201527e+07</code>, high by 0.66%. The frequency version of the same run has the area 6.536758, against 6.493939, high by 0.66%, and the same physical integral <code>2.201527e+07</code> as the wavelength version. Say why the physical integrals of the two quantities are exactly equal, when the two areas are not. Then read the last run, in which the thresholds sit on the two sides of the peak. The area is 689.653453, 5.6 times its exact value, and the physical integral is <code>1.444356e+08</code>, 6.6 times its exact value. The printed peak, <code>x = 4.959505</code>, is the same as in Beat 0. Say why that is not evidence that the run is right. In the annotation, <code>Peak value = 8.3555e+14</code> is 29 times the 2.9281e+13 of the default run.</p>
+<p>Three tasks, in order. First, read the run with no approximations. <code>Dimensionless area = 122.081167</code> and <code>Physical integral = 2.187105e+07</code> are the printed values of the default run, so at the default thresholds 0.05 and 20 the approximations cost nothing that is visible in seven digits. Then read the run with the thresholds at 1 and 3. The area is 121.281452, low by 0.66%, and the physical integral is <code>2.201527e+07</code>, high by 0.66%. The frequency version of the same run has the area 6.536758, against 6.493939, high by 0.66%, and the same physical integral <code>2.201527e+07</code> as the wavelength version. Say why the physical integrals of the two quantities are exactly equal, when the two areas are not. Then read the last run, in which the thresholds sit on the two sides of the peak. The area is 689.653453, 5.6 times its exact value, and the physical integral is <code>1.444356e+08</code>, 6.6 times its exact value. The printed peak, <code>x = 4.959505</code>, is the same as in Beat 0. Say why that is not evidence that the run is right. In the annotation, <code>Peak value = 8.3555e+14</code> is 29 times the 2.9281e+13 of the default run. Then read <code>--x_low 4</code>. The true peak, at \(x=4.965\), is above the switch and in the exact branch, yet the printed peak is <code>x = 3.959605</code>, a whole unit away, and the physical integral is <code>7.989500e+07</code>, 3.7 times its exact value. The Rayleigh&ndash;Jeans form below \(x=4\) over-estimates the curve so much that a grid point there is higher than any point near the true peak. Keeping the curve unchanged near the peak is not enough to trust the printed peak.</p>
 <p><em>Then</em> what the program evaluates. It works with the logarithm of the shape function, which does not overflow, and replaces the difficult part by a simple formula at each end.</p>
 <div class="eq"><span class="eq-label">(18)</span>
 <div class="eq-kind">The shape function, evaluated as a logarithm <span class="kind kind-alg">ALGORITHM</span></div>
@@ -940,7 +941,7 @@ python main.py --x_low 1 --x_high 3 --y_frac_window 0</pre>
 <tr><td class="pname">--corner</td><td class="pdefault">"upper_right"</td><td>&mdash;</td><td>Annotation location: <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code> or <code>lower_left</code>.</td></tr>
 <tr><td class="pname">--y_frac_window</td><td class="pdefault">0.003</td><td>&mdash;</td><td>Finite fraction of the peak used for plot windowing; 0 shows the full computed range. Does not affect the peak search or the integrals.</td></tr>
 </tbody></table></div>
-<div class="note"><strong>Input checking:</strong> The command-line parser rejects invalid selectors, non-finite or non-positive temperatures, resolutions outside the integer range 1&ndash;1,000,000, invalid or incorrectly ordered domain limits (the message lists the four values it was given), invalid annotation corners, and window fractions outside the finite range 0&ndash;1. The driver also rejects domain and resolution combinations that cannot produce a representable positive step, and derived values outside the representable floating-point range.</div>
+<div class="note"><strong>Input checking:</strong> The command-line parser rejects invalid selectors, non-finite or non-positive temperatures, resolutions outside the integer range 1&ndash;1,000,000, invalid or incorrectly ordered domain limits (the message lists the four values it was given), invalid annotation corners, and window fractions outside the finite range 0&ndash;1. The driver also rejects domain and resolution combinations that cannot produce a representable positive step or distinct grid points, and derived values outside the representable floating-point range.</div>
 </section>
 <section id="quantities">
 <h2>Quantity Modes</h2>
@@ -982,13 +983,13 @@ python main.py --x_low 1 --x_high 3 --y_frac_window 0</pre>
 <section id="summary">
 <h2>Printed Summary</h2>
 <p>Every run prints these five lines before it opens the plot. The numbers are those of the default run of Beat 0.</p>
-<pre>Planck2 1.3.0 (build c7f04ac72375) — peak at x = 4.959505
+<pre>Planck2 1.4.0 (build 7b6f2f48d5c9) — peak at x = 4.959505
 Peak wavelength = 4.917033e-07 m
 Dimensionless area = 122.081167 (0..infinity exact value: 122.081167)
 Physical integral = 2.187105e+07 W m^-2 sr^-1
 Exact 0..infinity bolometric value = 2.187106e+07 W m^-2 sr^-1</pre>
 <ul>
-<li><code>peak at x</code>: the grid point with the largest shape-function value, within one grid step of the exact peak, Eq. (17), provided that peak lies inside the range and the switches leave the curve unchanged there. It is the edge of the range if the true peak lies outside it (Beat 8), and it can sit at the last grid point below <code>--x_low</code> if a switch reshapes the curve (Beat 7).</li>
+<li><code>peak at x</code>: the grid point with the largest shape-function value, within one grid step of the exact peak, Eq. (17), provided that peak lies inside the range and no switched grid point anywhere rises above the points around it. It is the edge of the range if the true peak lies outside it (Beat 8), and it can sit at a false maximum produced by a switch, as with <code>--x_low 4</code> or <code>--x_low 5 --x_high 6</code> (Beat 7).</li>
 <li><code>Peak wavelength</code> or <code>Peak frequency</code>: the physical coordinate of that grid point, in metres or hertz according to the quantity, converted from \(x\) by Eq. (2). It is what Wien's law of Beats 1 and 2 is about.</li>
 <li><code>Dimensionless area</code>: the trapezoidal sum of \(f_p\) over the grid, Eq. (15), with the exact 0 to infinity area of Eq. (12) in brackets. It is the area under the shape function and is not a radiance or a power (Beat 4).</li>
 <li><code>Physical integral</code>: the trapezoidal sum of the plotted spectrum over its physical coordinate, using the Jacobian of Eq. (13). Its units follow the quantity: W m<sup>&minus;2</sup> sr<sup>&minus;1</sup> for the two radiances, which is radiance added up over the spectrum and not the emitted flux \(M=\pi\) times it, and J m<sup>&minus;3</sup> for the energy density, which is stored energy per volume.</li>
