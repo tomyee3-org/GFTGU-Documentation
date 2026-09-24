@@ -2,165 +2,120 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Random2 1.2.0 Release Notes</title>
+<title>Random2 1.4.0 Release Notes</title>
 </head>
 <body>
-<h1>Random2 1.2.0 Release Notes</h1>
-<p class="meta"><b>Version:</b> 1.2.0<br><b>Build:</b> 5dc294ca595d<br><b>Date:</b> 2026-09-16</p>
+<h1>Random2 1.4.0 Release Notes</h1>
 
-<h2>Release Summary</h2>
-<p>Random2 1.2.0 adds a complete command-line interface for the existing scaled-distance and two-dimensional star experiments. Every ordinary input formerly assigned in <code>main.py</code>, including defaults inherited from the driver and plotter, now has a documented command-line option. The numerical models and default calculations are unchanged.</p>
+<p>
+<b>Version:</b> 1.4.0<br>
+<b>Build:</b> 06ebd8fea601<br>
+<b>Date:</b> 2026-09-24
+</p>
 
-<h2>Command-Line Interface</h2>
+<h2>Release Status</h2>
+
+<p>
+These notes cover Version 1.4.0 and the two code-changing rounds that produced it: the Kickoff2 conversion (1.3.0)
+and the Audit 21 response (1.4.0). The Audit 22 response changed only the two Help files and the tests; Audit 23
+changed nothing and only reviewed 1.4.0. Version 1.3.0 was never released separately; the last published notes were
+for 1.2.0.
+</p>
+
 <ul>
-<li><code>--display {scaled_distance,walk2d}</code> selects the 3D statistical scaling experiment or the fixed-step 2D star visualization.</li>
-<li><code>--max_steps</code>, <code>--n_trials</code>, and <code>--step_distribution {uniform,gaussian}</code> control the scaled-distance experiment. The former spellings <code>--maxSteps</code> and <code>--nTrials</code> are accepted as compatibility aliases.</li>
-<li><code>--reference_steps</code>, <code>--n_walks</code>, <code>--mean_free_path</code>, <code>--radius_factor</code>, <code>--radius</code>, <code>--ray_length_factor</code>, and <code>--step_cap</code> control the 2D visualization.</li>
-<li><code>--corner</code> accepts the command-safe selector values <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code>, and <code>lower_left</code>. The entry point translates these values to the plotter's internal spaced labels.</li>
-<li>Positive integer, positive finite, and nonnegative finite option types reject invalid inputs before a simulation starts. <code>--help</code> displays descriptions and defaults; <code>--version</code> prints the synchronized version and Build ID.</li>
+<li>Grok, Audit 23: freeze both Help files; no new defect. No hold.</li>
+<li>Codex, Audit 23: one P2 in the Reference Guide Help, <code>Random2-original.html</code> (OB-1); no other
+recommendation. No hold stated.</li>
 </ul>
 
-<h2>Documentation and Verification</h2>
+<h2>Open Bugs</h2>
+
 <ul>
-<li>The Help file now includes a command-line quick start, a complete option table, selector explanations, and runnable commands for all parameter-only suggested experiments.</li>
-<li>The programming extension remains identified as requiring a source change; the Help file does not imply that input options can perform an algorithmic modification.</li>
-<li>The Sample Outputs Guide now pairs each representative result with the equivalent <code>main.py</code> command and explains that fixed illustration seeds require a short Python reproducibility harness because seed selection is not a program input.</li>
-<li>Regression coverage now checks command defaults, selector parsing, input rejection, forwarding to both drivers, corner translation, version/build synchronization, and the packaged documentation path.</li>
+<li><b>OB-1</b> (P2; Codex Audit 23 item 1). <code>Random2-original.html</code> states the square-root law of Eq. (6)
+as exact for every step count and says that more trials bring the measured trend to slope 1/2; the mean scaled
+distance follows the law only for large step counts.<br>
+Reproduction: <code>python main.py --max_steps 2 --n_trials 200000 --seed 12</code>. Observed: mean scaled distance
+1.3844 (standard error 0.0010), ratio to sqrt(N) 0.9789, against the large-N prediction 0.9591, while Eq. (6) of
+<code>Random2-original.html</code> and the sentence after it say the trend approaches the theoretical value as
+<code>nTrials</code> grows. Expected: Eq. (6) stated as a large-N approximation, as Eq. (5) of
+<code>Random2-claude.html</code> is.</li>
 </ul>
 
-<h2>Default Commands</h2>
-<pre><code>python main.py
-python main.py --display scaled_distance --step_distribution gaussian
-python main.py --display walk2d --n_walks 6 --radius 50 --corner lower_left</code></pre>
+<h2>Major Improvements in This Release</h2>
+
+<p>Version 1.4.0 (Audit 21 response):</p>
+<ul>
+<li>A radius whose ratio to the mean free path lies outside 1e-150 to 1e150 is rejected with an input/model error; it
+previously stopped with a Python traceback (1e155) or printed <code>inf</code> (1e-160).</li>
+<li>With <code>--radius</code> given, the star annotation shows <code>(given)</code> after the radius and no longer shows the
+unused reference step count.</li>
+<li>Lengths in the summary and the annotation no longer print as 0.00 for very small stars.</li>
+<li>Help corrections: Experiment 9 uses (R/&lambda;)<sup>2</sup> and its correct bound; the square-root law of Beat 0 is
+marked as a large-N result. The Audit 22 response then corrected a typeset error in Eq. (5) and the seed wording,
+without changing the program.</li>
+</ul>
+
+<p>Version 1.3.0 (Kickoff2):</p>
+<ul>
+<li>New option <code>--seed</code> makes a run repeatable; without it every run differs, as before.</li>
+<li>Every run now prints a summary before its plot: for <code>scaled_distance</code>, a table of mean scaled distance,
+standard error and ratio to sqrt(N), the large-N prediction for that ratio and the fitted log-log slope; for
+<code>walk2d</code>, R, (R / mean free path)^2, each walk's escape step count (up to 12 walks) and the escape statistics.</li>
+<li>The scaling plot shows the fitted slope; the star plot's median is printed to one decimal, and its frame leaves room
+for long rays.</li>
+<li><code>--max_steps</code> below 2 is rejected by the command-line parser.</li>
+<li>Result objects are immutable, and the driver adds <code>run_scaled_distance_statistics()</code> and
+<code>escape_statistics()</code>; <code>run_scaled_distance_experiment()</code> still returns two lists.</li>
+<li>New Beats tutorial Help, <code>Random2-claude.html</code>, with nine beats and 11 experiments; the Reference Guide Help
+is retained, kept current, as <code>Random2-original.html</code>.</li>
+</ul>
+
+<h2>Test Suite Growth</h2>
+
+<ul>
+<li>1.2.0: 59 tests. 1.3.0: 123. 1.4.0: 146 (133 in the Audit 21 response, 137 in the Audit 22 response, plus nine checks of these two documents).</li>
+<li>Run from the program folder with <code>python -m unittest discover -s tests</code>. In the full repository layout all
+146 tests run and pass with no skips, in about 40 seconds. In a flat folder that holds only the program, the tests and
+<code>Random2-claude.html</code>, the link check, the <code>Random2-original.html</code> tests and these document checks are
+skipped (13 skips), and the rest pass.</li>
+<li>New coverage since 1.2.0 includes every command shown in the Help, every number the Help and the Sample Outputs Guide
+quote, the equation tags and index, the seed option, the printed summaries, the input limits, and end-to-end runs of both
+displays.</li>
+</ul>
 
 <h2>Known Limitations</h2>
+
 <ul>
-<li>Random2 is an educational diffusion model, not a research-grade model of stellar radiative transport.</li>
-<li>The <code>scaled_distance</code> uniform-component construction fills a cube and is not directionally isotropic, though its independent zero-mean finite-variance components retain the intended square-root scaling.</li>
-<li>The <code>walk2d</code> display is planar. Its first-passage distribution is not the corresponding three-dimensional stellar distribution.</li>
-<li>Monte Carlo output varies between runs. Larger trial or walk counts reduce sampling noise but increase run time and, for displayed paths, memory use.</li>
-<li>A path that reaches <code>--step_cap</code> is censored and marked with an x. Quantitative escape-time work should verify that nearly all paths escape.</li>
-<li>Computing fitted slopes, exporting individual escape-step data, or changing the definition of scaled distance still requires a programming change.</li>
-<li>The Help file uses MathJax from a public CDN for typeset equations. Its prose and raw equation source remain readable offline.</li>
+<li>An educational model of random walks; no solar opacity profile, changing mean free path or convection zone.</li>
+<li>The star display is two-dimensional; its escape-time distribution is not that of a three-dimensional star.</li>
+<li>The uniform-component steps fill a cube and are not isotropic in direction.</li>
+<li>Results vary from run to run unless <code>--seed</code> is given.</li>
+<li>Walks stopped by <code>--step_cap</code> are left out of the escape statistics, which then understate the mean.</li>
+<li>The ratio of radius to mean free path must lie between 1e-150 and 1e150.</li>
+<li>The equations in the Help are typeset by MathJax and need an internet connection.</li>
+</ul>
+
+<h2>Known Minor Maintenance Items</h2>
+
+<ul>
+<li>The build identifier reads <code>unknown</code>, rather than stopping with an error, if a core file cannot be read.</li>
+<li>The result dataclasses live in <code>random2_driver.py</code>, not in a separate neutral module.</li>
+<li>The statistical test tolerances assume Python's current random-number algorithms.</li>
+<li><code>Random2-original.html</code> and <code>Random2-claude.html</code> are both present, and neither is marked as the current Help.</li>
+<li>The Related Programs links point to <code>Star.html</code> and to the current Neutron Help file names.</li>
+<li>There is no option to save a figure or the escape step counts to a file.</li>
 </ul>
 
 <h2>Version Identification</h2>
-<p><code>MODEL_VERSION = "1.2.0"</code><br><code>BUILD_ID = "5dc294ca595d"</code></p>
-<p>The reproducible Build ID covers <code>random2_physics.py</code>, <code>random2_driver.py</code>, <code>main.py</code>, and <code>random2_plot.py</code>. Documentation and tests are excluded by design.</p>
 
-<section id="maintenance-status">
-<h2>Known Minor Maintenance Items: Historical Register and Current Status</h2>
-<p>The earlier wording is retained below and in the original notes. Resolved issues remain visible; items without verified completion remain on the follow-up list.</p>
 <ul>
-<li>Ordinary experiment parameters are edited in <code>main.py</code>; only <code>--version</code> is currently exposed on the command line. Optional command-line parameters may be useful in a future usability release but are not required for the textbook's edit-and-rerun workflow.<br><strong>Current status:</strong> Resolved in 1.2.0: the current command-line interface accepts ordinary experiment parameters. The original maintenance wording remains in the archive.</li>
-<li><code>random2_plot.py</code> imports the result dataclasses from <code>random2_driver.py</code>. If additional consumers or result types are introduced, shared immutable model types may be worth moving to a small neutral module.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.2.0; completion has not been verified.</li>
-<li>The physics and plotting layers each contain small private numeric-validation helpers. This limited duplication keeps the plotter independent of physics-layer implementation details; a public shared validation module may become worthwhile if the validation surface grows.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.2.0; completion has not been verified.</li>
-<li>The statistical regressions intentionally gate the expected physical behavior using deterministic seeds and generous scientific tolerances. If Python's random-number algorithms change substantially in a future runtime, the sampled tolerances should be reassessed rather than replaced with exact sequence assertions.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.2.0; completion has not been verified.</li>
-<li>Additional end-to-end subprocess tests for both display modes could supplement the existing driver and plotting integration coverage in a future test-maintenance round.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.2.0; completion has not been verified.</li>
-</ul>
-</section>
-
-<section id="release-history">
-<h2>Earlier Release Notes</h2>
-<p>The following release notes reproduce the archived releases. Statements about what was current then describe those versions; the status register above describes the current review.</p>
-<section id="historical-1.1.0">
-<h2>Random2 1.1.0 Release Notes</h2>
-<p><b>Version:</b> 1.1.0<br><b>Build:</b> 10144b08a600<br><b>Date:</b> 2026-09-10</p>
-
-<h3>Release Status</h3>
-<p>Version 1.1.0 is a focused visualization release on top of the reviewed 1.0.2 program. The scaled-distance log-log plot now uses equal decade lengths on the horizontal and vertical axes, so the theoretical slope of 1/2 can be judged by eye instead of being stretched by the output-panel aspect ratio. Physics, drivers, defaults, and the 2D star display are unchanged. Help, release notes, and the sample-outputs guide are synchronized to this version and build.</p>
-
-<h3>Changes in 1.1.0</h3>
-<ul>
-<li>In <code>plot_scaled_distance</code>, the log-log axes now call <code>ax.set_aspect("equal", adjustable="box")</code> after the data are drawn. One decade has the same plotted length on both axes regardless of the figure or window shape.</li>
-<li>A slope of 1/2 is therefore readable as a rise of one vertical decade over a run of two horizontal decades. Previously the (8, 6) figure and any later panel resize made that slope look arbitrarily steep or shallow.</li>
-<li><code>plt.tight_layout()</code> is applied to the scaled-distance figure, matching the existing walk display.</li>
-<li>The plotting regression test now checks that the scaled-distance axes are logarithmic and have equal box-adjustable aspect.</li>
-<li>Help Program Output, Experiment 1, and the plot-module card describe the equal-decade scaling. The sample-outputs guide regenerates the two log-log figures with the new aspect.</li>
-<li>MODEL_VERSION is 1.1.0. BUILD_ID is recomputed over the four executable core modules.</li>
+<li><b>Version:</b> 1.4.0 (<code>MODEL_VERSION</code> in <code>random2_physics.py</code>).</li>
+<li><b>Build:</b> 06ebd8fea601, the first 12 hexadecimal digits of the SHA-256 of the four modules
+<code>random2_physics.py</code>, <code>random2_driver.py</code>, <code>main.py</code> and <code>random2_plot.py</code>.</li>
+<li><b>Date:</b> 2026-09-24. Python 3.10 or later.</li>
+<li>Printed by <code>python main.py --version</code>, in the first line of every run, and in the version stamp of
+<code>Random2-claude.html</code> and <code>Random2-original.html</code>.</li>
 </ul>
 
-<h3>Inherited from 1.0.2</h3>
-<p>Version 1.0.2 concluded a kickoff maintenance review followed by two rounds of independent review involving Codex, Copilot, and Gemini. That release preserved Schutz's three-dimensional scaled-distance experiment; added the Gaussian-component comparison and the isotropic 2D star visualization; hardened circle-intersection geometry and input validation; and introduced a reproducible BUILD_ID synchronized across source, Help, runtime version output, and simulation-result metadata.</p>
-<p>The regression suite remains the 1.0.2 suite plus the new scaled-plot aspect assertions. Statistical tests still use private deterministic random-number generators. Core sources continue to parse under the Python 3.10 grammar.</p>
-
-<h3>Known Limitations</h3>
-<ul>
-<li>Random2 is intended for education and conceptual exploration, not research-grade stellar transport, opacity modeling, or quantitative solar diffusion-time prediction.</li>
-<li>The <code>scaled_distance</code> mode uses three-dimensional vectors uniformly distributed within a cube. Its direction distribution is therefore anisotropic, although its independent zero-mean finite-variance components still produce the intended √<i>N</i> scaling.</li>
-<li>Equal log-axis aspect makes the numerical slope readable; it does not make a slope of 1/2 appear as a 45° line. A 45° line on these axes would be a slope of 1.</li>
-<li>The <code>walk2d</code> mode is a planar visualization. Its qualitative scaling is instructive, but its first-passage distribution should not be interpreted as the corresponding three-dimensional stellar result.</li>
-<li>The default star radius is a selected multiple of the root-mean-square diffusion distance associated with <code>reference_steps</code>. That parameter sizes the schematic drawing; it is not the maximum walk length.</li>
-<li>Monte Carlo output varies between runs. Small values of <code>nTrials</code> or <code>n_walks</code> produce substantial statistical scatter and should not be used to infer precise coefficients or escape-time distributions.</li>
-<li>A walk that has not escaped when <code>step_cap</code> is reached is censored. Quantitative escape-time experiments must use a sufficiently high cap and confirm that nearly all sampled walks escape.</li>
-<li>Very large <code>maxSteps</code>, <code>nTrials</code>, <code>n_walks</code>, or <code>step_cap</code> values can make the program intentionally computation- or memory-intensive.</li>
-<li>The Help file loads MathJax from a public CDN. Offline, its prose and unrendered TeX source remain available, but equations are not typeset.</li>
-</ul>
-
-<h3>Known Minor Maintenance Items</h3>
-<ul>
-<li>Ordinary experiment parameters are edited in <code>main.py</code>; only <code>--version</code> is currently exposed on the command line. Optional command-line parameters may be useful in a future usability release but are not required for the textbook's edit-and-rerun workflow.</li>
-<li><code>random2_plot.py</code> imports the result dataclasses from <code>random2_driver.py</code>. If additional consumers or result types are introduced, shared immutable model types may be worth moving to a small neutral module.</li>
-<li>The physics and plotting layers each contain small private numeric-validation helpers. This limited duplication keeps the plotter independent of physics-layer implementation details; a public shared validation module may become worthwhile if the validation surface grows.</li>
-<li>The statistical regressions intentionally gate the expected physical behavior using deterministic seeds and generous scientific tolerances. If Python's random-number algorithms change substantially in a future runtime, the sampled tolerances should be reassessed rather than replaced with exact sequence assertions.</li>
-<li>Additional end-to-end subprocess tests for both display modes could supplement the existing driver and plotting integration coverage in a future test-maintenance round.</li>
-</ul>
-
-<h3>Version Identification</h3>
-<p>MODEL_VERSION: 1.1.0<br>BUILD_ID: 10144b08a600</p>
-<p>The BUILD_ID identifies the four executable core modules only: <code>random2_physics.py</code>, <code>random2_driver.py</code>, <code>main.py</code>, and <code>random2_plot.py</code>. Help and test files are excluded by design.</p>
-</section>
-<section id="historical-1.0.2">
-<h2>Random2 1.0.2 Release Notes</h2>
-<p><b>Version:</b> 1.0.2<br><b>Build:</b> 0ced72c5a652<br><b>Date:</b> 2026-08-29</p>
-
-<h3>Release Status</h3>
-<p>Version 1.0.2 concludes a kickoff maintenance review followed by two rounds of independent review involving Codex, Copilot, and Gemini. The reviewers compared the Python implementation with Schutz's original Java source; verified the three-dimensional random-walk calculation, two-dimensional isotropic visualization, diffusion scaling, line-circle geometry, input validation, floating-point behavior, plotting, Help-file accuracy, Version/Build synchronization, and regression coverage; and tested both the canonical and flattened upload layouts. No release-blocking defect remains. Copilot's final assessment is PASS, Gemini confirms that the mathematical and test-isolation repairs are effective, and the program is sufficiently robust, accurate, and clear for student use within the tutorial scope and limitations described below.</p>
-
-<h3>Major Improvements in This Release</h3>
-<ul>
-<li>Preserved Schutz's original three-dimensional scaled-distance experiment, including independent <i>x</i>, <i>y</i>, and <i>z</i> components uniformly distributed on [−1,1], trial-specific mean-step normalization, repeated trial averaging, and the original integer-halving sequence of walk lengths.</li>
-<li>Added an optional Gaussian-component comparison that demonstrates that the characteristic displacement remains proportional to √<i>N</i> for independent finite-variance steps even when the detailed step distribution changes.</li>
-<li>Added a separate fixed-step, isotropic two-dimensional visualization in which several random walks begin at the center of a circular schematic star and continue until they cross the boundary or reach a safety cap.</li>
-<li>Added exact clipping of the final random-walk segment to the circular boundary, optional schematic outgoing rays, per-walk escape-step counts, median escape statistics, and an explicit <code>x</code> marker for a walk that reaches <code>step_cap</code> without escaping.</li>
-<li>Replaced the schoolbook quadratic formula with scaled coefficients, a factored near-boundary coefficient, and the stable <code>q</code>-formulation, preventing cancellation, overflow, and underflow across very large and microscopic circle-intersection geometries.</li>
-<li>Added systematic validation for invalid step counts, trial counts, walk counts, distributions, radii, mean free paths, radius factors, ray lengths, annotation positions, points, interpolation fractions, plot data, manually constructed results, and computed radii that overflow or underflow.</li>
-<li>Hardened plotting against malformed paths and rays while preserving scientifically meaningful microscopic coordinate scales rather than silently clamping them to unrelated display limits.</li>
-<li>Clarified the distinction between the anisotropic component distribution used by the original three-dimensional statistical experiment and the genuinely isotropic fixed-length steps used by the planar star display.</li>
-<li>Clarified that the circular display is a schematic illustration of radiative diffusion, not a realistic model of the Sun's changing opacity, mean free path, three-dimensional first-passage statistics, or outer convective zone.</li>
-<li>Expanded the Help exercises into an approximately progressive sequence covering √<i>N</i> scaling, Monte Carlo scatter, log-log slope measurement, distribution independence, normalization choices, geometric rescaling, trajectory variability, escape-time distributions, and quadratic radius scaling.</li>
-<li>Added a reproducible BUILD_ID across the four executable source modules, with newline-independent hashing and synchronization across source, Help, runtime version output, and simulation-result metadata.</li>
-</ul>
-
-<h3>Test Suite Growth</h3>
-<p>A new 47-test regression suite was created at kickoff and expanded to 54 automated tests during the audit process. The suite defines the four core module filenames and uses <code>find_module_dir(start)</code> to locate the nearest directory containing all four, so the same test file works from the canonical <code>tests/</code> directory or when flattened beside the program modules.</p>
-<p>The final suite verifies preservation of the Java algorithm; uniform and Gaussian three-dimensional step generation; fixed-length planar isotropy; the analytic mean distance within the uniform cube; √<i>N</i> scaling for both distributions; quadratic escape-time scaling; exact radial, oblique, tangent, missing, microscopic, and very-large boundary crossings; radius construction; clipping and outgoing rays; safety-cap behavior; invalid and non-finite inputs; NumPy real-scalar interoperability; malformed constructed plot results; plot annotations; command-line version output; semantic Help content and defaults; Python 3.10 grammar compatibility; and independent Build-ID reproduction. Statistical tests use private deterministic random-number generators without consuming process-global random state. All 54 tests pass under CPython 3.12.13 in both canonical and flattened upload layouts, and all core sources parse successfully under the Python 3.10 grammar.</p>
-
-<h3>Known Limitations</h3>
-<ul>
-<li>Random2 is intended for education and conceptual exploration, not research-grade stellar transport, opacity modeling, or quantitative solar diffusion-time prediction.</li>
-<li>The <code>scaled_distance</code> mode uses three-dimensional vectors uniformly distributed within a cube. Its direction distribution is therefore anisotropic, although its independent zero-mean finite-variance components still produce the intended √<i>N</i> scaling.</li>
-<li>The <code>walk2d</code> mode is a planar visualization. Its qualitative scaling is instructive, but its first-passage distribution should not be interpreted as the corresponding three-dimensional stellar result.</li>
-<li>The default star radius is a selected multiple of the root-mean-square diffusion distance associated with <code>reference_steps</code>. That parameter sizes the schematic drawing; it is not the maximum walk length.</li>
-<li>Monte Carlo output varies between runs. Small values of <code>nTrials</code> or <code>n_walks</code> produce substantial statistical scatter and should not be used to infer precise coefficients or escape-time distributions.</li>
-<li>A walk that has not escaped when <code>step_cap</code> is reached is censored. Quantitative escape-time experiments must use a sufficiently high cap and confirm that nearly all sampled walks escape.</li>
-<li>Very large <code>maxSteps</code>, <code>nTrials</code>, <code>n_walks</code>, or <code>step_cap</code> values can make the program intentionally computation- or memory-intensive.</li>
-<li>The Help file loads MathJax from a public CDN. Offline, its prose and unrendered TeX source remain available, but equations are not typeset.</li>
-</ul>
-
-<h3>Known Minor Maintenance Items</h3>
-<ul>
-<li>Ordinary experiment parameters are edited in <code>main.py</code>; only <code>--version</code> is currently exposed on the command line. Optional command-line parameters may be useful in a future usability release but are not required for the textbook's edit-and-rerun workflow.</li>
-<li><code>random2_plot.py</code> imports the result dataclasses from <code>random2_driver.py</code>. If additional consumers or result types are introduced, shared immutable model types may be worth moving to a small neutral module.</li>
-<li>The physics and plotting layers each contain small private numeric-validation helpers. This limited duplication keeps the plotter independent of physics-layer implementation details; a public shared validation module may become worthwhile if the validation surface grows.</li>
-<li>The statistical regressions intentionally gate the expected physical behavior using deterministic seeds and generous scientific tolerances. If Python's random-number algorithms change substantially in a future runtime, the sampled tolerances should be reassessed rather than replaced with exact sequence assertions.</li>
-<li>Additional end-to-end subprocess tests for both display modes could supplement the existing driver and plotting integration coverage in a future test-maintenance round.</li>
-</ul>
-
-<h3>Version Identification</h3>
-<p>MODEL_VERSION: 1.0.2<br>BUILD_ID: 0ced72c5a652</p>
-<p>The BUILD_ID identifies the four executable core modules only: <code>random2_physics.py</code>, <code>random2_driver.py</code>, <code>main.py</code>, and <code>random2_plot.py</code>. Help and test files are excluded by design.</p>
-</section>
-</section>
 </body>
 </html>
