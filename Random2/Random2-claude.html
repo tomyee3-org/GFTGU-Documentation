@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Random2 – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+    /* ── Reset & custom properties ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #fdf5e6;
+      --surface:  #ffffff;
+      --border:   #c8bfa0;
+      --accent:   #7b2d00;
+      --accent2:  #a04010;
+      --gold:     #b5811a;
+      --text:     #1c1c1c;
+      --muted:    #5a4a3a;
+      --code-bg:  #f0ede4;
+      --note-bg:  #f4f0e8;
+      --eq-bg:    #f7f2e8;
+      --radius:   5px;
+      --shadow:   0 2px 8px rgba(0,0,0,0.10);
+      --mono:     "Courier New", Courier, monospace;
+      --sans:     "Helvetica Neue", Arial, sans-serif;
+      --serif:    Georgia, "Times New Roman", Times, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Page grid ── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.95rem;
+      font-weight: normal;
+      letter-spacing: -.02em;
+    }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub {
+      margin-top: 6px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: #f0d0b8;
+      line-height: 1.55;
+    }
+    header .sub a {
+      color: #ffd8b8;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,200,150,.4);
+    }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+
+    /* ── Sidebar ── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      padding: 14px 18px 4px;
+    }
+    nav a {
+      display: block;
+      padding: 6px 18px 6px 22px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background .15s, border-color .15s;
+    }
+    nav a:hover {
+      background: var(--bg);
+      border-left-color: var(--accent2);
+      color: var(--accent);
+    }
+    nav a.active {
+      background: var(--note-bg);
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    nav hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 14px;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 38px 48px 60px;
+      max-width: 860px;
+    }
+
+    section { margin-bottom: 52px; }
+
+    h2 {
+      font-size: 1.30rem;
+      font-weight: normal;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 6px;
+      margin-bottom: 18px;
+      letter-spacing: -.01em;
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--accent2);
+      margin: 24px 0 8px;
+    }
+    h4 {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin: 18px 0 6px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    /* ── Equation block ── */
+    .eq {
+      background: var(--eq-bg);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 20px;
+      margin: 18px 0;
+      overflow-x: auto;
+      font-size: 1.05em;
+    }
+    .eq-label {
+      float: right;
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 2px;
+    }
+
+    /* ── Note / tip box ── */
+    .note {
+      background: var(--note-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      margin: 18px 0;
+      font-size: 0.93rem;
+    }
+    .note strong { color: var(--accent); }
+
+    /* ── Restore-defaults box ── */
+    .restore-section {
+      margin: 2.5em auto;
+      max-width: 860px;
+      font-family: inherit;
+    }
+    .restore-box {
+      border: 1.5px solid var(--gold);
+      border-left: 5px solid var(--gold);
+      border-radius: 6px;
+      background: #fffbeb;
+      padding: 1.1em 1.4em;
+      display: flex;
+      gap: 1em;
+      align-items: flex-start;
+    }
+    .restore-icon { font-size: 1.5em; line-height: 1; flex-shrink: 0; }
+    .restore-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      color: var(--accent);
+      margin-bottom: 0.35em;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .restore-intro {
+      margin: 0 0 0.5em;
+      font-size: 0.92em;
+      line-height: 1.6;
+    }
+    .restore-list {
+      margin: 0;
+      padding-left: 1.4em;
+      font-size: 0.92em;
+      line-height: 1.8;
+    }
+    .restore-box kbd {
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.88em;
+    }
+    .restore-link { color: var(--accent); text-decoration: underline; }
+    .restore-footnote {
+      margin: 0.6em 0 0;
+      font-size: 0.88em;
+      color: var(--muted);
+    }
+
+    /* ── Code ── */
+    pre {
+      background: #2b2b2b;
+      color: #f0ede4;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.55;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 0.91em;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    pre code { background: none; padding: 0; font-size: inherit; }
+
+    /* ── Module cards ── */
+    .mc { display: grid; gap: 14px; margin: 18px 0; }
+    .mc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+    }
+    .mc-card .mc-name {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .mc-card .mc-role {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .mc-card p { font-size: 0.92rem; margin-bottom: 0; color: var(--muted); }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 16px 0;
+    }
+    th {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      background: var(--note-bg);
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { font-family: var(--mono); color: var(--accent2); }
+
+    /* ── Output type list ── */
+    .output-list { list-style: none; margin: 14px 0; }
+    .output-list li {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .output-list li:last-child { border-bottom: none; }
+    .output-list .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      white-space: nowrap;
+      color: var(--accent2);
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
+    }
+    footer a { color: #e0c090; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Beats layout additions ── */
+    .eq-kind {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .kind {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-left: 4px;
+      vertical-align: 1px;
+    }
+    .kind-law { background: #f6dcdc; color: #7a1f1f; border: 1px solid #d9a0a0; }
+    .kind-ode { background: #d9ead3; color: #274e13; border: 1px solid #a8c69a; }
+    .kind-def { background: #e4e4e4; color: #3a3a3a; border: 1px solid #b5b5b5; }
+    .kind-der { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
+    .kind-alg { background: #e6e0f8; color: #3d2c73; border: 1px solid #b7abdd; }
+    .kind-pre { background: #fbe3cc; color: #7a3a00; border: 1px solid #e0b184; }
+    .related-list li { margin-bottom: 6px; }
+    .warn {
+      background: #fff6e8;
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 12px 18px;
+      margin: 16px 0;
+      font-family: var(--sans);
+      font-size: 0.91rem;
+      color: var(--muted);
+    }
+    .warn strong { color: var(--accent); }
+    .compare-table th:not(:first-child), .compare-table td:not(:first-child) {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .compare-table td:not(:first-child) { font-family: var(--mono); color: var(--text); }
+    main { min-width: 0; }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+    section ul { margin: 0 0 14px 1.4em; }
+    section ul li, section ol li { margin-bottom: 6px; }
+    section ol { margin: 0 0 14px 1.6em; }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 48px; }
+    }
+  
+</style>
+</head>
+
+<body>
+<div class="page-wrap">
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+<div class="badge">Chapter 8 · Gravity from the Ground Up</div>
+<h1><em>Random2</em> — Random Walks and Radiative Diffusion</h1>
+<div class="sub">
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+</div>
+</header>
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<nav id="sidebar">
+<div class="nav-label">Overview</div>
+<a href="#overview">Overview</a>
+<a href="#beats">How to read this page</a>
+<div class="nav-label">Beats</div>
+<a href="#beat0">0 · Random steps add up as √N</a>
+<a href="#beat1">1 · How far to trust an average</a>
+<a href="#beat2">2 · Only the variance matters</a>
+<a href="#beat3">3 · A photon in a schematic star</a>
+<a href="#beat4">4 · Escape takes (R/λ)² steps</a>
+<a href="#beat5">5 · Twice the radius, four times the steps</a>
+<a href="#beat6">6 · Only R/λ matters</a>
+<a href="#beat7">7 · The step cap</a>
+<a href="#beat8">8 · Seeds and the hard cases</a>
+<div class="nav-label">Code</div>
+<a href="#equations">Governing Equations</a>
+<a href="#algorithm">Algorithm</a>
+<a href="#modules">Program Files</a>
+<div class="nav-label">Usage</div>
+<a href="#quickstart">Quick Start</a>
+<a href="#parameters">Parameters</a>
+<a href="#output">Plots</a>
+<a href="#summary">Printed Summary</a>
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
+<div class="nav-label">Reference</div>
+<a href="#related">Related Programs</a>
+<a href="#license">License</a>
+</nav>
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main>
+<p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
+  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build 3c162492d309
+</p>
+<section id="overview">
+<h2>Overview</h2>
+<p><strong>Random2</strong> explores the square-root law of random walks and uses it to picture how radiation leaks out of a star. Energy released in the Sun's core does not stream outwards; it is absorbed and re-emitted so often that its path is a random walk, and a random walk covers distance very slowly. After \(N\) independent steps the typical distance from the start grows as \(\sqrt N\), not \(N\).</p>
+<p>The program has two displays. <code>scaled_distance</code> runs many three-dimensional random walks of different lengths and prints and plots their average distance from the start. <code>walk2d</code> draws a few fixed-length, equally-likely-in-every-direction walks from the centre of a circle, a schematic star, and counts the steps each one takes to reach the edge. Every run prints a summary of the numbers before it opens its plot.</p>
+<p>The spine of the lesson is one sentence: <em>random steps add up so that the distance travelled grows only as the square root of the number of steps, whatever the shape of the step distribution, so escaping from a region of radius \(R\) takes about \((R/\lambda)^2\) steps of length \(\lambda\), and the printed standard errors are how you tell how far to trust an average made from a finite number of random trials.</em> Each numbered section below is one beat: a short argument, a command whose printed summary or figure illustrates that argument, and then the equation that the printed numbers follow from.</p>
+<div class="note">
+<strong>Scope:</strong> Random2 is about the statistics of random walks. <em>Star</em> models the structure of a star, and <em>Neutron</em> the structure of a neutron star; neither follows individual photons. Random2's circle is a picture of diffusion, not a model of the Sun.
+    </div>
+<div class="warn"><strong>What this program is, and what it does not model.</strong> Random2 is a teaching model of random walks. It does not model the Sun's changing density, opacity or photon mean free path, it has no convection zone, and the star display is two-dimensional, so the spread of its escape times is not that of a three-dimensional star. In the real Sun, radiation diffuses through the core and radiative zone, and convection carries the energy through the outer 30% or so of the radius. Every result is a Monte Carlo estimate: it comes from random numbers, differs from run to run, and carries a statistical uncertainty that the summary prints. Use the program to see how random walks scale and how to judge a random estimate; Beats 1, 7 and 8 show where the numbers stop being trustworthy.</div>
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw TeX source (e.g. <code>\(\sqrt{N}\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div>
+</section>
+<section id="beats">
+<h2>How to read this page</h2>
+<p>Each numbered section below is one beat: a short argument in words, a command whose output illustrates it, and then the equation that the output follows from. Do them in order the first time. After that, any beat can be opened on its own.</p>
+<p>The program's output is a consequence of its random numbers and its equations, so what a beat shows is the equations at work, not independent evidence that they are right. The outside checks the program offers are the predictions it prints beside its averages: the large-\(N\) ratio to \(\sqrt N\) in <code>scaled_distance</code>, and \((R/\lambda)^2\) in <code>walk2d</code>. Beats 1, 2, 4 and 5 compare the averages with them.</p>
+<p>Every command on this page includes <code>--seed 12</code> (Beat 8 also uses <code>--seed 28</code>). A seed fixes the sequence of random numbers, so your run prints exactly the numbers quoted here. Leave the seed out and every run is different; that is the normal way to use the program once you know what to look for, and Beat 8 shows what changes.</p>
+<p>Every beat uses the same program and the same kind of summary. Beats 0 to 2 use the three-dimensional <code>scaled_distance</code> display: Beat 0 runs the default, Beat 1 changes the number of trials, and Beat 2 changes the step distribution. Beats 3 to 7 use the two-dimensional <code>walk2d</code> display: Beat 3 runs its default, Beat 4 counts escape steps over many walks, Beat 5 halves the radius, Beat 6 changes the step length, and Beat 7 limits the number of steps. Beat 8 changes the seed and shows what the program rejects.</p>
+<p>Run every command from the program's folder. Each run prints a summary and then opens a plot window; close the window to end the program. Each beat names the lines of the summary to look at. Distances in <code>scaled_distance</code> are in units of the mean step length; distances in <code>walk2d</code> are in the same arbitrary units as <code>--mean_free_path</code>.</p>
+<div class="note"><strong>What kind of statement is each equation?</strong> Each displayed equation in the beats carries a tag. A red <span class="kind kind-law">MODEL</span> tag marks an assumption the model makes about the steps and does not derive: that they are independent, with no preferred direction on average. Eqs. (1) and (12) are the only ones. A grey <span class="kind kind-def">DEFINITION</span> tag marks a quantity that is defined by a formula. A blue <span class="kind kind-der">DERIVED</span> tag marks a result that follows from the equations already stated. A violet <span class="kind kind-alg">ALGORITHM</span> tag marks a rule of the calculation, which is a choice made by the program rather than a property of random walks: Eqs. (8), (15) and (19). An orange <span class="kind kind-pre">PRESCRIPTION</span> tag marks a convenience the program adopts, here only the default star radius, Eq. (14). The tags are there so that an assumption, a definition and a rule of the program are never mistaken for one another. Twenty equations are numbered; a few unnumbered ones appear where they are needed.</div>
+</section>
+<section id="beat0">
+<h2>Beat 0 · Random steps add up as √N</h2>
+<p>A walker takes steps in three dimensions, each one in a random direction and of random length, with no memory of the steps before. The program sends out 100 such walkers for each of twelve walk lengths, from 2 steps to 4096, and averages how far they end up from where they started.</p>
+<pre>python main.py --seed 12</pre>
+<p>Look at the table in the summary: the column <code>N</code>, the column <code>mean scaled distance</code>, and the column <code>ratio to sqrt(N)</code>. Look also at the last line, <code>fitted log-log slope</code>, and at the plot. Ignore the <code>standard error</code> column until Beat 1.</p>
+<p>Three tasks, in order. First, read the last row. After 4096 steps the walkers are on average only 63.0073 step lengths from the start, not 4096. Then compare rows four steps apart in <code>N</code>. From 1024 to 4096 steps the distance goes from 30.6802 to 63.0073, a factor of 2.05, and from 256 to 1024 it goes from 14.9520 to 30.6802, a factor of 2.05 again; four times as many steps take the walker only about twice as far. Then read the last column. Every value lies between 0.9074 and 1.0237, although <code>N</code> changes by a factor of 2048, and the fitted slope of the plot is 0.4964. Say what law connects the distance with the number of steps, and why the plot, which has equal decades on both axes, rises one decade for every two it runs.</p>
+<p><em>Then</em> the assumption behind those numbers. The steps are independent of one another and point, on average, nowhere.</p>
+<div class="eq"><span class="eq-label">(1)</span>
+<div class="eq-kind">Independent steps with zero mean <span class="kind kind-law">MODEL</span></div>
+      \[
+        \mathbf s_1,\mathbf s_2,\dots,\mathbf s_N\ \text{independent and identically distributed},
+        \qquad
+        \langle\mathbf s_i\rangle=\mathbf 0 .
+      \]
+    </div>
+<p>This is the whole physical content of a random walk: a photon that is absorbed and re-emitted forgets the direction it came from. By default each step's three components are drawn separately and uniformly.</p>
+<div class="eq"><span class="eq-label">(2)</span>
+<div class="eq-kind">Uniform step components <span class="kind kind-def">DEFINITION</span></div>
+      \[
+        \Delta x_i=2U_{x,i}-1,\qquad \Delta y_i=2U_{y,i}-1,\qquad \Delta z_i=2U_{z,i}-1,
+        \qquad U\sim\mathrm{Uniform}(0,1).
+      \]
+    </div>
+<p>These steps fill a cube, so diagonal directions are a little more common than directions along the axes; that does not matter for the law below, which uses only Eq. (1). The program adds the steps and divides the distance reached by the walk's own mean step length, so that walks with different kinds of steps can be compared.</p>
+<div class="eq"><span class="eq-label">(3)</span>
+<div class="eq-kind">Net distance and scaled distance <span class="kind kind-def">DEFINITION</span></div>
+      \[
+        \mathbf R_N=\sum_{i=1}^{N}\mathbf s_i,\qquad r_N=\lvert\mathbf R_N\rvert,
+        \qquad \bar\ell=\frac1N\sum_{i=1}^{N}\lvert\mathbf s_i\rvert,
+        \qquad d=\frac{r_N}{\bar\ell}.
+      \]
+    </div>
+<p>The column <code>mean scaled distance</code> is \(d\) averaged over the trials. Squaring \(\mathbf R_N\) gives \(N\) squared step lengths and \(N(N-1)\) cross terms \(\mathbf s_i\cdot\mathbf s_j\). By Eq. (1) every cross term averages to zero, because the two steps are independent and each averages to nothing. Only the squares survive.</p>
+<div class="eq"><span class="eq-label">(4)</span>
+<div class="eq-kind">The mean square distance <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \langle r_N^{2}\rangle=\sum_{i=1}^{N}\langle\lvert\mathbf s_i\rvert^{2}\rangle+\sum_{i\neq j}\langle\mathbf s_i\rangle\cdot\langle\mathbf s_j\rangle
+        =N\,\langle\lvert\mathbf s\rvert^{2}\rangle .
+      \]
+    </div>
+<p>For the uniform steps of Eq. (2) each component has mean square 1/3, so \(\langle\lvert\mathbf s\rvert^2\rangle=1\) and the root-mean-square distance is exactly \(\sqrt N\) in these units. The mean of \(d\) inherits the same \(\sqrt N\).</p>
+<div class="eq"><span class="eq-label">(5)</span>
+<div class="eq-kind">The square-root law <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \langle d\rangle\approx C\sqrt N,
+        \qquad
+        \log\langle d\rangle=\tfrac12\log N+\log C .
+      \]
+    </div>
+<p>So the ratio \(\langle d\rangle/\sqrt N\) is the constant \(C\), which is the last column, and on log-log axes the points lie on a line of slope 1/2, which is the fitted slope. Beat 1 asks how much of the scatter in that column is real.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat1">
+<h2>Beat 1 · How far to trust an average</h2>
+<p>An average of random numbers is itself random. Run the same experiment with a quarter as many trials, and then with ten times as many.</p>
+<pre>python main.py --seed 12 --n_trials 25
+python main.py --seed 12 --n_trials 1000</pre>
+<p>Look, in each run, at the <code>standard error</code> column, at the <code>ratio to sqrt(N)</code> column, at the line <code>large-N prediction for ratio to sqrt(N)</code>, and at <code>fitted log-log slope</code>. Compare them with the 100-trial run of Beat 0.</p>
+<p>Three tasks, in order. First, read the standard error of the last row: 4.2617 with 25 trials, 2.3473 with 100 (Beat 0) and 0.8231 with 1000. Four times as many trials divide it by 1.82, and ten times as many by 2.85. Then read the ratio column against the prediction, 0.9591. With 25 trials the ratios run from 0.8211 to 1.0326; with 1000 trials, from row <code>16</code> onwards, they lie between 0.9521 and 0.9667, all within 0.008 of the prediction. Then look down the standard-error column of the 1000-trial run: 0.0501 at 16 steps and 0.8231 at 4096, 16.4 times larger for 256 times as many steps. Say how the standard error should depend on the number of trials and on \(N\), and why the three fitted slopes, 0.4998, 0.4964 and 0.4969, hardly change.</p>
+<p><em>Then</em> what the standard error is. Each row averages \(n\) independent values of \(d\), where \(n\) is <code>--n_trials</code>. Their spread is measured by the sample standard deviation \(s\), and the uncertainty of their average by the standard error.</p>
+<div class="eq"><span class="eq-label">(6)</span>
+<div class="eq-kind">Standard error of a mean <span class="kind kind-def">DEFINITION</span></div>
+      \[
+        s^{2}=\frac{1}{n-1}\sum_{k=1}^{n}\bigl(d_k-\langle d\rangle\bigr)^{2},
+        \qquad
+        \mathrm{SE}=\frac{s}{\sqrt n}.
+      \]
+    </div>
+<div class="eq"><span class="eq-label">(7)</span>
+<div class="eq-kind">How the standard error scales <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \mathrm{SE}\approx\frac{0.42\,C\sqrt N}{\sqrt n}.
+      \]
+    </div>
+<p>The spread \(s\) of \(d\) grows like \(d\) itself, as \(\sqrt N\); for a large-\(N\) walk it is 0.42 of the mean. Dividing by \(\sqrt n\) is the square-root law again, applied to the trials instead of the steps: averaging \(n\) random numbers narrows their spread only by \(\sqrt n\). So ten times as many trials should shrink the standard error by \(\sqrt{10}=3.16\), and 256 times as many steps should grow it by 16. The printed 2.85 and 1.82 are not exactly 3.16 and 2 because \(s\) is itself estimated from the same random trials. About two rows in three should lie within one standard error of the prediction, and nearly all within two. The fitted slope comes from all twelve rows at once.</p>
+<div class="eq"><span class="eq-label">(8)</span>
+<div class="eq-kind">The fitted log-log slope <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        \alpha=\frac{\sum_j(\log N_j-\overline{\log N})(\log\langle d\rangle_j-\overline{\log\langle d\rangle})}
+                  {\sum_j(\log N_j-\overline{\log N})^{2}} .
+      \]
+    </div>
+<p>This is an ordinary least-squares line through the plotted points, computed by <code>fitted_loglog_slope()</code> in <code>random2_physics.py</code> and also written on the plot. Every row counts equally, and every row has about the same relative uncertainty, 0.42 divided by \(\sqrt n\), so the fit averages twelve independent errors spread over more than three decades of \(N\). Its own uncertainty is therefore small, about 0.01 with 25 trials and 0.002 with 1000, which is why the three slopes agree. There is also a small bias: the shortest walks have ratios a little above the large-\(N\) prediction, because two or four steps are too few for the central limit theorem of Beat 2, and that lowers the expected slope over these twelve rows slightly, to about 0.498. The standard error of a single row is the better guide to how well any one average is known. Beat 2 changes the step distribution and asks what happens to the constant \(C\).</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> and <a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat2">
+<h2>Beat 2 · Only the variance matters</h2>
+<p>The uniform steps of Beat 0 are one choice among many. Replace them with steps whose components follow the bell-shaped Gaussian distribution, which gives some very long steps and many short ones.</p>
+<pre>python main.py --seed 12 --step_distribution gaussian</pre>
+<p>Look at <code>step components</code>, at the <code>ratio to sqrt(N)</code> column, at <code>large-N prediction for ratio to sqrt(N)</code> and at <code>fitted log-log slope</code>, and compare them with Beat 0.</p>
+<p>Three tasks, in order. First, read the slope: 0.4986, against 0.4964 for uniform steps. The exponent has not changed. Then read the prediction. It is now 1.0000 where it was 0.9591, and the ratio column scatters about it: from row <code>64</code> onwards the ratios lie between 0.9408 and 1.0502. Then compare the last rows: 65.1655 with standard error 3.2761 here, against 63.0073 with standard error 2.3473 for uniform steps. The difference, 2.16, is 0.54 of the two standard errors combined, so these two rows cannot tell the distributions apart; the prediction says they should differ by 4%. Say what property of the step distribution the square-root law depends on, and what property sets the constant \(C\).</p>
+<p><em>Then</em> the Gaussian step.</p>
+<div class="eq"><span class="eq-label">(9)</span>
+<div class="eq-kind">Gaussian step components <span class="kind kind-def">DEFINITION</span></div>
+      \[
+        \Delta x_i,\ \Delta y_i,\ \Delta z_i\ \sim\ \mathcal N(0,\sigma^{2}),\qquad \sigma=1 .
+      \]
+    </div>
+<p>Eq. (4) used only independence and zero mean, so it holds for Gaussian steps too: the law is \(\sqrt N\) for any step distribution with a finite variance. The constant needs one more fact. The sum of many independent steps is close to a Gaussian in each coordinate, with variance \(N\sigma^2\), whatever the steps were (the central limit theorem). The distance from the origin of such a three-dimensional Gaussian point has a known mean.</p>
+<div class="eq"><span class="eq-label">(10)</span>
+<div class="eq-kind">Mean distance after many steps <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \langle r_N\rangle\approx\sigma\sqrt{\frac{8N}{\pi}},\qquad
+        \sigma^{2}=\tfrac13\ \text{(uniform)},\quad \sigma^{2}=1\ \text{(Gaussian)} .
+      \]
+    </div>
+<p>Dividing by the mean step length gives the constant \(C\) of Eq. (5), which the program prints as the large-\(N\) prediction. For Gaussian steps the mean step length is \(\sigma\sqrt{8/\pi}\), the same expression with \(N=1\), so \(C=1\) exactly. For uniform steps the mean step length is the mean distance from the centre of the cube \([-1,1]^3\) to a random point in it.</p>
+<div class="eq"><span class="eq-label">(11)</span>
+<div class="eq-kind">The constant C for the two distributions <span class="kind kind-der">DERIVED</span></div>
+      \[
+        C_{\rm uniform}=\frac{\sqrt{8/(3\pi)}}{\langle\ell\rangle}=\frac{0.92132}{0.96059}=0.9591,
+        \qquad
+        \langle\ell\rangle=\frac{\sqrt3}{4}+\frac{\ln(2+\sqrt3)}{2}-\frac{\pi}{24},
+        \qquad
+        C_{\rm gaussian}=1 .
+      \]
+    </div>
+<p>The exponent 1/2 depends only on the steps being independent with finite variance. The constant depends on the shape of the distribution, but only weakly, and the program's choice of dividing by the mean step length makes it close to 1 for both. The values are <code>large_n_scaled_distance_ratio()</code> and <code>UNIFORM_MEAN_STEP_LENGTH</code> in <code>random2_physics.py</code>. Eq. (10) is a large-\(N\) result; for 2 or 4 steps the central limit theorem has not yet taken hold, so those rows need not match it. Beat 3 turns from three-dimensional statistics to a picture.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> and <a href="#exp5">Experiment 5</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat3">
+<h2>Beat 3 · A photon in a schematic star</h2>
+<p>Now picture the walk. A photon starts at the centre of a circle, the schematic star, and takes steps of one fixed length in directions chosen with no preference, until it crosses the edge. The program draws four such walks.</p>
+<pre>python main.py --display walk2d --seed 12</pre>
+<p>Look at the plot, and at the summary lines <code>star radius R</code>, <code>(R / mean free path)^2</code>, the four <code>walk</code> lines, and <code>escape steps</code>.</p>
+<p>Three tasks, in order. First, read the geometry. The star radius is 89.4427 and every step has length 1 (the <code>mean free path</code>), so the photon needs at least 90 steps to get out if it walks straight; <code>(R / mean free path)^2</code> is 8000.0. Then read the walks. They escape after 11564, 7519, 8246 and 2479 steps, a factor of 4.66 between the slowest and the fastest; the mean is 7452.0 with a standard error of 1876.9. Then look at the plot. Each path is a tangle that revisits the same region many times before it happens to reach the edge, and each ends in a short straight ray outside the circle. Say how many steps a photon should need, on average, to escape from a star of radius \(R\), given Beat 0, and why four walks cannot tell you that number to better than about 25%.</p>
+<p><em>Then</em> the steps. In this display every step has exactly the length \(\lambda\), the option <code>--mean_free_path</code>, and a direction that is equally likely to be any angle.</p>
+<div class="eq"><span class="eq-label">(12)</span>
+<div class="eq-kind">Isotropic steps of fixed length <span class="kind kind-law">MODEL</span></div>
+      \[
+        \theta_i\sim\mathrm{Uniform}(0,2\pi),\qquad
+        \mathbf s_i=\lambda\,(\cos\theta_i,\ \sin\theta_i),\qquad
+        \lvert\mathbf s_i\rvert=\lambda .
+      \]
+    </div>
+<p>These steps satisfy Eq. (1), and each has \(\lvert\mathbf s\rvert^2=\lambda^2\) exactly, so Eq. (4) gives the root-mean-square distance after \(N\) steps directly.</p>
+<div class="eq"><span class="eq-label">(13)</span>
+<div class="eq-kind">Root-mean-square distance of the display walk <span class="kind kind-der">DERIVED</span></div>
+      \[
+        D_{\rm rms}=\sqrt{\langle r_N^{2}\rangle}=\lambda\sqrt N .
+      \]
+    </div>
+<p>The display is two-dimensional so that the paths can be seen; Eq. (13) holds in any number of dimensions. The default radius is chosen from Eq. (13): it is a multiple \(f\) of the distance a walk of \(N_{\rm ref}\) steps typically covers.</p>
+<div class="eq"><span class="eq-label">(14)</span>
+<div class="eq-kind">Default star radius <span class="kind kind-pre">PRESCRIPTION</span></div>
+      \[
+        R=f\,\lambda\sqrt{N_{\rm ref}},\qquad f=2,\quad N_{\rm ref}=2000 .
+      \]
+    </div>
+<p>Here \(f\) is <code>--radius_factor</code> and \(N_{\rm ref}\) is <code>--reference_steps</code>, with their defaults. So \(R=2\sqrt{2000}=89.4427\) and \((R/\lambda)^2=f^2N_{\rm ref}=8000\). This is a choice of drawing size, made by <code>default_radius()</code> in <code>random2_physics.py</code>, not a physical property; <code>--radius</code> overrides it, and <code>reference_steps</code> is not a limit on the walk. The walk stops at the step that crosses the circle.</p>
+<div class="eq"><span class="eq-label">(15)</span>
+<div class="eq-kind">Escape test and exact exit point <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        \lvert\mathbf p_k\rvert\ge R\ \Rightarrow\ \text{escaped after }k\text{ steps};\qquad
+        \lvert\mathbf p_{k-1}+t(\mathbf p_k-\mathbf p_{k-1})\rvert=R,\quad 0&lt;t\le1 .
+      \]
+    </div>
+<p>The second equation is a quadratic in \(t\); <code>circle_crossing_fraction()</code> solves it in a form that stays accurate when the walk ends just outside the circle, and the drawn path stops at that exit point. The ray beyond it, of length <code>--ray_length_factor</code> times \(R\) in the direction of the last step, is only a picture of the photon leaving; the model says nothing about what happens outside. Beat 4 answers the question of how many steps escape takes.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat4">
+<h2>Beat 4 · Escape takes (R/λ)² steps</h2>
+<p>Four walks are too few. Use a smaller star, so that each walk is quick, and send 200 photons out of it.</p>
+<pre>python main.py --display walk2d --radius 30 --n_walks 200 --seed 12</pre>
+<p>Look at <code>(R / mean free path)^2</code>, <code>escaped walks</code>, <code>escape steps</code> and <code>mean escape steps / (R / mean free path)^2</code>. With more than 12 walks the summary does not list them one by one.</p>
+<p>Three tasks, in order. First, read the prediction: <code>(R / mean free path)^2</code> is 900.0. Then read the mean: all 200 walks escape, with a mean of 902.7 steps and a standard error of 44.7, so the mean is 1.0030 times the prediction, well within one standard error. Then read the spread: the median is 742.5, the fastest walk escapes in 132 steps and the slowest takes 3797. Say why the mean is larger than the median, and what that says about the shape of the distribution of escape times.</p>
+<p><em>Then</em> why the prediction is \((R/\lambda)^2\). By Eq. (4), each step adds \(\lambda^2\) on average to the square of the distance from the centre, whatever the walk has done before. So the quantity \(r_k^2-k\lambda^2\) stays at zero on average at every step, and stays at zero on average also when it is looked at at the moment of escape. At that moment the photon is between \(R\) and \(R+\lambda\) from the centre, because it was inside one step earlier.</p>
+<div class="eq"><span class="eq-label">(16)</span>
+<div class="eq-kind">Mean number of steps to escape <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \Bigl(\frac{R}{\lambda}\Bigr)^{2}\ \le\ \langle N_{\rm escape}\rangle\ &lt;\ \Bigl(\frac{R}{\lambda}+1\Bigr)^{2}.
+      \]
+    </div>
+<p>For \(R=30\) the mean must lie between 900 and 961, and the printed 902.7 &plusmn; 44.7 is consistent with it. The argument uses only Eq. (4), so the same mean holds for a walk in three dimensions, although the spread of escape times is different there. The distribution is broad and has a long tail: most photons escape in fewer steps than the mean, and a few take several times longer, which pulls the mean above the median. This is the diffusion result behind the long time radiation takes to leave a star: to cross a distance \(R\) in steps of \(\lambda\) takes \((R/\lambda)^2\) steps, not \(R/\lambda\). The statistics are computed by <code>escape_statistics()</code> in <code>random2_driver.py</code>. Beat 5 tests the square.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp8">Experiment 8</a> and <a href="#exp10">Experiment 10</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat5">
+<h2>Beat 5 · Twice the radius, four times the steps</h2>
+<p>Run the 200 walks of Beat 4 again in a star of half the radius.</p>
+<pre>python main.py --display walk2d --radius 15 --n_walks 200 --seed 12
+python main.py --display walk2d --radius 30 --n_walks 200 --seed 12</pre>
+<p>Look at <code>escape steps</code> and <code>mean escape steps / (R / mean free path)^2</code> in both runs. The second run is the run of Beat 4.</p>
+<p>Three tasks, in order. First, read the small star: all 200 walks escape, with a mean of 227.8 steps and a standard error of 10.5, against a prediction of 225.0. Then divide: the mean for \(R=30\) is 902.7, and 902.7/227.8 = 3.96. The medians, 742.5 and 186.0, give 3.99. Then find the uncertainty of that ratio. The relative standard errors are 44.7/902.7 = 0.050 and 10.5/227.8 = 0.046, so the ratio is uncertain by about \(\sqrt{0.050^2+0.046^2}=0.068\) of itself, or 0.27. Say whether the ratio agrees with 4, and what ratio you would expect if escape took a number of steps proportional to \(R\).</p>
+<p><em>Then</em> the ratio from Eq. (16).</p>
+<div class="eq"><span class="eq-label">(17)</span>
+<div class="eq-kind">Doubling the radius <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \frac{\langle N_{\rm escape}(2R)\rangle}{\langle N_{\rm escape}(R)\rangle}\ \longrightarrow\ 4
+        \quad\text{as }R/\lambda\to\infty;\qquad
+        \frac{900}{256}=3.52\ \le\ \frac{\langle N(30)\rangle}{\langle N(15)\rangle}\ \le\ \frac{961}{225}=4.27 .
+      \]
+    </div>
+<p>For a large star the one-step allowance in Eq. (16) does not matter and the ratio is 4. For these small stars Eq. (16) only confines it between 3.52 and 4.27, and the measured 3.96 &plusmn; 0.27 lies inside. A photon that went straight out would take twice as many steps, not four times. Beat 6 asks whether the answer depends on the step length or only on the ratio \(R/\lambda\).</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp9">Experiment 9</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat6">
+<h2>Beat 6 · Only R/λ matters</h2>
+<p>Change the step length and leave the radius to the default rule of Beat 3, which scales it with the step length.</p>
+<pre>python main.py --display walk2d --mean_free_path 0.5 --seed 12
+python main.py --display walk2d --mean_free_path 2 --seed 12</pre>
+<p>Look at <code>star radius R</code>, <code>mean free path</code>, <code>(R / mean free path)^2</code> and the four <code>walk</code> lines, and compare them with Beat 3, which used a step length of 1. Compare the plots too, including the numbers on their axes.</p>
+<p>Three tasks, in order. First, read the radii: 44.7214 for a step of 0.5, 89.4427 for 1 (Beat 3) and 178.8854 for 2, while <code>(R / mean free path)^2</code> is 8000.0 in all three. Then read the walks: they escape after 11564, 7519, 8246 and 2479 steps in all three runs, the very same numbers. Then compare the plots: the pictures are the same, and only the scale on the axes differs by a factor of 2. Say why changing the step length changed nothing that is measured in steps.</p>
+<p><em>Then</em> the reason. Divide every position by \(\lambda\): by Eq. (12) the walk becomes a sum of unit vectors \((\cos\theta_i,\sin\theta_i)\), and the escape test of Eq. (15) becomes \(\lvert\mathbf p_k\rvert/\lambda\ge R/\lambda\).</p>
+<div class="eq"><span class="eq-label">(18)</span>
+<div class="eq-kind">The walk in units of the step length <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \frac{\mathbf p_k}{\lambda}=\sum_{i=1}^{k}(\cos\theta_i,\ \sin\theta_i),
+        \qquad
+        \text{escape when}\ \ \frac{\lvert\mathbf p_k\rvert}{\lambda}\ \ge\ \frac{R}{\lambda}=f\sqrt{N_{\rm ref}} .
+      \]
+    </div>
+<p>The step length has dropped out; only the dimensionless radius \(R/\lambda\) is left, and the default rule of Eq. (14) keeps it at \(2\sqrt{2000}\) whatever \(\lambda\) is. With the same seed the angles \(\theta_i\) are the same, so the walks are the same walks drawn at a different scale. The counts agree exactly here because multiplying by 0.5 or 2 is exact in the computer's binary arithmetic; for other factors a walk that ends within a rounding error of the edge could, in principle, differ by a step. In a star the photon's mean free path is therefore not needed by itself, only its ratio to the size of the star. Beat 7 turns to a limit the program imposes on its own.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat7">
+<h2>Beat 7 · The step cap</h2>
+<p>A walk could in principle go on for ever, so the program stops any walk that has not escaped after <code>--step_cap</code> steps (200000 by default). Set the cap to the mean escape time of Beat 4, and then to three times it.</p>
+<pre>python main.py --display walk2d --radius 30 --n_walks 200 --step_cap 900 --seed 12
+python main.py --display walk2d --radius 30 --n_walks 200 --step_cap 3000 --seed 12</pre>
+<p>Look at <code>step cap</code>, <code>escaped walks</code>, <code>escape steps</code> and <code>mean escape steps / (R / mean free path)^2</code>, and compare them with Beat 4. On the plot, a walk stopped by the cap ends in an <code>x</code> and has no ray.</p>
+<p>Three tasks, in order. First, read the cap of 900: only 130 of the 200 walks escape, and their mean is 515.7 steps, 0.5730 of the prediction, where Beat 4 found 902.7; the slowest escape counted is 897. Then read the cap of 3000: 196 of 200 escape, with a mean of 837.5, 0.9305 of the prediction. Then compare with Beat 4, where no walk came near the default cap and the mean was 1.0030 of the prediction. Say why the mean of the escaped walks is too small whenever some walks are stopped, even though every number in it is a correct escape count.</p>
+<p><em>Then</em> the rule.</p>
+<div class="eq"><span class="eq-label">(19)</span>
+<div class="eq-kind">The step cap, and the mean it leaves <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        k\le k_{\rm cap};\qquad
+        \text{printed mean}=\langle N_{\rm escape}\,\vert\,N_{\rm escape}\le k_{\rm cap}\rangle\ \le\ \langle N_{\rm escape}\rangle .
+      \]
+    </div>
+<p>Here \(k_{\rm cap}\) is <code>--step_cap</code>. A walk stopped by the cap is not an escape, so the program leaves it out of the escape statistics and reports it separately. What is left is the mean over the walks that happened to be quick, which is biased low; it is a censored sample. The long tail seen in Beat 4 is exactly what the cap cuts off, and even a cap of 3000, more than three times the mean, stops four walks and brings the mean down to 0.9305 of the prediction. The run also changes in a second way: a stopped walk uses fewer random numbers than it would have, so the walks after it are not the same walks as in Beat 4. The escape count of a quantitative experiment is trustworthy only if <code>escaped walks</code> reads 200 of 200, or very nearly. Beat 8 changes the seed.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat8">
+<h2>Beat 8 · Seeds and the hard cases</h2>
+<p>Every beat so far used <code>--seed 12</code>. Run the default experiment of Beat 0 with another seed, then with none, and then try a walk too short to have a length. The last command is rejected; the message says why.</p>
+<pre>python main.py --seed 28
+python main.py
+python main.py --max_steps 1</pre>
+<p>Look at the last row of the table and at <code>fitted log-log slope</code> in the first run, and compare them with Beat 0. In the second run, look at the line <code>seed</code>, and run the same command a second time.</p>
+<p>Three tasks, in order. First, compare the seeds. With seed 28 the last row is 62.2140 with standard error 2.5542; with seed 12 it was 63.0073 with standard error 2.3473. The difference is 0.79, and the two standard errors combined are \(\sqrt{2.5542^2+2.3473^2}=3.47\), so the difference is 0.23 of that. The slopes are 0.4974 and 0.4964. Then read the unseeded run: its <code>seed</code> line reads <code>none (results differ from run to run)</code>, and a second run prints different numbers. Then read the error of the third command: <code>max_steps must be at least 2, because the smallest walk has 2 steps</code>. Say how large a difference between two runs with different seeds would make you suspect a mistake rather than chance.</p>
+<p><em>Then</em> the rule for comparing two random estimates.</p>
+<div class="eq"><span class="eq-label">(20)</span>
+<div class="eq-kind">Uncertainty of a difference <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \mathrm{SE}\bigl(\langle d\rangle_1-\langle d\rangle_2\bigr)=\sqrt{\mathrm{SE}_1^{2}+\mathrm{SE}_2^{2}} .
+      \]
+    </div>
+<p>Two independent estimates differ by less than one combined standard error about two times in three and by more than two about one time in twenty, so a difference of three or more combined standard errors is a reason to look for a mistake. Eq. (20) is the same addition of independent squares as Eq. (4). A seed is a starting point for the generator of random numbers, set by <code>seed_generator()</code> in <code>random2_physics.py</code>; it makes a run repeatable, which is how this page can quote numbers, but it makes no run more correct than another. The table's step counts are found by halving <code>--max_steps</code> until the next value would be 1, so a run needs at least 2 steps; the smallest accepted value, <code>--max_steps 2</code>, gives a table of one row, and the program then prints <code>fitted log-log slope: n/a (only one step count)</code>. Other rejected inputs are listed under <a href="#parameters">Parameters</a>.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> and <a href="#exp11">Experiment 11</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="equations">
+<h2>Governing Equations</h2>
+<p>The twenty numbered equations, with the kind of statement each one is, the beat that introduces it, and where the program evaluates it. A few unnumbered relations are stated inside the beats where they are needed and are listed after the table.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Index of the numbered equations"><table>
+<thead><tr><th>Equation</th><th>Kind</th><th>What it says</th><th>Beat</th><th>Where in the code</th></tr></thead>
+<tbody>
+<tr><td>(1)</td><td><span class="kind kind-law">MODEL</span></td><td>Independent steps with zero mean</td><td>0</td><td>not evaluated; assumed by both step generators in <code>random2_physics.py</code></td></tr>
+<tr><td>(2)</td><td><span class="kind kind-def">DEFINITION</span></td><td>Uniform step components</td><td>0</td><td><code>generate_component_step("uniform")</code> in <code>random2_physics.py</code></td></tr>
+<tr><td>(3)</td><td><span class="kind kind-def">DEFINITION</span></td><td>Net distance and scaled distance</td><td>0</td><td><code>_perform_single_walk_3d()</code> in <code>random2_driver.py</code></td></tr>
+<tr><td>(4)</td><td><span class="kind kind-der">DERIVED</span></td><td>The mean square distance</td><td>0</td><td>not evaluated</td></tr>
+<tr><td>(5)</td><td><span class="kind kind-der">DERIVED</span></td><td>The square-root law</td><td>0</td><td>not evaluated; its ratio is the <code>ratio to sqrt(N)</code> column printed by <code>main.py</code></td></tr>
+<tr><td>(6)</td><td><span class="kind kind-def">DEFINITION</span></td><td>Standard error of a mean</td><td>1</td><td><code>_perform_trials_3d_with_error()</code> in <code>random2_driver.py</code>; <code>escape_statistics()</code> for escape steps</td></tr>
+<tr><td>(7)</td><td><span class="kind kind-der">DERIVED</span></td><td>How the standard error scales</td><td>1</td><td>not evaluated</td></tr>
+<tr><td>(8)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>The fitted log-log slope</td><td>1</td><td><code>fitted_loglog_slope()</code> in <code>random2_physics.py</code></td></tr>
+<tr><td>(9)</td><td><span class="kind kind-def">DEFINITION</span></td><td>Gaussian step components</td><td>2</td><td><code>generate_component_step("gaussian")</code> in <code>random2_physics.py</code></td></tr>
+<tr><td>(10)</td><td><span class="kind kind-der">DERIVED</span></td><td>Mean distance after many steps</td><td>2</td><td><code>large_n_scaled_distance_ratio()</code> in <code>random2_physics.py</code></td></tr>
+<tr><td>(11)</td><td><span class="kind kind-der">DERIVED</span></td><td>The constant C for the two distributions</td><td>2</td><td><code>large_n_scaled_distance_ratio()</code> and <code>UNIFORM_MEAN_STEP_LENGTH</code> in <code>random2_physics.py</code></td></tr>
+<tr><td>(12)</td><td><span class="kind kind-law">MODEL</span></td><td>Isotropic steps of fixed length</td><td>3</td><td><code>generate_isotropic_step()</code> in <code>random2_physics.py</code></td></tr>
+<tr><td>(13)</td><td><span class="kind kind-der">DERIVED</span></td><td>Root-mean-square distance of the display walk</td><td>3</td><td>not evaluated; used by Eq. (14)</td></tr>
+<tr><td>(14)</td><td><span class="kind kind-pre">PRESCRIPTION</span></td><td>Default star radius</td><td>3</td><td><code>default_radius()</code> in <code>random2_physics.py</code></td></tr>
+<tr><td>(15)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Escape test and exact exit point</td><td>3</td><td><code>run_walk2d()</code> in <code>random2_driver.py</code>; <code>circle_crossing_fraction()</code> in <code>random2_physics.py</code></td></tr>
+<tr><td>(16)</td><td><span class="kind kind-der">DERIVED</span></td><td>Mean number of steps to escape</td><td>4</td><td>not evaluated; \((R/\lambda)^2\) is printed by <code>main.py</code></td></tr>
+<tr><td>(17)</td><td><span class="kind kind-der">DERIVED</span></td><td>Doubling the radius</td><td>5</td><td>not evaluated</td></tr>
+<tr><td>(18)</td><td><span class="kind kind-der">DERIVED</span></td><td>The walk in units of the step length</td><td>6</td><td>not evaluated</td></tr>
+<tr><td>(19)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>The step cap, and the mean it leaves</td><td>7</td><td><code>run_walk2d()</code> and <code>escape_statistics()</code> in <code>random2_driver.py</code></td></tr>
+<tr><td>(20)</td><td><span class="kind kind-der">DERIVED</span></td><td>Uncertainty of a difference</td><td>8</td><td>not evaluated</td></tr>
+</tbody></table></div>
+<p>The unnumbered relations are the relative spread 0.42 of the scaled distance (Beat 1, DERIVED, from the distance of a three-dimensional Gaussian point); the bounds 3.52 and 4.27 on the escape ratio (Beat 5, DERIVED from Eq. (16)); and the halving rule for the step counts (Beat 8, ALGORITHM, <code>run_scaled_distance_statistics()</code>).</p>
+</section>
+<section id="algorithm">
+<h2>Algorithm</h2>
+<p>This section collects in one place the rules of the calculation that the beats introduced one at a time.</p>
+<h3>Scaled-distance display</h3>
+<ol>
+<li>If <code>--seed</code> is given, seed the random-number generator with it.</li>
+<li>Start with \(N\) = <code>--max_steps</code>. For this \(N\), run <code>--n_trials</code> independent walks of \(N\) steps with the step components of Eq. (2) or Eq. (9), and for each record the scaled distance \(d\) of Eq. (3).</li>
+<li>Record the mean of the \(d\) values and its standard error, Eq. (6). The standard error is <code>n/a</code> for a single trial.</li>
+<li>Halve \(N\), discarding any remainder, and repeat from step 2 until the next value would be 1.</li>
+<li>Order the rows from the shortest walk to the longest, print them with their ratio to \(\sqrt N\), the large-\(N\) prediction of Eq. (11) and the fitted slope of Eq. (8), and draw the log-log plot.</li>
+</ol>
+<h3>Star display</h3>
+<ol>
+<li>If <code>--seed</code> is given, seed the random-number generator with it. Take the radius from <code>--radius</code>, or from Eq. (14) if it is omitted.</li>
+<li>For each of <code>--n_walks</code> walks, start at the centre and add steps of Eq. (12) one at a time.</li>
+<li>After each step, apply the escape test of Eq. (15). If the walk has escaped, cut its last segment at the exact exit point, record the step count, and add a ray in the direction of the last step.</li>
+<li>If the walk has taken <code>--step_cap</code> steps without escaping, stop it and record it as not escaped, Eq. (19).</li>
+<li>Print the escape statistics of the escaped walks and draw the star, the paths, the rays and an <code>x</code> at the end of each stopped walk.</li>
+</ol>
+<h3>Named constants</h3>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Named constants"><table>
+<thead><tr><th>Name</th><th>Value</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td><code>UNIFORM_MEAN_STEP_LENGTH</code></td><td>0.960592</td><td>Mean length of a uniform-component step, \(\langle\ell\rangle\) of Eq. (11), in <code>random2_physics.py</code>.</td></tr>
+<tr><td><code>MAX_LISTED_WALKS</code></td><td>12</td><td>Largest number of walks listed one per line in the summary, in <code>main.py</code>.</td></tr>
+</tbody></table></div>
+<h3>Random numbers and repeatability</h3>
+<p>Both displays draw their random numbers from Python's standard generator. A run with <code>--seed</code> repeats exactly on the same computer and program version. A different computer normally gives the same numbers too, but its mathematical library could in principle round a sine or a square root differently in the last digit, which could move the end of a walk that finishes within a rounding error of the edge by one step. Without <code>--seed</code>, every run is different, and the standard errors in the summary say how different to expect.</p>
+<div class="note">
+<strong>Tip:</strong> Before trusting an average, read its standard error. Before trusting an escape-step mean, check that <code>escaped walks</code> says that all the walks, or nearly all, escaped. Before trusting a difference between two runs, compare it with the combined standard error of Eq. (20).
+    </div>
+</section>
+<section id="modules">
+<h2>Program Files</h2>
+<div class="mc">
+<div class="mc-card">
+<div class="mc-name">main.py</div>
+<div class="mc-role">Entry Point &amp; Configuration</div>
+<p>
+          Defines and describes every command-line option in <code>build_parser()</code>, seeds the generator, runs the selected display, prints its summary (see <a href="#summary">Printed Summary</a>) with <code>scaled_distance_summary()</code> or <code>walk2d_summary()</code>, and passes the results to the plotter.
+        </p>
+</div>
+<div class="mc-card">
+<div class="mc-name">random2_physics.py</div>
+<div class="mc-role">Physics Layer</div>
+<p>
+          Contains the two step generators, <code>generate_component_step()</code> and <code>generate_isotropic_step()</code>; <code>default_radius()</code>; the exit-point geometry <code>circle_crossing_fraction()</code> and <code>point_at()</code>; <code>large_n_scaled_distance_ratio()</code>; <code>fitted_loglog_slope()</code>; <code>seed_generator()</code>; the input checks shared by the other modules; and the version and build identifier.
+        </p>
+</div>
+<div class="mc-card">
+<div class="mc-name">random2_driver.py</div>
+<div class="mc-role">Driver Layer</div>
+<p>
+          Defines <code>run_scaled_distance_statistics()</code>, which returns a <code>ScaledDistanceResult</code> (step counts, averages and standard errors, as tuples); <code>run_scaled_distance_experiment()</code>, which returns just the step counts and averages as two lists; <code>run_walk2d()</code>, which returns a <code>Walk2DResult</code> holding one <code>WalkPath</code> per walk; and <code>escape_statistics()</code>. The result types are frozen, so they cannot be changed after they are returned.
+        </p>
+</div>
+<div class="mc-card">
+<div class="mc-name">random2_plot.py</div>
+<div class="mc-role">Visualisation</div>
+<p>
+          Provides <code>plot_scaled_distance(lengths, avg_dist)</code>, the log-log plot with equal decades and the fitted slope, and <code>plot_walk2d(result, corner="upper right")</code>, the star with its walks and an annotation box; see <a href="#output">Plots</a>.
+        </p>
+</div>
+</div><!-- .mc -->
+</section>
+<section id="quickstart">
+<h2>Quick Start</h2>
+<h3>Requirements</h3>
+<p>Python 3.10 or later with <code>matplotlib</code>:</p>
+<pre>pip install "matplotlib&gt;=3.5"</pre>
+<h3>Running the Program</h3>
+<p>Clone or download the repository, then open a terminal in the folder that contains <code>main.py</code>:</p>
+<pre>cd GFTGU-Programs/Random2
+python main.py
+python main.py --display walk2d
+python main.py --help</pre>
+<p>To display the program version and build identifier without running a calculation, use <code>python main.py --version</code>. Options omitted from a command keep their defaults.</p>
+<pre># More trials and Gaussian rather than uniform step components
+python main.py --display scaled_distance --max_steps 8192 --n_trials 500 --step_distribution gaussian
+
+# Move the annotation and suppress the outgoing rays
+python main.py --display walk2d --corner lower_left --ray_length_factor 0</pre>
+<p>The corner selector accepts <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code> and <code>lower_left</code>; the underscores map to the spaced names the plotter uses. The former spellings <code>--maxSteps</code> and <code>--nTrials</code> are still accepted.</p>
+</section>
+<section id="parameters">
+<h2>Command-Line Parameters</h2>
+<p>All ordinary settings are command-line options described in <code>main.py</code>. Options for the display that is not selected may be given, but only the selected display uses them.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table">
+<thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td class="pname">--display</td><td class="pdefault">scaled_distance</td><td><code>scaled_distance</code> runs the three-dimensional statistics of Beats 0 to 2; <code>walk2d</code> draws the schematic star of Beats 3 to 7.</td></tr>
+<tr><td class="pname">--max_steps</td><td class="pdefault">4096</td><td>Longest walk in <code>scaled_distance</code>, at least 2; the shorter walks are found by repeated halving. Alias <code>--maxSteps</code>.</td></tr>
+<tr><td class="pname">--n_trials</td><td class="pdefault">100</td><td>Independent walks averaged for each row; the standard error falls as its square root. Alias <code>--nTrials</code>.</td></tr>
+<tr><td class="pname">--step_distribution</td><td class="pdefault">uniform</td><td><code>uniform</code> draws each component from \([-1,1]\), Eq. (2); <code>gaussian</code> from the standard normal distribution, Eq. (9).</td></tr>
+<tr><td class="pname">--reference_steps</td><td class="pdefault">2000</td><td>\(N_{\rm ref}\) in the default radius, Eq. (14). It sizes the drawing and does not limit the walk.</td></tr>
+<tr><td class="pname">--n_walks</td><td class="pdefault">4</td><td>Number of star walks; they are listed one per line in the summary when there are at most 12.</td></tr>
+<tr><td class="pname">--mean_free_path</td><td class="pdefault">1.0</td><td>Step length \(\lambda\) of every star walk, in arbitrary units.</td></tr>
+<tr><td class="pname">--radius_factor</td><td class="pdefault">2.0</td><td>\(f\) in the default radius, Eq. (14).</td></tr>
+<tr><td class="pname">--radius</td><td class="pdefault">omitted</td><td>Explicit positive star radius; when omitted, Eq. (14) sets it.</td></tr>
+<tr><td class="pname">--ray_length_factor</td><td class="pdefault">0.6</td><td>Length of the outgoing ray as a fraction of the radius; 0 draws no ray.</td></tr>
+<tr><td class="pname">--step_cap</td><td class="pdefault">200000</td><td>Largest number of steps in one star walk; a walk that reaches it is stopped and not counted as escaped (Beat 7).</td></tr>
+<tr><td class="pname">--corner</td><td class="pdefault">upper_right</td><td>Position of the annotation box on the star plot: <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code> or <code>lower_left</code>.</td></tr>
+<tr><td class="pname">--seed</td><td class="pdefault">omitted</td><td>Nonnegative integer that makes a run repeatable; when omitted, every run uses different random numbers (Beat 8).</td></tr>
+</tbody></table></div>
+<div class="note"><strong>Input checking:</strong> The command-line parser rejects unknown display and distribution names, counts that are not positive integers, a <code>--max_steps</code> below 2, lengths and factors that are not positive and finite (the ray factor may be 0), a negative or non-integer seed, and corner names with spaces. The driver also rejects a default radius that cannot be represented as a positive finite number.</div>
+</section>
+<section id="output">
+<h2>Plots</h2>
+<p><strong>scaled_distance</strong> draws the mean scaled distance against the number of steps on log-log axes, with one decade the same length on both axes, so that a slope of 1/2 rises one decade over two. The fitted slope of Eq. (8) is written in the upper-left corner. The points scatter about a straight line by an amount set by the standard errors in the summary.</p>
+<p><strong>walk2d</strong> draws the star as a filled circle with its centre marked, each walk in its own colour, a straight ray beyond the edge for each escaped walk, and an <code>x</code> at the end of each walk stopped by the step cap. The annotation box repeats the radius, mean free path, reference step count, number of escaped walks and the median escape step count. The axes always leave room for the longest ray.</p>
+</section>
+<section id="summary">
+<h2>Printed Summary</h2>
+<p>Every run prints the program version and build, then a summary, then opens its plot. This is the summary of the run of Beat 0:</p>
+<pre>Random2 1.3.0 (build 3c162492d309)
+display: scaled_distance
+step components: uniform
+trials per step count: 100
+seed: 12
+       N  mean scaled distance  standard error  ratio to sqrt(N)
+       2                1.3630          0.0421            0.9638
+       4                1.9480          0.0697            0.9740
+       8                2.8664          0.1006            1.0134
+      16                3.8986          0.1587            0.9747
+      32                5.3557          0.2152            0.9468
+      64                8.0223          0.3229            1.0028
+     128               11.5819          0.4423            1.0237
+     256               14.9520          0.6668            0.9345
+     512               20.5331          0.8282            0.9074
+    1024               30.6802          1.2679            0.9588
+    2048               43.1601          1.9086            0.9537
+    4096               63.0073          2.3473            0.9845
+large-N prediction for ratio to sqrt(N): 0.9591
+fitted log-log slope: 0.4964</pre>
+<ul>
+<li><code>display</code>, <code>step components</code>, <code>trials per step count</code> and <code>seed</code>: the settings of the run. <code>seed</code> reads <code>none (results differ from run to run)</code> when <code>--seed</code> is omitted.</li>
+<li><code>mean scaled distance</code>: the mean of \(d\), Eq. (3), over the trials for that <code>N</code>, in units of the mean step length.</li>
+<li><code>standard error</code>: the standard error of that mean, Eq. (6); <code>n/a</code> for a single trial.</li>
+<li><code>ratio to sqrt(N)</code>: the mean scaled distance divided by \(\sqrt N\), which the square-root law of Eq. (5) makes constant.</li>
+<li><code>large-N prediction for ratio to sqrt(N)</code>: the constant \(C\) of Eq. (11), 0.9591 for uniform and 1.0000 for Gaussian steps.</li>
+<li><code>fitted log-log slope</code>: the least-squares slope of Eq. (8); <code>n/a</code> when there is only one row.</li>
+</ul>
+<p>The star display prints a different summary. This is the run of Beat 3:</p>
+<pre>Random2 1.3.0 (build 3c162492d309)
+display: walk2d
+star radius R: 89.4427
+mean free path: 1
+(R / mean free path)^2: 8000.0
+step cap: 200000
+seed: 12
+walk 1: escaped after 11564 steps
+walk 2: escaped after 7519 steps
+walk 3: escaped after 8246 steps
+walk 4: escaped after 2479 steps
+escaped walks: 4 of 4
+escape steps: mean 7452.0 (standard error 1876.9), median 7882.5, min 2479, max 11564
+mean escape steps / (R / mean free path)^2: 0.9315</pre>
+<ul>
+<li><code>star radius R</code>, <code>mean free path</code>, <code>step cap</code> and <code>seed</code>: the settings of the run; the radius is given explicitly or comes from Eq. (14).</li>
+<li><code>(R / mean free path)^2</code>: the lower bound of Eq. (16) on the mean number of steps to escape.</li>
+<li><code>walk</code> lines: each walk's escape step count, or <code>stopped at the step cap after ... steps, not escaped</code>; printed only for at most 12 walks.</li>
+<li><code>escaped walks</code>: how many of the walks escaped before the step cap.</li>
+<li><code>escape steps</code>: the mean with its standard error, the median, the minimum and the maximum of the escape step counts of the escaped walks only (Beat 7); <code>n/a (no walk escaped)</code> if none escaped.</li>
+<li><code>mean escape steps / (R / mean free path)^2</code>: the mean divided by the prediction.</li>
+</ul>
+</section>
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<p>The experiments are ranked from introductory to advanced, and each is cited by the beat it extends. Each command is run from the program's folder. Leave out <code>--seed</code> to see how much the results change from run to run.</p>
+<h3 id="exp1">1 · Verify the √N Law — Introductory</h3>
+<p>Run the default experiment several times without a seed. Check that the ratio column stays near the large-\(N\) prediction, and that the plotted points lie close to a line of slope 1/2, one vertical decade for two horizontal decades.</p>
+<pre>python main.py --display scaled_distance --max_steps 4096 --n_trials 100</pre>
+<h3 id="exp2">2 · Reduce Statistical Scatter — Introductory</h3>
+<p>Repeat the calculation with more and more trials. Record the standard error of the last row each time and check that it falls roughly as one over the square root of the number of trials. Notice the trade-off between precision and run time.</p>
+<pre>python main.py --n_trials 25
+python main.py --n_trials 100
+python main.py --n_trials 500
+python main.py --n_trials 1000</pre>
+<h3 id="exp3">3 · Measure the Log-Log Slope by Hand — Introductory to Intermediate</h3>
+<p>Take two well-separated rows of the table and compute the exponent \(\alpha\) in \(\langle d\rangle\propto N^\alpha\) from them, as \(\log(d_2/d_1)/\log(N_2/N_1)\). Compare it with the printed fitted slope, which uses all the rows, and repeat with more trials.</p>
+<pre>python main.py --max_steps 4096 --n_trials 500</pre>
+<h3 id="exp4">4 · Change the Step Distribution — Intermediate</h3>
+<p>Compare uniform and Gaussian step components with the same seed. The exponent stays at 1/2 and only the constant changes, from 0.9591 to 1. This is one of Schutz's suggested modifications.</p>
+<pre>python main.py --step_distribution uniform --seed 12
+python main.py --step_distribution gaussian --seed 12</pre>
+<h3 id="exp5">5 · Change the Definition of Scaled Distance — Intermediate Programming</h3>
+<p>Test whether the square-root law depends on dividing by each walk's mean step length. In a separate copy of the program, average <code>net_distance</code> instead of <code>net_distance / mean_step</code> in <code>_perform_trials_3d_with_error()</code>. The constant changes, to 0.9213 for uniform and 1.5958 for Gaussian steps by Eq. (10), but the exponent stays near 1/2.</p>
+<h3 id="exp6">6 · Mean Free Path and Geometric Scaling — Intermediate</h3>
+<p>Leave <code>--radius</code> out and change <code>--mean_free_path</code>. With a seed, the escape step counts do not change at all (Beat 6); without one, compare the statistics of many walks.</p>
+<pre>python main.py --display walk2d --mean_free_path 0.5
+python main.py --display walk2d --mean_free_path 1.0
+python main.py --display walk2d --mean_free_path 2.0</pre>
+<h3 id="exp7">7 · Individual Walks and Statistical Variety — Intermediate</h3>
+<p>Display a few walks at a time and compare their shapes and escape step counts. Individual paths look very different although they follow the same rules. Keep the number small enough that the paths can be told apart.</p>
+<pre>python main.py --display walk2d --n_walks 4
+python main.py --display walk2d --n_walks 6
+python main.py --display walk2d --n_walks 10</pre>
+<h3 id="exp8">8 · Explore the Escape-Time Distribution — Intermediate to Advanced</h3>
+<p>Run many walks in a small star and compare the mean, median, minimum and maximum escape step counts. Then lower the step cap until some walks are stopped, and watch the mean of the escaped walks fall (Beat 7).</p>
+<pre>python main.py --display walk2d --radius 20 --n_walks 500
+python main.py --display walk2d --radius 20 --n_walks 500 --step_cap 400</pre>
+<h3 id="exp9">9 · Verify Escape Steps ∝ R² — Advanced</h3>
+<p>Hold the mean free path fixed and use several radii. For each, divide the mean escape step count by \(R^2\). Eq. (16) says the result lies between 1 and \((1+1/R)^2\); check it, using the standard error, and check that every walk escaped.</p>
+<pre>python main.py --display walk2d --radius 30 --mean_free_path 1 --n_walks 100
+python main.py --display walk2d --radius 40 --mean_free_path 1 --n_walks 100
+python main.py --display walk2d --radius 50 --mean_free_path 1 --n_walks 100
+python main.py --display walk2d --radius 60 --mean_free_path 1 --n_walks 100</pre>
+<h3 id="exp10">10 · A Photon's Escape from the Sun — Advanced</h3>
+<p>Use Eq. (16), which holds in three dimensions as well as two, for an order-of-magnitude estimate. Take a solar radius of \(7\times10^{8}\) m and suppose, very roughly, that the photon mean free path were 1 cm everywhere. How many steps would escape take, and how long would that be if each step took \(\lambda/c\)? Then say which assumptions of the estimate are the weakest, using the limitations in the Overview: the mean free path changes enormously with depth, and the outer part of the Sun carries its energy by convection. Treat the answer only as an order of magnitude.</p>
+<h3 id="exp11">11 · Read the Result Objects — Advanced Programming</h3>
+<p>Every number in the summary is available from the driver's results. Run this script from the program's folder, compare its numbers with the last row of the table in Beat 0 and the mean in Beat 4, and then extend it, for example to make a histogram of the escape step counts.</p>
+<pre>import random2_physics as physics
+from random2_driver import run_scaled_distance_statistics, run_walk2d, escape_statistics
+
+physics.seed_generator(12)
+table = run_scaled_distance_statistics(4096, 100, "uniform")
+print(table.lengths[-1], table.averages[-1], table.standard_errors[-1])
+
+physics.seed_generator(12)
+star = run_walk2d(n_walks=200, radius=30.0)
+steps = [walk.steps_taken for walk in star.walks if walk.escaped]
+print(len(steps), escape_statistics(star).mean)</pre>
+</section>
+<section class="restore-section" aria-labelledby="restore-title">
+<div class="restore-box">
+<!-- Icon -->
+<div class="restore-icon">↩️</div>
+<!-- Content -->
+<div>
+<div class="restore-title" id="restore-title">Restoring Defaults and Program Files</div>
+<p class="restore-intro">
+        A new run with <code>python main.py</code> uses all default settings; options in a previous command do not carry over. If you edit <code>main.py</code> or another program file for a programming extension, restore it using any of the following methods:
+      </p>
+<ul class="restore-list">
+<li>
+<strong>Same session:</strong>
+          Press <kbd>Ctrl+Z</kbd>
+          (Windows) or <kbd>Cmd+Z</kbd>
+          (macOS) repeatedly in your editor to undo your edits.
+        </li>
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+        </li>
+<li>
+<strong>Full reset:</strong>
+          Re-download the ZIP from
+          <a class="restore-link" href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">
+            github.com/tomyee3-org/GFTGU-Programs
+          </a>
+          and replace this program's folder with the fresh copy.
+        </li>
+</ul>
+<p class="restore-footnote">
+        For additional ways to restore program files, see the corresponding
+        recovery instructions in the <em>GFTGU Python Setup Guide</em>.
+      </p>
+</div>
+</div>
+</section>
+<section id="related">
+<h2>Related Programs</h2>
+<ul class="related-list">
+<li><a href="../Star/Star.html"><strong>Star</strong></a> — Stellar structure and the physical conditions through a star, including the temperatures and densities through which radiation diffuses.</li>
+<li><a href="../Neutron/Neutron-claude.html"><strong>Neutron</strong></a> — Relativistic neutron-star structure.</li>
+</ul>
+</section>
+<section id="license">
+<h2>License</h2>
+<p>
+      This software is based on the programs by <strong>Bernard Schutz</strong> accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003) and is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license. It descends from Schutz's original Java program <em>Random</em>; this student-facing version is a Python port by Thomas Yee.
+    </p>
+</section>
+</main>
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+<em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+</footer>
+</div><!-- /page-wrap -->
+<!-- ── Sidebar active-link tracking ── -->
+<script>
+  (function () {
+    const links = document.querySelectorAll('nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector(`nav a[href="#${e.target.id}"]`);
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('main section[id]').forEach(s => observer.observe(s));
+  })();
+</script>
+</body>
+</html>
