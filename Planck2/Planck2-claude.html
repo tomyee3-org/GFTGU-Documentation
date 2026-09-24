@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Planck2 – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+    /* ── Reset & custom properties ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #fdf5e6;
+      --surface:  #ffffff;
+      --border:   #c8bfa0;
+      --accent:   #7b2d00;
+      --accent2:  #a04010;
+      --gold:     #b5811a;
+      --text:     #1c1c1c;
+      --muted:    #5a4a3a;
+      --code-bg:  #f0ede4;
+      --note-bg:  #f4f0e8;
+      --eq-bg:    #f7f2e8;
+      --radius:   5px;
+      --shadow:   0 2px 8px rgba(0,0,0,0.10);
+      --mono:     "Courier New", Courier, monospace;
+      --sans:     "Helvetica Neue", Arial, sans-serif;
+      --serif:    Georgia, "Times New Roman", Times, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Page grid ── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.95rem;
+      font-weight: normal;
+      letter-spacing: -.02em;
+    }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub {
+      margin-top: 6px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: #f0d0b8;
+      line-height: 1.55;
+    }
+    header .sub a {
+      color: #ffd8b8;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,200,150,.4);
+    }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+
+    /* ── Sidebar ── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      padding: 14px 18px 4px;
+    }
+    nav a {
+      display: block;
+      padding: 6px 18px 6px 22px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background .15s, border-color .15s;
+    }
+    nav a:hover {
+      background: var(--bg);
+      border-left-color: var(--accent2);
+      color: var(--accent);
+    }
+    nav a.active {
+      background: var(--note-bg);
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    nav hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 14px;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 38px 48px 60px;
+      max-width: 860px;
+    }
+
+    section { margin-bottom: 52px; }
+
+    h2 {
+      font-size: 1.30rem;
+      font-weight: normal;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 6px;
+      margin-bottom: 18px;
+      letter-spacing: -.01em;
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--accent2);
+      margin: 24px 0 8px;
+    }
+    h4 {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin: 18px 0 6px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    /* ── Equation block ── */
+    .eq {
+      background: var(--eq-bg);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 20px;
+      margin: 18px 0;
+      overflow-x: auto;
+      font-size: 1.05em;
+    }
+    .eq-label {
+      float: right;
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 2px;
+    }
+
+    /* ── Note / tip box ── */
+    .note {
+      background: var(--note-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      margin: 18px 0;
+      font-size: 0.93rem;
+    }
+    .note strong { color: var(--accent); }
+
+    /* ── Restore-defaults box ── */
+    .restore-section {
+      margin: 2.5em auto;
+      max-width: 860px;
+      font-family: inherit;
+    }
+    .restore-box {
+      border: 1.5px solid var(--gold);
+      border-left: 5px solid var(--gold);
+      border-radius: 6px;
+      background: #fffbeb;
+      padding: 1.1em 1.4em;
+      display: flex;
+      gap: 1em;
+      align-items: flex-start;
+    }
+    .restore-icon { font-size: 1.5em; line-height: 1; flex-shrink: 0; }
+    .restore-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      color: var(--accent);
+      margin-bottom: 0.35em;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .restore-intro {
+      margin: 0 0 0.5em;
+      font-size: 0.92em;
+      line-height: 1.6;
+    }
+    .restore-list {
+      margin: 0;
+      padding-left: 1.4em;
+      font-size: 0.92em;
+      line-height: 1.8;
+    }
+    .restore-box kbd {
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.88em;
+    }
+    .restore-link { color: var(--accent); text-decoration: underline; }
+    .restore-footnote {
+      margin: 0.6em 0 0;
+      font-size: 0.88em;
+      color: var(--muted);
+    }
+
+    /* ── Code ── */
+    pre {
+      background: #2b2b2b;
+      color: #f0ede4;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.55;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 0.91em;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    pre code { background: none; padding: 0; font-size: inherit; }
+
+    /* ── Module cards ── */
+    .mc { display: grid; gap: 14px; margin: 18px 0; }
+    .mc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+    }
+    .mc-card .mc-name {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .mc-card .mc-role {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .mc-card p { font-size: 0.92rem; margin-bottom: 0; color: var(--muted); }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 16px 0;
+    }
+    th {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      background: var(--note-bg);
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { font-family: var(--mono); color: var(--accent2); }
+
+    /* ── Output type list ── */
+    .output-list { list-style: none; margin: 14px 0; }
+    .output-list li {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .output-list li:last-child { border-bottom: none; }
+    .output-list .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      white-space: nowrap;
+      color: var(--accent2);
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
+    }
+    footer a { color: #e0c090; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Beats layout additions ── */
+    .eq-kind {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .kind {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-left: 4px;
+      vertical-align: 1px;
+    }
+    .kind-law { background: #f6dcdc; color: #7a1f1f; border: 1px solid #d9a0a0; }
+    .kind-ode { background: #d9ead3; color: #274e13; border: 1px solid #a8c69a; }
+    .kind-def { background: #e4e4e4; color: #3a3a3a; border: 1px solid #b5b5b5; }
+    .kind-der { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
+    .kind-alg { background: #e6e0f8; color: #3d2c73; border: 1px solid #b7abdd; }
+    .warn {
+      background: #fff6e8;
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 12px 18px;
+      margin: 16px 0;
+      font-family: var(--sans);
+      font-size: 0.91rem;
+      color: var(--muted);
+    }
+    .warn strong { color: var(--accent); }
+    .compare-table th:not(:first-child), .compare-table td:not(:first-child) {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .compare-table td:not(:first-child) { font-family: var(--mono); color: var(--text); }
+    main { min-width: 0; }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+    section ul { margin: 0 0 14px 1.4em; }
+    section ul li, section ol li { margin-bottom: 6px; }
+    section ol { margin: 0 0 14px 1.6em; }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 48px; }
+    }
+  
+</style>
+</head>
+
+<body>
+<div class="page-wrap">
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+<div class="badge">Chapter 10 · Gravity from the Ground Up</div>
+<h1><em>Planck2</em> — Black-Body Radiation</h1>
+<div class="sub">
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+</div>
+</header>
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<nav id="sidebar">
+<div class="nav-label">Overview</div>
+<a href="#overview">Overview</a>
+<a href="#beats">How to read this page</a>
+<div class="nav-label">Beats</div>
+<a href="#beat0">0 · One curve for a hot body</a>
+<a href="#beat1">1 · Temperature slides the curve</a>
+<a href="#beat2">2 · Per wavelength or per frequency</a>
+<a href="#beat3">3 · Radiance and energy density</a>
+<a href="#beat4">4 · Adding up the spectrum</a>
+<a href="#beat5">5 · Doubling T multiplies power by 16</a>
+<a href="#beat6">6 · The sampled grid</a>
+<a href="#beat7">7 · The approximation switches</a>
+<a href="#beat8">8 · The hard cases</a>
+<div class="nav-label">Code</div>
+<a href="#equations">Governing Equations</a>
+<a href="#algorithm">Algorithm</a>
+<a href="#modules">Program Files</a>
+<div class="nav-label">Usage</div>
+<a href="#quickstart">Quick Start</a>
+<a href="#parameters">Parameters</a>
+<a href="#quantities">Quantity Modes</a>
+<a href="#summary">Printed Summary</a>
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
+<div class="nav-label">Reference</div>
+<a href="#related">Related Programs</a>
+<a href="#license">License</a>
+</nav>
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main>
+<p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build c586ea3aebd4
+</p>
+<section id="overview">
+<h2>Overview</h2>
+<p><strong>Planck2</strong> is a black-body-radiation investigation for Chapter 10. It plots the user's choice of spectral radiance per unit wavelength \(B_\lambda\), spectral radiance per unit frequency \(B_\nu\), or spectral energy density per unit frequency \(u_\nu\), using physical wavelength or frequency on the horizontal axis. Investigations 10.1, 10.2, and 10.3 are relevant to this program.</p>
+<p>Besides the curve, the program prints and annotates the sampled peak, the area under the dimensionless shape function, and a physical integral over wavelength or frequency, next to the exact value that the integral would have if it ran from zero to infinity. Those last two numbers are what let you check the program, and the Stefan&ndash;Boltzmann \(T^4\) law, without any other tool.</p>
+<p>The spine of the lesson is one sentence: <em>every black-body spectrum is one universal curve \(x^p/(e^x-1)\) in the variable \(x=h\nu/kT\), so temperature only slides and scales it, the choice of what to call the spectrum (per wavelength, per frequency, or as an energy density) changes only the exponent \(p\) and the scale, and the printed comparison with the exact area is how you tell how far to trust a numerical sum over a finite grid.</em> Each numbered section below is one beat: a short argument, a command whose printed summary or figure illustrates it, and then the equation that the printed numbers follow from.</p>
+<div class="note">
+<strong>Scope:</strong> Planck2 evaluates the Planck law of an ideal black body. It does not model a real star's absorption lines, emissivity below one, or radiation transfer, and it does not fit measured spectra. <em>Star</em> models stellar structure and <em>Random2</em> follows radiation diffusing through an opaque interior; Planck2 shows the thermal spectrum that a given temperature produces.
+    </div>
+<div class="warn"><strong>What this program is, and what it does not model.</strong> Planck2 is a teaching model of the spectrum of a perfect black body at one temperature. The 5900 K default approximates the Sun's continuum, but the Sun is not an ideal black body, and the curve has no absorption lines. The numbers are computed by adding up the curve on a grid of finite size, over a finite range, with two limiting formulas at the ends of that range, so each printed integral carries a numerical error. The exact reference values it prints describe the whole range from zero to infinity; the numerical results describe the finite range. Beats 6 to 8 show what those choices do to the numbers, and how the printed comparison exposes a bad choice.</div>
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset. If the CDN cannot be reached, the unrendered TeX source and its delimiters remain visible&mdash;for example, <code>\(x=hc/(\lambda kT)\)</code>&mdash;instead of a typeset formula. This has no effect on the program itself, which needs no internet access to run.</div>
+</section>
+<section id="beats">
+<h2>How to read this page</h2>
+<p>Each numbered section below is one beat: a short argument in words, a command whose output illustrates it, and then the equation that the output follows from. Do them in order the first time. After that, any beat can be opened on its own.</p>
+<p>The program's output is a consequence of its equations, so what a beat shows is the equation at work, not independent evidence that Planck's law is right. The outside checks the program offers are the exact reference values that it prints beside its numerical integrals. Beats 4 to 8 compare the numerical results with them.</p>
+<p>Every beat uses the same program and the same printed summary. What changes from beat to beat is the command. Beat 0 runs the default spectrum, Beat 1 changes only the temperature, Beat 2 changes what the curve is a density of, Beat 3 changes what the curve measures, Beat 4 adds up the area, Beat 5 asks how that sum depends on temperature, and Beats 6 to 8 open up the numerical method: the grid, the two approximation switches, and the cases where the default settings are not enough.</p>
+<p>Run every command from the program's folder. Each run prints a four-line summary and then opens a plot window; close the window to end the program. Each beat names the lines of the summary to look at. The summary does not print the wavelength or frequency of the peak; that number is in the plot's annotation box, on the line that begins <code>Peak &lambda; =</code> or <code>Peak &nu; =</code>, and beats that quote it tell you so. Temperatures are in kelvin, wavelengths in metres, frequencies in hertz, spectral radiance per wavelength in W m<sup>&minus;3</sup> sr<sup>&minus;1</sup>, spectral radiance per frequency in W m<sup>&minus;2</sup> sr<sup>&minus;1</sup> Hz<sup>&minus;1</sup> and spectral energy density in J m<sup>&minus;3</sup> Hz<sup>&minus;1</sup>. The integrals of the radiances are in W m<sup>&minus;2</sup> sr<sup>&minus;1</sup> and that of the energy density is in J m<sup>&minus;3</sup>.</p>
+<div class="note"><strong>What kind of statement is each equation?</strong> Each displayed equation in the beats carries a tag. A red <span class="kind kind-law">LAW</span> tag marks a law of nature that the model adopts and does not derive; Eq. (1), Planck's law, is the only one. A grey <span class="kind kind-def">DEFINITION</span> tag marks a quantity that is defined by a formula. A blue <span class="kind kind-der">DERIVED</span> tag marks a result that follows from the equations already stated. A violet <span class="kind kind-alg">ALGORITHM</span> tag marks a rule of the numerical method, which is a choice made by the program rather than physics: Eqs. (15), (17) and (18) to (20). A green <span class="kind kind-ode">ODE</span> tag is used by other programs for a differential equation to be integrated; Planck2 has none. The tags are there so that a law, a definition and a numerical rule are never mistaken for one another. Twenty-one equations are numbered; a few unnumbered ones appear where they are needed.</div>
+</section>
+<section id="beat0">
+<h2>Beat 0 · One curve for a hot body</h2>
+<p>A body at 5900 K, about the temperature of the Sun's visible surface, glows across the spectrum but most strongly in one band. Ask the program for its spectral radiance per unit wavelength.</p>
+<pre>python main.py</pre>
+<p>Look at the plot, at the first line of the summary (<code>peak at x</code>), at <code>Dimensionless area</code> and its bracketed exact value, and at the last two lines, <code>Physical integral</code> and <code>Exact 0..infinity bolometric value</code>. In the annotation box, look at <code>Peak &lambda;</code> and <code>Peak value</code>.</p>
+<p>Three tasks, in order. First, read the peak. The annotation gives <code>Peak &lambda; = 4.9170e-07</code>, which is 491.70 nm, in the green part of the spectrum, and <code>Peak value = 2.9281e+13</code> W m<sup>&minus;3</sup> sr<sup>&minus;1</sup>. The summary line says the peak is at <code>x = 4.959505</code>, where <em>x</em> is a dimensionless number that the equations below define. Then read the comparison. <code>Dimensionless area = 122.081167</code> and the bracketed exact value is also 122.081167, so the sum over the grid reproduces the exact area to the printed digits. <code>Physical integral = 2.187105e+07</code> and <code>Exact 0..infinity bolometric value = 2.187106e+07</code> W m<sup>&minus;2</sup> sr<sup>&minus;1</sup> differ in the seventh digit. Say which of the two integrals is the total power radiated, and why the other is only a number. Then look at the plot: one hump, rising steeply on the short-wavelength side and falling slowly on the long side, drawn only where the curve is above 0.3% of its peak (the option <code>--y_frac_window</code>, Beat 8). Before reading on, write down what you expect to happen to the hump when the temperature is lowered.</p>
+<p><em>Then</em> the law that produced that curve. A body in thermal equilibrium with radiation emits, per unit area, per unit solid angle and per unit wavelength, a spectrum that depends only on its temperature.</p>
+<div class="eq"><span class="eq-label">(1)</span>
+<div class="eq-kind">Planck's law, per unit wavelength <span class="kind kind-law">LAW</span></div>
+      \[
+        B_\lambda(\lambda,T)\;=\;\frac{2hc^{2}}{\lambda^{5}}\;\frac{1}{e^{hc/(\lambda kT)}-1}.
+      \]
+    </div>
+<p>Here \(h\) is Planck's constant, \(c\) the speed of light and \(k\) Boltzmann's constant, all exact SI values in <code>planck2_physics.py</code>. The wavelength enters only through the combination \(hc/(\lambda kT)\), the energy of a photon of that wavelength measured in units of the thermal energy \(kT\). The program names it \(x\).</p>
+<div class="eq"><span class="eq-label">(2)</span>
+<div class="eq-kind">The dimensionless variable <span class="kind kind-def">DEFINITION</span></div>
+      \[
+        x\;=\;\frac{hc}{\lambda kT}\;=\;\frac{h\nu}{kT}.
+      \]
+    </div>
+<p>The second form is the same quantity written with the frequency \(\nu=c/\lambda\). The program's horizontal grid is uniform in \(x\), not in \(\lambda\); the conversion to a physical coordinate is <code>x_to_wavelength()</code> or <code>x_to_frequency()</code> in <code>planck2_physics.py</code>. Substituting Eq. (2) into Eq. (1) separates everything that depends on \(T\) from the curve itself. The curve is the shape function, and the rest is a prefactor.</p>
+<div class="eq"><span class="eq-label">(3)</span>
+<div class="eq-kind">The shape function <span class="kind kind-def">DEFINITION</span></div>
+      \[
+        f_p(x)\;=\;\frac{x^{p}}{e^{x}-1}.
+      \]
+    </div>
+<div class="eq"><span class="eq-label">(4)</span>
+<div class="eq-kind">Planck's law in the program's form <span class="kind kind-der">DERIVED</span></div>
+      \[
+        B_\lambda\;=\;\frac{2k^{5}T^{5}}{h^{4}c^{3}}\;f_{5}(x).
+      \]
+    </div>
+<p>So \(B_\lambda\) is the fixed curve \(f_5\) multiplied by a constant that grows as \(T^5\). The program computes \(f_5\) on a grid of \(x\) values (<code>shape_function()</code>), multiplies by that constant (<code>prefactor()</code>) and records the result as the array <code>y_values</code> of the result. Beat 1 asks what changing \(T\) does to this picture.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat1">
+<h2>Beat 1 · Temperature slides the curve</h2>
+<p>Run the default spectrum at a cooler and a hotter temperature. The middle run is the default of Beat 0, written out so that the three are side by side.</p>
+<pre>python main.py --T 3000
+python main.py --T 5900
+python main.py --T 10000</pre>
+<p>Look, in each run, at <code>peak at x</code> in the first summary line, and in each annotation box at <code>Peak &lambda;</code> and <code>Peak value</code>. The horizontal axis changes from run to run; look at its numbers, not only at the shape.</p>
+<p>Three tasks, in order. First, compare the shapes in <em>x</em>. The summary says <code>x = 4.959505</code> in all three runs, so the same point of the same curve is the peak at every temperature. Then compare the wavelengths. <code>Peak &lambda;</code> is 9.6702e-07 m at 3000 K, 4.9170e-07 m at 5900 K and 2.9010e-07 m at 10000 K, so the peak moves to shorter wavelengths as the body is heated: infrared at 3000 K, green at 5900 K, ultraviolet at 10000 K. Multiply each wavelength by its temperature: 9.6702&times;10<sup>&minus;7</sup> &times; 3000, 4.9170&times;10<sup>&minus;7</sup> &times; 5900 and 2.9010&times;10<sup>&minus;7</sup> &times; 10000 all give 2.9010&times;10<sup>&minus;3</sup> m K, the same number. Then compare the heights. <code>Peak value</code> is 9.9525e+11, 2.9281e+13 and 4.0957e+14 W m<sup>&minus;3</sup> sr<sup>&minus;1</sup>. The ratio of the first two is 29.42, which is (5900/3000)<sup>5</sup>. Write down a rule for how the peak height depends on temperature, and check it on the third run. The sampled 2.9010&times;10<sup>&minus;3</sup> m K is 0.11% above the exact constant of Eq. (6), 2.897772&times;10<sup>&minus;3</sup> m K; Beat 6 says where that difference comes from.</p>
+<p><em>Then</em> the reason. The curve \(f_5\) does not depend on temperature, so its peak is at one fixed value of \(x\). Setting the derivative of Eq. (3) to zero gives the condition that fixes it.</p>
+<div class="eq"><span class="eq-label">(5)</span>
+<div class="eq-kind">Where the shape function peaks <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \frac{d f_p}{dx}=0
+        \;\Longleftrightarrow\;
+        x \;=\; p\,\bigl(1-e^{-x}\bigr),
+        \qquad
+        x_{5}=4.965114,\quad x_{3}=2.821439 .
+      \]
+    </div>
+<p>The equation cannot be solved in closed form, but it can be solved by repeating \(x\leftarrow p(1-e^{-x})\) (Experiment 10). The \(p=5\) root, 4.965114, is the exact peak of \(B_\lambda\). Because Eq. (2) ties \(x\) to \(\lambda T\), a fixed \(x\) at the peak is a fixed \(\lambda T\).</p>
+<div class="eq"><span class="eq-label">(6)</span>
+<div class="eq-kind">Wien's displacement law <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \lambda_{\max}\,T \;=\; \frac{hc}{k\,x_{5}} \;=\; 2.897772\times10^{-3}\ \text{m K}.
+      \]
+    </div>
+<p>Setting \(\lambda_{\max}=hc/(x_5kT)\) makes the wavelength of the peak inversely proportional to \(T\), which is what the three runs show. For the 5900 K default, Eq. (6) gives 491.15 nm and the program prints 491.70 nm. The height follows from Eq. (4): at the fixed \(x_5\), \(B_\lambda\) is proportional to \(T^5\), which is the rule to write down from the three peak values. The peak of the plotted <em>curve</em> and the peak of the <em>grid</em> are not quite the same thing, which Beat 6 examines.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a>, <a href="#exp2">Experiment 2</a> and <a href="#exp10">Experiment 10</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat2">
+<h2>Beat 2 · Per wavelength or per frequency</h2>
+<p>Radiation can be sorted by wavelength or by frequency. Ask for the same 5900 K body sorted by frequency, and then for the cold radiation that fills the universe.</p>
+<pre>python main.py --T 5900 --quantity frequency
+python main.py --T 2.725 --quantity frequency</pre>
+<p>Look at <code>peak at x</code>, at <code>Peak &nu;</code> and <code>Peak value</code> in the annotation, and compare them with Beat 0. The second run is the cosmic microwave background, whose temperature is 2.725 K.</p>
+<p>Three tasks, in order. First, compare the peaks in <em>x</em>. At 5900 K the frequency curve peaks at <code>x = 2.809720</code>, not at the 4.959505 of the wavelength curve in Beat 0. Then convert. <code>Peak &nu; = 3.4542e+14</code> Hz. The wavelength that goes with that frequency is c/&nu; = 2.9979&times;10<sup>8</sup>/3.4542&times;10<sup>14</sup> = 8.679&times;10<sup>&minus;7</sup> m, or 867.9 nm, in the near infrared, and not the 491.70 nm of Beat 0. The same light has two different &ldquo;peaks&rdquo;. Say why this is not a contradiction. Then read the second run. <code>Peak &nu; = 1.5954e+11</code> Hz, which is 159.54 GHz, in the microwave band, and <code>Peak value = 3.8366e-18</code>. That is the frequency at which the sky's background radiation is brightest.</p>
+<p><em>Then</em> the reason. A spectral density is power per unit of <em>something</em>. Per unit wavelength and per unit frequency are different somethings, and the same band of light has a different width in each.</p>
+<div class="eq"><span class="eq-label">(7)</span>
+<div class="eq-kind">Same power, different variable <span class="kind kind-def">DEFINITION</span></div>
+      \[
+        B_\nu\,\lvert d\nu\rvert \;=\; B_\lambda\,\lvert d\lambda\rvert,
+        \qquad
+        \Bigl\lvert\frac{d\lambda}{d\nu}\Bigr\rvert=\frac{c}{\nu^{2}} .
+      \]
+    </div>
+<div class="eq"><span class="eq-label">(8)</span>
+<div class="eq-kind">Planck's law per unit frequency <span class="kind kind-der">DERIVED</span></div>
+      \[
+        B_\nu \;=\; \frac{2h\nu^{3}}{c^{2}}\frac{1}{e^{h\nu/kT}-1}
+        \;=\; \frac{2k^{3}T^{3}}{h^{2}c^{2}}\;f_{3}(x).
+      \]
+    </div>
+<p>Eq. (7) says that the power in a band is the same whichever variable is used to label it. Combining it with Eq. (1) and the relation \(\lvert d\lambda/d\nu\rvert=c/\nu^2\) removes two powers of \(\nu\) from the denominator, so the wavelength law with \(x^5\) becomes the frequency law with \(x^3\). The exponent in Eq. (3) is \(p=5\) for the wavelength quantity and \(p=3\) for the two frequency quantities, which is <code>SHAPE_EXPONENT</code> in <code>planck2_physics.py</code>. The peak of \(f_3\) is at \(x_3=2.821439\) by Eq. (5), and the physical frequency follows from Eq. (2).</p>
+<div class="eq"><span class="eq-label">(9)</span>
+<div class="eq-kind">Where the frequency curve peaks <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \nu_{\max} \;=\; \frac{x_{3}\,k\,T}{h}
+        \;=\; 5.8789\times10^{10}\ \text{Hz K}^{-1}\times T .
+      \]
+    </div>
+<p>For 2.725 K this gives 160.20 GHz and for 5900 K it gives 3.4686&times;10<sup>14</sup> Hz; the program's sampled values are a little lower, 159.54 GHz and 3.4542&times;10<sup>14</sup> Hz, because its peak is a grid point (Beat 6). The two peaks satisfy \(\lambda_{\max}\nu_{\max}=c\,x_3/x_5=0.568\,c\), not \(c\), so \(c/\nu_{\max}\) is not \(\lambda_{\max}\). Beat 3 changes what is being measured and keeps the frequency.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> and <a href="#exp4">Experiment 4</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat3">
+<h2>Beat 3 · Radiance and energy density</h2>
+<p>The program has a third quantity, the energy stored in the radiation field. Run it beside the frequency radiance of Beat 2, and then at the temperature of the cosmic microwave background.</p>
+<pre>python main.py --T 5900 --quantity frequency
+python main.py --T 5900 --quantity energy_density
+python main.py --T 2.725 --quantity energy_density</pre>
+<p>Look at <code>peak at x</code>, at <code>Dimensionless area</code>, at <code>Physical integral</code> and its units, and in the annotation box at <code>Peak &nu;</code> and <code>Peak value</code>.</p>
+<p>Three tasks, in order. First, compare the shapes. The first two runs both print <code>x = 2.809720</code> and <code>Dimensionless area = 6.493935</code>, and both annotations give <code>Peak &nu; = 3.4542e+14</code>: the curves have the same shape and the same peak frequency. Then compare the scales. <code>Peak value</code> is 3.8940e-08 for the radiance and 1.6323e-15 for the energy density. Divide the second by the first: 4.192&times;10<sup>&minus;8</sup>. Then look at the integrals. The radiance run prints <code>2.187105e+07</code> W m<sup>&minus;2</sup> sr<sup>&minus;1</sup> and the energy-density run prints <code>9.167666e-01</code> J m<sup>&minus;3</sup>; their ratio is the same 4.192&times;10<sup>&minus;8</sup>. Find a number built from \(\pi\) and \(c\) that equals it. The third run gives the energy density of the cosmic microwave background, <code>4.171735e-14</code> J m<sup>&minus;3</sup>, the energy in each cubic metre of empty space that the radiation fills.</p>
+<p><em>Then</em> the relation. Radiance is a brightness in one direction, per unit solid angle; energy density is the energy per unit volume, summed over all directions.</p>
+<div class="eq"><span class="eq-label">(10)</span>
+<div class="eq-kind">Energy density from radiance <span class="kind kind-der">DERIVED</span></div>
+      \[
+        u_\nu \;=\; \frac{4\pi}{c}\,B_\nu .
+      \]
+    </div>
+<div class="eq"><span class="eq-label">(11)</span>
+<div class="eq-kind">Planck's law for energy density <span class="kind kind-der">DERIVED</span></div>
+      \[
+        u_\nu \;=\; \frac{8\pi k^{3}T^{3}}{h^{2}c^{3}}\;f_{3}(x).
+      \]
+    </div>
+<p>For radiation that is the same in every direction, the energy in a volume is the power crossing it per unit area and solid angle, integrated over the full \(4\pi\) steradians of direction and divided by the speed \(c\) at which the radiation moves. That gives the factor \(4\pi/c=4.1917\times10^{-8}\) s m<sup>&minus;1</sup> sr, the number from the two ratios above. Eq. (11) is Eq. (8) multiplied by it, so the energy density has the same shape function \(f_3\), the same peak, and a different prefactor and unit. The prefactors are <code>FREQUENCY_PREFACTOR_SCALE</code> and <code>ENERGY_DENSITY_PREFACTOR_SCALE</code> in <code>planck2_physics.py</code>. The two frequency quantities differ only in scale, so the plotted curves look identical apart from the labels on the vertical axis. Beat 4 adds up the area under these curves.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> and <a href="#exp5">Experiment 5</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat4">
+<h2>Beat 4 · Adding up the spectrum</h2>
+<p>The total power that a black body radiates is the area under its spectrum. The program adds up two different areas, and it is easy to take the wrong one for the power. Run the wavelength curve and the frequency curve, and compare their printed integrals.</p>
+<pre>python main.py
+python main.py --quantity frequency</pre>
+<p>Look, in each run, at <code>Dimensionless area</code> and the exact value in brackets, and at <code>Physical integral</code> and <code>Exact 0..infinity bolometric value</code>. Ignore the plots this time.</p>
+<p>Three tasks, in order. First, compare the two dimensionless areas: 122.081167 for the wavelength curve and 6.493935 for the frequency curve, with brackets 122.081167 and 6.493939. They are the areas of \(f_5\) and \(f_3\) of Eq. (3) over the grid, and they are very different numbers. Then compare the two physical integrals. Both runs print <code>2.187105e+07</code> W m<sup>&minus;2</sup> sr<sup>&minus;1</sup>, against <code>2.187106e+07</code> for the exact value. So the two curves, which look so different, radiate the same power; the 122.08 is not that power. Then find the small difference. The dimensionless area of the frequency curve is 6.493935 against 6.493939, low by 4.5&times;10<sup>&minus;6</sup>, or 7&times;10<sup>&minus;7</sup> of the total. The physical integral of the <em>wavelength</em> curve is low by the same fraction, 6.9&times;10<sup>&minus;7</sup>, although its dimensionless area is not the same number as that of the frequency curve. Say why the physical integral of the wavelength curve follows the area of the <em>other</em> curve.</p>
+<p><em>Then</em> the areas. Their exact values, for the whole range from zero to infinity, are known.</p>
+<div class="eq"><span class="eq-label">(12)</span>
+<div class="eq-kind">Areas of the two shape functions <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \int_{0}^{\infty}\frac{x^{3}}{e^{x}-1}\,dx=\frac{\pi^{4}}{15}=6.493939,
+        \qquad
+        \int_{0}^{\infty}\frac{x^{5}}{e^{x}-1}\,dx=\frac{8\pi^{6}}{63}=122.081167 .
+      \]
+    </div>
+<p>The physical integral has to include the change of variable from \(x\) to wavelength or frequency, the coordinate Jacobian of <code>coordinate_jacobian()</code>. From Eq. (2), \(\lvert d\lambda\rvert=(hc/kT)\,x^{-2}\,dx\) and \(d\nu=(kT/h)\,dx\). Putting these into Eq. (4) and Eq. (8) gives the same integrand for both radiances.</p>
+<div class="eq"><span class="eq-label">(13)</span>
+<div class="eq-kind">Power in a band, in terms of x <span class="kind kind-der">DERIVED</span></div>
+      \[
+        B_\lambda\,\lvert d\lambda\rvert
+        \;=\; B_\nu\,d\nu
+        \;=\; \frac{2k^{4}T^{4}}{h^{3}c^{2}}\;f_{3}(x)\,dx .
+      \]
+    </div>
+<p>The factor \(x^{-2}\) turns \(f_5\) into \(f_3\), which is why the wavelength curve's power follows the \(p=3\) area and not its own \(p=5\) area of 122.08. Integrating Eq. (13) with the first result of Eq. (12) gives the Stefan&ndash;Boltzmann law for the radiance, and Eq. (10) gives it for the energy density.</p>
+<div class="eq"><span class="eq-label">(14)</span>
+<div class="eq-kind">The Stefan&ndash;Boltzmann law <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \int_{0}^{\infty}B_\lambda\,d\lambda=\int_{0}^{\infty}B_\nu\,d\nu=\frac{\sigma T^{4}}{\pi},
+        \qquad
+        \int_{0}^{\infty}u_\nu\,d\nu=\frac{4\sigma}{c}\,T^{4},
+        \qquad
+        \sigma=\frac{2\pi^{5}k^{4}}{15\,h^{3}c^{2}} .
+      \]
+    </div>
+<p>The last line of the summary is this exact value, computed by <code>exact_physical_integral()</code>. The program's own integral is a sum over the grid, which is the trapezoidal rule.</p>
+<div class="eq"><span class="eq-label">(15)</span>
+<div class="eq-kind">The trapezoidal rule on the grid <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        I \;\approx\; \sum_{i=1}^{N}\tfrac12\bigl(F_{i-1}+F_i\bigr)\,\Delta x,
+        \qquad
+        \Delta x=\frac{x_{\max}-x_{\min}}{N},
+        \qquad
+        F=f_p(x)\ \text{or}\ y\,\Bigl\lvert\frac{d(\text{coordinate})}{dx}\Bigr\rvert .
+      \]
+    </div>
+<p>The first choice of \(F\) gives <code>Dimensionless area</code> and the second gives <code>Physical integral</code>. Both are sums over \(N\) intervals, with \(N\) the option <code>--n_steps</code>, taken between the same \(x_{\min}\) and \(x_{\max}\). Neither is an integral to infinity, so neither can equal its exact value exactly. Beats 6 to 8 look at what that costs.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> and <a href="#exp11">Experiment 11</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat5">
+<h2>Beat 5 · Doubling T multiplies power by 16</h2>
+<p>The exact power of Eq. (14) depends on the temperature as \(T^4\). Check that the program's sum does too, with three temperatures for each of the frequency quantities. Each run doubles the temperature of the one before.</p>
+<pre>python main.py --T 3000 --quantity frequency
+python main.py --T 6000 --quantity frequency
+python main.py --T 12000 --quantity frequency
+python main.py --T 3000 --quantity energy_density
+python main.py --T 6000 --quantity energy_density
+python main.py --T 12000 --quantity energy_density</pre>
+<p>Look at <code>Physical integral</code> and at <code>Exact 0..infinity bolometric value</code> in each run. The dimensionless area and the peak position do not change from run to run; check that.</p>
+<p>Three tasks, in order. First, read the radiance integrals: <code>1.461997e+06</code>, <code>2.339196e+07</code> and <code>3.742713e+08</code> W m<sup>&minus;2</sup> sr<sup>&minus;1</sup> at 3000, 6000 and 12000 K. Divide each by the one before it: both ratios are 16.00, which is 2<sup>4</sup>, and the ratio of the last to the first is 256.0. Then read the energy densities: <code>6.128240e-02</code>, <code>9.805184e-01</code> and <code>1.568829e+01</code> J m<sup>&minus;3</sup>, with the same ratios. Then divide the first radiance integral by 3000<sup>4</sup>: 1.461997&times;10<sup>6</sup>/8.1&times;10<sup>13</sup> = 1.8049&times;10<sup>&minus;8</sup> W m<sup>&minus;2</sup> sr<sup>&minus;1</sup> K<sup>&minus;4</sup>. Compare that with &sigma;/&pi; = 5.670374&times;10<sup>&minus;8</sup>/&pi;, which is the same number. Do the same for the energy density and 4&sigma;/c = 7.5657&times;10<sup>&minus;16</sup> J m<sup>&minus;3</sup> K<sup>&minus;4</sup>. Say what the ratio of the two constants, 4.19&times;10<sup>&minus;8</sup>, is, and where it appeared in Beat 3.</p>
+<p><em>Then</em> the reason. Eq. (13) shows that once the integral is written in \(x\), the temperature appears only in a prefactor. The dimensionless part is the same number at every temperature, which is why the area and the peak did not change.</p>
+<div class="eq"><span class="eq-label">(16)</span>
+<div class="eq-kind">The temperature dependence of the power <span class="kind kind-der">DERIVED</span></div>
+      \[
+        I(T)=C\,T^{4},
+        \qquad
+        \frac{I(T_2)}{I(T_1)}=\Bigl(\frac{T_2}{T_1}\Bigr)^{4},
+        \qquad
+        C=\frac{\sigma}{\pi}\ \text{(radiance)}\ \text{or}\ \frac{4\sigma}{c}\ \text{(energy density)} .
+      \]
+    </div>
+<p>The prefactor grows as \(T^4\), as Eq. (13) shows, and the quantity it multiplies does not depend on \(T\). So doubling the temperature multiplies the radiated power by 16, and a body ten times hotter radiates ten thousand times as much. That is Stefan's law. In the program this is a direct check on <code>Physical integral</code>: divide by <code>T**4</code> and the temperature drops out. The sum is not exact, so the ratios come out to 16.00 and not 16 exactly; how close they come is the subject of Beats 6 to 8.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat6">
+<h2>Beat 6 · The sampled grid</h2>
+<p>So far every run used the default grid of 2000 equal steps. The grid decides how well the sum follows the curve, and how well the peak is found. Change only <code>--n_steps</code>.</p>
+<pre>python main.py --n_steps 10
+python main.py --n_steps 100
+python main.py --n_steps 1000
+python main.py --n_steps 2000
+python main.py --n_steps 20000</pre>
+<p>Look at <code>peak at x</code>, <code>Dimensionless area</code> and <code>Physical integral</code> in each run, and compare them with the exact values 122.081167 and 2.187106e+07 that are printed with them. The 2000-step run is the default of Beat 0.</p>
+<p>Three tasks, in order. First, read the sums. With 10 steps the dimensionless area is 45.259090 and the physical integral <code>1.521580e+06</code>, about 7% of the true value: the grid step is 10 units of <em>x</em>, and the whole hump of the curve lies between the first two of its eleven grid points. With 100 steps the area is 122.083459 and the integral <code>2.185156e+07</code>, low by 9&times;10<sup>&minus;4</sup>; with 1000 steps the area is 122.081167 and the integral <code>2.187101e+07</code>, low by 2.7&times;10<sup>&minus;6</sup>; with 2000 the integral is <code>2.187105e+07</code>, low by 6.9&times;10<sup>&minus;7</sup>. Going from 1000 to 2000 steps divides the error by 3.9, close to 4. Then read the peak. The printed <code>x</code> is 10.009000, 5.009500, 5.009500, 4.959505 and 4.964504, against the exact 4.965114. The peak does not improve steadily: the 1000-step grid, ten times finer than the 100-step one, gives exactly the same peak, and the 2000-step grid happens to land closer than the 1000-step grid. Then read the 20000-step integral, <code>2.187107e+07</code>, which is not below the exact value but slightly above it, by 8.7&times;10<sup>&minus;8</sup>. Ten times more steps did not make the error ten times, or a hundred times, smaller. The next beat says where the remaining error comes from.</p>
+<p><em>Then</em> the grid itself. The program divides the range of \(x\) into \(N\) equal intervals, so the peak it reports is one of the grid points.</p>
+<div class="eq"><span class="eq-label">(17)</span>
+<div class="eq-kind">The grid, and the sampled peak <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        x_i=x_{\min}+i\,\Delta x,\quad i=0,\dots,N,
+        \qquad
+        \Delta x=\frac{x_{\max}-x_{\min}}{N},
+        \qquad
+        \bigl\lvert x_{\rm peak}-x_{\rm exact}\bigr\rvert<\Delta x .
+      \]
+    </div>
+<p>With the default limits 0.01 and 100, \(\Delta x=(100-0.01)/N\), which is 9.999, 0.9999, 0.09999, 0.049995 and 0.0049995 for the five runs. The sampled peak is the first grid point with the largest value, with no interpolation, so it can be off by as much as one step (by less than half a step once the grid is fine enough for the curve to look symmetric about its peak), and it can only take values that the grid contains. That is why 100 and 1000 steps agree: the point \(x=5.0095\) is on both grids (\(0.01+5\times0.9999\) and \(0.01+50\times0.09999\)), and is the closest one to the peak on both. The 10-step grid has no point near the peak at all, and the largest of its eleven samples is at 10.009. The error of the trapezoidal sum of Eq. (15) falls as \(\Delta x^{2}\) once the step is small enough, which is the factor of about 4 from 1000 to 2000 steps, and it does not follow that rule at 100 steps, where the step is too large. The 0.11% error in Beat 1's \(\lambda T\) is this sampling: \(x=4.959505\) instead of 4.965114 makes the wavelength 0.11% too large. The limit on the number of steps is <code>MAX_STEPS</code> in <code>planck2_driver.py</code>, and one million steps is allowed.</p>
+<p>The reason the error at 20000 steps is not smaller is not the grid. Beat 7 shows that the approximation switches and the finite range of \(x\) leave an error of about 7&times;10<sup>&minus;8</sup> that no grid can remove.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat7">
+<h2>Beat 7 · The approximation switches</h2>
+<p>The program does not evaluate \(x^p/(e^x-1)\) directly across the whole range. For very small \(x\), \(e^x-1\) is nearly \(x\); for very large \(x\), \(e^x\) is so big that the &minus;1 does not matter, and the exponential would overflow. Two options set where the program switches: <code>--x_low</code> and <code>--x_high</code>. The first command below turns both switches off. The second and third move them inwards, and the fourth moves them to the middle of the peak.</p>
+<pre>python main.py --x_low 0.01 --x_high 100
+python main.py --x_low 1 --x_high 3
+python main.py --quantity frequency --x_low 1 --x_high 3
+python main.py --x_low 5 --x_high 6</pre>
+<p>Look at <code>peak at x</code>, <code>Dimensionless area</code> and its bracketed exact value, and <code>Physical integral</code> and the exact value below it. Compare each run with the default of Beat 0. In the annotation box of the last run, look at <code>Peak value</code>.</p>
+<p>Three tasks, in order. First, read the run with no approximations. <code>Dimensionless area = 122.081167</code> and <code>Physical integral = 2.187105e+07</code> are the printed values of the default run, so at the default thresholds 0.05 and 20 the approximations cost nothing that is visible in seven digits. Then read the run with the thresholds at 1 and 3. The area is 121.281452, low by 0.66%, and the physical integral is <code>2.201527e+07</code>, high by 0.66%. The frequency version of the same run has the area 6.536758, against 6.493939, high by 0.66%, and the same physical integral <code>2.201527e+07</code> as the wavelength version. Say why the physical integrals of the two quantities are exactly equal, when the two areas are not. Then read the last run, in which the thresholds sit on the two sides of the peak. The area is 689.653453, 5.6 times its exact value, and the physical integral is <code>1.444356e+08</code>, 6.6 times its exact value. The printed peak, <code>x = 4.959505</code>, is the same as in Beat 0. Say why that is not evidence that the run is right. In the annotation, <code>Peak value = 8.3555e+14</code> is 29 times the 2.9281e+13 of the default run.</p>
+<p><em>Then</em> what the program evaluates. It works with the logarithm of the shape function, which does not overflow, and replaces the difficult part by a simple formula at each end.</p>
+<div class="eq"><span class="eq-label">(18)</span>
+<div class="eq-kind">The shape function, evaluated as a logarithm <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        \ln f_p(x)=p\ln x-\ln\!\bigl(e^{x}-1\bigr),
+        \qquad
+        f_p=\exp\bigl(\ln f_p\bigr).
+      \]
+    </div>
+<div class="eq"><span class="eq-label">(19)</span>
+<div class="eq-kind">The Rayleigh&ndash;Jeans switch, for \(x&lt;x_{\rm low}\) <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        e^{x}-1\approx x
+        \quad\Longrightarrow\quad
+        f_p\approx x^{\,p-1},
+        \qquad
+        \frac{f_{\rm approx}}{f_p}=\frac{e^{x}-1}{x}\approx 1+\frac x2 .
+      \]
+    </div>
+<div class="eq"><span class="eq-label">(20)</span>
+<div class="eq-kind">The Wien switch, for \(x>x_{\rm high}\) <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        e^{x}-1\approx e^{x}
+        \quad\Longrightarrow\quad
+        f_p\approx x^{\,p}e^{-x},
+        \qquad
+        \frac{f_{\rm approx}}{f_p}=1-e^{-x}.
+      \]
+    </div>
+<p>Between the thresholds the program uses <code>expm1(x)</code>, which computes \(e^x-1\) accurately even for small \(x\). The Rayleigh&ndash;Jeans form always over-estimates the curve, by the fraction \(x/2\) at small \(x\); the Wien form always under-estimates it, by \(e^{-x}\). At the defaults these errors are 2.5% at \(x=0.05\), where the curve is very small, and \(2\times10^{-9}\) at \(x=20\), where it is smaller still, which is why the first run prints the same numbers as the default. Moving the switches to 1 and 3 puts errors of 72% and 5% at the switch points and gives the 0.66% of the second run. With the switches at 5 and 6 the Rayleigh&ndash;Jeans form is used all the way up to the peak, where it is wrong by a factor of 29; the sampled maximum then sits at the last grid point before \(x=5\), which happens to be the default peak's grid point, 4.959505, for the wrong reason. The two printed reference values are what catch this. Both physical integrals also account for the leftover of Beat 6. At the defaults the small-\(x\) form over-estimates the integral by 1.2&times;10<sup>&minus;7</sup> of its value, and the range starting at \(x_{\min}=0.01\) leaves out 5&times;10<sup>&minus;8</sup>, so about +7&times;10<sup>&minus;8</sup> is left however fine the grid.</p>
+<p>The physical integrals of the wavelength and frequency quantities are equal, in every one of these runs, because both are the integral of Eq. (13), the same function \(f_3\) of \(x\), evaluated on the same grid with the same switches. The wavelength area is the sum of \(f_5\) and the frequency area the sum of \(f_3\), which are different sums. The rule that the thresholds must satisfy, \(x_{\min}\le x_{\rm low}&lt;x_{\rm high}\le x_{\max}\), is checked by the program before it computes anything. It is in <code>PlanckDomain.validate()</code> in <code>planck2_physics.py</code>.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat8">
+<h2>Beat 8 · The hard cases</h2>
+<p>The defaults sample \(x\) from 0.01 to 100, which contains almost all of the curve. Change that range, and see how the summary shows what has been cut off. The first command below is rejected; the message tells you what to change.</p>
+<pre>python main.py --x_max 10
+python main.py --x_max 10 --x_high 9
+python main.py --x_max 4 --x_high 3
+python main.py --x_min 1 --x_low 1
+python main.py --y_frac_window 0</pre>
+<p>Look at <code>peak at x</code>, <code>Dimensionless area</code>, <code>Physical integral</code> and the exact values. For the last command only the plot changes, so look at the horizontal axis of the plot.</p>
+<p>Three tasks, in order. First, read the rejected command. The program stops with <code>Require x_min &lt;= x_low &lt; x_high &lt;= x_max</code> and the four numbers <code>x_min=0.01, x_low=0.05, x_high=20, x_max=10</code>. Lowering <code>--x_max</code> below the default <code>--x_high</code> of 20 is not allowed, and the second command lowers both. Then read that run. The area is 114.030238, low by 6.6%, but the physical integral is <code>2.166218e+07</code>, low by only 0.96%. The peak is found correctly, at <code>x = 4.965040</code>. Say why cutting the range at \(x=10\) costs the two integrals different amounts. Then read the third command, with the range cut at \(x=4\), below the peak. The printed peak is <code>x = 4.000000</code>: the last point of the range, and not a peak of the curve. The physical integral, <code>1.291514e+07</code>, is 59% of the exact value. In the annotation, <code>Peak &lambda; = 6.0965e-07</code>. Then read the fourth command, which starts at \(x=1\). The area is 121.952341, low by only 0.1%, while the physical integral, <code>2.111337e+07</code>, is low by 3.5%. Finally, run the last command. The numbers are the same as the default run; only the display differs. It shows the whole range, from \(x=100\) at 2.4&times;10<sup>&minus;8</sup> m to \(x=0.01\) at 2.4&times;10<sup>&minus;4</sup> m, a factor of 10<sup>4</sup>, and the hump is squeezed into the left edge of it. The option only changes the display; it never changes a number in the summary.</p>
+<p><em>Then</em> how much is left out. What the program adds up is the exact integral minus the two ends that the range omits.</p>
+<div class="eq"><span class="eq-label">(21)</span>
+<div class="eq-kind">What a finite range leaves out <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \int_{x_{\min}}^{x_{\max}}f_p\,dx
+        \;=\;\int_{0}^{\infty}f_p\,dx
+        \;-\;\underbrace{\int_{0}^{x_{\min}}f_p\,dx}_{\approx\,x_{\min}^{\,p}/p}
+        \;-\;\underbrace{\int_{x_{\max}}^{\infty}f_p\,dx}_{\approx\,e^{-x_{\max}}\left(x_{\max}^{p}+p\,x_{\max}^{p-1}+\cdots+p!\right)} .
+      \]
+    </div>
+<p>For \(x_{\max}=10\) the upper term is 8.05 for \(p=5\), which is 6.6% of 122.08, and 0.062 for \(p=3\), which is 0.96% of 6.494. The wavelength <em>area</em> is a sum of \(f_5\) and loses the first. The wavelength <em>physical integral</em> is the sum of \(f_3\) of Eq. (13) and loses the second, which is why the two are low by different amounts. For \(x_{\min}=1\) the lower term is the reverse. The integral of \(f_3\) from 0 to 1 is 0.2248, 3.5% of 6.494, while the integral of \(f_5\) from 0 to 1 is 0.1284, 0.1% of 122.08. The rule of thumb is that low \(x\) matters for the power and high \(x\) matters for the area of \(f_5\). The printed line <code>Exact 0..infinity bolometric value</code> is the number that shows how much a chosen range has left out. The peak line has no such check: it is the largest grid point in the range, and at \(x_{\max}=4\) that is an end point.</p>
+<p>The input checks catch impossible ranges before any spectrum is computed: non-finite or non-positive numbers, ranges that do not have \(x_{\min}&lt;x_{\max}\), thresholds outside the range, an <code>--n_steps</code> outside 1 to 1,000,000, and a <code>--y_frac_window</code> outside 0 to 1. A range and resolution that cannot produce a representable positive step, or values outside the floating-point range, are rejected by the driver with a message that begins <code>Planck2 input/model error</code>.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp9">Experiment 9</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="equations">
+<h2>Governing Equations</h2>
+<p>The twenty-one numbered equations, with the kind of statement each one is, the beat that introduces it, and where the program evaluates it. A few unnumbered relations are stated inside the beats where they are needed and are listed after the table.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Index of the numbered equations"><table>
+<thead><tr><th>Equation</th><th>Kind</th><th>What it says</th><th>Beat</th><th>Where in the code</th></tr></thead>
+<tbody>
+<tr><td>(1)</td><td><span class="kind kind-law">LAW</span></td><td>Planck's law, per unit wavelength</td><td>0</td><td>not evaluated in this form; its rewritten form, Eq. (4), is <code>prefactor()</code> times <code>shape_function()</code> in <code>planck2_physics.py</code></td></tr>
+<tr><td>(2)</td><td><span class="kind kind-def">DEFINITION</span></td><td>The dimensionless variable \(x\)</td><td>0</td><td><code>x_to_wavelength()</code> and <code>x_to_frequency()</code> in <code>planck2_physics.py</code></td></tr>
+<tr><td>(3)</td><td><span class="kind kind-def">DEFINITION</span></td><td>The shape function \(f_p\)</td><td>0</td><td><code>shape_function()</code> and <code>ln_shape_function()</code> in <code>planck2_physics.py</code></td></tr>
+<tr><td>(4)</td><td><span class="kind kind-der">DERIVED</span></td><td>Planck's law in the program's form, wavelength</td><td>0</td><td><code>prefactor("wavelength", T)</code> and <code>WAVELENGTH_PREFACTOR_SCALE</code></td></tr>
+<tr><td>(5)</td><td><span class="kind kind-der">DERIVED</span></td><td>Where the shape function peaks</td><td>1</td><td>not evaluated; the grid maximum is found in <code>run_planck2()</code></td></tr>
+<tr><td>(6)</td><td><span class="kind kind-der">DERIVED</span></td><td>Wien's displacement law</td><td>1</td><td>not evaluated</td></tr>
+<tr><td>(7)</td><td><span class="kind kind-def">DEFINITION</span></td><td>Same power, different variable</td><td>2</td><td>not evaluated; its consequence is <code>FREQUENCY_PREFACTOR_SCALE</code></td></tr>
+<tr><td>(8)</td><td><span class="kind kind-der">DERIVED</span></td><td>Planck's law per unit frequency</td><td>2</td><td><code>prefactor("frequency", T)</code> and <code>FREQUENCY_PREFACTOR_SCALE</code></td></tr>
+<tr><td>(9)</td><td><span class="kind kind-der">DERIVED</span></td><td>Where the frequency curve peaks</td><td>2</td><td>not evaluated; <code>x_to_frequency()</code> converts every grid point</td></tr>
+<tr><td>(10)</td><td><span class="kind kind-der">DERIVED</span></td><td>Energy density from radiance</td><td>3</td><td>not evaluated; its consequence is <code>ENERGY_DENSITY_PREFACTOR_SCALE</code></td></tr>
+<tr><td>(11)</td><td><span class="kind kind-der">DERIVED</span></td><td>Planck's law for energy density</td><td>3</td><td><code>prefactor("energy_density", T)</code></td></tr>
+<tr><td>(12)</td><td><span class="kind kind-der">DERIVED</span></td><td>Areas of the two shape functions</td><td>4</td><td><code>_exact_dimensionless_area()</code> in <code>main.py</code></td></tr>
+<tr><td>(13)</td><td><span class="kind kind-der">DERIVED</span></td><td>Power in a band, in terms of \(x\)</td><td>4</td><td><code>coordinate_jacobian()</code> in <code>planck2_physics.py</code></td></tr>
+<tr><td>(14)</td><td><span class="kind kind-der">DERIVED</span></td><td>The Stefan&ndash;Boltzmann law</td><td>4</td><td><code>exact_physical_integral()</code> and <code>SIGMA_SB</code> in <code>planck2_physics.py</code></td></tr>
+<tr><td>(15)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>The trapezoidal rule on the grid</td><td>4</td><td><code>run_planck2()</code> in <code>planck2_driver.py</code></td></tr>
+<tr><td>(16)</td><td><span class="kind kind-der">DERIVED</span></td><td>The temperature dependence of the power</td><td>5</td><td>not evaluated; checked by the printed integrals</td></tr>
+<tr><td>(17)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>The grid, and the sampled peak</td><td>6</td><td><code>run_planck2()</code> in <code>planck2_driver.py</code></td></tr>
+<tr><td>(18)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>The shape function, evaluated as a logarithm</td><td>7</td><td><code>_ln_shape_function_unchecked()</code> in <code>planck2_physics.py</code></td></tr>
+<tr><td>(19)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>The Rayleigh&ndash;Jeans switch</td><td>7</td><td><code>_ln_shape_function_unchecked()</code>, for \(x&lt;x_{\rm low}\)</td></tr>
+<tr><td>(20)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>The Wien switch</td><td>7</td><td><code>_ln_shape_function_unchecked()</code>, for \(x&gt;x_{\rm high}\)</td></tr>
+<tr><td>(21)</td><td><span class="kind kind-der">DERIVED</span></td><td>What a finite range leaves out</td><td>8</td><td>not evaluated; the exact reference lines of the summary show it</td></tr>
+</tbody></table></div>
+<p>The unnumbered relations are the conversion \(\lambda=c/\nu\) between the two horizontal coordinates (Beat 2, DEFINITION); the product \(\lambda_{\max}\nu_{\max}=c\,x_3/x_5\) (Beat 2, DERIVED); and the rule \(x_{\min}\le x_{\rm low}&lt;x_{\rm high}\le x_{\max}\) that the switches must satisfy (Beat 7, ALGORITHM, <code>PlanckDomain.validate()</code>).</p>
+</section>
+<section id="algorithm">
+<h2>Algorithm</h2>
+<p>This section collects in one place the rules of the numerical method that Beats 4 to 8 introduced one at a time. The trapezoidal rule is Eq. (15) in Beat 4, the grid and the peak are Eq. (17) in Beat 6, and the switches are Eqs. (18) to (20) in Beat 7.</p>
+<h3>One run</h3>
+<ol>
+<li>Validate the temperature, the quantity, the domain and the resolution.</li>
+<li>Divide \([x_{\min},x_{\max}]\) into exactly <code>n_steps</code> intervals, giving <code>n_steps + 1</code> grid points, Eq. (17). The last point is exactly <code>x_max</code>.</li>
+<li>At each grid point evaluate \(\ln f_p\) with the Rayleigh&ndash;Jeans, <code>expm1</code> or Wien formula that applies there, Eqs. (18) to (20), and exponentiate.</li>
+<li>Multiply by the prefactor of the selected quantity, Eqs. (4), (8) and (11), to obtain \(B_\lambda\), \(B_\nu\) or \(u_\nu\); convert \(x\) to the physical wavelength or frequency, Eq. (2).</li>
+<li>Record the first grid point with the largest shape-function value as the sampled peak.</li>
+<li>Apply the trapezoidal rule, Eq. (15), between neighbouring grid points only, accumulating both the dimensionless area and the physical integral, the latter with the coordinate Jacobian of Eq. (13).</li>
+<li>Report the exact references of Eqs. (12) and (14) beside the sums.</li>
+</ol>
+<h3>Plot windowing</h3>
+<p>A uniform grid in \(x\) maps non-uniformly into wavelength or frequency, so the plotter sorts the points by physical coordinate. By default it shows only the region where the curve exceeds the fraction <code>--y_frac_window</code>, 0.003, of its peak, with a 5% margin, so the hump fills the plot. Integration and the peak search always use the full \(x\)-range. Set <code>--y_frac_window 0</code> to display the whole computed coordinate range, which then ends exactly at its first and last points.</p>
+<h3>Named constants and defaults</h3>
+<p>The physical constants are the exact SI defining values, and the domain defaults are those of <code>PlanckDomain</code>. They are part of the model and not options, except the four domain values, which are the options <code>--x_min</code>, <code>--x_max</code>, <code>--x_low</code> and <code>--x_high</code>.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Constants and defaults"><table>
+<thead><tr><th>Name</th><th>Value</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td><code>H_PLANCK</code></td><td>6.62607015&times;10<sup>&minus;34</sup> J s</td><td>Planck's constant \(h\) (exact).</td></tr>
+<tr><td><code>C_LIGHT</code></td><td>2.99792458&times;10<sup>8</sup> m s<sup>&minus;1</sup></td><td>Speed of light \(c\) (exact).</td></tr>
+<tr><td><code>K_BOLTZMANN</code></td><td>1.380649&times;10<sup>&minus;23</sup> J K<sup>&minus;1</sup></td><td>Boltzmann's constant \(k\) (exact).</td></tr>
+<tr><td><code>SIGMA_SB</code></td><td>5.670374&times;10<sup>&minus;8</sup> W m<sup>&minus;2</sup> K<sup>&minus;4</sup></td><td>The Stefan&ndash;Boltzmann constant, computed from \(h\), \(c\) and \(k\) by Eq. (14).</td></tr>
+<tr><td><code>MAX_STEPS</code></td><td>1,000,000</td><td>Largest accepted <code>--n_steps</code> (Beat 6).</td></tr>
+<tr><td><code>PlanckDomain.x_min</code></td><td>0.01</td><td>Lower limit of the \(x\)-range (Beat 8).</td></tr>
+<tr><td><code>PlanckDomain.x_max</code></td><td>100.0</td><td>Upper limit of the \(x\)-range (Beat 8).</td></tr>
+<tr><td><code>PlanckDomain.x_low</code></td><td>0.05</td><td>Rayleigh&ndash;Jeans switch (Beat 7).</td></tr>
+<tr><td><code>PlanckDomain.x_high</code></td><td>20.0</td><td>Wien switch (Beat 7).</td></tr>
+</tbody></table></div>
+<p>Every product of large and small factors, such as the prefactors, which combine powers of \(h\), \(c\) and \(k\) that individually overflow or underflow, is formed by <code>_scaled_product()</code> in <code>planck2_physics.py</code>, which keeps the mantissa and exponent separately and reports a value outside the floating-point range as an error, instead of returning zero or infinity.</p>
+<div class="note">
+<strong>Tip:</strong> If a printed integral is far from its exact reference line, ask which of the three settings that define the sum is responsible: <code>--n_steps</code> (the grid, Beat 6), <code>--x_low</code> and <code>--x_high</code> (the switches, Beat 7) or <code>--x_min</code> and <code>--x_max</code> (the range, Beat 8). Change one at a time. A physical integral that is off by more than a few parts in a million at the defaults is a sign that the range or the switches, not the grid, are at fault.
+    </div>
+</section>
+<section id="modules">
+<h2>Program Files</h2>
+<div class="mc">
+<div class="mc-card">
+<div class="mc-name">main.py</div>
+<div class="mc-role">Entry Point &amp; Configuration</div>
+<p>
+          Defines and describes every command-line option in <code>build_parser()</code>, checks the domain, passes the settings to <code>run_planck2()</code>, prints the four-line summary (see <a href="#summary">Printed Summary</a>) and passes the result to <code>plot_planck2()</code>.
+        </p>
+</div>
+<div class="mc-card">
+<div class="mc-name">planck2_physics.py</div>
+<div class="mc-role">Physics Layer</div>
+<p>
+          Contains the exact SI constants, the <code>QuantitySpec</code> record of each of the three quantities (its shape exponent, prefactor, exact-integral scale, horizontal coordinate, axis labels and integral units, all in one place), the three-regime evaluation of the shape function, the prefactors, the coordinate Jacobians, the exact bolometric references, the conversions from \(x\) to wavelength and frequency, and the version and build identifier.
+        </p>
+<div class="sig">def shape_function(x, quantity, domain)
+  -&gt; f(x)  (dimensionless)
+
+def prefactor(quantity, T)
+  -&gt; physical scale factor
+
+def quantity_spec(quantity)
+  -&gt; QuantitySpec</div>
+</div>
+<div class="mc-card">
+<div class="mc-name">planck2_driver.py</div>
+<div class="mc-role">Driver Layer</div>
+<p>
+          Samples the domain, evaluates the shape function and the physical quantity at each point, tracks the peak, and accumulates the dimensionless and physical integrals. Returns an immutable <code>Planck2Result</code>: the arrays <code>x_values</code>, <code>coord_values</code> and <code>y_values</code> (tuples), the peak, both integrals, the exact reference, and the labels.
+        </p>
+<div class="sig">def run_planck2(
+  T, quantity,
+  n_steps=2000,
+  domain=None
+) -&gt; Planck2Result</div>
+</div>
+<div class="mc-card">
+<div class="mc-name">planck2_plot.py</div>
+<div class="mc-role">Visualisation</div>
+<p>
+          Provides <code>plot_planck2(result, corner="upper right", y_frac_window=0.003)</code>, which checks the result, draws the curve against the physical coordinate, windows the displayed range, marks the sampled peak and writes the six-line annotation box described under <a href="#summary">Printed Summary</a>.
+        </p>
+<div class="sig">def plot_planck2(
+  result,
+  corner="upper right",
+  y_frac_window=0.003
+) -&gt; None (displays figure)</div>
+</div>
+</div><!-- .mc -->
+</section>
+<section id="quickstart">
+<h2>Quick Start</h2>
+<h3>Requirements</h3>
+<p>Python 3.10 or later with <code>matplotlib</code>:</p>
+<pre>pip install "matplotlib&gt;=3.5"</pre>
+<h3>Running the Program</h3>
+<p>Clone or download the repository, then open a terminal in the folder that contains <code>main.py</code>:</p>
+<pre>cd GFTGU-Programs/Planck2
+python main.py
+python main.py --help</pre>
+<p>To display the program version and executable-core build identifier without running a calculation, use <code>python main.py --version</code>. Options omitted from a command keep their defaults. The default configuration is a 5900 K body with the spectral radiance per unit wavelength.</p>
+<pre># Spectral energy density with the annotation at lower left
+python main.py --quantity energy_density --corner lower_left
+
+# Show the complete coordinate range with the switches moved inwards
+python main.py --x_low 1 --x_high 3 --y_frac_window 0</pre>
+<p>The quantity selector accepts <code>wavelength</code>, <code>frequency</code> or <code>energy_density</code>. The corner selector accepts <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code> and <code>lower_left</code>; the underscores map to the spaced names that the plotter uses.</p>
+</section>
+<section id="parameters">
+<h2>Command-Line Parameters</h2>
+<p>All ordinary settings are command-line options described in <code>main.py</code>. Physical quantities are in SI units throughout.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table">
+<thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td class="pname">--T</td><td class="pdefault">5900.0</td><td>K</td><td>Positive finite black-body temperature; the default approximates the Sun's continuum.</td></tr>
+<tr><td class="pname">--quantity</td><td class="pdefault">"wavelength"</td><td>&mdash;</td><td><code>"wavelength"</code> plots radiance per wavelength; <code>"frequency"</code> plots radiance per frequency; <code>"energy_density"</code> plots energy density per frequency.</td></tr>
+<tr><td class="pname">--n_steps</td><td class="pdefault">2000</td><td>&mdash;</td><td>Number of equal \(x\)-intervals; the program samples <code>n_steps + 1</code> points. Valid range: 1&ndash;1,000,000.</td></tr>
+<tr><td class="pname">--x_min</td><td class="pdefault">0.01</td><td>&mdash;</td><td>Positive lower bound of the dimensionless \(x\)-domain.</td></tr>
+<tr><td class="pname">--x_max</td><td class="pdefault">100.0</td><td>&mdash;</td><td>Upper bound of the dimensionless \(x\)-domain, greater than <code>--x_min</code>.</td></tr>
+<tr><td class="pname">--x_low</td><td class="pdefault">0.05</td><td>&mdash;</td><td>Below this value, use the small-\(x\) Rayleigh&ndash;Jeans approximation.</td></tr>
+<tr><td class="pname">--x_high</td><td class="pdefault">20.0</td><td>&mdash;</td><td>Above this value, use the large-\(x\) Wien approximation. Require <code>x_min &le; x_low &lt; x_high &le; x_max</code>, so lowering <code>--x_max</code> below 20 also needs a lower <code>--x_high</code>.</td></tr>
+<tr><td class="pname">--corner</td><td class="pdefault">"upper_right"</td><td>&mdash;</td><td>Annotation location: <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code> or <code>lower_left</code>.</td></tr>
+<tr><td class="pname">--y_frac_window</td><td class="pdefault">0.003</td><td>&mdash;</td><td>Finite fraction of the peak used for plot windowing; 0 shows the full computed range. Does not affect the peak search or the integrals.</td></tr>
+</tbody></table></div>
+<div class="note"><strong>Input checking:</strong> The command-line parser rejects invalid selectors, non-finite or non-positive temperatures, resolutions outside the integer range 1&ndash;1,000,000, invalid or incorrectly ordered domain limits (the message lists the four values it was given), invalid annotation corners, and window fractions outside the finite range 0&ndash;1. The driver also rejects domain and resolution combinations that cannot produce a representable positive step, and derived values outside the representable floating-point range.</div>
+</section>
+<section id="quantities">
+<h2>Quantity Modes</h2>
+<p>The <code>--quantity</code> option, and the <code>quantity</code> argument of <code>run_planck2()</code>, select which physical form of Planck's law is computed and plotted. Beats 2 and 3 compare them.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Quantity modes"><table class="out-table">
+<thead>
+<tr>
+<th>Mode string</th>
+<th>Physical quantity</th>
+<th>Shape function</th>
+<th>x-axis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="oname">"wavelength"</td>
+<td>Spectral radiance \(B_\lambda\) (W m⁻³ sr⁻¹)</td>
+<td>\(x^5/(e^x-1)\), peaks at \(x\approx4.9651\)</td>
+<td>Wavelength (m)</td>
+</tr>
+<tr>
+<td class="oname">"frequency"</td>
+<td>Spectral radiance \(B_\nu\) (W m⁻² sr⁻¹ Hz⁻¹)</td>
+<td>\(x^3/(e^x-1)\), peaks at \(x\approx2.8214\)</td>
+<td>Frequency (Hz)</td>
+</tr>
+<tr>
+<td class="oname">"energy_density"</td>
+<td>Spectral energy density \(u_\nu\) (J m⁻³ Hz⁻¹)</td>
+<td>\(x^3/(e^x-1)\), peaks at \(x\approx2.8214\)</td>
+<td>Frequency (Hz)</td>
+</tr>
+</tbody>
+</table></div>
+<div class="note">
+<strong>Verification tip:</strong> Run <code>"frequency"</code> and <code>"energy_density"</code> side by side. Both peak at the same \(x\), and so at the same frequency, since they share the shape function \(f_3\); only the prefactor and the vertical units differ. Compare either against <code>"wavelength"</code>: its peak lands at a <em>different</em> \(x\), and therefore at a different photon energy, for the reason given in Beat 2.
+    </div>
+</section>
+<section id="summary">
+<h2>Printed Summary</h2>
+<p>Every run prints these four lines before it opens the plot. The numbers are those of the default run of Beat 0.</p>
+<pre>Planck2 1.2.0 (build c586ea3aebd4) — peak at x = 4.959505
+Dimensionless area = 122.081167 (0..infinity exact value: 122.081167)
+Physical integral = 2.187105e+07 W m^-2 sr^-1
+Exact 0..infinity bolometric value = 2.187106e+07 W m^-2 sr^-1</pre>
+<ul>
+<li><code>peak at x</code>: the grid point with the largest shape-function value, within one grid step of the exact peak, Eq. (17). It is the edge of the range if the true peak lies outside it (Beat 8).</li>
+<li><code>Dimensionless area</code>: the trapezoidal sum of \(f_p\) over the grid, Eq. (15), with the exact 0 to infinity area of Eq. (12) in brackets. It is the area under the shape function and is not the radiated power (Beat 4).</li>
+<li><code>Physical integral</code>: the trapezoidal sum of the plotted spectrum over its physical coordinate, using the Jacobian of Eq. (13). Its units follow the quantity: W m<sup>&minus;2</sup> sr<sup>&minus;1</sup> for the two radiances and J m<sup>&minus;3</sup> for the energy density.</li>
+<li><code>Exact 0..infinity bolometric value</code>: the Stefan&ndash;Boltzmann reference of Eq. (14), \(\sigma T^4/\pi\) or \(4\sigma T^4/c\). The physical integral covers only the range \(x_{\min}\) to \(x_{\max}\), so the two differ by the truncation, grid and approximation errors of Beats 6 to 8. At the defaults, and in each of the three quantity modes, the relative difference is under \(10^{-6}\).</li>
+</ul>
+<p>The plot's annotation box has six lines: <code>Peak at x</code>, <code>Peak &lambda;</code> (or <code>Peak &nu;</code>, the physical coordinate of the peak), <code>Peak value</code>, <code>&int; f(x) dx</code> (the dimensionless area), <code>Physical integral</code> and <code>Exact 0..&infin; physical</code>. Printed digits in the sampled peak are not an uncertainty estimate; peak-location accuracy is limited by the grid step, Eq. (17).</p>
+</section>
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<p>The experiments are ranked from introductory to advanced, and each is cited by the beat it extends. Each command is run from the program's folder.</p>
+<h3 id="exp1">1 · Solar Black-Body Approximation — Introductory</h3>
+<p>Compare the sampled wavelength peak at 5900 K with Wien's displacement law. It should be near 490 nm. A real solar spectrum also has absorption lines, and the Sun's effective temperature is nearer 5800 K, which moves the peak to slightly longer wavelength.</p>
+<pre>python main.py --T 5900 --quantity wavelength</pre>
+<h3 id="exp2">2 · Wien's Displacement Law and Temperature — Introductory</h3>
+<p>Verify that <code>x_peak</code> stays nearly constant while \(\lambda_{\rm peak}T\) stays near \(2.898\times10^{-3}\,\text{m K}\). Compare frequency peaks at different temperatures to see that they are proportional to \(T\).</p>
+<pre>python main.py --T 3000 --quantity wavelength
+python main.py --T 5900 --quantity wavelength
+python main.py --T 10000 --quantity wavelength
+python main.py --T 3000 --quantity frequency
+python main.py --T 10000 --quantity frequency</pre>
+<h3 id="exp3">3 · Cosmic Microwave Background — Introductory</h3>
+<p>The 2.725 K frequency peak should be near 160 GHz. As an optional research extension, consider why the background's nearly ideal black-body spectrum supports a hot early universe.</p>
+<pre>python main.py --T 2.725 --quantity frequency</pre>
+<h3 id="exp4">4 · Wavelength vs. Frequency Peaks — Intermediate</h3>
+<p>At the same temperature, record the \(B_\lambda\) peak wavelength, the \(B_\nu\) peak frequency, and \(c/\nu_{\max}\). The two wavelengths differ because the curves are densities with respect to different variables.</p>
+<pre>python main.py --T 5900 --quantity wavelength
+python main.py --T 5900 --quantity frequency</pre>
+<h3 id="exp5">5 · Frequency Radiance vs. Energy Density — Intermediate</h3>
+<p>Verify that <code>x_peak</code> and the peak frequency agree. Compare the plotted peak values and the printed physical integrals, and explain why their ratios equal \(4\pi/c\), with the corresponding change of units.</p>
+<pre>python main.py --T 5900 --quantity frequency
+python main.py --T 5900 --quantity energy_density</pre>
+<h3 id="exp6">6 · Stefan–Boltzmann T⁴ Scaling — Intermediate</h3>
+<p>Record the printed physical integrals, divide by <code>T**4</code>, and compare with \(\sigma/\pi\) for the radiance or \(4\sigma/c\) for the energy density. Doubling \(T\) should increase the integral by about a factor of 16.</p>
+<pre>python main.py --T 3000 --quantity frequency
+python main.py --T 6000 --quantity frequency
+python main.py --T 12000 --quantity frequency
+# Repeat with --quantity energy_density to compare 4σ/c.</pre>
+<h3 id="exp7">7 · Resolution and Peak Sampling — Intermediate</h3>
+<p>Compare the printed <code>x_peak</code> and the dimensionless area with the exact values printed beside them. For the physical integral, remember that its exact reference spans \(0&lt;x&lt;\infty\) while the numerical result uses the finite range. The sampled peak need not converge at the same rate as the trapezoidal area.</p>
+<pre>python main.py --n_steps 10
+python main.py --n_steps 100
+python main.py --n_steps 1000
+python main.py --n_steps 2000
+python main.py --n_steps 20000</pre>
+<h3 id="exp8">8 · Rayleigh–Jeans and Wien Limits — Intermediate</h3>
+<p>Compare the default peak and integrals with a run that applies the small- and large-\(x\) approximations well beyond their usual regimes. These thresholds change the approximation regions while preserving the physical range. Then try moving only one of the two thresholds.</p>
+<pre>python main.py
+python main.py --x_low 1 --x_high 3</pre>
+<h3 id="exp9">9 · Truncating the Range — Intermediate to Advanced</h3>
+<p>Predict from Eq. (21) how much each printed integral will lose when the range is cut at \(x_{\max}=10\), then run it and compare. Repeat with \(x_{\min}=1\) and with \(x_{\max}=4\), and say for each which of the three quantities is hurt most and why the peak line cannot warn you.</p>
+<pre>python main.py --x_max 10 --x_high 9
+python main.py --x_max 4 --x_high 3
+python main.py --x_min 1 --x_low 1</pre>
+<h3 id="exp10">10 · The Peak Condition by Iteration — Advanced Programming</h3>
+<p>Solve Eq. (5) by repeating \(x\leftarrow p(1-e^{-x})\) and compare the roots with the sampled peaks of a very fine grid. The script imports the driver directly, so run it from the program's folder.</p>
+<pre>import math
+from planck2_driver import run_planck2
+
+for quantity, p in (("wavelength", 5), ("frequency", 3)):
+    x = float(p)
+    for _ in range(50):
+        x = p * (1.0 - math.exp(-x))
+    sampled = run_planck2(5900.0, quantity, 100000).x_peak
+    print(quantity, x, sampled)</pre>
+<h3 id="exp11">11 · Read the Result Object — Advanced Programming</h3>
+<p>Every number the summary prints, and the whole curve, is available from the result of <code>run_planck2()</code>. Compute \(\lambda_{\rm peak}T\) and the ratio of the physical integral to its exact reference without opening a plot, and compare them with Beats 1 and 4.</p>
+<pre>from planck2_driver import run_planck2
+
+r = run_planck2(5900.0, "wavelength", 2000)
+print(r.coord_peak * r.T)
+print(r.physical_integral / r.exact_physical_integral)</pre>
+</section>
+<section class="restore-section" aria-labelledby="restore-title">
+<div class="restore-box">
+<!-- Icon -->
+<div class="restore-icon">↩️</div>
+<!-- Content -->
+<div>
+<div class="restore-title" id="restore-title">Restoring Defaults and Program Files</div>
+<p class="restore-intro">
+        A new run with <code>python main.py</code> uses all default settings; options in a previous command do not carry over. If you edit <code>main.py</code> or another program file for an exercise, restore it using any of the following methods:
+      </p>
+<ul class="restore-list">
+<li>
+<strong>Same session:</strong>
+          Press <kbd>Ctrl+Z</kbd>
+          (Windows) or <kbd>Cmd+Z</kbd>
+          (macOS) repeatedly in your editor to undo your edits.
+        </li>
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+        </li>
+<li>
+<strong>Full reset:</strong>
+          Re-download the ZIP from
+          <a class="restore-link" href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">
+            github.com/tomyee3-org/GFTGU-Programs
+          </a>
+          and replace this program's folder with the fresh copy.
+        </li>
+</ul>
+<p class="restore-footnote">
+        For additional ways to restore program files, see the corresponding
+        recovery instructions in the <em>GFTGU Python Setup Guide</em>.
+      </p>
+</div>
+</div>
+</section>
+<section id="related">
+<h2>Related Programs</h2>
+<ul class="related-list">
+<li><a href="../Star/Star.html"><strong>Star</strong></a> — Models stellar structure and central/surface conditions; Planck2 shows the thermal spectrum associated with a chosen temperature.</li>
+<li><a href="../Random2/Random2.html"><strong>Random2</strong></a> — Illustrates radiative diffusion through an opaque stellar interior before radiation ultimately emerges from the surface.</li>
+</ul>
+</section>
+<section id="license">
+<h2>License</h2>
+<p>
+      Planck2 accompanies the black-body-radiation investigations in Bernard Schutz's
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003), Chapter 10.
+      This rewritten and extended Python version descends from Schutz's original Java/Triana
+      <em>Planck</em> program for the first edition. It is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+</section>
+</main>
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+<em>Gravity from the Ground Up</em> — Python Programs ·
+  Bernard Schutz © 2003 (Cambridge University Press) ·
+  Python programs © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+</footer>
+</div><!-- /page-wrap -->
+<!-- ── Sidebar active-link tracking ── -->
+<script>
+  (function () {
+    const links = document.querySelectorAll('nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector(`nav a[href="#${e.target.id}"]`);
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('main section[id]').forEach(s => observer.observe(s));
+  })();
+</script>
+</body>
+</html>
