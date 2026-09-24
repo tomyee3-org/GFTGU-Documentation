@@ -6,93 +6,55 @@
 </head>
 <body>
 <h1>Neutron 1.3.1 Release Notes</h1>
-<p><b>Version:</b> 1.3.1<br><b>Build:</b> 2cd414a64b3a<br><b>Date:</b> 2026-09-18</p>
-<h2>What changed</h2>
+<p><b>Version:</b> 1.3.1<br><b>Build:</b> 2cd414a64b3a<br><b>Date:</b> 2026-09-23</p>
+
+<h2>Release Status</h2>
+<p>This release is Neutron 1.3.1, build 2cd414a64b3a. It covers the two most recent code-changing rounds, the Audit23 response and the Audit24 response (both 2026-09-24), both of which revised <code>Neutron-claude.html</code> only; the four program modules (<code>main.py</code>, <code>physics_neutron.py</code>, <code>driver_neutron.py</code>, <code>plot_neutron.py</code>) are byte-identical across both rounds and back to Kickoff2.</p>
+<p>A subsequent round, Audit25 (2026-09-23/24), reviewed the Audit24 response and changed nothing; it is mentioned here only because it set this release's open items. Grok's Audit25 review found no open item, confirmed the four program modules and the packaged test suite unchanged, and recommends freezing <code>Neutron-claude.html</code> and moving on to this release's documents. Codex's Audit25 review likewise established no new program-code defect and did not request another review cycle; it raised one P2 and one P3 finding against <code>Neutron-claude.html</code> and its test suite, both listed under Open Bugs below. Correcting them is deliberately deferred to a later round; this release documents them rather than fixing them.</p>
+
+<h2>Open Bugs</h2>
 <ul>
-<li>The model summary now names the chosen central pressure in pascals, alongside its existing central density and global properties.</li>
-<li>Five rows following the model summary report radius, pressure, density, and enclosed mass at 0.00, 0.25, 0.50, 0.75, and 0.90 of the computed surface radius. Pressure and mass are interpolated from the integrated profile; density is evaluated with the model equation of state at the interpolated pressure. Quantities in this new table use up to five significant figures.</li>
-<li>The Help file explains the interpolation and units. The Sample Outputs guide contains the full updated console transcript; the four embedded model plots remain applicable because the integration and plot rendering are unchanged.</li>
+<li><b>ID:</b> NEUTRON-A25-C1<br>
+<b>Severity:</b> P2<br>
+<b>Reviewer finding:</b> Codex Audit25, finding 1<br>
+<b>Symptom:</b> Beat 1's center-limit paragraph overstates its own central-only ratio &eta; as holding "everywhere" in the star, and describes the TOV/Newtonian gradient ratio as "holding fixed" at 1.979374 over a range where it only approaches that value.<br>
+<b>Reproduction:</b> Read <code>Neutron-claude.html</code>, Beat 1, line 624. Observed: "this star's high central pressure keeps &eta; of order one everywhere, however small its compactness gets" and "confirms the ratio holds fixed at 1.979374". Expected: &eta; is fixed by the central initial conditions only &mdash; the corresponding local ratio p(r)/(&rho;(r)c&sup2;) falls to about 0.10911 at r/R=0.504 and 0.0001331 at r/R=0.99884, tending to zero at the surface &mdash; and the TOV/Newton ratio at r0=16.375&nbsp;m is 1.97937253, approaching but not exactly equal to the quoted 1.979374 limit.</li>
+<li><b>ID:</b> NEUTRON-A25-C2<br>
+<b>Severity:</b> P3<br>
+<b>Reviewer finding:</b> Codex Audit25, finding 2<br>
+<b>Symptom:</b> One regression test's docstring attributes the measured shortfall from RK4's textbook O(h<sup>4</sup>) global convergence to a specific cause that the Help file itself no longer claims, and the same test's assertion depends on an exact HTML markup fragment that a harmless formatting change would break.<br>
+<b>Reproduction:</b> Read <code>tests/test_physics_neutron.py</code>, lines 1023&ndash;1032 (<code>test_help_does_not_claim_the_sweep_measures_rk4_global_order</code>). Observed: the docstring says the observed shortfall "is masked by the lower-order surface-location estimate", and the assertion locks the literal fragment <code>steps_per_scale&lt;/code&gt; sweep</code>. Expected: the docstring states only the measured end-to-end discrepancy, matching <code>Neutron-claude.html</code>'s own current wording (which declines to attribute the shortfall to a single cause without a controlled comparison that has not been done), and the assertion checks rendered text or a narrower statement rather than the exact tag boundary.</li>
 </ul>
+
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li>Beat 1's interior-ranking discussion now states the crossover radii precisely (compactness overtakes the pressure/energy ratio near r/R&asymp;0.287 and the pressure-source ratio near r/R&asymp;0.420) instead of a mis-located "around the halfway point", and both this paragraph and the Eq. 2 discussion consistently describe the default model as "the default toy-star model" rather than implying it is a real stellar interior.</li>
+<li>Beat 1 now states the correct r&rarr;0 limit of the TOV-to-Newtonian pressure-gradient ratio, (1+&eta;)(1+3&eta;)&asymp;1.979, and explains that the classical equation stays off by nearly a factor of two arbitrarily close to the center of this model, correcting a prior sentence that wrongly implied the classical equation becomes exact there.</li>
+<li>Beats 4 and 5 now describe the surface-location extrapolation (Eq. 7) as "linear (tangent-line)" in formula shape but second-order accurate in error, correcting an earlier "first-order" description, and state its accuracy is demonstrated by evidence (a roughly fourfold error reduction per grid doubling) rather than asserted.</li>
+<li>Beat 5 now states <code>REF_R</code>'s actual role and provenance precisely: it is a fixed benchmark checked against the production solver's own surface-location regression, not reproduced bit-for-bit by a single run of the reference integrator shown on the page (the two differ by roughly a micrometre), and a new executable test, <code>test_q_reference_model_matches_default_reference_constant</code>, checks that specific gap directly.</li>
+<li>A stale docstring claim that the interior pressure-dominant ranking holds "through most of" the star's volume was corrected to state the actual crossover radii; the volume inside the inner crossover is about 7% of the star's total, not most of it.</li>
+<li>None of these changes altered any program module or any number the program prints; they are corrections to the Help file's prose and, in one case, to a test's documentation and one test-file comment's stated provenance.</li>
+</ul>
+
+<h2>Test Suite Growth</h2>
+<p>All counts below are for Neutron 1.3.1, build 2cd414a64b3a; the four program modules did not change across these rounds. The suite grew from 122 tests + 5 subtests, to 125 + 5 after the Audit23 response (three new Help-content regression tests), to 127 + 5 after the Audit24 response (one new physics-behavior test executing the independent reference integrator against <code>REFERENCE_RADIUS_M</code>, and one new Help-content lock). No test assertion was weakened or removed in either round.</p>
+<p>The suite is run with <code>pytest</code> and passes in both the sibling-repo layout (<code>GFTGU-Programs/Neutron</code> beside <code>GFTGU-Documentation/Neutron</code>) and the flattened code-review layout used for packaged submissions, on Python 3.12. It has also been verified, as of Kickoff2, under native Python 3.10.20, 3.11.15, 3.12.3 and 3.13.13 interpreters, not only the 3.12 audit environment.</p>
+
+<h2>Known Limitations</h2>
+<ul>
+<li>The equation of state is a single polytrope, not a modern piecewise or tabulated nuclear-matter model; it cannot represent a crust, neutron drip, or a composition change with radius.</li>
+<li>The star is modeled as static, spherically symmetric, isotropic and non-rotating; the program has no setting for rotation, a magnetic field, finite temperature, tidal deformability, or separate baryonic-versus-gravitational mass bookkeeping.</li>
+<li>The program computes equilibrium configurations only. It can display a model on either side of the mass-maximum turnover described in Beat 7, but it does not evolve an unstable star, model a collapse, or compute quasi-normal modes.</li>
+<li>The deterministic extreme-range sweeps in the test suite verify exception discipline and controlled failure behavior; they are not intended to establish physical validity across the entire sampled parameter space.</li>
+</ul>
+
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>The independent q-reference integration used for surface verification is named and described in Beat 5, and an executable test now checks it against <code>REFERENCE_RADIUS_M</code> at the default model's own parameters, but it is still not distributed as a separate user-facing utility. Shipping it as a small student-facing tool remains optional future work.</li>
+<li>Beat 7 identifies a mass-maximum turnover between central pressures of 10<sup>35</sup> and 10<sup>36</sup>&nbsp;Pa but notes the program does not itself test the associated instability dynamically. An explicit dynamic stability test of that turnover remains optional future work.</li>
+</ul>
+
 <h2>Version Identification</h2>
 <p>MODEL_VERSION: 1.3.1<br>BUILD_ID: 2cd414a64b3a</p>
-
-<section id="maintenance-current">
-<h2>Known Minor Maintenance Items: Historical Register and Current Status</h2>
-<p>The original maintenance wording is retained in the full earlier notes below. Resolved issues remain visible; items without verified completion remain on the follow-up list.</p>
-<ul>
-<li>The source and tests parse successfully using Python 3.10 grammar and execute successfully under the audit environment's Python 3.12 interpreter. Running the complete suite under a native Python 3.10 runtime remains a desirable non-blocking verification step.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.1; completion has not been verified.</li>
-<li>The deterministic extreme-range sweeps verify exception discipline and controlled failure behavior; they are not intended to establish physical validity across the entire sampled parameter space.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.1; completion has not been verified.</li>
-<li>The independent q-reference integration used for surface verification exists within the regression suite and is not distributed as a separate user-facing utility.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.1; completion has not been verified.</li>
-</ul>
-</section>
-
-<section id="historical-1.3.0">
-<h2>Earlier Release Notes (1.3.0 and 1.2.0)</h2>
-<p>The complete earlier release notes, including minor maintenance items, follow without omissions. The original 1.3.0 file is also included separately.</p>
-<h1>Neutron 1.3.0 Release Notes</h1>
-<p><b>Version:</b> 1.3.0<br><b>Build:</b> b2c0f0597478<br><b>Date:</b> 2026-09-16</p>
-<h2>What changed</h2><ul>
-<li>All seven model, integration, and display settings are available through <code>python main.py --help</code> and command-line flags. Omitting a flag uses the supplied three-parameter polytropic model and numerical defaults.</li>
-<li>Select <code>--output_type pressure</code>, <code>density</code>, or <code>mass</code>. Use <code>--log_y</code> for pressure or density; the mass plot remains linear even when a logarithmic axis is requested.</li>
-<li>The Help file includes runnable commands for each suggested exercise, including convergence, low-mass results, and controlled equation-of-state comparisons. Experiments requiring a continuous sequence or the separate Star program still require additional analysis or code.</li>
-<li>The Sample Outputs guide was synchronized with this version and build and now gives runnable commands and the default console summary.</li>
-</ul><h2>Scope</h2><p>The TOV solver remains a static educational model with one polytropic equation of state. Changing the polytrope can yield mathematical equilibria outside the physical domain represented by real neutron-star matter; read the causality and compactness diagnostics when interpreting results.</p>
-
-<section id="maintenance-status">
-<h2>Known Minor Maintenance Items: Historical Register and Current Status</h2>
-<p>The earlier wording is retained below and in the original notes. Resolved issues remain visible; items without verified completion remain on the follow-up list.</p>
-<ul>
-<li>The source and tests parse successfully using Python 3.10 grammar and execute successfully under the audit environment's Python 3.12 interpreter. Running the complete suite under a native Python 3.10 runtime remains a desirable non-blocking verification step.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.0; completion has not been verified.</li>
-<li>The deterministic extreme-range sweeps verify exception discipline and controlled failure behavior; they are not intended to establish physical validity across the entire sampled parameter space.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.0; completion has not been verified.</li>
-<li>The independent q-reference integration used for surface verification exists within the regression suite and is not distributed as a separate user-facing utility.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.0; completion has not been verified.</li>
-</ul>
-</section>
-
-<section id="release-history">
-<h2>Earlier Release Notes</h2>
-<p>The following release notes reproduce the archived releases. Statements about what was current then describe those versions; the status register above describes the current review.</p>
-<section id="historical-1.2.0">
-<h2>Neutron 1.2.0 Release Notes</h2>
-<p><b>Version:</b> 1.2.0<br><b>Build:</b> 685bb0e10e01<br><b>Date:</b> 2026-08-28</p>
-<h3>Release Status</h3>
-<p>Version 1.2.0 concludes a kickoff maintenance review followed by independent adversarial review by Microsoft Copilot and Google Gemini and a final remediation pass by Codex. The reviewers examined the Tolman-Oppenheimer-Volkoff equations, equation-of-state implementation, surface-location method, numerical stability, validation and error handling, Help-file accuracy, Version/Build synchronization, regression coverage, and extreme-range behavior. All reported release-blocking defects have been corrected. The program is approved for release and is suitable for student use within the educational scope and limitations described below.</p>
-<h3>Major Improvements in This Release</h3>
-<ul>
-<li>Corrected the stellar-surface locator by replacing a pressure-tangent extrapolation with a surface estimate based on the regular polytropic variable <i>q = p<sup>(gamma-1)/gamma</sup></i>, substantially reducing systematic radius bias.</li>
-<li>Added guarded arithmetic and controlled failure handling throughout the central expansion, TOV derivative evaluation, and RK4 integration pipeline to prevent raw floating-point exceptions from escaping the public solver interface.</li>
-<li>Added validation of the complete TOV denominator to prevent underflow-related division failures in extreme parameter regimes.</li>
-<li>Introduced a dedicated <code>SurfaceCrossingError</code> so that RK4 surface detection no longer masks unrelated numerical or validation failures.</li>
-<li>Reworked several calculations into logarithmic form, including EOS inversion, radial-scale evaluation, and central sound-speed diagnostics, reducing avoidable overflow and underflow risk.</li>
-<li>Added explicit causality diagnostics reporting the central sound speed relative to the speed of light and whether the adopted toy EOS satisfies the causality condition.</li>
-<li>Made plotting behavior more student-friendly by accepting case-insensitive output selections such as <code>"pressure"</code>, <code>" DENSITY "</code>, and <code>"mAsS"</code>.</li>
-<li>Added a warning when <code>log_y=True</code> is requested for a mass plot, eliminating the previous silent override.</li>
-<li>Documented the scientific reason that <code>gamma = 1</code> is not accepted by this solver and clarified the limitations of representing self-bound matter with a simple polytropic EOS.</li>
-<li>Added BUILD_ID verification across the four core program modules and synchronized Version/Build reporting with the Help file and runtime output.</li>
-</ul>
-<h3>Test Suite Growth</h3>
-<p>A comprehensive regression suite was created during kickoff and expanded throughout the audit process. The final release includes 107 automated tests covering physics equations, central expansions, RK4 integration, surface-location accuracy, plotting behavior, validation logic, Build-ID reproduction, Help-file synchronization, command-line execution, and Python compatibility checks.</p>
-<p>The final suite includes deterministic extreme-range parameter sweeps, exact regression tests for all audit-discovered robustness defects, independent reference integrations using the regular surface variable, and surface-verification cases spanning multiple polytropic exponents. All 107 tests pass in both the canonical <code>tests/</code> layout and a flattened upload layout. Independent audit reviews concluded that the previously reported numerical-robustness defects have been corrected and that no new release-blocking defects remain.</p>
-<h3>Known Limitations</h3>
-<ul>
-<li>Intended for education and conceptual exploration rather than precision neutron-star modeling or research-grade equation-of-state studies.</li>
-<li>The EOS is a single pedagogical polytrope and does not represent modern crust-plus-core, piecewise-polytropic, or tabulated nuclear-matter equations of state.</li>
-<li>The model is static, spherically symmetric, isotropic, nonrotating, and computes equilibrium configurations only.</li>
-<li>The program does not evolve unstable stars, model collapse, compute quasi-normal modes, or simulate black-hole formation.</li>
-<li>The reported mass is the TOV gravitational mass function. Baryonic mass, binding energy, tidal deformability, and rotational effects are not computed.</li>
-<li>A failed causality diagnostic indicates breakdown of the assumed toy EOS rather than a prediction of superluminal propagation in real neutron-star matter.</li>
-<li>The onset of instability along a sequence is inferred through the usual turning-point interpretation; no independent radial-mode stability calculation is performed.</li>
-<li>The Help file loads MathJax from a public CDN. Offline, the explanatory text remains available but equations appear as raw LaTeX source rather than typeset mathematics.</li>
-</ul>
-<h3>Known Minor Maintenance Items</h3>
-<ul>
-<li>The source and tests parse successfully using Python 3.10 grammar and execute successfully under the audit environment's Python 3.12 interpreter. Running the complete suite under a native Python 3.10 runtime remains a desirable non-blocking verification step.</li>
-<li>The deterministic extreme-range sweeps verify exception discipline and controlled failure behavior; they are not intended to establish physical validity across the entire sampled parameter space.</li>
-<li>The independent q-reference integration used for surface verification exists within the regression suite and is not distributed as a separate user-facing utility.</li>
-</ul>
-<h3>Version Identification</h3>
-<p>MODEL_VERSION: 1.2.0<br>BUILD_ID: 685bb0e10e01</p>
-</section>
-</section>
-</section>
 </body>
 </html>
