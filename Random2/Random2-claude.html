@@ -479,7 +479,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build 3c162492d309
+  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 06ebd8fea601
 </p>
 <section id="overview">
 <h2>Overview</h2>
@@ -496,7 +496,7 @@
 <h2>How to read this page</h2>
 <p>Each numbered section below is one beat: a short argument in words, a command whose output illustrates it, and then the equation that the output follows from. Do them in order the first time. After that, any beat can be opened on its own.</p>
 <p>The program's output is a consequence of its random numbers and its equations, so what a beat shows is the equations at work, not independent evidence that they are right. The outside checks the program offers are the predictions it prints beside its averages: the large-\(N\) ratio to \(\sqrt N\) in <code>scaled_distance</code>, and \((R/\lambda)^2\) in <code>walk2d</code>. Beats 1, 2, 4 and 5 compare the averages with them.</p>
-<p>Every command on this page includes <code>--seed 12</code> (Beat 8 also uses <code>--seed 28</code>). A seed fixes the sequence of random numbers, so your run prints exactly the numbers quoted here. Leave the seed out and every run is different; that is the normal way to use the program once you know what to look for, and Beat 8 shows what changes.</p>
+<p>The commands of Beats 0 to 7 include <code>--seed 12</code>; Beat 8 compares a run with <code>--seed 28</code> and a run with no seed. A seed fixes the sequence of random numbers, so your run prints exactly the numbers quoted here. Seed 12 is not special: it gives results that are typical of these experiments, and another seed gives other numbers that agree with these within their standard errors (Beat 8). Leave the seed out and every run is different; that is the normal way to use the program once you know what to look for, and Beat 8 shows what changes.</p>
 <p>Every beat uses the same program and the same kind of summary. Beats 0 to 2 use the three-dimensional <code>scaled_distance</code> display: Beat 0 runs the default, Beat 1 changes the number of trials, and Beat 2 changes the step distribution. Beats 3 to 7 use the two-dimensional <code>walk2d</code> display: Beat 3 runs its default, Beat 4 counts escape steps over many walks, Beat 5 halves the radius, Beat 6 changes the step length, and Beat 7 limits the number of steps. Beat 8 changes the seed and shows what the program rejects.</p>
 <p>Run every command from the program's folder. Each run prints a summary and then opens a plot window; close the window to end the program. Each beat names the lines of the summary to look at. Distances in <code>scaled_distance</code> are in units of the mean step length; distances in <code>walk2d</code> are in the same arbitrary units as <code>--mean_free_path</code>.</p>
 <div class="note"><strong>What kind of statement is each equation?</strong> Each displayed equation in the beats carries a tag. A red <span class="kind kind-law">MODEL</span> tag marks an assumption the model makes about the steps and does not derive: that they are independent, with no preferred direction on average. Eqs. (1) and (12) are the only ones. A grey <span class="kind kind-def">DEFINITION</span> tag marks a quantity that is defined by a formula. A blue <span class="kind kind-der">DERIVED</span> tag marks a result that follows from the equations already stated. A violet <span class="kind kind-alg">ALGORITHM</span> tag marks a rule of the calculation, which is a choice made by the program rather than a property of random walks: Eqs. (8), (15) and (19). An orange <span class="kind kind-pre">PRESCRIPTION</span> tag marks a convenience the program adopts, here only the default star radius, Eq. (14). The tags are there so that an assumption, a definition and a rule of the program are never mistaken for one another. Twenty equations are numbered; a few unnumbered ones appear where they are needed.</div>
@@ -541,16 +541,16 @@
         =N\,\langle\lvert\mathbf s\rvert^{2}\rangle .
       \]
     </div>
-<p>For the uniform steps of Eq. (2) each component has mean square 1/3, so \(\langle\lvert\mathbf s\rvert^2\rangle=1\) and the root-mean-square distance is exactly \(\sqrt N\) in these units. The mean of \(d\) inherits the same \(\sqrt N\).</p>
+<p>For the uniform steps of Eq. (2) each component has mean square 1/3, so \(\langle\lvert\mathbf s\rvert^2\rangle=1\) and the root-mean-square distance is exactly \(\sqrt N\) in these units. Eq. (4) is exact for every \(N\). The printed quantity is different: it is the mean of \(r_N\), not of \(r_N^2\), and each walk is divided by its own mean step length. For large \(N\) it grows in the same way.</p>
 <div class="eq"><span class="eq-label">(5)</span>
-<div class="eq-kind">The square-root law <span class="kind kind-der">DERIVED</span></div>
+<div class="eq-kind">The square-root law, for large N <span class="kind kind-der">DERIVED</span></div>
       \[
         \langle d\rangle\approx C\sqrt N,
         \qquad
-        \log\langle d\rangle=\tfrac12\log N+\log C .
+        \\log\langle d\rangle\approx\tfrac12\log N+\log C .
       \]
     </div>
-<p>So the ratio \(\langle d\rangle/\sqrt N\) is the constant \(C\), which is the last column, and on log-log axes the points lie on a line of slope 1/2, which is the fitted slope. Beat 1 asks how much of the scatter in that column is real.</p>
+<p>Eq. (5) is a large-\(N\) result, so the ratio \(\langle d\rangle/\sqrt N\) in the last column approaches a constant \(C\) as \(N\) grows, and on log-log axes the points approach a line of slope 1/2, which the fitted slope measures. For a few steps the ratio is a little larger than \(C\); Beat 1 returns to this. Beat 1 asks how much of the scatter in that column is real.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 <section id="beat1">
@@ -618,7 +618,7 @@ python main.py --seed 12 --n_trials 1000</pre>
         C_{\rm gaussian}=1 .
       \]
     </div>
-<p>The exponent 1/2 depends only on the steps being independent with finite variance. The constant depends on the shape of the distribution, but only weakly, and the program's choice of dividing by the mean step length makes it close to 1 for both. The values are <code>large_n_scaled_distance_ratio()</code> and <code>UNIFORM_MEAN_STEP_LENGTH</code> in <code>random2_physics.py</code>. Eq. (10) is a large-\(N\) result; for 2 or 4 steps the central limit theorem has not yet taken hold, so those rows need not match it. Beat 3 turns from three-dimensional statistics to a picture.</p>
+<p>The exponent 1/2 depends only on the steps being independent with finite variance. The constant depends on the shape of the distribution. For these two distributions it differs by only about 4%, and dividing by the mean step length makes it close to 1 for both; a distribution with mostly very short steps and a few very long ones would have a much larger \(C\), because its mean step length is small compared with its root-mean-square step length. The values are <code>large_n_scaled_distance_ratio()</code> and <code>UNIFORM_MEAN_STEP_LENGTH</code> in <code>random2_physics.py</code>. Eq. (10) is a large-\(N\) result; for 2 or 4 steps the central limit theorem has not yet taken hold, so those rows need not match it. Beat 3 turns from three-dimensional statistics to a picture.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> and <a href="#exp5">Experiment 5</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 <section id="beat3">
@@ -884,17 +884,17 @@ python main.py --display walk2d --corner lower_left --ray_length_factor 0</pre>
 <tr><td class="pname">--corner</td><td class="pdefault">upper_right</td><td>Position of the annotation box on the star plot: <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code> or <code>lower_left</code>.</td></tr>
 <tr><td class="pname">--seed</td><td class="pdefault">omitted</td><td>Nonnegative integer that makes a run repeatable; when omitted, every run uses different random numbers (Beat 8).</td></tr>
 </tbody></table></div>
-<div class="note"><strong>Input checking:</strong> The command-line parser rejects unknown display and distribution names, counts that are not positive integers, a <code>--max_steps</code> below 2, lengths and factors that are not positive and finite (the ray factor may be 0), a negative or non-integer seed, and corner names with spaces. The driver also rejects a default radius that cannot be represented as a positive finite number.</div>
+<div class="note"><strong>Input checking:</strong> The command-line parser rejects unknown display and distribution names, counts that are not positive integers, a <code>--max_steps</code> below 2, lengths and factors that are not positive and finite (the ray factor may be 0), a negative or non-integer seed, and corner names with spaces. The driver also rejects a default radius that cannot be represented as a positive finite number, and a radius whose ratio to the mean free path lies outside 10<sup>&minus;150</sup> to 10<sup>150</sup>, where \((R/\lambda)^2\) could not be printed.</div>
 </section>
 <section id="output">
 <h2>Plots</h2>
 <p><strong>scaled_distance</strong> draws the mean scaled distance against the number of steps on log-log axes, with one decade the same length on both axes, so that a slope of 1/2 rises one decade over two. The fitted slope of Eq. (8) is written in the upper-left corner. The points scatter about a straight line by an amount set by the standard errors in the summary.</p>
-<p><strong>walk2d</strong> draws the star as a filled circle with its centre marked, each walk in its own colour, a straight ray beyond the edge for each escaped walk, and an <code>x</code> at the end of each walk stopped by the step cap. The annotation box repeats the radius, mean free path, reference step count, number of escaped walks and the median escape step count. The axes always leave room for the longest ray.</p>
+<p><strong>walk2d</strong> draws the star as a filled circle with its centre marked, each walk in its own colour, a straight ray beyond the edge for each escaped walk, and an <code>x</code> at the end of each walk stopped by the step cap. The annotation box repeats the radius, the mean free path, the reference step count (or, when <code>--radius</code> is given, <code>(given)</code> after the radius instead, since the reference count is then unused), the number of escaped walks and the median escape step count. The axes always leave room for the longest ray.</p>
 </section>
 <section id="summary">
 <h2>Printed Summary</h2>
 <p>Every run prints the program version and build, then a summary, then opens its plot. This is the summary of the run of Beat 0:</p>
-<pre>Random2 1.3.0 (build 3c162492d309)
+<pre>Random2 1.4.0 (build 06ebd8fea601)
 display: scaled_distance
 step components: uniform
 trials per step count: 100
@@ -923,7 +923,7 @@ fitted log-log slope: 0.4964</pre>
 <li><code>fitted log-log slope</code>: the least-squares slope of Eq. (8); <code>n/a</code> when there is only one row.</li>
 </ul>
 <p>The star display prints a different summary. This is the run of Beat 3:</p>
-<pre>Random2 1.3.0 (build 3c162492d309)
+<pre>Random2 1.4.0 (build 06ebd8fea601)
 display: walk2d
 star radius R: 89.4427
 mean free path: 1
@@ -982,11 +982,12 @@ python main.py --display walk2d --n_walks 10</pre>
 <pre>python main.py --display walk2d --radius 20 --n_walks 500
 python main.py --display walk2d --radius 20 --n_walks 500 --step_cap 400</pre>
 <h3 id="exp9">9 · Verify Escape Steps ∝ R² — Advanced</h3>
-<p>Hold the mean free path fixed and use several radii. For each, divide the mean escape step count by \(R^2\). Eq. (16) says the result lies between 1 and \((1+1/R)^2\); check it, using the standard error, and check that every walk escaped.</p>
+<p>Hold the mean free path fixed and use several radii. For each, divide the mean escape step count by \((R/\lambda)^2\), which the summary prints as <code>mean escape steps / (R / mean free path)^2</code>. Eq. (16) says the result lies between 1 and \((1+\lambda/R)^2\); check it, using the standard error, and check that every walk escaped. Then repeat one radius with <code>--mean_free_path 2</code>: only \(R/\lambda\) matters (Beat 6).</p>
 <pre>python main.py --display walk2d --radius 30 --mean_free_path 1 --n_walks 100
 python main.py --display walk2d --radius 40 --mean_free_path 1 --n_walks 100
 python main.py --display walk2d --radius 50 --mean_free_path 1 --n_walks 100
-python main.py --display walk2d --radius 60 --mean_free_path 1 --n_walks 100</pre>
+python main.py --display walk2d --radius 60 --mean_free_path 1 --n_walks 100
+python main.py --display walk2d --radius 60 --mean_free_path 2 --n_walks 100</pre>
 <h3 id="exp10">10 · A Photon's Escape from the Sun — Advanced</h3>
 <p>Use Eq. (16), which holds in three dimensions as well as two, for an order-of-magnitude estimate. Take a solar radius of \(7\times10^{8}\) m and suppose, very roughly, that the photon mean free path were 1 cm everywhere. How many steps would escape take, and how long would that be if each step took \(\lambda/c\)? Then say which assumptions of the estimate are the weakest, using the limitations in the Overview: the mean free path changes enormously with depth, and the outer part of the Sun carries its energy by convection. Treat the answer only as an order of magnitude.</p>
 <h3 id="exp11">11 · Read the Result Objects — Advanced Programming</h3>
