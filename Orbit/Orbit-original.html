@@ -444,7 +444,7 @@
 ═══════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.5.0&nbsp;&nbsp;&nbsp;&nbsp;Build c52c3580dd61
+  Version 1.6.0&nbsp;&nbsp;&nbsp;&nbsp;Build 412acfd3de66
 </p>
 <!-- ── Description ── -->
 <section id="description">
@@ -717,7 +717,7 @@ correction rather than iterating further.</div>
 <thead><tr><th>Mode string</th><th>Fields plotted</th><th>Tutorial use</th></tr></thead>
 <tbody>
 <tr><td class="oname">"orbit"</td><td><code>xs, ys</code></td><td>True-shape x-y trajectory with equal-axis scaling.</td></tr>
-<tr><td class="oname">"velocity"</td><td><code>vxs, vys</code></td><td>Hamilton hodograph. For a non-radial Kepler orbit the velocity vectors lie on a circle; an ellipse traces the full circle, while parabolic/hyperbolic motion traces only an arc.</td></tr>
+<tr><td class="oname">"velocity"</td><td><code>vxs, vys</code></td><td>Hamilton hodograph, with the origin (zero velocity) and the initial velocity marked. For a non-radial Kepler orbit the velocity vectors lie on a circle; an ellipse traces the full circle, while parabolic/hyperbolic motion traces only an arc.</td></tr>
 <tr><td class="oname">"position_time"</td><td><code>ts, xs, ys</code></td><td>Position components versus time; useful for reading orbital periods and seeing nonuniform orbital speed.</td></tr>
 <tr><td class="oname">"velocity_time"</td><td><code>ts, vxs, vys</code></td><td>Velocity components versus time and periodicity.</td></tr>
 <tr><td class="oname">"energy"</td><td><code>ts, KEs, PEs</code></td><td>Specific kinetic, potential, and total energy; the total should remain constant.</td></tr>
@@ -725,12 +725,13 @@ correction rather than iterating further.</div>
 </table>
 <p>The console summary additionally reports termination reason, elapsed simulated time,
 revolution count, the numbers of angular-step rejections and final-endpoint refinement trials,
+the number of acceleration evaluations, the shortest and longest accepted timesteps,
 maximum absolute specific-energy and specific-angular-momentum drift, and—when
 defined—fractional drift for each conserved quantity. If the initial energy is zero or nearly zero,
 or the initial angular momentum is zero or nearly zero, the corresponding fractional diagnostic is
 reported as <code>n/a</code>. Closure residuals are reported when the requested endpoint is an
 integral number of revolutions; otherwise both closure fields are shown as <code>n/a</code>.</p>
-<p>The summary also reports the meaningful planar Keplerian elements listed above. Real-valued
+<p>The summary also reports the meaningful planar Keplerian elements listed above, together with the specific energy of the starting state. Real-valued
 summary results use five significant digits. For a hyperbolic trajectory ending because
 <code>--maxSteps</code> or a small <code>--maxOrbits</code> target was reached, the final radius and
 speed are printed as well.</p>
