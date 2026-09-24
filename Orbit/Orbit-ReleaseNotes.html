@@ -2,224 +2,127 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Orbit 1.4.0 Release Notes</title>
+<title>Orbit 1.7.0 Release Notes</title>
 </head>
 <body>
-<h1>Orbit 1.4.0 Release Notes</h1>
+<h1>Orbit 1.7.0 Release Notes</h1>
 
 <p>
-<b>Version:</b> 1.4.0<br>
-<b>Build:</b> c9fb119d6144<br>
-<b>Date:</b> 2026-09-16
+<b>Version:</b> 1.7.0<br>
+<b>Build:</b> a1a3dbb90d3b<br>
+<b>Date:</b> 2026-09-24
 </p>
 
 <h2>Release Status</h2>
 
 <p>
-Version 1.4.0 adds a complete command-line interface and expands the numerical
-summary with planar Keplerian orbital elements. The Newtonian inverse-square
-model, adaptive predictor-corrector algorithm, trajectory arrays, and five plot
-modes retain their previous behavior.
-</p>
-
-<h2>Command-Line Interface</h2>
-
-<ul>
-<li>Added command-line options for all ten driver inputs:
-<code>--xInit</code>, <code>--yInit</code>, <code>--vxInit</code>,
-<code>--vyInit</code>, <code>--k</code>, <code>--dt0</code>,
-<code>--maxSteps</code>, <code>--eps1</code>, <code>--eps2</code>, and
-<code>--maxOrbits</code>.</li>
-
-<li>Added <code>--output</code> for the five display alternatives:
-<code>orbit</code>, <code>velocity</code>, <code>position_time</code>,
-<code>velocity_time</code>, and <code>energy</code>.</li>
-
-<li>Documented every option in the <code>main.py</code> module description and
-in <code>python main.py --help</code>. Omitted options retain the established
-Mercury-like defaults.</li>
-
-<li>Invalid physical or numerical settings now terminate with a concise
-<code>Orbit: ...</code> message.</li>
-</ul>
-
-<h2>Keplerian Elements</h2>
-
-<p>
-The program derives osculating elements from the initial Cartesian state and
-the selected central gravitational parameter. The summary reports:
+These notes cover Version 1.7.0 and the two code-changing rounds that produced it: the Audit 21 response (1.6.0) and
+the Audit 22 response (1.7.0). Audit 23 changed nothing and only reviewed 1.7.0. Versions 1.5.0 and 1.6.0 were never
+released separately; the last published notes were for 1.4.0.
 </p>
 
 <ul>
-<li>conic classification: elliptic, parabolic, or hyperbolic;</li>
-<li>eccentricity;</li>
-<li>semimajor axis, using the standard negative value for a hyperbola;</li>
-<li>semilatus rectum and periapsis radius;</li>
-<li>apoapsis radius and Keplerian period for an ellipse;</li>
-<li>periapsis longitude and initial true anomaly in the x-y plane when the
-orbit is not circular.</li>
+<li>Codex, Audit 23: no numerical regression found; one P3 documentation correction recommended (OB-1). No hold.</li>
+<li>Grok, Audit 23: accept 1.7.0; no new science or integrator defect; the same documentation item (OB-1). No hold.</li>
 </ul>
 
-<p>
-Inclination and longitude of the ascending node are not included because Orbit
-is a two-dimensional program. Periapsis direction and true anomaly are marked
-as undefined for a circular orbit. A parabola has no finite semimajor axis,
-apoapsis, or period; a hyperbola has no apoapsis or period.
-</p>
-
-<h2>Summary Output</h2>
+<h2>Open Bugs</h2>
 
 <ul>
-<li>All real-valued summary results are formatted to five significant digits.
-Exact integer counters remain integers.</li>
+<li><b>OB-1</b> (P3; Codex Audit 23 item 1, Grok Audit 23 section 4). The lower limit of <code>--maxOrbits</code>
+is not stated where accepted inputs are described.<br>
+Reproduction: <code>python main.py --help</code>. Observed: the <code>--maxOrbits</code> line says
+&quot;positive requested accumulated azimuthal revolutions&quot;, and the same wording, &quot;positive&quot;, appears in the
+<code>main.py</code> module description, in the Valid numerical inputs note of <code>Orbit-claude.html</code>, and in
+<code>Orbit-original.html</code>. Expected: each states a minimum of 1e-9, because <code>python main.py --maxOrbits 1e-10</code>
+exits with &quot;Orbit: maxOrbits must be at least 1e-09 revolutions...&quot;.</li>
 
-<li>The summary continues to report termination, accepted steps, elapsed
-simulated time, azimuthal revolutions, angular-step rejections, endpoint
-refinement trials, fractional and absolute energy drift, fractional and
-absolute angular-momentum drift, and closure residuals.</li>
-
-<li>Closure radius and velocity fields are now printed as <code>n/a</code> when
-the endpoint is not an integral-revolution closure point, keeping the summary
-layout complete across run types.</li>
-
-<li>A hyperbolic trajectory ending at <code>maxSteps</code> or a deliberately
-small <code>maxOrbits</code> target reports its final radius and final speed.</li>
+<li><b>OB-2</b> (P3; Grok Audit 21 item P3). <code>Orbit-claude.html</code> quotes the printed results of runs before the
+student has made them. Status: reviewed and declined as a house-style decision; open until the book's authors choose a
+Help density.<br>
+Reproduction: open <code>Orbit-claude.html</code> and read the task paragraph of Beat 0. Observed: it states 761 accepted
+steps and 7.6025e+06 s, and Experiments 1, 3, 4, 6, 7, 9, 12 and 13 repeat such numbers. Expected (reviewer): no run
+results quoted in the beats or experiment cards.</li>
 </ul>
 
-<h2>Default Printed Elements</h2>
+<h2>Major Improvements in This Release</h2>
 
-<p>For <code>python main.py</code>, the initial-state elements are:</p>
+<p>Version 1.7.0 (Audit 22 response):</p>
+<ul>
+<li>The summary prints <code>final specific energy</code>, the specific energy of the last accepted state.</li>
+<li><code>--maxOrbits</code> below 1e-9 is now rejected with an error. Previously a tiny target such as 1e-13
+overshot by a factor of 2 and 1e-16 by a factor of 204, and still printed closure residuals.</li>
+<li>Small <code>--maxOrbits</code> targets are now met to a small fraction of the request. This changes the printed
+<code>azimuthal revolutions</code> and end state for targets below about 0.16; runs with larger targets, including
+the default, print the same numbers as before.</li>
+<li>Closure residuals are printed only when <code>--maxOrbits</code> is a whole number of at least 1.</li>
+<li>With no accepted step, the shortest and longest accepted step lines both read <code>n/a (no step accepted)</code>.</li>
+<li>The initial-velocity marker on the hodograph is larger and red, with a black edge.</li>
+</ul>
 
-<pre>conic classification       : elliptic
-eccentricity              : 0.20575
-semimajor axis             : 5.7916e+10 m
-semilatus rectum           : 5.5464e+10 m
-periapsis radius           : 4.6000e+10 m
-apoapsis radius            : 6.9832e+10 m
-Keplerian period           : 7.6019e+06 s
-periapsis longitude        : 0.0000 deg
-initial true anomaly (CCW) : 0.0000 deg</pre>
+<p>Version 1.6.0 (Audit 21 response):</p>
+<ul>
+<li>The summary prints <code>acceleration evaluations</code>, <code>shortest accepted step</code> and
+<code>longest accepted step</code>.</li>
+<li>The Keplerian block prints <code>specific energy</code> of the starting state.</li>
+<li>The hodograph plot marks the origin (zero velocity) and the initial velocity.</li>
+<li>New Beats tutorial Help, <code>Orbit-claude.html</code>, with nine beats and 15 experiments; the Reference Guide
+Help is retained as <code>Orbit-original.html</code>.</li>
+</ul>
 
-<h2>Documentation Updates</h2>
+<p>Also new in the unreleased 1.5.0 step:</p>
+<ul>
+<li>Five-significant-digit output no longer prints six digits at a rounding boundary (for example 0.99999996 now prints
+as 1.0000, not 1.00000).</li>
+<li>An invalid <code>--k</code> is reported as <code>k</code>, not <code>mu</code>.</li>
+<li>The nine numerical limits and factors of the integrator are named constants in <code>driver_orbit.py</code>, and the
+termination reason is a <code>TerminationReason</code> value with unchanged text.</li>
+</ul>
+
+<h2>Test Suite Growth</h2>
 
 <ul>
-<li>Reworked the Help Parameters section around the command-line option names
-and added complete runnable examples.</li>
-
-<li>Converted parameter-only Suggested Experiments to command-line commands.
-Exercises that require array analysis or changes to the numerical method remain
-programming exercises.</li>
-
-<li>Expanded the Help output discussion to explain planar elements, undefined
-quantities, significant-digit formatting, and hyperbolic final-state output.</li>
-
-<li>Updated the Sample Outputs Guide with Version 1.4.0 commands and numerical
-summaries. Existing embedded plots remain applicable because the integrator and
-plot routines are unchanged.</li>
+<li>1.4.0: 75 tests. 1.5.0: 128. 1.6.0: 144. 1.7.0: 156 (149 in the Audit 22 response, plus seven checks of these two documents).</li>
+<li>Run from the program folder with <code>python -m unittest discover -s tests</code>. In the full repository layout
+all 156 tests run and pass with no skips. In a flat folder that lacks the documentation files, the tests that read the
+Release Notes, the Sample Outputs Guide and <code>Orbit-original.html</code> are skipped (13 skips), and the rest pass.</li>
+<li>New coverage since 1.4.0 includes every command shown in the Help, the numbers the Help quotes, the named
+constants, small <code>--maxOrbits</code> targets, and the version and build in both companion documents.</li>
 </ul>
-
-<h2>Regression Coverage</h2>
-
-<p>
-All 75 automated tests pass from the canonical <code>tests/</code> directory.
-The suite retains coverage of the force law, adaptive integration,
-endpoint refinement, singularity protection, conservation diagnostics,
-plotting, Build-ID calculation, and Python 3.10 syntax. New coverage checks
-all command-line defaults and forwarding, selector help, five-significant-digit
-formatting, elliptic/circular/parabolic/hyperbolic elements, hyperbolic final
-radius and speed, and synchronization of all documentation artifacts.
-</p>
 
 <h2>Known Limitations</h2>
 
 <ul>
-<li>Orbit models a test particle around a fixed point mass. It is not a general
-two-body or N-body simulation.</li>
+<li>Planar Newtonian motion of a test particle about a fixed point mass; no relativity, drag, tides or second body.</li>
+<li>The Mercury-like defaults are a teaching state, not an ephemeris.</li>
+<li>Closure residuals are defined only for a whole number of revolutions.</li>
+<li>The angular-step safeguard is a conservative estimate, not a proof.</li>
+<li>The equations in the Help are typeset by MathJax and need an internet connection.</li>
+</ul>
 
-<li>The force law is Newtonian. Relativistic effects, finite body sizes,
-atmospheric drag, radiation pressure, tides, and third-body perturbations are
-not included.</li>
+<h2>Known Minor Maintenance Items</h2>
 
-<li>The reported elements are osculating elements calculated from the initial
-state. Numerical drift diagnostics and closure residuals describe the actual
-integrated trajectory.</li>
-
-<li>Five-significant-digit display does not imply that every run is physically
-or numerically accurate to five significant digits. Students should use the
-reported conservation and closure diagnostics and repeat runs with tighter
-controls.</li>
-
-<li>The singularity guard is numerical rather than a physical stellar or
-planetary surface.</li>
+<ul>
+<li>Four groups of numerical literals in <code>run_orbit()</code> are not yet named constants.</li>
+<li>There is no option to save a figure to a file.</li>
+<li>The physics functions still name the gravitational parameter <code>mu</code> in their error messages.</li>
+<li>There is no runtime check that the final azimuth matches <code>--maxOrbits</code>; tests cover the accepted range.</li>
+<li><code>Orbit-original.html</code> and <code>Orbit-claude.html</code> are both present, and neither is marked as
+the current Help.</li>
+<li>Grok Audit 21 items P4 to P6: the spine sentence has three claims, Beat 0 answers its own question, and the
+Printed Summary reproduces the whole default console.</li>
 </ul>
 
 <h2>Version Identification</h2>
 
-<p>
-MODEL_VERSION: 1.4.0<br>
-BUILD_ID: c9fb119d6144
-</p>
-
-<section id="maintenance-status">
-<h2>Known Minor Maintenance Items: Historical Register and Current Status</h2>
-<p>The earlier wording is retained below and in the original notes. Resolved issues remain visible; items without verified completion remain on the follow-up list.</p>
 <ul>
-<li>Several retry limits and iteration limits remain implemented as local constants within the driver rather than centralized module constants. This does not affect correctness but may become a future maintainability improvement.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.4.0; completion has not been verified.</li>
-<li>Termination reasons continue to use documented string identifiers rather than enumerated types. The current approach is functional and well tested, but stronger typing could be considered in future maintenance work.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.4.0; completion has not been verified.</li>
-<li>Documentation-synchronization tests intentionally verify specific Help-file wording. This provides strong protection against drift but may require updates when wording is revised without changing behavior.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.4.0; completion has not been verified.</li>
-</ul>
-</section>
-
-<section id="release-history">
-<h2>Earlier Release Notes</h2>
-<p>The following release notes reproduce the archived releases. Statements about what was current then describe those versions; the status register above describes the current review.</p>
-<section id="historical-1.3.1">
-<h2>Orbit 1.3.1 Release Notes</h2>
-<p><b>Version:</b> 1.3.1<br><b>Build:</b> 93380f960f8e<br><b>Date:</b> 2026-08-30</p>
-
-<h3>Release Status</h3>
-<p>Version 1.3.1 concludes a kickoff maintenance review followed by four rounds of independent review involving Codex, Copilot, and Gemini. The reviewers examined the Python implementation against Schutz's original Java/Triana Orbit program; verified the Newtonian inverse-square force law, predictor-corrector integration, adaptive timestep control, revolution counting, conservation diagnostics, singularity handling, plotting, Help-file accuracy, Version/Build synchronization, and regression coverage; and tested both the canonical and flattened upload layouts. No release-blocking defect remains.</p>
-<p>During the review process, issues involving scale-invariant singularity handling, endpoint event refinement, angular-step aliasing, numerical overflow protection, diagnostic consistency, Help synchronization, and test coverage were identified and corrected. The final Audit4 reviews from both Copilot and Gemini recommend release. The resulting program is robust, scientifically consistent, and appropriate for student use within the scope and limitations described below.</p>
-
-<h3>Major Improvements in This Release</h3>
-<ul>
-<li>Reworked singularity handling so that coarse predictor or corrector steps intersecting the numerical guard are retried with a reduced timestep rather than being incorrectly classified as physical singularity events. Accepted-state approach to the guard is now distinguished from trial-step geometry.</li>
-<li>Replaced the former fixed 1 μm singularity floor with a scale-relative and floating-point-relative guard based on the initial orbital scale and machine precision. This preserves numerical protection while allowing microscopic educational models that were previously excluded.</li>
-<li>Added an independent angular-step safeguard that limits accepted angular motion before endpoint-angle unwrapping occurs. The safeguard is documented as a conservative numerical protection mechanism rather than a mathematical proof.</li>
-<li>Replaced endpoint state interpolation with bracketed predictor-corrector event refinement. Final-orbit termination now repeatedly re-integrates from the last accepted state until the requested revolution target is reached within tolerance, avoiding the loss of integrator accuracy associated with state interpolation.</li>
-<li>Corrected a consistency issue between reported revolution counts and returned trajectory states. Position, velocity, time, and revolution-count diagnostics now correspond to the same integrated endpoint.</li>
-<li>Added overflow-safe geometry calculations for minimum-segment-radius testing and expanded validation of derived radii, speeds, accelerations, energies, and angular momenta. Finite inputs that produce non-representable derived quantities now fail with explicit diagnostic messages.</li>
-<li>Improved conservation diagnostics by distinguishing between absolute and fractional drift measures. Fractional energy drift is no longer reported for parabolic-orbit cases where the reference energy is effectively zero, and fractional angular-momentum drift is omitted when the reference angular momentum is effectively zero. Absolute diagnostics remain available in all cases.</li>
-<li>Added explicit numerical-effort diagnostics for angular-step rejections and endpoint refinement trials. These counters help students understand adaptive-control behavior during numerical experiments and tolerance studies.</li>
-<li>Restored textbook references to Investigations 4.1 and 4.2, Tables 4.2 and 4.3, and Chapter 6 while preserving compatibility with future documentation updates.</li>
-<li>Expanded and clarified the Help exercises, including guidance for direct access to returned arrays in EXP-11 and improved treatment of floating-point issues near the escape-velocity threshold in EXP-5.</li>
-<li>Added a reproducible <code>BUILD_ID</code> across the four executable source modules, with newline-independent hashing, independent verification tests, synchronization across runtime output and Help documentation, and explicit documentation of Build-ID scope.</li>
+<li><b>Version:</b> 1.7.0 (<code>MODEL_VERSION</code> in <code>physics_orbit.py</code>).</li>
+<li><b>Build:</b> a1a3dbb90d3b, the first 12 hexadecimal digits of the SHA-256 of the four modules
+<code>main.py</code>, <code>physics_orbit.py</code>, <code>driver_orbit.py</code> and <code>plot_orbit.py</code>.</li>
+<li><b>Date:</b> 2026-09-24. Python 3.10 or later.</li>
+<li>Printed by <code>python main.py --version</code>, in the first line of every run, and in the version stamp of
+<code>Orbit-claude.html</code> and <code>Orbit-original.html</code>.</li>
 </ul>
 
-<h3>Test Suite Growth</h3>
-<p>A 41-test regression suite was created during the kickoff review and expanded through the audit process to 60 automated tests. The suite defines the four executable-core module filenames and uses <code>find_module_dir(start)</code> so that the same test file operates correctly from either the canonical <code>tests/</code> directory or a flattened upload layout beside the program modules.</p>
-<p>The final suite verifies Newtonian acceleration, specific energy and specific angular momentum formulas; rotational invariance and sign conventions; singularity handling and radial infall; microscopic and large-scale models; adaptive timestep behavior and tolerance controls; event refinement and revolution-count consistency; angular safeguards; overflow protection; Build-ID rules; command-line execution; plotting; documentation synchronization; Python 3.10 compatibility; and both supported layouts. All 60 tests pass in both layouts.</p>
-
-<h3>Known Limitations</h3>
-<ul>
-<li>Orbit models a test particle moving in the gravitational field of a fixed central mass. The central body does not move, and the program is not a general two-body or N-body solver.</li>
-<li>The program implements Newtonian gravity only. Relativistic effects, tidal effects, finite body sizes, atmospheric drag, radiation pressure, and non-gravitational perturbations are not included.</li>
-<li>The angular-step safeguard is a conservative numerical estimate designed to prevent endpoint-angle ambiguity. It is not a rigorous mathematical proof that every accepted trajectory segment remains below a specified angular bound.</li>
-<li>Closure diagnostics are reported only when the requested termination target corresponds to an integral number of revolutions. Fractional-orbit runs intentionally omit closure residuals.</li>
-<li>The singularity guard is a numerical protection mechanism rather than a physical stellar or planetary radius. Its value depends on the initial problem scale and floating-point resolution.</li>
-<li>The Help file loads MathJax from a public CDN. Offline, explanatory text and TeX source remain available, but equations are not typeset.</li>
-</ul>
-
-<h3>Known Minor Maintenance Items</h3>
-<ul>
-<li>Several retry limits and iteration limits remain implemented as local constants within the driver rather than centralized module constants. This does not affect correctness but may become a future maintainability improvement.</li>
-<li>Termination reasons continue to use documented string identifiers rather than enumerated types. The current approach is functional and well tested, but stronger typing could be considered in future maintenance work.</li>
-<li>Documentation-synchronization tests intentionally verify specific Help-file wording. This provides strong protection against drift but may require updates when wording is revised without changing behavior.</li>
-</ul>
-
-<h3>Version Identification</h3>
-<p>MODEL_VERSION: 1.3.1<br>BUILD_ID: 93380f960f8e</p>
-</section>
-</section>
 </body>
 </html>
