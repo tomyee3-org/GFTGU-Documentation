@@ -394,7 +394,7 @@
 ════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 8ffe1c52fd03
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 7d6e2d9d542c
 </p>
 
 <!-- ── Physical Background ── -->
@@ -607,7 +607,7 @@
 <!-- ── Output Modes ── -->
 <section id="output">
 <h2>Output Modes</h2>
-<p>Every run prints the modeled surface radius and total mass to five significant figures. Under <code>Numerical grid</code> it prints the radial step finally used, the number of grid points from the center to the surface, and the number of step-doubling restarts. Under <code>Lane-Emden solution of the same polytrope (numerical reference)</code> it prints the polytropic index \(n=1/(\gamma-1)\) and the radius and mass of the Lane–Emden solution of the same equations, computed with fourth-order Runge–Kutta steps and again with half those steps, with the relative differences of the integrated radius and mass from them: those differences measure the error of the Euler integration, not how well a polytrope describes a real star. The two Lane–Emden integrations agree to better than \(10^{-8}\) for \(n\) below 4.99; if they differ by more than \(10^{-7}\), which happens only for \(\gamma\) within about \(1.3\times10^{-7}\) of 6/5, a line beginning <code>Warning: gamma is so close to 6/5</code> says that the Lane–Emden values may not be good to seven significant figures. It then prints pressure, density, temperature, and mass enclosed at exactly 0%, 25%, 50%, 75%, and 90% of the modeled radius. Values between stored grid points are linearly interpolated in radius. This numerical summary is independent of the selected plot.</p>
+<p>Every run prints the modeled surface radius and total mass to five significant figures. Under <code>Numerical grid</code> it prints the radial step finally used, the number of grid points from the center to the surface, and the number of step-doubling restarts. Under <code>Lane-Emden solution of the same polytrope (numerical reference)</code> it prints the polytropic index \(n=1/(\gamma-1)\) and the radius and mass of the Lane–Emden solution of the same equations, computed with fourth-order Runge–Kutta steps and again with half those steps, with the relative differences of the integrated radius and mass from them: those differences measure the error of the Euler integration, not how well a polytrope describes a real star. Checked against an independent high-accuracy solution across \(0\le n\le4.99\), the Lane–Emden values agree with it to better than \(10^{-10}\). The difference between the two Lane–Emden integrations is used as an estimate of their error, not a guaranteed bound; if it exceeds \(10^{-7}\), which happens only for \(\gamma\) within about \(1.5\times10^{-7}\) of 6/5, a line beginning <code>Warning: gamma is so close to 6/5</code> says that the Lane–Emden values may not be good to seven significant figures. It then prints pressure, density, temperature, and mass enclosed at exactly 0%, 25%, 50%, 75%, and 90% of the modeled radius. Values between stored grid points are linearly interpolated in radius. This numerical summary is independent of the selected plot.</p>
 <p>
       All four physical profiles are computed in every run; <code>output_type</code> chooses which
       one is displayed. The horizontal axis begins at the stored center \(r=0\) and ends at the
