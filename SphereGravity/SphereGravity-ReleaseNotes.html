@@ -2,148 +2,129 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>SphereGravity 1.3.0 Release Notes</title>
+<title>SphereGravity 1.4.0 Release Notes</title>
 </head>
 <body>
-<h1>SphereGravity 1.3.0 Release Notes</h1>
-<p class="meta"><strong>Version:</strong> 1.3.0<br>
-<strong>Build:</strong> 018f4d9c843c<br>
-<strong>Date:</strong> 16 September 2026</p>
-
-<h2>Release summary</h2>
-<p>Version 1.3.0 adds a complete command-line interface and a numerical console report for the shell mass and the seven requested field-comparison radii. The profile physics, plotting behavior, and transparent textbook midpoint implementation remain compatible with version 1.2.0.</p>
-
-<h2>Command-line inputs</h2>
-<ul>
-<li>Added <code>--nDiv N</code> for the positive angular-division count, with the existing safety limit of 100,000.</li>
-<li>Added <code>--outputType acceleration</code> and <code>--outputType relative_difference</code>. The underscore form is safe as one command-line token and maps to the legacy internal selector <code>relative difference</code>.</li>
-<li>Added <code>--epsilon VALUE</code>, exposing the driver’s previously unreferenced optional mass-scale input. Values must be positive and finite.</li>
-<li>Retained <code>--version</code> and added defaults to the live <code>--help</code> output.</li>
-<li>Expanded the <code>main.py</code> module description with the meaning, accepted values, and tradeoffs of every input.</li>
-</ul>
-
-<h2>New printed results</h2>
-<ul>
-<li>Every run prints the numerical midpoint shell mass, the exact continuum mass <em>4π ε R</em><sup>2</sup>, and their signed relative difference.</li>
-<li>Every run prints predicted numerical acceleration and exact continuum acceleration at <em>r</em> = 0.5, 0.995, 1.005, 2, 3, 4, and 5.</li>
-<li>Exterior rows include the signed relative difference from the continuum result. At the two interior radii, where the exact field is zero and a relative difference is undefined, the report says <code>undefined</code> and supplies the mass-normalized residual <em>g</em>/<em>M</em>.</li>
-<li>The requested <em>r</em> = 5 value is evaluated directly even though the standard plot grid ends at 4.995.</li>
-<li>Console numerical results are formatted to five significant figures.</li>
-</ul>
-
-<h2>Physics and implementation additions</h2>
-<ul>
-<li>Added <code>compute_continuum_shell_mass()</code> for the exact thin-shell mass.</li>
-<li>Added <code>compute_acceleration_at_radii()</code>, a validated direct midpoint evaluator for arbitrary nonsurface radii. It follows the same visible latitude-ring calculation as the textbook profile function.</li>
-<li>Kept the profile’s existing relative-difference definition: the exterior plot uses the finite numerical mass to isolate field-integration error, whereas the new console comparison uses the continuum mass as the expected physical value.</li>
-</ul>
-
-<h2>Documentation</h2>
-<ul>
-<li>Reworked Quick Start and parameter tables around command-line examples following the StellarEvolutionTracks documentation pattern.</li>
-<li>Documented both selector choices, their physical meanings, and the command-line underscore convention.</li>
-<li>Added a Printed Results section explaining the mass comparison, all seven fixed radii, five-significant-figure formatting, and the zero-denominator issue inside the shell.</li>
-<li>Updated non-programming exercises to use command-line parameters while retaining exercises that genuinely require code changes.</li>
-<li>Updated the Sample Outputs Guide with current commands and the complete default console transcript.</li>
-</ul>
-
-<h2>Verification</h2>
-<p>The regression suite now contains 74 tests. New coverage checks all driver inputs at the command line, selector mapping, invalid legacy selector spelling, the continuum mass helper, arbitrary-radius validation, independent reference values at every requested radius, the printed report, and portable Help-file discovery. The four core Python files also continue to parse as Python 3.10 source.</p>
-
-<h2>Known limitations</h2>
-<ul>
-<li>The ideal thin-shell field is discontinuous at <em>r</em> = 1, so that exact point remains omitted and the returned profile retains its compatibility placeholder.</li>
-<li>Finite angular tiling is least accurate immediately beside the shell; the 0.995 and 1.005 report rows deliberately expose this resolution effect.</li>
-<li>A conventional relative difference cannot be defined inside the shell because the continuum expected acceleration is zero.</li>
-<li>The default implementation favors instructional clarity over speed. The optional bounded-vectorized implementation remains available for performance experiments.</li>
-<li>The Help file uses MathJax from a public CDN; offline, formulas remain readable as TeX source but are not typeset.</li>
-</ul>
-
-<h2>Version identification</h2>
-<p><strong>MODEL_VERSION:</strong> 1.3.0<br>
-<strong>BUILD_ID:</strong> 018f4d9c843c</p>
-
-<section id="maintenance-status">
-<h2>Known Minor Maintenance Items: Historical Register and Current Status</h2>
-<p>The earlier wording is retained below and in the original notes. Resolved issues remain visible; items without verified completion remain on the follow-up list.</p>
-<ul>
-<li>The plotting API intentionally owns display behavior and does not return matplotlib figure or axis objects.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.0; completion has not been verified.</li>
-<li>Runtime type annotations remain intentionally conservative because the validated interface accepts both Python numeric types and NumPy scalar types.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.0; completion has not been verified.</li>
-<li>Repository-level validation of related-program documentation links remains outside the scope of the module-local regression suite.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.0; completion has not been verified.</li>
-<li>The textbook implementation still contains deliberately explicit computations that could be further optimized; maintaining instructional clarity remains the higher priority.<br><strong>Current status:</strong> Retained from the prior release for follow-up as of 1.3.0; completion has not been verified.</li>
-</ul>
-</section>
-
-<section id="release-history">
-<h2>Earlier Release Notes</h2>
-<p>The following release notes reproduce the archived releases. Statements about what was current then describe those versions; the status register above describes the current review.</p>
-<section id="historical-1.2.0">
-<h2>SphereGravity 1.2.0 Release Notes</h2>
-<p><b>Version:</b> 1.2.0<br><b>Build:</b> 35c1d2c0dd16<br><b>Date:</b> 2026-08-29</p>
-
-<h3>Release Status</h3>
-<p>
-Version 1.2.0 concludes the kickoff review, Audit1 review cycle, and Audit2 verification process.
-The program was reviewed by Codex, Microsoft Copilot, and Gemini. Reviewers verified the
-numerical implementation of Newton's shell theorem, the Java-to-Python translation, Help-file
-accuracy, plotting behavior, version/build synchronization, input validation, and regression-test
-coverage. All identified release issues were addressed before final review. Audit2 concluded with
-release recommendations from both Copilot and Gemini and no remaining release-blocking defects.
-</p>
-
-<h3>Major Improvements in This Release</h3>
-<ul>
-<li>Restored the transparent textbook midpoint-integration implementation as the default execution path so students can directly follow the numerical method developed in Schutz's Investigation 4.3.</li>
-<li>Added an optional optimized implementation using bounded NumPy vectorization for performance comparisons while preserving identical physics, signatures, and return values.</li>
-<li>Introduced reusable ring-geometry precomputation for the optimized implementation, eliminating repeated trigonometric evaluation and ring-mass construction.</li>
-<li>Achieved approximately 46.5× speedup at nDiv = 1000 in relative-difference mode while maintaining numerical agreement to floating-point precision.</li>
-<li>Added a resource-safety limit of 100,000 angular divisions and corresponding validation, Help documentation, and regression protection.</li>
-<li>Preserved the legacy surface placeholder value at r = 1 in returned data while introducing a plotting-only NaN gap so the graph correctly displays the shell-surface discontinuity.</li>
-<li>Strengthened plot validation by rejecting negative, duplicate, and non-monotonic radii in addition to existing shape, type, and finiteness checks.</li>
-<li>Added reproducible BUILD_ID generation with controlled-fixture verification, universal-newline normalization tests, and explicit fallback testing for damaged or unavailable source files.</li>
-<li>Added independent shell-theorem validation against the analytical continuum solution in addition to Java-reference consistency tests.</li>
-<li>Expanded the Help file with clarified sign conventions, improved discussion of the shell-surface omission, documentation of the optimized implementation, and a new advanced vectorization exercise.</li>
-</ul>
-
-<h3>Test Suite Growth</h3>
-<p>
-The original regression suite was expanded from 47 automated tests to 65 automated tests.
-The suite now verifies textbook and optimized implementation equivalence; BUILD_ID generation
-and fallback behavior; shell-mass convergence; analytical shell-theorem agreement; NumPy scalar
-validation; plotting-domain constraints; plotting discontinuity handling; Help-file structure;
-local navigation targets; MathJax integration; command-line execution; version reporting; and
-headless end-to-end execution.
-</p>
+<h1>SphereGravity 1.4.0 Release Notes</h1>
 
 <p>
-The final suite verifies that the textbook implementation remains the selected default behavior,
-confirms numerical agreement between textbook and optimized algorithms in both output modes,
-and includes a high-resolution nDiv = 10,000 regression using the optimized implementation.
-The final reported audit run completed with all 65 tests passing.
+<b>Version:</b> 1.4.0<br>
+<b>Build:</b> 217c2c26a44a<br>
+<b>Date:</b> 2026-09-25
 </p>
 
-<h3>Known Limitations</h3>
+<h2>Release Status</h2>
+
+<p>
+These notes cover Version 1.4.0 and the two code-changing rounds that produced it: the Kickoff2 conversion (build
+a43a939a4607, not released separately) and the Audit 21 response (build 217c2c26a44a). The last published notes were for
+1.3.0. Audit 22 reviewed the Audit 21 response. After it, only the Related Programs sections of the two Help files and
+the tests that check them were changed; the program and its build are unchanged.
+</p>
+
 <ul>
-<li>SphereGravity is intended for education and conceptual exploration of Newton's shell theorem rather than research-grade gravitational modeling.</li>
-<li>The shell is represented by a midpoint-rule angular tiling. Numerical errors decrease with increasing angular resolution but do not vanish completely at finite nDiv.</li>
-<li>The exact shell surface at r = 1 is intentionally omitted because the idealized thin-shell field is discontinuous there. Returned arrays contain a compatibility placeholder at that radius.</li>
-<li>The default implementation prioritizes transparency and pedagogical value over execution speed.</li>
-<li>The optimized implementation is available for performance comparison but is not the default instructional pathway.</li>
-<li>The program evaluates 1000 radial sample locations from r = 0 to r = 4.995 and is not intended to provide arbitrary radial sampling.</li>
-<li>The Help file loads MathJax from a public CDN. When offline, equations remain visible as TeX source but are not typeset.</li>
+<li>Grok, Audit 22: freeze both Help files; no new science defect. No hold.</li>
+<li>Codex, Audit 22: no P1 or P2 defect; two P3 items in the Help files (OB-1, OB-2). No hold stated.</li>
 </ul>
 
-<h3>Known Minor Maintenance Items</h3>
+<h2>Open Bugs</h2>
+
 <ul>
-<li>The plotting API intentionally owns display behavior and does not return matplotlib figure or axis objects.</li>
-<li>Runtime type annotations remain intentionally conservative because the validated interface accepts both Python numeric types and NumPy scalar types.</li>
-<li>Repository-level validation of related-program documentation links remains outside the scope of the module-local regression suite.</li>
-<li>The textbook implementation still contains deliberately explicit computations that could be further optimized; maintaining instructional clarity remains the higher priority.</li>
+<li><b>OB-1</b> (P3; Codex Audit 22 item 1). Beat 5 of <code>SphereGravity-claude.html</code> says that the jump across
+a surface layer is 4&pi;G&epsilon; &ldquo;whatever the shape of a surface layer&rdquo;, which is true of the signed normal
+component of the field but not of its magnitude.<br>
+Reproduction: read the sentence after Eq. (15) in Beat 5. Observed: the magnitude jump of Eq. (15) is stated for a
+surface layer of any shape. Expected: for a general layer only the signed normal component jumps by 4&pi;G&epsilon; (an
+infinite uniform sheet has the same magnitude, 2&pi;G&epsilon;, on both sides).</li>
+<li><b>OB-2</b> (P3; Codex Audit 22 item 2). The paragraph after Eq. 7 of <code>SphereGravity-original.html</code> calls
+M<sub>num</sub> &ldquo;the pull just outside the surface&rdquo;, but the tiled pull just outside the surface is different.<br>
+Reproduction: <code>python main.py --radii 1.00000000001</code>. Observed: <code>predicted g</code> 0.0062832, about half
+of <code>numerical midpoint mass</code> 0.012567. Expected: the text describes M<sub>num</sub> as the point-mass reference
+pull at r = 1, not as the pull of the tiles.</li>
 </ul>
 
-<h3>Version Identification</h3>
-<p>MODEL_VERSION: 1.2.0<br>BUILD_ID: 35c1d2c0dd16</p>
-</section>
-</section>
+<h2>Major Improvements in This Release</h2>
+
+<p>Version 1.4.0, build 217c2c26a44a (Audit 21 response, and a Help change after Audit 22):</p>
+<ul>
+<li>Radius labels in the comparison table give back the radius exactly; <code>--radii 0.99999999999 1.00000000001</code>
+prints those two labels instead of <code>1</code> and <code>1</code>. Usual radii keep their short labels.</li>
+<li>The Beats Help gives separate exterior and interior relations between the plotted and the printed relative
+differences (Eq. (17)), and the Reference Guide's Eq. 7 shows that the plot divides by the tiles' mass M<sub>num</sub>,
+while the table divides by the exact mass 4&pi;&epsilon;.</li>
+<li>After Audit 22, the Related Programs sections of both Help files name the related programs without links to their
+Help files and without chapter numbers. The program and its build did not change.</li>
+</ul>
+
+<p>Version 1.4.0, build a43a939a4607 (Kickoff2, not released separately):</p>
+<ul>
+<li>New Beats tutorial Help, <code>SphereGravity-claude.html</code>, with nine beats, 19 equations and 11 experiments.
+The Reference Guide Help is retained, kept current, as <code>SphereGravity-original.html</code>.</li>
+<li>New option <code>--radii R [R ...]</code> chooses the comparison radii; the default is the seven radii of 1.3.0.</li>
+<li>The table prints a new line, <code>latitude step h = pi/nDiv</code>, and a new column, <code>h^2 estimate</code>, from
+the new public function <code>midpoint_error_estimate()</code>. A row is marked <code>*</code>, with a footnote, where the
+estimate does not apply. The values printed by 1.3.0 are unchanged.</li>
+<li>The note about the undefined interior relative difference is printed only when the table has an interior row.</li>
+<li><code>--epsilon</code> accepts 1e-100 to 1e100 and <code>--radii</code> accepts radii up to 1e100; values outside
+these ranges are rejected. In 1.3.0, <code>--epsilon 1e308</code> ended with a traceback and <code>--epsilon 1e-320</code>
+printed a predicted g of 0 at r = 4 and 5.</li>
+<li><code>plot_spheregravity()</code> returns the Matplotlib figure and axes, so the plot can be saved.</li>
+</ul>
+
+<h2>Test Suite Growth</h2>
+
+<ul>
+<li>1.3.0: 74 tests. 1.4.0 at Kickoff2: 135. 1.4.0 at the Audit 21 response and at release: 142.</li>
+<li>Run from the program folder with <code>python -m unittest discover -s tests</code>. In the full repository layout all
+142 tests run and pass with no skips, in about 7 seconds, on Python 3.11 and on Python 3.10.20. In a flat folder that
+holds only the program, the tests and the two Help files, the test of links from other modules' Help files is skipped
+(1 skip). Without <code>SphereGravity-original.html</code> its 19 tests are skipped.</li>
+<li>New coverage since 1.3.0 includes the h<sup>2</sup> estimate against an independent Euler&ndash;Maclaurin calculation
+and the actual error of the sum, the input limits, the radius labels, every command in the Beats Help, every number the
+Beats quote, both forms of Eq. (17) against the plotted profile, and end-to-end runs.</li>
+</ul>
+
+<h2>Known Limitations</h2>
+
+<ul>
+<li>An ideal thin shell of radius 1 in dimensionless units (G = 1); &epsilon; sets only the mass per unit area.</li>
+<li>The field is computed on the symmetry axis, with each latitude treated as a uniform ring, whatever the number of
+divisions.</li>
+<li>The field is discontinuous at r = 1; that point is left out of the plot, and <code>--radii 1</code> is rejected.</li>
+<li>The tiling is least accurate beside the shell; the h<sup>2</sup> estimate does not apply to rows marked
+<code>*</code>.</li>
+<li>Inside the shell a relative difference is undefined, and the table prints g/M instead.</li>
+<li>The plot divides by the tiles' mass and the table by the exact mass, so their exterior values differ.</li>
+<li>Inputs are limited to 1 to 100000 divisions, &epsilon; from 1e-100 to 1e100, and radii up to 1e100.</li>
+<li>The plotted profile uses the explicit textbook loops; a 10000-division run takes about ten seconds.</li>
+<li>The equations in the Help are typeset by MathJax and need an internet connection.</li>
+</ul>
+
+<h2>Known Minor Maintenance Items</h2>
+
+<ul>
+<li>A NumPy <code>float32</code> value of &epsilon; passed to the physics functions emits a <code>RuntimeWarning</code>,
+although it is accepted or rejected correctly (Grok, Audit 22).</li>
+<li>The build identifier reads <code>unknown</code> when a core file is missing.</li>
+<li>Runtime type annotations are conservative.</li>
+<li>The faster NumPy implementation is selected only by editing two lines of <code>physics_spheregravity.py</code>.</li>
+<li>There is no command-line option to save the figure or the table to a file.</li>
+<li><code>SphereGravity-claude.html</code> and <code>SphereGravity-original.html</code> are both present, and neither is
+marked as the current Help.</li>
+<li>MathJax is not bundled for offline use.</li>
+</ul>
+
+<h2>Version Identification</h2>
+
+<ul>
+<li><b>Version:</b> 1.4.0 (<code>MODEL_VERSION</code> in <code>physics_spheregravity.py</code>).</li>
+<li><b>Build:</b> 217c2c26a44a, the first 12 hexadecimal digits of the SHA-256 of the four modules
+<code>physics_spheregravity.py</code>, <code>driver_spheregravity.py</code>, <code>main.py</code> and
+<code>plot_spheregravity.py</code>.</li>
+<li><b>Date:</b> 2026-09-25. Python 3.10 or later.</li>
+<li>Printed by <code>python main.py --version</code>, in the first line of every run, and in the version stamp of
+<code>SphereGravity-claude.html</code> and <code>SphereGravity-original.html</code>.</li>
+</ul>
+
 </body>
 </html>
