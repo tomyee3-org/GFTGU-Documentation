@@ -111,15 +111,15 @@
 </nav>
 <main>
   <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-    Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 95f43226e01f
+    Version 1.5.0&nbsp;&nbsp;&nbsp;&nbsp;Build d12634057d18
   </p>
 
   <section id="description">
     <h2>Description</h2>
     <p><strong>Atmosphere</strong> is the Chapter&nbsp;7 teaching model of a planetary atmosphere in hydrostatic equilibrium (Investigations 7.1 and 7.3). You supply a temperature profile. The program integrates pressure upward from a reference surface and plots pressure, density, or temperature.</p>
     <p>The spine of the lesson is one sentence:</p>
-    <p><em>Pressure holds up the weight of the air above; the gas law turns that pressure into a density; their ratio is a length — the scale height — set by temperature, gravity and molecular weight.</em></p>
-    <div class="warn"><strong>What this program is not.</strong> It is not a weather code and not a research atmosphere. Gravity and mean molecular weight are constant with height. Temperature is an input, linearly interpolated between the altitudes you give. Pressure is advanced by a first-order Euler step. The altitude where pressure hits zero is a stopping rule, not a physical top of the air.</div>
+    <p><em>Pressure holds up the weight of the air above; the gas law turns that pressure into a density; their ratio is a length — the scale height — set by temperature, gravity and mean molecular mass.</em></p>
+    <div class="warn"><strong>What this program is not.</strong> It is not a weather code and not a research atmosphere. Gravity and mean molecular mass are constant with height. Temperature is an input, linearly interpolated between the altitudes you give. Pressure is advanced by a first-order Euler step that also lands on every supplied temperature breakpoint, so a thin layer cannot hide between samples. The altitude where pressure hits zero is a stopping rule, not a physical top of the air.</div>
     <div class="note"><strong>Reading this page.</strong> Equations are rendered by MathJax from a public CDN. Without a network connection the raw \(\LaTeX\) remains visible as text. The program itself needs no internet access.</div>
   </section>
 
@@ -149,7 +149,7 @@ python main.py</pre>
     <h2>Beat 1 · Density is not free: the gas law supplies it</h2>
     <p>Air is a gas. Density follows from pressure and temperature. Plot density this time; the printed table is the same as Beat 0.</p>
 <pre>python main.py --output_type density</pre>
-    <p>Read the surface density (it should sit next to \(1.225\,\mathrm{kg\,m^{-3}}\), the U.S. Standard Atmosphere 1976 value). Then divide density by the <code>p/T</code> column in two different rows. The ratio does not move. That constant is \(\mu m_u/k_B\).</p>
+    <p>Read the surface density (it should sit next to \(1.225\,\mathrm{kg\,m^{-3}}\), the U.S. Standard Atmosphere 1976 value). Then divide density by the <code>p/T</code> column in two different rows. The ratio does not move. That constant is \(\mu m_u/k_B\): the <code>p/T</code> column is not itself the density, but density written without the constant factor \(\mu m_u/k_B\).</p>
     <div class="eq-block">
       <div class="eq-label">Ideal gas — derived; governing equation — the ODE</div>
 \[
@@ -174,7 +174,7 @@ p = p_0\,e^{-h/H},
 H = \frac{p_0}{g\,\rho_0} = \frac{k_B\,T_0}{g\,\mu\,m_u}.
 \]
     </div>
-    <p>For the default Earth numbers at 288.15&nbsp;K, \(H\approx 8.43\,\mathrm{km}\). The first integration step is \(H_{\min}/200\), sized from the coldest temperature on the profile so a cold layer is not stepped through too coarsely.</p>
+    <p>For the default Earth numbers at 288.15&nbsp;K, \(H\approx 8.43\,\mathrm{km}\). The first integration step is \(H_{\min}/200\), sized from the coldest temperature on the profile so a cold layer is not stepped through too coarsely. The integrator also lands on every supplied temperature breakpoint, even when that breakpoint is closer than \(H_{\min}/200\).</p>
   </section>
 
   <section id="beat3">
@@ -206,7 +206,7 @@ T(h) = T_{i-1} + \frac{T_i-T_{i-1}}{h_i-h_{i-1}}\,(h-h_{i-1}),
 \qquad h_{i-1}\le h&lt;h_i.
 \]
     </div>
-    <p>Below the first supplied point the temperature is held at \(T_0\). Above the last one, Beat 7 takes over. The default Earth list combines U.S. Standard Atmosphere 1976 values through about 86&nbsp;km with a representative NRLMSIS 2.0 thermosphere to 500&nbsp;km.</p>
+    <p>Below the first supplied point the temperature is held at \(T_0\). Above the last one, Beat 7 takes over. The default Earth list combines U.S. Standard Atmosphere 1976 values through about 86&nbsp;km with seven rounded NRLMSIS 2.0 thermospheric temperatures (100, 150, 200, 250, 300, 400 and 500&nbsp;km) for one date and place.</p>
   </section>
 
   <section id="beat5">
@@ -236,7 +236,7 @@ python main.py</pre>
 \frac{p_{\mathrm{Euler}}}{p_{\mathrm{exact}}}\approx 1-\frac{h/H}{2N}.
 \]
     </div>
-    <p>Against the U.S. Standard Atmosphere the default run is already a fraction of a per cent low at 11&nbsp;km and about 18&nbsp;per cent low at 86&nbsp;km. Most of that growing deficit is constant gravity, not the Euler step: real \(g\) falls by about 2.6&nbsp;per cent to 86&nbsp;km. Rounded inputs (\(g=9.81\), \(p_0=101300\,\mathrm{Pa}\), \(\mu=28.97\)) take a smaller third share. Use the program for scale heights and ratios, not for an 86&nbsp;km pressure to three figures.</p>
+    <p>Against the U.S. Standard Atmosphere the default run is already a fraction of a per cent low at 11&nbsp;km and about 18&nbsp;per cent low at 86&nbsp;km. Do not read the isothermal Euler estimate (a few per cent at 100&nbsp;km) as the 18% figure in that comparison: most of the growing deficit against the standard is constant gravity, not the Euler step. Real \(g\) falls by about 2.6&nbsp;per cent to 86&nbsp;km. Rounded inputs (\(g=9.81\), \(p_0=101300\,\mathrm{Pa}\), \(\mu=28.97\)) take a smaller third share. The factor \(\mu m_u/k_B\) inherits the rounding already present in \(\mu\) and in the measured atomic mass constant. Use the program for scale heights and ratios, not for an 86&nbsp;km pressure to three figures.</p>
   </section>
 
   <section id="beat7">
@@ -262,18 +262,21 @@ T=\beta\,p^{\alpha},\qquad \alpha=0.5.
       <tbody>
         <tr><td class="pname">--planet_name</td><td class="pdefault">Earth</td><td>Label on the plot and in the heading.</td></tr>
         <tr><td class="pname">--g_accel</td><td class="pdefault">9.81</td><td>Constant gravity, m&nbsp;s\(^{-2}\).</td></tr>
-        <tr><td class="pname">--mu</td><td class="pdefault">28.97</td><td>Mean molecular weight in atomic mass units. Dry air.</td></tr>
+        <tr><td class="pname">--mu</td><td class="pdefault">28.97</td><td>Mean molecular mass in atomic mass units (<code>ATOMIC_MASS_UNITS</code>). Dry air. The code uses the CODATA 2018 atomic mass constant \(m_u=1.66053906660\times10^{-27}\,\mathrm{kg}\) and the exact SI Boltzmann constant \(k_B=1.380649\times10^{-23}\,\mathrm{J\,K^{-1}}\).</td></tr>
         <tr><td class="pname">--p0</td><td class="pdefault">1.013e5</td><td>Pressure at altitude zero, Pa.</td></tr>
         <tr><td class="pname">--h_points</td><td class="pdefault">0 … 500000</td><td>Strictly increasing altitudes in metres. May start below zero.</td></tr>
         <tr><td class="pname">--T_points</td><td class="pdefault">288.15 … 1240</td><td>Matching positive temperatures in kelvin. Same length as <code>--h_points</code>.</td></tr>
         <tr><td class="pname">--output_type</td><td class="pdefault">pressure</td><td>pressure, density, or temperature. The checkpoint table always prints all four columns.</td></tr>
+        <tr><td class="pname">--save_plot</td><td class="pdefault">(none)</td><td>Write the figure to this path (PNG, PDF, &hellip;).</td></tr>
+        <tr><td class="pname">--no_show</td><td class="pdefault">off</td><td>Do not open a plot window. Use with <code>--save_plot</code> for batch runs.</td></tr>
+        <tr><td class="pname">--version</td><td class="pdefault"></td><td>Print the version and build identifier and exit.</td></tr>
       </tbody>
     </table>
   </section>
 
   <section id="output">
     <h2>Output</h2>
-    <p>Every run prints a heading with version and build, then a checkpoint table of altitude, pressure, density, \(p/T\), and temperature at every supplied altitude that still lies in the positive-pressure domain. Numbers use five significant figures. A plot window then opens; close it to end the program. The plotted quantity is the only thing <code>--output_type</code> changes.</p>
+    <p>Every run prints a heading with version and build, then a checkpoint table of altitude, pressure, density, \(p/T\), and temperature at every supplied altitude that still lies in the positive-pressure domain. The density is \(p\,\mu m_u/(k_B T)\), so \(p/T\) is the density stripped of that constant, not the density in other units. Numbers use five significant figures. A plot window then opens unless you pass <code>--no_show</code>; <code>--save_plot PATH</code> writes the same figure to a file. The plotted quantity is the only thing <code>--output_type</code> changes.</p>
   </section>
 
   <section id="experiments">
