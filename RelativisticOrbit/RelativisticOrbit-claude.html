@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RelativisticOrbit – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+    /* ── Reset & custom properties ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #fdf5e6;
+      --surface:  #ffffff;
+      --border:   #c8bfa0;
+      --accent:   #7b2d00;
+      --accent2:  #a04010;
+      --gold:     #b5811a;
+      --text:     #1c1c1c;
+      --muted:    #5a4a3a;
+      --code-bg:  #f0ede4;
+      --note-bg:  #f4f0e8;
+      --eq-bg:    #f7f2e8;
+      --radius:   5px;
+      --shadow:   0 2px 8px rgba(0,0,0,0.10);
+      --mono:     "Courier New", Courier, monospace;
+      --sans:     "Helvetica Neue", Arial, sans-serif;
+      --serif:    Georgia, "Times New Roman", Times, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Page grid ── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.95rem;
+      font-weight: normal;
+      letter-spacing: -.02em;
+    }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub {
+      margin-top: 6px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: #f0d0b8;
+      line-height: 1.55;
+    }
+    header .sub a {
+      color: #ffd8b8;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,200,150,.4);
+    }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+
+    /* ── Sidebar ── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      padding: 14px 18px 4px;
+    }
+    nav a {
+      display: block;
+      padding: 6px 18px 6px 22px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background .15s, border-color .15s;
+    }
+    nav a:hover {
+      background: var(--bg);
+      border-left-color: var(--accent2);
+      color: var(--accent);
+    }
+    nav a.active {
+      background: var(--note-bg);
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    nav hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 14px;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 38px 48px 60px;
+      max-width: 860px;
+    }
+
+    section { margin-bottom: 52px; }
+
+    h2 {
+      font-size: 1.30rem;
+      font-weight: normal;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 6px;
+      margin-bottom: 18px;
+      letter-spacing: -.01em;
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--accent2);
+      margin: 24px 0 8px;
+    }
+    h4 {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin: 18px 0 6px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    /* ── Equation block ── */
+    .eq {
+      background: var(--eq-bg);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 20px;
+      margin: 18px 0;
+      overflow-x: auto;
+      font-size: 1.05em;
+    }
+    .eq-label {
+      float: right;
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 2px;
+    }
+
+    /* ── Note / tip box ── */
+    .note {
+      background: var(--note-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      margin: 18px 0;
+      font-size: 0.93rem;
+    }
+    .note strong { color: var(--accent); }
+
+    /* ── Restore-defaults box ── */
+    .restore-section {
+      margin: 2.5em auto;
+      max-width: 860px;
+      font-family: inherit;
+    }
+    .restore-box {
+      border: 1.5px solid var(--gold);
+      border-left: 5px solid var(--gold);
+      border-radius: 6px;
+      background: #fffbeb;
+      padding: 1.1em 1.4em;
+      display: flex;
+      gap: 1em;
+      align-items: flex-start;
+    }
+    .restore-icon { font-size: 1.5em; line-height: 1; flex-shrink: 0; }
+    .restore-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      color: var(--accent);
+      margin-bottom: 0.35em;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .restore-intro {
+      margin: 0 0 0.5em;
+      font-size: 0.92em;
+      line-height: 1.6;
+    }
+    .restore-list {
+      margin: 0;
+      padding-left: 1.4em;
+      font-size: 0.92em;
+      line-height: 1.8;
+    }
+    .restore-box kbd {
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.88em;
+    }
+    .restore-link { color: var(--accent); text-decoration: underline; }
+    .restore-footnote {
+      margin: 0.6em 0 0;
+      font-size: 0.88em;
+      color: var(--muted);
+    }
+
+    /* ── Code ── */
+    pre {
+      background: #2b2b2b;
+      color: #f0ede4;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.55;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 0.91em;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    pre code { background: none; padding: 0; font-size: inherit; }
+
+    /* ── Module cards ── */
+    .mc { display: grid; gap: 14px; margin: 18px 0; }
+    .mc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+    }
+    .mc-card .mc-name {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .mc-card .mc-role {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .mc-card p { font-size: 0.92rem; margin-bottom: 0; color: var(--muted); }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 16px 0;
+    }
+    th {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      background: var(--note-bg);
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { font-family: var(--mono); color: var(--accent2); }
+
+    /* ── Output type list ── */
+    .output-list { list-style: none; margin: 14px 0; }
+    .output-list li {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .output-list li:last-child { border-bottom: none; }
+    .output-list .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      white-space: nowrap;
+      color: var(--accent2);
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
+    }
+    footer a { color: #e0c090; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Beats layout additions ── */
+    .eq-kind {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .kind {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-left: 4px;
+      vertical-align: 1px;
+    }
+    .kind-law { background: #f6dcdc; color: #7a1f1f; border: 1px solid #d9a0a0; }
+    .kind-ode { background: #d9ead3; color: #274e13; border: 1px solid #a8c69a; }
+    .kind-def { background: #e4e4e4; color: #3a3a3a; border: 1px solid #b5b5b5; }
+    .kind-der { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
+    .kind-alg { background: #e6e0f8; color: #3d2c73; border: 1px solid #b7abdd; }
+    .related-list li { margin-bottom: 6px; }
+    .warn {
+      background: #fff6e8;
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 12px 18px;
+      margin: 16px 0;
+      font-family: var(--sans);
+      font-size: 0.91rem;
+      color: var(--muted);
+    }
+    .warn strong { color: var(--accent); }
+    .compare-table th:not(:first-child), .compare-table td:not(:first-child) {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .compare-table td:not(:first-child) { font-family: var(--mono); color: var(--text); }
+    main { min-width: 0; }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+    section ul { margin: 0 0 14px 1.4em; }
+    section ul li, section ol li { margin-bottom: 6px; }
+    section ol { margin: 0 0 14px 1.6em; }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 48px; }
+    }
+  
+</style>
+</head>
+
+<body>
+<div class="page-wrap">
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+<div class="badge">Chapter 21 · Gravity from the Ground Up</div>
+<h1><em>RelativisticOrbit</em> — Orbital Precession in Schwarzschild Geometry</h1>
+<div class="sub">
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+</div>
+</header>
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<nav id="sidebar">
+<div class="nav-label">Overview</div>
+<a href="#overview">Overview</a>
+<a href="#beats">How to read this page</a>
+<div class="nav-label">Beats</div>
+<a href="#beat0">0 · The rosette</a>
+<a href="#beat1">1 · Relativity switched off</a>
+<a href="#beat2">2 · The advance, predicted exactly</a>
+<a href="#beat3">3 · The weak field</a>
+<a href="#beat4">4 · Circular orbits and the ISCO</a>
+<a href="#beat5">5 · Inside the ISCO, and back out</a>
+<a href="#beat6">6 · The plunge</a>
+<a href="#beat7">7 · How far to trust the orbit</a>
+<a href="#beat8">8 · Escape, Mercury and the hard cases</a>
+<div class="nav-label">Code</div>
+<a href="#equations">Governing Equations</a>
+<a href="#algorithm">Algorithm</a>
+<a href="#modules">Program Files</a>
+<div class="nav-label">Usage</div>
+<a href="#quickstart">Quick Start</a>
+<a href="#parameters">Parameters</a>
+<a href="#output">Plot</a>
+<a href="#summary">Printed Summary</a>
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
+<div class="nav-label">Reference</div>
+<a href="#related">Related Programs</a>
+<a href="#license">License</a>
+</nav>
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main>
+<p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 8e44c5a56ab6
+</p>
+<section id="overview">
+<h2>Overview</h2>
+<p><strong>RelativisticOrbit</strong> follows a small particle falling freely around a non-rotating black hole of one solar mass, and draws its orbit. Close to the hole the orbit is not an ellipse. Its closest approach, the periapsis, moves forward from one pass to the next, so that the path traces a rosette; much closer in, the particle can whirl round several times before it swings out again, or it can fall through the horizon and never come back. A second model, Newtonian gravity started from the same point with the same velocity, runs beside it for comparison.</p>
+<p>The program integrates the orbit step by step in the particle's own time, its proper time \(\tau\), and prints a summary before it opens the plot: why the run stopped, how far the particle turned, where it found the periapsides and how far each one advanced, and how well two quantities that should stay constant did stay constant. Beneath that it prints what the constants of motion say the orbit must do, worked out exactly without integrating anything: whether it is bound, where it turns, and by how much its periapsis advances.</p>
+<p>The spine of the lesson is one sentence: <em>a freely falling particle outside a black hole obeys a Newtonian-looking equation with one extra inward pull, \(3h^2/(c^2r^2)\) times the Newtonian one, and that pull makes each periapsis advance by an angle that the particle's energy and angular momentum fix exactly: a fraction of a degree far away, more than a whole turn close in, and, below a critical angular momentum, no return at all; the exact prediction printed beside each run and the printed drift of the conserved quantities are how you tell how far to trust the step-by-step orbit.</em> Each numbered section below is one beat: a short argument, a command whose printed summary or plot illustrates that argument, and then the equation that the printed numbers follow from.</p>
+<div class="note">
+<strong>Scope:</strong> RelativisticOrbit is about test-particle orbits in the Schwarzschild geometry, the geometry outside any non-rotating, uncharged, spherical mass. <em>Orbit</em> integrates the same kind of orbit in Newtonian gravity, and <em>MercPert</em> shows how a second planet makes a Newtonian orbit precess. Neither includes relativity.
+    </div>
+<div class="warn"><strong>What this program is, and what it does not model.</strong> RelativisticOrbit is a teaching model of a single test particle, so light that it does not disturb the central mass, moving in the equatorial plane of a non-rotating black hole of one solar mass. It has no spin (no Kerr geometry), no gravitational radiation, so an orbit never decays, no gas, no second body and no back-reaction of the particle on the hole. The \(x\)&ndash;\(y\) plot draws the areal radius \(r\) and the angle \(\phi\) as if they were polar coordinates in a flat plane; that is a convenient diagram, not a picture of curved space. The input <code>--u_init</code> is a rate of change with respect to the particle's proper time, not a measured speed: at the start it is \(\gamma v\), where \(v\) is the speed measured by an observer at rest there, so it can exceed the speed of light although \(v\) cannot. The orbit is computed step by step, so it carries a numerical error, largest where the particle passes closest; the drift diagnostics and the exact prediction measure it. Beats 5 to 8 show where the numbers stop being trustworthy.</div>
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw TeX source (e.g. <code>\(3h^2/(c^2r^2)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div>
+</section>
+<section id="beats">
+<h2>How to read this page</h2>
+<p>Each numbered section below is one beat: a short argument in words, a command whose output illustrates it, and then the equation that the output follows from. Do them in order the first time. After that, any beat can be opened on its own.</p>
+<p>The program's output is a consequence of its equations, so what a beat shows is the equations at work, not independent evidence that they are right. The outside checks the program offers are the lines under <code>predicted from the constants of motion</code>, which come from an exact solution of the same equation by a different route, and the drift of the two conserved quantities. Beats 2 to 7 compare the integrated orbit with them.</p>
+<p>The program has no random numbers, so every command prints the numbers quoted here. A different computer normally prints the same digits too, although its mathematical library could in principle round the last digit of a long run differently. Beat 0 runs the default orbit and Beat 1 runs it again with Newtonian gravity. Beat 2 explains the prediction and tests it on a second orbit. Beats 3 to 6 move the particle: far out (Beat 3), onto circular orbits (Beat 4), inside the innermost stable circular orbit (Beat 5) and into the hole (Beat 6). Beat 7 tightens the numerical settings, and Beat 8 collects the cases the program handles least well.</p>
+<p>Run every command from the program's folder. Each run prints a summary and then opens a plot window; close the window to end the program. Each beat names the lines of the summary to look at. Radii are in metres, proper time in seconds, and angles in radians and degrees.</p>
+<div class="note"><strong>What kind of statement is each equation?</strong> Each displayed equation in the beats carries a tag. A red <span class="kind kind-law">LAW</span> tag marks a law of nature that the model adopts and does not derive; Eq. (1) is the only one. A green <span class="kind kind-ode">ODE</span> tag marks a differential equation that the program integrates: Eqs. (2) and (6). A grey <span class="kind kind-def">DEFINITION</span> tag marks a quantity that is defined by a formula. A blue <span class="kind kind-der">DERIVED</span> tag marks a result that follows from the equations already stated. A violet <span class="kind kind-alg">ALGORITHM</span> tag marks a rule of the calculation, which is a choice made by the program rather than physics: Eqs. (5), (18), (19) and (20). The tags are there so that a law, a definition and a numerical rule are never mistaken for one another. Twenty-two equations are numbered; a few unnumbered ones appear where they are needed.</div>
+</section>
+<section id="beat0">
+<h2>Beat 0 · The rosette</h2>
+<p>A particle starts 15000 m from a black hole of one solar mass, moving sideways. Watch what it does.</p>
+<pre>python main.py</pre>
+<p>Look at the plot, and at the summary lines <code>horizon radius</code>, <code>termination</code>, <code>accepted steps</code>, <code>azimuthal turns</code>, <code>periapsides found</code>, <code>periapsis radius</code> and <code>mean periapsis advance per radial period</code>. Ignore the block <code>predicted from the constants of motion</code> until Beat 2.</p>
+<p>Three tasks, in order. First, read the scale. The horizon is at 2953.3 m, so the particle starts only about five horizon radii out. Then read the motion. The run stopped at its safety limit, <code>maximum accepted-step count reached</code>, after 6000 steps and 0.012 s of the particle's proper time; by then the line from the hole to the particle had turned through 9.285146 turns, and the program had found 6 periapsides, all at the same distance, between 14999.8 m and 15000 m. Then read the advance. Each periapsis comes 2.44005 rad = 139.805 deg further round than the one before, so from one periapsis to the next the particle turns through 360 + 139.805 = 499.805 degrees, or 1.388 turns. The 9.285146 turns are 6.69 of those radial periods, and the plot shows the loops of a rosette, each rotated from the last. Say why an orbit whose closest approach stays at the same distance need not close.</p>
+<p><em>Then</em> the law. Outside a non-rotating mass the geometry of spacetime is Schwarzschild's, and a particle on which no force acts follows a path of this geometry, a geodesic, whose length is its proper time.</p>
+<div class="eq"><span class="eq-label">(1)</span>
+<div class="eq-kind">Schwarzschild geometry in the equatorial plane <span class="kind kind-law">LAW</span></div>
+      \[
+        c^2\,d\tau^2=\Bigl(1-\frac{2GM}{c^2r}\Bigr)c^2\,dt^2-\Bigl(1-\frac{2GM}{c^2r}\Bigr)^{-1}dr^2-r^2\,d\phi^2 .
+      \]
+    </div>
+<p>Here \(t\) is the time of a distant clock, \(\tau\) the particle's proper time, and \(r\) the areal radius: a sphere at \(r\) has area \(4\pi r^2\). The central mass is \(M\), with \(GM\) = <code>GM_SUN</code>, and \(c\) is the speed of light. Following a geodesic of Eq. (1) and measuring rates of change in proper time gives an equation for the orbit that looks almost like Newton's.</p>
+<div class="eq"><span class="eq-label">(2)</span>
+<div class="eq-kind">The orbit equation that the program integrates <span class="kind kind-ode">ODE</span></div>
+      \[
+        \frac{d^2\mathbf r}{d\tau^2}=-\frac{GM}{r^3}\Bigl(1+\frac{3h^2}{c^2r^2}\Bigr)\mathbf r,
+        \qquad \mathbf r=(x,\ y)=(r\cos\phi,\ r\sin\phi) .
+      \]
+    </div>
+<p>This is exact for Eq. (1), not an approximation for weak fields. Its left-hand side is a second derivative of the diagram coordinates, not an acceleration anyone could feel: a freely falling particle feels none. The quantity \(h\) in it is the particle's angular momentum per unit mass, which Eq. (2), like any force towards a centre, keeps constant. The program starts every orbit on the \(x\) axis, moving in the \(y\) direction.</p>
+<div class="eq"><span class="eq-label">(3)</span>
+<div class="eq-kind">Starting state and angular momentum <span class="kind kind-def">DEFINITION</span></div>
+      \[
+        x=x_0,\quad y=0,\quad \frac{dx}{d\tau}=0,\quad \frac{dy}{d\tau}=u_0;
+        \qquad
+        h=r^2\frac{d\phi}{d\tau}=x\frac{dy}{d\tau}-y\frac{dx}{d\tau}=x_0u_0 .
+      \]
+    </div>
+<p>Here \(x_0\) is <code>--x_init</code> and \(u_0\) is <code>--u_init</code>; for the default, \(h=15000\times1.2\times10^{8}=1.8\times10^{12}\ {\rm m^2\,s^{-1}}\). Schutz writes the same constant as \(K=h/2\), and the relativistic term of Eq. (2) as \(Q/r^2\) with \(Q=12K^2/c^2=3h^2/c^2\); <code>orbital_constants()</code> returns \(h\) and \(Q\). The program counts how far the particle has gone round by adding up the change in \(\phi\) at every step.</p>
+<div class="eq"><span class="eq-label">(4)</span>
+<div class="eq-kind">Azimuthal turns <span class="kind kind-def">DEFINITION</span></div>
+      \[
+        N_{\rm rev}=\frac{|\Delta\phi_{\rm accumulated}|}{2\pi} .
+      \]
+    </div>
+<p>\(N_{\rm rev}\) is <code>azimuthal turns</code>, and a run stops when it reaches <code>--max_orbits</code>, unless the step limit <code>--max_steps</code> or the horizon comes first. A periapsis is a point closer to the hole than the points on either side of it, and the advance is how much more than a full turn separates two of them.</p>
+<div class="eq"><span class="eq-label">(5)</span>
+<div class="eq-kind">Periapsides and the measured advance <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        r_{k-1}&gt;r_k\le r_{k+1}\ \Rightarrow\ \text{periapsis at step }k;
+        \qquad
+        \overline{\Delta\phi}=\frac{|\phi_{p,n}-\phi_{p,1}|}{n-1}-2\pi .
+      \]
+    </div>
+<p>The \(r_k\) are the radii at the accepted steps, and \(\phi_{p,1},\dots,\phi_{p,n}\) are the unwrapped angles of the \(n\) periapsides found. The starting point is not counted, because it has no step before it. \(\overline{\Delta\phi}\) is <code>mean periapsis advance per radial period</code>; it needs at least two periapsides. A periapsis found this way can only be at a step, not between steps, which Beat 7 shows is one of the two limits on how precisely the advance is measured. Beat 1 asks which term of Eq. (2) makes the advance.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat1">
+<h2>Beat 1 · Relativity switched off</h2>
+<p>Start the particle from the same place with the same velocity, but let it obey Newton's law of gravity instead.</p>
+<pre>python main.py --model newtonian</pre>
+<p>Look at the plot, at <code>azimuthal turns</code>, <code>periapsides found</code> and <code>mean periapsis advance per radial period</code>, and at the lines <code>circular dy/dtau</code> and <code>motion</code> in the predicted block. Compare them with Beat 0.</p>
+<p>Three tasks, in order. First, read the shape. The Newtonian orbit swings out to 65554 m before it returns, where the relativistic one of Beat 0 turned back at 23954.4 m (the <code>apoapsis</code> printed in Beat 0). Then read the timing. In the same 6000 steps the Newtonian particle turns through only 2.572195 turns, finds 2 periapsides, and they are 0.00101314 rad apart beyond a full turn, against 2.44005 rad in Beat 0; the prediction for Newtonian gravity is <code>0 rad</code>. Then compare the two <code>circular dy/dtau</code> lines, the sideways speed that would keep the particle on a circle: 9.40611e+07 m/s for Newton and 1.12051e+08 m/s for Schwarzschild. Say what the relativistic term in Eq. (2) must do to the pull on the particle, given that relativity needs a faster start to stay on the same circle.</p>
+<p><em>Then</em> the comparison model. It is Eq. (2) without the extra term, started from the same state, Eq. (3).</p>
+<div class="eq"><span class="eq-label">(6)</span>
+<div class="eq-kind">The Newtonian comparison <span class="kind kind-ode">ODE</span></div>
+      \[
+        \frac{d^2\mathbf r}{d\tau^2}=-\frac{GM}{r^3}\,\mathbf r .
+      \]
+    </div>
+<p>In Newtonian gravity \(\tau\) is simply time. The relativistic term is an extra pull towards the hole, a fixed fraction of the Newtonian one at each radius, and largest where the particle is closest. At the start it takes a simple form, because \(h=x_0u_0\).</p>
+<div class="eq"><span class="eq-label">(7)</span>
+<div class="eq-kind">Size of the relativistic term at the start <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \frac{3h^2}{c^2r^2}\bigg|_{r=x_0}=\frac{3u_0^{2}}{c^2}=\frac{3\,(1.2\times10^{8})^2}{(2.998\times10^{8})^2}=0.481 .
+      \]
+    </div>
+<p>At its closest approach the default particle is pulled 48% harder than Newton would pull it. That is why it cannot climb as far out, and why a circle needs a faster start. Without the extra term the orbit is one of Kepler's conics, which closes.</p>
+<div class="eq"><span class="eq-label">(8)</span>
+<div class="eq-kind">The Newtonian orbit closes <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \frac1r=\frac{GM}{h^2}\bigl(1+e\cos\phi\bigr),
+        \qquad
+        e=\frac{r_a-r_p}{r_a+r_p}=\frac{65554-15000}{65554+15000}=0.628 .
+      \]
+    </div>
+<p>Here \(r_p\) and \(r_a\) are the periapsis and apoapsis radii. The radius depends on \(\phi\) only through \(\cos\phi\), so it repeats exactly after one turn and every periapsis is at the same angle. The 0.00101314 rad that the program measures is therefore a numerical error, of the size Beat 7 explains, and the program's own prediction says so: <code>0 rad</code>. In Eq. (2) the extra pull grows faster than \(1/r^2\) as the particle comes in, so it bends the path round further near periapsis and the orbit overshoots. Beat 2 computes by how much.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat2">
+<h2>Beat 2 · The advance, predicted exactly</h2>
+<p>The program does not have to integrate the orbit to know where it turns and how far its periapsis moves; the constants of motion decide both. Read the prediction for the default run of Beat 0, and then test it on an orbit that starts at its farthest point instead of its closest.</p>
+<pre>python main.py
+python main.py --u_init 1.1e8 --dt 5e-7 --max_steps 24000</pre>
+<p>Look at the block <code>predicted from the constants of motion</code>: <code>circular dy/dtau</code>, <code>motion</code> and <code>apsidal advance</code>. Compare it with <code>periapsis radius</code> and <code>mean periapsis advance per radial period</code> above it. The second command also uses a smaller step, which Beat 7 explains.</p>
+<p>Three tasks, in order. First, the default run. The prediction reads <code>bound, periapsis 15000 m, apoapsis 23954.4 m</code> and an advance of 2.44037 rad = 139.823 deg; the integration measured 2.44005 rad = 139.805 deg, 0.00032 rad less. Then the second run. It starts at 1.1e8 m/s, below the <code>circular dy/dtau</code> of 1.12051e+08 m/s, and now the prediction reads <code>periapsis 13171.1 m, apoapsis 15000 m</code>: the starting point is the far end of the orbit. The integration found all six of its periapsides at 13170.9 m, and measured an advance of 4.07277 rad against the predicted 4.07222 rad. Then compare the two orbits. The one that comes closer, to 13171.1 m instead of 15000 m, advances 233.321 deg per radial period instead of 139.823 deg. Say why a start faster than the circular value makes the starting point a periapsis and a slower start makes it an apoapsis.</p>
+<p><em>Then</em> where the prediction comes from. Eq. (2) has a second constant of motion besides \(h\): an energy.</p>
+<div class="eq"><span class="eq-label">(9)</span>
+<div class="eq-kind">The energy integral <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \mathcal E=\frac12\biggl[\Bigl(\frac{dx}{d\tau}\Bigr)^2+\Bigl(\frac{dy}{d\tau}\Bigr)^2\biggr]-\frac{GM}{r}-\frac{GMh^2}{c^2r^3} .
+      \]
+    </div>
+<p>Differentiate \(\mathcal E\) along a solution of Eq. (2) and the result is zero. It is the energy of the orbit equation, not an energy that a local observer measures; the program prints its fractional drift as <code>max |ΔE/E0|</code>, and the drift of \(h\) as <code>max |Δh/h0|</code>. Write the velocity in terms of \(dr/d\tau\) and \(h/r\), change the variable from \(\tau\) to \(\phi\) using \(d\phi/d\tau=h/r^2\), and put \(u=1/r\). The orbit's shape then obeys a first-order equation with a cubic on the right.</p>
+<div class="eq"><span class="eq-label">(10)</span>
+<div class="eq-kind">The orbit equation in u = 1/r <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \Bigl(\frac{du}{d\phi}\Bigr)^2=\frac{2GM}{c^2}u^3-u^2+\frac{2GM}{h^2}u+\frac{2\mathcal E}{h^2}
+        =\frac{2GM}{c^2}\,(u-u_1)(u-u_2)(u-u_3) .
+      \]
+    </div>
+<p>The particle can only be where the right-hand side is positive, and it turns round where it is zero, at the roots \(u_1&lt;u_2&lt;u_3\) of the cubic. The start is always one root, because the particle starts moving sideways, so \(du/d\phi=0\) there. A bound orbit oscillates between \(u_1=1/r_a\) and \(u_2=1/r_p\); the third root lies beyond, and the three add up to \(c^2/(2GM)\). If the start is a periapsis the other turning point lies farther out, and if it is an apoapsis it lies closer in; which one depends on whether the start is faster or slower than circular. Dividing \(du\) by the square root of Eq. (10) and integrating from \(u_1\) to \(u_2\) and back gives the angle of one radial period.</p>
+<div class="eq"><span class="eq-label">(11)</span>
+<div class="eq-kind">The exact apsidal advance <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \Delta\phi=\frac{4K(m)}{\sqrt{(2GM/c^2)(u_3-u_1)}}-2\pi,
+        \qquad
+        m=\frac{u_2-u_1}{u_3-u_1},
+        \qquad
+        K(m)=\int_0^{\pi/2}\frac{d\theta}{\sqrt{1-m\sin^2\theta}} .
+      \]
+    </div>
+<p>\(K\) is the complete elliptic integral of the first kind, which <code>predict_orbit()</code> in <code>physics_relativistic_orbit.py</code> evaluates to full double precision; the same function finds the roots and prints the kind of orbit. For the default orbit Eq. (11) gives 2.4403696101582 rad, which agrees to 12 digits with an independent high-accuracy integration of Eq. (2) kept in the program's tests. Eq. (11) is exact for the equation the program integrates, so the difference between it and the measured advance is numerical error: 0.00032 rad at the default settings. With Newtonian gravity the cubic term is absent, the right-hand side of Eq. (10) is a quadratic, and one radial period is exactly one turn: the advance is 0, as Beat 1 found. Beat 3 moves the particle far from the hole.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> and <a href="#exp12">Experiment 12</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat3">
+<h2>Beat 3 · The weak field</h2>
+<p>Move the particle out to a million metres, 339 horizon radii, and give it nearly the speed for a circle there. Run it with relativity and then without.</p>
+<pre>python main.py --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_steps 20000
+python main.py --model newtonian --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_steps 20000</pre>
+<p>Look at <code>mean periapsis advance per radial period</code>, at <code>apsidal advance</code> and <code>weak-field 6piGM/(c^2 p)</code> in the predicted block, and at the lines <code>circular dy/dtau</code> and <code>motion</code> in both runs.</p>
+<p>Three tasks, in order. First, compare the two predictions of the first run. The exact advance is 0.0280972 rad = 1.60985 deg, and the weak-field formula gives 0.0279099 rad = 1.59912 deg, 0.7% less. In Beat 0 the same formula printed 1.50876 rad against the exact 2.44037 rad, only 62% of it. Then compare the measurement. The first run measured 0.0280654 rad, 0.0000318 rad below the exact value. The Newtonian run, which should measure nothing, measured 0.000315267 rad: at these settings a measured advance can be off by a few ten-thousandths of a radian, about 1% of the relativistic advance, and the first run happens to come closer than that. Then read the <code>circular dy/dtau</code> lines: 1.15457e+07 m/s with relativity and 1.15201e+07 m/s without. The starting value, 1.153e7 m/s, lies between them, so the start is the far point of the relativistic orbit, which comes in to 994558 m, and the near point of the Newtonian one, which goes out to 1.00345e+06 m. Say why the weak-field formula should get better as the orbit gets bigger.</p>
+<p><em>Then</em> the weak-field formula. Far from the hole the cubic term of Eq. (10) is small, and expanding Eq. (11) in powers of it gives, to first order, a simple result.</p>
+<div class="eq"><span class="eq-label">(12)</span>
+<div class="eq-kind">The weak-field advance <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \Delta\phi\approx\frac{6\pi GM}{c^2p},
+        \qquad
+        p=\frac{2r_pr_a}{r_p+r_a}=a(1-e^2) .
+      \]
+    </div>
+<p>Here \(p\) is the semi-latus rectum of the orbit, \(a\) its semimajor axis and \(e\) its eccentricity; for this orbit \(p\approx997272\) m, and the small number that controls the expansion is \(GM/(c^2p)=0.00148\). The next term of the expansion is \((18+e^2)/4\) times \(GM/(c^2p)\) of the first one, 0.0067 here, which is the 0.7% difference between the two predicted lines. In Beat 0, \(GM/(c^2p)\) is 0.080: the first two terms then give 1.36 times the weak-field value, and Eq. (11) gives 1.62 times; close to the hole only the full Eq. (11) will do. Eq. (12) is the formula behind the relativistic advance of Mercury's perihelion, which Beat 8 tries. Beat 4 moves the particle the other way, onto circular orbits close to the hole.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat4">
+<h2>Beat 4 · Circular orbits and the ISCO</h2>
+<p>Put the particle on a circle at \(8GM/c^2\), with exactly the circular speed there. Then put it on a circle at \(5GM/c^2\), inside the innermost stable circular orbit, with a start 0.1% faster than circular.</p>
+<pre>python main.py --x_init 11813.0003044 --u_init 134071263.04595 --max_orbits 4 --max_steps 8000
+python main.py --x_init 7383.12519025 --u_init 212197265.2804 --dt 1e-7 --max_orbits 12 --max_steps 40000</pre>
+<p>Look at <code>ISCO radius</code>, <code>periapsis radius</code>, <code>max |ΔE/E0|</code> and <code>mean periapsis advance per radial period</code>, and at the whole predicted block, in both runs.</p>
+<p>Three tasks, in order. First, the circle at 11813.0 m, outside the ISCO at 8859.8 m. The prediction says <code>circular (stable)</code>. The program finds one shallow periapsis, at 11813 m, the starting radius to the printed digits, and the energy drift is only 1.903e-08. The advance of a slightly disturbed orbit there is predicted to be 6.28319 rad = 360 deg, a whole turn, while the weak-field formula says 2.35619 rad = 135 deg. Then the circle at 7383.1 m, inside the ISCO. Its <code>circular dy/dtau</code> is 2.11985e+08 m/s, and the start is 0.1% faster. That small change sends the particle out to 15002.2 m, twice as far, before it comes back: the prediction is <code>bound, periapsis 7383.13 m, apoapsis 15002.2 m</code> with an advance of 24.4301 rad = 1399.74 deg. So the particle goes 4.89 times round in each radial period; in 11.833533 turns it finds 2 periapsides, at 7383.06 m and 7383.09 m, and measures 24.4374 rad. Then look at the second plot: tight loops close to the hole, then one wide swing out and back. Say why a small push would barely change the circle outside the ISCO, when it changes the circle inside it so much.</p>
+<p><em>Then</em> the reason, which is an effective potential. Split the velocity in Eq. (9) into its radial part \(dr/d\tau\) and its sideways part \(h/r\).</p>
+<div class="eq"><span class="eq-label">(13)</span>
+<div class="eq-kind">Radial motion in an effective potential <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \frac12\Bigl(\frac{dr}{d\tau}\Bigr)^2+V(r)=\mathcal E,
+        \qquad
+        V(r)=-\frac{GM}{r}+\frac{h^2}{2r^2}-\frac{GMh^2}{c^2r^3} .
+      \]
+    </div>
+<p>The first two terms of \(V\) are Newton's: a pull and a centrifugal barrier. The third is the relativistic term, and it wins at small \(r\), so, when \(h&gt;\sqrt{12}\,GM/c\) (Beat 5), \(V\) has a peak as well as a well. A circular orbit sits where \(dV/dr=0\); it is stable at the bottom of the well and unstable on the top of the peak.</p>
+<div class="eq"><span class="eq-label">(14)</span>
+<div class="eq-kind">Circular orbits and their stability <span class="kind kind-der">DERIVED</span></div>
+      \[
+        u_{\rm circ}=\frac{dy}{d\tau}\bigg|_{\rm circle}=\sqrt{\frac{GM}{r-3GM/c^2}},\quad r&gt;\frac{3GM}{c^2};
+        \qquad
+        \text{stable if } r&gt;r_{\rm ISCO}=\frac{6GM}{c^2} .
+      \]
+    </div>
+<p>This is <code>circular dy/dtau</code>, computed by <code>circular_proper_time_speed()</code>. It grows without limit as \(r\) approaches \(3GM/c^2\), 4429.9 m, where only light can circle; it can exceed \(c\), because it is a rate of change in proper time, \(\gamma v\) for the speed \(v\) that an observer at rest there measures. With no \(3GM/c^2\) in the denominator, Newton's value is \(\sqrt{GM/r}\), and every Newtonian circle is stable. A particle nudged off a stable circle oscillates about it, and the angle it turns through in one oscillation is not \(2\pi\).</p>
+<div class="eq"><span class="eq-label">(15)</span>
+<div class="eq-kind">Advance of a nearly circular orbit <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \Delta\phi_{\rm circ}=\frac{2\pi}{\sqrt{1-6GM/(c^2r)}}-2\pi .
+      \]
+    </div>
+<p>At \(r=8GM/c^2\) the square root is \(\sqrt{1/4}=1/2\), so \(\Delta\phi_{\rm circ}=2\pi\) exactly: a slightly disturbed orbit there returns to its periapsis only after two full turns. As \(r\) falls to \(6GM/c^2\) the advance grows without limit, and inside it there is no oscillation, only a peak to fall off. The 0.1% push at \(5GM/c^2\) set the particle rolling down from the top of the peak into the well and out the other side. Beat 5 asks whether a particle that comes in from outside can pass inside the ISCO and still come back.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat5">
+<h2>Beat 5 · Inside the ISCO, and back out</h2>
+<p>Start the particle at 20000 m, moving sideways well below the circular speed, so that it falls inwards. Run it at the default settings and then with a smaller step and tighter tolerances.</p>
+<pre>python main.py --x_init 20000 --u_init 8e7 --max_steps 8000
+python main.py --x_init 20000 --u_init 8e7 --dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 20000</pre>
+<p>Look at <code>periapsis radius</code>, <code>mean periapsis advance per radial period</code>, <code>max |ΔE/E0|</code> and the predicted block, in both runs.</p>
+<p>Three tasks, in order. First, read the prediction: <code>bound, periapsis 7564.95 m, apoapsis 20000 m</code>. The periapsis is inside the ISCO, 8859.8 m, yet the orbit is bound: the particle comes back out to 20000 m every time. Then read the first run. Its periapsides lie between 7475.6 m and 7476.56 m, about 89 m deeper than predicted, and it measures an advance of 10.0873 rad against the predicted 9.40306 rad = 538.756 deg, 7% too much. Its energy drift, 4.988e-03, is about 32 times the 1.573e-04 of Beat 0. Then read the second run: periapsides at 7564.13 m, an advance of 9.40766 rad, and an energy drift of 5.746e-05. Say which run to believe, and why the prediction lets you decide without running a third.</p>
+<p><em>Then</em> why the particle can come back from inside the ISCO. The ISCO is where circular orbits stop being stable; it is not a surface that the particle cannot cross. What decides the particle's fate is the peak of the potential of Eq. (13), which is at the smaller of the two radii where \(dV/dr=0\).</p>
+<div class="eq"><span class="eq-label">(16)</span>
+<div class="eq-kind">The peak and the well of the potential <span class="kind kind-der">DERIVED</span></div>
+      \[
+        r_\pm=\frac{h^2}{2GM}\Bigl(1\pm\sqrt{1-12\Bigl(\frac{GM}{ch}\Bigr)^2}\,\Bigr) .
+      \]
+    </div>
+<p>The peak is at \(r_-\) and the bottom of the well at \(r_+\). They exist only if \(h&gt;\sqrt{12}\,GM/c=1.53349\times10^{12}\ {\rm m^2\,s^{-1}}\), and they meet at \(6GM/c^2\), the ISCO, when \(h\) equals that value. Here \(h=20000\times8\times10^{7}=1.6\times10^{12}\ {\rm m^2\,s^{-1}}\), so \(r_-=6893.0\) m and \(r_+=12396.8\) m. The particle's energy is below the top of the peak, so it turns round at 7564.95 m, outside \(r_-=6893.0\) m, although inside the ISCO. The first run went too deep because its step was too large for the fast, tight passage close to the hole: its energy drifted, and the orbit it followed was a slightly different one. Beat 6 lowers the energy barrier until the particle does not turn round at all.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat6">
+<h2>Beat 6 · The plunge</h2>
+<p>Go back to the default start at 15000 m and make it slower. At 1.044e8 m/s and at 1.045e8 m/s the particle's fate differs; run both with a small step and tight tolerances, and the second also at the default settings.</p>
+<pre>python main.py --u_init 1.044e8 --dt 1e-7 --eps1 0.005 --eps2 1e-6 --max_steps 12000
+python main.py --u_init 1.045e8 --dt 1e-7 --eps1 0.005 --eps2 1e-6 --max_steps 40000
+python main.py --u_init 1.045e8</pre>
+<p>Look at <code>termination</code>, <code>azimuthal turns</code>, <code>max |ΔE/E0|</code>, <code>mean periapsis advance per radial period</code> and the <code>motion</code> line in each run, and at the plots.</p>
+<p>Three tasks, in order. First, the slower start. The prediction reads <code>plunge (no inner turning point; the orbit crosses the horizon)</code>, and the run ends with <code>Schwarzschild horizon crossed</code> after 9266 steps and 0.000861161 s of proper time, having gone 2.844796 times round the hole. Then the start 0.1% faster. It is <code>bound</code>, with <code>periapsis 7710.01 m</code> and an advance of 13.5506 rad = 776.393 deg, so each radial period adds more than two extra turns; the run finds periapsides at 7709.6 m and measures 13.5564 rad. Its plot shows the particle whirling close to the hole and then zooming out to 15000 m. Then the same start at the default settings: it ends <code>Schwarzschild horizon crossed</code> after 3.932597 turns, with an energy drift of 2.686e-02, although the prediction for it still reads <code>bound</code>. Say why a small numerical error changes this orbit's fate completely, when in Beat 0 it only moved the advance in the fourth decimal place.</p>
+<p><em>Then</em> the horizon. In Eq. (1) the coefficient of \(dt^2\) vanishes at one radius.</p>
+<div class="eq"><span class="eq-label">(17)</span>
+<div class="eq-kind">The horizon <span class="kind kind-der">DERIVED</span></div>
+      \[
+        r_s=\frac{2GM}{c^2}=2953.3\ {\rm m} .
+      \]
+    </div>
+<p>This is <code>horizon radius</code>. Nothing that crosses it comes back out, and the program stops there. By Eqs. (13) and (16), a particle falling inwards turns round only if its energy is below the peak of \(V\); otherwise nothing stops it and it plunges. At 1.044e8 m/s the energy is just above the peak and at 1.045e8 m/s just below; the boundary, where the particle would whirl for ever round the unstable circular orbit on top of the peak, is at 1.04444e8 m/s. A particle near that boundary spends a long time close to the peak, whirling, which is why both the plunge and the bound orbit go round several times close in. Near the boundary a tiny change in energy decides the outcome, and at the default settings the numerical error is not tiny: the energy drift is 2.686e-02, and the computed particle crossed the top of the peak. The last step of a plunge crosses the horizon somewhere between two accepted points; the program finds where.</p>
+<div class="eq"><span class="eq-label">(18)</span>
+<div class="eq-kind">The horizon crossing <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        \bigl|\mathbf r_n+f\,(\mathbf r_{n+1}-\mathbf r_n)\bigr|=r_s,\qquad 0\le f\le1,
+        \qquad
+        \tau_{\rm end}=\tau_n+f\,\Delta\tau .
+      \]
+    </div>
+<p>The smallest root \(f\) of this quadratic places the end of the orbit on the horizon, and the position, velocity and proper time there are interpolated linearly along the last step. The interpolated end point is not a solution of Eq. (2), so it is left out of the drift diagnostics. The printed proper time of a plunge is therefore the proper time to reach the horizon, to the accuracy of the last step. Beat 7 asks how small the step has to be.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp8">Experiment 8</a> and <a href="#exp9">Experiment 9</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat7">
+<h2>Beat 7 · How far to trust the orbit</h2>
+<p>Run the default orbit of Beat 0 again with a step half as large, a quarter as large, and a tenth as large with tighter tolerances. Each run needs more steps to cover the same proper time.</p>
+<pre>python main.py --dt 1e-6 --max_steps 12000
+python main.py --dt 5e-7 --max_steps 24000
+python main.py --dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 60000</pre>
+<p>Look at <code>max |Δh/h0|</code>, <code>max |ΔE/E0|</code> and <code>mean periapsis advance per radial period</code> in each run, and compare them with Beat 0 and with the predicted 2.44037 rad.</p>
+<p>Three tasks, in order. First, the drifts. As the step goes from 2e-6 s to 1e-6 s to 5e-7 s, the energy drift goes from 1.573e-04 to 3.928e-05 to 9.875e-06, smaller by a factor of 4.00 and then 3.98 each time the step halves, and the angular-momentum drift goes from 4.632e-05 to 1.158e-05 to 2.909e-06. In the last run the energy drift is 1.587e-06. Then the advance. The four runs measure 2.44005, 2.44109, 2.44014 and 2.44033 rad, so their errors are &minus;0.00032, +0.00072, &minus;0.00023 and &minus;0.00004 rad: the error does not shrink steadily, and the second run is further off than Beat 0. Then compare each error with \(\omega_p\,\Delta\tau/(n-1)\) from Eq. (21) below, which is 0.0032, 0.0016, 0.0008 and 0.00032 rad for these runs. Say why the drifts fall smoothly while the measured advance jumps about, and what limits the advance.</p>
+<p><em>Then</em> the method. Each step first predicts the new position and velocity from the acceleration at the start of the step, and then corrects them with the average of the start and end accelerations, repeatedly.</p>
+<div class="eq"><span class="eq-label">(19)</span>
+<div class="eq-kind">Predictor and iterated corrector <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        \tilde{\mathbf r}=\mathbf r^n+\mathbf v^n\Delta\tau+\tfrac12\mathbf a^n\Delta\tau^2;
+        \qquad
+        \mathbf v^{n+1}=\mathbf v^n+\frac{\mathbf a^n+\mathbf a^{n+1}}{2}\Delta\tau,
+        \qquad
+        \mathbf r^{n+1}=\mathbf r^n+\frac{\mathbf v^n+\mathbf v^{n+1}}{2}\Delta\tau .
+      \]
+    </div>
+<p>The end-of-step acceleration \(\mathbf a^{n+1}\) is recomputed from each corrected position, up to ten times, until successive velocity estimates differ by less than the fraction \(\varepsilon_2\) (<code>--eps2</code>). This trapezoidal rule is second order: halving the step divides the error accumulated over a fixed proper time by 4, which is the factor the drifts show. The step itself is chosen adaptively.</p>
+<div class="eq"><span class="eq-label">(20)</span>
+<div class="eq-kind">Adaptive step <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        \frac{\lVert\tilde{\mathbf a}-\mathbf a^n\rVert}{\max\bigl(\lVert\tilde{\mathbf a}\rVert,\lVert\mathbf a^n\rVert\bigr)}&gt;\varepsilon_1
+        \ \Rightarrow\ \Delta\tau\to\tfrac12\Delta\tau;
+        \qquad
+        \text{after an accepted step}\ \ \Delta\tau\to\min(1.1\,\Delta\tau,\ \Delta\tau_{\max}) .
+      \]
+    </div>
+<p>Here \(\tilde{\mathbf a}\) is the acceleration at the predicted position, \(\varepsilon_1\) is <code>--eps1</code> and \(\Delta\tau_{\max}\) is <code>--dt</code>. A step that fails either test is halved and tried again, with at most 80 attempts in all. The measured advance has a second error, which has nothing to do with the accuracy of each step: by Eq. (5) a periapsis can only be found at an accepted point, and near periapsis each step turns the particle through an angle \(\omega_p\Delta\tau\), where \(\omega_p=h/r_p^2\) is the angular speed there.</p>
+<div class="eq"><span class="eq-label">(21)</span>
+<div class="eq-kind">Sampling error of the measured advance <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \bigl|\overline{\Delta\phi}_{\rm measured}-\overline{\Delta\phi}_{\rm orbit}\bigr|\ \lesssim\ \frac{\omega_p\,\Delta\tau}{n-1},
+        \qquad
+        \omega_p=\frac{h}{r_p^{2}} .
+      \]
+    </div>
+<p>Each periapsis found can be off by up to half a step in angle, and Eq. (5) divides the difference between the first and last by the \(n-1\) radial periods between them. For the default orbit \(\omega_p=1.8\times10^{12}/15000^2=8000\) rad/s and \(n-1=5\), which gives the bounds quoted above. The measured advance therefore carries two errors: the integration error of Eq. (19), which changes smoothly and falls by about 4 each time the step halves, and the sampling error of Eq. (21), which depends on where the steps happen to fall and can have either sign. Here every measured error lies inside its sampling bound, but the two errors can partly cancel, so one small error is not proof of accuracy; what counts is agreement that persists as the step shrinks. So there are two tests of a run: the drifts, which should fall by about 4 each time the step halves, and the prediction, which the measured advance should approach as the step shrinks. To measure the advance more precisely, make the step smaller, which reduces both errors, or follow more radial periods, which reduces the sampling error. Beat 8 shows cases where neither is practical.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp10">Experiment 10</a> and <a href="#exp12">Experiment 12</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat8">
+<h2>Beat 8 · Escape, Mercury and the hard cases</h2>
+<p>Four runs the program handles least well: a particle fast enough to escape, the orbit of Mercury with and without relativity, and a start inside the hole, which is rejected.</p>
+<pre>python main.py --u_init 1.8e8 --max_steps 12000
+python main.py --x_init 4.6e10 --u_init 58980 --dt 1e4 --max_steps 4000 --max_orbits 5
+python main.py --model newtonian --x_init 4.6e10 --u_init 58980 --dt 1e4 --max_steps 4000 --max_orbits 5
+python main.py --x_init 2000</pre>
+<p>Look at <code>termination</code>, <code>azimuthal turns</code> and <code>motion</code> in the first run; at <code>mean periapsis advance per radial period</code> and <code>apsidal advance</code> in the second and third; and at the error message of the fourth.</p>
+<p>Three tasks, in order. First, the escape. The run stops with <code>maximum accepted-step count reached</code> after 12000 steps, having gone only 0.394547 of a turn, and the prediction reads <code>escape (no outer turning point)</code>: the program has no escape detector, and without the prediction you would only see a particle still moving away when the steps ran out. Then Mercury, started at its perihelion distance with its perihelion speed around a solar mass. The prediction is an advance of 5.01831e-07 rad per orbit. The relativistic run measures 0.000121605 rad and the Newtonian run 0.000119678 rad, both about 240 times the prediction, and they differ from each other by more than the prediction too. Then read the error of the fourth command: <code>--x_init must lie outside the Schwarzschild horizon</code>. Say why the program cannot measure Mercury's advance, although it predicts it exactly.</p>
+<p><em>Then</em> the escape condition. A particle that starts moving outwards escapes if nothing turns it back, and by Eq. (13), since \(V\) rises towards zero at large \(r\), that happens when its energy is not negative.</p>
+<div class="eq"><span class="eq-label">(22)</span>
+<div class="eq-kind">Escape from a sideways start <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \mathcal E\ge0
+        \quad\Longleftrightarrow\quad
+        u_0\ge u_{\rm esc}=\sqrt{\frac{2GM}{x_0\bigl(1-2GM/(c^2x_0)\bigr)}} .
+      \]
+    </div>
+<p>Outside \(4GM/c^2\), 5906.5 m, \(u_{\rm esc}\) is larger than the circular value of Eq. (14), so a start at or above it does move outwards and escapes; closer in, a start between the two values has enough energy but moves inwards, and plunges. At 15000 m, \(u_{\rm esc}=1.48435\times10^{8}\) m/s, against Newton's \(\sqrt{2GM/x_0}=1.33023\times10^{8}\) m/s, so 1.8e8 m/s escapes. The Mercury runs fail for two reasons. One is Eq. (21): at perihelion the angular speed is \(58980/4.6\times10^{10}=1.28\times10^{-6}\) rad/s, so one step of \(10^4\) s turns the planet through 0.0128 rad, and with 5 periapsides the sampling error can reach 0.0032 rad, thousands of times the signal. The other is the integration error of Eq. (19), which at so large a step makes even the Newtonian orbit precess by far more than the signal. Both measured numbers are numerical error, which is why the Newtonian control is essential: when it measures an advance as large as the relativistic run, the measured number is not relativity. Bringing the sampling bound alone down to \(5\times10^{-7}\) rad would need a step of under 2 s, about 5 million steps per orbit, and measuring the signal would need both errors to be far smaller than that. The fourth command is rejected before any calculation. The program also rejects <code>--eps2</code> not smaller than <code>--eps1</code>, tolerances not strictly between 0 and 1, a <code>--x_init</code> or <code>--dt</code> that is not positive, counts that are not positive integers, and numbers that are not finite. A negative <code>--u_init</code> is allowed and gives the same orbit in the clockwise direction; zero gives a straight fall into the hole. Other limits are listed under <a href="#parameters">Parameters</a>.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp11">Experiment 11</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="equations">
+<h2>Governing Equations</h2>
+<p>The twenty-two numbered equations, with the kind of statement each one is, the beat that introduces it, and where the program evaluates it. A few unnumbered relations are stated inside the beats where they are needed and are listed after the table.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Index of the numbered equations"><table>
+<thead><tr><th>Equation</th><th>Kind</th><th>What it says</th><th>Beat</th><th>Where in the code</th></tr></thead>
+<tbody>
+<tr><td>(1)</td><td><span class="kind kind-law">LAW</span></td><td>Schwarzschild geometry in the equatorial plane</td><td>0</td><td>not evaluated; Eq. (2) follows from it</td></tr>
+<tr><td>(2)</td><td><span class="kind kind-ode">ODE</span></td><td>The orbit equation that the program integrates</td><td>0</td><td><code>central_acceleration()</code> in <code>physics_relativistic_orbit.py</code>; advanced by <code>integrate_relativistic_orbit()</code> in <code>driver_relativistic_orbit.py</code></td></tr>
+<tr><td>(3)</td><td><span class="kind kind-def">DEFINITION</span></td><td>Starting state and angular momentum</td><td>0</td><td><code>orbital_constants()</code> and <code>specific_angular_momentum()</code> in <code>physics_relativistic_orbit.py</code></td></tr>
+<tr><td>(4)</td><td><span class="kind kind-def">DEFINITION</span></td><td>Azimuthal turns</td><td>0</td><td><code>integrate_relativistic_orbit()</code> in <code>driver_relativistic_orbit.py</code></td></tr>
+<tr><td>(5)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Periapsides and the measured advance</td><td>0</td><td><code>integrate_relativistic_orbit()</code> in <code>driver_relativistic_orbit.py</code></td></tr>
+<tr><td>(6)</td><td><span class="kind kind-ode">ODE</span></td><td>The Newtonian comparison</td><td>1</td><td><code>central_acceleration(..., "newtonian")</code> in <code>physics_relativistic_orbit.py</code></td></tr>
+<tr><td>(7)</td><td><span class="kind kind-der">DERIVED</span></td><td>Size of the relativistic term at the start</td><td>1</td><td>not evaluated</td></tr>
+<tr><td>(8)</td><td><span class="kind kind-der">DERIVED</span></td><td>The Newtonian orbit closes</td><td>1</td><td>not evaluated; its turning points are found by <code>predict_orbit()</code></td></tr>
+<tr><td>(9)</td><td><span class="kind kind-der">DERIVED</span></td><td>The energy integral</td><td>2</td><td><code>effective_specific_energy()</code> in <code>physics_relativistic_orbit.py</code></td></tr>
+<tr><td>(10)</td><td><span class="kind kind-der">DERIVED</span></td><td>The orbit equation in u = 1/r</td><td>2</td><td><code>predict_orbit()</code> in <code>physics_relativistic_orbit.py</code></td></tr>
+<tr><td>(11)</td><td><span class="kind kind-der">DERIVED</span></td><td>The exact apsidal advance</td><td>2</td><td><code>predict_orbit()</code> in <code>physics_relativistic_orbit.py</code></td></tr>
+<tr><td>(12)</td><td><span class="kind kind-der">DERIVED</span></td><td>The weak-field advance</td><td>3</td><td><code>weak_field_advance()</code> in <code>physics_relativistic_orbit.py</code></td></tr>
+<tr><td>(13)</td><td><span class="kind kind-der">DERIVED</span></td><td>Radial motion in an effective potential</td><td>4</td><td>not evaluated</td></tr>
+<tr><td>(14)</td><td><span class="kind kind-der">DERIVED</span></td><td>Circular orbits and their stability</td><td>4</td><td><code>circular_proper_time_speed()</code>, <code>ISCO_RADIUS</code> and <code>PHOTON_ORBIT_RADIUS</code> in <code>physics_relativistic_orbit.py</code></td></tr>
+<tr><td>(15)</td><td><span class="kind kind-der">DERIVED</span></td><td>Advance of a nearly circular orbit</td><td>4</td><td><code>predict_orbit()</code> in <code>physics_relativistic_orbit.py</code></td></tr>
+<tr><td>(16)</td><td><span class="kind kind-der">DERIVED</span></td><td>The peak and the well of the potential</td><td>5</td><td>not evaluated</td></tr>
+<tr><td>(17)</td><td><span class="kind kind-der">DERIVED</span></td><td>The horizon</td><td>6</td><td><code>HORIZON_RADIUS</code> in <code>physics_relativistic_orbit.py</code></td></tr>
+<tr><td>(18)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>The horizon crossing</td><td>6</td><td><code>integrate_relativistic_orbit()</code> in <code>driver_relativistic_orbit.py</code></td></tr>
+<tr><td>(19)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Predictor and iterated corrector</td><td>7</td><td><code>integrate_relativistic_orbit()</code> in <code>driver_relativistic_orbit.py</code></td></tr>
+<tr><td>(20)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Adaptive step</td><td>7</td><td><code>integrate_relativistic_orbit()</code> in <code>driver_relativistic_orbit.py</code></td></tr>
+<tr><td>(21)</td><td><span class="kind kind-der">DERIVED</span></td><td>Sampling error of the measured advance</td><td>7</td><td>not evaluated</td></tr>
+<tr><td>(22)</td><td><span class="kind kind-der">DERIVED</span></td><td>Escape from a sideways start</td><td>8</td><td>not evaluated; <code>predict_orbit()</code> reports an escape</td></tr>
+</tbody></table></div>
+<p>The unnumbered relations are the direction of the first radial motion, outwards if \(u_0\) exceeds the circular value of Eq. (14) and inwards if it is less (Beat 2, DERIVED from Eq. (2)); the second-order term \((18+e^2)/4\) of the weak-field expansion (Beat 3, DERIVED from Eq. (11)); the critical angular momentum \(\sqrt{12}\,GM/c\) (Beat 5, DERIVED from Eq. (16)); the input checks (Beat 8, ALGORITHM, in <code>main.py</code> and <code>driver_relativistic_orbit.py</code>); and the starting-step estimate under <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="algorithm">
+<h2>Algorithm</h2>
+<p>This section collects in one place the rules of the calculation that the beats introduced one at a time.</p>
+<h3>Integrating the orbit</h3>
+<ol>
+<li>Check the inputs and set the starting state of Eq. (3); compute \(h\) and the energy of Eq. (9) for the drift diagnostics.</li>
+<li>Try a step of the current size: predict with the start-of-step acceleration, and if the acceleration changes by more than \(\varepsilon_1\), halve the step and try again, Eq. (20).</li>
+<li>Correct the step with the trapezoidal rule of Eq. (19), recomputing the end acceleration, until the velocity changes by less than \(\varepsilon_2\); if ten corrections are not enough, halve the step and try again.</li>
+<li>In Schwarzschild mode, if the step crosses the horizon, end the orbit on it by Eq. (18).</li>
+<li>Accept the step. Add the change of angle to the turn count, Eq. (4); update the maximum drifts of \(h\) and \(\mathcal E\); and test the previous point for a periapsis, Eq. (5).</li>
+<li>Stop at the horizon, at <code>--max_orbits</code> turns or at <code>--max_steps</code> accepted steps. Otherwise let the step grow by 10%, but not beyond <code>--dt</code>, and repeat from step 2.</li>
+<li>Compute the mean advance of Eq. (5) if at least two periapsides were found, print the summary, and draw the plot.</li>
+</ol>
+<h3>Predicting the orbit</h3>
+<ol>
+<li>From \(x_0\) and \(u_0\) form the cubic of Eq. (10), scaled so that the start is the root \(w=1\) of \((w-1)\bigl(Aw^2+(A-1)w+A+B-1\bigr)\), with \(A=2GM/(c^2x_0)\) and \(B=2GM/(x_0u_0^2)\); in Newtonian mode \(A=0\).</li>
+<li>Find the other roots. If one equals the start, the orbit is circular, stable or unstable by Eq. (14), with the advance of Eq. (15).</li>
+<li>Otherwise find the direction of the first motion and look for the next root in that direction. If there is none the orbit plunges (inwards) or escapes (outwards); if there is one it is bound, and Eq. (11) gives its advance.</li>
+</ol>
+<h3>Named constants</h3>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Named constants"><table>
+<thead><tr><th>Name</th><th>Value</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td><code>GM_SUN</code></td><td>1.3271244e20</td><td>\(GM\) for one solar mass, in \({\rm m^3\,s^{-2}}\), the IAU nominal value.</td></tr>
+<tr><td><code>C</code></td><td>299792458.0</td><td>Speed of light in m/s, exact in SI units.</td></tr>
+<tr><td><code>HORIZON_RADIUS</code></td><td>2953.25</td><td>\(2GM/c^2\) in m, Eq. (17).</td></tr>
+<tr><td><code>PHOTON_ORBIT_RADIUS</code></td><td>4429.88</td><td>\(3GM/c^2\) in m, below which there is no circular orbit, Eq. (14).</td></tr>
+<tr><td><code>ISCO_RADIUS</code></td><td>8859.75</td><td>\(6GM/c^2\) in m, the innermost stable circular orbit, Eq. (14).</td></tr>
+</tbody></table></div>
+<div class="note">
+<strong>Tip:</strong> Before trusting a measured advance, compare it with the predicted one and with the sampling bound of Eq. (21). Before trusting any run, halve <code>--dt</code> (and double <code>--max_steps</code>) and check that the drifts fall by about four. Near a plunge or a zoom-whirl, trust the <code>motion</code> line of the prediction over the fate of the integrated orbit.
+    </div>
+</section>
+<section id="modules">
+<h2>Program Files</h2>
+<div class="mc">
+<div class="mc-card">
+<div class="mc-name">main.py</div>
+<div class="mc-role">Entry Point &amp; Configuration</div>
+<p>
+          Holds the editable defaults in <code>params</code>, defines every command-line option in <code>build_parser()</code>, runs the integration, prints the summary (see <a href="#summary">Printed Summary</a>), including the lines from <code>prediction_lines()</code>, and passes the result to the plotter. It can be imported without running anything.
+        </p>
+</div>
+<div class="mc-card">
+<div class="mc-name">physics_relativistic_orbit.py</div>
+<div class="mc-role">Physics Layer</div>
+<p>
+          Contains the constants, the acceleration of Eqs. (2) and (6) in <code>central_acceleration()</code>, the conserved quantities <code>specific_angular_momentum()</code> and <code>effective_specific_energy()</code>, <code>circular_proper_time_speed()</code>, <code>weak_field_advance()</code>, and <code>predict_orbit()</code>, which returns an <code>OrbitPrediction</code> with the kind of orbit, its turning points and its exact advance. It also computes the version and build identifier.
+        </p>
+</div>
+<div class="mc-card">
+<div class="mc-name">driver_relativistic_orbit.py</div>
+<div class="mc-role">Driver Layer</div>
+<p>
+          Defines <code>RelativisticOrbitParams</code>, the inputs, and <code>integrate_relativistic_orbit()</code>, which carries out the algorithm above and returns a <code>RelativisticOrbitResult</code>: the orbit as tuples of positions, velocities, proper times and unwrapped angles, the periapsides, the mean advance, the drift maxima and the reason the run stopped. The result is frozen, so it cannot be changed after it is returned.
+        </p>
+</div>
+<div class="mc-card">
+<div class="mc-name">plot_relativistic_orbit.py</div>
+<div class="mc-role">Visualisation</div>
+<p>
+          Provides <code>plot_relativistic_orbit(result, show_isco=True, show_periapsides=False)</code>, which draws the orbit with equal scales on both axes; see <a href="#output">Plot</a>.
+        </p>
+</div>
+</div><!-- .mc -->
+</section>
+<section id="quickstart">
+<h2>Quick Start</h2>
+<h3>Requirements</h3>
+<p>Python 3.10 or later with <code>matplotlib</code>:</p>
+<pre>pip install "matplotlib&gt;=3.5"</pre>
+<h3>Running the Program</h3>
+<p>Clone or download the repository, then open a terminal in the folder that contains <code>main.py</code>:</p>
+<pre>cd GFTGU-Programs/RelativisticOrbit
+python main.py
+python main.py --model newtonian
+python main.py --help</pre>
+<p>To display the program version and build identifier without running a calculation, use <code>python main.py --version</code>. Options omitted from a command keep their defaults, and a negative value can be written directly, as in <code>--u_init -1.2e8</code>.</p>
+<pre># Mark the periapsides and hide the ISCO circle
+python main.py --show_periapsides --no-show_isco
+
+# A tighter run of the default orbit
+python main.py --dt 5e-7 --max_steps 24000</pre>
+</section>
+<section id="parameters">
+<h2>Command-Line Parameters</h2>
+<p>All ordinary settings are command-line options described in <code>main.py</code>. The two display switches change only the plot.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table">
+<thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td class="pname">--x_init</td><td class="pdefault">15000</td><td>Starting areal radius \(x_0\) in m, on the \(+x\) axis, Eq. (3). It must be positive, and outside the horizon, 2953.3 m, in Schwarzschild mode.</td></tr>
+<tr><td class="pname">--u_init</td><td class="pdefault">1.2e8</td><td>Starting \(dy/d\tau\), \(u_0\), in m/s, Eq. (3); any finite value, including zero or a negative value. It is a proper-time rate, not a measured speed.</td></tr>
+<tr><td class="pname">--dt</td><td class="pdefault">2e-6</td><td>Largest proper-time step \(\Delta\tau_{\max}\) in s, Eq. (20).</td></tr>
+<tr><td class="pname">--max_steps</td><td class="pdefault">6000</td><td>Largest number of accepted steps; a run can stop here before it reaches <code>--max_orbits</code>.</td></tr>
+<tr><td class="pname">--max_orbits</td><td class="pdefault">10</td><td>Number of turns, Eq. (4), after which the run stops; the last step can overshoot it slightly.</td></tr>
+<tr><td class="pname">--eps1</td><td class="pdefault">0.05</td><td>Largest fractional change of the acceleration in one step, \(\varepsilon_1\) of Eq. (20); strictly between 0 and 1.</td></tr>
+<tr><td class="pname">--eps2</td><td class="pdefault">1e-4</td><td>Convergence threshold \(\varepsilon_2\) of the corrector, Eq. (19); strictly between 0 and <code>--eps1</code>.</td></tr>
+<tr><td class="pname">--model</td><td class="pdefault">schwarzschild</td><td><code>schwarzschild</code> integrates Eq. (2); <code>newtonian</code> integrates Eq. (6) from the same start.</td></tr>
+<tr><td class="pname">--show_isco</td><td class="pdefault">on</td><td>Draw the ISCO circle at \(6GM/c^2\) in Schwarzschild mode; <code>--no-show_isco</code> hides it.</td></tr>
+<tr><td class="pname">--show_periapsides</td><td class="pdefault">off</td><td>Mark the periapsides found by Eq. (5) with an <code>x</code>; <code>--no-show_periapsides</code> hides them.</td></tr>
+</tbody></table></div>
+<div class="note"><strong>Input checking:</strong> The command-line parser rejects numbers that are not finite, a <code>--x_init</code> or <code>--dt</code> that is not positive, counts that are not positive integers, tolerances that are not strictly between 0 and 1, an <code>--eps2</code> that is not smaller than <code>--eps1</code>, an unknown model, and, in Schwarzschild mode, a <code>--x_init</code> at or inside the horizon. The driver makes the same checks for a script that calls it directly, and stops with a message if an orbit's numbers become too large to represent or a step cannot be made to converge.</div>
+</section>
+<section id="output">
+<h2>Plot</h2>
+<p>The plot draws the orbit in the \(x\)&ndash;\(y\) diagram coordinates with equal scales on both axes, a dot at the central mass, and, in Schwarzschild mode, the horizon at its true radius and, unless <code>--no-show_isco</code> is given, the ISCO as a dashed circle; with <code>--show_periapsides</code> the periapsides are marked with an <code>x</code>. The legend below the axes names each element and gives the two radii. In a weak-field run the horizon is far too small to see, so the dot marks where the mass is.</p>
+</section>
+<section id="summary">
+<h2>Printed Summary</h2>
+<p>Every run prints a summary and then opens its plot. This is the summary of the default run of Beat 0:</p>
+<pre>RelativisticOrbit 1.2.0 (build 8e44c5a56ab6) summary
+  model             : schwarzschild
+  horizon radius    : 2953.3 m
+  ISCO radius       : 8859.8 m
+  termination       : maximum accepted-step count reached
+  accepted steps    : 6000
+  proper time       : 0.012 s
+  azimuthal turns   : 9.285146
+  periapsides found : 6
+  max |Δh/h0|       : 4.632e-05
+  max |ΔE/E0|       : 1.573e-04
+  periapsis radius  : min 14999.8 m, max 15000 m
+  mean periapsis advance per radial period: 2.44005 rad = 139.805 deg
+  predicted from the constants of motion:
+    circular dy/dtau: 1.12051e+08 m/s at x_init
+    motion          : bound, periapsis 15000 m, apoapsis 23954.4 m
+    apsidal advance : 2.44037 rad = 139.823 deg
+    weak-field 6piGM/(c^2 p): 1.50876 rad = 86.4458 deg</pre>
+<ul>
+<li><code>model</code>: <code>schwarzschild</code> or <code>newtonian</code>. <code>horizon radius</code> and <code>ISCO radius</code>: Eqs. (17) and (14), printed in Schwarzschild mode only.</li>
+<li><code>termination</code>: why the run stopped: <code>requested revolution count reached</code>, <code>maximum accepted-step count reached</code> or <code>Schwarzschild horizon crossed</code>.</li>
+<li><code>accepted steps</code> and <code>proper time</code>: how many steps were accepted and how much of the particle's proper time they covered.</li>
+<li><code>azimuthal turns</code>: \(N_{\rm rev}\) of Eq. (4).</li>
+<li><code>periapsides found</code> and <code>periapsis radius</code>: the number of periapsides found by Eq. (5) and the smallest and largest of their radii; the radius line is left out when none is found.</li>
+<li><code>max |Δh/h0|</code> and <code>max |ΔE/E0|</code>: the largest fractional drift of \(h\), Eq. (3), and of \(\mathcal E\), Eq. (9), over the accepted steps.</li>
+<li><code>mean periapsis advance per radial period</code>: \(\overline{\Delta\phi}\) of Eq. (5), in radians and degrees; printed when at least two periapsides are found.</li>
+<li><code>predicted from the constants of motion</code>: lines worked out from \(x_0\) and \(u_0\) alone, without the integration. <code>circular dy/dtau</code> is Eq. (14), or \(\sqrt{GM/r}\) in Newtonian mode; it reads <code>none</code> when \(x_0\) is not above \(3GM/c^2\). <code>motion</code> is the kind of orbit, with its turning points when it is bound or circular. <code>apsidal advance</code> is Eq. (11), or Eq. (15) for a stable circle, and 0 in Newtonian mode. <code>weak-field 6piGM/(c^2 p)</code> is Eq. (12), printed in Schwarzschild mode.</li>
+</ul>
+<p>A plunge prints a different prediction. This is the run of Beat 6 that crosses the horizon:</p>
+<pre>RelativisticOrbit 1.2.0 (build 8e44c5a56ab6) summary
+  model             : schwarzschild
+  horizon radius    : 2953.3 m
+  ISCO radius       : 8859.8 m
+  termination       : Schwarzschild horizon crossed
+  accepted steps    : 9266
+  proper time       : 0.000861161 s
+  azimuthal turns   : 2.844796
+  periapsides found : 0
+  max |Δh/h0|       : 1.230e-05
+  max |ΔE/E0|       : 2.354e-04
+  predicted from the constants of motion:
+    circular dy/dtau: 1.12051e+08 m/s at x_init
+    motion          : plunge (no inner turning point; the orbit crosses the horizon)</pre>
+<ul>
+<li>The <code>motion</code> line can also read <code>escape (no outer turning point)</code>, <code>circular (stable)</code>, <code>circular (unstable)</code>, <code>radial (zero angular momentum)</code>, or, exactly on the boundary between a plunge and a bound orbit, <code>marginal</code>.</li>
+<li>Only lines that apply are printed: a plunge or an escape has no <code>apsidal advance</code>, and a run with fewer than two periapsides has no measured advance.</li>
+</ul>
+</section>
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<p>The experiments are ranked from introductory to advanced, and each is cited by the beat it extends. Each command is run from the program's folder. When choosing a step for a new orbit, a useful first estimate for \(N\) steps per turn at radius \(r\) is \(\Delta\tau\sim2\pi r/(u_0N)\); the adaptive rule of Eq. (20) shortens it where it must.</p>
+<h3 id="exp1">1 · Mark the Periapsides — Introductory</h3>
+<p>Run the default with the periapsides marked. Check that successive marks are equally far from the hole and equally spaced in angle, and estimate the angle between neighbouring marks from the plot. Compare it with the printed advance plus a whole turn.</p>
+<pre>python main.py --show_periapsides</pre>
+<h3 id="exp2">2 · Count the Turns — Introductory</h3>
+<p>Stop the default orbit after three turns. How many periapsides does it find, and why not three? Read <code>azimuthal turns</code>: the run stops at the first step that completes three turns, so the count slightly exceeds 3.</p>
+<pre>python main.py --max_orbits 3 --show_periapsides</pre>
+<h3 id="exp3">3 · Same Start, Two Laws — Introductory</h3>
+<p>Run both models for three turns from the same start and compare the plots and the apoapsis radii. Which orbit closes, and which one is pulled in more tightly?</p>
+<pre>python main.py --max_orbits 3 --max_steps 7000
+python main.py --model newtonian --max_orbits 3 --max_steps 7000</pre>
+<h3 id="exp4">4 · Which Turning Point? — Intermediate</h3>
+<p>Start just below and just above the circular value at 15000 m, 1.12051e+08 m/s. In each run, read from the <code>motion</code> line whether the start is the periapsis or the apoapsis, and compare the measured and predicted advances. Why do both runs have nearly the same advance, although their starts are on opposite sides of the circular value?</p>
+<pre>python main.py --u_init 1.12e8
+python main.py --u_init 1.125e8</pre>
+<h3 id="exp5">5 · How Weak Is Weak? — Intermediate</h3>
+<p>Only the prediction is needed here, so ten steps are enough. For each radius, divide <code>apsidal advance</code> by <code>weak-field 6piGM/(c^2 p)</code> and compare the ratio minus 1 with \((18+e^2)/4\) times \(GM/(c^2p)\), Beat 3. How far out must an orbit be for Eq. (12) to be right to 1%?</p>
+<pre>python main.py --x_init 1e5 --u_init 3.8e7 --max_steps 10
+python main.py --x_init 1e7 --u_init 3.7e6 --max_steps 10
+python main.py --x_init 1e9 --u_init 3.7e5 --max_steps 10</pre>
+<h3 id="exp6">6 · Circular Speeds and Stability — Intermediate Programming</h3>
+<p>Run this script from the program's folder. It prints the circular value of Eq. (14) and the predicted kind of orbit at radii from 4.5 to 10 times \(GM/c^2\), started exactly at the circular value. Where does the kind change from unstable to stable? Then start one of the stable circles 0.1% faster than circular, with a small step, and compare its measured advance with the printed prediction.</p>
+<pre>import physics_relativistic_orbit as physics
+
+m = physics.GM_SUN / physics.C2
+for factor in (4.5, 5, 6.5, 8, 10):
+    r = factor * m
+    u = physics.circular_proper_time_speed(r)
+    prediction = physics.predict_orbit(r, u)
+    print(factor, f"{u:.6g}", prediction.kind, prediction.apsidal_advance)</pre>
+<h3 id="exp7">7 · The Deepest Return — Intermediate to Advanced</h3>
+<p>From 20000 m, lower <code>--u_init</code> below 8e7 in small steps, keeping the tight settings of Beat 5. The first command still returns and the second plunges. Narrow the interval between them and record the smallest periapsis that still returns. Compare it with the ISCO and with \(r_-\) of Eq. (16).</p>
+<pre>python main.py --x_init 20000 --u_init 7.99e7 --dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 20000
+python main.py --x_init 20000 --u_init 7.95e7 --dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 20000</pre>
+<h3 id="exp8">8 · Toward the Photon Orbit — Advanced</h3>
+<p>At 5000 m, just outside the photon orbit, the circular value is 4.82471e+08 m/s, well above the speed of light, because it is a proper-time rate. Start well below it and then just above it. Why does the faster start escape rather than stay bound, and which part of Beat 8 explains it?</p>
+<pre>python main.py --x_init 5000 --u_init 2e8 --dt 1e-7 --max_steps 10000
+python main.py --x_init 5000 --u_init 4.83e8 --dt 1e-8 --max_steps 20000</pre>
+<h3 id="exp9">9 · Hunt the Zoom-Whirl Boundary — Advanced</h3>
+<p>Between 1.044e8 and 1.045e8 m/s at 15000 m the orbit changes from a plunge to a bound zoom-whirl. Use the <code>motion</code> line, which needs only ten steps, to narrow the boundary; then run a start just above it with the tight settings of Beat 6 and many steps, and count the whirls.</p>
+<pre>python main.py --u_init 1.0444e8 --max_steps 10
+python main.py --u_init 1.04445e8 --max_steps 10</pre>
+<h3 id="exp10">10 · Convergence Inside the ISCO — Advanced</h3>
+<p>Repeat the orbit of Beat 5 with smaller steps and tighter tolerances. Check that the periapsis radius and the advance approach the predicted 7564.95 m and 9.40306 rad and that the energy drift falls, and compare the remaining error in the advance with the sampling bound of Eq. (21).</p>
+<pre>python main.py --x_init 20000 --u_init 8e7 --dt 1e-7 --eps1 0.005 --eps2 1e-6 --max_steps 40000</pre>
+<h3 id="exp11">11 · Mercury's 43 Arcseconds — Advanced</h3>
+<p>Read the predicted advance for Mercury's orbit from ten steps. Convert it to arcseconds per century, using 415 orbits per century and 206265 arcseconds per radian, and compare it with the 43 arcseconds per century that Einstein explained in 1915. Why can the prediction do what the integration of Beat 8 cannot?</p>
+<pre>python main.py --x_init 4.6e10 --u_init 58980 --max_steps 10</pre>
+<h3 id="exp12">12 · Read the Result and the Prediction — Advanced Programming</h3>
+<p>Every number in the summary is available from the driver's result and from <code>predict_orbit()</code>. Run this script from the program's folder and compare its numbers with Beat 0; then extend it, for example to print the angle of each periapsis or the radius at every step.</p>
+<pre>import physics_relativistic_orbit as physics
+from driver_relativistic_orbit import RelativisticOrbitParams, integrate_relativistic_orbit
+
+params = RelativisticOrbitParams(x_init=1.5e4, u_init=1.2e8, dt=2e-6,
+                                 max_steps=6000, max_orbits=10, eps1=0.05, eps2=1e-4)
+result = integrate_relativistic_orbit(params)
+prediction = physics.predict_orbit(params.x_init, params.u_init)
+print(len(result.periapsis_radius), result.mean_periapsis_advance, prediction.apsidal_advance)</pre>
+</section>
+<section class="restore-section" aria-labelledby="restore-title">
+<div class="restore-box">
+<!-- Icon -->
+<div class="restore-icon">↩️</div>
+<!-- Content -->
+<div>
+<div class="restore-title" id="restore-title">Restoring Defaults and Program Files</div>
+<p class="restore-intro">
+        A new run with <code>python main.py</code> uses all default settings; options in a previous command do not carry over. If you edit <code>main.py</code> or another program file for a programming extension, restore it using any of the following methods:
+      </p>
+<ul class="restore-list">
+<li>
+<strong>Same session:</strong>
+          Press <kbd>Ctrl+Z</kbd>
+          (Windows) or <kbd>Cmd+Z</kbd>
+          (macOS) repeatedly in your editor to undo your edits.
+        </li>
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+        </li>
+<li>
+<strong>Full reset:</strong>
+          Re-download the ZIP from
+          <a class="restore-link" href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">
+            github.com/tomyee3-org/GFTGU-Programs
+          </a>
+          and replace this program's folder with the fresh copy.
+        </li>
+</ul>
+<p class="restore-footnote">
+        For additional ways to restore program files, see the corresponding
+        recovery instructions in the <em>GFTGU Python Setup Guide</em>.
+      </p>
+</div>
+</div>
+</section>
+<section id="related">
+<h2>Related Programs</h2>
+<ul class="related-list">
+<li><a href="../Orbit/Orbit-claude.html"><strong>Orbit</strong></a> — Newtonian orbits around a fixed mass with a related adaptive predictor-corrector; its orbits close.</li>
+<li><a href="../MercPert/MercPert-claude.html"><strong>MercPert</strong></a> — The precession of Mercury's orbit caused by another planet in Newtonian gravity. Such perturbations account for most of Mercury's observed precession; relativity accounts for the remaining 43 arcseconds per century (Experiment 11).</li>
+<li><a href="../Binary/Binary-claude.html"><strong>Binary</strong></a> — Two bodies orbiting each other in Newtonian gravity, where neither is fixed.</li>
+</ul>
+</section>
+<section id="license">
+<h2>License</h2>
+<p>
+      This software is based on the programs by <strong>Bernard Schutz</strong> accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003) and is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license. It descends from Schutz's original Java program for relativistic orbits; this student-facing version is a Python port by Thomas Yee.
+    </p>
+</section>
+</main>
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+<em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+</footer>
+</div><!-- /page-wrap -->
+<!-- ── Sidebar active-link tracking ── -->
+<script>
+  (function () {
+    const links = document.querySelectorAll('nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector(`nav a[href="#${e.target.id}"]`);
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('main section[id]').forEach(s => observer.observe(s));
+  })();
+</script>
+</body>
+</html>

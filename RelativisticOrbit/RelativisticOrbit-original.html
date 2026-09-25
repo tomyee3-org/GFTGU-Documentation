@@ -373,7 +373,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.1&nbsp;&nbsp;&nbsp;&nbsp;Build 88cf3667856e
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 8e44c5a56ab6
 </p>
 
 <!-- ─── Overview ─── -->
@@ -428,8 +428,15 @@ python main.py --u_init 1.044e8 --show_periapsides --max_steps 12000</pre>
 <p>
       After the run, the console reports why the integration stopped, accepted
       steps, accumulated azimuthal revolutions, detected periapsides, and
-      conservation drift. If at least two periapsides are found, it also reports
-      the mean periapsis advance per radial period.
+      conservation drift. If periapsides are found, it reports the smallest and
+      largest periapsis radius, and if at least two are found, the mean periapsis
+      advance per radial period. It then prints a block headed
+      <code>predicted from the constants of motion</code>, worked out from
+      <code>x_init</code> and <code>u_init</code> without integrating: the circular
+      value of \(dy/d\tau\) at the starting radius, whether the orbit is bound,
+      circular, plunges or escapes, its periapsis and apoapsis radii, its exact
+      apsidal advance and, in Schwarzschild mode, the weak-field value
+      \(6\pi GM/(c^2p)\).
     </p>
 <div class="note">
 <strong>Stopping limits:</strong> <code>max_steps</code> is a hard safety
@@ -462,7 +469,8 @@ python main.py --u_init 1.044e8 --show_periapsides --max_steps 12000</pre>
           Holds the user-editable initial conditions, numerical tolerances,
           Schwarzschild/Newtonian switch, and plotting options. It prints the
           run summary, the Schwarzschild horizon and ISCO radii (five significant figures),
-          and precession/conservation diagnostics.
+          precession/conservation diagnostics, and the orbit predicted from the
+          constants of motion.
         </p>
 </div>
 <div class="mc-card">
@@ -471,8 +479,10 @@ python main.py --u_init 1.044e8 --show_periapsides --max_steps 12000</pre>
 <p>
           Defines the nominal solar gravitational parameter, exact SI speed of
           light, Schwarzschild horizon/ISCO/photon-orbit radii, the orbital
-          acceleration, circular-orbit proper-time speed, and conserved-quantity
-          diagnostic functions.
+          acceleration, circular-orbit proper-time speed, conserved-quantity
+          diagnostic functions, and <code>predict_orbit()</code>, which finds the
+          orbit's turning points and its exact apsidal advance from the constants
+          of motion.
         </p>
 </div>
 <div class="mc-card">
@@ -609,9 +619,11 @@ python main.py --u_init 1.044e8 --show_periapsides --max_steps 12000</pre>
     </p>
 <div class="note">
 <strong>Printed advance versus the weak-field formula:</strong>
-      the console value is a diagnostic of the integrated trajectory, not an
-      automatic measurement of the analytic \(6\pi GM/[a(1-e^2)c^2]\) result.
-      In the Mercury-scale weak-field regime that analytic signal is smaller
+      the measured console value is a diagnostic of the integrated trajectory.
+      The console prints the exact advance of the orbit being integrated, and the
+      weak-field value, separately under
+      <code>predicted from the constants of motion</code>; the difference between the
+      measured and exact values is numerical error. In the Mercury-scale weak-field regime that analytic signal is smaller
       than the apsidal error typical of this educational integrator. See
       exercise 10.
     </div>
@@ -901,7 +913,11 @@ python main.py --dt 1e-6 --eps1 0.02 --eps2 1e-5 --show_periapsides --max_steps 
 <pre><code>python main.py --x_init 20000 --u_init 8e7 --show_periapsides --max_steps 8000</code></pre>
         Search for an eccentric orbit whose periapsis lies inside
         \(6GM/c^2\) but which still returns outward. A useful strategy is to
-        start at 20000 m with the command above and vary <code>--u_init</code> in small increments. This example returns from approximately 7476 m, inside the ISCO. Use
+        start at 20000 m with the command above and vary <code>--u_init</code> in small increments. This example returns from a periapsis of about 7565 m, inside the ISCO
+        (the printed prediction gives 7564.95 m); at the default step size the
+        integrated periapsides lie near 7476 m, about 89 m too deep, and they move to
+        the predicted value when <code>--dt</code>, <code>--eps1</code> and
+        <code>--eps2</code> are reduced (for example <code>--dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 20000</code>). Use
         <code>result.periapsis_radius</code> to check how far inward the orbit
         actually reached. This shows why crossing the ISCO does not by itself
         imply immediate plunge.
@@ -926,8 +942,8 @@ python main.py --dt 1e-6 --eps1 0.02 --eps2 1e-5 --show_periapsides --max_steps 
       </div>
 <div class="scenario-card">
 <div class="sc-title">10. Weak-Field Precession — Advanced</div>
-<pre><code>python main.py --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_steps 10000 --show_periapsides
-python main.py --model newtonian --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_steps 10000 --show_periapsides</code></pre>
+<pre><code>python main.py --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_steps 20000 --show_periapsides
+python main.py --model newtonian --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_steps 20000 --show_periapsides</code></pre>
         The two commands give a first qualitative comparison; matching precise orbital elements or measuring Mercury-scale advance requires additional numerical analysis. Move the starting radius outward and choose a correspondingly weaker
         bound orbit. Verify qualitatively that Schwarzschild precession becomes
         smaller as the field weakens. The goal of this exercise is that
