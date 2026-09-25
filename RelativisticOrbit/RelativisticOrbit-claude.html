@@ -823,7 +823,7 @@ python main.py --x_init 2000</pre>
 <h3>Predicting the orbit</h3>
 <ol>
 <li>From \(x_0\) and \(u_0\) form the cubic of Eq. (10), scaled so that the start is the root \(w=1\) of \((w-1)\bigl(Aw^2+(A-1)w+A+B-1\bigr)\), with \(A=2GM/(c^2x_0)\) and \(B=2GM/(x_0u_0^2)\); in Newtonian mode \(A=0\).</li>
-<li>Evaluate the radial force balance at the start, \(s=3A+B-2\), which is zero for a circle, positive if the first motion is inwards and negative if it is outwards. If \(s\) is no larger than a change of <code>--u_init</code> by a few units in its last digit could make (<code>CIRCULAR_ULPS</code>), the orbit is circular: stable, marginally stable or unstable by Eq. (14), with the advance of Eq. (15) for a stable circle. This recognises the value printed as <code>circular dy/dtau</code>, and <code>circular_proper_time_speed()</code>, which are correct to rounding, while a start that differs from them by any larger amount is treated as the orbit it is. In the same way a circle within a few units in the last digit of <code>--x_init</code> of \(6GM/c^2\) (<code>ISCO_ULPS</code>) is taken to be exactly at the ISCO.</li>
+<li>Evaluate the radial force balance at the start, \(s=3A+B-2\), which is zero for a circle, positive if the first motion is inwards and negative if it is outwards. If \(s\) is no larger than a change of <code>--u_init</code> by a few units in its last digit could make (<code>CIRCULAR_ULPS</code>), the orbit is circular: stable, marginally stable or unstable by Eq. (14), with the advance of Eq. (15) for a stable circle. This recognises the full-precision value returned by <code>circular_proper_time_speed()</code>, which is correct to rounding, while a start that differs from it by any larger amount is treated as the orbit it is. The <code>circular dy/dtau</code> line of the summary shows that value to six significant figures only, so a start typed from it is a slightly different orbit: at the ISCO, <code>--x_init 8859.750228300749 --u_init 1.73085e8</code> is predicted to plunge. To start on a circle, use the full value, as the Beat 4 command and Experiment 6 do. In the same way a circle within a few units in the last digit of <code>--x_init</code> of \(6GM/c^2\) (<code>ISCO_ULPS</code>) is taken to be exactly at the ISCO.</li>
 <li>Otherwise look for the next root in the direction of the first motion. If there is none the orbit plunges (inwards) or escapes (outwards); if there is one it is bound, and Eq. (11) gives its advance. These decisions use the signs of \(s\), of the discriminant \((1-3A)^2-4As\) of the quadratic, of \(1-3A\) and of \(A+B-1\), which the program evaluates exactly from the input numbers, so apart from the two rounding allowances of the previous step the kind of orbit never depends on rounding.</li>
 </ol>
 <h3>Named constants</h3>
@@ -945,7 +945,7 @@ python main.py --dt 5e-7 --max_steps 24000</pre>
 <li><code>periapsides found</code> and <code>periapsis radius</code>: the number of periapsides found by Eq. (5) and the smallest and largest of their radii; the radius line is left out when none is found.</li>
 <li><code>max |Δh/h0|</code> and <code>max |ΔE/E0|</code>: the largest fractional drift of \(h\), Eq. (3), and of \(\mathcal E\), Eq. (9), over the accepted steps.</li>
 <li><code>mean periapsis advance per radial period</code>: \(\overline{\Delta\phi}\) of Eq. (5), in radians and degrees; printed when at least two periapsides are found.</li>
-<li><code>predicted from the constants of motion</code>: lines worked out from \(x_0\) and \(u_0\) alone, without the integration. <code>circular dy/dtau</code> is Eq. (14), or \(\sqrt{GM/r}\) in Newtonian mode; it reads <code>none</code> when \(x_0\) is not above \(3GM/c^2\). <code>motion</code> is the kind of orbit, with its turning points when it is bound or circular. <code>apsidal advance</code> is Eq. (11), or Eq. (15) for a stable circle, and 0 in Newtonian mode. <code>weak-field 6piGM/(c^2 p)</code> is Eq. (12), printed in Schwarzschild mode.</li>
+<li><code>predicted from the constants of motion</code>: lines worked out from \(x_0\) and \(u_0\) alone, without the integration. <code>circular dy/dtau</code> is Eq. (14), or \(\sqrt{GM/r}\) in Newtonian mode, shown to six significant figures (see <a href="#algorithm">Algorithm</a> before typing it back in as <code>--u_init</code>); it reads <code>none</code> when \(x_0\) is not above \(3GM/c^2\). <code>motion</code> is the kind of orbit, with its turning points when it is bound or circular. <code>apsidal advance</code> is Eq. (11), or Eq. (15) for a stable circle, and 0 in Newtonian mode. <code>weak-field 6piGM/(c^2 p)</code> is Eq. (12), printed in Schwarzschild mode.</li>
 </ul>
 <p>A plunge prints a different prediction. This is the run of Beat 6 that crosses the horizon:</p>
 <pre>RelativisticOrbit 1.4.0 (build 991fa89ab9b7) summary
@@ -990,7 +990,7 @@ python main.py --u_init 1.125e8</pre>
 python main.py --x_init 1e7 --u_init 3.7e6 --max_steps 10
 python main.py --x_init 1e9 --u_init 3.7e5 --max_steps 10</pre>
 <h3 id="exp6">6 · Circular Speeds and Stability — Intermediate Programming</h3>
-<p>Run this script from the program's folder. It prints the circular value of Eq. (14) and the predicted kind of orbit at radii from 4.5 to 10 times \(GM/c^2\), started exactly at the circular value. Where does the kind change from unstable to stable? Then start one of the stable circles 0.1% faster than circular, with a small step, and compare its measured advance with the printed prediction.</p>
+<p>Run this script from the program's folder. It prints each radius and the full circular value of Eq. (14), which can be copied into <code>--x_init</code> and <code>--u_init</code>, and the predicted kind of orbit at radii from 4.5 to 10 times \(GM/c^2\), started exactly at the circular value. Where does the kind change from unstable to stable? Then start one of the stable circles 0.1% faster than circular, with a small step, and compare its measured advance with the printed prediction.</p>
 <pre>import physics_relativistic_orbit as physics
 
 m = physics.GM_SUN / physics.C2
@@ -998,7 +998,7 @@ for factor in (4.5, 5, 6.5, 8, 10):
     r = factor * m
     u = physics.circular_proper_time_speed(r)
     prediction = physics.predict_orbit(r, u)
-    print(factor, f"{u:.6g}", prediction.kind, prediction.apsidal_advance)</pre>
+    print(factor, repr(r), repr(u), prediction.kind, prediction.apsidal_advance)</pre>
 <h3 id="exp7">7 · The Deepest Return — Intermediate to Advanced</h3>
 <p>From 20000 m, lower <code>--u_init</code> below 8e7 in small steps, keeping the tight settings of Beat 5. The first command still returns and the second plunges. Narrow the interval between them and record the smallest periapsis that still returns. Compare it with the ISCO and with \(r_-\) of Eq. (16).</p>
 <pre>python main.py --x_init 20000 --u_init 7.99e7 --dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 20000
