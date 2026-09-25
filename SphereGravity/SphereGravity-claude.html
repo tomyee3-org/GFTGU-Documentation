@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SphereGravity – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+    /* ── Reset & custom properties ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #fdf5e6;
+      --surface:  #ffffff;
+      --border:   #c8bfa0;
+      --accent:   #7b2d00;
+      --accent2:  #a04010;
+      --gold:     #b5811a;
+      --text:     #1c1c1c;
+      --muted:    #5a4a3a;
+      --code-bg:  #f0ede4;
+      --note-bg:  #f4f0e8;
+      --eq-bg:    #f7f2e8;
+      --radius:   5px;
+      --shadow:   0 2px 8px rgba(0,0,0,0.10);
+      --mono:     "Courier New", Courier, monospace;
+      --sans:     "Helvetica Neue", Arial, sans-serif;
+      --serif:    Georgia, "Times New Roman", Times, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Page grid ── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.95rem;
+      font-weight: normal;
+      letter-spacing: -.02em;
+    }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub {
+      margin-top: 6px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: #f0d0b8;
+      line-height: 1.55;
+    }
+    header .sub a {
+      color: #ffd8b8;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,200,150,.4);
+    }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+
+    /* ── Sidebar ── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      padding: 14px 18px 4px;
+    }
+    nav a {
+      display: block;
+      padding: 6px 18px 6px 22px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background .15s, border-color .15s;
+    }
+    nav a:hover {
+      background: var(--bg);
+      border-left-color: var(--accent2);
+      color: var(--accent);
+    }
+    nav a.active {
+      background: var(--note-bg);
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    nav hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 14px;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 38px 48px 60px;
+      max-width: 860px;
+    }
+
+    section { margin-bottom: 52px; }
+
+    h2 {
+      font-size: 1.30rem;
+      font-weight: normal;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 6px;
+      margin-bottom: 18px;
+      letter-spacing: -.01em;
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--accent2);
+      margin: 24px 0 8px;
+    }
+    h4 {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin: 18px 0 6px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    /* ── Equation block ── */
+    .eq {
+      background: var(--eq-bg);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 20px;
+      margin: 18px 0;
+      overflow-x: auto;
+      font-size: 1.05em;
+    }
+    .eq-label {
+      float: right;
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 2px;
+    }
+
+    /* ── Note / tip box ── */
+    .note {
+      background: var(--note-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      margin: 18px 0;
+      font-size: 0.93rem;
+    }
+    .note strong { color: var(--accent); }
+
+    /* ── Restore-defaults box ── */
+    .restore-section {
+      margin: 2.5em auto;
+      max-width: 860px;
+      font-family: inherit;
+    }
+    .restore-box {
+      border: 1.5px solid var(--gold);
+      border-left: 5px solid var(--gold);
+      border-radius: 6px;
+      background: #fffbeb;
+      padding: 1.1em 1.4em;
+      display: flex;
+      gap: 1em;
+      align-items: flex-start;
+    }
+    .restore-icon { font-size: 1.5em; line-height: 1; flex-shrink: 0; }
+    .restore-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      color: var(--accent);
+      margin-bottom: 0.35em;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .restore-intro {
+      margin: 0 0 0.5em;
+      font-size: 0.92em;
+      line-height: 1.6;
+    }
+    .restore-list {
+      margin: 0;
+      padding-left: 1.4em;
+      font-size: 0.92em;
+      line-height: 1.8;
+    }
+    .restore-box kbd {
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.88em;
+    }
+    .restore-link { color: var(--accent); text-decoration: underline; }
+    .restore-footnote {
+      margin: 0.6em 0 0;
+      font-size: 0.88em;
+      color: var(--muted);
+    }
+
+    /* ── Code ── */
+    pre {
+      background: #2b2b2b;
+      color: #f0ede4;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.55;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 0.91em;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    pre code { background: none; padding: 0; font-size: inherit; }
+
+    /* ── Module cards ── */
+    .mc { display: grid; gap: 14px; margin: 18px 0; }
+    .mc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+    }
+    .mc-card .mc-name {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .mc-card .mc-role {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .mc-card p { font-size: 0.92rem; margin-bottom: 0; color: var(--muted); }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 16px 0;
+    }
+    th {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      background: var(--note-bg);
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { font-family: var(--mono); color: var(--accent2); }
+
+    /* ── Output type list ── */
+    .output-list { list-style: none; margin: 14px 0; }
+    .output-list li {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .output-list li:last-child { border-bottom: none; }
+    .output-list .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      white-space: nowrap;
+      color: var(--accent2);
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
+    }
+    footer a { color: #e0c090; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Beats layout additions ── */
+    .eq-kind {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .kind {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-left: 4px;
+      vertical-align: 1px;
+    }
+    .kind-law { background: #f6dcdc; color: #7a1f1f; border: 1px solid #d9a0a0; }
+    .kind-ode { background: #d9ead3; color: #274e13; border: 1px solid #a8c69a; }
+    .kind-def { background: #e4e4e4; color: #3a3a3a; border: 1px solid #b5b5b5; }
+    .kind-der { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
+    .kind-alg { background: #e6e0f8; color: #3d2c73; border: 1px solid #b7abdd; }
+    .related-list li { margin-bottom: 6px; }
+    .warn {
+      background: #fff6e8;
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 12px 18px;
+      margin: 16px 0;
+      font-family: var(--sans);
+      font-size: 0.91rem;
+      color: var(--muted);
+    }
+    .warn strong { color: var(--accent); }
+    .compare-table th:not(:first-child), .compare-table td:not(:first-child) {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .compare-table td:not(:first-child) { font-family: var(--mono); color: var(--text); }
+    main { min-width: 0; }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+    section ul { margin: 0 0 14px 1.4em; }
+    section ul li, section ol li { margin-bottom: 6px; }
+    section ol { margin: 0 0 14px 1.6em; }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 48px; }
+    }
+  
+</style>
+</head>
+
+<body>
+<div class="page-wrap">
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+<div class="badge">Chapter 4 · Investigation 4.3</div>
+<h1><em>SphereGravity</em> — Newton's Shell Theorem, Tile by Tile</h1>
+<div class="sub">
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+</div>
+</header>
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<nav id="sidebar">
+<div class="nav-label">Overview</div>
+<a href="#overview">Overview</a>
+<a href="#beats">How to read this page</a>
+<div class="nav-label">Beats</div>
+<a href="#beat0">0 · Nothing inside, a point outside</a>
+<a href="#beat1">1 · The shell as tiles</a>
+<a href="#beat2">2 · Far away, a point of the tiled mass</a>
+<a href="#beat3">3 · Inside, the pulls cancel</a>
+<a href="#beat4">4 · Ten times the divisions, a hundredth of the error</a>
+<a href="#beat5">5 · The surface is hard</a>
+<a href="#beat6">6 · The relative-difference plot</a>
+<a href="#beat7">7 · Epsilon only sets the scale</a>
+<a href="#beat8">8 · Coarse tilings and the hard cases</a>
+<div class="nav-label">Code</div>
+<a href="#equations">Governing Equations</a>
+<a href="#algorithm">Algorithm</a>
+<a href="#modules">Program Files</a>
+<div class="nav-label">Usage</div>
+<a href="#quickstart">Quick Start</a>
+<a href="#parameters">Parameters</a>
+<a href="#output">Plot</a>
+<a href="#summary">Printed Summary</a>
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
+<div class="nav-label">Reference</div>
+<a href="#related">Related Programs</a>
+<a href="#license">License</a>
+</nav>
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main>
+<p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
+  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build a43a939a4607
+</p>
+<section id="overview">
+<h2>Overview</h2>
+<p><strong>SphereGravity</strong> tests one of Newton's most useful results, the shell theorem: a thin, uniform spherical shell pulls on anything outside it exactly as if all its mass sat at its centre, and pulls on nothing inside it at all. The program does not assume the theorem. It cuts the shell into small tiles, treats each tile as a point mass, adds up their pulls at many distances from the centre, and compares the total with the theorem.</p>
+<p>Every run prints the shell's mass as the tiles add it up beside its exact value, and a table of the computed and expected pull at a set of radii, with the difference between them and a prediction of how large that difference should be. Then it plots the computed pull, or its relative difference from the theorem, from the centre out to five shell radii.</p>
+<p>The spine of the lesson is one sentence: <em>adding up the inverse-square pulls of the tiles of a thin shell gives no pull inside and the pull of a point mass outside, as Newton proved, and the small differences that remain are the error of the sum itself, which falls as the square of the tile size wherever the tiles are small compared with the distance to the shell, and which the program predicts in advance; next to the shell, where that condition fails, the sum needs far finer tiles.</em> Each numbered section below is one beat: a short argument, a command whose printed summary or plot illustrates that argument, and then the equation that the printed numbers follow from.</p>
+<div class="note">
+<strong>Scope:</strong> SphereGravity is about the field of one thin shell. <em>Atmosphere</em>, <em>Star</em> and <em>Neutron</em> use the shell theorem, through the mass inside a radius, to build whole spherical bodies.
+    </div>
+<div class="warn"><strong>What this program is, and what it does not model.</strong> SphereGravity is a teaching model of Newtonian gravity in dimensionless units: the shell has radius 1, \(G=1\), and every tile lies exactly on the radius-1 sphere, so the shell has no thickness; the parameter <code>--epsilon</code> only sets how much mass it carries. The field is computed only at points on one axis through the centre, which is enough because the shell is symmetric. The result is a numerical sum, not the exact integral, so it carries an error that depends on the number of tiles; the program prints that error beside a prediction of it. At the shell itself, <em>r</em> = 1, the exact field jumps and the program does not evaluate it. Beats 4, 5 and 8 show where the numbers stop being trustworthy.</div>
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw TeX source (e.g. <code>\(GM/r^2\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div>
+</section>
+<section id="beats">
+<h2>How to read this page</h2>
+<p>Each numbered section below is one beat: a short argument in words, a command whose output illustrates it, and then the equation that the output follows from. Do them in order the first time. After that, any beat can be opened on its own.</p>
+<p>The program's output is a consequence of its equations, so what a beat shows is the equations at work, not independent evidence that they are right. The outside checks the program offers are the exact continuum values it prints beside the tiled sum, the <code>expected g</code> and <code>continuum mass</code>, and the column <code>h^2 estimate</code>, which predicts the error of the sum from a formula rather than from the sum. Beats 1 to 5 compare the sum with them.</p>
+<p>The program has no random numbers, so every command prints the numbers quoted here. Beat 0 shows the theorem at the default settings, Beat 1 the tiles and their mass, Beat 2 the far field and Beat 3 the interior. Beat 4 refines the tiles, Beat 5 goes close to the shell, Beat 6 reads the default plot, Beat 7 changes the mass, and Beat 8 collects the coarsest tilings and the inputs the program refuses.</p>
+<p>Run every command from the program's folder. Each run prints a summary and then opens a plot window; close the window to end the program. Each beat names the lines of the summary to look at. All quantities are dimensionless: lengths in units of the shell radius, and accelerations in units in which \(G=1\).</p>
+<div class="note"><strong>What kind of statement is each equation?</strong> Each displayed equation in the beats carries a tag. A red <span class="kind kind-law">LAW</span> tag marks a law of nature that the model adopts and does not derive; Eq. (1) is the only one. A grey <span class="kind kind-def">DEFINITION</span> tag marks a quantity that is defined by a formula. A blue <span class="kind kind-der">DERIVED</span> tag marks a result that follows from the equations already stated. A violet <span class="kind kind-alg">ALGORITHM</span> tag marks a rule of the calculation, which is a choice made by the program rather than physics: Eqs. (8), (14) and (19). The tags are there so that a law, a definition and a numerical rule are never mistaken for one another. Nineteen equations are numbered; a few unnumbered ones appear where they are needed.</div>
+</section>
+<section id="beat0">
+<h2>Beat 0 · Nothing inside, a point outside</h2>
+<p>Run the program with its default tiling and plot the pull itself.</p>
+<pre>python main.py --outputType acceleration</pre>
+<p>Look at the plot, and at the columns <code>predicted g</code> and <code>expected g</code> of the table. <code>predicted g</code> is the program's sum over the tiles; <code>expected g</code> is Newton's shell theorem. Ignore the other columns until Beat 2.</p>
+<p>Three tasks, in order. First, look inside the shell. At <em>r</em> = 0.5 the tiles pull with <code>predicted g</code> = -9.1945e-07, and the theorem expects 0; on the plot the curve lies flat on zero from the centre almost to <em>r</em> = 1. Then look outside. At <em>r</em> = 2 the sum gives 0.0031419 against the expected 0.0031416, and at <em>r</em> = 4 it gives 0.00078544 against 0.0007854; the pull at 2 is 4.000 times the pull at 4, and more than 3400 times the size of the tiny leftover at 0.5, which Beat 4 shows is an error of the sum. Then look at the shell. The plot rises sharply from about zero to about 0.012 across the dashed line at <em>r</em> = 1, where it has a gap; just inside the shell it dips slightly below zero, and just outside it overshoots to more than 0.012 before it falls. Beat 5 explains the dip and the overshoot. Say what would have to be true of the shell's pull for the pull outside to fall to a quarter when the distance doubles.</p>
+<p><em>Then</em> the law. Every tile pulls on a test mass with Newton's inverse-square force.</p>
+<div class="eq"><span class="eq-label">(1)</span>
+<div class="eq-kind">Newton's law of gravitation for a point mass <span class="kind kind-law">LAW</span></div>
+      \[
+        \mathbf g=-\frac{G\,m}{d^{2}}\,\hat{\mathbf d} .
+      \]
+    </div>
+<p>Here \(m\) is the mass of the tile, \(d\) its distance from the test mass, and \(\hat{\mathbf d}\) the unit vector from the tile to the test mass; \(\mathbf g\) is the acceleration of the test mass, or the force on a unit test mass. Adding the pulls of all the pieces of a uniform thin shell of mass \(M\) and radius \(R\) exactly, as Newton did, gives the shell theorem.</p>
+<div class="eq"><span class="eq-label">(2)</span>
+<div class="eq-kind">The shell theorem <span class="kind kind-der">DERIVED</span></div>
+      \[
+        g(r)=\begin{cases}\dfrac{GM}{r^{2}}, & r&gt;R,\\[6pt] 0, & r&lt;R.\end{cases}
+      \]
+    </div>
+<p>Here \(g\) is the magnitude of the pull towards the centre at distance \(r\) from it. In the program's units \(R=1\) and \(G=1\), so the expected pull outside is \(M/r^2\) and inside it is 0; these are the <code>expected g</code> column. The theorem is why a planet or a star pulls on things outside it as if all its mass were at its centre, and why the matter outside a radius does not matter for the pull at that radius. Beat 1 looks at how the program builds the shell.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat1">
+<h2>Beat 1 · The shell as tiles</h2>
+<p>The program cuts the shell into a grid of tiles, <code>--nDiv</code> in latitude and <code>--nDiv</code> in longitude. Use very coarse tiles, ten by ten, so that the effect of the tiling is large.</p>
+<pre>python main.py --nDiv 10</pre>
+<p>Look at the three lines under <code>Shell mass comparison</code>, and at the line <code>latitude step h = pi/nDiv</code>.</p>
+<p>Three tasks, in order. First, compare the masses. The tiles add up to <code>numerical midpoint mass</code> 0.012618, while the shell's exact mass is 0.012566; the <code>relative difference</code> is 0.0041242. Then compare with Beat 0, which used 100 tiles each way: its relative difference was 4.1125e-05, a hundred times smaller for ten times as many divisions, ten times finer in latitude. Then read the step: <code>latitude step h = pi/nDiv</code> is 0.31416 here, against 0.031416 in Beat 0. Say why the tiles should carry slightly more mass than the smooth shell, not less.</p>
+<p><em>Then</em> the tiles. Latitude \(\theta\) runs from \(-\pi/2\) at the south pole to \(+\pi/2\) at the north pole, and longitude \(\varphi\) round the equator.</p>
+<div class="eq"><span class="eq-label">(3)</span>
+<div class="eq-kind">The angular grid <span class="kind kind-def">DEFINITION</span></div>
+      \[
+        \Delta\varphi=\frac{2\pi}{n},\qquad h=\Delta\theta=\frac{\pi}{n},\qquad
+        \theta_k=-\frac{\pi}{2}+\Bigl(k+\tfrac12\Bigr)h,\quad k=0,1,\dots,n-1 .
+      \]
+    </div>
+<p>Here \(n\) is <code>--nDiv</code>. Each tile is represented by its midpoint, at latitude \(\theta_k\), and carries the mass of the patch of shell around it.</p>
+<div class="eq"><span class="eq-label">(4)</span>
+<div class="eq-kind">Tile mass and shell mass <span class="kind kind-def">DEFINITION</span></div>
+      \[
+        \delta m_k=\varepsilon\cos\theta_k\,h\,\Delta\varphi,\qquad
+        M_{\rm num}=\sum_{k=0}^{n-1}n\,\delta m_k,\qquad
+        M=4\pi\varepsilon .
+      \]
+    </div>
+<p>The area of a patch is \(\cos\theta\,\Delta\theta\,\Delta\varphi\) on a sphere of radius 1, and \(\varepsilon\), <code>--epsilon</code>, is the mass per unit area. All \(n\) tiles at one latitude are the same, so the program adds each ring of \(n\) tiles at once. \(M_{\rm num}\) is <code>numerical midpoint mass</code> and \(M\) is <code>continuum mass</code>. The sum of the cosines at the midpoints can be done exactly.</p>
+<div class="eq"><span class="eq-label">(5)</span>
+<div class="eq-kind">The mass of the tiles <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \frac{M_{\rm num}}{M}=\frac{h/2}{\sin(h/2)}\approx1+\frac{h^{2}}{24} .
+      \]
+    </div>
+<p>For \(n=10\), \(h/2=\pi/20\) and \((\pi/20)/\sin(\pi/20)=1.0041242\), the printed difference; for \(n=100\) it is 1.0000411245. Across each latitude band the band's width, \(\cos\theta\), curves downwards on both sides of its value at the midpoint, so the midpoint value is slightly more than the band's average width, and each ring slightly overcounts its area. The error falls as \(h^2\), which is why ten times as many divisions made it a hundred times smaller. Beat 2 turns from the mass to the pull.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat2">
+<h2>Beat 2 · Far away, a point of the tiled mass</h2>
+<p>Print the comparison at points farther and farther from the shell, from 2 to 1000 shell radii.</p>
+<pre>python main.py --radii 2 5 10 100 1000</pre>
+<p>Look at the <code>relative difference</code> column and compare it with the mass line <code>relative difference</code> above the table.</p>
+<p>Three tasks, in order. First, read the column from top to bottom: 9.1423e-05, 4.6409e-05, 4.2379e-05, 4.1137e-05 and 4.1125e-05. The difference between the tiled sum and the theorem gets smaller as the test mass moves away, but it does not go to zero. Then compare the last value with the mass: the relative mass difference is also 4.1125e-05. Far away, the tiles pull almost exactly like a point carrying the tiles' own mass, which is too large by that fraction. Then compare with the column <code>h^2 estimate</code>, which is 9.1385e-05 at <em>r</em> = 2 and 4.1123e-05 at <em>r</em> = 1000. Say why the pull of the tiles must approach that of a point of mass \(M_{\rm num}\), not \(M\), however the tiles are arranged.</p>
+<p><em>Then</em> the sum. By symmetry the pull at a point on the axis through the centre points along the axis, so the program puts the test mass on the axis, at \(z=-r\), below the shell's centre. A tile at latitude \(\theta\) is at height \(z=\sin\theta\).</p>
+<div class="eq"><span class="eq-label">(6)</span>
+<div class="eq-kind">Distance from a tile to the test mass <span class="kind kind-der">DERIVED</span></div>
+      \[
+        d(\theta,r)=\sqrt{1+r^{2}+2r\sin\theta} .
+      \]
+    </div>
+<p>All the tiles of one ring are at the same distance, and their sideways pulls cancel round the ring, so the program treats each ring as a whole and keeps only the component of its pull along the axis. That component is Eq. (1) times \((r+\sin\theta)/d\), the axial separation over the distance.</p>
+<div class="eq"><span class="eq-label">(7)</span>
+<div class="eq-kind">The pull of one ring <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \delta g_k=n\,\frac{G\,\delta m_k\,(r+\sin\theta_k)}{d(\theta_k,r)^{3}} .
+      \]
+    </div>
+<p>A positive \(\delta g_k\) points in the \(+z\) direction, which for the test mass at \(z=-r\) is towards the centre. The program adds the rings.</p>
+<div class="eq"><span class="eq-label">(8)</span>
+<div class="eq-kind">The tiled sum <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        g_{\rm num}(r)=\sum_{k=0}^{n-1}\delta g_k .
+      \]
+    </div>
+<p>\(g_{\rm num}\) is <code>predicted g</code>, computed by <code>compute_acceleration_at_radii()</code> in <code>physics_spheregravity.py</code>; it is positive when it points towards the centre. It is a midpoint-rule approximation to the integral that gives Eq. (2). The table compares it with the theorem.</p>
+<div class="eq"><span class="eq-label">(9)</span>
+<div class="eq-kind">The printed comparison <span class="kind kind-def">DEFINITION</span></div>
+      \[
+        \delta(r)=\frac{g_{\rm num}(r)-M/r^{2}}{M/r^{2}}\quad(r&gt;1),\qquad
+        \frac{g_{\rm num}(r)}{M}\quad(r&lt;1) .
+      \]
+    </div>
+<p>\(\delta\) is <code>relative difference</code>. Inside the shell the expected pull is zero and a relative difference would divide by zero, so the program prints <code>undefined</code> and the pull divided by the mass, <code>g/M</code>, instead. Both use the exact mass \(M\). Far away, every tile is at almost the same distance \(r\), and the sum becomes the total mass over \(r^2\).</p>
+<div class="eq"><span class="eq-label">(10)</span>
+<div class="eq-kind">The far field <span class="kind kind-der">DERIVED</span></div>
+      \[
+        g_{\rm num}(r)\to\frac{M_{\rm num}}{r^{2}},\qquad
+        \delta(r)\to\frac{M_{\rm num}}{M}-1\qquad(r\to\infty) .
+      \]
+    </div>
+<p>So the relative difference far away is the mass error of Beat 1, 4.1125e-05, and what is left at smaller \(r\) is an error in the shape of the field, which falls off with distance. Beat 3 looks inside the shell.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat3">
+<h2>Beat 3 · Inside, the pulls cancel</h2>
+<p>Print the comparison at five points inside the shell, from the centre to nine tenths of the way to the shell.</p>
+<pre>python main.py --radii 0 0.25 0.5 0.75 0.9</pre>
+<p>Look at the <code>predicted g</code> column, at the <code>g/M</code> values in the <code>relative difference</code> column, and at <code>h^2 estimate</code>.</p>
+<p>Three tasks, in order. First, read the centre: <code>predicted g</code> is 1.5217e-18, rounding error in a sum of terms each about \(10^{-4}\), and the estimate is 0. Then read outwards: <code>g/M</code> is -2.3403e-05 at <em>r</em> = 0.25, -7.3167e-05 at 0.5, -0.00032343 at 0.75 and -0.0021036 at 0.9. The pull is tiny everywhere inside but grows towards the shell, and it is negative, pointing away from the centre, towards the nearer part of the shell. Then compare with the estimate: -2.3395e-05, -7.3108e-05, -0.00032227 and -0.0020505. Say why the pulls of the near and far sides of the shell cancel, although the near side is much closer.</p>
+<p><em>Then</em> Newton's argument. Draw a thin double cone from the test point, in opposite directions. It cuts two small patches out of the shell, at distances \(d_1\) and \(d_2\).</p>
+<div class="eq"><span class="eq-label">(11)</span>
+<div class="eq-kind">Cancellation of opposite patches <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \delta A_i=\frac{d_i^{2}\,\delta\Omega}{\cos\alpha},\qquad
+        \frac{G\,\varepsilon\,\delta A_1}{d_1^{2}}=\frac{G\,\varepsilon\,\delta A_2}{d_2^{2}}=\frac{G\,\varepsilon\,\delta\Omega}{\cos\alpha} .
+      \]
+    </div>
+<p>Here \(\delta\Omega\) is the solid angle of the cone and \(\alpha\) the angle between the cone's axis and the shell's normal, the radius, which is the same at both ends, because a chord of a sphere meets it at equal angles at its two ends. The patch that is twice as far away has four times the area and so four times the mass, and its pull is exactly as strong as that of the near patch, in the opposite direction. Every direction pairs off in this way, so the total is zero. The tiled sum does not pair off exactly: its tiles are not cut by cones from the test point. What is left is the error of the sum, and it is largest near the shell, where the nearest tiles are closest. Beat 4 shows how it shrinks.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> and <a href="#exp10">Experiment 10</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat4">
+<h2>Beat 4 · Ten times the divisions, a hundredth of the error</h2>
+<p>This is Schutz's convergence test. Run the default comparison again with ten times and then a hundred times as many divisions. The second run takes noticeably longer, about ten seconds on the computer used to write this page, because it computes the plotted profile with ten thousand rings at each of a thousand radii.</p>
+<pre>python main.py --nDiv 1000
+python main.py --nDiv 10000</pre>
+<p>Look at the <code>relative difference</code> and <code>h^2 estimate</code> columns at <em>r</em> = 0.5 and 2, in these two runs and in the run of Beat 0, and at the mass line <code>relative difference</code>.</p>
+<p>Three tasks, in order. First, read <em>r</em> = 2: the relative difference is 9.1423e-05 with 100 divisions, 9.1386e-07 with 1000 and 9.1385e-09 with 10000. Then read <em>r</em> = 0.5: <code>g/M</code> is -7.3167e-05, -7.3109e-07 and -7.3108e-09. Each tenfold refinement divides the error by 100, and the mass error goes the same way, from 4.1125e-05 to 4.1123e-07 to 4.1123e-09. Then compare with the estimate: at <em>r</em> = 2 it is 9.1385e-05, 9.1385e-07 and 9.1385e-09, so with 1000 divisions it agrees with the error to four digits, and with 10000 to all five printed digits. Say what kind of formula for the error would make it fall exactly a hundredfold for every tenfold refinement.</p>
+<p><em>Then</em> why the error goes as \(h^2\). The ring sum of Eq. (8) is \(2\pi\varepsilon\) times a midpoint-rule sum \(h\sum_k f(\theta_k)\) with \(f(\theta)=\cos\theta\,(r+\sin\theta)/d(\theta,r)^3\), and the exact field is \(2\pi\varepsilon\) times the integral of \(f\). For a smooth \(f\), the error of the midpoint rule has a known leading term, from the Euler-Maclaurin formula.</p>
+<div class="eq"><span class="eq-label">(12)</span>
+<div class="eq-kind">Error of the midpoint rule <span class="kind kind-der">DERIVED</span></div>
+      \[
+        h\sum_{k=0}^{n-1}f(\theta_k)-\int_{-\pi/2}^{\pi/2}f(\theta)\,d\theta
+        =-\frac{h^{2}}{24}\Bigl[f'\bigl(\tfrac{\pi}{2}\bigr)-f'\bigl(-\tfrac{\pi}{2}\bigr)\Bigr]+O(h^{4}) .
+      \]
+    </div>
+<p>The slopes of \(f\) at the two poles are \(-1/(1+r)^2\) at the far pole and \(\pm1/(r-1)^2\) at the near pole, with the sign of \(r-1\). Dividing by the expected values of Eq. (9) gives the column <code>h^2 estimate</code>, computed by <code>midpoint_error_estimate()</code>.</p>
+<div class="eq"><span class="eq-label">(13)</span>
+<div class="eq-kind">The printed error estimate <span class="kind kind-der">DERIVED</span></div>
+      \[
+        \delta(r)\approx\frac{h^{2}}{48}\,r^{2}\Bigl[\frac{1}{(r+1)^{2}}+\frac{1}{(r-1)^{2}}\Bigr]\quad(r&gt;1),\qquad
+        \frac{g_{\rm num}}{M}\approx\frac{h^{2}}{48}\Bigl[\frac{1}{(r+1)^{2}}-\frac{1}{(1-r)^{2}}\Bigr]\quad(r&lt;1) .
+      \]
+    </div>
+<p>At the centre the two terms cancel, and far away \(\delta\to h^2/24\), the mass error of Eq. (5). The estimate is a formula, not a sum over tiles, so its agreement with the printed error is a real check on the sum. Its \(1/(r-1)^2\) term, from the pole nearest the test mass, grows without limit as \(r\) approaches the shell, which is where Beat 5 goes.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat5">
+<h2>Beat 5 · The surface is hard</h2>
+<p>Go close to the shell, half a hundredth of a radius inside and outside it, and a little farther out, first with the default 100 divisions and then with 10000. The second run takes about ten seconds, like the second run of Beat 4.</p>
+<pre>python main.py --radii 0.995 1.005 1.01 1.05 1.1
+python main.py --nDiv 10000 --radii 0.995 1.005 1.01 1.05 1.1</pre>
+<p>Look at <code>latitude step h = pi/nDiv</code>, at <code>predicted g</code> and <code>relative difference</code>, and at <code>h^2 estimate</code> and the <code>*</code> marks beside it.</p>
+<p>Three tasks, in order. First, the default run. Just inside, at 0.995, <code>g/M</code> is 0.15216, a leftover pull of 0.15 times the mass where there should be none, and just outside, at 1.005, the relative difference is -0.15117, a 15% error; the estimates, -0.82246 and 0.83072, do not even have the right signs. They are marked <code>*</code>, and so are those at 1.01 and 1.05; only at 1.1 do the error, 0.0025682, and the estimate, 0.0024936, agree. Then the fine run. Now nothing is marked, and the estimates agree with the errors at every radius: -8.2331e-05 against -8.2246e-05 at 0.995, and 8.3158e-05 against 8.3072e-05 at 1.005. A row without a mark is not a guarantee, though: just past the marking threshold, with 1257 divisions, the estimate at 1.005 is still about 8% off (Experiment 7). Then read the jump. In the fine run <code>predicted g</code> goes from -1.0346e-06 inside to 0.012443 outside, a jump of 0.012444 across a hundredth of a radius, against the expected 0.012442. Say why the tiles must be small compared with the distance to the shell before the sum can be trusted there.</p>
+<p><em>Then</em> the condition. Near the shell the test mass is within \(|r-1|\) of the nearest tiles, and their pull changes completely over that distance. Eq. (12) is a series in powers of \(h\) measured against the scale on which \(f\) changes, which is the shell radius 1 far from the shell and \(|r-1|\) near it, so the estimate, and the sum, can be trusted only when \(h=\pi/n\ll\min(1,\ |r-1|)\). With 100 divisions \(h=0.031416\), more than six times the distance 0.005, so each tile near the pole is larger than its distance from the test mass, and the sum is poor. With 10000 divisions \(h=0.00031416\), a sixteenth of that distance. The program turns the condition into a rule for its marks.</p>
+<div class="eq"><span class="eq-label">(14)</span>
+<div class="eq-kind">The marking rule <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        h\ \ge\ \tfrac12\min\bigl(1,\ |r-1|\bigr)\quad\Longrightarrow\quad\text{row marked }*.
+      \]
+    </div>
+<p>A marked estimate is unreliable, although the sum itself may happen to be close; the factor \(\tfrac12\) is a choice, and an unmarked estimate close to the threshold can still be off by several per cent. The exact field does not just become hard to compute at the shell: it jumps.</p>
+<div class="eq"><span class="eq-label">(15)</span>
+<div class="eq-kind">The jump across the shell <span class="kind kind-der">DERIVED</span></div>
+      \[
+        g(1^{+})-g(1^{-})=\frac{GM}{R^{2}}-0=4\pi G\varepsilon .
+      \]
+    </div>
+<p>The jump is \(4\pi G\) times the mass per unit area \(\varepsilon\), whatever the shape of a surface layer; it is the reason the program does not evaluate the field at \(r=1\) itself, and why the plot has a gap there. Across the pair 0.995 and 1.005 the expected change is \(M/1.005^2=0.012442\), the jump less the small fall-off of the outer field. Beat 6 turns to the plot.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> and <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat6">
+<h2>Beat 6 · The relative-difference plot</h2>
+<p>Run the program with all its defaults. The plot now shows the relative difference, not the pull.</p>
+<pre>python main.py</pre>
+<p>Look at the plot and at the scale of its vertical axis, and at the rows 0.995, 1.005 and 5 of the table.</p>
+<p>Three tasks, in order. First, the scale. The curve runs from about -0.15 to about +0.15, set by the two spikes on either side of the dashed line, which are the 15% errors of Beat 5 (0.15216 and -0.15117 in the table). Then everywhere else. On this scale the curve lies on zero from the centre to within a few hundredths of the shell, and from just outside the shell to <em>r</em> = 4.995: the errors of Beats 2 to 4 are far too small to see. Then compare the definitions. At <em>r</em> = 5 the table prints 4.6409e-05, most of which, 4.1125e-05, is the mass error; the plotted value just inside <em>r</em> = 5 is only about 5.3e-06, because the plot divides by the tiles' own mass. Say which of the two relative differences measures only the error in the shape of the field.</p>
+<p><em>Then</em> what is plotted.</p>
+<div class="eq"><span class="eq-label">(16)</span>
+<div class="eq-kind">The plotted relative difference <span class="kind kind-def">DEFINITION</span></div>
+      \[
+        \delta_{\rm plot}(r)=\frac{g_{\rm num}(r)-M_{\rm num}/r^{2}}{M_{\rm num}/r^{2}}\quad(r&gt;1),\qquad
+        \frac{g_{\rm num}(r)}{M_{\rm num}}\quad(r&lt;1) .
+      \]
+    </div>
+<p>This is the table's comparison, Eq. (9), with the tiles' mass \(M_{\rm num}\) in place of the exact mass \(M\). It is computed at the plot's 1000 radii from 0 to 4.995, except \(r=1\), by <code>compute_acceleration_profile()</code>. The two definitions are simply related.</p>
+<div class="eq"><span class="eq-label">(17)</span>
+<div class="eq-kind">The two relative differences <span class="kind kind-der">DERIVED</span></div>
+      \[
+        1+\delta_{\rm plot}=\frac{1+\delta}{M_{\rm num}/M}\qquad\Longrightarrow\qquad
+        \delta_{\rm plot}\approx\delta-\frac{h^{2}}{24} .
+      \]
+    </div>
+<p>With the table's values at \(r=5\), \((1+4.6409\times10^{-5})/(1+4.1125\times10^{-5})-1=5.3\times10^{-6}\). Far away \(\delta\) tends to the mass error and \(\delta_{\rm plot}\) tends to zero. Inside the shell the two differ only by the factor \(M/M_{\rm num}\), too little to see. Beat 7 changes the mass.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat7">
+<h2>Beat 7 · Epsilon only sets the scale</h2>
+<p>Double the shell's mass per unit area and plot the pull again.</p>
+<pre>python main.py --epsilon 0.002 --outputType acceleration</pre>
+<p>Look at the mass lines, at <code>predicted g</code> and <code>expected g</code>, and at <code>relative difference</code>, and compare them with Beat 0.</p>
+<p>Three tasks, in order. First, the masses: 0.025134 and 0.025133, twice those of Beat 0, with the same relative difference, 4.1125e-05. Then the pulls: 0.0062838 at <em>r</em> = 2, twice the 0.0031419 of Beat 0, and the plot has the same shape with twice the height. Then the comparisons: 9.1423e-05 at <em>r</em> = 2 and <code>g/M</code> = -7.3167e-05 at 0.5, exactly as in Beat 0. Say why no relative difference can depend on <code>--epsilon</code>.</p>
+<p><em>Then</em> the scaling. Every tile mass in Eq. (4) is proportional to \(\varepsilon\), so the sum, the exact mass and the exact field all are.</p>
+<div class="eq"><span class="eq-label">(18)</span>
+<div class="eq-kind">Scaling with the mass per unit area <span class="kind kind-der">DERIVED</span></div>
+      \[
+        g_{\rm num}\propto\varepsilon,\qquad M\propto\varepsilon,\qquad
+        \delta,\ \ \frac{g_{\rm num}}{M},\ \ \frac{M_{\rm num}}{M}\ \ \text{independent of }\varepsilon .
+      \]
+    </div>
+<p>\(\varepsilon\) is described as the shell's thickness over its radius because a shell of density 1 and thickness \(\varepsilon\) has mass \(\varepsilon\) per unit area. The tiles all lie on the radius-1 sphere whatever \(\varepsilon\) is, so it does not make the shell thicker. It sets the size of the jump of Eq. (15) and nothing else about the shape of the field. Beat 8 goes to the coarsest tilings and to inputs the program refuses.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat8">
+<h2>Beat 8 · Coarse tilings and the hard cases</h2>
+<p>Use the coarsest possible tiling, a single ring, and then try a comparison radius on the shell and more divisions than the program allows. The last two commands are rejected; the messages say why.</p>
+<pre>python main.py --nDiv 1
+python main.py --radii 1
+python main.py --nDiv 100001</pre>
+<p>Look, in the first run, at the mass <code>relative difference</code>, at the whole table and its <code>*</code> marks, and at the plot. Then read the two error messages.</p>
+<p>Three tasks, in order. First, the mass: the single ring, at the equator, carries 0.019739 against the shell's 0.012566, a relative difference of 0.5708, which is \(\pi/2-1\) from Eq. (5) with \(h=\pi\). Then the field: inside the shell <code>g/M</code> is 0.56199 at <em>r</em> = 0.5, a strong pull towards the ring's plane, and outside the relative difference rises from 0.12397 at <em>r</em> = 2 to 0.48105 at 5, on its way to the mass error 0.5708 of Eq. (10); every estimate is marked <code>*</code>. Then the errors: <code>--radii 1</code> is refused because the field is discontinuous at the shell, and <code>--nDiv 100001</code> because the program limits the divisions to 100000. Say why a single ring pulls like the whole shell only when the test mass is far away.</p>
+<p><em>Then</em> the rules of the calculation that set these limits.</p>
+<div class="eq"><span class="eq-label">(19)</span>
+<div class="eq-kind">Radii, divisions and the omitted surface <span class="kind kind-alg">ALGORITHM</span></div>
+      \[
+        r_j=0.005\,j,\quad j=0,1,\dots,999,\ j\ne200;\qquad
+        1\le n\le100\,000;\qquad
+        0\le r_{\rm table}\le10^{100},\ \ r_{\rm table}\ne1 .
+      \]
+    </div>
+<p>The plot uses the grid \(r_j\), from 0 to 4.995, and skips \(j=200\), which is \(r=1\); the returned profile keeps a value of 0 there as a placeholder, and the plot leaves a gap. The table, <code>--radii</code>, may use any radius from 0 to \(10^{100}\) except 1, including radii far beyond the plot, and <code>--epsilon</code> must lie between \(10^{-100}\) and \(10^{100}\); these ranges keep every printed result within the range of the computer's floating-point arithmetic. The limit on \(n\) keeps the run time and memory reasonable: the plotted profile adds \(n\) rings at each of 1000 radii, so its time grows in proportion to \(n\). The program treats each latitude as a uniform ring, whatever \(n\) is, so even with one division the ring's sideways pulls are taken to cancel. Other rejected inputs are listed under <a href="#parameters">Parameters</a>.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp9">Experiment 9</a> and <a href="#exp11">Experiment 11</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="equations">
+<h2>Governing Equations</h2>
+<p>The nineteen numbered equations, with the kind of statement each one is, the beat that introduces it, and where the program evaluates it. A few unnumbered relations are stated inside the beats where they are needed and are listed after the table.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Index of the numbered equations"><table>
+<thead><tr><th>Equation</th><th>Kind</th><th>What it says</th><th>Beat</th><th>Where in the code</th></tr></thead>
+<tbody>
+<tr><td>(1)</td><td><span class="kind kind-law">LAW</span></td><td>Newton's law of gravitation for a point mass</td><td>0</td><td>not evaluated directly; used in Eq. (7)</td></tr>
+<tr><td>(2)</td><td><span class="kind kind-der">DERIVED</span></td><td>The shell theorem</td><td>0</td><td>the <code>expected g</code> column printed by <code>main.py</code></td></tr>
+<tr><td>(3)</td><td><span class="kind kind-def">DEFINITION</span></td><td>The angular grid</td><td>1</td><td>every function in <code>physics_spheregravity.py</code> that sums over rings</td></tr>
+<tr><td>(4)</td><td><span class="kind kind-def">DEFINITION</span></td><td>Tile mass and shell mass</td><td>1</td><td><code>compute_shell_mass()</code> and <code>compute_continuum_shell_mass()</code> in <code>physics_spheregravity.py</code></td></tr>
+<tr><td>(5)</td><td><span class="kind kind-der">DERIVED</span></td><td>The mass of the tiles</td><td>1</td><td>not evaluated</td></tr>
+<tr><td>(6)</td><td><span class="kind kind-der">DERIVED</span></td><td>Distance from a tile to the test mass</td><td>2</td><td><code>compute_acceleration_at_radii()</code> and the profile functions in <code>physics_spheregravity.py</code></td></tr>
+<tr><td>(7)</td><td><span class="kind kind-der">DERIVED</span></td><td>The pull of one ring</td><td>2</td><td><code>compute_acceleration_at_radii()</code> and the profile functions in <code>physics_spheregravity.py</code></td></tr>
+<tr><td>(8)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>The tiled sum</td><td>2</td><td><code>compute_acceleration_at_radii()</code> and the profile functions in <code>physics_spheregravity.py</code></td></tr>
+<tr><td>(9)</td><td><span class="kind kind-def">DEFINITION</span></td><td>The printed comparison</td><td>2</td><td><code>print_comparison()</code> in <code>main.py</code></td></tr>
+<tr><td>(10)</td><td><span class="kind kind-der">DERIVED</span></td><td>The far field</td><td>2</td><td>not evaluated</td></tr>
+<tr><td>(11)</td><td><span class="kind kind-der">DERIVED</span></td><td>Cancellation of opposite patches</td><td>3</td><td>not evaluated</td></tr>
+<tr><td>(12)</td><td><span class="kind kind-der">DERIVED</span></td><td>Error of the midpoint rule</td><td>4</td><td>not evaluated; gives Eq. (13)</td></tr>
+<tr><td>(13)</td><td><span class="kind kind-der">DERIVED</span></td><td>The printed error estimate</td><td>4</td><td><code>midpoint_error_estimate()</code> in <code>physics_spheregravity.py</code></td></tr>
+<tr><td>(14)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>The marking rule</td><td>5</td><td>the <code>*</code> marks printed by <code>print_comparison()</code> in <code>main.py</code></td></tr>
+<tr><td>(15)</td><td><span class="kind kind-der">DERIVED</span></td><td>The jump across the shell</td><td>5</td><td>not evaluated</td></tr>
+<tr><td>(16)</td><td><span class="kind kind-def">DEFINITION</span></td><td>The plotted relative difference</td><td>6</td><td><code>compute_acceleration_profile()</code> in <code>physics_spheregravity.py</code></td></tr>
+<tr><td>(17)</td><td><span class="kind kind-der">DERIVED</span></td><td>The two relative differences</td><td>6</td><td>not evaluated</td></tr>
+<tr><td>(18)</td><td><span class="kind kind-der">DERIVED</span></td><td>Scaling with the mass per unit area</td><td>7</td><td>not evaluated</td></tr>
+<tr><td>(19)</td><td><span class="kind kind-alg">ALGORITHM</span></td><td>Radii, divisions and the omitted surface</td><td>8</td><td>the profile functions in <code>physics_spheregravity.py</code>; the input checks in <code>main.py</code> and <code>physics_spheregravity.py</code></td></tr>
+</tbody></table></div>
+<p>The unnumbered relations are the sum of the cosines at the midpoints, \(h\sum_k\cos\theta_k=h/\sin(h/2)\), behind Eq. (5) (Beat 1, DERIVED); the slopes of the integrand at the poles, behind Eq. (13) (Beat 4, DERIVED); the condition \(h\ll\min(1,|r-1|)\) for the estimate to apply (Beat 5, DERIVED); and the relation between thickness and mass per unit area (Beat 7, DEFINITION).</p>
+</section>
+<section id="algorithm">
+<h2>Algorithm</h2>
+<p>This section collects in one place the rules of the calculation that the beats introduced one at a time.</p>
+<h3>Printed summary</h3>
+<ol>
+<li>Compute the tiles' mass \(M_{\rm num}\) of Eq. (4) and the exact mass \(M=4\pi\varepsilon\), and print them with their relative difference.</li>
+<li>For each comparison radius (<code>--radii</code>), add the ring pulls of Eqs. (6) to (8), starting at the ring nearest the south pole and moving northwards.</li>
+<li>Print the sum, the expected pull of Eq. (2), the comparison of Eq. (9) and the estimate of Eq. (13), with a <code>*</code> where the condition of Eq. (14) fails.</li>
+</ol>
+<h3>Plotted profile</h3>
+<ol>
+<li>Compute \(M_{\rm num}\) as above.</li>
+<li>For each radius \(r_j=0.005\,j\), \(j=0,\dots,999\), except \(r=1\), add the ring pulls as for the table. Leave the value at \(r=1\) at the placeholder 0.</li>
+<li>For the relative-difference plot, convert each value with Eq. (16).</li>
+<li>Draw the curve with a gap at \(r=1\) and a dashed line at the shell.</li>
+</ol>
+<h3>Two implementations of the profile</h3>
+<p>The default <code>compute_acceleration_profile_textbook()</code> uses plain nested loops, over radii and then over rings, so that each step of the sum can be read. The alternative <code>compute_acceleration_profile_optimized()</code> computes the ring geometry once and adds the rings with NumPy arrays, a few radii at a time so that no array becomes too large; it gives the same values to rounding and is much faster. Near the end of <code>physics_spheregravity.py</code> two lines choose between them:</p>
+<pre>compute_acceleration_profile = compute_acceleration_profile_textbook
+# compute_acceleration_profile = compute_acceleration_profile_optimized</pre>
+<p>Swapping the comment mark between them selects the other one; the two functions have identical signatures and return values, so nothing else needs to change. The printed table always uses <code>compute_acceleration_at_radii()</code>, which follows the textbook loop.</p>
+<h3>Named constants</h3>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Named constants"><table>
+<thead><tr><th>Name</th><th>Value</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td><code>SHELL_RADIUS</code></td><td>1.0</td><td>Radius of the shell, the unit of length.</td></tr>
+<tr><td><code>DEFAULT_EPSILON</code></td><td>0.001</td><td>Default mass per unit area \(\varepsilon\).</td></tr>
+<tr><td><code>NUM_RADII</code></td><td>1000</td><td>Number of radii in the plotted profile.</td></tr>
+<tr><td><code>RADIUS_STEP</code></td><td>0.005</td><td>Spacing of the plotted radii.</td></tr>
+<tr><td><code>SURFACE_INDEX</code></td><td>200</td><td>Index of the omitted radius \(r=1\) in the profile.</td></tr>
+<tr><td><code>MAX_NDIV</code></td><td>100000</td><td>Largest accepted <code>--nDiv</code>.</td></tr>
+<tr><td><code>MIN_EPSILON</code></td><td>1e-100</td><td>Smallest accepted <code>--epsilon</code>.</td></tr>
+<tr><td><code>MAX_EPSILON</code></td><td>1e100</td><td>Largest accepted <code>--epsilon</code>.</td></tr>
+<tr><td><code>MAX_SAMPLE_RADIUS</code></td><td>1e100</td><td>Largest accepted comparison radius.</td></tr>
+<tr><td><code>REPORT_RADII</code></td><td>0.5 0.995 1.005 2 3 4 5</td><td>Default comparison radii, in <code>main.py</code>.</td></tr>
+</tbody></table></div>
+<div class="note">
+<strong>Tip:</strong> Before trusting a comparison near the shell, check that its row has no <code>*</code>, and compare the relative difference with <code>h^2 estimate</code>. Before judging convergence, compare errors at the same radius for different <code>--nDiv</code>, never errors at different radii.
+    </div>
+</section>
+<section id="modules">
+<h2>Program Files</h2>
+<div class="mc">
+<div class="mc-card">
+<div class="mc-name">main.py</div>
+<div class="mc-role">Entry Point &amp; Configuration</div>
+<p>
+          Defines every command-line option in <code>build_parser()</code>, calls the driver for the plotted profile, prints the summary (see <a href="#summary">Printed Summary</a>) with <code>print_comparison()</code>, and passes the profile to the plotter. It can be imported without running anything.
+        </p>
+</div>
+<div class="mc-card">
+<div class="mc-name">physics_spheregravity.py</div>
+<div class="mc-role">Physics Layer</div>
+<p>
+          Contains the constants, <code>compute_shell_mass()</code> and <code>compute_continuum_shell_mass()</code>, <code>compute_acceleration_at_radii()</code> for the table, <code>midpoint_error_estimate()</code>, the two profile implementations and the line that selects one of them as <code>compute_acceleration_profile()</code>, the input checks, and the version and build identifier.
+        </p>
+</div>
+<div class="mc-card">
+<div class="mc-name">driver_spheregravity.py</div>
+<div class="mc-role">Driver Layer</div>
+<p>
+          Provides <code>run_spheregravity(nDiv=100, outputType='acceleration', epsilon=0.001)</code>, which returns the plotted radii and values as two NumPy arrays, and <code>get_version_info()</code>.
+        </p>
+</div>
+<div class="mc-card">
+<div class="mc-name">plot_spheregravity.py</div>
+<div class="mc-role">Visualisation</div>
+<p>
+          Provides <code>plot_spheregravity(radius, acceleration, outputType='acceleration')</code>, which checks the arrays, draws the profile (see <a href="#output">Plot</a>), shows it, and returns the figure and axes so that a script can save them.
+        </p>
+</div>
+</div><!-- .mc -->
+</section>
+<section id="quickstart">
+<h2>Quick Start</h2>
+<h3>Requirements</h3>
+<p>Python 3.10 or later with <code>numpy</code> and <code>matplotlib</code>:</p>
+<pre>pip install numpy "matplotlib&gt;=3.5"</pre>
+<h3>Running the Program</h3>
+<p>Clone or download the repository, then open a terminal in the folder that contains <code>main.py</code>:</p>
+<pre>cd GFTGU-Programs/SphereGravity
+python main.py
+python main.py --outputType acceleration
+python main.py --help</pre>
+<p>To display the program version and build identifier without running a calculation, use <code>python main.py --version</code>. Options omitted from a command keep their defaults.</p>
+<pre># A finer tiling, and the comparison at radii of your choice
+python main.py --nDiv 1000 --radii 1.1 1.05 1.01</pre>
+</section>
+<section id="parameters">
+<h2>Command-Line Parameters</h2>
+<p>All settings are command-line options described in <code>main.py</code>. <code>--outputType</code> changes only the plot, and <code>--radii</code> only the printed table.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table">
+<thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td class="pname">--nDiv</td><td class="pdefault">100</td><td>Divisions \(n\) in latitude and in longitude, Eq. (3); a whole number from 1 to 100000. The plotted profile takes a time proportional to it.</td></tr>
+<tr><td class="pname">--outputType</td><td class="pdefault">relative_difference</td><td><code>acceleration</code> plots \(g_{\rm num}\); <code>relative_difference</code> plots Eq. (16).</td></tr>
+<tr><td class="pname">--epsilon</td><td class="pdefault">0.001</td><td>Mass per unit area \(\varepsilon\), from \(10^{-100}\) to \(10^{100}\); it scales every pull and mass, Eq. (18).</td></tr>
+<tr><td class="pname">--radii</td><td class="pdefault">0.5 0.995 1.005 2 3 4 5</td><td>Radii of the printed comparison, Eq. (9); each not negative, not 1 and at most \(10^{100}\).</td></tr>
+</tbody></table></div>
+<div class="note"><strong>Input checking:</strong> The command-line parser rejects a <code>--nDiv</code> that is not a whole number from 1 to 100000, an <code>--epsilon</code> outside \(10^{-100}\) to \(10^{100}\), an unknown <code>--outputType</code> (the underscore in <code>relative_difference</code> is required), and a <code>--radii</code> value that is not a number, is negative, is exactly 1 or exceeds \(10^{100}\). These ranges keep every printed result within the range of double-precision numbers, so that no printed result underflows to zero or overflows. The physics functions make the same checks when they are called from a script.</div>
+</section>
+<section id="output">
+<h2>Plot</h2>
+<p>The plot draws the profile from \(r=0\) to 4.995 against the radius in shell radii, with a red dashed line at the shell, \(r=1\), and a gap in the curve there. With <code>--outputType acceleration</code> the vertical axis is the pull \(g_{\rm num}\), positive towards the centre; with <code>relative_difference</code> it is the relative difference of Eq. (16), whose range is usually set by the spikes beside the shell. <code>plot_spheregravity()</code> returns the figure and its axes, so a script can save the plot with <code>figure.savefig()</code>.</p>
+</section>
+<section id="summary">
+<h2>Printed Summary</h2>
+<p>Every run prints the program version and build, then a summary, then opens its plot. This is the summary of the default run, <code>python main.py</code>:</p>
+<pre>SphereGravity 1.4.0 (build a43a939a4607)
+
+Shell mass comparison (dimensionless units)
+  numerical midpoint mass : 0.012567
+  continuum mass          : 0.012566
+  relative difference     : 4.1125e-05
+
+Acceleration comparison (G = 1; force for a unit test mass)
+  latitude step h = pi/nDiv: 0.031416
+  radius    predicted g       expected g        relative difference     h^2 estimate
+     0.5     -9.1945e-07               0    undefined; g/M=-7.3167e-05   -7.3108e-05
+   0.995        0.001912               0    undefined; g/M=0.15216          -0.82246 *
+   1.005        0.010561        0.012442    -0.15117                         0.83072 *
+       2       0.0031419       0.0031416    9.1423e-05                    9.1385e-05
+       3       0.0013963       0.0013963    5.7838e-05                     5.783e-05
+       4      0.00078544       0.0007854    4.9718e-05                    4.9714e-05
+       5      0.00050268      0.00050265    4.6409e-05                    4.6407e-05
+  (Relative difference is undefined inside because expected g is zero.)
+  (* h is not small compared with |r - 1| or 1; the h^2 estimate does not apply.)</pre>
+<ul>
+<li><code>numerical midpoint mass</code> and <code>continuum mass</code>: \(M_{\rm num}\) and \(M\) of Eq. (4); <code>relative difference</code> below them is \(M_{\rm num}/M-1\), Eq. (5).</li>
+<li><code>latitude step h = pi/nDiv</code>: the step \(h\) of Eq. (3), in radians.</li>
+<li><code>predicted g</code>: the tiled sum \(g_{\rm num}\) of Eq. (8), positive towards the centre. <code>expected g</code>: the shell theorem, Eq. (2).</li>
+<li><code>relative difference</code>: \(\delta\) of Eq. (9) outside the shell, and inside it <code>undefined; g/M=</code> followed by \(g_{\rm num}/M\), because the expected pull is zero there.</li>
+<li><code>h^2 estimate</code>: the leading-order error of Eq. (13), marked <code>*</code> when the condition of Eq. (14) fails, with a note below the table.</li>
+</ul>
+<p>With fine enough tiles no row is marked. This is the second run of Beat 5:</p>
+<pre>SphereGravity 1.4.0 (build a43a939a4607)
+
+Shell mass comparison (dimensionless units)
+  numerical midpoint mass : 0.012566
+  continuum mass          : 0.012566
+  relative difference     : 4.1123e-09
+
+Acceleration comparison (G = 1; force for a unit test mass)
+  latitude step h = pi/nDiv: 0.00031416
+  radius    predicted g       expected g        relative difference     h^2 estimate
+   0.995     -1.0346e-06               0    undefined; g/M=-8.2331e-05   -8.2246e-05
+   1.005        0.012443        0.012442    8.3158e-05                    8.3072e-05
+    1.01        0.012319        0.012319    2.0981e-05                    2.0975e-05
+    1.05        0.011398        0.011398    9.0732e-07                    9.0731e-07
+     1.1        0.010385        0.010385    2.4936e-07                    2.4936e-07
+  (Relative difference is undefined inside because expected g is zero.)</pre>
+<p>Results are printed to at most five significant figures, and radii with up to ten.</p>
+</section>
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<p>The experiments are ranked from introductory to advanced, and each is cited by the beat it extends. Each command is run from the program's folder.</p>
+<h3 id="exp1">1 · See the Theorem — Introductory</h3>
+<p>Plot the pull with the default tiling and with ten times as many divisions. Check that it is essentially zero inside and falls as \(1/r^2\) outside, and look at how the small wiggles on either side of the shell change.</p>
+<pre>python main.py --outputType acceleration
+python main.py --nDiv 1000 --outputType acceleration</pre>
+<h3 id="exp2">2 · The Inverse-Square Law from the Table — Introductory</h3>
+<p>Print the comparison at radii that double each time. Divide each <code>predicted g</code> by the next one and check that the ratio is close to 4; then say how close it should be, using the <code>relative difference</code> column, and why the five printed digits cannot show the departure for the most distant pair.</p>
+<pre>python main.py --radii 1.5 3 6 12 24</pre>
+<h3 id="exp3">3 · The Mass of the Tiles — Introductory to Intermediate</h3>
+<p>Run a few coarse tilings and compare the printed mass <code>relative difference</code> with \((h/2)/\sin(h/2)-1\) of Eq. (5), computed on a calculator from the printed \(h\), and with \(h^2/24\). How coarse must the tiling be before the two formulas differ in the second digit?</p>
+<pre>python main.py --nDiv 3
+python main.py --nDiv 30
+python main.py --nDiv 300</pre>
+<h3 id="exp4">4 · Schutz's Convergence Test at r = 1.1 — Intermediate</h3>
+<p>Print the comparison at \(r=1.1\) for 100, 1000 and 10000 divisions. The relative differences are about \(2.6\times10^{-3}\), \(2.5\times10^{-5}\) and \(2.5\times10^{-7}\): each tenfold refinement gives a hundredfold improvement. Compare each with <code>h^2 estimate</code>, and say why a statement about convergence must compare errors at the same radius.</p>
+<pre>python main.py --radii 1.1
+python main.py --nDiv 1000 --radii 1.1
+python main.py --nDiv 10000 --radii 1.1</pre>
+<h3 id="exp5">5 · Map the Interior — Intermediate</h3>
+<p>Print <code>g/M</code> at many interior radii and plot it by hand against \(r\), with the estimate beside it. Where does the first <code>*</code> appear, and how well does the estimate do just before it?</p>
+<pre>python main.py --radii 0.1 0.3 0.5 0.7 0.9 0.95 0.98</pre>
+<h3 id="exp6">6 · Read and Save the Plotted Profile — Intermediate Programming</h3>
+<p>The driver returns the plotted radii and values as two arrays, on the grid \(r_j=0.005\,j\), so a radius on that grid is found from its index. Run this script from the program's folder. It prints the plotted relative difference of Eq. (16) at three radii; compare the value at \(r=2\) with the table's 9.1423e-05 of Beat 2 through Eq. (17). Then extend it: after <code>from plot_spheregravity import plot_spheregravity</code>, <code>plot_spheregravity(radius, accel, outputType="relative difference")</code> returns the figure and axes, and <code>figure.savefig("profile.png")</code> saves the plot once its window is closed.</p>
+<pre>from driver_spheregravity import run_spheregravity
+
+radius, accel = run_spheregravity(nDiv=100, outputType="relative difference")
+for r in (1.1, 2.0, 4.995):
+    i = round(r / 0.005)
+    print(radius[i], accel[i])</pre>
+<h3 id="exp7">7 · How Fine Near the Shell? — Intermediate to Advanced</h3>
+<p>Find the smallest number of divisions for which the row at \(r=1.005\) loses its <code>*</code>, first from Eq. (14) and the marking rule, then by running the program on either side of it. Compare the error with the estimate in both runs, and then at ten times that number of divisions.</p>
+<pre>python main.py --nDiv 1256 --radii 1.005
+python main.py --nDiv 1257 --radii 1.005</pre>
+<h3 id="exp8">8 · Measure the Jump — Intermediate to Advanced</h3>
+<p>Print the pull a hundredth of a radius inside and outside the shell with fine tiles, for two values of \(\varepsilon\). Compare the difference of the two <code>predicted g</code> values with \(4\pi\varepsilon/1.01^2\), the jump of Eq. (15) less the fall-off of the outer field, and check that it doubles with \(\varepsilon\). Then move the two radii closer to the shell: where does the error of the sum, shown by <code>h^2 estimate</code>, become larger than the fall-off correction?</p>
+<pre>python main.py --nDiv 10000 --radii 0.99 1.01
+python main.py --nDiv 10000 --epsilon 0.002 --radii 0.99 1.01</pre>
+<h3 id="exp9">9 · Coarse Tilings — Advanced</h3>
+<p>With very few divisions the tiled shell is far from spherical. Print the comparison far from the shell for one, two and three divisions and check that the relative difference approaches the mass error, Eq. (10), in every case. Then look at the plots: for which tilings does the interior still look like a hollow shell?</p>
+<pre>python main.py --nDiv 1 --radii 10 100 1000
+python main.py --nDiv 2 --radii 10 100 1000
+python main.py --nDiv 3 --radii 10 100 1000</pre>
+<h3 id="exp10">10 · Replace the Sphere by an Ellipsoidal Homoeoid — Advanced Programming</h3>
+<p>In a separate copy of the program, replace the spherical shell by a thin ellipsoidal shell of the kind called a homoeoid: the material between two similar, concentric, similarly oriented ellipsoids of uniform density. Deforming the spherical coordinates while keeping the spherical tile masses is not enough; derive the correct mass of each tile and compute every component of the pull, including at points off the symmetry axis. Check that the pull inside tends to zero as the tiling is refined, while the pull outside depends on direction and so cannot be that of a point mass.</p>
+<h3 id="exp11">11 · NumPy Vectorization and Computational Tradeoffs — Advanced Programming</h3>
+<p>Compare <code>compute_acceleration_profile_textbook()</code> with <code>compute_acceleration_profile_optimized()</code>. Identify which loops the NumPy array operations replace and how the ring geometry is computed once and reused. Select each in turn with the two lines described under <a href="#algorithm">Algorithm</a>, check that they give the same profile in both output modes, time them for several values of <code>--nDiv</code>, and explain why the optimized version works through the radii in bounded chunks rather than building one array for every radius and ring. Which is better for learning the method, and which for large calculations?</p>
+</section>
+<section class="restore-section" aria-labelledby="restore-title">
+<div class="restore-box">
+<!-- Icon -->
+<div class="restore-icon">↩️</div>
+<!-- Content -->
+<div>
+<div class="restore-title" id="restore-title">Restoring Defaults and Program Files</div>
+<p class="restore-intro">
+        A new run with <code>python main.py</code> uses all default settings; options in a previous command do not carry over. If you edit <code>main.py</code> or another program file for a programming extension, restore it using any of the following methods:
+      </p>
+<ul class="restore-list">
+<li>
+<strong>Same session:</strong>
+          Press <kbd>Ctrl+Z</kbd>
+          (Windows) or <kbd>Cmd+Z</kbd>
+          (macOS) repeatedly in your editor to undo your edits.
+        </li>
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+        </li>
+<li>
+<strong>Full reset:</strong>
+          Re-download the ZIP from
+          <a class="restore-link" href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">
+            github.com/tomyee3-org/GFTGU-Programs
+          </a>
+          and replace this program's folder with the fresh copy.
+        </li>
+</ul>
+<p class="restore-footnote">
+        For additional ways to restore program files, see the corresponding
+        recovery instructions in the <em>GFTGU Python Setup Guide</em>.
+      </p>
+</div>
+</div>
+</section>
+<section id="related">
+<h2>Related Programs</h2>
+<ul class="related-list">
+<li><a href="../Atmosphere/Atmosphere-claude.html"><strong>Atmosphere</strong></a> — The pressure and density of a planetary atmosphere held by gravity.</li>
+<li><a href="../Star/Star.html"><strong>Star</strong></a> — The structure of a star, where the shell theorem lets the pull at each radius depend only on the mass inside it.</li>
+<li><a href="../Neutron/Neutron-claude.html"><strong>Neutron</strong></a> — The structure of a neutron star, with the same use of the mass inside each radius in relativistic form.</li>
+<li><a href="../RelativisticOrbit/RelativisticOrbit-claude.html"><strong>RelativisticOrbit</strong></a> — Orbits around a black hole, whose field outside is that of a spherical mass.</li>
+</ul>
+<p>Textbook reference: B. F. Schutz, <em>Gravity from the Ground Up</em>, Cambridge University Press, 2003, Chapter 4, Investigation 4.3.</p>
+</section>
+<section id="license">
+<h2>License</h2>
+<p>
+      This software is based on the programs by <strong>Bernard Schutz</strong> accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003) and is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license. It descends from Schutz's original Java program for Investigation 4.3; this student-facing version is a Python port by Thomas Yee.
+    </p>
+</section>
+</main>
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+<em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+</footer>
+</div><!-- /page-wrap -->
+<!-- ── Sidebar active-link tracking ── -->
+<script>
+  (function () {
+    const links = document.querySelectorAll('nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector(`nav a[href="#${e.target.id}"]`);
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('main section[id]').forEach(s => observer.observe(s));
+  })();
+</script>
+</body>
+</html>

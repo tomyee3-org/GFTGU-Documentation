@@ -471,7 +471,7 @@
 <!-- ══════════════════════ MAIN ══════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build 018f4d9c843c
+  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build a43a939a4607
 </p>
 
 <!-- ── Overview ── -->
@@ -772,10 +772,11 @@
 <p>
         Accepts the <code>(radius, acceleration)</code> arrays from the driver and renders a
         matplotlib figure. Axis labels and title adapt automatically to the selected output
-        mode.
+        mode. After the figure is shown, the function returns it and its axes, so a script can
+        save the plot with <code>figure.savefig()</code>.
       </p>
 <div class="sig">plot_spheregravity(radius, acceleration,
-        outputType='acceleration') → None</div>
+        outputType='acceleration') → (Figure, Axes)</div>
 </div>
 <div class="module-card">
 <div class="mod-role">Entry Point</div>
@@ -794,8 +795,8 @@
 <p>
     Supply parameters after <code>python main.py</code>. Run <code>python main.py --help</code>
     for the live command summary and <code>python main.py --version</code> for the version and
-    reproducible source Build ID. All three driver inputs are exposed; omitting an option uses
-    the default shown below.
+    reproducible source Build ID. All three driver inputs are exposed, together with the radii
+    of the printed comparison; omitting an option uses the default shown below.
   </p>
 <table class="param-table">
 <thead>
@@ -840,7 +841,18 @@
           Mass-scale factor corresponding to nominal shell thickness divided by radius.
           Because every tile mass is placed on the same spherical surface, changing
           \(\varepsilon\) scales the raw acceleration and total mass but does not make the
-          modeled shell geometrically thicker. VALUE must be positive and finite.
+          modeled shell geometrically thicker. VALUE must lie between 1e-100 and 1e100, a
+          range that keeps every computed quantity within double precision.
+        </td>
+</tr>
+<tr>
+<td>--radii R [R ...]</td>
+<td>0.5 0.995 1.005 2 3 4 5</td>
+<td>floats</td>
+<td>
+          Radii at which the comparison table is printed (see Printed Results). Each must be
+          nonnegative, at most 1e100 and different from the shell radius 1. The plotted profile always
+          uses its fixed grid from 0 to 4.995.
         </td>
 </tr>
 <tr>
@@ -893,6 +905,17 @@
     ideal surface, the finite angular tiling converges slowly; the 0.995 and 1.005 rows are
     intentionally retained as a visible resolution test. All reported numbers use five
     significant figures.
+  </p>
+<p>
+    <code>--radii</code> replaces the seven comparison radii by any list of radii that are
+    finite, nonnegative and different from 1, including radii beyond the plot. The table also
+    prints the latitude step \(h=\pi/n_\text{div}\) and a column <code>h^2 estimate</code>: the
+    leading-order error of the midpoint sum from the Euler–Maclaurin formula,
+    \(\tfrac{h^2}{48}r^2\bigl[(r+1)^{-2}+(r-1)^{-2}\bigr]\) for the exterior relative difference and
+    \(\tfrac{h^2}{48}\bigl[(r+1)^{-2}-(1-r)^{-2}\bigr]\) for the interior <code>g/M</code>. A row is
+    marked <code>*</code> when \(h\) is at least half of \(|r-1|\) or of 1, whichever is
+    smaller; the estimate does not apply there, which is the case for the 0.995 and 1.005 rows
+    at the default <code>--nDiv 100</code>.
   </p>
 <!-- ── Quick start ── -->
 <h2 id="quickstart">Quick Start</h2>
@@ -951,8 +974,9 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
         observe that the numerical disagreement with Newton's theorem becomes rapidly smaller.
         For a quantitative comparison, read the value at the same exterior radius, such as
         \(r=1.1\), on each run rather than comparing different points on the three curves.
-        The graph alone is not precise enough for that comparison; use the printed table or,
-        for the original \(r=1.1\) exercise, the programming lookup below.
+        The graph alone is not precise enough for that comparison; use the printed table
+        (<code>--radii 1.1</code> prints the comparison at \(r=1.1\) without any code change)
+        or, for the plotted value itself, the programming lookup below.
       </p>
 <p>
         <code>run_spheregravity()</code> returns two NumPy arrays of equal length.
@@ -960,12 +984,11 @@ plot_spheregravity(radius, accel, outputType='relative difference')</pre>
         plotted at that location (raw acceleration or relative difference, according to
         <code>outputType</code>). The radial grid is uniform:
         \(r_j = j\times 0.005\) for \(j=0,1,\ldots,999\), so a requested radius that lies on
-        that grid, including \(r=1.1\), is stored exactly. After the existing call in
-        <code>main.py</code>, add:
+        that grid, including \(r=1.1\), is stored exactly. The existing call in
+        <code>main.py</code> already stores the two arrays in <code>radius</code> and
+        <code>accel</code>; immediately after it, add:
       </p>
-<pre>radius, accel = run_spheregravity(nDiv=nDiv, outputType=outputType)
-
-# r = 1.1 sits on the 0.005 grid, so this index is exact.
+<pre># r = 1.1 sits on the 0.005 grid, so this index is exact.
 i = int(round(1.1 / 0.005))
 print(radius[i], accel[i])</pre>
 <p>
@@ -1003,7 +1026,7 @@ print(radius[i], accel[i])</pre>
         At fixed <code>nDiv</code>, the error grows as \(r\) approaches 1 because the contribution
         from nearby tiles becomes increasingly concentrated in angle and is poorly resolved by a
         coarse grid. The printed 1.005 row supplies the closest exterior value without any code
-        changes. Repeat with a larger <code>--nDiv</code> and see how much of the near-surface
+        changes, and <code>--radii 1.1 1.05 1.01 1.005</code> prints all four. Repeat with a larger <code>--nDiv</code> and see how much of the near-surface
         discrepancy disappears.
       </p>
 <div class="sc-params">--nDiv 100, then 1000 · compare the printed r=1.005 row</div>
@@ -1116,10 +1139,10 @@ print(radius[i], accel[i])</pre>
     a result used throughout later gravitational calculations:
   </p>
 <div class="related-list">
-<a class="related-tag" href="../Atmosphere/Atmosphere.html">Atmosphere (Ch. 7)</a>
+<a class="related-tag" href="../Atmosphere/Atmosphere-claude.html">Atmosphere (Ch. 7)</a>
 <a class="related-tag" href="../Star/Star.html">Star (Ch. 8)</a>
-<a class="related-tag" href="../Neutron/Neutron.html">Neutron (Ch. 20)</a>
-<a class="related-tag" href="../RelativisticOrbit/RelativisticOrbit.html">RelativisticOrbit (Ch. 21)</a>
+<a class="related-tag" href="../Neutron/Neutron-claude.html">Neutron (Ch. 20)</a>
+<a class="related-tag" href="../RelativisticOrbit/RelativisticOrbit-claude.html">RelativisticOrbit (Ch. 21)</a>
 </div>
 <p style="margin-top:18px; font-family:var(--sans); font-size:0.875rem; color:var(--muted);">
 <strong>Textbook reference:</strong>
