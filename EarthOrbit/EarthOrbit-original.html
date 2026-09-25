@@ -1326,10 +1326,10 @@ speed_squared = us**2 + vs**2
 <strong>CannonTrajectory</strong> — the simpler near-surface projectile calculation on
         which EarthOrbit builds. EarthOrbit adds the essential new feature that the direction of
         gravitational acceleration changes with position so that it always points toward Earth's
-        centre; the underlying mathematics is developed in Investigations 4.1 and 4.2.
+        centre.
       </li>
 <li>
-<strong>Orbit</strong> — the general planetary orbit program (Chapter 4). Uses a
+<strong>Orbit</strong> — the general planetary orbit program. Uses a
         predictor-corrector scheme with adaptive timestep rather than EarthOrbit's simple
         fixed-step algorithm; supports multiple output modes including energy and velocity
         hodographs. EarthOrbit is the pedagogically simpler version focused specifically on
@@ -1337,16 +1337,16 @@ speed_squared = us**2 + vs**2
       </li>
 <li>
 <strong>RelativisticOrbit</strong> — explores strong-field orbital behaviour with
-        an effective relativistic correction to the orbital acceleration (Chapter 21).
+        an effective relativistic correction to the orbital acceleration.
         It shares the predictor-corrector integration core used by Orbit.
       </li>
 <li>
 <strong>Binary</strong> — extends the Orbit integrator to a two-body system with
-        mutual gravitational interaction (Chapter 13). Both bodies move under Newton's
+        mutual gravitational interaction. Both bodies move under Newton's
         law; the predictor-corrector loop handles the coupled equations simultaneously.
       </li>
 <li>
-<strong>Atmosphere</strong> — companion program (Chapter 7) covering the related
+<strong>Atmosphere</strong> — companion program covering the related
         problem of vertical hydrostatic equilibrium in a planetary atmosphere, where the
         same constant-g vs. inverse-square distinction arises.
       </li>
