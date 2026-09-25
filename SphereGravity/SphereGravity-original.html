@@ -471,7 +471,7 @@
 <!-- ══════════════════════ MAIN ══════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build a43a939a4607
+  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 217c2c26a44a
 </p>
 
 <!-- ── Overview ── -->
@@ -487,14 +487,15 @@
   </p>
 <p>
     The program can display either the raw acceleration profile or the <em>relative difference</em>
-    between the numerical result and the exact Newtonian prediction. The latter mode makes it
+    between the numerical result and Newton's prediction for the same tiled mass. The latter mode makes it
     easy to see how rapidly the computation converges to the analytical answer as the number of
     tiles is increased.
   </p>
 <p>
     Every run also prints the numerical shell mass beside the exact continuum value and a
-    shell-theorem comparison at seven fixed radii. These numerical results are printed to five
-    significant figures independently of the selected plot mode.
+    shell-theorem comparison at seven default radii, or at those supplied by
+    <code>--radii</code>. These numerical results are printed to five significant figures,
+    independently of the selected plot mode.
   </p>
 <!-- ── Physical Background ── -->
 <div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div><h2 id="background">Physical Background</h2>
@@ -615,21 +616,34 @@
     When the <em>relative difference</em> output mode is selected, the program reports:
   </p>
 <div class="eq-block">
-<div class="eq-label">Eq. 7 — Relative difference from Newton's theorem</div>
+<div class="eq-label">Eq. 7 — Plotted relative difference</div>
     \[
-      \delta(r) = \begin{cases}
-        \dfrac{g_\text{num}(r) - g_\text{Newton}(r)}{g_\text{Newton}(r)} &amp;
-          r &gt; 1 \quad\bigl(g_\text{Newton} = M/r^2\bigr)\\[10pt]
-        \dfrac{g_\text{num}(r)}{M} &amp;
+      \delta_\text{plot}(r) = \begin{cases}
+        \dfrac{g_\text{num}(r) - M_\text{num}/r^2}{M_\text{num}/r^2} &amp;
+          r &gt; 1\\[10pt]
+        \dfrac{g_\text{num}(r)}{M_\text{num}} &amp;
           r &lt; 1 \quad \text{(interior normalized residual)}
       \end{cases}
     \]
   </div>
 <p>
-    Outside the shell the Newtonian acceleration is \(g_\text{Newton} = M/r^2\) (with \(G=1\)).
+    Here \(M_\text{num}=\sum n_\text{div}\,\delta m\) is the mass of the tiles themselves, the
+    finite midpoint sum of Eq. 3, not the continuum mass \(M=4\pi\varepsilon\). Outside the
+    shell \(M_\text{num}/r^2\) is the point-mass pull of the tiled mass (with \(G=1\)), so the
+    plot measures only the error in the <em>shape</em> of the field, not the small error in the
+    tiled mass, \(M_\text{num}/M-1\approx h^2/24\) with \(h=\pi/n_\text{div}\).
     Inside the shell Newton predicts exactly zero, so the raw numerical acceleration is
-    normalised by \(M\) (the Newtonian acceleration just outside the surface) to produce a
-    dimensionless normalized residual. The returned array stores <code>0.0</code> at the omitted
+    normalised by \(M_\text{num}\) (the pull just outside the surface) to produce a
+    dimensionless normalized residual.
+  </p>
+<p>
+    The printed comparison table (see <a href="#printed-results">Printed Results</a>) instead
+    divides by the continuum mass \(M\), so the two differ. Outside the shell
+    \(1+\delta_\text{table}=(1+\delta_\text{plot})\,M_\text{num}/M\); inside,
+    \(g/M=\delta_\text{plot}\,M_\text{num}/M\). At the default <code>--nDiv 100</code>,
+    for example, the plot at \(r=2\) shows \(5.03\times10^{-5}\), while the table prints
+    9.1423e-05; far from the shell the table's value tends to the mass error and the plot's
+    to zero. Inside, the factor \(M_\text{num}/M\) is too close to 1 to matter. The returned array stores <code>0.0</code> at the omitted
     surface sample \(r=1\) for compatibility with the original program. That placeholder is not
     part of either physical branch in Eq. 7, and the plot leaves a gap there.
   </p>
@@ -715,7 +729,7 @@
 <thead>
 <tr>
 <th>nDiv</th>
-<th>Signed relative difference at \(r=1.1\)</th>
+<th>Plotted relative difference at \(r=1.1\) (Eq. 7)</th>
 <th>Expected trend</th>
 </tr>
 </thead>
@@ -879,11 +893,14 @@
 <div class="mode-pill">--outputType relative_difference</div>
 <p>
         Outside the shell, plots the signed relative difference between the numerical result and
-        Newton's exact prediction; inside, plots the normalized residual (Eq. 7). This mode is
+        the point-mass pull of the tiled mass \(M_\text{num}\); inside, plots the normalized
+        residual (Eq. 7). This mode is
         more informative for convergence studies: as <code>nDiv</code>
         increases the curve should drop closer and closer to zero at sampled points away from
         the skipped shell surface. Inside the shell, where Newton predicts \(g = 0\), the residual
-        acceleration normalised by \(M\) is plotted instead.
+        acceleration normalised by \(M_\text{num}\) is plotted instead. The plot divides by
+        \(M_\text{num}\) and the printed table by the continuum mass \(M\), so their exterior
+        values differ by about the mass error (Eq. 7).
       </p>
 </div>
 </div>
@@ -903,8 +920,10 @@
     ordinary relative difference would require division by zero. The program therefore prints
     <code>undefined</code> and supplies the useful normalized residual <code>g/M</code>. Near the
     ideal surface, the finite angular tiling converges slowly; the 0.995 and 1.005 rows are
-    intentionally retained as a visible resolution test. All reported numbers use five
-    significant figures.
+    intentionally retained as a visible resolution test. Masses, accelerations and relative
+    differences use five significant figures; the radius labels use up to ten, and more when
+    needed to show a radius exactly. Unlike the plot, the table's relative difference and
+    <code>g/M</code> divide by the continuum mass \(M\) (see Eq. 7).
   </p>
 <p>
     <code>--radii</code> replaces the seven comparison radii by any list of radii that are
@@ -935,8 +954,9 @@ python main.py --help</pre>
     With the defaults (<code>--nDiv 100</code>, <code>--outputType relative_difference</code>,
     <code>--epsilon 0.001</code>) the program computes the acceleration profile over 1 000 radii from
     \(r=0\) to \(r=4.995\) and opens a matplotlib window. Away from the shell surface the
-    numerical result is already close to Newton's theorem—for example, the signed relative
-    difference at \(r=1.1\) is about \(2.5\times10^{-3}\) (0.25%). Much closer to \(r=1\), the finite angular
+    numerical result is already close to Newton's theorem—for example, the plotted relative
+    difference at \(r=1.1\) is about \(2.5\times10^{-3}\) (0.25%); the printed table,
+    which divides by the continuum mass, gives \(2.6\times10^{-3}\) there. Much closer to \(r=1\), the finite angular
     tiling is harder to resolve and the error is larger.
   </p>
 <h3>Running programmatically</h3>

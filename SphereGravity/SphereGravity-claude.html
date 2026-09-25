@@ -478,12 +478,12 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build a43a939a4607
+  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 217c2c26a44a
 </p>
 <section id="overview">
 <h2>Overview</h2>
 <p><strong>SphereGravity</strong> tests one of Newton's most useful results, the shell theorem: a thin, uniform spherical shell pulls on anything outside it exactly as if all its mass sat at its centre, and pulls on nothing inside it at all. The program does not assume the theorem. It cuts the shell into small tiles, treats each tile as a point mass, adds up their pulls at many distances from the centre, and compares the total with the theorem.</p>
-<p>Every run prints the shell's mass as the tiles add it up beside its exact value, and a table of the computed and expected pull at a set of radii, with the difference between them and a prediction of how large that difference should be. Then it plots the computed pull, or its relative difference from the theorem, from the centre out to five shell radii.</p>
+<p>Every run prints the shell's mass as the tiles add it up beside its exact value, and a table of the computed and expected pull at a set of radii, with the difference between them and a prediction of how large that difference should be. Then it plots the computed pull, or its relative difference from the pull the theorem gives for the tiles' own mass, from the centre out to five shell radii.</p>
 <p>The spine of the lesson is one sentence: <em>adding up the inverse-square pulls of the tiles of a thin shell gives no pull inside and the pull of a point mass outside, as Newton proved, and the small differences that remain are the error of the sum itself, which falls as the square of the tile size wherever the tiles are small compared with the distance to the shell, and which the program predicts in advance; next to the shell, where that condition fails, the sum needs far finer tiles.</em> Each numbered section below is one beat: a short argument, a command whose printed summary or plot illustrates that argument, and then the equation that the printed numbers follow from.</p>
 <div class="note">
 <strong>Scope:</strong> SphereGravity is about the field of one thin shell. <em>Atmosphere</em>, <em>Star</em> and <em>Neutron</em> use the shell theorem, through the mass inside a radius, to build whole spherical bodies.
@@ -682,15 +682,19 @@ python main.py --nDiv 10000 --radii 0.995 1.005 1.01 1.05 1.1</pre>
         \frac{g_{\rm num}(r)}{M_{\rm num}}\quad(r&lt;1) .
       \]
     </div>
-<p>This is the table's comparison, Eq. (9), with the tiles' mass \(M_{\rm num}\) in place of the exact mass \(M\). It is computed at the plot's 1000 radii from 0 to 4.995, except \(r=1\), by <code>compute_acceleration_profile()</code>. The two definitions are simply related.</p>
+<p>This is the table's comparison, Eq. (9), with the tiles' mass \(M_{\rm num}\) in place of the exact mass \(M\). It is computed at the plot's 1000 radii from 0 to 4.995, except \(r=1\), by <code>compute_acceleration_profile()</code>. The two definitions are simply related, but differently outside and inside, because outside the mass also sets the expected pull.</p>
 <div class="eq"><span class="eq-label">(17)</span>
 <div class="eq-kind">The two relative differences <span class="kind kind-der">DERIVED</span></div>
       \[
-        1+\delta_{\rm plot}=\frac{1+\delta}{M_{\rm num}/M}\qquad\Longrightarrow\qquad
-        \delta_{\rm plot}\approx\delta-\frac{h^{2}}{24} .
+        1+\delta_{\rm plot}=\frac{1+\delta}{M_{\rm num}/M}\quad(r&gt;1),\qquad
+        \delta_{\rm plot}=\frac{\delta}{M_{\rm num}/M}\quad(r&lt;1) ;
+      \]
+      \[
+        \delta_{\rm plot}\approx\delta-\frac{h^{2}}{24}\quad(r&gt;1),\qquad
+        \delta_{\rm plot}\approx\delta\left(1-\frac{h^{2}}{24}\right)\quad(r&lt;1) .
       \]
     </div>
-<p>With the table's values at \(r=5\), \((1+4.6409\times10^{-5})/(1+4.1125\times10^{-5})-1=5.3\times10^{-6}\). Far away \(\delta\) tends to the mass error and \(\delta_{\rm plot}\) tends to zero. Inside the shell the two differ only by the factor \(M/M_{\rm num}\), too little to see. Beat 7 changes the mass.</p>
+<p>The second line keeps only the first power of \(h^2\), using \(M_{\rm num}/M\approx1+h^2/24\) from Eq. (5); outside it also drops the product \(\delta\,h^2/24\), which is smaller still. With the table's values at \(r=5\), \((1+4.6409\times10^{-5})/(1+4.1125\times10^{-5})-1=5.3\times10^{-6}\): far away \(\delta\) tends to the mass error and \(\delta_{\rm plot}\) tends to zero. Inside the shell the two differ only by the factor \(M/M_{\rm num}\): at \(r=0.5\) the table's <code>g/M</code> of -7.3167e-05 becomes -7.3164e-05 in the plot, too little a change to see. The exterior formula must not be used inside: it would subtract the mass error from a quantity that does not contain it, and give -1.1429e-04. Beat 7 changes the mass.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 <section id="beat7">
@@ -866,7 +870,7 @@ python main.py --nDiv 1000 --radii 1.1 1.05 1.01</pre>
 <section id="summary">
 <h2>Printed Summary</h2>
 <p>Every run prints the program version and build, then a summary, then opens its plot. This is the summary of the default run, <code>python main.py</code>:</p>
-<pre>SphereGravity 1.4.0 (build a43a939a4607)
+<pre>SphereGravity 1.4.0 (build 217c2c26a44a)
 
 Shell mass comparison (dimensionless units)
   numerical midpoint mass : 0.012567
@@ -893,7 +897,7 @@ Acceleration comparison (G = 1; force for a unit test mass)
 <li><code>h^2 estimate</code>: the leading-order error of Eq. (13), marked <code>*</code> when the condition of Eq. (14) fails, with a note below the table.</li>
 </ul>
 <p>With fine enough tiles no row is marked. This is the second run of Beat 5:</p>
-<pre>SphereGravity 1.4.0 (build a43a939a4607)
+<pre>SphereGravity 1.4.0 (build 217c2c26a44a)
 
 Shell mass comparison (dimensionless units)
   numerical midpoint mass : 0.012566
@@ -909,7 +913,7 @@ Acceleration comparison (G = 1; force for a unit test mass)
     1.05        0.011398        0.011398    9.0732e-07                    9.0731e-07
      1.1        0.010385        0.010385    2.4936e-07                    2.4936e-07
   (Relative difference is undefined inside because expected g is zero.)</pre>
-<p>Results are printed to at most five significant figures, and radii with up to ten.</p>
+<p>Results are printed to at most five significant figures. Radii are printed with up to ten, or with as many as are needed to give back the radius exactly, so that a radius very close to 1 is never shown as 1.</p>
 </section>
 <section id="experiments">
 <h2>Suggested Experiments</h2>
