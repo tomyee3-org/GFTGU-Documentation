@@ -478,7 +478,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 8e44c5a56ab6
+  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build a9793cfa6cc4
 </p>
 <section id="overview">
 <h2>Overview</h2>
@@ -667,7 +667,7 @@ python main.py --x_init 7383.12519025 --u_init 212197265.2804 --dt 1e-7 --max_or
         \Delta\phi_{\rm circ}=\frac{2\pi}{\sqrt{1-6GM/(c^2r)}}-2\pi .
       \]
     </div>
-<p>At \(r=8GM/c^2\) the square root is \(\sqrt{1/4}=1/2\), so \(\Delta\phi_{\rm circ}=2\pi\) exactly: a slightly disturbed orbit there returns to its periapsis only after two full turns. As \(r\) falls to \(6GM/c^2\) the advance grows without limit, and inside it there is no oscillation, only a peak to fall off. The 0.1% push at \(5GM/c^2\) set the particle rolling down from the top of the peak into the well and out the other side. Beat 5 asks whether a particle that comes in from outside can pass inside the ISCO and still come back.</p>
+<p>At \(r=8GM/c^2\) the square root is \(\sqrt{1/4}=1/2\), so \(\Delta\phi_{\rm circ}=2\pi\) exactly: a slightly disturbed orbit there returns to its periapsis only after two full turns. As \(r\) falls to \(6GM/c^2\) the advance grows without limit, and inside it there is no oscillation, only a peak to fall off. Exactly at \(6GM/c^2\) the circle is marginally stable: the period of a small radial oscillation is infinite, so there is no advance to give, and for a start exactly there the program prints <code>circular (marginally stable)</code>. The 0.1% push at \(5GM/c^2\) set the particle rolling down from the top of the peak into the well and out the other side. Beat 5 asks whether a particle that comes in from outside can pass inside the ISCO and still come back.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 <section id="beat5">
@@ -823,8 +823,8 @@ python main.py --x_init 2000</pre>
 <h3>Predicting the orbit</h3>
 <ol>
 <li>From \(x_0\) and \(u_0\) form the cubic of Eq. (10), scaled so that the start is the root \(w=1\) of \((w-1)\bigl(Aw^2+(A-1)w+A+B-1\bigr)\), with \(A=2GM/(c^2x_0)\) and \(B=2GM/(x_0u_0^2)\); in Newtonian mode \(A=0\).</li>
-<li>Find the other roots. If one equals the start, the orbit is circular, stable or unstable by Eq. (14), with the advance of Eq. (15).</li>
-<li>Otherwise find the direction of the first motion and look for the next root in that direction. If there is none the orbit plunges (inwards) or escapes (outwards); if there is one it is bound, and Eq. (11) gives its advance.</li>
+<li>Evaluate the radial force balance at the start, \(s=3A+B-2\), which is zero for a circle, positive if the first motion is inwards and negative if it is outwards. If \(|s|\le10^{-12}\) (<code>CIRCULAR_TOLERANCE</code>) the orbit is circular: stable, marginally stable or unstable by Eq. (14), with the advance of Eq. (15) for a stable circle. A circle within \(10^{-12}\) of \(1-3A=0\) (<code>ISCO_TOLERANCE</code>) is taken to be exactly at the ISCO.</li>
+<li>Otherwise look for the next root in the direction of the first motion. If there is none the orbit plunges (inwards) or escapes (outwards); if there is one it is bound, and Eq. (11) gives its advance. These decisions use the signs of \(s\), of the discriminant \((1-3A)^2-4As\) of the quadratic, of \(1-3A\) and of \(A+B-1\), which the program evaluates exactly from the input numbers, so the kind of orbit never depends on rounding.</li>
 </ol>
 <h3>Named constants</h3>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Named constants"><table>
@@ -835,6 +835,8 @@ python main.py --x_init 2000</pre>
 <tr><td><code>HORIZON_RADIUS</code></td><td>2953.25</td><td>\(2GM/c^2\) in m, Eq. (17).</td></tr>
 <tr><td><code>PHOTON_ORBIT_RADIUS</code></td><td>4429.88</td><td>\(3GM/c^2\) in m, below which there is no circular orbit, Eq. (14).</td></tr>
 <tr><td><code>ISCO_RADIUS</code></td><td>8859.75</td><td>\(6GM/c^2\) in m, the innermost stable circular orbit, Eq. (14).</td></tr>
+<tr><td><code>CIRCULAR_TOLERANCE</code></td><td>1e-12</td><td>Largest \(|3A+B-2|\) for which <code>predict_orbit()</code> treats a start as circular.</td></tr>
+<tr><td><code>ISCO_TOLERANCE</code></td><td>1e-12</td><td>Largest \(|1-3A|\) for which a circle is taken to be exactly at the ISCO.</td></tr>
 </tbody></table></div>
 <div class="note">
 <strong>Tip:</strong> Before trusting a measured advance, compare it with the predicted one and with the sampling bound of Eq. (21). Before trusting any run, halve <code>--dt</code> (and double <code>--max_steps</code>) and check that the drifts fall by about four. Near a plunge or a zoom-whirl, trust the <code>motion</code> line of the prediction over the fate of the integrated orbit.
@@ -917,7 +919,7 @@ python main.py --dt 5e-7 --max_steps 24000</pre>
 <section id="summary">
 <h2>Printed Summary</h2>
 <p>Every run prints a summary and then opens its plot. This is the summary of the default run of Beat 0:</p>
-<pre>RelativisticOrbit 1.2.0 (build 8e44c5a56ab6) summary
+<pre>RelativisticOrbit 1.3.0 (build a9793cfa6cc4) summary
   model             : schwarzschild
   horizon radius    : 2953.3 m
   ISCO radius       : 8859.8 m
@@ -946,7 +948,7 @@ python main.py --dt 5e-7 --max_steps 24000</pre>
 <li><code>predicted from the constants of motion</code>: lines worked out from \(x_0\) and \(u_0\) alone, without the integration. <code>circular dy/dtau</code> is Eq. (14), or \(\sqrt{GM/r}\) in Newtonian mode; it reads <code>none</code> when \(x_0\) is not above \(3GM/c^2\). <code>motion</code> is the kind of orbit, with its turning points when it is bound or circular. <code>apsidal advance</code> is Eq. (11), or Eq. (15) for a stable circle, and 0 in Newtonian mode. <code>weak-field 6piGM/(c^2 p)</code> is Eq. (12), printed in Schwarzschild mode.</li>
 </ul>
 <p>A plunge prints a different prediction. This is the run of Beat 6 that crosses the horizon:</p>
-<pre>RelativisticOrbit 1.2.0 (build 8e44c5a56ab6) summary
+<pre>RelativisticOrbit 1.3.0 (build a9793cfa6cc4) summary
   model             : schwarzschild
   horizon radius    : 2953.3 m
   ISCO radius       : 8859.8 m
@@ -961,7 +963,7 @@ python main.py --dt 5e-7 --max_steps 24000</pre>
     circular dy/dtau: 1.12051e+08 m/s at x_init
     motion          : plunge (no inner turning point; the orbit crosses the horizon)</pre>
 <ul>
-<li>The <code>motion</code> line can also read <code>escape (no outer turning point)</code>, <code>circular (stable)</code>, <code>circular (unstable)</code>, <code>radial (zero angular momentum)</code>, or, exactly on the boundary between a plunge and a bound orbit, <code>marginal</code>.</li>
+<li>The <code>motion</code> line can also read <code>escape (no outer turning point)</code>, <code>circular (stable)</code>, <code>circular (marginally stable)</code>, <code>circular (unstable)</code>, <code>radial (zero angular momentum)</code>, or, exactly on the boundary between a plunge and a bound orbit, <code>marginal</code>.</li>
 <li>Only lines that apply are printed: a plunge or an escape has no <code>apsidal advance</code>, and a run with fewer than two periapsides has no measured advance.</li>
 </ul>
 </section>
