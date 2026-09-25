@@ -358,7 +358,7 @@
      HEADER
 ════════════════════════════════════════════ -->
 <header>
-<div class="badge">Chapter 8 · Newtonian Stellar Structure</div>
+<div class="badge">Newtonian Stellar Structure</div>
 <h1>Star  —  <em>Polytropic Stellar Structure</em></h1>
 <div class="sub">
     Source Code:
@@ -394,7 +394,7 @@
 ════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 35c2e676d666
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 328c84d14b72
 </p>
 
 <!-- ── Physical Background ── -->
@@ -410,8 +410,8 @@
       The model deliberately omits nuclear energy generation and explicit radiative or convective
       energy transport. Instead, pressure and density are constrained everywhere by one power law,
       while the ideal-gas relation is used to set the central density and to recover a temperature
-      profile. This is the same deliberately simple physical picture emphasized in Schutz's
-      Chapter 8 Star investigation.
+      profile. This is the same deliberately simple physical picture emphasized in the Star
+      investigation of the first edition (2003) of Schutz's book.
     </p>
 <p>
       Gravity is not constant inside a star. The gravitational acceleration at radius \(r\) is
@@ -547,15 +547,16 @@
     </p>
 <p>
 <code>max_points</code> determines how far a given spacing can extend before such a restart
-      is necessary. Increasing <code>max_points</code> does <em>not</em> make an already successful
-      run finer. To perform an actual resolution study, increase
+      is necessary. Increasing <code>max_points</code> refines a run only by removing restarts;
+      once no restart occurs, more points do <em>not</em> make the run finer. To perform an actual resolution study, increase
       <code>steps_per_scale</code> (for example, 200, 400, 800, 1600) while keeping enough
       <code>max_points</code> to avoid a restart.
     </p>
 <p>
       The returned <code>StarResult</code> reports both <code>radial_step</code> and
-      <code>restart_count</code>, making it possible to tell whether the requested initial
-      resolution was retained.
+      <code>restart_count</code>, and every run prints them as <code>Radial step (m)</code> and
+      <code>Restarts (radial step doubled)</code>, making it possible to tell whether the
+      requested initial resolution was retained.
     </p>
 </section>
 <!-- ── Module Overview ── -->
@@ -563,8 +564,8 @@
 <h2>Module Overview</h2>
 <div class="module-grid">
 <div class="module-card"><div class="mc-name">physics_star.py</div><div class="mc-role">Physics</div>
-<p>Ideal-gas relations, polytropic EOS, characteristic radial scale, hydrostatic step, and mass-continuity step.</p>
-<div class="mc-sig">q_factor(mu)<br/>central_density(p_c, T_c, mu)<br/>polytropic_D(rho_c, p_c, gamma)<br/>radial_scale(p_c, rho_c)<br/>hydrostatic_step(...)<br/>mass_step(...)<br/>density_from_pressure(...)<br/>temperature_from_prho(...)</div>
+<p>Ideal-gas relations, polytropic EOS, characteristic radial scale, hydrostatic step, mass-continuity step, and the exact Lane–Emden radius and mass of the same polytrope.</p>
+<div class="mc-sig">q_factor(mu)<br/>central_density(p_c, T_c, mu)<br/>polytropic_D(rho_c, p_c, gamma)<br/>radial_scale(p_c, rho_c)<br/>hydrostatic_step(...)<br/>mass_step(...)<br/>density_from_pressure(...)<br/>temperature_from_prho(...)<br/>polytropic_index(gamma)<br/>lane_emden_surface(n)<br/>lane_emden_solution(p_c, rho_c, gamma)</div>
 </div>
 <div class="module-card"><div class="mc-name">driver_star.py</div><div class="mc-role">Driver</div>
 <p>Validates the user parameters, performs the forward-Euler radial integration, restarts with a larger step only when necessary for radial coverage, interpolates the zero-pressure surface, and evaluates requested fractional-radius checkpoints.</p>
@@ -596,17 +597,17 @@
 <tr><td><code>--T_c</code></td><td><code>2.263e7</code></td><td>K</td><td>Positive finite central temperature used with \(p_c\) and \(\mu\) to set \(\rho_c\). At fixed \(p_c,\mu,\gamma\), the model scales as \(R\propto T_c\) and \(M\propto T_c^2\).</td></tr>
 <tr><td><code>--mu</code></td><td><code>1.285</code></td><td>dimensionless</td><td>Positive effective mean molecular-weight parameter in proton-mass units. In this simplified model it should not be interpreted as the actual mean molecular weight of the solar core.</td></tr>
 <tr><td><code>--gamma</code></td><td><code>1.36</code></td><td>dimensionless</td><td>Polytropic exponent in \(p=K\rho^\gamma\), not the conventional index \(n\). It must exceed 1.2 so the mathematical polytrope has a finite zero-pressure radius.</td></tr>
-<tr><td><code>--max_points</code></td><td><code>2000</code></td><td>integer</td><td>Grid-point capacity in one attempt, at least 3. Increase it when an extended model would otherwise trigger step doubling; it does not by itself refine a successful run.</td></tr>
+<tr><td><code>--max_points</code></td><td><code>2000</code></td><td>integer</td><td>Grid-point capacity in one attempt, from 3 to 1000000. Increase it when an extended model would otherwise trigger step doubling; once no restart occurs, raising it further does not refine the run.</td></tr>
 <tr><td><code>--steps_per_scale</code></td><td><code>400</code></td><td>integer</td><td>Positive number controlling initial numerical resolution through \(dr=\ell/\)<code>steps_per_scale</code>. Larger values give a finer calculation when <code>max_points</code> is large enough to avoid a restart.</td></tr>
 <tr><td><code>--output_type</code></td><td><code>"pressure"</code></td><td>selector</td><td><code>"pressure"</code> plots Pa; <code>"density"</code> plots kg m\(^{-3}\); <code>"temperature"</code> plots K; <code>"mass"</code> plots enclosed kg.</td></tr>
 <tr><td><code>--log_y</code></td><td><code>False</code></td><td>switch</td><td>When present, uses a logarithmic vertical axis for pressure, density, or temperature. Omit it for a linear axis. It is invalid for mass because \(m(0)=0\); the exact zero-valued surface point is omitted from logarithmic plots.</td></tr>
 </tbody></table>
-<div class="note"><strong>Input checks:</strong> The command-line parser rejects non-finite or nonpositive central inputs, \(\gamma\le1.2\), fewer than three grid points, nonpositive <code>--steps_per_scale</code>, unsupported output names, and logarithmic mass plots before integration. The driver retains equivalent validation for direct Python callers.</div>
+<div class="note"><strong>Input checks:</strong> The command-line parser rejects non-finite or nonpositive central inputs, \(\gamma\le1.2\), fewer than three or more than 1000000 grid points, nonpositive <code>--steps_per_scale</code>, unsupported output names, and logarithmic mass plots before integration. The driver retains equivalent validation for direct Python callers.</div>
 </section>
 <!-- ── Output Modes ── -->
 <section id="output">
 <h2>Output Modes</h2>
-<p>Every run prints the modeled surface radius and total mass to five significant figures. It then prints pressure, density, temperature, and mass enclosed at exactly 0%, 25%, 50%, 75%, and 90% of the modeled radius. Values between stored grid points are linearly interpolated in radius. This numerical summary is independent of the selected plot.</p>
+<p>Every run prints the modeled surface radius and total mass to five significant figures. Under <code>Numerical grid</code> it prints the radial step finally used, the number of grid points from the center to the surface, and the number of step-doubling restarts. Under <code>Lane-Emden solution of the same polytrope (exact)</code> it prints the polytropic index \(n=1/(\gamma-1)\) and the radius and mass of the exact Lane–Emden solution of the same equations, with the relative differences of the integrated radius and mass from them: those differences measure the error of the Euler integration, not how well a polytrope describes a real star. It then prints pressure, density, temperature, and mass enclosed at exactly 0%, 25%, 50%, 75%, and 90% of the modeled radius. Values between stored grid points are linearly interpolated in radius. This numerical summary is independent of the selected plot.</p>
 <p>
       All four physical profiles are computed in every run; <code>output_type</code> chooses which
       one is displayed. The horizontal axis begins at the stored center \(r=0\) and ends at the
@@ -634,7 +635,7 @@
       Run the default calculation with each of the four output modes: pressure, density,
       temperature, and enclosed mass. Identify the modeled surface where the pressure reaches
       zero, and record the total radius and mass there. Compare the shapes of the profiles with
-      the solar model discussed in Chapter 8. Keep in mind that matching the Sun's overall mass
+      the solar model discussed in the first edition of Schutz's book. Keep in mind that matching the Sun's overall mass
       and radius does not make a one-polytrope calculation a detailed solar model.</p>
 <div class="sc-params">python main.py --output_type pressure<br/>python main.py --output_type density --log_y<br/>python main.py --output_type temperature<br/>python main.py --output_type mass</div></div>
 <div class="scenario-card"><h4>2 · Introductory–Intermediate — Central-Temperature Sensitivity</h4><p>
@@ -675,7 +676,7 @@
       predictions \(R\propto p_c^{(\gamma-2)/(2\gamma)}\) and
       \(M\propto p_c^{(3\gamma-4)/(2\gamma)}\). Explain why these exponents differ from the
       one-variable experiments above, and compare them with the proportionalities developed
-      in Investigation 8.6.</p>
+      in the first edition of Schutz's book.</p>
 <div class="sc-params"># Part A uses the commands in Experiments 2–4.<br/># Part B: three fixed-D examples for gamma = 1.36<br/>python main.py --p_c 1.7895e15 --T_c 1.5678905e7<br/>python main.py --p_c 7.158e15 --T_c 2.263e7<br/>python main.py --p_c 2.8632e16 --T_c 3.2662797e7<br/>record radius and mass; compare measured and predicted exponents</div></div>
 <div class="scenario-card"><h4>7 · Advanced — A Schematic Red-Giant Polytrope</h4><p>
       Set \(\gamma=1.335\) and try to construct a model having approximately
@@ -694,11 +695,12 @@
 <div class="sc-params">python main.py --mu 1 --gamma 2 --p_c 1.9888e34 --T_c 1.1188e12 <br/>    --max_points 5000 --steps_per_scale 400 --output_type mass<br/># This gives approximately R = 1.0e4 m and M = 2.8e30 kg.</div></div>
 <div class="scenario-card"><h4>9 · Advanced — Numerical Convergence</h4><p>
       Keep the physical inputs fixed and increase <code>steps_per_scale</code>. Increase
-      <code>max_points</code> when necessary so that <code>restart_count</code> remains zero;
+      <code>max_points</code> when necessary so that the printed <code>Restarts (radial step doubled)</code> remains zero;
       otherwise the automatic step-doubling restart changes the effective radial resolution.
       Compare the surface radius and total mass. Because the integration uses forward Euler
       steps, the global error should eventually decrease approximately in proportion to
-      \(dr\) as the grid is refined.</p>
+      \(dr\) as the grid is refined. The printed relative differences from the exact
+      Lane–Emden radius and mass measure that error directly.</p>
 <div class="sc-params">python main.py --steps_per_scale 200 --max_points 2000<br/>python main.py --steps_per_scale 400 --max_points 2000<br/>python main.py --steps_per_scale 800 --max_points 4000<br/>python main.py --steps_per_scale 1600 --max_points 8000</div></div>
 <div class="scenario-card"><h4>10 · Advanced Programming Extension — Use More Than One Polytropic Region</h4><p>
       Experiment with allowing the equation of state to change from one region
