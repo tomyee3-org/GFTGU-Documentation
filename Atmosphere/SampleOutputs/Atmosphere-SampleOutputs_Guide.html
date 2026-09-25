@@ -24,7 +24,7 @@ pre,code{background:#eee9df}pre{padding:12px;overflow:auto;border-radius:4px}
 <header>
 <h1>Atmosphere</h1>
 <h2>Representative Sample Outputs</h2>
-<p><strong>Current program version:</strong> 1.5.1 &nbsp; <strong>Build:</strong> 08772f6e8e51<br>
+<p><strong>Current program version:</strong> 1.6.0 &nbsp; <strong>Build:</strong> fb81e2f99894<br>
 <strong>Guide prepared:</strong> 2026-09-25</p>
 </header>
 
@@ -147,6 +147,7 @@ pre,code{background:#eee9df}pre{padding:12px;overflow:auto;border-radius:4px}
 <li>Layer temperatures include 288.15 K at the surface, 216.65 K from 11 to 20 km, 186.95 K at 86 km, and 1240 K from 400 to 500 km.</li>
 <li>Pressure falls by a factor 4.50 over the first 11 km, and by about 4700 from 200 km (6.7556e-05 Pa) to 500 km (1.437e-08 Pa).</li>
 <li>Seven rounded NRLMSIS 2.0 temperatures are used from 100 to 500 km.</li>
+<li>The other Beat 4 command, --h_points 0,50000,100000 --T_points 288,200,350, prints 83.933 Pa at 50 km and 0.14095 Pa at 100 km. The density ratio between those rows is the pressure ratio times 200/350.</li>
 </ul>
 </div>
 </section>
@@ -170,6 +171,8 @@ pre,code{background:#eee9df}pre{padding:12px;overflow:auto;border-radius:4px}
 <li>Venus surface: 9.2e6 Pa, 66.24 kg m<sup>&minus;3</sup>, 735 K. Column mass p<sub>0</sub>/g = 1.037e6 kg m<sup>&minus;2</sup>.</li>
 <li>Venus 10 km: 4.6835e6 Pa (about 2% below the 4.80 MPa compilation value). 60 km: 20 022 Pa (about 16% below 23.9 kPa).</li>
 <li>Earth column 1.033e4 kg m<sup>&minus;2</sup>; Venus/Earth column ratio about 100.</li>
+<li>Mars (g = 3.72 m s<sup>&minus;2</sup>, &mu; = 44, p<sub>0</sub> = 610 Pa, T<sub>0</sub> = 210 K): H = 10.67 km, column p<sub>0</sub>/g = 164 kg m<sup>&minus;2</sup>.</li>
+<li>Jupiter slice (g = 24.8 m s<sup>&minus;2</sup>, &mu; = 2.2, p<sub>0</sub> = 1e5 Pa, T<sub>0</sub> = 165 K): H = 25.14 km, column 4032 kg m<sup>&minus;2</sup>.</li>
 </ul>
 </div>
 </section>
@@ -219,12 +222,12 @@ pre,code{background:#eee9df}pre{padding:12px;overflow:auto;border-radius:4px}
 <section id="evaluation-notes">
 <h2>Notes for evaluation</h2>
 <ul>
-<li>The model holds gravity and the mean molecular mass constant with height, takes the temperature profile as input, and integrates with a first-order Euler step that also lands on every supplied temperature breakpoint. Its pressures are illustrations of the equations, not predictions.</li>
+<li>The model holds gravity and the mean molecular mass constant with height, takes the temperature profile as input, and integrates with a first-order Euler step that lands on every supplied temperature breakpoint and shortens a step that would change temperature by more than about 5% of the temperature at the start of that step. A proposed step shorter than about 10<sup>&minus;5</sup> of the local scale height is left alone. Its pressures are illustrations of the equations, not predictions.</li>
 <li>The default Earth profile combines U.S. Standard Atmosphere 1976 layer values through about 86 km, converted to geometric altitude, with seven rounded NRLMSIS 2.0 temperatures from 100 to 500 km for one date and place. The Venus profile is from a secondary compilation; the Mars and Jupiter profiles are round-number illustrations.</li>
 <li>Above the highest supplied altitude the temperature follows a mathematical closure that ends the calculation at a finite altitude. That endpoint is a stopping rule.</li>
 <li>Headline values come from the printed checkpoint table or from the printed Numerical top line of the same run.</li>
 </ul>
-<p class="small"><strong>Image provenance and compression.</strong> All eight figures were regenerated on 2026-09-25 using Atmosphere 1.5.1, build 08772f6e8e51, with the commands shown above and <code>--save_plot</code> / <code>--no_show</code>. Each PNG was then converted, without changing its dimensions, to a 256-colour indexed palette for compact embedding. No plotted data, labels or layout were changed after the program wrote the file.</p>
+<p class="small"><strong>Image provenance and compression.</strong> All eight figures were generated on 2026-09-25 from Atmosphere 1.5.1 with the commands shown above and <code>--save_plot</code> / <code>--no_show</code>, then converted, without changing dimensions, to a 256-colour indexed palette. Atmosphere 1.6.0, build fb81e2f99894, reprints the same default table, first step, 11 km and 86 km pressures, and Numerical top as 1.5.1; the eight figure commands therefore produce the same curves. The embedded PNGs were compared against that 1.6.0 output and left unchanged. Headline values for Beats 3, 4 and 5 cover the extra commands in those Beats and were reread from 1.6.0 printed tables.</p>
 </section>
 
 <footer>This is a self-contained HTML document. All eight figures are embedded as data, so the file can be opened or forwarded without a separate images folder.</footer>

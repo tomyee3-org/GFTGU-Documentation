@@ -498,7 +498,7 @@
 <!-- ══════════════════════ MAIN ══════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.5.1&nbsp;&nbsp;&nbsp;&nbsp;Build 08772f6e8e51
+  Version 1.6.0&nbsp;&nbsp;&nbsp;&nbsp;Build fb81e2f99894
 </p>
 <section id="description">
 <h2>Description</h2>
@@ -538,7 +538,7 @@
 <p>Each numbered section below is one beat: a short argument in words, a command whose output illustrates it, and then the equation that the output follows from. Do them in order the first time. After that, any beat can be opened on its own.</p>
 <p>The program's output is a consequence of its equations, so what a beat shows is the equation at work, not independent evidence that the equation is right. Where a beat compares the program with something outside it, such as the U.S. Standard Atmosphere in Beat 6 or published Venus values in Beat 5, it says so.</p>
 <p>Every beat uses the same program and the same printed table. What changes from beat to beat is the command. Beats 0 and 1 use the default Earth atmosphere, Beat 2 an isothermal one, Beat 3 changes one dial at a time, Beat 4 changes the temperature profile, Beat 5 moves to other planets, and Beats 6 and 7 examine the numerical method and the top of the model.</p>
-<p>Every run prints the checkpoint table and then opens a plot window; close the window to end the program. Each beat names the columns and rows to look at. In several beats the table is what to study and the plot can be left until later.</p>
+<p>Every run prints the checkpoint table and then a <code>Numerical top</code> line giving the last stored altitude and temperature (a stopping rule, not a physical top). A plot window then opens; close the window to end the program. Each beat names the columns and rows to look at. In several beats the table is what to study and the plot can be left until later.</p>
 <p>Give lists with commas and no brackets. A list that contains spaces must be put in quotation marks, and a list may begin with a negative altitude, as in <code>--h_points -1000,0,10000</code>.</p>
 <div class="note"><strong>What is integrated and what is prescribed.</strong> Each displayed equation in the beats carries a tag saying what kind of statement it is. A green <span class="tag tag-ode">ODE</span> tag marks a differential equation that the program integrates. A blue <span class="tag tag-der">DERIVED</span> tag marks an algebraic result that follows from stated assumptions; the ideal gas law, Eq. (7.2), is here a consequence of treating the air as an ideal gas of one mean molecular mass. A grey <span class="tag tag-rule">PRESCRIPTION</span> tag marks a rule the program adopts, and a violet <span class="tag tag-cal">CLOSURE</span> tag marks an assumption that stands in for physics the model does not have. The numerical method itself, the Euler step of Eq. (7.7) under <a href="#algorithm">Algorithm</a>, is an algorithm rather than physics and is not tagged. Equation (7.6) is a closure and Eq. (7.1) is a physical law, and the tags are there so that the two are never mistaken for each other.</div>
 </section>
@@ -692,7 +692,7 @@ python main.py</pre>
 <pre>python main.py --output_type temperature
 python main.py --h_points 0,20000 --T_points 288.15,216.65 --output_type temperature</pre>
 <p>Look at the temperature plot in each run, and at the right-hand end of the curve. In the second run the last supplied altitude is 20 km.</p>
-<p>Three tasks, in order. First, in the default run see that the temperature stays at 1240 K up to 500 km, the last supplied altitude, and then falls steeply to less than 1 K where the curve ends near 572 km. Then in the second run see that the curve follows the supplied straight line down to 216.65 K at 20 km, and then falls toward zero, ending near 33 km. The atmosphere the program computes extends about 13 km above the last supplied point. Then decide, before reading on, whether the falling curve above the last supplied altitude is a discovery about the atmosphere or an assumption of the program, and what a real atmosphere at 30 km would do.</p>
+<p>Three tasks, in order. First, in the default run see that the temperature stays at 1240 K up to 500 km, the last supplied altitude, and then falls steeply to less than 1 K where the curve ends near 572 km. Read the printed Numerical top line; it should name that last stored altitude and temperature. Then in the second run see that the curve follows the supplied straight line down to 216.65 K at 20 km, and then falls toward zero, ending near 33 km. The atmosphere the program computes extends about 13 km above the last supplied point; the Numerical top line for that run is the number to quote. Then decide, before reading on, whether the falling curve above the last supplied altitude is a discovery about the atmosphere or an assumption of the program, and what a real atmosphere at 30 km would do.</p>
 <p><em>Then</em> the assumption. Above the highest supplied altitude the program switches to a power-law relation between temperature and pressure. On the first computed step above that altitude, the coefficient \(\beta\) is chosen so that the extrapolated temperature there equals the last supplied temperature:</p>
 <div class="eq-block"><div class="eq-label">Upper-atmosphere closure <span class="tag tag-cal">CLOSURE</span></div>
         \[
@@ -776,7 +776,7 @@ while last_step == 0:
     for j in range(1, max_steps):          # max_steps = 50 000
         next_node = next positive h_points entry after alt[j-1], or none
         step = min(dh, next_node - alt[j-1])   # land on each breakpoint
-        # also shrink step if |Delta T|/T would exceed about 5%
+        # also shrink step if |Delta T| would exceed about 5% of the current T
         alt[j] = alt[j-1] + step
         p[j] = hydrostatic_step(p[j-1], rho[j-1], g, step)
         if p[j] &lt;= 0.0:
@@ -1021,7 +1021,7 @@ class CurveData:
           The following is an abbreviated view of the entry point; the complete temperature arrays
           and argument-parser setup are in <code>main.py</code>. The first line printed is a status
           line giving the version, the build, the planet name and the plotted quantity, followed by
-          the checkpoint table.
+          the checkpoint table and one Numerical top line.
         </p>
 <pre><code>def main(argv=None):
     args = parse_args(argv)

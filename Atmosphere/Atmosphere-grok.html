@@ -111,7 +111,7 @@
 </nav>
 <main>
   <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-    Version 1.5.1&nbsp;&nbsp;&nbsp;&nbsp;Build 08772f6e8e51
+    Version 1.6.0&nbsp;&nbsp;&nbsp;&nbsp;Build fb81e2f99894
   </p>
 
   <section id="description">
@@ -174,7 +174,7 @@ p = p_0\,e^{-h/H},
 H = \frac{p_0}{g\,\rho_0} = \frac{k_B\,T_0}{g\,\mu\,m_u}.
 \]
     </div>
-    <p>For the default Earth numbers at 288.15&nbsp;K, \(H\approx 8.43\,\mathrm{km}\). The first integration step is \(H_{\min}/200\), sized from the coldest temperature on the profile so a cold layer is not stepped through too coarsely. The integrator also lands on every supplied temperature breakpoint, even when that breakpoint is closer than \(H_{\min}/200\), and shortens a step that would change temperature by more than 5% of the local value.</p>
+    <p>For the default Earth numbers at 288.15&nbsp;K, \(H\approx 8.43\,\mathrm{km}\). The first integration step is \(H_{\min}/200\), sized from the coldest temperature on the profile so a cold layer is not stepped through too coarsely. The integrator also lands on every supplied temperature breakpoint, even when that breakpoint is closer than \(H_{\min}/200\), and shortens a step that would change temperature by more than about 5% of the temperature at the start of that step. A proposed step shorter than about \(10^{-5}\) of the local scale height is left alone.</p>
   </section>
 
   <section id="beat3">
@@ -244,7 +244,7 @@ python main.py</pre>
     <p>A real atmosphere fades into space. The program needs a temperature above the last altitude you supplied, and a place to stop. Neither is a discovery about the air.</p>
 <pre>python main.py --output_type temperature
 python main.py --h_points 0,20000 --T_points 288.15,216.65 --output_type temperature</pre>
-    <p>In the default run the temperature holds at 1240&nbsp;K to 500&nbsp;km and then falls toward zero where the curve ends. In the short profile the fall begins at 20&nbsp;km. That falling tail is the closure, not the mesosphere.</p>
+    <p>In the default run the temperature holds at 1240&nbsp;K to 500&nbsp;km and then falls toward zero where the curve ends. Read the printed <code>Numerical top</code> line for the last stored altitude and temperature; it is a stopping rule, not a physical top. In the short profile the fall begins at 20&nbsp;km. That falling tail is the closure, not the mesosphere.</p>
     <div class="eq-block">
       <div class="eq-label">Upper-atmosphere closure — not a physical model</div>
 \[
@@ -276,7 +276,7 @@ T=\beta\,p^{\alpha},\qquad \alpha=0.5.
 
   <section id="output">
     <h2>Output</h2>
-    <p>Every run prints a heading with version and build, then a checkpoint table of altitude, pressure, density, \(p/T\), and temperature at every supplied altitude that still lies in the positive-pressure domain. The density is \(p\,\mu m_u/(k_B T)\), so \(p/T\) is the density stripped of that constant, not the density in other units. Numbers use five significant figures. A plot window then opens unless you pass <code>--no_show</code>; <code>--save_plot PATH</code> writes the same figure to a file. The plotted quantity is the only thing <code>--output_type</code> changes.</p>
+    <p>Every run prints a heading with version and build, then a checkpoint table of altitude, pressure, density, \(p/T\), and temperature at every supplied altitude that still lies in the positive-pressure domain. After the table it prints one <code>Numerical top</code> line: the last stored altitude and temperature, which is the stopping rule, not a physical top of the air. The density is \(p\,\mu m_u/(k_B T)\), so \(p/T\) is the density stripped of that constant, not the density in other units. Numbers use five significant figures. A plot window then opens unless you pass <code>--no_show</code>; <code>--save_plot PATH</code> writes the same figure to a file. The plotted quantity is the only thing <code>--output_type</code> changes.</p>
   </section>
 
   <section id="experiments">
@@ -305,7 +305,7 @@ T=\beta\,p^{\alpha},\qquad \alpha=0.5.
         <p>At 86&nbsp;km, \(g\) has fallen by about 2.6&nbsp;per cent. Argue, without writing a new integrator, why holding \(g\) fixed makes the model pressure run low, and in which direction the deficit should grow.</p></div>
       <div class="exp-card"><div class="ec-num">EXP-8 · Advanced</div>
         <h4>Do not name the tail</h4>
-        <p>Run Beat 7’s short profile. Where does the supplied line end, and where does the curve end? Invent one sentence that uses the word “top” only for the stopping rule.</p></div>
+        <p>Run Beat 7’s short profile. Read the printed Numerical top line. Where does the supplied line end, and where does the curve end? Invent one sentence that uses the word “top” only for the stopping rule.</p></div>
     </div>
   </section>
 

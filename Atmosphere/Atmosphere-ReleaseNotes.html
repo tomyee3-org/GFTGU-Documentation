@@ -2,41 +2,42 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Atmosphere 1.5.1 Release Notes</title>
+<title>Atmosphere 1.6.0 Release Notes</title>
 </head>
 <body>
-<h1>Atmosphere 1.5.1 Release Notes</h1>
-<p><b>Version:</b> 1.5.1<br><b>Build:</b> 08772f6e8e51<br><b>Date:</b> 2026-09-25</p>
+<h1>Atmosphere 1.6.0 Release Notes</h1>
+<p><b>Version:</b> 1.6.0<br><b>Build:</b> fb81e2f99894<br><b>Date:</b> 2026-09-25</p>
 
 <h2>Release Status</h2>
-<p>Version 1.5.1 follows 1.5.0 through two code-changing rounds: Grok Kickoff-4 (1.5.0, build d12634057d18), and this Audit41 response. Claude Audit41 and Codex Audit41 both recommended holding 1.5.0 until their P2 items were closed. Those P2 items, and the P3 items listed under Improvements, are addressed here. Grok recommends accepting 1.5.1. Claude and Codex have not yet reviewed this build. These notes replace the 1.5.0 notes; earlier notes are not reproduced.</p>
+<p>Version 1.6.0 follows 1.5.1 (Grok Response to Audit41, build 08772f6e8e51). Claude Audit42 and Codex Audit42 both recommended holding 1.5.1. This release closes every Audit42 P2 item and the P3 items listed under Improvements. Grok recommends accepting 1.6.0. Claude and Codex have not yet reviewed this build. These notes replace the 1.5.1 notes; earlier notes are not reproduced.</p>
 
 <h2>Open Bugs</h2>
-<p>None at P1-P3 from Audit41 that remain unresolved in this build.</p>
+<p>None.</p>
 
 <h2>Major Improvements in This Release</h2>
-<p>Version 1.5.1 (Audit41 response):</p>
+<p>Version 1.6.0 (Audit42 response):</p>
 <ul>
-<li>Euler steps inside the supplied profile are shortened when temperature would change by more than about 5% in one sample (Codex P2-01). Landing on breakpoints is unchanged. The 300 K / 3000 K sawtooth that was 24% low at 8000 m is now 0.18% low. Default-run stored length, first step, 11 km pressure, 86 km pressure and numerical top are unchanged from 1.5.0.</li>
-<li>The long Help algorithm, Experiment 9 patch, plotter excerpt and main() tail now describe the 1.5.x loop: step may be shorter than dh, and plotting goes through save_and_maybe_show (Codex P2-02, Claude A41-P2-01, A41-P3-01). Experiment 9 quotes 0.36195 Pa at 86 km from that printed patch.</li>
-<li>The test suite discovers every active Help file on the search path and checks both even when one of them sits next to main.py (Codex P2-03, Claude A41-P3-04). Short-Help scientific claims are tied to live runs (Claude A41-P2-02).</li>
-<li>get_temp() validates the profile only when the lists look new, and interpolates with bisect (Claude A41-P3-05).</li>
-<li>--save_plot rejects an empty path at parse time; a missing directory or unsupported format exits with Atmosphere plot error (Codex P3-03, Claude A41-P3-06).</li>
-<li>Every run prints a Numerical top line giving the last stored altitude and temperature.</li>
+<li>The temperature-change cap now bounds |Delta T| by 5% of the temperature at the start of the step, not of min(T, T_target). The Audit41 300 K / 3000 K sawtooth at 8000 m stays within 0.02% of the exact piecewise integral. The Audit42 300 K / 30000 K counterexample, which 1.5.1 refused with a restart RuntimeError, now finishes (18,298 samples, 0.19 s) 0.002% from the exact integral. Disabling the cap restores a greater than 10% error on both sawtooths.</li>
+<li>If the 5% cap spends the 50,000-point budget before pressure reaches zero, the driver raises a budget error instead of doubling the Euler step 25 times. Doubling cannot enlarge a temperature-capped step.</li>
+<li>get_temp() re-validates the whole profile on every public call. An interior edit of h, T or power after validate() is a ValueError. The integrator uses a trusted interpolation path after one validation, so a 20,000-node run stays fast.</li>
+<li>The suite audits scientific claims in Atmosphere-claude.html even when Atmosphere-grok.html is primary, including the isothermal 0.7144 Pa figure. Duplicate Help copies on the search path must match byte-for-byte.</li>
+<li>Every run prints a Numerical top line. Both Help files describe it. A test pins the printed line to the result arrays for the default run and the 20 km profile. The 5% cap constant is pinned in code and in the short Help.</li>
+<li>MODEL_VERSION is 1.6.0 because printed output and steep-profile results changed (Audit42 A42-P3-03).</li>
 </ul>
-<p>Version 1.5.0 (Kickoff-4), carried forward:</p>
+<p>Version 1.5.1, carried forward:</p>
 <ul>
-<li>Breakpoint landing; rejection of non-positive result arrays; ValueError from an empty or non-increasing profile; --save_plot / --no_show.</li>
+<li>Breakpoint landing; temperature-limited Euler steps; rejection of non-positive result arrays; --save_plot / --no_show; dual Help discovery.</li>
 </ul>
 
 <h2>Test Suite Growth</h2>
-<p>186 to 199 automated tests (1.5.0 to 1.5.1). The suite is run from tests/. With both Help files on the search path and the short file next to the program: 199 pass, 27 long-Help-only assertions skipped, in about 43 s. The long Help is still audited by DualHelpFileTests and the named-file loaders. No test was removed. Two assertions that had been loosened for both layouts are again conditional on layout.</p>
+<p>The suite is run from tests/. Clean-extraction discover counts for this build: both Help files present, 205 tests, 27 skipped; Atmosphere-grok.html only, 205 tests, 29 skipped; Atmosphere-claude.html only, 200 tests, 6 skipped. No test was removed. test_a_profile_corrupted_after_validation_cannot_return_a_non_finite_temperature now expects the validate() message because get_temp re-validates; a separate test reaches the interpolation overflow guard on the trusted path. New tests cover the 300/30000 K sawtooth, the 5% versus 50% cap, interior profile edits, the Numerical top line, and Claude 0.7144 Pa with Grok present.</p>
 
 <h2>Known Limitations</h2>
 <ul>
 <li>Educational constant-gravity, constant-composition ideal-gas model. Temperature is supplied, not computed.</li>
-<li>First-order Euler: 2.93% low at 100 km for an isothermal 288.15 K atmosphere when the step is not enlarged. After a restart the step is coarser and that few-per-cent figure does not apply.</li>
-<li>The T = beta p^0.5 continuation is a pedagogical closure. The printed Numerical top is a stopping rule.</li>
+<li>First-order Euler: 2.93% low at 100 km for an isothermal 288.15 K atmosphere when the step is not enlarged. After a restart the step is coarser and that few-per-cent figure does not apply. A 0-3000 km isothermal run that restarts is about 83% low and prints no warning that the step was enlarged.</li>
+<li>The T = beta p^0.5 continuation is a pedagogical closure. The printed Numerical top is a stopping rule and depends on the step.</li>
+<li>A profile with more positive nodes than MAX_STEPS cannot finish, because the integrator lands on every node. An extremely steep, densely sampled profile can still exhaust the 50,000-point budget under the 5% cap.</li>
 <li>U.S. Standard Atmosphere 1976 layer-base pressures are a secondary-source fixture. Venus values are from a secondary compilation. Mars and Jupiter are round-number illustrations. The seven NRLMSIS temperatures are for one date and place. Those fixtures are consistency checks, not primary-source validation.</li>
 <li>A checkpoint outside the positive-pressure domain has no model pressure.</li>
 <li>Help files load MathJax from a public CDN.</li>
@@ -47,11 +48,11 @@
 <li>M_PROTON is absent; a direct importer gets AttributeError.</li>
 <li>Some test method names still say molecular weight.</li>
 <li>Long-Help Experiments 6 and 7 still give no numerical check values. Experiment 8 still asks for the surface-temperature step to be restored without quoting an expected result.</li>
-<li>A restart still does not print a warning that the step was enlarged.</li>
-<li>Help files still mention GFTGU Chapter 7 in the badge and description.</li>
+<li>--save_plot . writes a hidden .png; a path without a suffix is written as PATH.png by Matplotlib.</li>
+<li>Chapter 7 references remain in both Help files by the same standing decision as 1.5.1: the badge names the book chapter the program belongs to. Confirm with Prof. Schutz before a wider release if that rule should change.</li>
 </ul>
 
 <h2>Version Identification</h2>
-<p>MODEL_VERSION: 1.5.1<br>BUILD_ID: 08772f6e8e51</p>
+<p>MODEL_VERSION: 1.6.0<br>BUILD_ID: fb81e2f99894</p>
 </body>
 </html>
