@@ -478,7 +478,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build a9793cfa6cc4
+  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 991fa89ab9b7
 </p>
 <section id="overview">
 <h2>Overview</h2>
@@ -638,7 +638,7 @@ python main.py --model newtonian --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_s
 <section id="beat4">
 <h2>Beat 4 · Circular orbits and the ISCO</h2>
 <p>Put the particle on a circle at \(8GM/c^2\), with exactly the circular speed there. Then put it on a circle at \(5GM/c^2\), inside the innermost stable circular orbit, with a start 0.1% faster than circular.</p>
-<pre>python main.py --x_init 11813.0003044 --u_init 134071263.04595 --max_orbits 4 --max_steps 8000
+<pre>python main.py --x_init 11813.0003044 --u_init 134071263.04595919 --max_orbits 4 --max_steps 8000
 python main.py --x_init 7383.12519025 --u_init 212197265.2804 --dt 1e-7 --max_orbits 12 --max_steps 40000</pre>
 <p>Look at <code>ISCO radius</code>, <code>periapsis radius</code>, <code>max |ΔE/E0|</code> and <code>mean periapsis advance per radial period</code>, and at the whole predicted block, in both runs.</p>
 <p>Three tasks, in order. First, the circle at 11813.0 m, outside the ISCO at 8859.8 m. The prediction says <code>circular (stable)</code>. The program finds one shallow periapsis, at 11813 m, the starting radius to the printed digits, and the energy drift is only 1.903e-08. The advance of a slightly disturbed orbit there is predicted to be 6.28319 rad = 360 deg, a whole turn, while the weak-field formula says 2.35619 rad = 135 deg. Then the circle at 7383.1 m, inside the ISCO. Its <code>circular dy/dtau</code> is 2.11985e+08 m/s, and the start is 0.1% faster. That small change sends the particle out to 15002.2 m, twice as far, before it comes back: the prediction is <code>bound, periapsis 7383.13 m, apoapsis 15002.2 m</code> with an advance of 24.4301 rad = 1399.74 deg. So the particle goes 4.89 times round in each radial period; in 11.833533 turns it finds 2 periapsides, at 7383.06 m and 7383.09 m, and measures 24.4374 rad. Then look at the second plot: tight loops close to the hole, then one wide swing out and back. Say why a small push would barely change the circle outside the ISCO, when it changes the circle inside it so much.</p>
@@ -823,8 +823,8 @@ python main.py --x_init 2000</pre>
 <h3>Predicting the orbit</h3>
 <ol>
 <li>From \(x_0\) and \(u_0\) form the cubic of Eq. (10), scaled so that the start is the root \(w=1\) of \((w-1)\bigl(Aw^2+(A-1)w+A+B-1\bigr)\), with \(A=2GM/(c^2x_0)\) and \(B=2GM/(x_0u_0^2)\); in Newtonian mode \(A=0\).</li>
-<li>Evaluate the radial force balance at the start, \(s=3A+B-2\), which is zero for a circle, positive if the first motion is inwards and negative if it is outwards. If \(|s|\le10^{-12}\) (<code>CIRCULAR_TOLERANCE</code>) the orbit is circular: stable, marginally stable or unstable by Eq. (14), with the advance of Eq. (15) for a stable circle. A circle within \(10^{-12}\) of \(1-3A=0\) (<code>ISCO_TOLERANCE</code>) is taken to be exactly at the ISCO.</li>
-<li>Otherwise look for the next root in the direction of the first motion. If there is none the orbit plunges (inwards) or escapes (outwards); if there is one it is bound, and Eq. (11) gives its advance. These decisions use the signs of \(s\), of the discriminant \((1-3A)^2-4As\) of the quadratic, of \(1-3A\) and of \(A+B-1\), which the program evaluates exactly from the input numbers, so the kind of orbit never depends on rounding.</li>
+<li>Evaluate the radial force balance at the start, \(s=3A+B-2\), which is zero for a circle, positive if the first motion is inwards and negative if it is outwards. If \(s\) is no larger than a change of <code>--u_init</code> by a few units in its last digit could make (<code>CIRCULAR_ULPS</code>), the orbit is circular: stable, marginally stable or unstable by Eq. (14), with the advance of Eq. (15) for a stable circle. This recognises the value printed as <code>circular dy/dtau</code>, and <code>circular_proper_time_speed()</code>, which are correct to rounding, while a start that differs from them by any larger amount is treated as the orbit it is. In the same way a circle within a few units in the last digit of <code>--x_init</code> of \(6GM/c^2\) (<code>ISCO_ULPS</code>) is taken to be exactly at the ISCO.</li>
+<li>Otherwise look for the next root in the direction of the first motion. If there is none the orbit plunges (inwards) or escapes (outwards); if there is one it is bound, and Eq. (11) gives its advance. These decisions use the signs of \(s\), of the discriminant \((1-3A)^2-4As\) of the quadratic, of \(1-3A\) and of \(A+B-1\), which the program evaluates exactly from the input numbers, so apart from the two rounding allowances of the previous step the kind of orbit never depends on rounding.</li>
 </ol>
 <h3>Named constants</h3>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Named constants"><table>
@@ -835,8 +835,8 @@ python main.py --x_init 2000</pre>
 <tr><td><code>HORIZON_RADIUS</code></td><td>2953.25</td><td>\(2GM/c^2\) in m, Eq. (17).</td></tr>
 <tr><td><code>PHOTON_ORBIT_RADIUS</code></td><td>4429.88</td><td>\(3GM/c^2\) in m, below which there is no circular orbit, Eq. (14).</td></tr>
 <tr><td><code>ISCO_RADIUS</code></td><td>8859.75</td><td>\(6GM/c^2\) in m, the innermost stable circular orbit, Eq. (14).</td></tr>
-<tr><td><code>CIRCULAR_TOLERANCE</code></td><td>1e-12</td><td>Largest \(|3A+B-2|\) for which <code>predict_orbit()</code> treats a start as circular.</td></tr>
-<tr><td><code>ISCO_TOLERANCE</code></td><td>1e-12</td><td>Largest \(|1-3A|\) for which a circle is taken to be exactly at the ISCO.</td></tr>
+<tr><td><code>CIRCULAR_ULPS</code></td><td>8</td><td>Units in the last digit of <code>--u_init</code> within which <code>predict_orbit()</code> treats a start as circular.</td></tr>
+<tr><td><code>ISCO_ULPS</code></td><td>4</td><td>Units in the last digit of <code>--x_init</code> within which a circle is taken to be exactly at the ISCO.</td></tr>
 </tbody></table></div>
 <div class="note">
 <strong>Tip:</strong> Before trusting a measured advance, compare it with the predicted one and with the sampling bound of Eq. (21). Before trusting any run, halve <code>--dt</code> (and double <code>--max_steps</code>) and check that the drifts fall by about four. Near a plunge or a zoom-whirl, trust the <code>motion</code> line of the prediction over the fate of the integrated orbit.
@@ -919,7 +919,7 @@ python main.py --dt 5e-7 --max_steps 24000</pre>
 <section id="summary">
 <h2>Printed Summary</h2>
 <p>Every run prints a summary and then opens its plot. This is the summary of the default run of Beat 0:</p>
-<pre>RelativisticOrbit 1.3.0 (build a9793cfa6cc4) summary
+<pre>RelativisticOrbit 1.4.0 (build 991fa89ab9b7) summary
   model             : schwarzschild
   horizon radius    : 2953.3 m
   ISCO radius       : 8859.8 m
@@ -948,7 +948,7 @@ python main.py --dt 5e-7 --max_steps 24000</pre>
 <li><code>predicted from the constants of motion</code>: lines worked out from \(x_0\) and \(u_0\) alone, without the integration. <code>circular dy/dtau</code> is Eq. (14), or \(\sqrt{GM/r}\) in Newtonian mode; it reads <code>none</code> when \(x_0\) is not above \(3GM/c^2\). <code>motion</code> is the kind of orbit, with its turning points when it is bound or circular. <code>apsidal advance</code> is Eq. (11), or Eq. (15) for a stable circle, and 0 in Newtonian mode. <code>weak-field 6piGM/(c^2 p)</code> is Eq. (12), printed in Schwarzschild mode.</li>
 </ul>
 <p>A plunge prints a different prediction. This is the run of Beat 6 that crosses the horizon:</p>
-<pre>RelativisticOrbit 1.3.0 (build a9793cfa6cc4) summary
+<pre>RelativisticOrbit 1.4.0 (build 991fa89ab9b7) summary
   model             : schwarzschild
   horizon radius    : 2953.3 m
   ISCO radius       : 8859.8 m
