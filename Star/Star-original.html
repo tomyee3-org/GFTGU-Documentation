@@ -394,7 +394,7 @@
 ════════════════════════════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 328c84d14b72
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 8ffe1c52fd03
 </p>
 
 <!-- ── Physical Background ── -->
@@ -564,7 +564,7 @@
 <h2>Module Overview</h2>
 <div class="module-grid">
 <div class="module-card"><div class="mc-name">physics_star.py</div><div class="mc-role">Physics</div>
-<p>Ideal-gas relations, polytropic EOS, characteristic radial scale, hydrostatic step, mass-continuity step, and the exact Lane–Emden radius and mass of the same polytrope.</p>
+<p>Ideal-gas relations, polytropic EOS, characteristic radial scale, hydrostatic step, mass-continuity step, and the Lane–Emden radius and mass of the same polytrope, computed numerically as a reference.</p>
 <div class="mc-sig">q_factor(mu)<br/>central_density(p_c, T_c, mu)<br/>polytropic_D(rho_c, p_c, gamma)<br/>radial_scale(p_c, rho_c)<br/>hydrostatic_step(...)<br/>mass_step(...)<br/>density_from_pressure(...)<br/>temperature_from_prho(...)<br/>polytropic_index(gamma)<br/>lane_emden_surface(n)<br/>lane_emden_solution(p_c, rho_c, gamma)</div>
 </div>
 <div class="module-card"><div class="mc-name">driver_star.py</div><div class="mc-role">Driver</div>
@@ -607,7 +607,7 @@
 <!-- ── Output Modes ── -->
 <section id="output">
 <h2>Output Modes</h2>
-<p>Every run prints the modeled surface radius and total mass to five significant figures. Under <code>Numerical grid</code> it prints the radial step finally used, the number of grid points from the center to the surface, and the number of step-doubling restarts. Under <code>Lane-Emden solution of the same polytrope (exact)</code> it prints the polytropic index \(n=1/(\gamma-1)\) and the radius and mass of the exact Lane–Emden solution of the same equations, with the relative differences of the integrated radius and mass from them: those differences measure the error of the Euler integration, not how well a polytrope describes a real star. It then prints pressure, density, temperature, and mass enclosed at exactly 0%, 25%, 50%, 75%, and 90% of the modeled radius. Values between stored grid points are linearly interpolated in radius. This numerical summary is independent of the selected plot.</p>
+<p>Every run prints the modeled surface radius and total mass to five significant figures. Under <code>Numerical grid</code> it prints the radial step finally used, the number of grid points from the center to the surface, and the number of step-doubling restarts. Under <code>Lane-Emden solution of the same polytrope (numerical reference)</code> it prints the polytropic index \(n=1/(\gamma-1)\) and the radius and mass of the Lane–Emden solution of the same equations, computed with fourth-order Runge–Kutta steps and again with half those steps, with the relative differences of the integrated radius and mass from them: those differences measure the error of the Euler integration, not how well a polytrope describes a real star. The two Lane–Emden integrations agree to better than \(10^{-8}\) for \(n\) below 4.99; if they differ by more than \(10^{-7}\), which happens only for \(\gamma\) within about \(1.3\times10^{-7}\) of 6/5, a line beginning <code>Warning: gamma is so close to 6/5</code> says that the Lane–Emden values may not be good to seven significant figures. It then prints pressure, density, temperature, and mass enclosed at exactly 0%, 25%, 50%, 75%, and 90% of the modeled radius. Values between stored grid points are linearly interpolated in radius. This numerical summary is independent of the selected plot.</p>
 <p>
       All four physical profiles are computed in every run; <code>output_type</code> chooses which
       one is displayed. The horizontal axis begins at the stored center \(r=0\) and ends at the
@@ -699,7 +699,7 @@
       otherwise the automatic step-doubling restart changes the effective radial resolution.
       Compare the surface radius and total mass. Because the integration uses forward Euler
       steps, the global error should eventually decrease approximately in proportion to
-      \(dr\) as the grid is refined. The printed relative differences from the exact
+      \(dr\) as the grid is refined. The printed relative differences from the
       Lane–Emden radius and mass measure that error directly.</p>
 <div class="sc-params">python main.py --steps_per_scale 200 --max_points 2000<br/>python main.py --steps_per_scale 400 --max_points 2000<br/>python main.py --steps_per_scale 800 --max_points 4000<br/>python main.py --steps_per_scale 1600 --max_points 8000</div></div>
 <div class="scenario-card"><h4>10 · Advanced Programming Extension — Use More Than One Polytropic Region</h4><p>

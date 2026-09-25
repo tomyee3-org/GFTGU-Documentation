@@ -457,7 +457,7 @@
 <a href="#beat2">2 · The temperature comes last</a>
 <a href="#beat3">3 · Where the mass is</a>
 <a href="#beat4">4 · One star, a family of stars</a>
-<a href="#beat5">5 · The exact solution</a>
+<a href="#beat5">5 · The Lane–Emden solution</a>
 <a href="#beat6">6 · Euler steps and their error</a>
 <a href="#beat7">7 · The surface and the restart</a>
 <a href="#beat8">8 · Where one polytrope stops</a>
@@ -479,24 +479,24 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 328c84d14b72
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 8ffe1c52fd03
 </p>
 <section id="overview">
 <h2>Overview</h2>
 <p><strong>Star</strong> builds a star from the centre outwards. It starts from a central pressure and a central temperature, and at each small step in radius it lets the weight of the gas above push the pressure down, and the gas it passes add to the mass inside. It stops where the pressure reaches zero: that radius is the surface of the star, and the mass inside it is the mass of the star.</p>
-<p>Every run prints the radius and the mass of the star; the radial step it used; the radius and mass of the exact solution of the same equations, called the Lane–Emden solution, with the relative difference of the numbers the program integrated; and the pressure, density, temperature and mass at five points inside the star. Then it plots one of pressure, density, temperature or enclosed mass against radius.</p>
-<p>The spine of the lesson is one sentence: <em>a star is gas in balance between its own weight and its own pressure; with one power law linking pressure to density, the balance fixes the whole star — its radius, its mass and every profile inside it — from the central conditions alone, and the program's step-by-step answer can be compared with the exact Lane–Emden solution of the same equations, which shows how large the error of the steps is.</em> Each numbered section below is one beat: a short argument, a command whose printed summary or plot illustrates that argument, and then the equation that the printed numbers follow from.</p>
+<p>Every run prints the radius and the mass of the star; the radial step it used; the radius and mass of the Lane–Emden solution of the same equations, which the program computes separately and far more accurately than its steps, with the relative difference of the numbers the program integrated; and the pressure, density, temperature and mass at five points inside the star. Then it plots one of pressure, density, temperature or enclosed mass against radius.</p>
+<p>The spine of the lesson is one sentence: <em>a star is gas in balance between its own weight and its own pressure; with one power law linking pressure to density, the balance fixes the whole star — its radius, its mass and every profile inside it — from the central conditions alone, and the program's step-by-step answer can be compared with the Lane–Emden solution of the same equations, computed far more accurately, which shows how large the error of the steps is.</em> Each numbered section below is one beat: a short argument, a command whose printed summary or plot illustrates that argument, and then the equation that the printed numbers follow from.</p>
 <div class="note">
 <strong>Scope:</strong> Star is Newtonian. <em>SphereGravity</em> shows why only the mass inside a radius pulls on the gas at that radius; <em>Atmosphere</em> balances pressure against a gravity that does not change with height; <em>Neutron</em> repeats this calculation in general relativity.
     </div>
-<div class="warn"><strong>What this program is, and what it does not model.</strong> Star is a teaching model of a spherical star in Newtonian gravity, held up by gas pressure. The link between pressure and density is one power law, the polytrope, imposed everywhere in the star; nothing in the program generates energy, carries it outwards by radiation or convection, or changes the composition from centre to surface. The temperature is inferred from the pressure and density, not computed from how heat flows. The default inputs are chosen so that the radius and mass come out close to the Sun's, but the interior is not the Sun's interior. The numerical method is the simplest one, forward Euler steps, and it carries an error that the program measures against the exact solution. Beats 5 to 8 show how large that error is and where the model stops.</div>
+<div class="warn"><strong>What this program is, and what it does not model.</strong> Star is a teaching model of a spherical star in Newtonian gravity, held up by gas pressure. The link between pressure and density is one power law, the polytrope, imposed everywhere in the star; nothing in the program generates energy, carries it outwards by radiation or convection, or changes the composition from centre to surface. The temperature is inferred from the pressure and density, not computed from how heat flows. The default inputs are chosen so that the radius and mass come out close to the Sun's, but the interior is not the Sun's interior. The numerical method is the simplest one, forward Euler steps, and it carries an error that the program measures against the Lane–Emden solution of the same equations, computed far more accurately. Beats 5 to 8 show how large that error is and where the model stops.</div>
 <div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw TeX source (e.g. <code>\(dp/dr\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div>
 </section>
 <section id="beats">
 <h2>How to read this page</h2>
 <p>Each numbered section below is one beat: a short argument in words, a command whose output illustrates it, and then the equation that the output follows from. Do them in order the first time. After that, any beat can be opened on its own.</p>
-<p>The program's output is a consequence of its equations, so what a beat shows is the equations at work, not independent evidence that they are right. The outside check the program offers is the exact Lane–Emden solution of the same equations, printed beside the numbers it integrated. Beats 5 to 8 compare the two.</p>
-<p>The program has no random numbers, so every command prints the numbers quoted here. Beat 0 shows the default star, Beats 1 to 3 its density, temperature and mass, and Beat 4 how the star changes with its central conditions. Beat 5 gives the exact solution, Beats 6 and 7 the error of the steps, and Beat 8 the limits of the model.</p>
+<p>The program's output is a consequence of its equations, so what a beat shows is the equations at work, not independent evidence that they are right. The outside check the program offers is the Lane–Emden solution of the same equations, computed separately and far more accurately, printed beside the numbers it integrated. Beats 5 to 8 compare the two.</p>
+<p>The program has no random numbers, so every command prints the numbers quoted here. Beat 0 shows the default star, Beats 1 to 3 its density, temperature and mass, and Beat 4 how the star changes with its central conditions. Beat 5 gives the Lane–Emden solution, Beats 6 and 7 the error of the steps, and Beat 8 the limits of the model.</p>
 <p>Run every command from the program's folder. Each run prints a summary and then opens a plot window; close the window to end the program. Each beat names the lines of the summary to look at. All quantities are in SI units: metres, kilograms, pascals, kilograms per cubic metre and kelvin.</p>
 <div class="note"><strong>What kind of statement is each equation?</strong> Each displayed equation in the beats carries a tag. A red <span class="kind kind-law">LAW</span> tag marks a law of nature that the model adopts as it stands; Eq. (4), the ideal gas law, is the only equation with this tag, since Newton's gravity enters through Eqs. (1) and (2). A green <span class="kind kind-ode">ODE</span> tag marks a differential equation that the program integrates: Eqs. (2) and (3). An orange <span class="kind kind-clo">CLOSURE</span> tag marks a relation chosen for teaching rather than derived: Eq. (5), the polytrope, is the only one, and it is the assumption that everything else in the model depends on. A grey <span class="kind kind-def">DEFINITION</span> tag marks a quantity defined by a formula. A blue <span class="kind kind-der">DERIVED</span> tag marks a result that follows from the equations already stated. A violet <span class="kind kind-alg">ALGORITHM</span> tag marks a rule of the calculation, a choice made by the program rather than physics: Eqs. (14) to (17). The tags are there so that a law, an assumption, a definition and a numerical rule are never mistaken for one another. Eighteen equations are numbered.</div>
 </section>
@@ -589,15 +589,15 @@
         \bar\rho=\frac{3M}{4\pi R^{3}} .
       \]
     </div>
-<p>With \(M=1.9825\times10^{30}\) kg and \(R=6.9674\times10^{8}\) m, \(\bar\rho=1399\ \mathrm{kg/m^3}\), close to the Sun's mean density. A polytrope is always centrally condensed, and the more so the smaller \(\gamma\) is; Beat 5 gives the exact ratio \(\rho_c/\bar\rho\) for any \(\gamma\), and Beat 8 shows a star in which nearly all the mass is in the inner quarter of the radius. Beat 4 asks how the star changes when its central conditions change.</p>
+<p>With \(M=1.9825\times10^{30}\) kg and \(R=6.9674\times10^{8}\) m, \(\bar\rho=1399\ \mathrm{kg/m^3}\), close to the Sun's mean density. A polytrope is always centrally condensed, and the more so the smaller \(\gamma\) is; Beat 5 gives the Lane–Emden ratio \(\rho_c/\bar\rho\) for any \(\gamma\), and Beat 8 shows a star in which nearly all the mass is in the inner quarter of the radius. Beat 4 asks how the star changes when its central conditions change.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 <section id="beat4">
 <h2>Beat 4 · One star, a family of stars</h2>
 <p>Make the centre 10% hotter, at the same central pressure.</p>
 <pre>python main.py --T_c 2.4893e7</pre>
-<p>Look at <code>Radius (m)</code> and <code>Total mass (kg)</code>, at the three lines under <code>Numerical grid</code>, and at the two relative differences under <code>Lane-Emden solution of the same polytrope (exact)</code>. Compare each with the default run of Beat 0.</p>
-<p>Three tasks, in order. First, the radius: 7.6641e+08 m, against 6.9674e+08 m in Beat 0, a ratio of 1.1000, exactly the ratio of the central temperatures. Then the mass: 2.3988e+30 kg, against 1.9825e+30 kg, a ratio of 1.2100, the square of 1.1. Then the grid: the radial step is 5.791e+05 m, 1.1 times the default 5.2645e+05 m, the number of grid points is 1325 in both runs, and the relative differences from the exact solution, -0.014174 and -0.0018494, are the same in both runs. Say what that tells you about the shapes of the two stars.</p>
+<p>Look at <code>Radius (m)</code> and <code>Total mass (kg)</code>, at the three lines under <code>Numerical grid</code>, and at the two relative differences under <code>Lane-Emden solution of the same polytrope (numerical reference)</code>. Compare each with the default run of Beat 0.</p>
+<p>Three tasks, in order. First, the radius: 7.6641e+08 m, against 6.9674e+08 m in Beat 0, a ratio of 1.1000, exactly the ratio of the central temperatures. Then the mass: 2.3988e+30 kg, against 1.9825e+30 kg, a ratio of 1.2100, the square of 1.1. Then the grid: the radial step is 5.791e+05 m, 1.1 times the default 5.2645e+05 m, the number of grid points is 1325 in both runs, and the relative differences from the Lane–Emden solution, -0.014174 and -0.0018494, are the same in both runs. Say what that tells you about the shapes of the two stars.</p>
 <p><em>Then</em> why. The central values set one natural length, the radial scale, and the program's radial step is a fixed fraction of it, <code>--steps_per_scale</code>.</p>
 <div class="eq"><span class="eq-label">(9)</span>
 <div class="eq-kind">The radial scale <span class="kind kind-def">DEFINITION</span></div>
@@ -612,16 +612,16 @@
         R\propto\frac{T_c}{\mu\,p_c^{1/2}},\qquad M\propto\frac{T_c^{2}}{\mu^{2}\,p_c^{1/2}}\qquad(\gamma\ \text{fixed}) .
       \]
     </div>
-<p>Because the step scales with \(\ell\) too, the program's Euler steps land on the same points of the same dimensionless star, and the scaling holds to rounding for the printed numbers, not only for the exact solution. Holding \(\gamma\) fixed while changing \(p_c\) or \(T_c\) also changes the constant \(K\) of Eq. (5): these stars follow the same law \(p\propto\rho^\gamma\) but not the same equation of state. Experiment 8 builds a family with one fixed \(K\). Beat 5 finds the shape that all these stars share.</p>
+<p>Because the step scales with \(\ell\) too, the program's Euler steps land on the same points of the same dimensionless star, and the scaling holds to rounding for the printed numbers, not only for the Lane–Emden solution. Holding \(\gamma\) fixed while changing \(p_c\) or \(T_c\) also changes the constant \(K\) of Eq. (5): these stars follow the same law \(p\propto\rho^\gamma\) but not the same equation of state. Experiment 8 builds a family with one fixed \(K\). Beat 5 finds the shape that all these stars share.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a>, <a href="#exp3">Experiment 3</a>, <a href="#exp4">Experiment 4</a>, <a href="#exp5">Experiment 5</a> and <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 <section id="beat5">
-<h2>Beat 5 · The exact solution</h2>
+<h2>Beat 5 · The Lane–Emden solution</h2>
 <p>Change the exponent to \(\gamma=2\), for which the exact solution is a simple formula.</p>
 <pre>python main.py --gamma 2</pre>
-<p>Look at the three lines under <code>Lane-Emden solution of the same polytrope (exact)</code>, and at <code>Radius (m)</code> and <code>Total mass (kg)</code>.</p>
+<p>Look at the three lines under <code>Lane-Emden solution of the same polytrope (numerical reference)</code>, and at <code>Radius (m)</code> and <code>Total mass (kg)</code>.</p>
 <p>Three tasks, in order. First, read the index: <code>Polytropic index n = 1/(gamma - 1)</code> is 1. Then compute the exact radius by hand from Eq. (13) below: \(R=\sqrt{\pi p_c/(2G)}/\rho_c\), with \(p_c=7.158\times10^{15}\) Pa and the central density 49187 kg/m<sup>3</sup> of the <code>0%</code> row, gives 2.6392e+08 m, the printed <code>Lane-Emden radius (m)</code>. Then compare: the program's own radius, 2.6239e+08 m, is short by the printed -0.0058198, and its mass, 1.1565e+30 kg, is larger than the exact 1.1513e+30 kg by 0.004502. Say why a smaller radius and a larger mass can both be errors of the same calculation.</p>
-<p><em>Then</em> the exact solution. Write the density as \(\rho=\rho_c\,\theta^n\) and the radius as \(r=a\,\xi\). Eliminating \(m\) between Eqs. (2) and (3), with Eq. (5), leaves one equation for \(\theta(\xi)\), the Lane–Emden equation.</p>
+<p><em>Then</em> the Lane–Emden solution. Write the density as \(\rho=\rho_c\,\theta^n\) and the radius as \(r=a\,\xi\). Eliminating \(m\) between Eqs. (2) and (3), with Eq. (5), leaves one equation for \(\theta(\xi)\), the Lane–Emden equation.</p>
 <div class="eq"><span class="eq-label">(11)</span>
 <div class="eq-kind">The Lane–Emden equation <span class="kind kind-der">DERIVED</span></div>
       \[
@@ -642,14 +642,14 @@
         \theta=\frac{\sin\xi}{\xi},\qquad \xi_1=\pi,\quad \omega_1=\pi,\qquad R=\pi a=\frac{1}{\rho_c}\sqrt{\frac{\pi p_c}{2G}} .
       \]
     </div>
-<p>For every \(n\), including \(n=1\), the program integrates Eq. (11) itself, with fourth-order Runge–Kutta steps that are refined as the surface approaches, to at least seven significant figures and usually about ten; for the default \(n=2.7778\) it finds \(\xi_1=6.1212\) and \(\omega_n=2.0876\), so the exact centre-to-mean density ratio is 36.62, against 35.2 from the integrated radius and mass of Beat 3. The Lane–Emden values are the exact solution of the same equations as the program's steps, so the printed differences measure the error of the steps in the radius and the mass, including the first point and the surface interpolation of Beats 6 and 7, and nothing else. They are not a check of the profiles inside the star, and they do not measure how well a polytrope describes a real star. Beat 6 shows how the error shrinks.</p>
+<p>For every \(n\), including \(n=1\), the program integrates Eq. (11) itself, with fourth-order Runge–Kutta steps that are refined as the surface approaches, and then again with steps half as long, and prints the half-step values. The relative change between the two integrations estimates the error that remains, and in checks against an independent high-accuracy solver it has always been the larger of the two. It is below \(10^{-8}\) for every \(n\) below 4.99, so there the printed values are good to eight significant figures or more. It passes \(10^{-7}\) only when \(\gamma\) is within about \(1.3\times10^{-7}\) of 6/5, and then the program prints a warning line under the Lane–Emden mass, because the values may no longer be good to seven significant figures (Beat 8). For the default \(n=2.7778\) it finds \(\xi_1=6.1212\) and \(\omega_n=2.0876\), so the Lane–Emden centre-to-mean density ratio is 36.62, against 35.2 from the integrated radius and mass of Beat 3. The Lane–Emden values solve the same equations as the program's steps, far more accurately, so the printed differences measure the error of the steps in the radius and the mass, including the first point and the surface interpolation of Beats 6 and 7, and nothing else. They are not a check of the profiles inside the star, and they do not measure how well a polytrope describes a real star. Beat 6 shows how the error shrinks.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 <section id="beat6">
 <h2>Beat 6 · Euler steps and their error</h2>
 <p>Halve the radial step: 800 steps per radial scale instead of 400. The star then needs more grid points than the default 2000, so allow 4000.</p>
 <pre>python main.py --steps_per_scale 800 --max_points 4000</pre>
-<p>Look at the three lines under <code>Numerical grid</code>, and at the two relative differences under <code>Lane-Emden solution of the same polytrope (exact)</code>. Compare them with the default run of Beat 0.</p>
+<p>Look at the three lines under <code>Numerical grid</code>, and at the two relative differences under <code>Lane-Emden solution of the same polytrope (numerical reference)</code>. Compare them with the default run of Beat 0.</p>
 <p>Three tasks, in order. First, the grid: the step is 2.6323e+05 m, half the default 5.2645e+05 m, with 2666 grid points and no restart. Then the radius error: -0.0075071, against -0.014174 at the default step, a ratio of 1.888. Then the mass error: -0.00092707, against -0.0018494, a ratio of 1.995. Say what the next halving of the step should give, and check it with Experiment 6.</p>
 <p><em>Then</em> the steps. The program starts at the centre and moves outwards in equal steps \(\Delta r\), using at each step the values at the start of the step.</p>
 <div class="eq"><span class="eq-label">(14)</span>
@@ -665,7 +665,7 @@
         \Delta r=\frac{\ell}{N_s},\qquad r_1=\Delta r,\quad p_1=p_c,\quad \rho_1=\rho_c,\quad T_1=T_c,\quad m_1=\frac{4\pi}{3}\rho_c\,\Delta r^{3} .
       \]
     </div>
-<p>Here \(N_s\) is <code>--steps_per_scale</code>. Each Euler step makes an error proportional to \(\Delta r^2\), and a star takes a number of steps proportional to \(1/\Delta r\), so the error is proportional to \(\Delta r\): halving the step halves the error. The mass follows this closely, as the ratio 1.995 shows. The radius follows it less cleanly, 1.888 here, because the density \(\rho=Dp^{1/\gamma}\) is not smooth where the pressure reaches zero, which affects the interpolated surface; for \(n&lt;1\), such as \(\gamma=4\) in Experiment 7, the radius error does not fall in a regular way at all. The default star is 1.4% smaller than the exact polytrope of Eq. (12). Its closeness to the Sun's radius in Beat 0 is therefore partly an accident of the step size: the exact solution of the same equations has a radius of 7.0676e+08 m, 1.6% larger than the Sun's. Beat 7 looks at the last step and at what happens when the grid is too short.</p>
+<p>Here \(N_s\) is <code>--steps_per_scale</code>. Each Euler step makes an error proportional to \(\Delta r^2\), and a star takes a number of steps proportional to \(1/\Delta r\), so the error is proportional to \(\Delta r\): halving the step halves the error. The mass follows this closely, as the ratio 1.995 shows. The radius follows it less cleanly, 1.888 here, because the density \(\rho=Dp^{1/\gamma}\) is not smooth where the pressure reaches zero, which affects the interpolated surface; for \(n&lt;1\), such as \(\gamma=4\) in Experiment 7, the radius error does not fall in a regular way at all. The default star is 1.4% smaller than the exact polytrope of Eq. (12). Its closeness to the Sun's radius in Beat 0 is therefore partly an accident of the step size: the Lane–Emden solution of the same equations has a radius of 7.0676e+08 m, 1.6% larger than the Sun's. Beat 7 looks at the last step and at what happens when the grid is too short.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 <section id="beat7">
@@ -693,12 +693,13 @@
 </section>
 <section id="beat8">
 <h2>Beat 8 · Where one polytrope stops</h2>
-<p>Take \(\gamma\) close to its lower limit of 1.2, and then try the limit itself and a logarithmic mass plot. The last two commands are rejected; the messages say why.</p>
+<p>Take \(\gamma\) close to its lower limit of 1.2, then much closer, and then try the limit itself and a logarithmic mass plot. The last two commands are rejected; the messages say why.</p>
 <pre>python main.py --gamma 1.21
+python main.py --gamma 1.2000000001
 python main.py --gamma 1.2
 python main.py --output_type mass --log_y</pre>
 <p>Look, in the first run, at the three lines under <code>Numerical grid</code>, at the Lane–Emden lines, and at the column <code>mass within r (kg)</code>. Then read the two error messages.</p>
-<p>Three tasks, in order. First, the grid: the program restarted 4 times, and its step, 8.4233e+06 m, is 16 times the default. Then the error: the index is 4.7619, and the integrated radius, 7.2406e+09 m, is short of the exact 9.9626e+09 m by -0.27322, a quarter, with the mass short by -0.080272. Then the mass: 2.8287e+30 kg of the total 2.8415e+30 kg lies inside a quarter of the radius, almost all of it. Finally, <code>--gamma 1.2</code> is refused because the polytrope then has no finite radius, and a logarithmic mass plot because the mass at the centre is zero. Say why a star whose outer three quarters hold almost no mass needs so many small steps to reach its surface.</p>
+<p>Three tasks, in order. First, the grid: the program restarted 4 times, and its step, 8.4233e+06 m, is 16 times the default. Then the error: the index is 4.7619, and the integrated radius, 7.2406e+09 m, is short of the Lane–Emden 9.9626e+09 m by -0.27322, a quarter, with the mass short by -0.080272. Then the mass: 2.8287e+30 kg of the total 2.8415e+30 kg lies inside a quarter of the radius, almost all of it. Finally, <code>--gamma 1.2</code> is refused because the polytrope then has no finite radius, and a logarithmic mass plot because the mass at the centre is zero. Say why a star whose outer three quarters hold almost no mass needs so many small steps to reach its surface.</p>
 <p><em>Then</em> the limit. The Lane–Emden function \(\theta\) reaches zero at a finite \(\xi_1\) only for \(n&lt;5\); for \(n=5\) it falls off forever and the star has no surface.</p>
 <div class="eq"><span class="eq-label">(18)</span>
 <div class="eq-kind">A finite radius <span class="kind kind-der">DERIVED</span></div>
@@ -706,7 +707,7 @@ python main.py --output_type mass --log_y</pre>
         \xi_1\ \text{finite}\iff n&lt;5\iff\gamma&gt;\tfrac{6}{5}\qquad(\gamma&gt;1) .
       \]
     </div>
-<p>As \(\gamma\) approaches 6/5, \(\xi_1\) grows without limit, the envelope becomes enormous and nearly empty, and the step needed to reach the surface grows: the restarts of the first run trade accuracy for range, which is why its radius is a quarter short. With enough points and a finer step the error comes back down (Experiment 6). Closer still to 6/5 the program keeps printing a finite radius, but it is an artefact of the steps: with <code>--gamma 1.2000000001</code> the exact radius is tens of millions of times larger, and the printed relative difference, -1, is the warning. The program refuses \(\gamma\le1.2\), and does not compute the Lane–Emden solution if its surface lies beyond \(\xi=10^{12}\), which happens only for \(\gamma\) within about \(10^{-12}\) of 6/5. A second limit has nothing to do with the numbers: \(\gamma=4/3\) is the boundary of stability of a star whose gas responds to compression with that same exponent, but the program computes equilibrium only, and a real star cannot be classified by one constant \(\gamma\). The red giant and neutron star of Experiments 9 and 10 stretch one polytrope further than any real star allows.</p>
+<p>As \(\gamma\) approaches 6/5, \(\xi_1\) grows without limit, the envelope becomes enormous and nearly empty, and the step needed to reach the surface grows: the restarts of the first run trade accuracy for range, which is why its radius is a quarter short. With enough points and a finer step the error comes back down (Experiment 6). Closer still to 6/5 the program keeps printing a finite radius, but it is an artefact of the steps: in the second run, with <code>--gamma 1.2000000001</code>, the Lane–Emden radius is tens of millions of times larger, and the printed relative difference, -1, is the warning. So near 6/5 the Lane–Emden values themselves become less certain, and the second run also prints <code>Warning: gamma is so close to 6/5 that these Lane-Emden values are uncertain by about 0.0001 (relative).</code> under the Lane–Emden mass, with the index given to more figures, <code>4.9999999975</code>, since five figures would round it to 5. The program refuses \(\gamma\le1.2\), and does not compute the Lane–Emden solution if its surface lies beyond \(\xi=10^{12}\), which happens only for \(\gamma\) within about \(10^{-12}\) of 6/5. A second limit has nothing to do with the numbers: \(\gamma=4/3\) is the boundary of stability of a star whose gas responds to compression with that same exponent, but the program computes equilibrium only, and a real star cannot be classified by one constant \(\gamma\). The red giant and neutron star of Experiments 9 and 10 stretch one polytrope further than any real star allows.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp9">Experiment 9</a>, <a href="#exp10">Experiment 10</a> and <a href="#exp11">Experiment 11</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 <section id="equations">
@@ -748,7 +749,7 @@ python main.py --output_type mass --log_y</pre>
 <h3>The printed summary</h3>
 <ol>
 <li>Print the radius and mass of the surface point, the step \(\Delta r\) finally used, the number of grid points from the centre to the surface, and the number of restarts.</li>
-<li>Compute \(n=1/(\gamma-1)\) and integrate the Lane–Emden equation (11) from its series near \(\xi=0\) with fourth-order Runge–Kutta steps of 0.1% of \(\xi\) (0.001 near the centre), shorter where \(\theta\) is small if \(n&lt;1\), until \(\theta\) first becomes zero or negative; then repeat that last step in three stages, with steps 10, 100 and 1000 times shorter. Locate the zero on a cubic through the last step, and add the mass of the last short interval to \(\omega_n\). This gives \(\xi_1\) and \(\omega_n\) to at least seven significant figures, usually about ten.</li>
+<li>Compute \(n=1/(\gamma-1)\) and integrate the Lane–Emden equation (11) from its series near \(\xi=0\) with fourth-order Runge–Kutta steps of 0.1% of \(\xi\) (0.001 near the centre), shorter where \(\theta\) is small if \(n&lt;1\), until \(\theta\) first becomes zero or negative; then repeat that last step in three stages, with steps 10, 100 and 1000 times shorter. Locate the zero on a cubic through the last step, and add the mass of the last short interval to \(\omega_n\). Repeat the whole integration with steps half as long, keep the half-step \(\xi_1\) and \(\omega_n\), and take the larger of their relative changes between the two integrations as their uncertainty. It is below \(10^{-8}\) for \(n\) below 4.99; if it exceeds \(10^{-7}\), which happens only for \(\gamma\) within about \(1.3\times10^{-7}\) of 6/5, the printed summary says so.</li>
 <li>Print the radius and mass of Eq. (12) and the relative differences of the integrated radius and mass from them.</li>
 <li>Print the pressure, density, temperature and mass at 0%, 25%, 50%, 75% and 90% of the radius, interpolated linearly between the two grid points on either side.</li>
 </ol>
@@ -760,13 +761,14 @@ python main.py --output_type mass --log_y</pre>
 <tr><td><code>k_BOLTZMANN</code></td><td>1.38e-23</td><td>Boltzmann's constant \(k_{\mathrm B}\), in J/K.</td></tr>
 <tr><td><code>MPROTON</code></td><td>1.67e-27</td><td>Proton mass \(m_p\), in kg.</td></tr>
 <tr><td><code>LANE_EMDEN_RELATIVE_STEP</code></td><td>0.001</td><td>Step of the Lane–Emden integration as a fraction of \(\xi\).</td></tr>
+<tr><td><code>LANE_EMDEN_UNCERTAINTY_WARNING</code></td><td>1e-7</td><td>Estimated relative uncertainty of the Lane–Emden values above which the printed summary warns.</td></tr>
 <tr><td><code>LANE_EMDEN_MAX_XI</code></td><td>1e12</td><td>Largest \(\xi\) at which the Lane–Emden surface is sought.</td></tr>
 <tr><td><code>MAX_POINTS_LIMIT</code></td><td>1000000</td><td>Largest accepted <code>--max_points</code>, in <code>driver_star.py</code>.</td></tr>
 <tr><td><code>DEFAULT_CHECKPOINT_FRACTIONS</code></td><td>0 0.25 0.5 0.75 0.9</td><td>Fractions of the radius printed in the checkpoint table, in <code>driver_star.py</code>.</td></tr>
 </tbody></table></div>
 <p>The three physical constants are the rounded values of the original program, kept so that the grid values inside the star reproduce those of the original program exactly; the interpolated surface point, and with it the printed radius and mass, is this program's own.</p>
 <div class="note">
-<strong>Tip:</strong> Before trusting a comparison with the exact solution, check that <code>Restarts (radial step doubled)</code> is 0: a restart doubles the step. To refine a run, raise <code>--steps_per_scale</code>, and raise <code>--max_points</code> only as far as needed to avoid a restart.
+<strong>Tip:</strong> Before trusting a comparison with the Lane–Emden solution, check that <code>Restarts (radial step doubled)</code> is 0: a restart doubles the step. To refine a run, raise <code>--steps_per_scale</code>, and raise <code>--max_points</code> only as far as needed to avoid a restart.
     </div>
 </section>
 <section id="modules">
@@ -851,7 +853,7 @@ python main.py --steps_per_scale 1600 --max_points 8000</pre>
 <section id="summary">
 <h2>Printed Summary</h2>
 <p>Every run prints the program version and build, then a summary, then opens its plot. This is the summary of the default run, <code>python main.py</code>:</p>
-<pre>Star 1.2.0 (build 328c84d14b72)
+<pre>Star 1.2.0 (build 8ffe1c52fd03)
 
 Stellar structure summary
   Radius (m):     6.9674e+08
@@ -862,7 +864,7 @@ Stellar structure summary
   Grid points, centre to surface: 1325
   Restarts (radial step doubled): 0
 
-  Lane-Emden solution of the same polytrope (exact)
+  Lane-Emden solution of the same polytrope (numerical reference)
   Polytropic index n = 1/(gamma - 1): 2.7778
   Lane-Emden radius (m):     7.0676e+08   integrated radius differs by -0.014174
   Lane-Emden mass (kg):      1.9861e+30   integrated mass differs by -0.0018494
@@ -877,7 +879,7 @@ Stellar structure summary
 <ul>
 <li><code>Radius (m)</code> and <code>Total mass (kg)</code>: the radius and mass of the surface point of Eq. (16).</li>
 <li><code>Radial step (m)</code>: the step \(\Delta r\) actually used, Eq. (15), after any restarts. <code>Grid points, centre to surface</code>: the number of stored points, including the centre and the surface. <code>Restarts (radial step doubled)</code>: how many times the step was doubled, Eq. (17).</li>
-<li><code>Polytropic index n = 1/(gamma - 1)</code>, <code>Lane-Emden radius (m)</code> and <code>Lane-Emden mass (kg)</code>: the exact solution of Eqs. (11) and (12). <code>integrated radius differs by</code> and <code>integrated mass differs by</code>: the integrated value divided by the exact value, minus 1. If the Lane–Emden surface cannot be found (Beat 8), the section says <code>not computed</code> and why.</li>
+<li><code>Polytropic index n = 1/(gamma - 1)</code>, <code>Lane-Emden radius (m)</code> and <code>Lane-Emden mass (kg)</code>: the Lane–Emden solution of Eqs. (11) and (12), computed numerically as a reference. The index is printed to more figures when five would round it to 5. <code>integrated radius differs by</code> and <code>integrated mass differs by</code>: the integrated value divided by the Lane–Emden value, minus 1. If the Lane–Emden values may not be good to seven significant figures, a line <code>Warning: gamma is so close to 6/5 that these Lane-Emden values are uncertain by about …</code> follows the mass (Beat 8). If the Lane–Emden surface cannot be found (Beat 8), the section says <code>not computed</code> and why.</li>
 <li><code>Interior checkpoints</code>: the radius, pressure, density, temperature and mass inside, at the fractions <code>r/R</code> of the radius, interpolated linearly between grid points.</li>
 </ul>
 <p>Results are printed to five significant figures.</p>
@@ -911,14 +913,14 @@ python main.py --mu 1.285</pre>
 <pre>python main.py --T_c 2.4893e7 --p_c 7.158e15
 python main.py --T_c 2.4893e7 --p_c 1.048e16</pre>
 <h3 id="exp6">6 · How Fine Is Fine Enough? — Intermediate to Advanced</h3>
-<p>Halve the step three times, allowing enough points each time to avoid a restart, and tabulate the relative differences from the exact solution. Check that each halving roughly halves the error, Beat 6. Then take \(\gamma=1.21\), where the default run restarted four times and missed the radius by a quarter (Beat 8), and find how fine a run has to be to bring the error below 1%.</p>
+<p>Halve the step three times, allowing enough points each time to avoid a restart, and tabulate the relative differences from the Lane–Emden solution. Check that each halving roughly halves the error, Beat 6. Then take \(\gamma=1.21\), where the default run restarted four times and missed the radius by a quarter (Beat 8), and find how fine a run has to be to bring the error below 1%.</p>
 <pre>python main.py --steps_per_scale 200
 python main.py --steps_per_scale 400
 python main.py --steps_per_scale 800 --max_points 4000
 python main.py --steps_per_scale 1600 --max_points 8000
 python main.py --gamma 1.21 --steps_per_scale 1000 --max_points 100000</pre>
 <h3 id="exp7">7 · The Shape of a Polytrope — Intermediate to Advanced</h3>
-<p>Run the default star with \(\gamma\) = 4, 2, 5/3, 1.36, 4/3 and 1.25, and read the index \(n\) and the radius and mass of the exact solution from each. For each, compute the ratio of central to mean density, \(\rho_c/\bar\rho\), from the integrated radius and mass with Eq. (8) and from the Lane–Emden values with Eq. (8) again. Check that <code>Restarts (radial step doubled)</code> is 0 in each run; \(\gamma=1.25\) needs more than the default 2000 points. How does the concentration of the star change with \(n\), and how well does the default step reproduce it?</p>
+<p>Run the default star with \(\gamma\) = 4, 2, 5/3, 1.36, 4/3 and 1.25, and read the index \(n\) and the radius and mass of the Lane–Emden solution from each. For each, compute the ratio of central to mean density, \(\rho_c/\bar\rho\), from the integrated radius and mass with Eq. (8) and from the Lane–Emden values with Eq. (8) again. Check that <code>Restarts (radial step doubled)</code> is 0 in each run; \(\gamma=1.25\) needs more than the default 2000 points. How does the concentration of the star change with \(n\), and how well does the default step reproduce it?</p>
 <pre>python main.py --gamma 4
 python main.py --gamma 2
 python main.py --gamma 1.6666667
