@@ -2,60 +2,56 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Atmosphere 1.5.0 Release Notes</title>
+<title>Atmosphere 1.5.1 Release Notes</title>
 </head>
 <body>
-<h1>Atmosphere 1.5.0 Release Notes</h1>
-<p><b>Version:</b> 1.5.0<br><b>Build:</b> d12634057d18<br><b>Date:</b> 2026-09-25</p>
+<h1>Atmosphere 1.5.1 Release Notes</h1>
+<p><b>Version:</b> 1.5.1<br><b>Build:</b> 08772f6e8e51<br><b>Date:</b> 2026-09-25</p>
 
 <h2>Release Status</h2>
-<p>Version 1.5.0 follows 1.4.0 through two code-changing rounds since those notes: a Grok Kickoff-4 audit of the shared core against both Beats Help files, and the fixes listed below. The 1.4.0 notes recorded three open bugs (OB-1, OB-2, OB-3). This release closes all three. Grok recommends accepting 1.5.0. Independent review by Claude and Codex has not yet reported on this build. These notes replace the 1.4.0 notes; the earlier notes are not reproduced.</p>
+<p>Version 1.5.1 follows 1.5.0 through two code-changing rounds: Grok Kickoff-4 (1.5.0, build d12634057d18), and this Audit41 response. Claude Audit41 and Codex Audit41 both recommended holding 1.5.0 until their P2 items were closed. Those P2 items, and the P3 items listed under Improvements, are addressed here. Grok recommends accepting 1.5.1. Claude and Codex have not yet reviewed this build. These notes replace the 1.5.0 notes; earlier notes are not reproduced.</p>
 
 <h2>Open Bugs</h2>
-<p>None at P1-P3. The three defects carried from 1.4.0 are closed in this release:</p>
-<ul>
-<li><b>OB-1 (was P2, Codex A22-P2-01), closed.</b> Symptom was a silently large Euler error when temperature breakpoints were closer together than the altitude step. The integrator now lands on every supplied temperature breakpoint above the reference level, so a thin hot or cold layer cannot hide between samples. The 100-cell spike profile that was 39% low at 292.56 m is now within 2% of the exact piecewise-linear integral.</li>
-<li><b>OB-2 (was P3, Codex A22-P3-01), closed.</b> Symptom was that <code>extract_checkpoints()</code> and <code>extract_output()</code> accepted a physically invalid <code>AtmosphereResult</code>. Both now reject non-positive pressures, densities or temperatures, and an altitude span that overflows interpolation arithmetic, with <code>ValueError</code>.</li>
-<li><b>OB-3 (was P3, Codex A22-P3-02), closed.</b> Symptom was that <code>TemperatureProfile.get_temp()</code> raised <code>IndexError</code> or <code>ZeroDivisionError</code> on an empty or non-increasing profile. It now raises <code>ValueError</code>.</li>
-</ul>
+<p>None at P1-P3 from Audit41 that remain unresolved in this build.</p>
 
 <h2>Major Improvements in This Release</h2>
-<p>Version 1.5.0:</p>
+<p>Version 1.5.1 (Audit41 response):</p>
 <ul>
-<li>The Euler integrator lands on every supplied temperature breakpoint above altitude zero, in addition to stepping by <i>H</i><sub>min</sub>/200. Default-run stored length is 20,940 points (was 20,933). Pressures at 11 km are unchanged to five figures; at 86 km the printed value is 0.30439 Pa (was 0.30438 Pa); the numerical top is 572.441 km (was 572.418 km).</li>
-<li><code>extract_output()</code> and <code>extract_checkpoints()</code> reject non-positive pressures, densities and temperatures, and an unusable altitude span.</li>
-<li><code>TemperatureProfile.get_temp()</code> raises <code>ValueError</code> for an empty or non-increasing profile instead of <code>IndexError</code> or <code>ZeroDivisionError</code>.</li>
-<li>New command-line flags <code>--save_plot PATH</code> and <code>--no_show</code> write the figure to a file and skip the plot window. Sample outputs were regenerated with those flags.</li>
-<li>User-facing wording uses mean molecular mass rather than mean molecular weight. Help files state that the <code>p/T</code> column is density without the factor &mu;<i>m</i><sub>u</sub>/<i>k</i><sub>B</sub>, that the default thermosphere uses seven NRLMSIS temperatures, and that the gas-law coefficient inherits the rounding already present in &mu; and <i>m</i><sub>u</sub>.</li>
-<li>Both Beats Help files (<code>Atmosphere-grok.html</code> and <code>Atmosphere-claude.html</code>) share this core, this test suite, and this Sample Outputs guide. The suite recognises either layout. Quoted checkpoint numbers in the long Help were refreshed where five-figure values moved.</li>
+<li>Euler steps inside the supplied profile are shortened when temperature would change by more than about 5% in one sample (Codex P2-01). Landing on breakpoints is unchanged. The 300 K / 3000 K sawtooth that was 24% low at 8000 m is now 0.18% low. Default-run stored length, first step, 11 km pressure, 86 km pressure and numerical top are unchanged from 1.5.0.</li>
+<li>The long Help algorithm, Experiment 9 patch, plotter excerpt and main() tail now describe the 1.5.x loop: step may be shorter than dh, and plotting goes through save_and_maybe_show (Codex P2-02, Claude A41-P2-01, A41-P3-01). Experiment 9 quotes 0.36195 Pa at 86 km from that printed patch.</li>
+<li>The test suite discovers every active Help file on the search path and checks both even when one of them sits next to main.py (Codex P2-03, Claude A41-P3-04). Short-Help scientific claims are tied to live runs (Claude A41-P2-02).</li>
+<li>get_temp() validates the profile only when the lists look new, and interpolates with bisect (Claude A41-P3-05).</li>
+<li>--save_plot rejects an empty path at parse time; a missing directory or unsupported format exits with Atmosphere plot error (Codex P3-03, Claude A41-P3-06).</li>
+<li>Every run prints a Numerical top line giving the last stored altitude and temperature.</li>
+</ul>
+<p>Version 1.5.0 (Kickoff-4), carried forward:</p>
+<ul>
+<li>Breakpoint landing; rejection of non-positive result arrays; ValueError from an empty or non-increasing profile; --save_plot / --no_show.</li>
 </ul>
 
 <h2>Test Suite Growth</h2>
-<p>177 to 186 automated tests (1.4.0 to 1.5.0). The suite is run once from <code>tests/</code>; all 186 pass under CPython 3.12 in about 36 s with the short Help beside the program (27 long-Help assertions skipped) and in about 46 s with the long Help (4 short-Help assertions skipped). No test was removed.</p>
-<p>New coverage: landing on thin temperature layers against the exact piecewise-linear integral; <code>ValueError</code> from <code>get_temp()</code> on an empty or non-increasing profile; rejection of non-positive or unusable <code>AtmosphereResult</code> arrays; <code>--save_plot</code> / <code>--no_show</code>; layout recognition for the short Beats script; smoke checks that the short script does not pre-print the checkpoint table.</p>
+<p>186 to 199 automated tests (1.5.0 to 1.5.1). The suite is run from tests/. With both Help files on the search path and the short file next to the program: 199 pass, 27 long-Help-only assertions skipped, in about 43 s. The long Help is still audited by DualHelpFileTests and the named-file loaders. No test was removed. Two assertions that had been loosened for both layouts are again conditional on layout.</p>
 
 <h2>Known Limitations</h2>
 <ul>
-<li>Educational constant-gravity, constant-composition ideal-gas model. The temperature profile is supplied, not computed. Not an atmosphere forecast.</li>
-<li>The first-order Euler method still accumulates error that grows with height (2.93% low at 100 km for an isothermal 288.15 K atmosphere). A profile that exhausts the 50,000-point budget restarts with a larger step.</li>
-<li>The upper continuation <i>T</i> = &beta;<i>p</i><sup>0.5</sup> is a pedagogical closure. The computed top is a stopping rule, and its altitude depends on the step.</li>
-<li>The Beat 6 U.S. Standard Atmosphere 1976 layer-base pressures are a test fixture transcribed from a secondary reproduction of the layer table and checked against the standard's defining constants. The NTRS scan of the primary tables is of poor quality and was not used as a digitization source.</li>
-<li>The Venus temperatures and the two published pressures in Beat 5 come from the Wikipedia article “Atmosphere of Venus,” a secondary compilation, not VIRA. The Mars and Jupiter profiles are round-number illustrations.</li>
-<li>The seven rounded 100-500 km NRLMSIS 2.0 temperatures are illustrative and specific to 15 October 2024, 12:00 UTC, 55 deg N, 45 deg E. The CCMC run identifier, indices and raw output are not archived.</li>
-<li>A checkpoint outside the computed positive-pressure domain has no model pressure or <i>p</i>/<i>T</i>; the report says so.</li>
-<li>Extreme parameter combinations that exceed the floating-point domain are rejected with an error.</li>
-<li>The Help files load MathJax from a public CDN. Offline, formulas appear as TeX source.</li>
+<li>Educational constant-gravity, constant-composition ideal-gas model. Temperature is supplied, not computed.</li>
+<li>First-order Euler: 2.93% low at 100 km for an isothermal 288.15 K atmosphere when the step is not enlarged. After a restart the step is coarser and that few-per-cent figure does not apply.</li>
+<li>The T = beta p^0.5 continuation is a pedagogical closure. The printed Numerical top is a stopping rule.</li>
+<li>U.S. Standard Atmosphere 1976 layer-base pressures are a secondary-source fixture. Venus values are from a secondary compilation. Mars and Jupiter are round-number illustrations. The seven NRLMSIS temperatures are for one date and place. Those fixtures are consistency checks, not primary-source validation.</li>
+<li>A checkpoint outside the positive-pressure domain has no model pressure.</li>
+<li>Help files load MathJax from a public CDN.</li>
 </ul>
 
 <h2>Known Minor Maintenance Items</h2>
 <ul>
-<li><code>M_PROTON</code> still does not exist in <code>physics_atmosphere</code>; a direct caller importing it gets <code>AttributeError</code>. This remains a 1.x change.</li>
-<li>A few internal comments and test method names still say “molecular weight” where the user-facing text now says “mean molecular mass.”</li>
-<li>The short Help’s experiments still ask questions without printed check values. That is the house-style choice for that file, not an omission of a number the code cannot produce.</li>
-<li>The generated-profile accuracy tests bound the error for their own profile families. Landing on breakpoints closed the previous counter-example; a still more pathological profile that the validator accepts could exist.</li>
+<li>M_PROTON is absent; a direct importer gets AttributeError.</li>
+<li>Some test method names still say molecular weight.</li>
+<li>Long-Help Experiments 6 and 7 still give no numerical check values. Experiment 8 still asks for the surface-temperature step to be restored without quoting an expected result.</li>
+<li>A restart still does not print a warning that the step was enlarged.</li>
+<li>Help files still mention GFTGU Chapter 7 in the badge and description.</li>
 </ul>
 
 <h2>Version Identification</h2>
-<p>MODEL_VERSION: 1.5.0<br>BUILD_ID: d12634057d18</p>
+<p>MODEL_VERSION: 1.5.1<br>BUILD_ID: 08772f6e8e51</p>
 </body>
 </html>

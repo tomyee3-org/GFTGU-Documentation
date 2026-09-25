@@ -24,7 +24,7 @@ pre,code{background:#eee9df}pre{padding:12px;overflow:auto;border-radius:4px}
 <header>
 <h1>Atmosphere</h1>
 <h2>Representative Sample Outputs</h2>
-<p><strong>Current program version:</strong> 1.5.0 &nbsp; <strong>Build:</strong> d12634057d18<br>
+<p><strong>Current program version:</strong> 1.5.1 &nbsp; <strong>Build:</strong> 08772f6e8e51<br>
 <strong>Guide prepared:</strong> 2026-09-25</p>
 </header>
 
@@ -95,7 +95,7 @@ pre,code{background:#eee9df}pre{padding:12px;overflow:auto;border-radius:4px}
 <h3>What it shows</h3>
 <ul>
 <li>Equal altitude steps multiply the pressure by the same factor.</li>
-<li>That factor is exp(&minus;&Delta;h/H). H = p<sub>0</sub>/(g &rho;<sub>0</sub>) = k<sub>B</sub> T / (g &mu; m<sub>u</sub>).</li>
+<li>The exact isothermal model multiplies pressure by exp(&minus;&Delta;h/H) each 8 km. The printed ratio is the Euler value 0.3862; exp(&minus;8000/8430.15) is 0.3871, 0.24% larger. H = p<sub>0</sub>/(g &rho;<sub>0</sub>) = k<sub>B</sub> T / (g &mu; m<sub>u</sub>).</li>
 <li>The two readings of H, from the table ratios and from the surface row, are two views of the same model.</li>
 </ul>
 <div class="headline">
@@ -115,7 +115,7 @@ pre,code{background:#eee9df}pre{padding:12px;overflow:auto;border-radius:4px}
 <p class="caption">Default Earth temperatures and gravity, but &mu; = 44 instead of 28.97.</p>
 <h3>What it shows</h3>
 <ul>
-<li>Raising &mu; shrinks the scale height and flattens the atmosphere.</li>
+<li>Raising &mu; shrinks the scale height and makes pressure fall more rapidly with altitude.</li>
 <li>The other Beat 3 runs change g or p<sub>0</sub> one dial at a time.</li>
 <li>Raising p<sub>0</sub> by ten multiplies every pressure by ten and leaves the fraction p(11 km)/p<sub>0</sub> alone.</li>
 </ul>
@@ -125,6 +125,7 @@ pre,code{background:#eee9df}pre{padding:12px;overflow:auto;border-radius:4px}
 <li>Default p(11 019 m)/p<sub>0</sub> = 0.2221.</li>
 <li>With --mu 44 the same fraction is 0.1017 (10 304 Pa over 1.013e5 Pa).</li>
 <li>H scales as T/(&mu; g): 8.43 km at the default surface, 5.55 km at &mu; = 44.</li>
+<li>The other Beat 3 commands: --mu 18 gives p(11 km)/p0 = 0.3927; --g_accel 19.62 gives 0.04930; --p0 1.013e6 leaves the fraction at 0.2221.</li>
 </ul>
 </div>
 </section>
@@ -221,9 +222,9 @@ pre,code{background:#eee9df}pre{padding:12px;overflow:auto;border-radius:4px}
 <li>The model holds gravity and the mean molecular mass constant with height, takes the temperature profile as input, and integrates with a first-order Euler step that also lands on every supplied temperature breakpoint. Its pressures are illustrations of the equations, not predictions.</li>
 <li>The default Earth profile combines U.S. Standard Atmosphere 1976 layer values through about 86 km, converted to geometric altitude, with seven rounded NRLMSIS 2.0 temperatures from 100 to 500 km for one date and place. The Venus profile is from a secondary compilation; the Mars and Jupiter profiles are round-number illustrations.</li>
 <li>Above the highest supplied altitude the temperature follows a mathematical closure that ends the calculation at a finite altitude. That endpoint is a stopping rule.</li>
-<li>Every headline value was read from the checkpoint table printed by this build or computed from it.</li>
+<li>Headline values come from the printed checkpoint table or from the printed Numerical top line of the same run.</li>
 </ul>
-<p class="small"><strong>Image provenance and compression.</strong> All eight figures were regenerated on 2026-09-25 using Atmosphere 1.5.0, build d12634057d18, with the commands shown above and <code>--save_plot</code> / <code>--no_show</code>. Each PNG was then converted, without changing its dimensions, to a 256-colour indexed palette for compact embedding. No plotted data, labels or layout were changed after the program wrote the file.</p>
+<p class="small"><strong>Image provenance and compression.</strong> All eight figures were regenerated on 2026-09-25 using Atmosphere 1.5.1, build 08772f6e8e51, with the commands shown above and <code>--save_plot</code> / <code>--no_show</code>. Each PNG was then converted, without changing its dimensions, to a 256-colour indexed palette for compact embedding. No plotted data, labels or layout were changed after the program wrote the file.</p>
 </section>
 
 <footer>This is a self-contained HTML document. All eight figures are embedded as data, so the file can be opened or forwarded without a separate images folder.</footer>

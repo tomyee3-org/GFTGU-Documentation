@@ -111,7 +111,7 @@
 </nav>
 <main>
   <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-    Version 1.5.0&nbsp;&nbsp;&nbsp;&nbsp;Build d12634057d18
+    Version 1.5.1&nbsp;&nbsp;&nbsp;&nbsp;Build 08772f6e8e51
   </p>
 
   <section id="description">
@@ -119,7 +119,7 @@
     <p><strong>Atmosphere</strong> is the Chapter&nbsp;7 teaching model of a planetary atmosphere in hydrostatic equilibrium (Investigations 7.1 and 7.3). You supply a temperature profile. The program integrates pressure upward from a reference surface and plots pressure, density, or temperature.</p>
     <p>The spine of the lesson is one sentence:</p>
     <p><em>Pressure holds up the weight of the air above; the gas law turns that pressure into a density; their ratio is a length — the scale height — set by temperature, gravity and mean molecular mass.</em></p>
-    <div class="warn"><strong>What this program is not.</strong> It is not a weather code and not a research atmosphere. Gravity and mean molecular mass are constant with height. Temperature is an input, linearly interpolated between the altitudes you give. Pressure is advanced by a first-order Euler step that also lands on every supplied temperature breakpoint, so a thin layer cannot hide between samples. The altitude where pressure hits zero is a stopping rule, not a physical top of the air.</div>
+    <div class="warn"><strong>What this program is not.</strong> It is not a weather code and not a research atmosphere. Gravity and mean molecular mass are constant with height. Temperature is an input, linearly interpolated between the altitudes you give. Pressure is advanced by a first-order Euler step that also lands on every supplied temperature breakpoint, and shortens a step that would jump temperature by more than about 5%, so a thin or steep layer cannot hide between samples. The altitude where pressure hits zero is a stopping rule, not a physical top of the air.</div>
     <div class="note"><strong>Reading this page.</strong> Equations are rendered by MathJax from a public CDN. Without a network connection the raw \(\LaTeX\) remains visible as text. The program itself needs no internet access.</div>
   </section>
 
@@ -165,7 +165,7 @@ python main.py</pre>
     <h2>Beat 2 · One number sets the size of an atmosphere</h2>
     <p>If the temperature is the same at every height, equal steps upward multiply the pressure by the same factor.</p>
 <pre>python main.py --h_points 0,8000,16000,24000,32000 --T_points 288.15,288.15,288.15,288.15,288.15</pre>
-    <p>Read only the table; above the last supplied altitude the program switches to the closure of Beat 7. Divide each pressure by the one below it. Find the height over which the pressure falls by a factor of \(e\). Then compute \(p_0/(g\rho_0)\) from the first row. Those two lengths are two readings of the same model, not an independent check.</p>
+    <p>Read only the table; above the last supplied altitude the program switches to the closure of Beat 7. Divide each pressure by the one below it. Find the height over which the pressure falls by a factor of \(e\). Then compute \(p_0/(g\rho_0)\) from the first row. Those two lengths are two readings of the same model, not an independent check. Expect them to agree to a few tenths of a per cent; Beat 6 says why they differ.</p>
     <div class="eq-block">
       <div class="eq-label">Barometric formula and scale height — derived</div>
 \[
@@ -174,7 +174,7 @@ p = p_0\,e^{-h/H},
 H = \frac{p_0}{g\,\rho_0} = \frac{k_B\,T_0}{g\,\mu\,m_u}.
 \]
     </div>
-    <p>For the default Earth numbers at 288.15&nbsp;K, \(H\approx 8.43\,\mathrm{km}\). The first integration step is \(H_{\min}/200\), sized from the coldest temperature on the profile so a cold layer is not stepped through too coarsely. The integrator also lands on every supplied temperature breakpoint, even when that breakpoint is closer than \(H_{\min}/200\).</p>
+    <p>For the default Earth numbers at 288.15&nbsp;K, \(H\approx 8.43\,\mathrm{km}\). The first integration step is \(H_{\min}/200\), sized from the coldest temperature on the profile so a cold layer is not stepped through too coarsely. The integrator also lands on every supplied temperature breakpoint, even when that breakpoint is closer than \(H_{\min}/200\), and shortens a step that would change temperature by more than 5% of the local value.</p>
   </section>
 
   <section id="beat3">
@@ -184,7 +184,7 @@ H = \frac{p_0}{g\,\rho_0} = \frac{k_B\,T_0}{g\,\mu\,m_u}.
 python main.py --mu 44
 python main.py --g_accel 19.62
 python main.py --p0 1.013e6</pre>
-    <p>Compare the fraction \(p(11019\,\mathrm{m})/p_0\) with the default run. Light gas or weak gravity stretches the atmosphere; heavy gas or strong gravity flattens it. Raising \(p_0\) by ten multiplies every pressure by ten and leaves the fraction alone. \(p_0/g\) is the column mass; \(H\) is the height.</p>
+    <p>Compare the fraction \(p(11019\,\mathrm{m})/p_0\) with the default run. Light gas or weak gravity stretches the atmosphere; heavy gas or strong gravity makes pressure fall more rapidly with altitude. Raising \(p_0\) by ten multiplies every pressure by ten and leaves the fraction alone. \(p_0/g\) is the column mass; \(H\) is the height.</p>
     <div class="eq-block">
       <div class="eq-label">From the scale-height formula</div>
 \[
@@ -198,7 +198,7 @@ H \propto \frac{T}{\mu\,g}.
     <p>The program does not compute the layered temperature of a real atmosphere. You give temperatures at chosen altitudes; it joins them with straight lines. The scale height then changes with height.</p>
 <pre>python main.py --output_type temperature
 python main.py --h_points 0,50000,100000 --T_points 288,200,350</pre>
-    <p>On the default temperature plot find the four layers: troposphere cooling, stratosphere warming, mesosphere cooling, thermosphere rising. Local \(H\) tracks \(T\). In the second run, check that the density ratio between 50 and 100&nbsp;km is the pressure ratio multiplied by the temperature ratio.</p>
+    <p>On the default temperature plot find the four layers: troposphere cooling, stratosphere warming, mesosphere cooling, thermosphere rising. Local \(H\) tracks \(T\). In the second run, check that the density ratio between 50 and 100&nbsp;km is the pressure ratio multiplied by \(T(50\,\mathrm{km})/T(100\,\mathrm{km})=200/350\).</p>
     <div class="eq-block">
       <div class="eq-label">Piecewise-linear temperature — prescribed</div>
 \[
@@ -221,7 +221,7 @@ python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 \
 
 python main.py --planet_name Jupiter --g_accel 24.8 --mu 2.2 --p0 1e5 \
   --h_points 0,20000,50000,100000 --T_points 165,130,110,150</pre>
-    <p>Compute \(H=p_0/(g\rho_0)\) and the column mass \(p_0/g\) from the surface row of each table. Jupiter’s scale height is the largest of the four because \(\mu\) is so small. Venus’s column is about a hundred Earth columns; Mars has little air and a taller scale height than Earth. Jupiter has no solid surface: the run takes the 1-bar level as the reference and follows only 100&nbsp;km above it.</p>
+    <p>Compute \(H=p_0/(g\rho_0)\) and the column mass \(p_0/g\) from the surface row of each table. Jupiter’s scale height is the largest of the four because \(\mu\) is so small. Venus’s column is about a hundred Earth columns; Mars has little air and a taller scale height than Earth. Jupiter has no solid surface: the run takes the 1-bar level as the reference and the supplied profile ends at 100&nbsp;km; the plotted curve continues a little above that under the Beat 7 closure.</p>
   </section>
 
   <section id="beat6">
@@ -236,7 +236,7 @@ python main.py</pre>
 \frac{p_{\mathrm{Euler}}}{p_{\mathrm{exact}}}\approx 1-\frac{h/H}{2N}.
 \]
     </div>
-    <p>Against the U.S. Standard Atmosphere the default run is already a fraction of a per cent low at 11&nbsp;km and about 18&nbsp;per cent low at 86&nbsp;km. Do not read the isothermal Euler estimate (a few per cent at 100&nbsp;km) as the 18% figure in that comparison: most of the growing deficit against the standard is constant gravity, not the Euler step. Real \(g\) falls by about 2.6&nbsp;per cent to 86&nbsp;km. Rounded inputs (\(g=9.81\), \(p_0=101300\,\mathrm{Pa}\), \(\mu=28.97\)) take a smaller third share. The factor \(\mu m_u/k_B\) inherits the rounding already present in \(\mu\) and in the measured atomic mass constant. Use the program for scale heights and ratios, not for an 86&nbsp;km pressure to three figures.</p>
+    <p>That Euler estimate is for a slowly varying temperature and a run that did not have to enlarge the step. Against the U.S. Standard Atmosphere the default run is already a fraction of a per cent low at 11&nbsp;km and about 18&nbsp;per cent low at 86&nbsp;km. Do not read the isothermal Euler estimate (a few per cent at 100&nbsp;km) as the 18% figure in that comparison: most of the growing deficit against the standard is constant gravity, not the Euler step. Real \(g\) falls by about 2.6&nbsp;per cent to 86&nbsp;km. Rounded inputs (\(g=9.81\), \(p_0=101300\,\mathrm{Pa}\), \(\mu=28.97\)) take a smaller third share. The factor \(\mu m_u/k_B\) inherits the rounding already present in \(\mu\) and in the measured atomic mass constant. Use the program for scale heights and ratios, not for an 86&nbsp;km pressure to three figures.</p>
   </section>
 
   <section id="beat7">
