@@ -498,7 +498,7 @@
 <!-- ══════════════════════ MAIN ══════════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.6.0&nbsp;&nbsp;&nbsp;&nbsp;Build fb81e2f99894
+  Version 1.6.0&nbsp;&nbsp;&nbsp;&nbsp;Build e11669ba5cef
 </p>
 <section id="description">
 <h2>Description</h2>
@@ -748,7 +748,10 @@ python main.py --h_points 0,20000 --T_points 288.15,216.65 --output_type tempera
 <h3>Step-Size Restart (dh Doubling)</h3>
 <p>
         If 50 000 Euler steps do not reach the model's zero-pressure boundary, the driver doubles
-        \(\Delta h\) and restarts the calculation from the surface. This is a coverage
+        \(\Delta h\) and restarts the calculation from the surface, unless every step in that
+        pass was already shorter than the nominal increment (a temperature-capped or
+        breakpoint-limited profile). Doubling cannot enlarge those steps, so the driver then
+        raises a budget error instead of retrying. Otherwise this is a coverage
         mechanism rather than an error-controlled adaptive integrator: it ensures that the
         calculation eventually spans a sufficiently large altitude range, but the successful
         run can be considerably coarser than the initial step. On every restart,
@@ -776,7 +779,8 @@ while last_step == 0:
     for j in range(1, max_steps):          # max_steps = 50 000
         next_node = next positive h_points entry after alt[j-1], or none
         step = min(dh, next_node - alt[j-1])   # land on each breakpoint
-        # also shrink step if |Delta T| would exceed about 5% of the current T
+        # shrink step if |Delta T| would exceed about 5% of the current T
+        # (a step shorter than about 10^{-5} of the local scale height is left)
         alt[j] = alt[j-1] + step
         p[j] = hydrostatic_step(p[j-1], rho[j-1], g, step)
         if p[j] &lt;= 0.0:
@@ -786,9 +790,11 @@ while last_step == 0:
             break                          # atmosphere top reached;
                                             # T[j], rho[j] never computed
                                             # for this (discarded) point
-        T[j] = profile.get_temp(alt[j], p[j])
+        T[j] = profile._temperature_at(alt[j], p[j])  # after one validate()
         rho[j] = ideal_gas_density(p[j], mu, T[j])
     if last_step == 0:
+        if no unconstrained Euler step was taken:
+            raise RuntimeError(...)        # cap already binds; do not double
         dh *= 2.0                          # retry with a larger step</code></pre>
 <h3>Output Arrays</h3>
 <p>
@@ -847,7 +853,11 @@ ATOMIC_MASS_UNIT = 1.66053906660e-27   # Atomic mass unit   (kg)</code></pre>
           measured range; below the first breakpoint returns \(T_0\) (constant); above the
           highest breakpoint applies \(T = \beta\,p^{\alpha}\) (Eq. 7.6), fixing
           \(\beta\) on the first call in that regime so the extrapolated temperature there
-          equals the last supplied temperature. An interpolated value that is not finite is
+          equals the last supplied temperature. Every public call re-validates the whole
+          profile (O(n) in the number of supplied points). A valid edit of the last
+          altitude, last temperature or power drops the cached upper-atmosphere coefficient
+          so the continuation is recomputed. The driver validates once and then calls the
+          trusted interpolator. An interpolated value that is not finite is
           reported as a <code>ValueError</code>.
         </p>
 <span class="func-sig">ideal_gas_density(pressure: float, mu: float, temperature: float) -&gt; float</span>
