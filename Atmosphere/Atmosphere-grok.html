@@ -198,7 +198,7 @@ H \propto \frac{T}{\mu\,g}.
     <p>The program does not compute the layered temperature of a real atmosphere. You give temperatures at chosen altitudes; it joins them with straight lines. The scale height then changes with height.</p>
 <pre>python main.py --output_type temperature
 python main.py --h_points 0,50000,100000 --T_points 288,200,350</pre>
-    <p>On the default temperature plot find the four layers: troposphere cooling, stratosphere warming, mesosphere cooling, thermosphere rising. Local \(H\) tracks \(T\). In the second run, check that the density ratio between 50 and 100&nbsp;km is the pressure ratio multiplied by \(T(50\,\mathrm{km})/T(100\,\mathrm{km})=200/350\).</p>
+    <p>On the default temperature plot find the four layers: troposphere cooling, stratosphere warming, mesosphere cooling, thermosphere rising. Local \(H\) tracks \(T\). In the second run, check the fall factors from 50 to 100&nbsp;km: the density fall factor is the pressure fall factor multiplied by \(T(100\,\mathrm{km})/T(50\,\mathrm{km})=350/200=1.75\).</p>
     <div class="eq-block">
       <div class="eq-label">Piecewise-linear temperature — prescribed</div>
 \[

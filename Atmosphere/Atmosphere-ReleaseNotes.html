@@ -9,32 +9,28 @@
 <p><b>Version:</b> 1.6.0<br><b>Build:</b> cab9929fa0fb<br><b>Date:</b> 2026-09-26</p>
 
 <h2>Release Status</h2>
-<p>Version 1.6.0, build cab9929fa0fb, follows the Audit43 package (build e11669ba5cef). Claude Audit44 recommended accepting e11669ba5cef after one test-only P3. Codex Audit44 recommended holding it for an unaudited governing-equation sign. This build keeps MODEL_VERSION 1.6.0, closes that P2 and the remaining dual-Help P3, and records the P4 items listed under Improvements. Grok recommends accepting 1.6.0. These notes replace the previous 1.6.0 notes; earlier notes are not reproduced.</p>
+<p>Version 1.6.0, build cab9929fa0fb, is unchanged in the four core modules since the Audit44 package. This documentation-and-test round closes the Audit45 P2 items (Beat 4 fall factors; displayed barometric sign) and the remaining displayed-equation and Guide-provenance P3 items. Grok recommends accepting 1.6.0. Claude and Codex have not yet reviewed this package.</p>
 
 <h2>Open Bugs</h2>
 <p>None.</p>
 
 <h2>Major Improvements in This Release</h2>
-<p>Version 1.6.0 (Audit44 response, this build):</p>
+<p>Version 1.6.0 (Audit45 response, this package):</p>
 <ul>
-<li>The suite now audits the physical content of the governing equations in each named Help file, not only their tags. A plus sign on displayed Eq. (7.1) fails with both Helps present. An independent isothermal first Euler step equals -g rho0.</li>
-<li>The three long-Help tests that still skipped in the dual-Help layout (checkpoint-table excerpt, equation tags, parenthesised equation references) now read Atmosphere-claude.html whenever that file exists.</li>
-<li>A budget abort now says the profile is too steep or too finely sampled. The short Help Beat 7 states the same one-pass exception as the long Help.</li>
+<li>Short Help Beat 4 and the Sample Outputs Guide now teach the 50-to-100 km fall factors with T(100 km)/T(50 km) = 350/200 = 1.75, matching the long Help and the gas law.</li>
+<li>Each displayed equation in both Help files is checked inside its math block: hydrostatic minus sign, barometric e^{-h/H}, interpolation sign and denominator, Euler-error 1-(h/H)/(2N), H proportional to T/(mu g), N = 200, gas-law denominator k_B T, and the tagged Euler update with rho_{j-1}.</li>
+<li>The eight Sample Outputs figures were regenerated on 2026-09-26 from this build.</li>
+<li>Long-Help Beat 7 names the one-pass budget-error exception. The equation index says Eq. (7.7) is tagged in the Algorithm section.</li>
 </ul>
-<p>Version 1.6.0 (Audit43 response, carried forward):</p>
+<p>Version 1.6.0 (Audit44 and Audit43, carried forward):</p>
 <ul>
-<li>Long-Help scientific tests load Atmosphere-claude.html whenever that file exists; short-Help tests load Atmosphere-grok.html whenever that file exists.</li>
-<li>A valid in-place edit of a supplied altitude, temperature or power drops the cached upper-atmosphere coefficient, including an interior temperature that the content mix must see.</li>
-<li>If a pass spends the 50,000-point budget while every Euler step was already shorter than the nominal increment, the driver raises a budget error after that one pass.</li>
-<li>MIN_STEP_TO_SCALE_HEIGHT is the named 1e-5 exemption.</li>
-</ul>
-<p>Version 1.6.0 (Audit42 response, carried forward):</p>
-<ul>
-<li>The temperature-change cap bounds |Delta T| by 5% of the temperature at the start of the step. get_temp() re-validates on every public call. Every run prints a Numerical top line.</li>
+<li>Long-Help tests bind to Atmosphere-claude.html whenever that file exists. Displayed Eq. (7.1) must have the minus sign in each named Help.</li>
+<li>A valid in-place profile edit drops the cached upper-atmosphere coefficient. A fully capped 50,000-point pass raises a budget error after one pass and names a steep or finely sampled profile.</li>
+<li>The temperature-change cap bounds |Delta T| by 5% of the temperature at the start of the step. Every run prints a Numerical top line.</li>
 </ul>
 
 <h2>Test Suite Growth</h2>
-<p>The suite is run from tests/. Clean-extraction discover counts for this build: both Help files present, 217 tests, 0 skipped; Atmosphere-grok.html only, 217 tests, 29 skipped; Atmosphere-claude.html only, 212 tests, 6 skipped. No test was removed. New tests cover the hydrostatic minus sign in both Helps, the first-step slope -g rho0, the Claude checkpoint excerpt and equation-reference list with Grok present, the Beat 4 tropopause temperature, Experiment 9's 0.27% figure, the short Help's "last stored altitude", and an interior temperature edit that must drop beta.</p>
+<p>The suite is run from tests/. Clean-extraction discover counts for the program folder (core modules, tests, and the Help file or files under test): both Help files present, 220 tests, 1 skipped (Sample Outputs Guide not in that folder); Atmosphere-grok.html only, 220 tests, 30 skipped; Atmosphere-claude.html only, 215 tests, 7 skipped. From the full package, with Atmosphere-Documentation/SampleOutputs beside the program folder, the Guide check runs and the both-Help layout is 220 tests, 0 skipped. No test was removed. New checks cover the displayed barometric sign, interpolation and Euler-error formulae, the 350/200 fall factor against the live 50 km and 100 km rows and the Guide, and several short-Help qualitative directions that follow from the gas law and from H.</p>
 
 <h2>Known Limitations</h2>
 <ul>
