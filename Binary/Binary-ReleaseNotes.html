@@ -2,40 +2,27 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Binary 1.2.2 Release Notes</title>
+<title>Binary 1.2.3 Release Notes</title>
 </head>
 <body>
-<h1>Binary 1.2.2 Release Notes</h1>
-<p><b>Version:</b> 1.2.2<br><b>Build:</b> 1ef841946b74<br><b>Date:</b> 2026-09-21</p>
+<h1>Binary 1.2.3 Release Notes</h1>
+<p><b>Version:</b> 1.2.3<br><b>Build:</b> 7b64e2aa7973<br><b>Date:</b> 2026-09-26</p>
 
 <h2>Release Status</h2>
-<p>Version 1.2.2 follows 1.2.0 through two rounds of changes: a Beats-layout Help file with the three maintenance items of the previous notes and a check for missed issues (1.2.1), and a response to independent review by Codex and Grok (1.2.2). A further review by Codex and Grok (Audit22) changed nothing; it reproduced the 239-test suite and confirmed the fixes of the previous round. Grok recommended accepting 1.2.2 and closing the code and Help audit loop. Codex agreed that 1.2.2 is an appropriate PATCH version but recommended fixing OB-1 before the orbital-elements range repair is described as complete, and fixing the two Beat 5 wording items (M-1, M-2) before the student Help is finalized; none of the three is fixed in this release. OB-1 is not reached by the default run or by any command shown in the Help. These notes replace the 1.1.4 notes; the earlier notes are not reproduced.</p>
+<p>Version 1.2.3 follows 1.2.2 by repairing the remaining orbital-elements range failures recorded as OB-1, softening two Beat&nbsp;5 wording items (M-1, M-2) in both Beats Help files, and making the test suite treat <code>Binary-claude.html</code> and <code>Binary-grok.html</code> as dual Help that share the same core program, the same Sample Outputs Guide, and the same version and build stamps. Default-run numbers are unchanged from 1.2.2. These notes replace the 1.2.2 notes; the earlier notes are not reproduced.</p>
 
 <h2>Open Bugs</h2>
-<ul>
-<li><b>OB-1 (P3, Codex A22-P3-01). <code>orbital_elements()</code> reports a range failure, or raises <code>ZeroDivisionError</code>, for finite states whose elements are representable, so the command line can integrate successfully and then exit without a summary.</b><br>
-Reproduction: <code>python main.py --MA 7.49e106 --MB 7.49e106 --xInitA 5e149 --xInitB -5e149 --uInitA 5e99 --uInitB -5e99 --dt 1 --max_steps 1 --no-stop_after_one_orbit</code> exits with status 1 and &ldquo;Binary: Orbital elements are outside the numerical range.&rdquo; (expected: the summary, with a hyperbolic orbit of eccentricity about 1.0002&times;10<sup>253</sup>).<br>
-Also: the same state with <code>--vInitA 5e99 --vInitB -5e99</code> (radial) gives the same error (expected: kind radial, eccentricity 1); <code>orbital_elements(7.49e307, 7.49e307, 5e-11, 0, 0, 0.5, -5e-11, 0, 0, -0.5)</code> raises <code>ZeroDivisionError</code> (expected: an elliptic orbit of semi-major axis 5&times;10<sup>&minus;11</sup> m, the reviewer's high-precision value).</li>
-</ul>
+<p>None recorded for this release. The 1.2.2 item OB-1 is closed below.</p>
 
 <h2>Major Improvements in This Release</h2>
-<p>Version 1.2.1:</p>
 <ul>
-<li>The Help file now uses the Beats layout: eight Beats (0&ndash;7), each with a command, something to read from the printed output or the plot, three tasks and the equations those observations lead to. Governing Equations is now an index, and there is a Printed Summary section with a real default-run excerpt.</li>
-<li>The signed orbit angle behind the one-revolution stop and the reported number of revolutions is summed with compensation, so long runs no longer accumulate rounding in it.</li>
-<li><code>--help</code> no longer shows &ldquo;(default: True)&rdquo; beside <code>--no-stop_after_one_orbit</code>.</li>
-<li>A radial start now prints &ldquo;Radial trajectory (zero angular momentum): apsides and period are undefined.&rdquo;; this is the only line of program output that changed for any command tried.</li>
-</ul>
-<p>Version 1.2.2:</p>
-<ul>
-<li><code>orbital_elements()</code> and the mass fractions in the printed summary no longer fail for some finite inputs near the top of the floating-point range: the sum of two masses near 10<sup>308</sup>, and a circular period whose cube of the semi-major axis overflows (for example two masses of 5&times;10<sup>199</sup> kg at 10<sup>110</sup> m). OB-1 records what still fails. Nothing printed for an input that worked before changed; the 31 commands compared with 1.2.1 differ only in the version and build line.</li>
-<li>Help: the Printed Summary no longer says an unbound or radial orbit always ends at <code>max_steps</code> (an inward radial start stops early with the close-approach error); Beat 4 states angular momentum and the hodograph test in the centre-of-mass frame; Beat 5 says the two-body problem has an exact conic solution and that Binary integrates it step by step on purpose; energy departure is called one diagnostic, not a measure of total error; the 0.015% and 0.013% figures are explained (unrounded and rounded digits).</li>
-<li>Help: Experiment 8 is a keyword-argument script with six printed values to check; the five wide tables scroll inside labelled regions on narrow screens.</li>
+<li><b>OB-1 closed.</b> <code>orbital_elements()</code> now classifies finite states whose intermediate products overflow or underflow, when the elements themselves are representable. The former hyperbolic example (<code>python main.py --MA 7.49e106 --MB 7.49e106 --xInitA 5e149 --xInitB -5e149 --uInitA 5e99 --uInitB -5e99</code>) prints a hyperbolic orbit of eccentricity about 1.0002&times;10<sup>253</sup> instead of exiting after a successful integration. The same state with radial velocities prints kind <code>radial</code> and eccentricity 1. The tiny equal-mass needle ellipse <code>orbital_elements(7.49e307, 7.49e307, 5e-11, 0, 0, 0.5, -5e-11, 0, 0, -0.5)</code> returns an elliptic orbit of semi-major axis 5&times;10<sup>&minus;11</sup>&nbsp;m instead of raising <code>ZeroDivisionError</code>. The helpers are mantissa/exponent products already used for energy and acceleration; they do not change any previously printed default-run figure.</li>
+<li><b>M-1, M-2.</b> Beat&nbsp;5 in both Help files now says the two-body conic is about the centre of mass, and that row&nbsp;0.5 is the closest-approach sample on the apoapsis-start runs shown, not an identity for every possible start.</li>
+<li><b>Dual Help.</b> <code>Binary-claude.html</code> remains the dense lab-manual Beats file that the quoted-number and structure tests pin. <code>Binary-grok.html</code> remains the shorter terminal-script Beats file. Both carry Version 1.2.3 and build 7b64e2aa7973. The test suite discovers both, pins the dense contract on the Claude file, and checks that the Grok file has the same stamps, Beats 0&ndash;7, runnable commands, and the same licence line.</li>
 </ul>
 
 <h2>Test Suite Growth</h2>
-<p>95 &rarr; 217 &rarr; 239 automated tests (1.2.0 &rarr; 1.2.1 &rarr; 1.2.2). The suite is run once from <code>tests/</code> with <code>RuntimeWarning</code> promoted to an error, with the Help, Release Notes and Sample Outputs Guide in the repository layout beside the modules; all 239 pass under CPython 3.11 in about 30 s, and also under Python 3.10.20 with Matplotlib 3.5.0 and NumPy 1.26.4. Both Audit22 reviewers reproduced 239 tests passing. No uploaded test was removed or loosened. The one <code>expectedFailure</code> that held the release-metadata test while these two documents were out of date has been removed; that test now passes.</p>
-<p>New coverage: the compensated angle sum; corrector and step-control edge cases; unequal-mass energies; orbital elements against independent Decimal and Fraction oracles, including the overflow cases of 1.2.2; how each kind of run ends (head-on, outward radial, unbound); and the Help (layout recogniser, every command shown is run, quoted numbers are tied to live runs and to the sentence that uses them, Experiment 8 is executed). 194 hand-made mutants of the program and Help were used to check the tests; 187 are detected, and the seven that are not are the no-change control and six judged equivalent or unreachable.</p>
+<p>239 &rarr; 248 automated tests. The suite is run once from <code>tests/</code> with the Help, Release Notes and Sample Outputs Guide in the repository layout beside the modules. New coverage: the three OB-1 states (hyperbolic, radial, tiny elliptic), the former OB-1 command line after a one-step integration, discovery of both Beats Help files, matching version/build stamps in both files, and that every command shown in the Grok Help parses. No uploaded test was removed or loosened.</p>
 
 <h2>Known Limitations</h2>
 <ul>
@@ -45,24 +32,22 @@ Also: the same state with <code>--vInitA 5e99 --vInitB -5e99</code> (radial) giv
 <li>The one-revolution stop follows the accumulated signed angle of the relative position; it can pass 2&pi; by part of a step and does not prove the trajectory is closed. Radial and unbound runs normally continue to <code>max_steps</code> unless an error stops them earlier.</li>
 <li>Invariance under a common velocity boost is approximate because the corrector test is applied to each body separately.</li>
 <li>The printed energy table has eleven interpolated rows; the largest departure can fall between them. (E&minus;E0)/|E0| is undefined or large when E0 is near zero.</li>
-<li>Finite inputs whose derived displacement, acceleration or energy is outside the double-precision range are rejected rather than approximated.</li>
+<li>Finite inputs whose derived displacement, acceleration or energy is outside the double-precision range are rejected rather than approximated. A needle ellipse whose periapsis underflows is reported with periapsis 0 and an undefined periapsis speed.</li>
 <li>There is no option to save the plot to a file.</li>
-<li>The Help file loads MathJax from a public CDN; offline, equations appear as untypeset LaTeX.</li>
+<li>The Help files load MathJax from a public CDN; offline, equations appear as untypeset LaTeX.</li>
 </ul>
 
 <h2>Known Minor Maintenance Items</h2>
 <ul>
-<li><b>M-1 (Codex A22-P4-02).</b> Beat 5 says &ldquo;each body moves on a conic section&rdquo; without saying &ldquo;about the centre of mass&rdquo;; in a boosted frame the plotted path of each body is a drifting conic.</li>
-<li><b>M-2 (Codex A22-P4-03).</b> Beat 5 still contains &ldquo;Row 0.5 is the row at closest approach&rdquo; two sentences after saying the row falls &ldquo;at or near&rdquo; closest approach.</li>
 <li><b>M-3 (Codex A22-P4-04, Grok N2).</b> The &ldquo;60 retries&rdquo; error in <code>driver_binary.py</code> cannot be reached (the step floor stops the run on the 40th halving); its test reaches it only by replacing <code>_halve_timestep()</code> with a mock.</li>
 <li><b>M-4 (Codex A21-P3-06, Grok N1).</b> The summary does not print the largest sampled energy departure or its time; Experiment 8 supplies a script instead.</li>
-<li><b>M-5.</b> <code>--help</code> prints floating-point defaults such as 46000000000.0. In <code>physics_binary.py</code> the <code>min(e, 1)</code> cap in the bound branch never acts, and <code>plot_binary.py</code> lists a singular &ldquo;orbit&rdquo; output type that the command line never sends.</li>
-<li><b>M-6.</b> Help wording tests pin exact phrases, so rewording a pinned sentence means editing its test.</li>
+<li><b>M-5.</b> <code>--help</code> prints floating-point defaults such as 46000000000.0. In <code>physics_binary.py</code> the <code>min(e, 1)</code> cap in the bound branch now does act on a needle ellipse whose computed eccentricity rounds above 1. <code>plot_binary.py</code> still lists a singular &ldquo;orbit&rdquo; output type that the command line never sends.</li>
+<li><b>M-6.</b> Help wording tests pin exact phrases on <code>Binary-claude.html</code>, so rewording a pinned sentence means editing its test. The Grok Help is checked for stamps, Beats and commands, not for those dense phrases.</li>
 <li><b>M-7.</b> Repository-wide continuous integration and dependency-lock policy remain outside this module; the extreme-value tests should stay focused rather than gain a test for every equivalent permutation.</li>
 </ul>
 
 <h2>Version Identification</h2>
-<p>MODEL_VERSION: 1.2.2<br>BUILD_ID: 1ef841946b74</p>
+<p>MODEL_VERSION: 1.2.3<br>BUILD_ID: 7b64e2aa7973</p>
 <p>BUILD_ID identifies the executable program core formed by <code>physics_binary.py</code>, <code>driver_binary.py</code>, <code>main.py</code> and <code>plot_binary.py</code>. The Help, tests, reports and release notes are outside this core hash.</p>
 </body>
 </html>
