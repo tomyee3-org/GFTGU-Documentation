@@ -9,7 +9,7 @@
 <p><b>Version:</b> 1.2.4<br><b>Build:</b> 53b5e2037ced<br><b>Date:</b> 2026-09-26</p>
 
 <h2>Release Status</h2>
-<p>Version 1.2.4 covers two rounds on the same build. Audit41 closed the only code change of this version: <code>orbital_elements()</code> in <code>physics_binary.py</code> classifies an exactly radial state before forming r·v (Codex A41-P2-02), and closed 1.2.3's OB-1 range failures. Audit42/43 are documentation-and-test rounds on that same core. Codex Audit43 recommended HOLD on two P2 test gaps (EXP-6 compared the wrong fixed-star speed; Grok commands were parsed but not run). Claude Audit43 recommended HOLD on three P3s (the same EXP-6 sentence, Release Notes scope, and a bounded set of Grok pins). Audit44 closes the remaining test-pin gaps (Orbit command copyable; EXP-6 last-sentence speed bound to 5.11 days; Parameters table parsed by flag). This package closes those items. BUILD_ID stays 53b5e2037ced. Default-run numbers are unchanged.</p>
+<p>Version 1.2.4 is one core build plus documentation-and-test rounds. Audit41 made the only code change: <code>orbital_elements()</code> classifies an exactly radial state before forming r·v (Codex A41-P2-02) and closed 1.2.3's OB-1 range failures. Claude accepted the code and documentation in Audit44. Codex Audit45 recommended HOLD on one P2 (the command extractor skipped any Binary line that contained an Orbit-style flag). Claude Audit45 recommended HOLD on two P3s (the same extractor skip, and EXP-6 asking for a relative path Binary does not plot). This package closes those items. BUILD_ID stays 53b5e2037ced. Default-run numbers are unchanged.</p>
 
 <h2>Open Bugs</h2>
 <p>None recorded for this release.</p>
@@ -18,7 +18,7 @@
 <ul>
 <li><b>Audit41 / Codex A41-P2-02 (code).</b> <code>orbital_elements()</code> returns kind radial, eccentricity 1, when h = 0, without forming r·v. Command: <code>python main.py --MA 1e8 --MB 1e8 --xInitA 1e160 --xInitB 0 --vInitA 1e149 --vInitB 0 --uInitA 0 --uInitB 0 --dt 1e-3 --max_steps 2 --no-stop_after_one_orbit</code>.</li>
 <li><b>Codex A43-P2-01 / Claude A43-P3-01.</b> EXP-6 now compares Binary at 500000 m/s with a fixed 2e32 kg star at the same speed (about 5.11 days). Circular speed about that fixed mass is about 539000 m/s; 541000 m/s is the two-body relative circular speed. A matched Orbit command with <code>--k 1.33486e22</code> and <code>--vyInit 500000</code> is given.</li>
-<li><b>Codex A43-P2-02.</b> Every distinct Grok <code>python main.py</code> command is parsed and run. A coincident-start mutant of Beat 5 fails the suite.</li>
+<li><b>Codex A43-P2-02.</b> Every distinct Binary command in the Grok Help is parsed and run. The Orbit comparison line is marked <code>data-program="Orbit"</code> and is not treated as a Binary command. A coincident-start mutant of Beat 5 fails the suite.</li>
 <li><b>Claude A43-P3-03.</b> Grok pins now include the Parameters table against program defaults, Beat 0 start against the default run (e = 0.767), a live head-on timestep-floor check, exact display-equation blocks, and EXP-6 quoted numbers against the live run and the fixed-star Kepler period.</li>
 </ul>
 
