@@ -9,21 +9,23 @@
 <p><b>Version:</b> 1.2.4<br><b>Build:</b> 53b5e2037ced<br><b>Date:</b> 2026-09-26</p>
 
 <h2>Release Status</h2>
-<p>Version 1.2.4 answers Audit41 of Kickoff4 (1.2.3 / 7b64e2aa7973). Codex recommended HOLD on two P2s (Grok Help untested for its governing law; a finite radial state still aborted after a successful integration). Claude recommended HOLD on P3 documentation only and treated OB-1 as closed. This release closes both Codex P2s and the shared EXP-4 / Grok-pin / layout P3s. Default-run numbers are unchanged. These notes replace the 1.2.3 notes.</p>
+<p>This documentation-and-test update answers Audit42 of the Audit41 package (1.2.4 / 53b5e2037ced). Codex recommended HOLD on two P2 test gaps (Grok Beat 1 acceleration signs unpinned; EXP-6 worked command lived only in an inline code element and was not executed). Claude recommended HOLD on three P3s (EXP-6 still near-radial from an Audit41 suggestion; Grok claim coverage; missing dense Help can go green when the documentation tree is present). The four core modules are unchanged, so BUILD_ID stays 53b5e2037ced. Default-run numbers are unchanged.</p>
 
 <h2>Open Bugs</h2>
 <p>None recorded for this release.</p>
 
 <h2>Major Improvements in This Release</h2>
 <ul>
-<li><b>Codex A41-P2-02.</b> <code>orbital_elements()</code> classifies an exactly radial state before it forms the radial product r·v. The finite case <code>python main.py --MA 1e8 --MB 1e8 --xInitA 1e160 --xInitB 0 --vInitA 1e149 --vInitB 0 --uInitA 0 --uInitB 0 --dt 1e-3 --max_steps 2 --no-stop_after_one_orbit</code> now prints kind radial, eccentricity 1, instead of exiting after two accepted steps.</li>
-<li><b>Codex A41-P2-01, Claude A41-P3-02.</b> The shared suite now pins Grok Beat 0 to Newton's inverse-square law, the hodograph formula, the relative escape speed in EXP-4, and the 10&nbsp;per cent step-growth wording. Changing Grok Beat 0 from r^2 to r^3 fails the complete suite.</li>
-<li><b>Claude A41-P3-01 / Codex A41-P3-01.</b> Grok EXP-4 now asks for \(\sqrt{2G(M_A+M_B)/r}\) and half of that for equal CM speeds. The old "reduced mass" square root is gone.</li>
-<li><b>Claude A41-P3-05.</b> Dense Help tests skip when only Grok is present. Discovery never treats Grok as the canonical file. Physics tests import with no Help file.</li>
+<li><b>Codex A42-P2-01.</b> Grok Beat 1 now pins both signed acceleration components against accelerations() on a nonsymmetric state. Changing only the sign of x-acceleration of body B fails the complete suite.</li>
+<li><b>Codex A42-P2-02.</b> Every Grok python main.py command is taken from both pre blocks and inline code outside pre, parsed, and run. EXP-6 is a pre block. Changing only --MB 2e32 to --MB 0 fails the suite.</li>
+<li><b>Claude A42-P3-01 / Codex A42-P3-02.</b> EXP-6 now uses --uInitA 500000 (about 92 percent of circular speed around 2e32 kg at 4.6e10 m). Live check: elliptic, e about 0.147, about 218 steps and 5.05 days. The old 17000 m/s near-radial start is gone.</li>
+<li><b>Claude A42-P3-02.</b> Grok Help now has frozen display-equation and load-bearing-fragment pins (Newton, both acceleration signs, kinetic and boost energy, CM fraction, Kepler III a^3, hodograph, corrector-pass and step-growth wording, Beat 3 speeds).</li>
+<li><b>Claude A42-P3-03.</b> When a documentation tree is present (Notes, Guide, or GFTGU-Documentation/Binary), the suite fails unless dense Help (Binary-claude.html or Binary.html) is also present. Grok-only and no-Help layouts without that tree still skip.</li>
+<li><b>Codex A42-P3-01.</b> If the same Help filename exists both beside the program and under Documentation, the two copies must match byte for byte. A single copy in either place remains valid.</li>
 </ul>
 
 <h2>Test Suite Growth</h2>
-<p>248 &rarr; 255 automated tests. Added: overflowing-r·v radial elements and CLI summary; Grok inverse-square, hodograph, EXP-4 and EXP-6 pins. Dense classes skip in a Grok-only or no-Help layout instead of failing at import. No uploaded test was removed or loosened.</p>
+<p>255 automated tests in the Audit41 tree. This round adds Grok equation and fragment pins, inline-command extraction, a live EXP-6 check, a documentation-tree dense-Help guard, and a duplicate-copy byte check. Dense classes still skip in a Grok-only or no-Help layout that has no documentation tree. The full-tree gate is the complete discoverable suite with 0 skipped. The missing-Help precondition is a skip only when no documentation tree is in view; it is a failure when that tree is present.</p>
 
 <h2>Known Limitations</h2>
 <ul>
@@ -31,7 +33,7 @@
 <li>A head-on start hits the timestep floor rather than an impact.</li>
 <li>Highly eccentric orbits are inaccurate at the default <code>eps1</code>.</li>
 <li>The one-revolution stop is a geometric angle rule, not a proof the path closed.</li>
-<li>Near-radial states whose r·v overflows a double, while h is a tiny nonzero value, are still rejected as out of range.</li>
+<li>Some near-radial states at extreme scale (around 1e140 m) are rejected as out of range.</li>
 <li>The printed energy table has eleven interpolated rows; (E−E0)/|E0| is poor when E0 is near zero.</li>
 <li>There is no option to save the plot to a file.</li>
 <li>Help loads MathJax from a public CDN; offline, equations appear as untypeset LaTeX.</li>
@@ -42,9 +44,8 @@
 <li><b>M-3.</b> The "60 retries" error is reached in tests only by mocking the timestep floor.</li>
 <li><b>M-4.</b> The summary does not print the largest sampled energy departure or its time.</li>
 <li><b>M-5.</b> <code>--help</code> prints defaults such as 46000000000.0. <code>plot_binary.py</code> still lists a singular "orbit" output type the CLI never sends.</li>
-<li><b>M-6.</b> Dense phrase pins live on <code>Binary-claude.html</code>. Grok now has its own short fact pins.</li>
+<li><b>M-6.</b> Dense phrase pins live on <code>Binary-claude.html</code>. Grok has short equation and fragment pins.</li>
 <li><b>M-7.</b> Repository-wide CI and lockfiles remain outside this module.</li>
-<li><b>P4-02 carried.</b> Some near-radial extreme-range states still raise a range error; see Known Limitations.</li>
 </ul>
 
 <h2>Version Identification</h2>
