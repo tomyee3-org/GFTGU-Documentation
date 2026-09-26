@@ -111,7 +111,7 @@
 </nav>
 <main>
   <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-    Version 1.6.0&nbsp;&nbsp;&nbsp;&nbsp;Build e11669ba5cef
+    Version 1.6.0&nbsp;&nbsp;&nbsp;&nbsp;Build cab9929fa0fb
   </p>
 
   <section id="description">
@@ -251,7 +251,7 @@ python main.py --h_points 0,20000 --T_points 288.15,216.65 --output_type tempera
 T=\beta\,p^{\alpha},\qquad \alpha=0.5.
 \]
     </div>
-    <p>\(\beta\) is chosen so the first step above the last supplied altitude matches that last temperature. As \(p\to 0\), \(T\to 0\) and the local scale height collapses, so pressure reaches zero at a finite height. If 50,000 steps do not get there, the program doubles \(\Delta h\) and starts again. A zero pressure reached by that coarser step at or below the last supplied altitude is refused as a numerical failure.</p>
+    <p>\(\beta\) is chosen so the first step above the last supplied altitude matches that last temperature. As \(p\to 0\), \(T\to 0\) and the local scale height collapses, so pressure reaches zero at a finite height. If 50,000 steps do not get there, the program doubles \(\Delta h\) and starts again, unless every step in that pass was already shorter than the nominal increment, in which case it raises a budget error instead. A zero pressure reached by that coarser step at or below the last supplied altitude is refused as a numerical failure.</p>
   </section>
 
   <section id="parameters">

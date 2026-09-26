@@ -6,42 +6,42 @@
 </head>
 <body>
 <h1>Atmosphere 1.6.0 Release Notes</h1>
-<p><b>Version:</b> 1.6.0<br><b>Build:</b> e11669ba5cef<br><b>Date:</b> 2026-09-25</p>
+<p><b>Version:</b> 1.6.0<br><b>Build:</b> cab9929fa0fb<br><b>Date:</b> 2026-09-26</p>
 
 <h2>Release Status</h2>
-<p>Version 1.6.0 follows 1.5.1 (Grok Response to Audit41, build 08772f6e8e51). Claude Audit42 and Codex Audit42 both recommended holding 1.5.1. The first 1.6.0 package (build fb81e2f99894, Grok Response to Audit42) closed the Audit42 code items. Claude Audit43 recommended holding that package for one P2 and two P3 items; Codex Audit43 recommended holding it for two P2 items and a documented-retry mismatch. This build keeps MODEL_VERSION 1.6.0 and closes those Audit43 P1/P2 items and the P3 items listed under Improvements. Grok recommends accepting 1.6.0. Claude and Codex have not yet reviewed this build. These notes replace the previous 1.6.0 notes; earlier notes are not reproduced.</p>
+<p>Version 1.6.0, build cab9929fa0fb, follows the Audit43 package (build e11669ba5cef). Claude Audit44 recommended accepting e11669ba5cef after one test-only P3. Codex Audit44 recommended holding it for an unaudited governing-equation sign. This build keeps MODEL_VERSION 1.6.0, closes that P2 and the remaining dual-Help P3, and records the P4 items listed under Improvements. Grok recommends accepting 1.6.0. These notes replace the previous 1.6.0 notes; earlier notes are not reproduced.</p>
 
 <h2>Open Bugs</h2>
 <p>None.</p>
 
 <h2>Major Improvements in This Release</h2>
-<p>Version 1.6.0 (Audit43 response, this build):</p>
+<p>Version 1.6.0 (Audit44 response, this build):</p>
 <ul>
-<li>Long-Help scientific tests load Atmosphere-claude.html whenever that file exists, and short-Help tests load Atmosphere-grok.html whenever that file exists. They no longer depend on which file is primary. Worked claims such as Experiment 8's 30843 Pa and Beat 6's 0.7144 Pa are checked in the shipped dual-Help layout.</li>
-<li>A valid in-place edit of any supplied altitude, any supplied temperature, or power drops the cached upper-atmosphere coefficient. The Codex sequence that changed T[-1] from 300 K to 600 K after an above-profile query now continues from 600 K.</li>
-<li>If a pass spends the 50,000-point budget while every Euler step was already shorter than the nominal increment, the driver raises a budget error after that one pass. It does not double the step 25 times. A tall profile that still takes unconstrained steps continues to restart. The 10 m, 801-node 300 K / 30000 K sounding now fails in one pass instead of about 1.25 million steps.</li>
-<li>MIN_STEP_TO_SCALE_HEIGHT is the named 1e-5 exemption. A micrometre-wide 20 K / 2000 K edge uses more stored points when the exemption is removed. An extreme but valid finite profile that would shrink the step to zero raises a range error instead of blaming the user-supplied dh.</li>
+<li>The suite now audits the physical content of the governing equations in each named Help file, not only their tags. A plus sign on displayed Eq. (7.1) fails with both Helps present. An independent isothermal first Euler step equals -g rho0.</li>
+<li>The three long-Help tests that still skipped in the dual-Help layout (checkpoint-table excerpt, equation tags, parenthesised equation references) now read Atmosphere-claude.html whenever that file exists.</li>
+<li>A budget abort now says the profile is too steep or too finely sampled. The short Help Beat 7 states the same one-pass exception as the long Help.</li>
+</ul>
+<p>Version 1.6.0 (Audit43 response, carried forward):</p>
+<ul>
+<li>Long-Help scientific tests load Atmosphere-claude.html whenever that file exists; short-Help tests load Atmosphere-grok.html whenever that file exists.</li>
+<li>A valid in-place edit of a supplied altitude, temperature or power drops the cached upper-atmosphere coefficient, including an interior temperature that the content mix must see.</li>
+<li>If a pass spends the 50,000-point budget while every Euler step was already shorter than the nominal increment, the driver raises a budget error after that one pass.</li>
+<li>MIN_STEP_TO_SCALE_HEIGHT is the named 1e-5 exemption.</li>
 </ul>
 <p>Version 1.6.0 (Audit42 response, carried forward):</p>
 <ul>
-<li>The temperature-change cap bounds |Delta T| by 5% of the temperature at the start of the step, not of min(T, T_target). The 300 K / 3000 K and 300 K / 30000 K sawtooths stay within 0.02% of the exact piecewise-linear integral.</li>
-<li>get_temp() re-validates the whole profile on every public call. An invalid interior edit of h, T or power is a ValueError. The integrator validates once and then uses the trusted interpolator.</li>
-<li>Every run prints a Numerical top line. MODEL_VERSION is 1.6.0 because printed output and steep-profile results changed relative to 1.5.1.</li>
-</ul>
-<p>Version 1.5.1, carried forward:</p>
-<ul>
-<li>Breakpoint landing; rejection of non-positive result arrays; --save_plot / --no_show; dual Help discovery.</li>
+<li>The temperature-change cap bounds |Delta T| by 5% of the temperature at the start of the step. get_temp() re-validates on every public call. Every run prints a Numerical top line.</li>
 </ul>
 
 <h2>Test Suite Growth</h2>
-<p>The suite is run from tests/. Clean-extraction discover counts for this build: both Help files present, 211 tests, 3 skipped; Atmosphere-grok.html only, 211 tests, 29 skipped; Atmosphere-claude.html only, 206 tests, 6 skipped. Those last two layout counts will be confirmed on the packaging run. No test was removed. New tests cover valid final-temperature / power / top-altitude edits, a fully capped budget abort that must not restart 25 times, a tall uncapped restart, the 1e-5 exemption, an extreme-range zero step, Experiment 8's 30843 Pa with Grok present, and additional short-Help phrases.</p>
+<p>The suite is run from tests/. Clean-extraction discover counts for this build: both Help files present, 217 tests, 0 skipped; Atmosphere-grok.html only, 217 tests, 29 skipped; Atmosphere-claude.html only, 212 tests, 6 skipped. No test was removed. New tests cover the hydrostatic minus sign in both Helps, the first-step slope -g rho0, the Claude checkpoint excerpt and equation-reference list with Grok present, the Beat 4 tropopause temperature, Experiment 9's 0.27% figure, the short Help's "last stored altitude", and an interior temperature edit that must drop beta.</p>
 
 <h2>Known Limitations</h2>
 <ul>
 <li>Educational constant-gravity, constant-composition ideal-gas model. Temperature is supplied, not computed.</li>
 <li>First-order Euler: 2.93% low at 100 km for an isothermal 288.15 K atmosphere when the step is not enlarged. After a restart the step is coarser and that few-per-cent figure does not apply. A 0-3000 km isothermal run that restarts is about 83% low and prints no warning that the step was enlarged.</li>
 <li>The T = beta p^0.5 continuation is a pedagogical closure. The printed Numerical top is a stopping rule and depends on the step.</li>
-<li>A profile with more positive nodes than MAX_STEPS cannot finish, because the integrator lands on every node. An extremely steep, densely sampled profile can still exhaust the 50,000-point budget under the 5% cap; if every step in that pass was already shorter than the nominal increment the error is raised after one pass.</li>
+<li>A profile with more positive nodes than MAX_STEPS cannot finish, because the integrator lands on every node. An extremely steep or finely sampled profile can still exhaust the 50,000-point budget; if every step in that pass was already shorter than the nominal increment the error is raised after one pass.</li>
 <li>U.S. Standard Atmosphere 1976 layer-base pressures are a secondary-source fixture. Venus values are from a secondary compilation. Mars and Jupiter are round-number illustrations. The seven NRLMSIS temperatures are for one date and place. Those fixtures are consistency checks, not primary-source validation.</li>
 <li>A checkpoint outside the positive-pressure domain has no model pressure.</li>
 <li>Help files load MathJax from a public CDN.</li>
@@ -54,10 +54,10 @@
 <li>Some test method names still say molecular weight.</li>
 <li>Long-Help Experiments 6 and 7 still give no numerical check values. Experiment 8 still asks for the surface-temperature step to be restored without quoting an expected result.</li>
 <li>--save_plot . writes a hidden .png; a path without a suffix is written as PATH.png by Matplotlib.</li>
-<li>Both Help files still carry first-edition Chapter 7 equation tags. Whether a Help file should name a book chapter is an open question for Prof. Schutz; the badges are unchanged until he decides. They are not a standing program rule.</li>
+<li>Both Help files still name Chapter 7 in the page header. Whether a Help file should name a book chapter is an open question for Prof. Schutz; the badges are unchanged until he decides.</li>
 </ul>
 
 <h2>Version Identification</h2>
-<p>MODEL_VERSION: 1.6.0<br>BUILD_ID: e11669ba5cef</p>
+<p>MODEL_VERSION: 1.6.0<br>BUILD_ID: cab9929fa0fb</p>
 </body>
 </html>
