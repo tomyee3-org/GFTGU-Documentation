@@ -9,7 +9,7 @@
 <p><b>Version:</b> 1.2.4<br><b>Build:</b> 53b5e2037ced<br><b>Date:</b> 2026-09-26</p>
 
 <h2>Release Status</h2>
-<p>Version 1.2.4 covers two rounds on the same build. Audit41 closed the only code change of this version: <code>orbital_elements()</code> in <code>physics_binary.py</code> classifies an exactly radial state before forming r·v (Codex A41-P2-02), and closed 1.2.3's OB-1 range failures. Audit42/43 are documentation-and-test rounds on that same core. Codex Audit43 recommended HOLD on two P2 test gaps (EXP-6 compared the wrong fixed-star speed; Grok commands were parsed but not run). Claude Audit43 recommended HOLD on three P3s (the same EXP-6 sentence, Release Notes scope, and a bounded set of Grok pins). This package closes those items. BUILD_ID stays 53b5e2037ced. Default-run numbers are unchanged.</p>
+<p>Version 1.2.4 covers two rounds on the same build. Audit41 closed the only code change of this version: <code>orbital_elements()</code> in <code>physics_binary.py</code> classifies an exactly radial state before forming r·v (Codex A41-P2-02), and closed 1.2.3's OB-1 range failures. Audit42/43 are documentation-and-test rounds on that same core. Codex Audit43 recommended HOLD on two P2 test gaps (EXP-6 compared the wrong fixed-star speed; Grok commands were parsed but not run). Claude Audit43 recommended HOLD on three P3s (the same EXP-6 sentence, Release Notes scope, and a bounded set of Grok pins). Audit44 closes the remaining test-pin gaps (Orbit command copyable; EXP-6 last-sentence speed bound to 5.11 days; Parameters table parsed by flag). This package closes those items. BUILD_ID stays 53b5e2037ced. Default-run numbers are unchanged.</p>
 
 <h2>Open Bugs</h2>
 <p>None recorded for this release.</p>
@@ -24,7 +24,7 @@
 
 <h2>Test Suite Growth</h2>
 <p>248 &rarr; 255 &rarr; 261 &rarr; 265. Full-tree gate with Help only under GFTGU-Documentation:</p>
-<pre>MPLBACKEND=Agg python -W error::RuntimeWarning -m unittest discover -s tests</pre>
+<p><code>MPLBACKEND=Agg python -W error::RuntimeWarning -m unittest discover -s tests</code> — 265 run, 0 skipped, OK.</p>
 <p>Dense classes still skip in a Grok-only or no-Help layout that has no documentation tree. Missing dense Help fails when that tree is present. Duplicate Help copies must match byte for byte.</p>
 
 <h2>Known Limitations</h2>
