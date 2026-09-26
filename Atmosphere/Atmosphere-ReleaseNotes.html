@@ -9,39 +9,39 @@
 <p><b>Version:</b> 1.6.0<br><b>Build:</b> cab9929fa0fb<br><b>Date:</b> 2026-09-26</p>
 
 <h2>Release Status</h2>
-<p>Version 1.6.0, build cab9929fa0fb, is unchanged in the four core modules since the Audit44 package. This documentation-and-test round closes the Audit45 P2 items (Beat 4 fall factors; displayed barometric sign) and the remaining displayed-equation and Guide-provenance P3 items. Grok recommends accepting 1.6.0. Claude and Codex have not yet reviewed this package.</p>
+<p>Version 1.6.0, build cab9929fa0fb. The four core modules are unchanged since Audit44. This documentation-and-test round restores the displayed-equation pins that Audit46 found missing and adds a golden-block check for every displayed equation in both Helps. Grok recommends accepting 1.6.0. Claude Audit46 held the Audit45 package for one P3 item (dropped Eq. (7.3)–(7.6) pins). Codex Audit46 held it for one P2 item (the same regression). Neither reviewer has seen this package.</p>
 
 <h2>Open Bugs</h2>
 <p>None.</p>
 
 <h2>Major Improvements in This Release</h2>
-<p>Version 1.6.0 (Audit45 response, this package):</p>
+<p>Version 1.6.0 (Audit46 response, this package):</p>
 <ul>
-<li>Short Help Beat 4 and the Sample Outputs Guide now teach the 50-to-100 km fall factors with T(100 km)/T(50 km) = 350/200 = 1.75, matching the long Help and the gas law.</li>
-<li>Each displayed equation in both Help files is checked inside its math block: hydrostatic minus sign, barometric e^{-h/H}, interpolation sign and denominator, Euler-error 1-(h/H)/(2N), H proportional to T/(mu g), N = 200, gas-law denominator k_B T, and the tagged Euler update with rho_{j-1}.</li>
-<li>The eight Sample Outputs figures were regenerated on 2026-09-26 from this build.</li>
-<li>Long-Help Beat 7 names the one-pass budget-error exception. The equation index says Eq. (7.7) is tagged in the Algorithm section.</li>
+<li>Each displayed equation in Atmosphere-grok.html (7 blocks) and Atmosphere-claude.html (10 blocks) is pinned as a whole whitespace-stripped math block. Changing any character in those blocks fails the suite.</li>
+<li>Restored pins: Eq. (7.3) minus sign and factors; both equalities of the surface scale-height definition; both differences and the validity range of the interpolation; the upper-closure exponent alpha = 0.5; the Euler update using rho_{j-1} Delta h, not Delta h^2.</li>
+<li>Selected inline physical relations are pinned (scale-height definitions, N = 200, gas-law fall factor, barometric and hydrostatic signs).</li>
 </ul>
-<p>Version 1.6.0 (Audit44 and Audit43, carried forward):</p>
+<p>Version 1.6.0 (Audit45, Audit44 and Audit43, carried forward):</p>
 <ul>
+<li>Short Help Beat 4 and the Sample Outputs Guide teach the 50-to-100 km fall factors with T(100 km)/T(50 km) = 350/200 = 1.75.</li>
 <li>Long-Help tests bind to Atmosphere-claude.html whenever that file exists. Displayed Eq. (7.1) must have the minus sign in each named Help.</li>
 <li>A valid in-place profile edit drops the cached upper-atmosphere coefficient. A fully capped 50,000-point pass raises a budget error after one pass and names a steep or finely sampled profile.</li>
 <li>The temperature-change cap bounds |Delta T| by 5% of the temperature at the start of the step. Every run prints a Numerical top line.</li>
 </ul>
 
 <h2>Test Suite Growth</h2>
-<p>The suite is run from tests/. Clean-extraction discover counts for the program folder (core modules, tests, and the Help file or files under test): both Help files present, 220 tests, 1 skipped (Sample Outputs Guide not in that folder); Atmosphere-grok.html only, 220 tests, 30 skipped; Atmosphere-claude.html only, 215 tests, 7 skipped. From the full package, with Atmosphere-Documentation/SampleOutputs beside the program folder, the Guide check runs and the both-Help layout is 220 tests, 0 skipped. No test was removed. New checks cover the displayed barometric sign, interpolation and Euler-error formulae, the 350/200 fall factor against the live 50 km and 100 km rows and the Guide, and several short-Help qualitative directions that follow from the gas law and from H.</p>
+<p>The suite is run from tests/. Clean-extraction discover counts for the program folder (core modules, tests, and the Help file or files under test): both Help files present, 224 tests, 1 skipped (Sample Outputs Guide not in that folder); Atmosphere-grok.html only, 224 tests, 30 skipped; Atmosphere-claude.html only, 218 tests, 7 skipped. From the full package, with Atmosphere-Documentation/SampleOutputs beside the program folder, the Guide check runs and the both-Help layout is 224 tests, 0 skipped. No test was removed. New checks are a golden-block equality for every displayed equation, restored Eq. (7.3)–(7.6) and interpolation-numerator pins with independent numeric consequences, a list of inline physical relations, a long-Help Beat 7 budget-exception sentence bound to Atmosphere-claude.html, and a Guide provenance date read from the provenance paragraph.</p>
 
 <h2>Known Limitations</h2>
 <ul>
 <li>Educational constant-gravity, constant-composition ideal-gas model. Temperature is supplied, not computed.</li>
 <li>First-order Euler: 2.93% low at 100 km for an isothermal 288.15 K atmosphere when the step is not enlarged. After a restart the step is coarser and that few-per-cent figure does not apply. A 0-3000 km isothermal run that restarts is about 83% low and prints no warning that the step was enlarged.</li>
 <li>The T = beta p^0.5 continuation is a pedagogical closure. The printed Numerical top is a stopping rule and depends on the step.</li>
-<li>A profile with more positive nodes than MAX_STEPS cannot finish, because the integrator lands on every node. An extremely steep or finely sampled profile can still exhaust the 50,000-point budget; if every step in that pass was already shorter than the nominal increment the error is raised after one pass.</li>
+<li>A profile with more positive nodes than MAX_STEPS cannot finish. An extremely steep or finely sampled profile can still exhaust the 50,000-point budget; if every step in that pass was already shorter than the nominal increment the error is raised after one pass.</li>
 <li>U.S. Standard Atmosphere 1976 layer-base pressures are a secondary-source fixture. Venus values are from a secondary compilation. Mars and Jupiter are round-number illustrations. The seven NRLMSIS temperatures are for one date and place. Those fixtures are consistency checks, not primary-source validation.</li>
 <li>A checkpoint outside the positive-pressure domain has no model pressure.</li>
 <li>Help files load MathJax from a public CDN.</li>
-<li>Public get_temp() scans the whole profile on every call (O(n)). The driver is unaffected because it validates once.</li>
+<li>Public get_temp() scans the whole profile on every call (O(n)).</li>
 </ul>
 
 <h2>Known Minor Maintenance Items</h2>
@@ -51,6 +51,7 @@
 <li>Long-Help Experiments 6 and 7 still give no numerical check values. Experiment 8 still asks for the surface-temperature step to be restored without quoting an expected result.</li>
 <li>--save_plot . writes a hidden .png; a path without a suffix is written as PATH.png by Matplotlib.</li>
 <li>Both Help files still name Chapter 7 in the page header. Whether a Help file should name a book chapter is an open question for Prof. Schutz; the badges are unchanged until he decides.</li>
+<li>Inline formulas that are not in the pinned physical-relation list are not covered by tests.</li>
 </ul>
 
 <h2>Version Identification</h2>
