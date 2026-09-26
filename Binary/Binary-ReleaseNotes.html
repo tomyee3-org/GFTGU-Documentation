@@ -2,52 +2,53 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Binary 1.2.3 Release Notes</title>
+<title>Binary 1.2.4 Release Notes</title>
 </head>
 <body>
-<h1>Binary 1.2.3 Release Notes</h1>
-<p><b>Version:</b> 1.2.3<br><b>Build:</b> 7b64e2aa7973<br><b>Date:</b> 2026-09-26</p>
+<h1>Binary 1.2.4 Release Notes</h1>
+<p><b>Version:</b> 1.2.4<br><b>Build:</b> 53b5e2037ced<br><b>Date:</b> 2026-09-26</p>
 
 <h2>Release Status</h2>
-<p>Version 1.2.3 follows 1.2.2 by repairing the remaining orbital-elements range failures recorded as OB-1, softening two Beat&nbsp;5 wording items (M-1, M-2) in both Beats Help files, and making the test suite treat <code>Binary-claude.html</code> and <code>Binary-grok.html</code> as dual Help that share the same core program, the same Sample Outputs Guide, and the same version and build stamps. Default-run numbers are unchanged from 1.2.2. These notes replace the 1.2.2 notes; the earlier notes are not reproduced.</p>
+<p>Version 1.2.4 answers Audit41 of Kickoff4 (1.2.3 / 7b64e2aa7973). Codex recommended HOLD on two P2s (Grok Help untested for its governing law; a finite radial state still aborted after a successful integration). Claude recommended HOLD on P3 documentation only and treated OB-1 as closed. This release closes both Codex P2s and the shared EXP-4 / Grok-pin / layout P3s. Default-run numbers are unchanged. These notes replace the 1.2.3 notes.</p>
 
 <h2>Open Bugs</h2>
-<p>None recorded for this release. The 1.2.2 item OB-1 is closed below.</p>
+<p>None recorded for this release.</p>
 
 <h2>Major Improvements in This Release</h2>
 <ul>
-<li><b>OB-1 closed.</b> <code>orbital_elements()</code> now classifies finite states whose intermediate products overflow or underflow, when the elements themselves are representable. The former hyperbolic example (<code>python main.py --MA 7.49e106 --MB 7.49e106 --xInitA 5e149 --xInitB -5e149 --uInitA 5e99 --uInitB -5e99</code>) prints a hyperbolic orbit of eccentricity about 1.0002&times;10<sup>253</sup> instead of exiting after a successful integration. The same state with radial velocities prints kind <code>radial</code> and eccentricity 1. The tiny equal-mass needle ellipse <code>orbital_elements(7.49e307, 7.49e307, 5e-11, 0, 0, 0.5, -5e-11, 0, 0, -0.5)</code> returns an elliptic orbit of semi-major axis 5&times;10<sup>&minus;11</sup>&nbsp;m instead of raising <code>ZeroDivisionError</code>. The helpers are mantissa/exponent products already used for energy and acceleration; they do not change any previously printed default-run figure.</li>
-<li><b>M-1, M-2.</b> Beat&nbsp;5 in both Help files now says the two-body conic is about the centre of mass, and that row&nbsp;0.5 is the closest-approach sample on the apoapsis-start runs shown, not an identity for every possible start.</li>
-<li><b>Dual Help.</b> <code>Binary-claude.html</code> remains the dense lab-manual Beats file that the quoted-number and structure tests pin. <code>Binary-grok.html</code> remains the shorter terminal-script Beats file. Both carry Version 1.2.3 and build 7b64e2aa7973. The test suite discovers both, pins the dense contract on the Claude file, and checks that the Grok file has the same stamps, Beats 0&ndash;7, runnable commands, and the same licence line.</li>
+<li><b>Codex A41-P2-02.</b> <code>orbital_elements()</code> classifies an exactly radial state before it forms the radial product r·v. The finite case <code>python main.py --MA 1e8 --MB 1e8 --xInitA 1e160 --xInitB 0 --vInitA 1e149 --vInitB 0 --uInitA 0 --uInitB 0 --dt 1e-3 --max_steps 2 --no-stop_after_one_orbit</code> now prints kind radial, eccentricity 1, instead of exiting after two accepted steps.</li>
+<li><b>Codex A41-P2-01, Claude A41-P3-02.</b> The shared suite now pins Grok Beat 0 to Newton's inverse-square law, the hodograph formula, the relative escape speed in EXP-4, and the 10&nbsp;per cent step-growth wording. Changing Grok Beat 0 from r^2 to r^3 fails the complete suite.</li>
+<li><b>Claude A41-P3-01 / Codex A41-P3-01.</b> Grok EXP-4 now asks for \(\sqrt{2G(M_A+M_B)/r}\) and half of that for equal CM speeds. The old "reduced mass" square root is gone.</li>
+<li><b>Claude A41-P3-05.</b> Dense Help tests skip when only Grok is present. Discovery never treats Grok as the canonical file. Physics tests import with no Help file.</li>
 </ul>
 
 <h2>Test Suite Growth</h2>
-<p>239 &rarr; 248 automated tests. The suite is run once from <code>tests/</code> with the Help, Release Notes and Sample Outputs Guide in the repository layout beside the modules. New coverage: the three OB-1 states (hyperbolic, radial, tiny elliptic), the former OB-1 command line after a one-step integration, discovery of both Beats Help files, matching version/build stamps in both files, and that every command shown in the Grok Help parses. No uploaded test was removed or loosened.</p>
+<p>248 &rarr; 255 automated tests. Added: overflowing-r·v radial elements and CLI summary; Grok inverse-square, hodograph, EXP-4 and EXP-6 pins. Dense classes skip in a Grok-only or no-Help layout instead of failing at import. No uploaded test was removed or loosened.</p>
 
 <h2>Known Limitations</h2>
 <ul>
-<li>Educational model of two Newtonian point masses acting only through mutual gravity, not an ephemeris or research orbital-dynamics code. No relativity, gravitational radiation, tides, rotation, finite size, collisions, mass transfer, external fields or third bodies.</li>
-<li>Point-mass gravity is singular at zero separation: an unresolvable close approach, such as an inward radial start, ends in a numerical-safety error instead of an impact or a softened passage.</li>
-<li>The Euler-predictor and iterated-trapezoidal-corrector method accumulates error; results should be repeated with smaller <code>dt</code> and stricter tolerances. An orbit far more eccentric than the default is inaccurate at the default <code>eps1</code> (Experiment 8: a largest sampled energy departure of 25.9%).</li>
-<li>The one-revolution stop follows the accumulated signed angle of the relative position; it can pass 2&pi; by part of a step and does not prove the trajectory is closed. Radial and unbound runs normally continue to <code>max_steps</code> unless an error stops them earlier.</li>
-<li>Invariance under a common velocity boost is approximate because the corrector test is applied to each body separately.</li>
-<li>The printed energy table has eleven interpolated rows; the largest departure can fall between them. (E&minus;E0)/|E0| is undefined or large when E0 is near zero.</li>
-<li>Finite inputs whose derived displacement, acceleration or energy is outside the double-precision range are rejected rather than approximated. A needle ellipse whose periapsis underflows is reported with periapsis 0 and an undefined periapsis speed.</li>
+<li>Educational Newtonian two-body model. No relativity, tides, finite size, collisions or third bodies.</li>
+<li>A head-on start hits the timestep floor rather than an impact.</li>
+<li>Highly eccentric orbits are inaccurate at the default <code>eps1</code>.</li>
+<li>The one-revolution stop is a geometric angle rule, not a proof the path closed.</li>
+<li>Near-radial states whose r·v overflows a double, while h is a tiny nonzero value, are still rejected as out of range.</li>
+<li>The printed energy table has eleven interpolated rows; (E−E0)/|E0| is poor when E0 is near zero.</li>
 <li>There is no option to save the plot to a file.</li>
-<li>The Help files load MathJax from a public CDN; offline, equations appear as untypeset LaTeX.</li>
+<li>Help loads MathJax from a public CDN; offline, equations appear as untypeset LaTeX.</li>
 </ul>
 
 <h2>Known Minor Maintenance Items</h2>
 <ul>
-<li><b>M-3 (Codex A22-P4-04, Grok N2).</b> The &ldquo;60 retries&rdquo; error in <code>driver_binary.py</code> cannot be reached (the step floor stops the run on the 40th halving); its test reaches it only by replacing <code>_halve_timestep()</code> with a mock.</li>
-<li><b>M-4 (Codex A21-P3-06, Grok N1).</b> The summary does not print the largest sampled energy departure or its time; Experiment 8 supplies a script instead.</li>
-<li><b>M-5.</b> <code>--help</code> prints floating-point defaults such as 46000000000.0. In <code>physics_binary.py</code> the <code>min(e, 1)</code> cap in the bound branch now does act on a needle ellipse whose computed eccentricity rounds above 1. <code>plot_binary.py</code> still lists a singular &ldquo;orbit&rdquo; output type that the command line never sends.</li>
-<li><b>M-6.</b> Help wording tests pin exact phrases on <code>Binary-claude.html</code>, so rewording a pinned sentence means editing its test. The Grok Help is checked for stamps, Beats and commands, not for those dense phrases.</li>
-<li><b>M-7.</b> Repository-wide continuous integration and dependency-lock policy remain outside this module; the extreme-value tests should stay focused rather than gain a test for every equivalent permutation.</li>
+<li><b>M-3.</b> The "60 retries" error is reached in tests only by mocking the timestep floor.</li>
+<li><b>M-4.</b> The summary does not print the largest sampled energy departure or its time.</li>
+<li><b>M-5.</b> <code>--help</code> prints defaults such as 46000000000.0. <code>plot_binary.py</code> still lists a singular "orbit" output type the CLI never sends.</li>
+<li><b>M-6.</b> Dense phrase pins live on <code>Binary-claude.html</code>. Grok now has its own short fact pins.</li>
+<li><b>M-7.</b> Repository-wide CI and lockfiles remain outside this module.</li>
+<li><b>P4-02 carried.</b> Some near-radial extreme-range states still raise a range error; see Known Limitations.</li>
 </ul>
 
 <h2>Version Identification</h2>
-<p>MODEL_VERSION: 1.2.3<br>BUILD_ID: 7b64e2aa7973</p>
+<p>MODEL_VERSION: 1.2.4<br>BUILD_ID: 53b5e2037ced</p>
 <p>BUILD_ID identifies the executable program core formed by <code>physics_binary.py</code>, <code>driver_binary.py</code>, <code>main.py</code> and <code>plot_binary.py</code>. The Help, tests, reports and release notes are outside this core hash.</p>
 </body>
 </html>

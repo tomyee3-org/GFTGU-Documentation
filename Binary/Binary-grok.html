@@ -111,7 +111,7 @@
 </nav>
 <main>
   <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-    Version 1.2.3&nbsp;&nbsp;&nbsp;&nbsp;Build 7b64e2aa7973
+    Version 1.2.4&nbsp;&nbsp;&nbsp;&nbsp;Build 53b5e2037ced
   </p>
 
   <section id="description">
@@ -219,7 +219,7 @@ e=\frac{v_p-v_a}{v_p+v_a}.
     <p>Two point masses have an exact conic-section solution about the centre of mass. The program integrates anyway, so you can see a method that still works when there is no such solution. Each step is an Euler predictor plus an iterated trapezoidal corrector. <code>--eps2</code> decides when to stop iterating. It is not the step size.</p>
 <pre>python main.py --eps2 1e-8
 python main.py --eps2 0.5</pre>
-    <p>Compare <code>Accepted steps</code> and rows 0.5 and 1.0 of <code>(E-E0)/|E0|</code> with the default <code>eps2=1e-4</code>. Row 0.5 sits at or near closest approach on these apoapsis-start runs. The dip there barely moves when you change <code>eps2</code>. What does move is how completely the energy returns at the end of the orbit. A corrector that actually solves the trapezoid is time-symmetric; an orbit that starts at apoapsis then undoes on the way out much of the error it made on the way in.</p>
+    <p>Compare <code>Accepted steps</code> and rows 0.5 and 1.0 of <code>(E-E0)/|E0|</code> with the default <code>eps2=1e-4</code>. Row 0.5 sits at or near closest approach on these apoapsis-start runs. The dip there moves far less than the end-of-orbit residual does when you change <code>eps2</code>. What does move is how completely the energy returns at the end of the orbit. A corrector that actually solves the trapezoid is time-symmetric; an orbit that starts at apoapsis then undoes on the way out much of the error it made on the way in.</p>
     <div class="eq-block">
       <div class="eq-label">Predictor, then trapezoidal corrector — algorithm</div>
 \[
@@ -297,13 +297,13 @@ python main.py --dt 1000 --eps2 1e-8</pre>
         <p>Run Beat 2’s second command. Why is the printed total energy positive while the Keplerian line still says elliptic?</p></div>
       <div class="exp-card"><div class="ec-num">EXP-4 · Intermediate</div>
         <h4>Escape</h4>
-        <p>From Beat 3, compute \(v_{\mathrm{esc}}=\sqrt{2GM/r}\) for one body about the other reduced mass, or equivalently the speed that makes \(E=0\) in the CM frame. How close is 38091.14&nbsp;m&nbsp;s\(^{-1}\)?</p></div>
+        <p>From Beat 3, compute the relative escape speed \(v_{\mathrm{rel,esc}}=\sqrt{2G(M_A+M_B)/r}\). In the centre-of-mass frame with equal masses each body has half of that. How close is 38091.14&nbsp;m&nbsp;s\(^{-1}\)? For unequal masses the two CM speeds split the same relative speed in the inverse-mass ratio; do not substitute a single mass for \(M_A+M_B\).</p></div>
       <div class="exp-card"><div class="ec-num">EXP-5 · Intermediate</div>
         <h4>The hodograph</h4>
         <p>On the default velocity-space plot, estimate \(e\) from the radius and offset of one body’s circle. Compare with the printed eccentricity.</p></div>
       <div class="exp-card"><div class="ec-num">EXP-6 · Intermediate</div>
         <h4>Fixed star</h4>
-        <p>Set <code>--MB 2e32</code> and put B at the origin at rest. How close is A’s path to the one-body problem that <code>Orbit</code> integrates?</p></div>
+        <p>Start from <code>python main.py --MB 2e32 --xInitB 0 --yInitB 0 --vInitB 0 --uInitB 0 --xInitA 4.6e10 --yInitA 0 --vInitA 0 --uInitA 17000</code>. Body B is then almost fixed. Compare A’s path with the one-body problem that <code>Orbit</code> integrates at the same mass, radius and speed.</p></div>
       <div class="exp-card"><div class="ec-num">EXP-7 · Advanced</div>
         <h4>Two knobs, two errors</h4>
         <p>From Beats 5–7, which printed diagnostic follows <code>dt</code>, and which follows <code>eps2</code>? Halve each once and say what you would spend computer time on if you cared about periapsis, or about many orbits.</p></div>
