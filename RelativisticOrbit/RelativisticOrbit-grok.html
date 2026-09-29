@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RelativisticOrbit – Terminal Tutorial | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+    /* ── Reset & custom properties ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #fdf5e6;
+      --surface:  #ffffff;
+      --border:   #c8bfa0;
+      --accent:   #7b2d00;
+      --accent2:  #a04010;
+      --gold:     #b5811a;
+      --text:     #1c1c1c;
+      --muted:    #5a4a3a;
+      --code-bg:  #f0ede4;
+      --note-bg:  #f4f0e8;
+      --eq-bg:    #f7f2e8;
+      --radius:   5px;
+      --shadow:   0 2px 8px rgba(0,0,0,0.10);
+      --mono:     "Courier New", Courier, monospace;
+      --sans:     "Helvetica Neue", Arial, sans-serif;
+      --serif:    Georgia, "Times New Roman", Times, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Page grid ── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.95rem;
+      font-weight: normal;
+      letter-spacing: -.02em;
+    }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub {
+      margin-top: 6px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: #f0d0b8;
+      line-height: 1.55;
+    }
+    header .sub a {
+      color: #ffd8b8;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,200,150,.4);
+    }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+
+    /* ── Sidebar ── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      padding: 14px 18px 4px;
+    }
+    nav a {
+      display: block;
+      padding: 6px 18px 6px 22px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background .15s, border-color .15s;
+    }
+    nav a:hover {
+      background: var(--bg);
+      border-left-color: var(--accent2);
+      color: var(--accent);
+    }
+    nav a.active {
+      background: var(--note-bg);
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    nav hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 14px;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 38px 48px 60px;
+      max-width: 860px;
+    }
+
+    section { margin-bottom: 52px; }
+
+    h2 {
+      font-size: 1.30rem;
+      font-weight: normal;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 6px;
+      margin-bottom: 18px;
+      letter-spacing: -.01em;
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--accent2);
+      margin: 24px 0 8px;
+    }
+    h4 {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin: 18px 0 6px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    /* ── Equation block ── */
+    .eq {
+      background: var(--eq-bg);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 20px;
+      margin: 18px 0;
+      overflow-x: auto;
+      font-size: 1.05em;
+    }
+    .eq-label {
+      float: right;
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 2px;
+    }
+
+    /* ── Note / tip box ── */
+    .note {
+      background: var(--note-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      margin: 18px 0;
+      font-size: 0.93rem;
+    }
+    .note strong { color: var(--accent); }
+
+    /* ── Restore-defaults box ── */
+    .restore-section {
+      margin: 2.5em auto;
+      max-width: 860px;
+      font-family: inherit;
+    }
+    .restore-box {
+      border: 1.5px solid var(--gold);
+      border-left: 5px solid var(--gold);
+      border-radius: 6px;
+      background: #fffbeb;
+      padding: 1.1em 1.4em;
+      display: flex;
+      gap: 1em;
+      align-items: flex-start;
+    }
+    .restore-icon { font-size: 1.5em; line-height: 1; flex-shrink: 0; }
+    .restore-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      color: var(--accent);
+      margin-bottom: 0.35em;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .restore-intro {
+      margin: 0 0 0.5em;
+      font-size: 0.92em;
+      line-height: 1.6;
+    }
+    .restore-list {
+      margin: 0;
+      padding-left: 1.4em;
+      font-size: 0.92em;
+      line-height: 1.8;
+    }
+    .restore-box kbd {
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.88em;
+    }
+    .restore-link { color: var(--accent); text-decoration: underline; }
+    .restore-footnote {
+      margin: 0.6em 0 0;
+      font-size: 0.88em;
+      color: var(--muted);
+    }
+
+    /* ── Code ── */
+    pre {
+      background: #2b2b2b;
+      color: #f0ede4;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.55;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 0.91em;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    pre code { background: none; padding: 0; font-size: inherit; }
+
+    /* ── Module cards ── */
+    .mc { display: grid; gap: 14px; margin: 18px 0; }
+    .mc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+    }
+    .mc-card .mc-name {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .mc-card .mc-role {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .mc-card p { font-size: 0.92rem; margin-bottom: 0; color: var(--muted); }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 16px 0;
+    }
+    th {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      background: var(--note-bg);
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { font-family: var(--mono); color: var(--accent2); }
+
+    /* ── Output type list ── */
+    .output-list { list-style: none; margin: 14px 0; }
+    .output-list li {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .output-list li:last-child { border-bottom: none; }
+    .output-list .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      white-space: nowrap;
+      color: var(--accent2);
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
+    }
+    footer a { color: #e0c090; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Beats layout additions ── */
+    .eq-kind {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .kind {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-left: 4px;
+      vertical-align: 1px;
+    }
+    .kind-law { background: #f6dcdc; color: #7a1f1f; border: 1px solid #d9a0a0; }
+    .kind-ode { background: #d9ead3; color: #274e13; border: 1px solid #a8c69a; }
+    .kind-def { background: #e4e4e4; color: #3a3a3a; border: 1px solid #b5b5b5; }
+    .kind-der { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
+    .kind-alg { background: #e6e0f8; color: #3d2c73; border: 1px solid #b7abdd; }
+    .related-list li { margin-bottom: 6px; }
+    .warn {
+      background: #fff6e8;
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 12px 18px;
+      margin: 16px 0;
+      font-family: var(--sans);
+      font-size: 0.91rem;
+      color: var(--muted);
+    }
+    .warn strong { color: var(--accent); }
+    .compare-table th:not(:first-child), .compare-table td:not(:first-child) {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .compare-table td:not(:first-child) { font-family: var(--mono); color: var(--text); }
+    main { min-width: 0; }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+    section ul { margin: 0 0 14px 1.4em; }
+    section ul li, section ol li { margin-bottom: 6px; }
+    section ol { margin: 0 0 14px 1.6em; }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 48px; }
+    }
+  
+</style>
+</head>
+<body>
+<div class="page-wrap">
+<header>
+<div class="badge">Chapter 21 · Gravity from the Ground Up · Terminal Tutorial</div>
+<h1><em>RelativisticOrbit</em> — Orbital Precession in Schwarzschild Geometry</h1>
+<div class="sub">
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+</div>
+</header>
+<nav id="sidebar"><div class="nav-label">Start</div><a href="#overview">Overview</a><div class="nav-label">At the terminal</div>
+<a href="#beat0">Beat 0 · Watch a rosette</a>
+<a href="#beat1">Beat 1 · Switch off the extra pull</a>
+<a href="#beat2">Beat 2 · Read the prediction first</a>
+<a href="#beat3">Beat 3 · Move to a weak field</a>
+<a href="#beat4">Beat 4 · Disturb two circles</a>
+<a href="#beat5">Beat 5 · Cross the ISCO and return</a>
+<a href="#beat6">Beat 6 · Separate a plunge from a whirl</a>
+<a href="#beat7">Beat 7 · Refine before trusting a digit</a>
+<a href="#beat8">Beat 8 · Escape, Mercury and rejected inputs</a>
+<div class="nav-label">More</div>
+<a href="#further">Try next</a>
+<a href="#parameters">Command-line parameters</a>
+<a href="#summary">Reading the output</a>
+<a href="#related">Related programs</a>
+<a href="#license">License</a></nav>
+<main>
+<p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">Version 1.5.0&nbsp;&nbsp;&nbsp;&nbsp;Build daaef3a0231c</p>
+<section id="overview"><h2>Start here</h2>
+<p>RelativisticOrbit draws a test particle's orbit around a fixed, non-rotating, one-solar-mass black hole. The second model, <code>newtonian</code>, starts from the same diagram position and sideways rate so you can compare the trajectories. Every run prints its numerical result and a prediction from the constants of motion before opening the plot.</p>
+<p>Run commands from the folder containing <code>main.py</code>; close each plot before starting the next. Hover over the graph to see the cursor's graphical <code>(x, y)</code> coordinates at the lower right of the Matplotlib window. All radii are metres and times are seconds. The plot uses areal radius and angle as flat diagram coordinates; <code>--u_init</code> is <code>dy/dtau</code>, a proper-time coordinate rate, not a speed measured by a nearby observer. The central mass is held fixed.</p>
+<div class="note"><strong>How to judge a run.</strong> Compare the measured periapsis advance with the <code>predicted from the constants of motion</code> block, then inspect <code>max |ΔE/E0|</code> and <code>max |Δh/h0|</code>. The prediction solves the same orbit equation by a different route: it is an outside check on the integration, not an independent test of the physical model. Periapsides are sampled at accepted steps, so the measured advance can jump about even as the conserved-quantity drift falls.</div></section>
+<section id="beat0"><h2>Beat 0 · Watch a rosette</h2>
+<p><strong>Run.</strong> Begin with the default Schwarzschild orbit.</p>
+<pre>python main.py</pre>
+<p><strong>Observe.</strong> The run stops at 6000 accepted steps after 9.285146 turns. It finds six periapsides at about 15000 m and measures 2.44005 rad of advance per radial period. The independent calculation from the constants of motion predicts 2.44037 rad and an apoapsis of 23954.4 m. The horizon is about 2953.3 m and the ISCO about 8859.8 m, both inside this orbit.</p>
+<p><strong>Your turn.</strong> Point to two successive closest approaches in the plot. Why can their distances agree while their directions differ? The extra Schwarzschild inward term in the orbit equation is (3h^2/(c^2r^2)) times the Newtonian attraction, where (h=x_0u_0) is conserved angular momentum per unit mass. The orbital diagram is not a flat-space map of the geometry.</p></section>
+<section id="beat1"><h2>Beat 1 · Switch off the extra pull</h2>
+<p><strong>Run.</strong> Keep the initial data and change only the force law.</p>
+<pre>python main.py --model newtonian</pre>
+<p><strong>Observe.</strong> The Newtonian prediction is an ellipse between 15000 m and 65554 m with zero advance. The numerical run measures only 0.00101314 rad, a residual numerical error. Compare its 2.572195 turns in 6000 steps with Beat 0's 9.285146 turns and its tighter relativistic apoapsis.</p>
+<p><strong>Your turn.</strong> Which output gives the prediction, and which records the integrated path? At the common start, (3u_0^2/c^2approx0.481): the additional inward term is about 48% of the Newtonian one. The two models do not describe the same physical orbit merely because their input numbers match.</p></section>
+<section id="beat2"><h2>Beat 2 · Read the prediction first</h2>
+<p><strong>Run.</strong> Lower the starting sideways rate and tighten the step.</p>
+<pre>python main.py --u_init 1.1e8 --dt 5e-7 --max_steps 24000</pre>
+<p><strong>Observe.</strong> The starting radius of 15000 m is now the apoapsis. The prediction gives a periapsis of 13171.1 m and an advance of 4.07222 rad; the run finds 13170.9 m and 4.07277 rad. Beat 0's predicted advance was 2.44037 rad.</p>
+<p><strong>Your turn.</strong> Explain why going closer to the hole makes the excess angle larger. The predicted turning points and advance follow from energy and angular momentum, without taking integration steps. Compare the measured and predicted values as a numerical check; agreement does not independently prove the Schwarzschild model.</p></section>
+<section id="beat3"><h2>Beat 3 · Move to a weak field</h2>
+<p><strong>Run.</strong> Compare the two models farther from the mass.</p>
+<pre>python main.py --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_steps 20000
+python main.py --model newtonian --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_steps 20000</pre>
+<p><strong>Observe.</strong> The Schwarzschild run measures 0.0280654 rad per radial period; the exact prediction is 0.0280972 rad and the weak-field approximation is 0.0279099 rad. Newtonian gravity predicts zero, while its numerical run measures 0.000315267 rad.</p>
+<p><strong>Your turn.</strong> Compare each measured angle with its own prediction. Why is the Newtonian nonzero result an estimate of numerical contamination? The weak-field formula (6pi GM/(c^2p)), with (p) from the predicted turning points, is an approximation; the exact advance is a different output line.</p></section>
+<section id="beat4"><h2>Beat 4 · Disturb two circles</h2>
+<p><strong>Run.</strong> Compare a stable circle at (8GM/c^2) with a near-circle at (5GM/c^2).</p>
+<pre>python main.py --x_init 11813.0003044 --u_init 134071263.04595919 --max_orbits 4 --max_steps 8000
+python main.py --x_init 7383.12519025 --u_init 212197265.2804 --dt 1e-7 --max_orbits 12 --max_steps 40000</pre>
+<p><strong>Observe.</strong> The first predicts <code>circular (stable)</code> at 11813 m and 6.28319 rad as the advance of a small radial disturbance; a perfectly circular path itself has no periapsis sequence to measure. The second begins inside the ISCO but about 0.1% above its circular proper-time rate: it travels out to 15002.2 m, predicts 24.4301 rad of advance and measures 24.4374 rad.</p>
+<p><strong>Your turn.</strong> Look at the two plots. Why is a small disturbance mild outside the ISCO but dramatic on the unstable inner circle? Do not start a circular run by copying the six-significant-figure <code>circular dy/dtau</code> line; use the full input value shown here or compute it with <code>circular_proper_time_speed()</code>.</p></section>
+<section id="beat5"><h2>Beat 5 · Cross the ISCO and return</h2>
+<p><strong>Run.</strong> Start at 20000 m and compare the default numerical settings with a tighter integration.</p>
+<pre>python main.py --x_init 20000 --u_init 8e7 --max_steps 8000
+python main.py --x_init 20000 --u_init 8e7 --dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 20000</pre>
+<p><strong>Observe.</strong> The predicted orbit is bound, with periapsis 7564.95 m, inside the ISCO at 8859.8 m. The coarse run finds periapsides near 7476 m and a measured advance of 10.0873 rad against the predicted 9.40306 rad. The tighter run finds 7564.13 m and 9.40766 rad, with energy drift falling from 4.988e-03 to 5.746e-05.</p>
+<p><strong>Your turn.</strong> Which picture deserves more trust, and what two numbers justify it? The ISCO is a limit for stable <em>circular</em> paths, not a wall for eccentric orbits. The closer passage is where errors in a coarse integration become most conspicuous.</p></section>
+<section id="beat6"><h2>Beat 6 · Separate a plunge from a whirl</h2>
+<p><strong>Run.</strong> Test two nearby initial rates with tight settings, then repeat the second at default settings.</p>
+<pre>python main.py --u_init 1.044e8 --dt 1e-7 --eps1 0.005 --eps2 1e-6 --max_steps 12000
+python main.py --u_init 1.045e8 --dt 1e-7 --eps1 0.005 --eps2 1e-6 --max_steps 40000
+python main.py --u_init 1.045e8</pre>
+<p><strong>Observe.</strong> The first prediction is <code>plunge</code> and the run crosses the horizon after 9266 steps and 2.844796 turns. The second is predicted <code>bound</code>, with periapsis 7710.01 m and advance 13.5506 rad; the tight run measures 13.5564 rad. The default-step run from that same second start crosses the horizon instead, with energy drift 2.686e-02.</p>
+<p><strong>Your turn.</strong> Why can the coarse calculation make a bound input appear to plunge? Near the unstable potential peak, a small change in conserved energy changes the fate. Read the termination, drift and prediction together; the horizon end point is interpolated between the last two accepted states and omitted from drift maxima.</p></section>
+<section id="beat7"><h2>Beat 7 · Refine before trusting a digit</h2>
+<p><strong>Run.</strong> Halve the default maximum step twice, then run at one tenth of it with tighter tolerances.</p>
+<pre>python main.py --dt 1e-6 --max_steps 12000
+python main.py --dt 5e-7 --max_steps 24000
+python main.py --dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 60000</pre>
+<p><strong>Observe.</strong> The energy drifts for default, half, quarter and tenth steps are 1.573e-04, 3.928e-05, 9.875e-06 and 1.587e-06. Measured advances in the same order are 2.44005, 2.44109, 2.44014 and 2.44033 rad; the prediction is 2.44037 rad.</p>
+<p><strong>Your turn.</strong> The drift shrinks almost fourfold on each halving, yet the measured angle first moves farther from the prediction. Why? Periapsides are identified only at accepted points; an angular sampling error of order (omega_pDelta	au/(n-1)) can change sign. Look for stable agreement under refinement as well as a smaller conserved-quantity drift.</p></section>
+<section id="beat8"><h2>Beat 8 · Escape, Mercury and rejected inputs</h2>
+<p><strong>Run.</strong> Watch escape, compare a tiny predicted Mercury advance with two numerical readings, then try an invalid starting radius.</p>
+<pre>python main.py --u_init 1.8e8 --max_steps 12000
+python main.py --x_init 4.6e10 --u_init 58980 --dt 1e4 --max_steps 4000 --max_orbits 5
+python main.py --model newtonian --x_init 4.6e10 --u_init 58980 --dt 1e4 --max_steps 4000 --max_orbits 5
+python main.py --x_init 2000</pre>
+<p><strong>Observe.</strong> The first prediction is <code>escape</code>, although the run ends at the 12000-step limit because the program has no escape detector. The Mercury input predicts 5.01831e-07 rad of relativistic advance, while the Schwarzschild and Newtonian integrations report 0.000121605 and 0.000119678 rad. The final command is expected to fail: 2000 m lies inside the horizon.</p>
+<p><strong>Your turn.</strong> Why is neither measured Mercury angle evidence of 43 arcseconds per century? The control that should have zero advance produces nearly the same spurious angle. Use the predicted angle for this small effect; the coarse integration and accepted-step periapsis sampling cannot resolve it. The invalid input stops before a plot opens.</p></section>
+<section id="further"><h2>Try next</h2>
+<p><strong>Check a plot marker.</strong> Run <code>python main.py --show_periapsides</code> and inspect the marked accepted-step minima. Compare a marker's radius with the printed periapsis range. The cursor coordinate display can help you locate it.</p>
+<p><strong>Run a clockwise path.</strong> Try <code>python main.py --u_init -1.2e8</code>. Compare its turn count, predicted fate and advance with Beat 0; what changes sign, and what should remain a magnitude?</p>
+<p><strong>Measure the other boundary.</strong> Use <code>python main.py --u_init 1.0444e8 --max_steps 10</code> and <code>python main.py --u_init 1.04445e8 --max_steps 10</code> to bracket the plunge/bound threshold from the prediction alone. Ten steps do not trace the eventual fate.</p></section>
+<section id="parameters"><h2>Command-line parameters</h2>
+<p>Options override defaults for one run. <code>--show_isco</code> and <code>--show_periapsides</code> only change the picture; <code>--no-show_isco</code> and <code>--no-show_periapsides</code> undo those switches. Negative values for <code>--u_init</code> are allowed.</p><div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table">
+<thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td class="pname">--x_init</td><td class="pdefault">15000</td><td>Starting areal radius \(x_0\) in m, on the \(+x\) axis, Eq. (3). It must be positive, and outside the horizon, 2953.3 m, in Schwarzschild mode.</td></tr>
+<tr><td class="pname">--u_init</td><td class="pdefault">1.2e8</td><td>Starting \(dy/d\tau\), \(u_0\), in m/s, Eq. (3); any finite value, including zero or a negative value. It is a proper-time rate, not a measured speed.</td></tr>
+<tr><td class="pname">--dt</td><td class="pdefault">2e-6</td><td>Largest proper-time step \(\Delta\tau_{\max}\) in s, Eq. (20).</td></tr>
+<tr><td class="pname">--max_steps</td><td class="pdefault">6000</td><td>Largest number of accepted steps; a run can stop here before it reaches <code>--max_orbits</code>.</td></tr>
+<tr><td class="pname">--max_orbits</td><td class="pdefault">10</td><td>Number of turns, Eq. (4), after which the run stops; the last step can overshoot it slightly.</td></tr>
+<tr><td class="pname">--eps1</td><td class="pdefault">0.05</td><td>Largest fractional change of the acceleration in one step, \(\varepsilon_1\) of Eq. (20); strictly between 0 and 1.</td></tr>
+<tr><td class="pname">--eps2</td><td class="pdefault">1e-4</td><td>Convergence threshold \(\varepsilon_2\) of the corrector, Eq. (19); strictly between 0 and <code>--eps1</code>.</td></tr>
+<tr><td class="pname">--model</td><td class="pdefault">schwarzschild</td><td><code>schwarzschild</code> integrates Eq. (2); <code>newtonian</code> integrates Eq. (6) from the same start.</td></tr>
+<tr><td class="pname">--show_isco</td><td class="pdefault">on</td><td>Draw the ISCO circle at \(6GM/c^2\) in Schwarzschild mode; <code>--no-show_isco</code> hides it.</td></tr>
+<tr><td class="pname">--show_periapsides</td><td class="pdefault">off</td><td>Mark the periapsides found by Eq. (5) with an <code>x</code>; <code>--no-show_periapsides</code> hides them.</td></tr>
+</tbody></table></div></section>
+<section id="summary"><h2>Reading the output</h2>
+<p><code>termination</code> says why integration stopped, while <code>motion</code> in the predicted block classifies the ideal orbit from the constants. <code>accepted steps</code>, <code>proper time</code>, and <code>azimuthal turns</code> describe the integrated path. <code>periapsides found</code> counts discrete minima; a circular path has no sequence of such events. The advance is printed only when at least two periapsides are found. The exact predicted advance and the weak-field approximation are separately labeled.</p>
+<pre>python main.py --version
+python main.py --help</pre>
+<p>The first command prints the shared version/build and the second lists the parser's options; neither starts an orbit. Python 3.10 or later is required. The program runs offline; MathJax typesets this page's equations when online.</p></section>
+<section id="related"><h2>Related programs</h2>
+
+<h2>Related Programs</h2>
+<ul class="related-list">
+<li><strong>Orbit</strong> — Newtonian orbits around a fixed mass with a related adaptive predictor-corrector; its orbits close.</li>
+<li><strong>MercPert</strong> — The precession of Mercury's orbit caused by another planet in Newtonian gravity. Such perturbations account for most of Mercury's observed precession; relativity accounts for the remaining 43 arcseconds per century (Experiment 11).</li>
+<li><strong>Binary</strong> — Two bodies orbiting each other in Newtonian gravity, where neither is fixed.</li>
+</ul>
+</section>
+<section id="license"><h2>License</h2>
+
+<h2>License</h2>
+<p>
+      This software is based on the programs by <strong>Bernard Schutz</strong> accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003) and is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license. It descends from Schutz's original Java program for relativistic orbits; this student-facing version is a Python port by Thomas Yee.
+    </p>
+</section>
+</main>
+<footer>
+<em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+</footer>
+</div><!-- /page-wrap -->
+<!-- ── Sidebar active-link tracking ── -->
+<script>
+  (function () {
+    const links = document.querySelectorAll('nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector(`nav a[href="#${e.target.id}"]`);
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('main section[id]').forEach(s => observer.observe(s));
+  })();
+</script>
+</body>
+</html>

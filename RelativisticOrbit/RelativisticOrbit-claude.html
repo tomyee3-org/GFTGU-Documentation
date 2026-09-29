@@ -478,10 +478,11 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 991fa89ab9b7
+  Version 1.5.0&nbsp;&nbsp;&nbsp;&nbsp;Build daaef3a0231c
 </p>
 <section id="overview">
 <h2>Overview</h2>
+<p class="note">Hover over a graph in the Matplotlib display to see the cursor’s graphical <code>(x, y)</code> coordinates at the lower right of the display.</p>
 <p><strong>RelativisticOrbit</strong> follows a small particle falling freely around a non-rotating black hole of one solar mass, and draws its orbit. Close to the hole the orbit is not an ellipse. Its closest approach, the periapsis, moves forward from one pass to the next, so that the path traces a rosette; much closer in, the particle can whirl round several times before it swings out again, or it can fall through the horizon and never come back. A second model, Newtonian gravity started from the same point with the same velocity, runs beside it for comparison.</p>
 <p>The program integrates the orbit step by step in the particle's own time, its proper time \(\tau\), and prints a summary before it opens the plot: why the run stopped, how far the particle turned, where it found the periapsides and how far each one advanced, and how well two quantities that should stay constant did stay constant. Beneath that it prints what the constants of motion say the orbit must do, worked out exactly without integrating anything: whether it is bound, where it turns, and by how much its periapsis advances.</p>
 <p>The spine of the lesson is one sentence: <em>a freely falling particle outside a black hole obeys a Newtonian-looking equation with one extra inward pull, \(3h^2/(c^2r^2)\) times the Newtonian one, and that pull makes each periapsis advance by an angle that the particle's energy and angular momentum fix exactly: a fraction of a degree far away, more than a whole turn close in, and, below a critical angular momentum, no return at all; the exact prediction printed beside each run and the printed drift of the conserved quantities are how you tell how far to trust the step-by-step orbit.</em> Each numbered section below is one beat: a short argument, a command whose printed summary or plot illustrates that argument, and then the equation that the printed numbers follow from.</p>
@@ -919,7 +920,7 @@ python main.py --dt 5e-7 --max_steps 24000</pre>
 <section id="summary">
 <h2>Printed Summary</h2>
 <p>Every run prints a summary and then opens its plot. This is the summary of the default run of Beat 0:</p>
-<pre>RelativisticOrbit 1.4.0 (build 991fa89ab9b7) summary
+<pre>RelativisticOrbit 1.5.0 (build daaef3a0231c) summary
   model             : schwarzschild
   horizon radius    : 2953.3 m
   ISCO radius       : 8859.8 m
@@ -948,7 +949,7 @@ python main.py --dt 5e-7 --max_steps 24000</pre>
 <li><code>predicted from the constants of motion</code>: lines worked out from \(x_0\) and \(u_0\) alone, without the integration. <code>circular dy/dtau</code> is Eq. (14), or \(\sqrt{GM/r}\) in Newtonian mode, shown to six significant figures (see <a href="#algorithm">Algorithm</a> before typing it back in as <code>--u_init</code>); it reads <code>none</code> when \(x_0\) is not above \(3GM/c^2\). <code>motion</code> is the kind of orbit, with its turning points when it is bound or circular. <code>apsidal advance</code> is Eq. (11), or Eq. (15) for a stable circle, and 0 in Newtonian mode. <code>weak-field 6piGM/(c^2 p)</code> is Eq. (12), printed in Schwarzschild mode.</li>
 </ul>
 <p>A plunge prints a different prediction. This is the run of Beat 6 that crosses the horizon:</p>
-<pre>RelativisticOrbit 1.4.0 (build 991fa89ab9b7) summary
+<pre>RelativisticOrbit 1.5.0 (build daaef3a0231c) summary
   model             : schwarzschild
   horizon radius    : 2953.3 m
   ISCO radius       : 8859.8 m
