@@ -3,9 +3,9 @@
 <h1>EarthOrbit 1.5.0 Release Notes</h1>
 <p><b>Version:</b> 1.5.0<br><b>Build:</b> 5b353c62e594<br><b>Date:</b> 2026-09-29</p>
 <h2>Release Status</h2>
-<p>This Kickoff4 candidate resumes work after the 1.4.0 documentation round. The two most recent code-changing rounds are the Audit22 response (1.4.0) and this Kickoff4 (1.5.0). Codex completed an internal adversarial review before packaging. Claude's external review of 1.5.0 is pending; this note does not claim release approval.</p>
+<p>This Kickoff4 candidate resumes work after the 1.4.0 documentation round. The two most recent code-changing rounds are the Audit22 response (1.4.0) and this Kickoff4 (1.5.0). Codex completed an internal adversarial review before packaging. Claude Audit41 returned APPROVE with one P3 test-maintenance finding and one optional P4 test-thoroughness observation; both were corrected in this response. The 1.5.0 code and source build remain unchanged. This candidate is ready for release.</p>
 <h2>Open Bugs</h2>
-<p>No unresolved P1–P3 defect is known in this candidate. EO-1 from Grok Audit21/Audit25 is closed below. Further external review may identify new defects.</p>
+<p>No unresolved P1–P3 defect is known in this candidate. EO-1 from Grok Audit21/Audit25 is closed below. Claude Audit41 found no P1 or P2 defect and its sole P3 finding is closed.</p>
 <h2>Major Improvements in This Release</h2>
 <ul>
 <li><b>1.5.0: clean extreme-input error (EO-1).</b> The launch-state orbital-element calculation now converts NumPy scalar diagnostics to Python floats and rejects non-finite squares and eccentricity before later operations. Reproduction: <code>python main.py --uInit 1e160 --dt 1e-150 --maxSteps 2 --force_law inverse_square</code>. Formerly: three raw <code>RuntimeWarning</code> lines followed by an <code>EarthOrbit:</code> error. Now: only <code>EarthOrbit: summary values must be finite</code> on stderr, with no plot. This changes public error behavior and warrants a minor version bump.</li>
@@ -16,7 +16,7 @@
 <h2>Test Suite Growth</h2>
 <ul>
 <li>Baseline 1.4.0 candidate: 90 tests passed in the installed Programs/Documentation pair. The earlier 1.4.0 note's count of 87 predates three subsequent documentation checks.</li>
-<li>1.5.0: 94 tests, adding the EO-1 subprocess regression and three paired-tutorial contracts. The latter require both named tutorial files in one documentation folder, check version/build and Beat sections, and parse every Beat command under the shared command-line interface.</li>
+<li>1.5.0 Kickoff4: 94 tests, including the EO-1 subprocess regression and three paired-tutorial contracts. Audit41 response: 95 tests. The paired version/build check now derives its version pattern from MODEL_VERSION instead of a literal 1.5.0 (P3). A new check rejects leaked development vocabulary in both student tutorials and the Sample Outputs Guide (P4). The suite requires both named tutorial files in one documentation folder and parses every Beat command under the shared command-line interface.</li>
 <li>Run <code>python -m unittest discover -s tests -v</code> from <code>GFTGU-Programs/EarthOrbit</code> with the sibling <code>GFTGU-Documentation/EarthOrbit</code> installed. The Reference Guide is included for historical tests but is not the active tutorial.</li>
 </ul>
 <h2>Known Limitations</h2>
