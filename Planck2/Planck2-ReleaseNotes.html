@@ -10,10 +10,11 @@
 <p>
 <b>Version:</b> 1.5.1<br>
 <b>Build:</b> 1107bea3441f<br>
-<b>Date:</b> 2026-09-24
+<b>Date:</b> 2026-09-29
 </p>
 
 <h2>Release Status</h2>
+<p>Kickoff4, 29 September 2026: the 1.5.1 executable core and build ID remain unchanged. Two active tutorial guides, <code>Planck2-claude.html</code> and <code>Planck2-grok.html</code>, now share this code, test suite and figure guide. Claude's Audit41 verdict is APPROVE: no new P1, P2 or P3 defects and no release hold. The one carried P3, OB-1 below, is accepted as an optional enhancement; the archived <code>Planck2-original.html</code> remains at its historical 1.2.0 stamp and is not maintained against the current program.</p>
 
 <p>
 These notes cover Version 1.5.1 and the two code-changing rounds that produced it: the Audit 23 response (1.5.0) and
@@ -35,10 +36,11 @@ box, not in the console summary.<br>
 Reproduction: <code>python main.py</code>. Observed: the five-line summary gives the peak position
 (<code>peak at x = 4.959505</code>, <code>Peak wavelength = 4.917033e-07 m</code>) but no peak value; only the plot
 annotation shows <code>Peak value = 2.9281e+13</code>. Expected (reviewer, optional): the summary and the annotation
-report the same set of peak quantities.</li>
+report the same set of peak quantities. <b>Audit41 disposition:</b> accepted as an optional future enhancement. The peak value is available in the plot annotation, and both active tutorials tell students where to find it; no exercise is blocked. As released, the console and annotation report complementary quantities.</li>
 </ul>
 
 <h2>Major Improvements in This Release</h2>
+<p>Kickoff4 (documentation and test only): added a terminal-led Grok tutorial with nine Beats; checked its commands, parameter defaults, math and sample-figure commands against the same program as the Claude tutorial. Added the graphical cursor-coordinate note to both active tutorials. The original Reference Guide is preserved as an archive. Regenerated all nine embedded figures from the unchanged core.</p>
 
 <p>Version 1.5.1 (Audit 24 response):</p>
 <ul>
@@ -75,11 +77,12 @@ instead of extending to negative values (1.2.0).</li>
 <h2>Test Suite Growth</h2>
 
 <ul>
-<li>1.1.0: 96 tests. 1.2.0: 138. 1.3.0: 146. 1.4.0: 154. 1.5.0: 161. 1.5.1: 172 (164 in the Audit 24 response, plus eight checks of these two documents).</li>
-<li>Run from the program folder with <code>python -m unittest discover -s tests</code>. In the full repository layout
-all 172 tests run and pass with no skips. In a flat folder that holds only the program, the tests and
-<code>Planck2-claude.html</code>, the link check, the <code>Planck2-original.html</code> tests and these document checks
-are skipped (10 skips, with the three <code>Planck2-original.html</code> tests reported as one), and the rest pass.</li>
+<li>1.1.0: 96 tests. 1.2.0: 138. 1.3.0: 146. 1.4.0: 154. 1.5.0: 161. The Audit 24 response to 1.5.1 had 172 tests (164 program and Help checks plus eight companion-document checks). 1.5.1: 176 in Kickoff4 (three archive behavior checks replaced by two archive identity checks and five paired-guide checks).</li>
+<li>Run from the program folder with <code>python -m unittest discover -s tests</code>. In this isolated Kickoff4
+package, all 176 tests run: 175 pass and one cross-module Related Programs link check skips because its sibling
+documentation is absent. The two active guides must be present together beside the program or in
+<code>GFTGU-Documentation/Planck2/</code>. The archived original is optional and is never tested
+for compatibility with the current executable.</li>
 <li>New coverage since 1.1.0 includes every command shown in the Help, the numbers the Help and the Sample Outputs Guide
 quote, per-run attribution in Beat 7, input rejection at the floating-point limits, and the plot's axis limits.</li>
 </ul>
@@ -100,11 +103,12 @@ quote, per-run attribution in Beat 7, input rejection at the floating-point limi
 <ul>
 <li>MathJax is not bundled for offline use; this awaits a decision for the whole program set.</li>
 <li>The Related Programs links point to <code>Star.html</code> and <code>Random2.html</code> and will need updating if those Help files are renamed.</li>
-<li><code>Planck2-original.html</code> and <code>Planck2-claude.html</code> are both present, and neither is marked as the current Help.</li>
-<li><code>Planck2-claude.html</code> is the Claude-style Help, which quotes run results; the Grok-style alternative is a separate file not yet written.</li>
+<li>The historical <code>Planck2-original.html</code> retains its 1.2.0 stamp. The active guides are <code>Planck2-claude.html</code> and <code>Planck2-grok.html</code>; a default Help selection policy for the wider project has not been chosen.</li>
+
 <li>The annotation prints the peak <i>x</i> to four decimals and the console to six.</li>
 <li>The <code>--help</code> text for <code>--x_max</code> does not mention that <code>--x_high</code> must not exceed it.</li>
 <li>There is no option to save a figure to a file.</li>
+<li>Audit41 P4: the regression check for internal AI/review-history vocabulary scans <code>Planck2-claude.html</code> only. When convenient, extend it to <code>Planck2-grok.html</code> and the Sample Outputs Guide. Claude directly inspected all current student documents and found no leaked wording; this is a future test-coverage improvement.</li>
 </ul>
 
 <h2>Version Identification</h2>
@@ -113,9 +117,9 @@ quote, per-run attribution in Beat 7, input rejection at the floating-point limi
 <li><b>Version:</b> 1.5.1 (<code>MODEL_VERSION</code> in <code>planck2_physics.py</code>).</li>
 <li><b>Build:</b> 1107bea3441f, the first 12 hexadecimal digits of the SHA-256 of the four modules
 <code>planck2_physics.py</code>, <code>planck2_driver.py</code>, <code>main.py</code> and <code>planck2_plot.py</code>.</li>
-<li><b>Date:</b> 2026-09-24. Python 3.10 or later.</li>
+<li><b>Date:</b> 2026-09-29 (Kickoff4 documentation set; executable core last changed 2026-09-24). Python 3.10 or later.</li>
 <li>Printed by <code>python main.py --version</code>, in the first line of every run, and in the version stamp of
-<code>Planck2-claude.html</code> and <code>Planck2-original.html</code>.</li>
+<code>Planck2-claude.html</code> and <code>Planck2-grok.html</code>. The archived original retains its historical stamp.</li>
 </ul>
 
 </body>

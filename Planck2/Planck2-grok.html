@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Planck2 – Terminal Tutorial | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+    /* ── Reset & custom properties ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #fdf5e6;
+      --surface:  #ffffff;
+      --border:   #c8bfa0;
+      --accent:   #7b2d00;
+      --accent2:  #a04010;
+      --gold:     #b5811a;
+      --text:     #1c1c1c;
+      --muted:    #5a4a3a;
+      --code-bg:  #f0ede4;
+      --note-bg:  #f4f0e8;
+      --eq-bg:    #f7f2e8;
+      --radius:   5px;
+      --shadow:   0 2px 8px rgba(0,0,0,0.10);
+      --mono:     "Courier New", Courier, monospace;
+      --sans:     "Helvetica Neue", Arial, sans-serif;
+      --serif:    Georgia, "Times New Roman", Times, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Page grid ── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.95rem;
+      font-weight: normal;
+      letter-spacing: -.02em;
+    }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub {
+      margin-top: 6px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: #f0d0b8;
+      line-height: 1.55;
+    }
+    header .sub a {
+      color: #ffd8b8;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,200,150,.4);
+    }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+
+    /* ── Sidebar ── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      padding: 14px 18px 4px;
+    }
+    nav a {
+      display: block;
+      padding: 6px 18px 6px 22px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background .15s, border-color .15s;
+    }
+    nav a:hover {
+      background: var(--bg);
+      border-left-color: var(--accent2);
+      color: var(--accent);
+    }
+    nav a.active {
+      background: var(--note-bg);
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    nav hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 14px;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 38px 48px 60px;
+      max-width: 860px;
+    }
+
+    section { margin-bottom: 52px; }
+
+    h2 {
+      font-size: 1.30rem;
+      font-weight: normal;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 6px;
+      margin-bottom: 18px;
+      letter-spacing: -.01em;
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--accent2);
+      margin: 24px 0 8px;
+    }
+    h4 {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin: 18px 0 6px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    /* ── Equation block ── */
+    .eq {
+      background: var(--eq-bg);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 20px;
+      margin: 18px 0;
+      overflow-x: auto;
+      font-size: 1.05em;
+    }
+    .eq-label {
+      float: right;
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 2px;
+    }
+
+    /* ── Note / tip box ── */
+    .note {
+      background: var(--note-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      margin: 18px 0;
+      font-size: 0.93rem;
+    }
+    .note strong { color: var(--accent); }
+
+    /* ── Restore-defaults box ── */
+    .restore-section {
+      margin: 2.5em auto;
+      max-width: 860px;
+      font-family: inherit;
+    }
+    .restore-box {
+      border: 1.5px solid var(--gold);
+      border-left: 5px solid var(--gold);
+      border-radius: 6px;
+      background: #fffbeb;
+      padding: 1.1em 1.4em;
+      display: flex;
+      gap: 1em;
+      align-items: flex-start;
+    }
+    .restore-icon { font-size: 1.5em; line-height: 1; flex-shrink: 0; }
+    .restore-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      color: var(--accent);
+      margin-bottom: 0.35em;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .restore-intro {
+      margin: 0 0 0.5em;
+      font-size: 0.92em;
+      line-height: 1.6;
+    }
+    .restore-list {
+      margin: 0;
+      padding-left: 1.4em;
+      font-size: 0.92em;
+      line-height: 1.8;
+    }
+    .restore-box kbd {
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.88em;
+    }
+    .restore-link { color: var(--accent); text-decoration: underline; }
+    .restore-footnote {
+      margin: 0.6em 0 0;
+      font-size: 0.88em;
+      color: var(--muted);
+    }
+
+    /* ── Code ── */
+    pre {
+      background: #2b2b2b;
+      color: #f0ede4;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.55;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 0.91em;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    pre code { background: none; padding: 0; font-size: inherit; }
+
+    /* ── Module cards ── */
+    .mc { display: grid; gap: 14px; margin: 18px 0; }
+    .mc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+    }
+    .mc-card .mc-name {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .mc-card .mc-role {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .mc-card p { font-size: 0.92rem; margin-bottom: 0; color: var(--muted); }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 16px 0;
+    }
+    th {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      background: var(--note-bg);
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { font-family: var(--mono); color: var(--accent2); }
+
+    /* ── Output type list ── */
+    .output-list { list-style: none; margin: 14px 0; }
+    .output-list li {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .output-list li:last-child { border-bottom: none; }
+    .output-list .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      white-space: nowrap;
+      color: var(--accent2);
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
+    }
+    footer a { color: #e0c090; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Beats layout additions ── */
+    .eq-kind {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .kind {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-left: 4px;
+      vertical-align: 1px;
+    }
+    .kind-law { background: #f6dcdc; color: #7a1f1f; border: 1px solid #d9a0a0; }
+    .kind-ode { background: #d9ead3; color: #274e13; border: 1px solid #a8c69a; }
+    .kind-def { background: #e4e4e4; color: #3a3a3a; border: 1px solid #b5b5b5; }
+    .kind-der { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
+    .kind-alg { background: #e6e0f8; color: #3d2c73; border: 1px solid #b7abdd; }
+    .warn {
+      background: #fff6e8;
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 12px 18px;
+      margin: 16px 0;
+      font-family: var(--sans);
+      font-size: 0.91rem;
+      color: var(--muted);
+    }
+    .warn strong { color: var(--accent); }
+    .compare-table th:not(:first-child), .compare-table td:not(:first-child) {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .compare-table td:not(:first-child) { font-family: var(--mono); color: var(--text); }
+    main { min-width: 0; }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+    section ul { margin: 0 0 14px 1.4em; }
+    section ul li, section ol li { margin-bottom: 6px; }
+    section ol { margin: 0 0 14px 1.6em; }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 48px; }
+    }
+  
+</style>
+</head>
+<body><div class="page-wrap"><header>
+<div class="badge">Chapter 10 · Gravity from the Ground Up</div>
+<h1><em>Planck2</em> — Black-Body Radiation · Terminal Guide</h1>
+<div class="sub">
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+</div>
+</header><nav id="sidebar"><div class="nav-label">Start</div><a href="#overview">Overview</a><div class="nav-label">At the terminal</div><a href="#beat0">Beat 0 · Look at one spectrum</a><a href="#beat1">Beat 1 · Change temperature</a><a href="#beat2">Beat 2 · Change the horizontal density</a><a href="#beat3">Beat 3 · Radiance or energy per volume</a><a href="#beat4">Beat 4 · Add up a spectrum</a><a href="#beat5">Beat 5 · Test the fourth power</a><a href="#beat6">Beat 6 · Change the sampling grid</a><a href="#beat7">Beat 7 · Move the approximation switches</a><a href="#beat8">Beat 8 · Cut off the range deliberately</a><div class="nav-label">Reference</div><a href="#further">Two further challenges</a><a href="#parameters">Command-line parameters</a><a href="#summary">How to read the summary</a><a href="#related">Related programs</a><a href="#license">License</a></nav><main><p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">Version 1.5.1&nbsp;&nbsp;&nbsp;&nbsp;Build 1107bea3441f</p><section id="overview"><h2>Start here</h2><p>Planck2 lets you change a black body's temperature and see three related spectra: radiance per wavelength, radiance per frequency, and energy density per frequency. It accompanies Chapter 10, Investigations 10.1–10.3. You will run commands, read the five-line summary, and test where a numerical curve agrees with its exact integral.</p><p>Run commands from the folder containing <code>main.py</code>. Close each plot window before starting the next run. Hover over a graph: Matplotlib shows the cursor's graphical <code>(x, y)</code> coordinates at the lower right of the display. The equations use MathJax from the internet; the Python program runs offline.</p><div class="note"><strong>Model boundary:</strong> this is an ideal black body at one temperature. There are no spectral absorption lines, nonunit emissivity, or radiative transfer.</div></section><section id="beat0"><h2>Beat 0 · Look at one spectrum</h2><p><strong>Run.</strong> Start with the default 5900 K body, plotted as radiance per wavelength.</p><pre>python main.py</pre><p><strong>Observe.</strong> The console gives <code>peak at x = 4.959505</code>, <code>Peak wavelength = 4.917033e-07 m</code>, and both a numerical and an exact integral. The plot box also gives the sampled <code>Peak value</code>, which the console does not. Compare <code>2.187105e+07</code> with <code>2.187106e+07</code> in W m<sup>−2</sup> sr<sup>−1</sup>.</p><p><strong>Your turn.</strong> Move the cursor near the top of the curve. Which physical wavelength is at the maximum? Why might the cursor and the six-digit printed peak disagree slightly?</p><p>The dimensionless coordinate is \(x=hc/(\lambda kT)=h\nu/(kT)\). Planck's law supplies the curve; the printed peak is the largest sampled point, not a continuous optimizer.</p></section><section id="beat1"><h2>Beat 1 · Change temperature</h2><p><strong>Run.</strong> Compare these separate wavelength plots and record each printed peak wavelength.</p><pre>python main.py --T 3000
+python main.py --T 5900
+python main.py --T 10000</pre><p><strong>Observe.</strong> A hotter body peaks at a shorter wavelength. The product of temperature and peak wavelength should stay approximately fixed. The sampled \(x\) peak stays near 4.965 with a sufficiently fine grid.</p><p><strong>Your turn.</strong> Multiply the first and third peak wavelength by their temperatures. How close are the products? The law for this plotted density follows from \(\lambda_{\rm peak}=hc/(x_5 kT)\), where \(x_5\approx4.965\).</p></section><section id="beat2"><h2>Beat 2 · Change the horizontal density</h2><p><strong>Run.</strong> Ask for radiance per frequency at two temperatures.</p><pre>python main.py --T 5900 --quantity frequency
+python main.py --T 2.725 --quantity frequency</pre><p><strong>Observe.</strong> These horizontal axes are in hertz; the second run represents the cosmic microwave background as an ideal 2.725 K black body. Its frequency peak is much lower. The frequency peak has \(x_3\approx2.821\), whereas Beat 1 used \(x_5\approx4.965\).</p><p><strong>Your turn.</strong> Calculate \(h\nu_{\rm peak}/(kT)\) from one printed frequency. Why is it wrong to turn the wavelength peak of Beat 1 into the frequency peak simply by using \(\nu=c/\lambda\)? The two spectra are densities per different horizontal intervals.</p></section><section id="beat3"><h2>Beat 3 · Radiance or energy per volume</h2><p><strong>Run.</strong> Keep the temperature fixed while changing the plotted quantity; then inspect a cold example.</p><pre>python main.py --T 5900 --quantity frequency
+python main.py --T 5900 --quantity energy_density
+python main.py --T 2.725 --quantity energy_density</pre><p><strong>Observe.</strong> Both frequency curves peak at the same \(x\) and physical frequency for a fixed \(T\), but their vertical axes and integrated units differ. Frequency radiance integrates to W m<sup>−2</sup> sr<sup>−1</sup>; energy density integrates to J m<sup>−3</sup>. For isotropic black-body radiation, \(u_\nu=4\pi B_\nu/c\).</p><p><strong>Your turn.</strong> Compare the first two physical integrals only after accounting for \(4\pi/c\). Do not compare the numbers as if they shared units.</p></section><section id="beat4"><h2>Beat 4 · Add up a spectrum</h2><p><strong>Run.</strong> Compare both radiance representations at 5900 K.</p><pre>python main.py
+python main.py --quantity frequency</pre><p><strong>Observe.</strong> The peak positions differ but both physical integrals should approach the same radiance, \(\sigma T^4/\pi\). The dimensionless shape is \(f_p(x)=x^p/(e^x-1)\), with \(p=5\) for wavelength radiance and \(p=3\) for the two frequency quantities. Their dimensionless areas therefore differ; their physical radiance integrals agree.</p><p><strong>Your turn.</strong> Subtract the printed physical integral from its exact zero-to-infinity reference in each run. Which is closer? The emitted flux from a black surface is \(\pi\) times the integrated radiance; the printed radiance is not the emitted flux.</p></section><section id="beat5"><h2>Beat 5 · Test the fourth power</h2><p><strong>Run.</strong> Record the physical integral in each mode at 3000, 6000 and 12000 K.</p><pre>python main.py --T 3000 --quantity frequency
+python main.py --T 6000 --quantity frequency
+python main.py --T 12000 --quantity frequency
+python main.py --T 3000 --quantity energy_density
+python main.py --T 6000 --quantity energy_density
+python main.py --T 12000 --quantity energy_density</pre><p><strong>Observe.</strong> Doubling the temperature multiplies a bolometric integral by \(2^4=16\) within numerical precision. The radiance reference is \(\sigma T^4/\pi\); energy density uses \(4\sigma T^4/c\).</p><p><strong>Your turn.</strong> Take two successive ratios within each mode. Never divide an energy density by a radiance without the \(4\pi/c\) conversion.</p></section><section id="beat6"><h2>Beat 6 · Change the sampling grid</h2><p><strong>Run.</strong> Keep the same physical model and vary the number of equal intervals in \(x\).</p><pre>python main.py --n_steps 10
+python main.py --n_steps 100
+python main.py --n_steps 1000
+python main.py --n_steps 2000
+python main.py --n_steps 20000</pre><p><strong>Observe.</strong> There are \(N+1\) samples for <code>--n_steps N</code>. The ten-step peak is coarse, although the exact reference remains fixed. The sampled peak can lie as much as one grid step from the true maximum when the exact peak is inside the range and switches do not create a higher false maximum; a half-step bound is not guaranteed.</p><p><strong>Your turn.</strong> Compare the first-line \(x\) values and the numerical-versus-exact integrals. Which converges more quickly? The area is a trapezoidal sum over a finite range.</p></section><section id="beat7"><h2>Beat 7 · Move the approximation switches</h2><p><strong>Run.</strong> First keep both limiting approximations in the tails. Then move them into the body of the curve.</p><pre>python main.py --x_low 0.01 --x_high 100
+python main.py --x_low 1 --x_high 3
+python main.py --quantity frequency --x_low 1 --x_high 3
+python main.py --x_low 5 --x_high 6
+python main.py --x_low 4</pre><p><strong>Observe.</strong> Below <code>--x_low</code> the program uses the small-\(x\) Rayleigh–Jeans approximation; above <code>--x_high</code> it uses the large-\(x\) Wien approximation. The fourth and fifth commands can create a false maximum or a visibly distorted curve.</p><p><strong>Your turn.</strong> For each run, compare its numerical integral with its exact reference, and look for a change in the reported peak. The exact value remains a fixed check for each temperature and quantity; moving the switches changes the numerical approximation.</p></section><section id="beat8"><h2>Beat 8 · Cut off the range deliberately</h2><p><strong>Try a rejected command.</strong> <code>python main.py --x_max 10</code> is expected to fail: the default <code>--x_high 20</code> is now beyond the end of the range.</p><p><strong>Run.</strong> Move both limits together, then cut below the wavelength peak; compare with a truncated low end and a full horizontal plot.</p><pre>python main.py --x_max 10 --x_high 9
+python main.py --x_max 4 --x_high 3
+python main.py --x_min 1 --x_low 1
+python main.py --y_frac_window 0</pre><p><strong>Observe.</strong> The second command stops at \(x=4\), below the wavelength shape's true maximum near 4.965. The reported peak is at the edge and its numerical integral misses part of the spectrum. A window fraction of zero changes only the view, not the integration or peak calculation.</p><p><strong>Your turn.</strong> Explain why the second physical integral departs from the exact reference. Valid settings require <code>x_min &le; x_low &lt; x_high &le; x_max</code>. To isolate the viewing effect, compare the final command with Beat 0.</p></section><section id="further"><h2>Two further challenges</h2><p><strong>After Beat 8.</strong> These optional tasks give you the programming investigations from the longer tutorial without changing the program files.</p><p><strong>Challenge A:</strong> Solve the peak condition \(x=p(1-e^{-x})\) by repeatedly updating \(x\leftarrow p(1-e^{-x})\), starting at \(x=p\), for \(p=3\) and \(p=5\). Compare your answers with the first lines of these runs:</p><pre>python main.py --quantity frequency --n_steps 100000
+python main.py --n_steps 100000</pre><p>Distinguish the continuous root from the sampled maximum.</p><p><strong>Challenge B:</strong> In a Python interpreter opened in the program folder, run <code>from planck2_driver import run_planck2</code>, then <code>r = run_planck2(5900.0, "wavelength", 2000)</code>. Compare <code>r.coord_peak * r.T</code> across temperatures and compute <code>r.physical_integral / r.exact_physical_integral</code>. Check against Beats 1 and 4. The result also exposes <code>x_values</code>, <code>coord_values</code> and <code>y_values</code> for your own plot.</p></section><section id="parameters"><h2>Command-line parameters</h2><p>All ordinary settings are command-line options described in <code>main.py</code>. Physical quantities are in SI units throughout. Options you omit return to their defaults on each run.</p><div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table">
+<thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td class="pname">--T</td><td class="pdefault">5900.0</td><td>K</td><td>Positive finite black-body temperature; the default approximates the Sun's continuum.</td></tr>
+<tr><td class="pname">--quantity</td><td class="pdefault">"wavelength"</td><td>&mdash;</td><td><code>"wavelength"</code> plots radiance per wavelength; <code>"frequency"</code> plots radiance per frequency; <code>"energy_density"</code> plots energy density per frequency.</td></tr>
+<tr><td class="pname">--n_steps</td><td class="pdefault">2000</td><td>&mdash;</td><td>Number of equal \(x\)-intervals; the program samples <code>n_steps + 1</code> points. Valid range: 1&ndash;1,000,000.</td></tr>
+<tr><td class="pname">--x_min</td><td class="pdefault">0.01</td><td>&mdash;</td><td>Positive lower bound of the dimensionless \(x\)-domain.</td></tr>
+<tr><td class="pname">--x_max</td><td class="pdefault">100.0</td><td>&mdash;</td><td>Upper bound of the dimensionless \(x\)-domain, greater than <code>--x_min</code>.</td></tr>
+<tr><td class="pname">--x_low</td><td class="pdefault">0.05</td><td>&mdash;</td><td>Below this value, use the small-\(x\) Rayleigh&ndash;Jeans approximation.</td></tr>
+<tr><td class="pname">--x_high</td><td class="pdefault">20.0</td><td>&mdash;</td><td>Above this value, use the large-\(x\) Wien approximation. Require <code>x_min &le; x_low &lt; x_high &le; x_max</code>, so lowering <code>--x_max</code> below 20 also needs a lower <code>--x_high</code>.</td></tr>
+<tr><td class="pname">--corner</td><td class="pdefault">"upper_right"</td><td>&mdash;</td><td>Annotation location: <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code> or <code>lower_left</code>.</td></tr>
+<tr><td class="pname">--y_frac_window</td><td class="pdefault">0.003</td><td>&mdash;</td><td>Finite fraction of the peak used for plot windowing; 0 shows the full computed range. Does not affect the peak search or the integrals.</td></tr>
+</tbody></table></div></section><section id="summary"><h2>How to read the summary</h2><p>Each successful run prints the version/build and sampled \(x\) peak, the physical peak wavelength or frequency, the dimensionless area beside its zero-to-infinity reference, the physical integral, and its exact bolometric reference. The plot annotation also shows the peak height. Compare numerical and exact physical integrals in the same quantity and units. The exact line describes an ideal zero-to-infinity integral; the numerical line uses your finite domain, grid and switch settings.</p><pre>python main.py --version
+python main.py --help</pre><p><code>--version</code> shows the shared code identifier. <code>--help</code> lists every option; these commands do not draw figures.</p></section><section id="related"><h2>Related programs</h2><p><strong>Star</strong> models stellar structure. <strong>Random2</strong> illustrates radiative diffusion. Planck2 supplies an ideal thermal spectrum at a selected temperature.</p></section><section id="license"><h2>License</h2>
+<h2>License</h2>
+<p>
+      Planck2 accompanies the black-body-radiation investigations in Bernard Schutz's
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003), Chapter 10.
+      This rewritten and extended Python version descends from Schutz's original Java/Triana
+      <em>Planck</em> program for the first edition. It is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+</section></main><footer>
+<em>Gravity from the Ground Up</em> — Python Programs ·
+  Bernard Schutz © 2003 (Cambridge University Press) ·
+  Python programs © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+</footer></div></body></html>
