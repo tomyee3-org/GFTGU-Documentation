@@ -237,13 +237,15 @@
 </nav>
 <main id="content" tabindex="-1">
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 412f37f02fdc
+  Version 1.5.0&nbsp;&nbsp;&nbsp;&nbsp;Build 945d118ab595
 </p>
 <p class="small" style="font-size:0.8em; color:#666;">
   The Build identifier covers the four Python program modules listed below. Help-only or test-only
   edits do not change it; this Version/Build line is updated whenever the Help file is synchronized
   with a program build.
 </p>
+<p class="small">When the cursor hovers over a Matplotlib graph, its <code>(x, y)</code>
+position in graph coordinates appears at the lower right of the display.</p>
 <section id="overview">
 <h2>Overview</h2>
 <p>
@@ -317,7 +319,7 @@ definition, and a numerical rule are never mistaken for one another.</div>
 &mdash; with two of them already moving at 30 km/s and the third at rest. Ask the program what
 happens.</p>
 <pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories</code></pre>
-<p>Look at the six lines from <code>Multiple 1.4.0 ...</code> through <code>Maximum conservation
+<p>Look at the six lines from <code>Multiple 1.5.0 ...</code> through <code>Maximum conservation
 drift</code>, and at fraction 0.0 of the conservation table.</p>
 <p>Three tasks, in order. First, read <code>accepted steps: 8000; simulated time: 1.8094e+01
 days</code>: 8000 accepted steps cover 18.094 days. Then read the initial totals:
@@ -613,7 +615,7 @@ denominator is not a useful diagnostic, so <code>_energy_drift_scale()</code> in
 <code>driver_multiple.py</code> has long used a fallback for energy: if \(|E_0|\) is smaller than a
 tight tolerance times the characteristic scale \(K_0+|U_0|\) (which can never be zero for a bound,
 finite system), the program divides by that characteristic scale instead and labels the
-normalization <code>'characteristic_energy'</code>. Model version 1.4.0 extends the same idea to
+normalization <code>'characteristic_energy'</code>. Model version 1.4.0 extended the same idea to
 momentum and angular momentum, which can cancel exactly &mdash; as they do here for momentum, by
 symmetric construction, not merely by coincidence:</p>
 <div class="eq-block">
@@ -830,8 +832,9 @@ it never feeds back into the integration, which always advances by the adaptive
 <code>driver_multiple.py</code> implements Eq. 16, and <code>run_simulation()</code> calls it once
 for every requested frame time that a newly accepted step's bracket newly covers &mdash; one
 accepted step can cross several requested frame times at once if the step is long relative to
-<code>frame_time</code>. Animation stores far fewer position and velocity states than trajectories does &mdash; the uniformly
-spaced frames above, not one entry per accepted step &mdash; but both output modes keep one
+<code>frame_time</code>. Animation stores uniformly spaced position and velocity frames rather than
+one state per accepted step. A short <code>frame_time</code> can produce more stored frames than
+accepted states; a long one can produce fewer. Both output modes keep one
 energy/momentum/angular-momentum record per accepted step for the run's whole duration; that record
 is only reduced to the eleven console rows of Beat 3 after the run finishes. Requesting a coarser
 <code>frame_time</code> therefore bounds the stored frame count, not this accepted-step conservation
@@ -1010,9 +1013,10 @@ as a change, the program raises a clear error rather than looping or silently co
 <h3>Output Modes</h3>
 <p>
 <code>'trajectories'</code> stores every accepted position, velocity, and per-step conservation
-value; nothing is discarded. <code>'animation'</code> stores far fewer position and velocity states
-&mdash; uniformly spaced frames obtained from Eq. 16 applied to the bracketing accepted states,
-rather than one state per accepted step &mdash; but keeps the same per-accepted-step conservation
+value; nothing is discarded. <code>'animation'</code> stores uniformly spaced position and velocity
+frames obtained from Eq. 16 applied to the bracketing accepted states, rather than one state per
+accepted step. Depending on <code>frame_time</code>, it can store more or fewer frames than the
+number of accepted states, and it keeps the same per-accepted-step conservation
 history as <code>'trajectories'</code> for the run's whole duration; that history is reduced to the
 eleven console samples of Beat 3 only after the run finishes. Animation's own memory use therefore
 still grows with the accepted-step count, not only with the requested frame count. A guard limits
@@ -1142,10 +1146,10 @@ required when constructing <code>SimulationParams</code> directly rather than th
 <h2>Output Modes</h2>
 <p><code>'trajectories'</code> stores every accepted position and velocity state and plots the
 complete paths (Beats 0 to 6, 8). <code>'animation'</code> precomputes uniformly timed movie frames
-by cubic-Hermite interpolation (Beat 7), which keeps its stored position and velocity data far
-smaller than <code>'trajectories'</code>' for a long run; its per-accepted-step conservation history,
-however, grows the same way <code>'trajectories'</code>' does regardless of frame count (Beat 7,
-Output Modes above). <code>'current positions'</code> is not an
+by cubic-Hermite interpolation (Beat 7). The frame count depends on
+<code>frame_time</code> and can be larger or smaller than the accepted-state count; its
+per-accepted-step conservation history grows with the accepted-step count regardless of frame
+count. <code>'current positions'</code> is not an
 <code>output_type</code> value; it is one of the two <code>animation_mode</code> choices, alongside
 <code>'trails'</code>, which adds a recent path behind each current marker.</p>
 <p>During an animation, <strong>Space</strong> pauses or resumes; <strong>Left</strong>/<strong>Right</strong>
@@ -1158,7 +1162,7 @@ run.</p>
 <h2>Printed Summary</h2>
 <p>Every run prints a summary before opening a plot. This is Beat 0's default run,
 <code>python main.py --max_steps 8000 --output_type trajectories</code>:</p>
-<pre class="code-block"><code>Multiple 1.4.0 (build 412f37f02fdc) — accepted steps: 8000; simulated time: 1.8094e+01 days
+<pre class="code-block"><code>Multiple 1.5.0 (build 945d118ab595) — accepted steps: 8000; simulated time: 1.8094e+01 days
 Display frame: COM (center of mass). Plots subtract the instantaneous center-of-mass position R_CM; printed E, P and L use input coordinates.
 Initial user-frame totals (scaled by one solar mass): E=-4.6226e+09 m^2/s^2; E_internal=-4.9226e+09 m^2/s^2; P=(-3.0000e+04, -3.0000e+04, 0.0000e+00) m/s; L=(0.0000e+00, 0.0000e+00, 2.7600e+15) m^2/s
 Final user-frame totals (scaled by one solar mass): E=-4.6226e+09 m^2/s^2; E_internal=-4.9226e+09 m^2/s^2; P=(-3.0000e+04, -3.0000e+04, 0.0000e+00) m/s; L=(0.0000e+00, 0.0000e+00, 2.7600e+15) m^2/s
