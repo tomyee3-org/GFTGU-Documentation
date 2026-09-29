@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Orbit — Guided Session | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+    /* ── Reset & custom properties ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #fdf5e6;
+      --surface:  #ffffff;
+      --border:   #c8bfa0;
+      --accent:   #7b2d00;
+      --accent2:  #a04010;
+      --gold:     #b5811a;
+      --text:     #1c1c1c;
+      --muted:    #5a4a3a;
+      --code-bg:  #f0ede4;
+      --note-bg:  #f4f0e8;
+      --eq-bg:    #f7f2e8;
+      --radius:   5px;
+      --shadow:   0 2px 8px rgba(0,0,0,0.10);
+      --mono:     "Courier New", Courier, monospace;
+      --sans:     "Helvetica Neue", Arial, sans-serif;
+      --serif:    Georgia, "Times New Roman", Times, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Page grid ── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.95rem;
+      font-weight: normal;
+      letter-spacing: -.02em;
+    }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub {
+      margin-top: 6px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: #f0d0b8;
+      line-height: 1.55;
+    }
+    header .sub a {
+      color: #ffd8b8;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,200,150,.4);
+    }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+
+    /* ── Sidebar ── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      padding: 14px 18px 4px;
+    }
+    nav a {
+      display: block;
+      padding: 6px 18px 6px 22px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background .15s, border-color .15s;
+    }
+    nav a:hover {
+      background: var(--bg);
+      border-left-color: var(--accent2);
+      color: var(--accent);
+    }
+    nav a.active {
+      background: var(--note-bg);
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    nav hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 14px;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 38px 48px 60px;
+      max-width: 860px;
+    }
+
+    section { margin-bottom: 52px; }
+
+    h2 {
+      font-size: 1.30rem;
+      font-weight: normal;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 6px;
+      margin-bottom: 18px;
+      letter-spacing: -.01em;
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--accent2);
+      margin: 24px 0 8px;
+    }
+    h4 {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin: 18px 0 6px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    /* ── Equation block ── */
+    .eq {
+      background: var(--eq-bg);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 20px;
+      margin: 18px 0;
+      overflow-x: auto;
+      font-size: 1.05em;
+    }
+    .eq-label {
+      float: right;
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 2px;
+    }
+
+    /* ── Note / tip box ── */
+    .note {
+      background: var(--note-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      margin: 18px 0;
+      font-size: 0.93rem;
+    }
+    .note strong { color: var(--accent); }
+
+    /* ── Restore-defaults box ── */
+    .restore-section {
+      margin: 2.5em auto;
+      max-width: 860px;
+      font-family: inherit;
+    }
+    .restore-box {
+      border: 1.5px solid var(--gold);
+      border-left: 5px solid var(--gold);
+      border-radius: 6px;
+      background: #fffbeb;
+      padding: 1.1em 1.4em;
+      display: flex;
+      gap: 1em;
+      align-items: flex-start;
+    }
+    .restore-icon { font-size: 1.5em; line-height: 1; flex-shrink: 0; }
+    .restore-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      color: var(--accent);
+      margin-bottom: 0.35em;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .restore-intro {
+      margin: 0 0 0.5em;
+      font-size: 0.92em;
+      line-height: 1.6;
+    }
+    .restore-list {
+      margin: 0;
+      padding-left: 1.4em;
+      font-size: 0.92em;
+      line-height: 1.8;
+    }
+    .restore-box kbd {
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.88em;
+    }
+    .restore-link { color: var(--accent); text-decoration: underline; }
+    .restore-footnote {
+      margin: 0.6em 0 0;
+      font-size: 0.88em;
+      color: var(--muted);
+    }
+
+    /* ── Code ── */
+    pre {
+      background: #2b2b2b;
+      color: #f0ede4;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.55;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 0.91em;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    pre code { background: none; padding: 0; font-size: inherit; }
+
+    /* ── Module cards ── */
+    .mc { display: grid; gap: 14px; margin: 18px 0; }
+    .mc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+    }
+    .mc-card .mc-name {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .mc-card .mc-role {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .mc-card p { font-size: 0.92rem; margin-bottom: 0; color: var(--muted); }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 16px 0;
+    }
+    th {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      background: var(--note-bg);
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { font-family: var(--mono); color: var(--accent2); }
+
+    /* ── Output type list ── */
+    .output-list { list-style: none; margin: 14px 0; }
+    .output-list li {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .output-list li:last-child { border-bottom: none; }
+    .output-list .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      white-space: nowrap;
+      color: var(--accent2);
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
+    }
+    footer a { color: #e0c090; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Beats layout additions ── */
+    .eq-kind {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .kind {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-left: 4px;
+      vertical-align: 1px;
+    }
+    .kind-law { background: #f6dcdc; color: #7a1f1f; border: 1px solid #d9a0a0; }
+    .kind-ode { background: #d9ead3; color: #274e13; border: 1px solid #a8c69a; }
+    .kind-def { background: #e4e4e4; color: #3a3a3a; border: 1px solid #b5b5b5; }
+    .kind-der { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
+    .kind-alg { background: #e6e0f8; color: #3d2c73; border: 1px solid #b7abdd; }
+    .warn {
+      background: #fff6e8;
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 12px 18px;
+      margin: 16px 0;
+      font-family: var(--sans);
+      font-size: 0.91rem;
+      color: var(--muted);
+    }
+    .warn strong { color: var(--accent); }
+    .compare-table th:not(:first-child), .compare-table td:not(:first-child) {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .compare-table td:not(:first-child) { font-family: var(--mono); color: var(--text); }
+    main { min-width: 0; }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+    section ul { margin: 0 0 14px 1.4em; }
+    section ul li, section ol li { margin-bottom: 6px; }
+    section ol { margin: 0 0 14px 1.6em; }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 48px; }
+    }
+  
+
+.activity { margin: 13px 0 17px; padding: 12px 17px; background: var(--note-bg); border-left: 4px solid var(--gold); }
+.activity strong { color: var(--accent); }
+.stage { font-family: var(--sans); color: var(--accent2); font-weight: bold; font-size: .82rem; text-transform: uppercase; letter-spacing: .07em; }
+section ul { margin-left: 1.6em; }
+</style></head><body>
+<div class="page-wrap">
+<header><div class="badge">CHAPTER 4 · INVESTIGATION 4.2</div><h1><em>Orbit</em> — One evening at the terminal</h1><p class="sub">Use one Newtonian force law to connect paths, periods and numerical error.</p></header>
+<nav id="sidebar"><div class="nav-label">Start</div><a href="#overview">How to use this session</a><div class="nav-label">Beats</div>
+<a href="#beat0">0 · First orbit</a><a href="#beat1">1 · Escape</a><a href="#beat2">2 · Change direction</a><a href="#beat3">3 · Areas and periods</a><a href="#beat4">4 · Repetition and hodograph</a><a href="#beat5">5 · The corrector</a><a href="#beat6">6 · Step control</a><a href="#beat7">7 · Trust the calculation</a><a href="#beat8">8 · Hard cases</a><div class="nav-label">Reference</div><a href="#parameters">Parameters</a><a href="#limits">Scope and checks</a></nav>
+<main><p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">Version 1.7.1&nbsp;&nbsp;Build 0b77d606baf2</p>
+<section id="overview"><h2>How to use this session</h2><p>Run each command from the <code>GFTGU-Programs/Orbit</code> folder with Python 3.10 or later, NumPy and Matplotlib. Read the named summary lines, inspect the figure, and answer the numbered activities before going on. Close each plot window to return to the terminal. All nine beats use the same four Python modules and the same command-line interface.</p>
+<div class="note"><strong>Graph coordinates.</strong> When the cursor hovers over a Matplotlib graph, its (x, y) position in graph coordinates appears at the lower right of the display.</div>
+<p>The fixed central body sits at the origin. Its gravitational parameter is \(\mu=GM\), supplied by <code>--k</code> in m<sup>3</sup>/s<sup>2</sup>. The particle's mass cancels out. The default state starts at 4.6×10<sup>10</sup> m on the x-axis with a +y velocity of 58,980 m/s, a Mercury-like teaching case rather than an ephemeris.</p>
+<p>Our thread is simple: the inverse-square acceleration determines the orbit; an exact orbit conserves specific energy and angular momentum; the numerical solution's drift and closure tell us how well this integration follows that exact motion.</p></section>
+<section id="beat0"><h2>Beat 0 · Make the first orbit</h2><p class="stage">Run</p><pre>python main.py</pre><p>Trace the oval from its right-hand starting point. In the summary find <code>periapsis radius</code>, <code>apoapsis radius</code>, <code>elapsed simulated time</code> and <code>Keplerian period</code>. The default ends after 761 accepted steps and 1.0000 azimuthal revolution. A stop at one revolution means the direction from the centre has turned through \(2\pi\), not that the position is mathematically exact.</p>
+<div class="activity"><strong>1. Predict.</strong> If the particle's distance from the central body doubled, by what factor would the magnitude of its acceleration change?</div><p>The force law used by the code is \(\mathbf a=-\mu\,\mathbf r/r^3\). That is an adopted law of this model. The integrator advances x, y, \(v_x\), and \(v_y\), with \(d\mathbf r/dt=\mathbf v\).</p>
+<div class="activity"><strong>2. Record.</strong> Compare 7.6025×10<sup>6</sup> s of simulated time with the 7.6019×10<sup>6</sup> s Keplerian period derived from the initial state. What could account for the difference within this model?</div></section>
+<section id="beat1"><h2>Beat 1 · Find the escape boundary</h2><p class="stage">Run, one at a time</p><pre>python main.py --vyInit 70000
+python main.py --vyInit 75961 --maxSteps 600
+python main.py --vyInit 85000 --maxSteps 600</pre><p>Compare <code>specific energy</code>, <code>conic classification</code>, <code>eccentricity</code> and <code>termination</code>. The first is elliptic; the last is hyperbolic and stops at the accepted-step limit before completing a revolution. Near escape, 75961 m/s is still slightly bound but its initial energy is so close to zero that a large <em>fractional</em> energy drift is a poor diagnostic on its own.</p>
+<div class="activity"><strong>3. Estimate.</strong> Calculate \(\sqrt{2\mu/r_0}\) with the printed initial radius and \(\mu\). Is 75961 m/s below or above it?</div><p>Only after comparing the runs, use the specific-energy definition: \(\mathcal E=v^2/2-\mu/r\). Its sign sets elliptic, parabolic or hyperbolic ideal motion, subject to the program's small near-zero classification tolerance. The printed elements describe the <em>initial</em> state, while the last accepted state can drift.</p>
+<div class="activity"><strong>4. Check.</strong> For the 85000 m/s run, find the printed <code>final radius</code> and <code>final speed</code>. Why is <code>closure radius residual</code> reported <code>n/a</code>?</div></section>
+<section id="beat2"><h2>Beat 2 · Rotate the starting velocity</h2><p class="stage">Run</p><pre>python main.py --vxInit 41705.15 --vyInit 41705.15</pre><p>Compare this with Beat 0. The speed is approximately the same, so the printed initial specific energy, semimajor axis and Keplerian period agree at displayed precision; eccentricity changes from 0.20575 to about 0.72192. The change is more than a rotation of the original ellipse because its specific angular momentum changed.</p>
+<div class="activity"><strong>5. Compare.</strong> Record the two periapsis and apoapsis radii. Which start has the more elongated orbit? Does the numerical closure residual also change?</div><p>The relevant conserved quantity in the exact problem is \(h=xv_y-yv_x\). For a bound ellipse \(a=-\mu/(2\mathcal E)\), \(p=h^2/\mu\), and \(e=\sqrt{1+2\mathcal E h^2/\mu^2}\). Same energy fixes \(a\), while a different \(h\) changes \(e\).</p>
+<div class="activity"><strong>6. Explain.</strong> Use \(y_0=0\) to show why reducing \(v_y\) while adding \(v_x\) reduces \(h\), even though the total speed stays fixed.</div></section>
+<section id="beat3"><h2>Beat 3 · Start at the far end</h2><p class="stage">Run</p><pre>python main.py --xInit 6.9832e10 --vyInit 38851.5
+python main.py --xInit 3.626e8 --vyInit 1082 --k 3.986e14 --dt0 1000</pre><p>In the first run the Mercury-like particle starts near apoapsis, where its tangential speed is smaller than at periapsis. The second run uses an Earth-like gravitational parameter and a Moon-like starting state. It is still a fixed-centre two-body <em>approximation</em>; it does not include other bodies.</p>
+<div class="activity"><strong>7. Calculate.</strong> Multiply the default periapsis radius and speed to obtain \(h\). Divide by the apoapsis radius. Compare with 38851.5 m/s.</div><p>Equal areas in equal times follow from \(dA/dt=|h|/2\). The ideal period of a bound ellipse is \(T=2\pi\sqrt{a^3/\mu}\), so \(T^2\mu/a^3=4\pi^2\). The printed <code>Keplerian period</code> is computed from the starting state; it is a useful check on the integrated elapsed time.</p>
+<div class="activity"><strong>8. Check.</strong> Use the printed \(a,T,\mu\) from each run to estimate \(T^2\mu/a^3\). Expect about 39.48. Explain why \(T^2/a^3\) alone differs between the two central bodies.</div></section>
+<section id="beat4"><h2>Beat 4 · Watch position and velocity repeat</h2><p class="stage">Run</p><pre>python main.py --output velocity
+python main.py --maxOrbits 2
+python main.py --maxOrbits 1.5
+python main.py --vyInit -58980 --output velocity</pre><p>The velocity plot is a <em>hodograph</em>: its horizontal and vertical axes are \((v_x,v_y)\), and its near-circle is not the path in space. The red marker shows the initial velocity and the cross marks zero velocity. Reversing the tangential velocity reverses the direction of travel and flips the hodograph's offset.</p>
+<div class="activity"><strong>9. Measure.</strong> Compare the default one-revolution closure radius residual, 5.2282e-09, with the two-revolution value, 2.0868e-08. Where do numerical errors show up when an exact Kepler orbit would retrace itself?</div><p>The program accumulates wrapped changes of the position angle. For whole-number revolution targets it reports normalized end-to-start radius and velocity differences. For 1.5 revolutions both closure lines are <code>n/a</code>, since that endpoint is not meant to coincide with the start. The hodograph circle's radius is \(\mu/|h|\) for a nonradial inverse-square orbit.</p>
+<div class="activity"><strong>10. Probe.</strong> Contrast the two hodographs, then run <code>python main.py --maxOrbits 1e-10</code>. Record the controlled minimum-input error. The accepted minimum is 1e-9 revolutions.</div></section>
+<section id="beat5"><h2>Beat 5 · Tighten the corrector</h2><p class="stage">Run</p><pre>python main.py --eps2 1e-8
+python main.py --eps2 10
+python main.py --dt0 1e6 --eps1 10 --eps2 1e-12</pre><p>Compare with Beat 0. Tight and loose corrector settings both use 761 accepted steps in the first two runs. Their acceleration-evaluation counts are 3062 and 1534, versus 2301 at default tolerance. The loose run has a worse closure radius residual, although its reported maximum energy drift is slightly smaller; a single diagnostic is not a general measure of accuracy.</p>
+<div class="activity"><strong>11. Compare.</strong> Record accepted steps, acceleration evaluations, energy drift and closure for all three commands. Why is the strict long-step example a different test from merely tightening <code>eps2</code> at default <code>dt0</code>?</div><p>A predictor estimates the end of a step; an iterated corrector evaluates the acceleration at its estimated endpoint and updates the velocity. <code>eps2</code> controls convergence of the velocity <em>increment</em>, not the orbit's error. If it fails to converge within the pass limit, that trial step is rejected and retried shorter.</p></section>
+<section id="beat6"><h2>Beat 6 · Make the step controller work</h2><p class="stage">Run</p><pre>python main.py --dt0 1e5
+python main.py --dt0 1e5 --eps1 10
+python main.py --dt0 1e6 --eps1 10</pre><p>The default 10,000 s maximum step is conservative for this initial orbit. Raising it to 100,000 s with the usual <code>eps1</code> gives 181 accepted steps; loosening <code>eps1</code> to 10 gives 77. The third run has only 14 accepted steps and appreciably worse energy drift. <code>dt0</code> is a ceiling, while <code>eps1</code> controls trial-step rejection when acceleration changes too much.</p>
+<div class="activity"><strong>12. Inspect.</strong> Compare the printed <code>shortest accepted step</code>, <code>longest accepted step</code> and <code>angular-step rejections</code>. Which run is controlled mainly by <code>dt0</code>, and which is repeatedly shortened?</div><p>An additional angular safeguard keeps a trial step from turning through more than half a revolution; a coarse trial intersection is a rejected step, not a physical singularity report.</p></section>
+<section id="beat7"><h2>Beat 7 · Decide how far to trust it</h2><p class="stage">Run</p><pre>python main.py --dt0 5000 --output energy
+python main.py --dt0 1250 --output energy</pre><p>As the step ceiling shrinks, the energy drift and one-revolution closure normally improve; the finer run shows about 8.3504e-07 maximum fractional energy drift and 1.2675e-12 closure radius residual. Read the <code>final specific energy</code> separately from the Keplerian block's <code>specific energy</code> for the starting state. The energy plot shows specific kinetic, potential and total energy; the total should be nearly flat.</p>
+<div class="activity"><strong>13. Quantify.</strong> Compare the default, 5000 s, and 1250 s runs. How does the energy-drift ratio change as the maximum step is halved? Do not infer an order from a single pair without checking the actual accepted steps.</div><p>Exact energy and angular momentum are conserved under the adopted force law. A small fractional drift is useful when the initial invariant is safely nonzero; near escape or radial infall, inspect the <em>absolute</em> drift and the scale of the initial quantity as well.</p></section>
+<section id="beat8"><h2>Beat 8 · Try the hard cases</h2><p class="stage">Run</p><pre>python main.py --vyInit 10000
+python main.py --vyInit 10000 --eps1 0.005
+python main.py --vxInit -1000 --vyInit 0 --maxSteps 20000</pre><p>A slower tangential start makes a very elongated ellipse with a near-centre passage. The first run's maximum fractional energy drift is about 0.011176; tightening <code>eps1</code> in the second run reduces it considerably. With zero tangential velocity the last run approaches the point-mass singularity guard: the program stops there instead of claiming to simulate passage through \(r=0\).</p>
+<div class="activity"><strong>14. Test.</strong> Compare accepted steps and the energy drift of the first two runs. Why can more steps be worthwhile near periapsis?</div><div class="activity"><strong>15. Diagnose.</strong> In the radial run, read termination, shortest accepted step and maximum <em>absolute</em> angular-momentum drift. Explain why fractional angular-momentum drift is unavailable when initial \(h=0\), and why this teaching model does not determine what a real particle does at the central body's surface.</div></section>
+<section id="parameters"><h2>Parameters</h2><p>Run <code>python main.py --help</code> for the command summary and <code>python main.py --version</code> for the core version and Build ID. Omitted options keep these defaults. <code>--output</code> selects one of five figures and does not change the integration.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Command-line options"><table><thead><tr><th>Option</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--xInit</code></td><td>4.6e10</td><td>m</td><td>Initial x-position; the default approximates Mercury's perihelion.</td></tr>
+<tr><td><code>--yInit</code></td><td>0.0</td><td>m</td><td>Initial y-position.</td></tr>
+<tr><td><code>--vxInit</code></td><td>0.0</td><td>m s<sup>&minus;1</sup></td><td>Initial x-velocity.</td></tr>
+<tr><td><code>--vyInit</code></td><td>58980.0</td><td>m s<sup>&minus;1</sup></td><td>Initial y-velocity; the default approximates Mercury's perihelion speed.</td></tr>
+<tr><td><code>--k</code></td><td>1.3271244e20</td><td>m<sup>3</sup> s<sup>&minus;2</sup></td><td>Central gravitational parameter \(GM\), not the central mass in kg; the default is the IAU nominal solar value.</td></tr>
+<tr><td><code>--dt0</code></td><td>1e4</td><td>s</td><td>Positive maximum timestep. The adaptive working timestep can shrink and later recover toward this value (Beat 6).</td></tr>
+<tr><td><code>--maxSteps</code></td><td>20000</td><td>steps</td><td>Positive maximum number of accepted integration steps, excluding the initial state.</td></tr>
+<tr><td><code>--eps1</code></td><td>0.05</td><td>&mdash;</td><td>Positive acceleration-vector change threshold for timestep rejection (Beat 6). Smaller values demand smaller timesteps.</td></tr>
+<tr><td><code>--eps2</code></td><td>1e-4</td><td>&mdash;</td><td>Positive convergence tolerance for successive estimates of the velocity increment (Beat 5). Smaller values demand tighter corrector convergence.</td></tr>
+<tr><td><code>--maxOrbits</code></td><td>1.0</td><td>revolutions</td><td>Requested accumulated azimuthal travel in units of \(2\pi\), at least 10<sup>&minus;9</sup> (Beat 4); a smaller value is rejected with an error. For unbound or nearly radial trajectories the target may never be reached, and the run then stops at <code>maxSteps</code> or the singularity guard.</td></tr>
+<tr><td><code>--output</code></td><td>orbit</td><td>&mdash;</td><td>Display selector; the five alternatives are listed under Output Modes. It changes only the plot, not the integration.</td></tr>
+</tbody></table></div>
+<p>The central body's gravitational parameter <code>--k</code> is (GM), not a mass in kilograms. All numeric inputs must be finite. Initial radius must be nonzero; <code>--k</code>, <code>--dt0</code>, <code>--eps1</code> and <code>--eps2</code> must be positive; <code>--maxSteps</code> is a positive integer; <code>--maxOrbits</code> must be at least 1e-9. Invalid input produces an <code>Orbit:</code> error instead of a plot.</p></section>
+<section id="limits"><h2>Scope and checks</h2><p>Orbit computes planar Newtonian motion about a fixed point mass. It omits relativity, drag, finite sizes, tides and a moving primary. An orbit near the numerical singularity guard is a failure of this model's assumptions, not a planetary collision calculation. The exact Keplerian elements derived from the starting state and the energy/angular-momentum drift give complementary checks; none alone certifies an entire computed trajectory.</p>
+<p>The companion Sample Outputs Guide has one representative image for each Beat. The detailed tutorial supplies derivations and longer investigations. Equations on these pages are rendered by MathJax from a public CDN; an internet connection is needed to see them typeset. The Python program itself runs offline.</p></section>
+</main><footer>Orbit · Gravity from the Ground Up · Investigation 4.2</footer></div></body></html>

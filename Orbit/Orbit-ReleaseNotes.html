@@ -1,10 +1,31 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Orbit 1.7.0 Release Notes</title>
-</head>
-<body>
+<html><head><meta charset="utf-8"><title>Orbit 1.7.1 Release Notes</title></head><body>
+<h1>Orbit 1.7.1 Release Notes</h1>
+<p><b>Version:</b> 1.7.1<br><b>Build:</b> 0b77d606baf2<br><b>Date:</b> 2026-09-29</p>
+<h2>Release Status</h2>
+<p>Kickoff4 continues the unreleased 1.7.0 audit sequence. The code-changing round is the present 1.7.1 documentation/CLI wording correction; the preceding code-changing round was the 1.7.0 Audit 22 response. Codex's Kickoff4 internal audit is complete and Claude's Audit41 verdict is APPROVE. The Audit41 P3 mixed-line-ending issue in <code>main.py</code> has been corrected by normalizing the file to LF. The numerical solver and figures are unchanged in behavior; the core's version metadata and public <code>--maxOrbits</code> description were the only semantic source changes in Kickoff4. Both active tutorials share the 1.7.1 code and build.</p>
+<h2>Open Bugs</h2>
+<ul><li><b>OB-2</b> (P3; Grok Audit 21 item P3). The detailed Claude-style tutorial quotes results before the student performs some runs; the presentation was retained pending an editorial decision between tutorial styles.<br>Reproduction: read <code>Orbit-claude.html</code> Beat 0. Observed: it gives 761 accepted steps and 7.6025e+06 s before the reader has run the command. Expected (reviewer): let the student first discover these values from the run.</li></ul>
+<p>Former OB-1 (P3, Codex/Grok Audit 23) is closed: <code>--help</code>, the <code>main.py</code> module description and both active tutorials state the 1e-9 minimum for <code>--maxOrbits</code>. <code>Orbit-original.html</code> is preserved as an archived 1.7.0 Reference Guide and is not an active tutorial.</p>
+<p>Audit41's P3 source-formatting issue is closed: <code>main.py</code> now uses LF throughout. It did not affect runtime behavior or the newline-normalized Build ID. OB-2 remains an editorial choice pending manual review of the two tutorial styles.</p>
+<h2>Major Improvements in This Release</h2>
+<ul><li>Added a styled Grok-style terminal tutorial with nine Beats, fifteen embedded activities, a concise parameter table and runnable commands. It works with the same core Python files and Sample Outputs Guide as the Claude-style tutorial.</li>
+<li>Corrected the public <code>--maxOrbits</code> description and the active Claude guide's input note to the existing minimum of 1e-9 revolutions. Input acceptance and numerical results have not changed.</li>
+<li>Added a graph-coordinate cursor note near the beginning of each active tutorial.</li>
+<li>Regenerated all nine Sample Outputs figures using the exact commands shown, checked their headline values, and updated the guide's version, date and image provenance.</li>
+<li>The test suite now requires both active tutorials in one directory, checks the Grok guide's structure, version, flags and executable commands, and verifies the stated input minimum.</li></ul>
+<p>Audit41 response: normalized the mixed CRLF/LF line endings in <code>main.py</code> to LF without altering the normalized source text or Build ID.</p>
+<h2>Test Suite Growth</h2>
+<ul><li>1.4.0: 75 tests, 1.5.0: 128, 1.6.0: 144, 1.7.0: 156, 1.7.1: 160 tests.</li>
+<li>From <code>GFTGU-Programs/Orbit</code>, run <code>MPLBACKEND=Agg python3 -m unittest discover -s tests -q</code>. All 160 tests pass with both active guides present in the sibling repository layout. The package includes both guides; the suite also supports a flattened review layout.</li>
+<li>The numerical tests retain the previous independent initial-state, event and conservation checks; the four new tests cover the paired tutorials and the input description. The archived Reference Guide is retained for historical reference without current-build synchronization.</li></ul>
+<h2>Known Limitations</h2>
+<ul><li>Planar Newtonian motion about a fixed point mass; the model has no relativity, drag, tides, central-body finite size or moving primary.</li><li>The Mercury-like initial state is a teaching case, not an ephemeris. Closure residuals have a meaning only after whole-number revolutions.</li><li>The equations in the active guides use MathJax from a public CDN for typesetting. The Python program itself works offline.</li></ul>
+<h2>Known Minor Maintenance Items</h2>
+<ul><li>Four groups of numerical literals in <code>run_orbit()</code> could be named constants. No direct option saves a figure to a file.</li><li>The physics functions still name the gravitational parameter <code>mu</code> in some error messages. A runtime assertion that the final azimuth matches the target remains optional; tests cover the supported range.</li><li>The editorial choice between the two active tutorial formats remains pending. The archived Reference Guide retains its historical 1.7.0 stamp and wording.</li></ul>
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.7.1<br>BUILD_ID: 0b77d606baf2<br>Date: 2026-09-29. The Build ID covers the four core files <code>main.py</code>, <code>physics_orbit.py</code>, <code>driver_orbit.py</code> and <code>plot_orbit.py</code>; universal-newline text reading makes it independent of LF versus CRLF source line endings.</p>
+<h2>Historical Release Notes</h2><p>The following 1.7.0 notes preserve the preceding audit history. Their OB-1 item was resolved above; the older text is historical, not the active bug list.</p>
 <h1>Orbit 1.7.0 Release Notes</h1>
 
 <p>
@@ -124,5 +145,4 @@ Printed Summary reproduces the whole default console.</li>
 <code>Orbit-claude.html</code> and <code>Orbit-original.html</code>.</li>
 </ul>
 
-</body>
-</html>
+</body></html>

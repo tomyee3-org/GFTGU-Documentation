@@ -478,7 +478,7 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.7.0&nbsp;&nbsp;&nbsp;&nbsp;Build a1a3dbb90d3b
+  Version 1.7.1&nbsp;&nbsp;&nbsp;&nbsp;Build 0b77d606baf2
 </p>
 <section id="overview">
 <h2>Overview</h2>
@@ -490,6 +490,7 @@
     </div>
 <div class="warn"><strong>What this program is, and what it does not model.</strong> Orbit is a teaching model of a point particle moving in a plane in the Newtonian field of a fixed point mass. It has no relativity, no drag, no radiation pressure, no tides, no finite size for either body and no second body, so it does not reproduce, for example, the precession of Mercury's perihelion. The motion is computed step by step, so it carries a numerical error that is largest where the acceleration changes fastest. The Keplerian elements it prints describe the starting state exactly; the drift and closure numbers describe the integration. The point-mass singularity guard is a numerical safeguard and not the surface of any real body. Use the program to see how an orbit depends on speed, direction and distance, and to learn how to judge a numerical result. Beats 5 to 8 show how, and where, the numbers stop being trustworthy.</div>
 <div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div></section>
+<div class="note"><strong>Reading graphs.</strong> When the cursor hovers over a Matplotlib graph, its (x, y) position in graph coordinates appears at the lower right of the display.</div>
 <section id="beats">
 <h2>How to read this page</h2>
 <p>Each numbered section below is one beat: a short argument in words, a command whose output illustrates it, and then the equation that the output follows from. Do them in order the first time. After that, any beat can be opened on its own.</p>
@@ -911,7 +912,7 @@ python main.py --xInit 4.6e10 --yInit 0 --vxInit 0 --vyInit 58980 \
 <tr><td><code>--maxOrbits</code></td><td>1.0</td><td>revolutions</td><td>Requested accumulated azimuthal travel in units of \(2\pi\), at least 10<sup>&minus;9</sup> (Beat 4); a smaller value is rejected with an error. For unbound or nearly radial trajectories the target may never be reached, and the run then stops at <code>maxSteps</code> or the singularity guard.</td></tr>
 <tr><td><code>--output</code></td><td>orbit</td><td>&mdash;</td><td>Display selector; the five alternatives are listed under Output Modes. It changes only the plot, not the integration.</td></tr>
 </tbody></table></div>
-<div class="note"><strong>Valid numerical inputs.</strong> The initial position must not be at <code>r=0</code>; <code>--k</code>, <code>--dt0</code>, <code>--eps1</code>, <code>--eps2</code> and <code>--maxOrbits</code> must be positive; and <code>--maxSteps</code> must be a positive integer. All numeric inputs must be finite real numbers, and intermediate acceleration and conservation quantities must fit within ordinary floating-point range. An invalid value ends the run with a one-line message beginning <code>Orbit:</code>.</div>
+<div class="note"><strong>Valid numerical inputs.</strong> The initial position must not be at <code>r=0</code>; <code>--k</code>, <code>--dt0</code>, <code>--eps1</code> and <code>--eps2</code> must be positive; <code>--maxOrbits</code> must be at least 1e-9 revolutions; and <code>--maxSteps</code> must be a positive integer. All numeric inputs must be finite real numbers, and intermediate acceleration and conservation quantities must fit within ordinary floating-point range. An invalid value ends the run with a one-line message beginning <code>Orbit:</code>.</div>
 </section>
 <section id="output">
 <h2>Output Modes</h2>
