@@ -24,7 +24,7 @@ pre,code{background:#eee9df}pre{padding:12px;overflow:auto;border-radius:4px}
 <header>
 <h1>MercPert</h1>
 <h2>Representative Sample Outputs</h2>
-<p>Version 1.1.0 &nbsp;|&nbsp; Build 9852baf113f7 &nbsp;|&nbsp; Updated 23 September 2026</p>
+<p>Version 1.1.0 &nbsp;|&nbsp; Build 9852baf113f7 &nbsp;|&nbsp; Updated 29 September 2026</p>
 </header>
 
 <p class="note"><strong>Purpose.</strong> One figure for each Beat of the MercPert Beats Help, in Beat order, for an instructor reading alongside it. Each section gives the exact command, the plot it produces, and the values the program prints. Beat 9 has no figure: its four commands each stop with a one-line error or usage message before any plot is drawn. No external image files are required.</p>
@@ -165,7 +165,7 @@ pre,code{background:#eee9df}pre{padding:12px;overflow:auto;border-radius:4px}
 <li><code>Test particle Sun-distance range: 0.016704 to 0.51065 AU</code></li>
 <li><code>Maximum fractional Jacobi drift: 0.0051623</code></li>
 <li><code>Adaptive controller working timestep range: 199.63 to 2000.0 s</code></li>
-<li>The beat's second command tightens eps1 fivefold: its smallest step is 39.907 s and its Jacobi drift falls 23-fold, to 0.00022738.</li>
+<li>The beat's second command tightens eps1 fivefold: its smallest step is 39.907 s and its maximum Jacobi drift is 0.00022738. It covers 852.41 days rather than this figure's 919.20 days, so the drift ratio is not a matched-duration convergence measure.</li>
 </ul>
 </section>
 
@@ -247,7 +247,7 @@ pre,code{background:#eee9df}pre{padding:12px;overflow:auto;border-radius:4px}
 
 <section id="provenance">
 <h2>Image and source provenance</h2>
-<p>All nine figures were regenerated for this guide from MercPert version 1.1.0, build 9852baf113f7, on 23 September 2026; no earlier images were reused. Each was produced by running the command shown with matplotlib's non-interactive Agg backend and saving the figure that <code>plot_orbits()</code> (Figures 1&ndash;3, 6&ndash;9) or <code>plot_jacobi_drift()</code> (Figure 5) would otherwise display, then converting it to a 256-colour indexed PNG. The nine embedded images total 225.0 KiB, compared with 584.9 KiB before palette conversion &mdash; a reduction of 61.5%. The headline values are the console output of the same runs.</p>
+<p>All nine figures were regenerated for this guide from MercPert version 1.1.0, build 9852baf113f7, on 29 September 2026; no earlier images were reused. Each was produced by running the command shown with matplotlib's non-interactive Agg backend and saving the figure that <code>plot_orbits()</code> (Figures 1&ndash;3, 6&ndash;9) or <code>plot_jacobi_drift()</code> (Figure 5) would otherwise display, then converting it to a 256-colour indexed PNG. The nine embedded images total 225.0 KiB, compared with 584.9 KiB before palette conversion &mdash; a reduction of 61.5%. The headline values are the console output of the same runs.</p>
 </section>
 
 <footer>

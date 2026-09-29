@@ -1,0 +1,294 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>MercPert — Terminal Tutorial | GFtGU Programs</title>
+<script>MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script><script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script><style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:          #fdf5e6;
+      --surface:     #ffffff;
+      --border:      #c8bfa0;
+      --accent:      #7b2d00;
+      --accent2:     #a04010;
+      --gold:        #b5811a;
+      --text:        #1c1c1c;
+      --muted:       #5a4a3a;
+      --code-bg:     #f0ede4;
+      --note-bg:     #f4f0e8;
+      --eq-bg:       #f7f2e8;
+      --warn-bg:     #fef8ec;
+      --warn-border: #c08020;
+      --radius:      5px;
+      --shadow:      0 2px 8px rgba(0,0,0,0.10);
+      --mono:        "Courier New", Courier, monospace;
+      --sans:        "Helvetica Neue", Arial, sans-serif;
+      --serif:       Georgia, "Times New Roman", Times, serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 { font-size: 1.95rem; font-weight: normal; letter-spacing: -.02em; }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub { margin-top: 6px; font-family: var(--sans); font-size: 0.88rem; color: #f0d0b8; line-height: 1.55; }
+    header .sub a { color: #ffd8b8; text-decoration: none; border-bottom: 1px solid rgba(255,200,150,.4); }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 16px 20px 4px;
+      margin-top: 8px;
+    }
+    nav a {
+      display: block;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      padding: 5px 20px 5px 26px;
+      border-left: 3px solid transparent;
+      line-height: 1.4;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    nav a:hover { color: var(--accent); border-left-color: var(--accent2); background: #f5ede0; }
+    nav a.active { color: var(--accent); border-left-color: var(--accent); font-weight: 600; background: #f5ede0; }
+    main { padding: 40px 50px 60px; max-width: 900px; min-width: 0; }
+    h2 {
+      font-family: var(--sans);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 5px;
+      margin: 44px 0 16px;
+      letter-spacing: -.01em;
+    }
+    h2:first-of-type { margin-top: 0; }
+    h3 { font-family: var(--sans); font-size: 1.02rem; font-weight: 700; color: var(--accent2); margin: 26px 0 8px; }
+    p { margin-bottom: 0.9em; }
+    section ul, section ol { margin: 0 0 14px 1.5em; }
+    section ul li, section ol li { margin-bottom: 6px; }
+    .eq-block {
+      background: var(--eq-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 14px 20px 14px 18px;
+      margin: 18px 0;
+      overflow-x: auto;
+    }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .eq-label { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--gold-text); margin-bottom: 6px; }
+    .module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(370px, 100%), 1fr)); gap: 18px; margin-top: 18px; }
+    .module-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px 20px 16px; }
+    .module-card .mc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .module-card .mc-title { font-family: var(--mono); font-size: 0.93rem; font-weight: bold; color: var(--accent); }
+    .module-card .mc-role { font-family: var(--sans); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .module-card p { font-size: 0.88rem; margin-bottom: 10px; color: var(--text); }
+    .module-card .sig { font-family: var(--mono); font-size: 0.80rem; background: var(--code-bg); border: 1px solid var(--border); border-radius: 3px; padding: 7px 10px; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--accent2); line-height: 1.5; }
+    .param-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 12px; }
+    .param-table th { background: var(--accent); color: #fff; font-family: var(--sans); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 8px 12px; text-align: left; }
+    .param-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .param-table tr:nth-child(even) td { background: var(--note-bg); }
+    .param-table code { font-family: var(--mono); font-size: 0.85em; background: var(--code-bg); padding: 1px 4px; border-radius: 2px; }
+    .experiment-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 20px; margin-bottom: 14px; }
+    .experiment-card .exp-num { font-family: var(--sans); font-size: 10px; font-weight: bold; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-text); margin-bottom: 4px; }
+    .experiment-card .exp-title { font-family: var(--sans); font-weight: 700; font-size: 0.96rem; color: var(--accent2); margin-bottom: 6px; }
+    .experiment-card p { font-size: 0.88rem; margin-bottom: 0; }
+    .experiment-card p + p { margin-top: 8px; }
+    .experiment-card .exp-beat { font-family: var(--sans); font-size: 0.8rem; color: var(--muted); }
+    .note-box { background: var(--note-bg); border: 1px solid var(--border); border-left: 4px solid var(--gold); border-radius: var(--radius); padding: 12px 16px; font-size: 0.88rem; margin: 16px 0; }
+    .warn-box { background: var(--warn-bg); border: 1px solid var(--warn-border); border-left: 4px solid var(--warn-border); border-radius: var(--radius); padding: 12px 16px; font-size: 0.88rem; margin: 16px 0; }
+    code { font-family: var(--mono); font-size: 0.87em; background: var(--code-bg); padding: 1px 5px; border-radius: 3px; }
+    .code-block { font-family: var(--mono); font-size: 0.82rem; line-height: 1.55; background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; margin: 12px 0; overflow-x: auto; max-width: 100%; }
+    .code-block code { background: transparent; padding: 0; }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-top: 14px; }
+    .related-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; text-decoration: none; color: var(--text); display: block; transition: box-shadow .15s, border-color .15s; }
+    .related-card:hover { border-color: var(--accent2); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+    .related-card .rc-name { font-family: var(--mono); font-size: 0.85rem; font-weight: bold; color: var(--accent); margin-bottom: 4px; }
+    .related-card .rc-ch { font-family: var(--sans); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--gold-text); margin-bottom: 5px; }
+    .related-card p { font-family: var(--sans); font-size: 0.80rem; color: var(--muted); margin-bottom: 0; line-height: 1.4; }
+    footer { grid-column: 1 / -1; background: var(--accent); color: #fff; font-family: var(--sans); font-size: 12.5px; text-align: center; padding: 18px 24px; line-height: 1.7; }
+    footer a { color: #e0c090; text-decoration: underline; }
+    .tag { display: inline-block; font-family: var(--sans); font-size: 9.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border-radius: 3px; padding: 1px 6px; margin-left: 4px; vertical-align: 1px; }
+    .tag-ode  { background: #d9ead3; color: #274e13; border: 1px solid #a8c69a; }
+    .tag-der  { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
+    .tag-rule { background: #e4e9ea; color: #33454a; border: 1px solid #b2c0c4; }
+    :root { --gold-text: #805a12; }
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .compare-table th { background: var(--accent); color: #fff; font-family: var(--sans); font-size: 11px; letter-spacing: .04em; padding: 8px 10px; text-align: right; }
+    .compare-table th:first-child { text-align: left; }
+    .compare-table td { padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); }
+    .compare-table td:first-child { text-align: left; font-family: var(--sans); }
+    .compare-table tr:nth-child(even) td { background: var(--note-bg); }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .skip-link { position: absolute; left: 8px; top: -80px; z-index: 100; background: var(--surface); color: var(--accent); border: 2px solid var(--accent); border-radius: var(--radius); padding: 8px 14px; font-family: var(--sans); font-size: 0.9rem; font-weight: bold; }
+    .skip-link:focus { top: 8px; }
+    main:focus { outline: none; }
+    @media (max-width: 700px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 40px; }
+    }
+  
+.beat-action{background:var(--note-bg);border-left:4px solid var(--gold);padding:11px 16px;margin:14px 0}.beat-action strong{font-family:var(--sans);font-size:.77rem;color:var(--accent);letter-spacing:.05em;text-transform:uppercase}.beat-action p:last-child{margin-bottom:0}.small-print{font-size:.86rem;color:var(--muted)}.compact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:12px}.compact-grid>div{background:var(--surface);border:1px solid var(--border);padding:12px 15px}.compact-grid p{margin-bottom:0}</style></head><body>
+<a class="skip-link" href="#content">Skip to the tutorial</a><div class="page-wrap">
+<header><div class="badge">GFtGU Programs · Terminal tutorial</div><h1><em>MercPert</em> — A Planet in a Binary Star System</h1><div class="sub">Ten Beats · One shared Python program</div></header>
+<nav id="sidebar"><div class="nav-label">Follow the run</div><a href="#start">Start here</a>
+<a href="#beat0">0 · A test particle in a binary</a>
+<a href="#beat1">1 · The binary is prescribed</a>
+<a href="#beat2">2 · Switch the companion off</a>
+<a href="#beat3">3 · Turn the companion back up</a>
+<a href="#beat4">4 · The one number that is conserved</a>
+<a href="#beat5">5 · Close encounters and the step controller</a>
+<a href="#beat6">6 · Collision and escape</a>
+<a href="#beat7">7 · Outside the binary</a>
+<a href="#beat8">8 · How far to trust a run</a>
+<a href="#beat9">9 · Where the model and the run stop</a>
+<a href="#parameters">Parameters</a>
+<a href="#output">Reading the output</a>
+<a href="#practice">Practice tasks</a>
+<a href="#modules">Code modules</a>
+<a href="#related">Related programs</a>
+<a href="#license">License</a></nav>
+<main id="content" tabindex="-1"><p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 9852baf113f7</p>
+<section id="start"><h2>Start here</h2>
+<p>Put a small test particle near a Sun–companion binary, run a command, then compare the printed diagnostics with the blue trajectory. Follow Beats 0–9 in order on a first pass. Every command starts a fresh run from the MercPert program folder; close the plot window before the next one.</p>
+<p class="note-box">When the cursor hovers over a graphical display, its <strong>(x, y)</strong> position in graph coordinates appears in the lower right corner of the Matplotlib display.</p>
+<p>Mercury's input position and velocity are relative to the Sun, while the plotted positions use the system's centre of mass. The dashed red and green circles show the <em>prescribed</em> stellar paths; the solid blue curve is Mercury's calculated path. A crossing of coloured paths on the screen does not mean the bodies met at the same time.</p>
+</section>
+<section id="beat0"><h2>Beat 0 · A test particle in a binary</h2><p>Begin with the default: a 1-solar-mass Sun, a 0.1-solar-mass companion 0.7 AU away, and Mercury 0.3 AU from the Sun with a 59,220 m/s sideways launch.</p>
+<pre class="code-block"><code>python main.py</code></pre>
+<div class="beat-action"><strong>Read these lines</strong><p>The stellar period is 203.96 days. The run covers 231.48 days and 10,000 accepted steps; Mercury ranges from 0.30000 to 0.40762 AU from the Sun. Find the compact red circle, wider green circle, and blue loops. The stars move on set circles; Mercury responds to both of them.</p></div>
+<p>The program solves Newton's equation for a massless third body: (ddot{mathbf r}=-GM_odot(mathbf r-mathbf r_odot)/|mathbf r-mathbf r_odot|^3-GM_c(mathbf r-mathbf r_c)/|mathbf r-mathbf r_c|^3). Do not call the blue loops closed or stable from this finite run alone.</p>
+<p class="small-print">Practice task 1 revisits this launch.</p></section>
+<section id="beat1"><h2>Beat 1 · The binary is prescribed</h2><p>Make the companion half as massive as the Sun. Watch what moves in the plot.</p>
+<pre class="code-block"><code>python main.py --m_planet_solar 0.5 --vy_init 54400</code></pre>
+<div class="beat-action"><strong>Check the geometry</strong><p>The printed binary period is 174.66 days. The Sun's red circle has radius 0.23333 AU about the centre of mass; the companion's green one has radius 0.46667 AU. Their 0.7 AU separation remains fixed. Read both radii from the axes, not from Mercury's printed <em>Sun-distance</em> range (0.14420–0.31804 AU).</p></div>
+<p>The stellar angular speed is (omega=sqrt{G(M_odot+M_c)/d^3}). At (t=0) the Sun moves in the negative (y) direction. The 54,400 m/s input is relative to that moving Sun, so it is not Mercury's barycentric speed.</p>
+<p class="small-print">Practice task 2 tests the frame conversion.</p></section>
+<section id="beat2"><h2>Beat 2 · Switch the companion off</h2><p>The companion mass must remain positive. Make it negligible and try a circular-speed launch, then the default faster launch.</p>
+<pre class="code-block"><code>python main.py --m_planet_solar 1e-12 --vy_init 54379.16
+python main.py --m_planet_solar 1e-12</code></pre>
+<div class="beat-action"><strong>Compare</strong><p>The first Sun-distance range prints 0.30000–0.30000 AU. The second prints 0.30000–0.43707 AU. The default companion in Beat 0 kept the same 59,220 m/s launch within 0.40762 AU over the same run.</p></div>
+<p>For one Sun, (v_c=sqrt{GM_odot/r}). Starting at perihelion (r_p) with tangential speed (v>v_c), energy and angular momentum give (r_a/r_p=[2-(v/v_c)^2]^{-1}(v/v_c)^2), provided the launch remains bound. At (r_p=0.3) AU, this predicts 0.43707 AU for the second run.</p>
+<p class="small-print">Practice task 3 asks for a prediction before rerunning.</p></section>
+<section id="beat3"><h2>Beat 3 · Turn the companion back up</h2><p>Keep the near-circular speed and multiply companion mass by ten on each run.</p>
+<pre class="code-block"><code>python main.py --m_planet_solar 0.001 --vy_init 54379.16
+python main.py --m_planet_solar 0.01 --vy_init 54379.16
+python main.py --m_planet_solar 0.1 --vy_init 54379.16</code></pre>
+<div class="beat-action"><strong>Subtract each range</strong><p>The Sun-distance spreads are 0.00049, 0.00491 and 0.05020 AU. For these settings they grow by about a factor of ten each time the companion mass does. The relation is empirical over these three finite runs, not a promise for every mass or encounter.</p></div>
+<p>The companion's direct acceleration relative to the Sun's pull scales as ((M_c/M_odot)(r/Delta)^2), where (Delta) is Mercury's distance from the companion. That ratio changes throughout the orbit; close passages can break the simple proportional pattern.</p>
+<p class="small-print">Practice task 4 tests where the trend stops.</p></section>
+<section id="beat4"><h2>Beat 4 · The one number that is conserved</h2><p>Ask for the second plot: signed fractional change of the Jacobi constant in the rotating binary frame.</p>
+<pre class="code-block"><code>python main.py --show_jacobi_diagnostic</code></pre>
+<div class="beat-action"><strong>Read and look</strong><p>The console gives a <em>maximum absolute</em> fractional Jacobi drift of 1.2305e-06. The second plot shows its sign, ranging about −1.23e-06 to +6.6e-08. Close the orbit window if it obscures the diagnostic window.</p></div>
+<p>Ordinary inertial energy of Mercury can change because the moving stars exchange energy with it. In a frame turning with the binary, the stellar field is stationary and (C=2(mathbf r	imesmathbf v)_zomega-v^2+2GM_odot/r_odot+2GM_c/r_c) is conserved by the ideal equations. A small computed drift diagnoses numerical error; it does not prove the entire path is accurate.</p>
+<p class="small-print">Practice task 5 asks which plotted quantity is signed.</p></section>
+<section id="beat5"><h2>Beat 5 · Close encounters and the step controller</h2><p>Run longer, then tighten the acceleration-change and corrector thresholds.</p>
+<pre class="code-block"><code>python main.py --max_steps 40000
+python main.py --max_steps 40000 --eps1 0.01 --eps2 1e-5</code></pre>
+<div class="beat-action"><strong>Compare the runs</strong><p>The first reaches 0.016704 AU from the Sun over 919.20 days; its accepted working timesteps range from 199.63 to 2000.0 s and its Jacobi drift reaches 0.0051623. The tighter run needs steps down to 39.907 s and reports drift 0.00022738, but covers only 852.41 days. The runs have unequal durations, so their drift maxima alone do not measure the benefit of the tighter tolerance. The blue path is much less regular than in Beat 0.</p></div>
+<p>The controller rejects a proposed step when acceleration changes too much and iterates a predictor–corrector until its change is below <code>eps2</code>. <code>dt</code> is the <em>maximum</em> working step, not a guarantee that each accepted step is that long. Drift this large calls for convergence checks before quoting a close-encounter trajectory.</p>
+<p class="small-print">Practice task 6 probes the controller.</p></section>
+<section id="beat6"><h2>Beat 6 · Collision and escape</h2><p>Make the companion as massive as the Sun for a collision, then try a launch that heads far outward.</p>
+<pre class="code-block"><code>python main.py --m_planet_solar 1
+python main.py --x_init_au 0.45 --max_steps 30000</code></pre>
+<div class="beat-action"><strong>Read the stopping reason</strong><p>The first stops at <code>collision with Sun</code> after 1920 steps and 41.543 days, at one nominal solar radius (0.0046505 AU); the black × marks that boundary crossing. The second reaches 11.531 AU from the Sun within 694.44 days, but its stopping reason is <code>max_steps reached</code>, not “escaped.”</p></div>
+<p>A point mass has no physical surface in these equations. The positive Sun collision radius is a numerical stop; the companion's default collision radius is zero (disabled). A long outward track in a finite run is evidence of outward motion over that interval. The program does not certify permanent escape, and a positive instantaneous energy near moving stars would not by itself do so.</p>
+<p class="small-print">Practice task 7 asks for a finite-time criterion.</p></section>
+<section id="beat7"><h2>Beat 7 · Outside the binary</h2><p>Place two equal Suns 1 AU apart and launch 2.5 AU from the Sun. Try a seemingly plausible relative speed, then include the Sun's motion.</p>
+<pre class="code-block"><code>python main.py --m_planet_solar 1 --binary_separation_au 1 --x_init_au 2.5 --vy_init 30000 --max_steps 40000
+python main.py --m_planet_solar 1 --binary_separation_au 1 --x_init_au 2.5 --vy_init 50846 --max_steps 40000</code></pre>
+<div class="beat-action"><strong>Compare the blue paths</strong><p>Mercury starts 2.0 AU from the barycentre. About 29,785 m/s would circle a point mass of two solar masses there. But the Sun moves initially at about −21,061 m/s in (y); the first relative speed makes only about 8,939 m/s barycentric, so Mercury falls into the binary. With 50,846 m/s relative to the Sun, it circles outside. Its Sun-distance range is 1.5463–2.6554 AU.</p></div>
+<p>For a nearby binary, a point-mass circular estimate is only a starting guess. The pair's changing geometry still perturbs the outside orbit.</p>
+<p class="small-print">Practice task 8 checks the sign of the velocity conversion.</p></section>
+<section id="beat8"><h2>Beat 8 · How far to trust a run</h2><p>Halve the maximum step on a smooth orbit; keep the simulated duration at 20 million seconds by changing <code>max_steps</code>.</p>
+<pre class="code-block"><code>python main.py
+python main.py --dt 1000 --max_steps 20000
+python main.py --dt 500 --max_steps 40000</code></pre>
+<div class="beat-action"><strong>Record drift</strong><p>The three maximum fractional Jacobi drifts are 1.2305e-06, 3.0312e-07 and 7.5216e-08. The ratio is about four when <code>dt</code> halves, consistent with second-order convergence on this smooth run.</p></div>
+<p>Now halve <code>dt</code> for the Sun-grazing run of Beat 5:</p>
+<pre class="code-block"><code>python main.py --max_steps 80000 --dt 1000</code></pre>
+<p>Its drift is 0.0051786, much like 0.0051623 at the larger cap. Close to the Sun, <code>eps1</code> rather than the cap already controls the working step. Beat 5's tighter-<code>eps1</code> run reported a smaller drift but covered less time. Match physical duration and inspect actual accepted steps when judging convergence.</p></section>
+<section id="beat9"><h2>Beat 9 · Where the model and the run stop</h2><p>Try three invalid settings and one singular starting position.</p>
+<pre class="code-block"><code>python main.py --m_planet_solar 0
+python main.py --eps2 0.1
+python main.py --binary_separation_au 0.001
+python main.py --x_init 0</code></pre>
+<p>The first three are rejected by the argument parser: masses must be positive, <code>eps2</code> must be smaller than <code>eps1</code>, and the two collision radii must fit within the binary separation. The fourth passes parsing but starts exactly at the Sun's point-mass centre, where gravity is singular; it reports a <code>MercPert error:</code> message with no plot. An ordinary <code>max_steps reached</code> is not an error.</p>
+<p>MercPert is planar, prescribes a circular binary, and neglects Mercury's mass, atmosphere, disks, tides, relativity and impact evolution. A finite-radius collision is interpolated along an accepted segment. Printed five-significant-digit numbers still need a timestep study before they can be trusted quantitatively.</p></section>
+<section id="parameters"><h2>Parameters</h2><p>Run <code>python main.py --help</code> for the complete current interface. Omitted settings take these defaults. Position and velocity inputs are Sun-relative; the graph is barycentric. The <code>_au</code> alternatives replace, rather than accompany, the matching metre option.</p>
+<div class="table-scroll" tabindex="0"><table class="param-table"><thead><tr><th>Option</th><th>Default</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><code>--m_sun_solar</code></td><td>1.0</td><td>Sun mass in solar-mass units.</td></tr>
+<tr><td><code>--m_planet_solar</code></td><td>0.1</td><td>Companion mass in solar-mass units; historical option name.</td></tr>
+<tr><td><code>--binary_separation</code> / <code>--binary_separation_au</code></td><td>0.7 AU</td><td>Star separation in metres or AU; choose one form.</td></tr>
+<tr><td><code>--x_init</code> / <code>--x_init_au</code></td><td>0.3 AU</td><td>Sun-relative initial x coordinate, metres or AU.</td></tr>
+<tr><td><code>--y_init</code> / <code>--y_init_au</code></td><td>0</td><td>Sun-relative initial y coordinate, metres or AU.</td></tr>
+<tr><td><code>--vx_init</code>, <code>--vy_init</code></td><td>0, 59220 m/s</td><td>Sun-relative initial velocity components.</td></tr>
+<tr><td><code>--dt</code>, <code>--max_steps</code></td><td>2000 s, 10000</td><td>Maximum working timestep and accepted-step cap.</td></tr>
+<tr><td><code>--eps1</code>, <code>--eps2</code></td><td>0.05, 0.0001</td><td>Acceleration-change gate and corrector tolerance; 0 &lt; eps2 &lt; eps1 &lt; 1.</td></tr>
+<tr><td><code>--sun_collision_radius</code>, <code>--companion_collision_radius</code></td><td>6.957e8 m, 0</td><td>Numerical stopping radii; zero disables one boundary.</td></tr>
+<tr><td><code>--position_unit</code></td><td>AU</td><td>Orbit-axis units: <code>AU</code> or <code>m</code>.</td></tr>
+<tr><td><code>--annotation_corner</code></td><td>upper_left</td><td><code>upper_left</code>, <code>upper_right</code>, <code>lower_left</code>, <code>lower_right</code>.</td></tr>
+<tr><td><code>--show_jacobi_diagnostic</code></td><td>off</td><td>Open the second diagnostic plot; <code>--no-show_jacobi_diagnostic</code> selects only the orbit plot.</td></tr>
+</tbody></table></div><p><code>python main.py --version</code> reports the shared version and source build. The program needs Python 3.10 or later and Matplotlib. The page's equations are typeset by MathJax from a public CDN; the program itself needs no connection.</p></section>
+<section id="output"><h2>Reading the output</h2><p>The first console line gives version, build, accepted-step count and stopping reason. Next come the binary's circular period, Mercury's integration time, its minimum and maximum distance <em>from the Sun</em>, maximum absolute fractional Jacobi drift, and the smallest/largest accepted working timestep. A run at <code>max_steps</code> has that many accepted steps plus the initial state. A collision can stop sooner.</p>
+<p>The orbit plot uses dashed red for Sun, dashed green for companion and solid blue for Mercury. A black × appears only for a configured collision. With <code>--show_jacobi_diagnostic</code>, the second plot shows signed ((C-C_0)/|C_0|), whereas the console shows its maximum magnitude. If (C_0=0), the printed fractional drift is undefined. For a collision, the interpolated endpoint contributes to the printed drift. The <a href="SampleOutputs/MercPert-SampleOutputs_Guide.html">Sample Outputs Guide</a> provides representative figures and quoted values for Beats 0–8.</p></section>
+<section id="practice"><h2>Practice tasks</h2><ol>
+<li>From Beat 0, compare the 231.48-day run with the binary's 203.96-day period. State what the blue loops do and what a single run cannot establish.</li>
+<li>Use Beat 1's mass ratio and 0.7 AU separation to calculate the two stellar orbit radii, then check them against the axes.</li>
+<li>Predict the isolated-Sun circular speed at 0.3 AU and the aphelion of the 59,220 m/s launch before running both Beat 2 commands.</li>
+<li>Extend Beat 3's companion-mass sequence to 0.3 and 0.5 solar masses. Record when the nearly proportional spread no longer holds.</li>
+<li>Explain why Beat 4's console drift is nonnegative while the plotted drift takes both signs.</li>
+<li>Repeat Beat 5 with a tighter <code>eps1</code>. Record both the smallest working step and the Jacobi drift; compare the actual simulated durations.</li>
+<li>For Beat 6's outward run, propose a finite observation interval and distance threshold for an operational “ejected during this run” label. Explain why that would not certify permanent escape.</li>
+<li>For Beat 7, add the Sun's initial barycentric y velocity to each Sun-relative input velocity and predict which launch can circle outside the binary.</li>
+</ol><p>Keep each command and its printed lines with your explanation. The fuller tutorial offers worked checks and additional open-ended experiments.</p></section>
+<section id="modules"><h2>Code modules</h2><div class="compact-grid">
+<div><code>main.py</code><p>Command-line options, summary and plotting calls.</p></div><div><code>physics_mercpert.py</code><p>Constants, binary geometry, forces, Jacobi quantity, version and build.</p></div>
+<div><code>driver_mercpert.py</code><p>Adaptive trajectory, collision detection and diagnostics.</p></div><div><code>plot_mercpert.py</code><p>Orbit and Jacobi-drift displays.</p></div></div><p>With both tutorial files installed in the sibling documentation folder, run <code>python -m unittest discover -s tests -v</code> from the program folder.</p></section>
+<section id="related"><h2>Related programs</h2><p><strong>Orbit</strong> studies a single central star. <strong>Binary</strong> evolves two massive bodies; MercPert prescribes the circular binary and follows a massless third body. <strong>Multiple</strong> lets several bodies all gravitate and move.</p></section>
+<section id="license"><h2>License</h2><p>Based on Bernard Schutz's programs accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003). Distributed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International</a>.</p></section>
+</main>
+<footer><em>Gravity from the Ground Up</em> — Python Programs · CC BY-NC-SA 4.0</footer></div></body></html>

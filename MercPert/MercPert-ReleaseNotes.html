@@ -1,10 +1,46 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>MercPert 1.1.0 Release Notes</title>
-</head>
-<body>
+<html><head><meta charset="utf-8"><title>MercPert 1.1.0 Release Notes — Kickoff4 continuation</title></head><body>
+<h1>MercPert 1.1.0 Release Notes — Kickoff4 continuation</h1>
+<p><b>Version:</b> 1.1.0<br><b>Build:</b> 9852baf113f7<br><b>Date:</b> 2026-09-29</p>
+<h2>Release Status</h2>
+<p>This Kickoff4 continuation adds a second tutorial and paired-document tests after the 1.1.0 documentation and Audit22 rounds. Neither round changed the four executable Python modules. Codex's Audit22 recommended no further changes to the Claude tutorial or program; Grok's Audit22 considered that tutorial factually ready to freeze and left the choice of format to Schutz and Higgs. Codex completed an internal adversarial audit of this new candidate. Claude's external review of the paired tutorials is pending, so this note does not claim release approval.</p>
+<h2>Open Bugs</h2>
+<p>No unresolved P1–P3 defect is currently known. Claude's review of the Kickoff4 candidate is pending.</p>
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li><b>Second tutorial format.</b> New <code>MercPert-grok.html</code> presents the same ten Beat topics as a concise terminal sequence with eight practice tasks. The existing <code>MercPert-claude.html</code> remains the fuller lab-manual version. Both active guides identify the same version and source build; the archived <code>MercPert-original.html</code> remains untouched.</li>
+<li><b>Graph-coordinate note.</b> Both active tutorials now tell students that hovering over a Matplotlib display reveals the cursor's <code>(x, y)</code> graph coordinates at the lower right.</li>
+<li><b>Drift-comparison qualification.</b> Beat 5's two 40,000-step runs cover 919.20 and 852.41 days. Both tutorials and the sample guide now state that their 23-fold difference in maximum Jacobi drift is not a matched-duration convergence measurement. The Claude tutorial also confines its five-figure agreement claim in Beat 8 to the printed Sun-distance extrema.</li>
+<li><b>Drift-comparison qualification.</b> Beat 5's two 40,000-step runs cover 919.20 and 852.41 days. Both tutorials and the sample guide now state that their 23-fold difference in maximum Jacobi drift is not a matched-duration convergence measurement. The Claude tutorial also confines its five-figure agreement claim in Beat 8 to the printed Sun-distance extrema.</li>
+<li><b>Instructor guide.</b> All nine embedded figures in the self-contained Sample Outputs Guide were regenerated from the exact listed commands for this unchanged 1.1.0 build. Their printed headline values were verified. Beat 9 has no figure because its commands demonstrate error handling.</li>
+</ul>
+<h2>Test Suite Growth</h2>
+<ul>
+<li>Version 1.1.0 as released on 2026-09-16: 68 tests; Kickoff2: 82 tests; Audit21/Audit22: 84 tests.</li>
+<li>Kickoff4: 88 tests. Four new contracts require the Claude and Grok tutorials together, check both version/build stamps, structure, options, navigation and student-facing wording, and parse every Grok Beat command through the shared command-line interface, and require the unequal-duration drift qualification in both tutorials and the sample guide. Historical tests for the archived Reference Guide remain optional.</li>
+<li>Run <code>python -m unittest discover -s tests -v</code> from <code>GFTGU-Programs/MercPert</code> with both guides, these notes and <code>SampleOutputs/MercPert-SampleOutputs_Guide.html</code> in the sibling <code>GFTGU-Documentation/MercPert</code> folder. The candidate suite passed 88 of 88 tests with no skips.</li>
+</ul>
+<h2>Known Limitations</h2>
+<ul>
+<li>The model is planar, circular and restricted: the companion and Sun follow prescribed circles and the test particle has no effect on them. It omits gas, disks, migration, pressure, tides, relativity and impact evolution.</li>
+<li>Collision radii are numerical stopping boundaries. Zero disables the corresponding boundary; the default companion radius is zero. Segment interpolation estimates a collision time and position, and the printed Jacobi-drift maximum includes that interpolated endpoint.</li>
+<li>Strong encounters may show large Jacobi drift; a small drift alone does not bound trajectory phase or a later encounter outcome. The program does not classify permanent escape.</li>
+<li>Starting exactly at a point-mass centre is singular. The program prints an error even if a positive collision radius surrounds the starting point.</li>
+<li>The BUILD_ID covers only the four executable modules. Tutorial, test and sample-guide edits retain the code version and build.</li>
+</ul>
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>The Claude tutorial and archived Reference Guide refer to Chapter 13 of the 2003 first edition; revise when the second edition's organization is known.</li>
+<li>Possible later code choices remain open: zero-step collision at an exact stellar centre; a Jacobi-drift maximum limited to accepted integration steps; a mass-derived default companion collision radius if Prof. Schutz wants one. Each would require a separate behavior and version decision.</li>
+<li>Selection of a single student Help format remains with Schutz, Higgs and Taylor. Both active tutorials are now tested against the same program.</li>
+</ul>
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.1.0<br>BUILD_ID: 9852baf113f7<br>
+BUILD_ID is computed from <code>physics_mercpert.py</code>, <code>driver_mercpert.py</code>, <code>main.py</code> and <code>plot_mercpert.py</code> only. <code>python main.py --version</code> prints <code>MercPert 1.1.0 (build 9852baf113f7)</code>. Both tutorials and the Sample Outputs Guide show those identifiers.</p>
+<hr>
+<h2>Archived development notes: Version 1.1.0 (2026-09-23)</h2>
+<p>The following section preserves the earlier candidate's release history and then-current recommendations. Its status and file inventory are historical.</p>
+
 <h1>MercPert 1.1.0 Release Notes</h1>
 
 <p>
@@ -146,5 +182,5 @@ BUILD_ID is computed from <code>physics_mercpert.py</code>,
 prints <code>MercPert 1.1.0 (build 9852baf113f7)</code>, and both Help files
 show the same version and build.
 </p>
-</body>
-</html>
+
+</body></html>

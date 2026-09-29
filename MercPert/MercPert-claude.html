@@ -239,6 +239,7 @@
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
   Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 9852baf113f7
 </p>
+<p class="note-box">When the cursor hovers over a graphical display, its <strong>(x, y)</strong> position in graph coordinates appears in the lower right corner of the Matplotlib display.</p>
 <section id="description">
 <h2>Description</h2>
 <p>
@@ -534,7 +535,7 @@ step ten times shorter near the Sun, which is also why 40,000 steps covered 919.
 the 925.93 days that 40,000 full steps would. Then compare the second run, which makes <code>eps1</code> five times
 smaller and <code>eps2</code> tighter: its smallest step is 39.907 s, and 199.63 / 39.907 = 5.00.
 The shortest step the controller allows has shrunk in direct proportion to <code>eps1</code>. The second run also meets the Sun at almost the same distance,
-0.016877 AU, and its Jacobi drift is 23 times smaller; Beat 8 returns to that.</p>
+0.016877 AU, and its reported maximum Jacobi drift is 23 times smaller. However, the tighter run covers only 852.41 days rather than 919.20 days: these are not equal-duration trials, so the drift ratio alone does not measure the effect of tighter tolerances. Beat 8 returns to controlled comparisons.</p>
 <p><em>Then</em> the rules the controller follows. Each step starts with a cheap Euler guess at the
 end of the step, and checks how much the acceleration would change over it:</p>
 <div class="eq-block">
@@ -679,12 +680,12 @@ python main.py --max_steps 80000 --dt 1000</code></pre>
 steps of 2000, 1000 and 500 s. Their drifts are 1.2305e-06, 3.0312e-07 and 7.5216e-08. Divide
 each by the next: 4.06 and 4.03. Halving the step divides the error by four, so the error goes as
 \(\Delta t^{2}\): the method is second order. Then look at their Sun-distance ranges: all three
-print 0.30000 to 0.40762 AU. On a smooth orbit the default settings are already accurate to five
-figures, and apart from the timestep line itself, the drift is the only line that changes. Then compare the fourth run
+print 0.30000 to 0.40762 AU. For this smooth run, those printed extrema agree to five
+displayed figures across these settings; that does not establish five-figure accuracy for the full trajectory or a later encounter. Apart from the timestep line itself, the drift is the only summary line that changes. Then compare the fourth run
 with the first command of Beat 5. It halves the maximum step for the Sun-grazing run, and its drift,
 0.0051786, is no better than Beat 5's 0.0051623. Near the Sun the step was already being set by
 <code>eps1</code>, not by <code>--dt</code>, so shrinking <code>--dt</code> changes nothing there;
-tightening <code>eps1</code>, as in Beat 5's second run, cut the drift 23-fold, to 0.00022738.</p>
+Beat 5's tighter-<code>eps1</code> run reports 0.00022738, 23 times smaller than its first run, but also stops after 852.41 rather than 919.20 days. Match elapsed time and encounter history before assigning the full difference to the tolerance.</p>
 <p><em>Then</em> the rule this suggests. The corrector of Eq. 8 converges to the trapezoidal rule,
 whose error over a fixed time span shrinks as the square of the step:</p>
 <div class="eq-block">
