@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Random2 – Terminal Tutorial | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+    /* ── Reset & custom properties ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #fdf5e6;
+      --surface:  #ffffff;
+      --border:   #c8bfa0;
+      --accent:   #7b2d00;
+      --accent2:  #a04010;
+      --gold:     #b5811a;
+      --text:     #1c1c1c;
+      --muted:    #5a4a3a;
+      --code-bg:  #f0ede4;
+      --note-bg:  #f4f0e8;
+      --eq-bg:    #f7f2e8;
+      --radius:   5px;
+      --shadow:   0 2px 8px rgba(0,0,0,0.10);
+      --mono:     "Courier New", Courier, monospace;
+      --sans:     "Helvetica Neue", Arial, sans-serif;
+      --serif:    Georgia, "Times New Roman", Times, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Page grid ── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.95rem;
+      font-weight: normal;
+      letter-spacing: -.02em;
+    }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub {
+      margin-top: 6px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: #f0d0b8;
+      line-height: 1.55;
+    }
+    header .sub a {
+      color: #ffd8b8;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,200,150,.4);
+    }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+
+    /* ── Sidebar ── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      padding: 14px 18px 4px;
+    }
+    nav a {
+      display: block;
+      padding: 6px 18px 6px 22px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background .15s, border-color .15s;
+    }
+    nav a:hover {
+      background: var(--bg);
+      border-left-color: var(--accent2);
+      color: var(--accent);
+    }
+    nav a.active {
+      background: var(--note-bg);
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    nav hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 14px;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 38px 48px 60px;
+      max-width: 860px;
+    }
+
+    section { margin-bottom: 52px; }
+
+    h2 {
+      font-size: 1.30rem;
+      font-weight: normal;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 6px;
+      margin-bottom: 18px;
+      letter-spacing: -.01em;
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--accent2);
+      margin: 24px 0 8px;
+    }
+    h4 {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin: 18px 0 6px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    /* ── Equation block ── */
+    .eq {
+      background: var(--eq-bg);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 20px;
+      margin: 18px 0;
+      overflow-x: auto;
+      font-size: 1.05em;
+    }
+    .eq-label {
+      float: right;
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 2px;
+    }
+
+    /* ── Note / tip box ── */
+    .note {
+      background: var(--note-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      margin: 18px 0;
+      font-size: 0.93rem;
+    }
+    .note strong { color: var(--accent); }
+
+    /* ── Restore-defaults box ── */
+    .restore-section {
+      margin: 2.5em auto;
+      max-width: 860px;
+      font-family: inherit;
+    }
+    .restore-box {
+      border: 1.5px solid var(--gold);
+      border-left: 5px solid var(--gold);
+      border-radius: 6px;
+      background: #fffbeb;
+      padding: 1.1em 1.4em;
+      display: flex;
+      gap: 1em;
+      align-items: flex-start;
+    }
+    .restore-icon { font-size: 1.5em; line-height: 1; flex-shrink: 0; }
+    .restore-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      color: var(--accent);
+      margin-bottom: 0.35em;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .restore-intro {
+      margin: 0 0 0.5em;
+      font-size: 0.92em;
+      line-height: 1.6;
+    }
+    .restore-list {
+      margin: 0;
+      padding-left: 1.4em;
+      font-size: 0.92em;
+      line-height: 1.8;
+    }
+    .restore-box kbd {
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.88em;
+    }
+    .restore-link { color: var(--accent); text-decoration: underline; }
+    .restore-footnote {
+      margin: 0.6em 0 0;
+      font-size: 0.88em;
+      color: var(--muted);
+    }
+
+    /* ── Code ── */
+    pre {
+      background: #2b2b2b;
+      color: #f0ede4;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.55;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 0.91em;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    pre code { background: none; padding: 0; font-size: inherit; }
+
+    /* ── Module cards ── */
+    .mc { display: grid; gap: 14px; margin: 18px 0; }
+    .mc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+    }
+    .mc-card .mc-name {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .mc-card .mc-role {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .mc-card p { font-size: 0.92rem; margin-bottom: 0; color: var(--muted); }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 16px 0;
+    }
+    th {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      background: var(--note-bg);
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { font-family: var(--mono); color: var(--accent2); }
+
+    /* ── Output type list ── */
+    .output-list { list-style: none; margin: 14px 0; }
+    .output-list li {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .output-list li:last-child { border-bottom: none; }
+    .output-list .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      white-space: nowrap;
+      color: var(--accent2);
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
+    }
+    footer a { color: #e0c090; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Beats layout additions ── */
+    .eq-kind {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .kind {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-left: 4px;
+      vertical-align: 1px;
+    }
+    .kind-law { background: #f6dcdc; color: #7a1f1f; border: 1px solid #d9a0a0; }
+    .kind-ode { background: #d9ead3; color: #274e13; border: 1px solid #a8c69a; }
+    .kind-def { background: #e4e4e4; color: #3a3a3a; border: 1px solid #b5b5b5; }
+    .kind-der { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
+    .kind-alg { background: #e6e0f8; color: #3d2c73; border: 1px solid #b7abdd; }
+    .kind-pre { background: #fbe3cc; color: #7a3a00; border: 1px solid #e0b184; }
+    .related-list li { margin-bottom: 6px; }
+    .warn {
+      background: #fff6e8;
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 12px 18px;
+      margin: 16px 0;
+      font-family: var(--sans);
+      font-size: 0.91rem;
+      color: var(--muted);
+    }
+    .warn strong { color: var(--accent); }
+    .compare-table th:not(:first-child), .compare-table td:not(:first-child) {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .compare-table td:not(:first-child) { font-family: var(--mono); color: var(--text); }
+    main { min-width: 0; }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+    section ul { margin: 0 0 14px 1.4em; }
+    section ul li, section ol li { margin-bottom: 6px; }
+    section ol { margin: 0 0 14px 1.6em; }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 48px; }
+    }
+  
+</style>
+</head>
+<body><div class="page-wrap"><header>
+<div class="badge">Chapter 8 · Gravity from the Ground Up · Terminal Tutorial</div>
+<h1><em>Random2</em> — Random Walks and Radiative Diffusion</h1>
+<div class="sub">
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+</div>
+</header><nav id="sidebar"><div class="nav-label">Start</div><a href="#overview">Overview</a><div class="nav-label">At the terminal</div><a href="#beat0">Beat 0 · Walk far, end near the start</a><a href="#beat1">Beat 1 · Put uncertainty beside an average</a><a href="#beat2">Beat 2 · Change the step distribution</a><a href="#beat3">Beat 3 · Follow four paths through a circle</a><a href="#beat4">Beat 4 · Estimate escape steps</a><a href="#beat5">Beat 5 · Double the radius</a><a href="#beat6">Beat 6 · Rescale every step and the circle</a><a href="#beat7">Beat 7 · Watch a cap censor the sample</a><a href="#beat8">Beat 8 · Repeat, vary, and reject</a><div class="nav-label">More</div><a href="#further">Further investigations</a><a href="#parameters">Command-line parameters</a><a href="#summary">Reading the two summaries</a><a href="#related">Related programs</a><a href="#license">License</a></nav><main><p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 06ebd8fea601</p>
+<section id="overview"><h2>Start here</h2><p>Random2 explores two related random walks. <code>scaled_distance</code> averages three-dimensional endpoint distances over many trials; <code>walk2d</code> draws fixed-length, direction-random paths inside a circular schematic star. Both print their numbers before opening a plot.</p>
+<p>Run each command from the folder containing <code>main.py</code>, then close the plot before the next command. Hover over a graph: Matplotlib displays the cursor's graphical <code>(x, y)</code> coordinates at the lower right. Use <code>--seed 12</code> to repeat the worked numbers; an unseeded run changes each time. MathJax typesets the equations online, but the Python program works offline.</p>
+<div class="note"><strong>Model boundary:</strong> the circle is a diffusion picture, not a solar model. There is no varying opacity or mean free path, no convection, and the displayed paths are two-dimensional. The escape-time spread therefore cannot be used as the Sun's three-dimensional distribution.</div>
+</section>
+
+<section id="beat0"><h2>Beat 0 · Walk far, end near the start</h2><p><strong>Run.</strong> Send 100 walkers out for each step count.</p>
+<pre>python main.py --seed 12</pre>
+<p><strong>Observe.</strong> In the last row, 4096 steps produce a mean scaled distance of 63.0073, with a fitted log-log slope of 0.4964. Compare the rows at 256, 1024 and 4096 steps: four times the steps roughly doubles the endpoint distance. The scale divides each walk's net displacement by that walk's own mean step length.</p>
+<p><strong>Your turn.</strong> Point to two rows in the table that support \(d\propto\sqrt N\). Does a single trajectory need to follow that relation exactly? The exact independent-step identity is \(\langle r_N^2\rangle=N\langle |s|^2\rangle\). The printed mean of scaled distance follows \(C\sqrt N\) only as a large-\(N\) approximation. In particular, a two-step row need not equal its large-\(N\) prediction.</p></section>
+
+<section id="beat1"><h2>Beat 1 · Put uncertainty beside an average</h2><p><strong>Run.</strong> Compare 25 and 1000 independent trials with the 100-trial run from Beat 0.</p>
+<pre>python main.py --seed 12 --n_trials 25
+python main.py --seed 12 --n_trials 1000</pre>
+<p><strong>Observe.</strong> At 4096 steps the standard errors are 4.2617 (25 trials), 2.3473 (100), and 0.8231 (1000). The large-\(N\) predicted ratio to \(\sqrt N\) is 0.9591; measured rows scatter around it.</p>
+<p><strong>Your turn.</strong> How many times did the standard error fall as trial count rose from 25 to 1000? Compare that finite-sample answer with the ideal scaling \(\mathrm{SE}=s/\sqrt n\), where \(s\) is the measured spread and \(n\) is the number of trials. More trials narrow uncertainty but cannot remove the short-walk bias of the large-\(N\) formula.</p></section>
+
+<section id="beat2"><h2>Beat 2 · Change the step distribution</h2><p><strong>Run.</strong> Switch the three-dimensional components from uniform draws on \([-1,1]\) to standard Gaussian draws.</p>
+<pre>python main.py --seed 12 --step_distribution gaussian</pre>
+<p><strong>Observe.</strong> The fitted slope is 0.4986, close to 0.4964 for uniform components. The large-\(N\) constant changes from 0.9591 to 1.0000. The two last-row means, 63.0073 and 65.1655, differ by less than their combined standard error.</p>
+<p><strong>Your turn.</strong> Which conclusion concerns the exponent and which concerns the constant? Independent, zero-mean steps with finite variance give the square-root scaling. The step distribution and the definition of scaled distance set its prefactor. Uniform components fill a cube; they are not direction-isotropic, unlike the steps used in the star picture.</p></section>
+
+<section id="beat3"><h2>Beat 3 · Follow four paths through a circle</h2><p><strong>Run.</strong> Switch to the two-dimensional schematic star.</p>
+<pre>python main.py --display walk2d --seed 12</pre>
+<p><strong>Observe.</strong> The default radius is 89.4427 step-length units, so \((R/\lambda)^2=8000.0\). The four paths escape after 11564, 7519, 8246 and 2479 steps; their mean is 7452.0 with standard error 1876.9. A path ends at the circle's exit point, and its outward ray is only a display convention.</p>
+<p><strong>Your turn.</strong> Why do four independent paths give such a noisy mean? In this display each step has fixed length \(\lambda\) and a uniform random angle. The default radius follows \(R=f\lambda\sqrt{N_{\rm ref}}\) with \(f=2\) and \(N_{\rm ref}=2000\); <code>--reference_steps</code> sizes the circle and does not cap a walk.</p></section>
+
+<section id="beat4"><h2>Beat 4 · Estimate escape steps</h2><p><strong>Run.</strong> Use a smaller circle and 200 walkers so the sample mean is more useful.</p>
+<pre>python main.py --display walk2d --radius 30 --n_walks 200 --seed 12</pre>
+<p><strong>Observe.</strong> The geometric scale is \((R/\lambda)^2=900.0\). All 200 escape; the sampled mean is 902.7 with standard error 44.7, and the median is 742.5. Individual counts are suppressed when there are more than 12 walks, but the summary keeps their statistics.</p>
+<p><strong>Your turn.</strong> Is the measured mean consistent with the theoretical expectation between 900 and 961 steps? Account for its standard error. The bound applies to the expected uncapped escape count: \((R/\lambda)^2\leq\langle N_{\rm escape}\rangle<(R/\lambda+1)^2\). A finite sample mean can fall outside the bound by chance; capped walks are excluded from the printed mean.</p></section>
+
+<section id="beat5"><h2>Beat 5 · Double the radius</h2><p><strong>Run.</strong> Compare radii 15 and 30 with the same fixed step length and 200 walks each.</p>
+<pre>python main.py --display walk2d --radius 15 --n_walks 200 --seed 12
+python main.py --display walk2d --radius 30 --n_walks 200 --seed 12</pre>
+<p><strong>Observe.</strong> The mean escape counts are 227.8 ± 10.5 and 902.7 ± 44.7, a ratio of about 3.96. The ideal large-radius comparison tends toward four, rather than two, because the walker repeatedly changes direction.</p>
+<p><strong>Your turn.</strong> Check the two printed \((R/\lambda)^2\) values, 225.0 and 900.0. How much uncertainty should you assign to the observed ratio? The radius-dependent one-step overshoot and Monte Carlo error matter for these finite circles.</p></section>
+
+<section id="beat6"><h2>Beat 6 · Rescale every step and the circle</h2><p><strong>Run.</strong> Leave the radius at its default rule and change only the mean free path.</p>
+<pre>python main.py --display walk2d --mean_free_path 0.5 --seed 12
+python main.py --display walk2d --mean_free_path 2 --seed 12</pre>
+<p><strong>Observe.</strong> The radii are 44.7214 and 178.8854; Beat 3 gave 89.4427 at step length 1. In all three runs \(R/\lambda=2\sqrt{2000}\), \((R/\lambda)^2=8000.0\), and the same seed gives counts 11564, 7519, 8246 and 2479. The axes change physical scale.</p>
+<p><strong>Your turn.</strong> Why do the counts match despite the different radii? The same angular draws give the same paths in step-length units. The exact count identity here uses binary-exact scale factors 0.5 and 2; other factors can differ at a boundary because of floating-point rounding.</p></section>
+
+<section id="beat7"><h2>Beat 7 · Watch a cap censor the sample</h2><p><strong>Run.</strong> Stop each radius-30 walk at 900 steps, then at 3000, and compare with Beat 4's generous default cap.</p>
+<pre>python main.py --display walk2d --radius 30 --n_walks 200 --step_cap 900 --seed 12
+python main.py --display walk2d --radius 30 --n_walks 200 --step_cap 3000 --seed 12</pre>
+<p><strong>Observe.</strong> At cap 900, 130 of 200 escape; their mean is 515.7. At cap 3000, 196 escape; their mean is 837.5. With the generous default, all 200 escape and their mean is 902.7. A stopped path ends in an <code>x</code> and has no outward ray.</p>
+<p><strong>Your turn.</strong> Why is 515.7 not an estimate of the uncapped mean near 900? The printed escape statistics omit stopped walks, preferentially discarding slow paths. Read both <code>escaped walks</code> and <code>step cap</code> before interpreting the mean.</p></section>
+
+<section id="beat8"><h2>Beat 8 · Repeat, vary, and reject</h2><p><strong>Run.</strong> Compare a new seed with Beat 0. Then run without a seed twice.</p>
+<pre>python main.py --seed 28
+python main.py</pre>
+<p><strong>Observe.</strong> At seed 28 the last-row mean is 62.2140 with standard error 2.5542, versus 63.0073 ± 2.3473 at seed 12. The difference is only 0.23 of their combined standard error \(\sqrt{\mathrm{SE}_1^2+\mathrm{SE}_2^2}\). The unseeded summary says its results differ from run to run.</p>
+<p><strong>Your turn.</strong> How would you decide whether two independent random estimates disagree meaningfully? Try <code>python main.py --max_steps 1</code>: this command is <strong>expected to fail</strong> because the minimum is 2. A rejected input is different from a random difference between valid runs.</p></section>
+
+<section id="further"><h2>Further investigations</h2><p><strong>Change the measure.</strong> In a separate copy of the program, inspect <code>_perform_trials_3d_with_error()</code> and replace the per-walk scaled distance by the net distance. Predict what happens to the slope and to its prefactor. Keep the original modules intact for the preceding exercises.</p>
+<p><strong>Use the result objects.</strong> At a Python prompt in the program folder, run this short script. Compare its final average and escape flags with Beats 0 and 4.</p>
+<pre>import random2_physics
+from random2_driver import run_scaled_distance_statistics, run_walk2d
+random2_physics.seed_generator(12)
+table = run_scaled_distance_statistics(4096, 100)
+print(table.averages[-1])
+random2_physics.seed_generator(12)
+star = run_walk2d(radius=30, n_walks=200)
+print(sum(walk.escaped for walk in star.walks))</pre>
+<p><strong>Estimate a solar scale.</strong> If \(R=7\times10^8\) m and a highly simplified constant \(\lambda=0.01\) m, calculate \((R/\lambda)^2\) and multiply by \(\lambda/c\). Explain why a real solar opacity profile and convection make that number only an order-of-magnitude thought experiment.</p></section>
+
+<section id="parameters"><h2>Command-line parameters</h2><p>All ordinary settings are command-line options described in <code>main.py</code>. Options for the display that is not selected may be given, but only the selected display uses them. Omitted options return to their defaults on each run.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table">
+<thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td class="pname">--display</td><td class="pdefault">scaled_distance</td><td><code>scaled_distance</code> runs the three-dimensional statistics of Beats 0 to 2; <code>walk2d</code> draws the schematic star of Beats 3 to 7.</td></tr>
+<tr><td class="pname">--max_steps</td><td class="pdefault">4096</td><td>Longest walk in <code>scaled_distance</code>, at least 2; the shorter walks are found by repeated halving. Alias <code>--maxSteps</code>.</td></tr>
+<tr><td class="pname">--n_trials</td><td class="pdefault">100</td><td>Independent walks averaged for each row; the standard error falls as its square root. Alias <code>--nTrials</code>.</td></tr>
+<tr><td class="pname">--step_distribution</td><td class="pdefault">uniform</td><td><code>uniform</code> draws each component from \([-1,1]\), Eq. (2); <code>gaussian</code> from the standard normal distribution, Eq. (9).</td></tr>
+<tr><td class="pname">--reference_steps</td><td class="pdefault">2000</td><td>\(N_{\rm ref}\) in the default radius, Eq. (14). It sizes the drawing and does not limit the walk.</td></tr>
+<tr><td class="pname">--n_walks</td><td class="pdefault">4</td><td>Number of star walks; they are listed one per line in the summary when there are at most 12.</td></tr>
+<tr><td class="pname">--mean_free_path</td><td class="pdefault">1.0</td><td>Step length \(\lambda\) of every star walk, in arbitrary units.</td></tr>
+<tr><td class="pname">--radius_factor</td><td class="pdefault">2.0</td><td>\(f\) in the default radius, Eq. (14).</td></tr>
+<tr><td class="pname">--radius</td><td class="pdefault">omitted</td><td>Explicit positive star radius; when omitted, Eq. (14) sets it.</td></tr>
+<tr><td class="pname">--ray_length_factor</td><td class="pdefault">0.6</td><td>Length of the outgoing ray as a fraction of the radius; 0 draws no ray.</td></tr>
+<tr><td class="pname">--step_cap</td><td class="pdefault">200000</td><td>Largest number of steps in one star walk; a walk that reaches it is stopped and not counted as escaped (Beat 7).</td></tr>
+<tr><td class="pname">--corner</td><td class="pdefault">upper_right</td><td>Position of the annotation box on the star plot: <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code> or <code>lower_left</code>.</td></tr>
+<tr><td class="pname">--seed</td><td class="pdefault">omitted</td><td>Nonnegative integer that makes a run repeatable; when omitted, every run uses different random numbers (Beat 8).</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="summary"><h2>Reading the two summaries</h2><p><code>scaled_distance</code> prints a row for each step count: mean scaled distance, standard error, and ratio to \(\sqrt N\). Read the large-\(N\) prediction and fitted slope below the rows. <code>walk2d</code> prints the radius, step length, \((R/\lambda)^2\), step cap, escaped count and escape statistics. It lists individual paths only when there are at most 12. The plot repeats a selection of these quantities.</p>
+<pre>python main.py --version
+python main.py --help</pre>
+<p>These two commands identify the shared code and list options; neither starts a walk.</p></section>
+
+<section id="related"><h2>Related programs</h2><p><strong>Star</strong> models stellar structure and <strong>Neutron</strong> models neutron-star structure. Random2 instead follows idealized stochastic steps.</p></section>
+
+<section id="license"><h2>License</h2>
+<h2>License</h2>
+<p>
+      This software is based on the programs by <strong>Bernard Schutz</strong> accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003) and is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license. It descends from Schutz's original Java program <em>Random</em>; this student-facing version is a Python port by Thomas Yee.
+    </p>
+</section></main><footer>
+<em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+</footer></div></body></html>
