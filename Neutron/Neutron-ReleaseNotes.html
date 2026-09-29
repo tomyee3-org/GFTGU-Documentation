@@ -3,9 +3,9 @@
 <h1>Neutron 1.3.1 Release Notes — Kickoff4</h1>
 <p><b>Version:</b> 1.3.1<br><b>Build:</b> 2cd414a64b3a<br><b>Date:</b> 2026-09-29</p>
 <h2>Release Status</h2>
-<p>Kickoff4 documentation and test refresh for the existing Neutron 1.3.1 core build. The four Python program modules are byte-identical to the previous release. The two active tutorials, <code>Neutron-claude.html</code> and <code>Neutron-grok.html</code>, describe the same commands and model. The archived Reference Guide <code>Neutron-original.html</code> is retained without active maintenance. Claude audit is pending.</p>
+<p>Kickoff4 documentation and test refresh for the existing Neutron 1.3.1 core build. The four Python program modules are byte-identical to the previous release. The two active tutorials, <code>Neutron-claude.html</code> and <code>Neutron-grok.html</code>, describe the same commands and model. The archived Reference Guide <code>Neutron-original.html</code> is retained without active maintenance. Claude's Audit41 verdict is APPROVE, with no P1, P2 or P3 findings and no release hold. The only finding is an optional P4 test-coverage item recorded below.</p>
 <h2>Open Bugs</h2>
-<p>No open P1/P2 issues identified in this round. NEUTRON-A25-C1 (P2) and NEUTRON-A25-C2 (P3), carried from Audit25, are resolved below. No new known student-facing bug was found during the internal review. External audit and manual classroom review are pending.</p>
+<p>No open P1, P2 or P3 defects. NEUTRON-A25-C1 (P2) and NEUTRON-A25-C2 (P3), carried from Audit25, were resolved in Kickoff4 and independently verified in Claude's Audit41. The optional P4 test-coverage item is listed under Known Minor Maintenance Items; Claude's review found the current student documents clean on direct inspection. Manual classroom review remains future work.</p>
 <h2>Major Improvements in This Release</h2>
 <ul>
 <li>Added a concise, styled Grok-format terminal tutorial with eight Beats, runnable commands, observations and “Your turn” activities. It uses the same version/build and numerical core as the Claude-format lab guide.</li>
@@ -19,7 +19,7 @@
 <h2>Known Limitations</h2>
 <ul><li>The single-polytrope static, spherical, non-rotating model does not represent crust transitions, rotation, finite temperature or time evolution. The mass turnover is an equilibrium sequence; this program does not dynamically test instability.</li><li>These guides use MathJax from an internet CDN for equation rendering; the numerical program runs offline.</li><li>Testing here was on Python 3.12 in the sibling layout; prior cross-version verification is described in the archived notes below.</li></ul>
 <h2>Known Minor Maintenance Items</h2>
-<ul><li>The independent q-reference integration remains a test helper, not a separate student utility.</li><li>An explicit dynamical stability calculation for the mass turnover remains optional future work outside this static solver.</li></ul>
+<ul><li>The independent q-reference integration remains a test helper, not a separate student utility.</li><li>An explicit dynamical stability calculation for the mass turnover remains optional future work outside this static solver.</li><li>Audit41 P4: the development-history wording regression test currently scans only <code>Neutron-claude.html</code> with a narrow phrase list. When convenient, extend it to <code>Neutron-grok.html</code> and <code>Neutron-SampleOutputs_Guide.html</code> and include general audit, kickoff, Codex and Xedoc vocabulary. Claude inspected all three current documents directly and found no such leaked wording; this is a future regression-coverage improvement.</li></ul>
 <h2>Version Identification</h2>
 <p>MODEL_VERSION: 1.3.1<br>BUILD_ID: 2cd414a64b3a</p>
 <hr><h2>Historical Release Notes</h2><p>The following 1.3.1 notes preserve the pre-Kickoff4 development history. Their Audit25 open items have been resolved in the Kickoff4 section above.</p>
