@@ -482,6 +482,7 @@
 </p>
 <section id="overview">
 <h2>Overview</h2>
+<p>When the cursor hovers over a graph, Matplotlib shows its (x, y) position in graph coordinates at the lower right of the display.</p>
 <p><strong>SphereGravity</strong> tests one of Newton's most useful results, the shell theorem: a thin, uniform spherical shell pulls on anything outside it exactly as if all its mass sat at its centre, and pulls on nothing inside it at all. The program does not assume the theorem. It cuts the shell into small tiles, treats each tile as a point mass, adds up their pulls at many distances from the centre, and compares the total with the theorem.</p>
 <p>Every run prints the shell's mass as the tiles add it up beside its exact value, and a table of the computed and expected pull at a set of radii, with the difference between them and a prediction of how large that difference should be. Then it plots the computed pull, or its relative difference from the pull the theorem gives for the tiles' own mass, from the centre out to five shell radii.</p>
 <p>The spine of the lesson is one sentence: <em>adding up the inverse-square pulls of the tiles of a thin shell gives no pull inside and the pull of a point mass outside, as Newton proved, and the small differences that remain are the error of the sum itself, which falls as the square of the tile size wherever the tiles are small compared with the distance to the shell, and which the program predicts in advance; next to the shell, where that condition fails, the sum needs far finer tiles.</em> Each numbered section below is one beat: a short argument, a command whose printed summary or plot illustrates that argument, and then the equation that the printed numbers follow from.</p>
@@ -665,7 +666,7 @@ python main.py --nDiv 10000 --radii 0.995 1.005 1.01 1.05 1.1</pre>
         g(1^{+})-g(1^{-})=\frac{GM}{R^{2}}-0=4\pi G\varepsilon .
       \]
     </div>
-<p>The jump is \(4\pi G\) times the mass per unit area \(\varepsilon\), whatever the shape of a surface layer; it is the reason the program does not evaluate the field at \(r=1\) itself, and why the plot has a gap there. Across the pair 0.995 and 1.005 the expected change is \(M/1.005^2=0.012442\), the jump less the small fall-off of the outer field. Beat 6 turns to the plot.</p>
+<p>For this spherical shell the pull's magnitude rises across the surface by \(4\pi G\varepsilon\). For a surface layer of another shape, the universal jump is in the signed normal component of the field; its magnitude need not jump by that amount. The program does not evaluate the field at \(r=1\) itself, and the plot has a gap there. Across the pair 0.995 and 1.005 the expected change is \(M/1.005^2=0.012442\), the jump less the small fall-off of the outer field. Beat 6 turns to the plot.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> and <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 <section id="beat6">
