@@ -1,10 +1,45 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>EarthOrbit 1.4.0 Release Notes</title>
-</head>
-<body>
+<html><head><meta charset="utf-8"><title>EarthOrbit 1.5.0 Release Notes</title></head><body>
+<h1>EarthOrbit 1.5.0 Release Notes</h1>
+<p><b>Version:</b> 1.5.0<br><b>Build:</b> 5b353c62e594<br><b>Date:</b> 2026-09-29</p>
+<h2>Release Status</h2>
+<p>This Kickoff4 candidate resumes work after the 1.4.0 documentation round. The two most recent code-changing rounds are the Audit22 response (1.4.0) and this Kickoff4 (1.5.0). Codex completed an internal adversarial review before packaging. Claude's external review of 1.5.0 is pending; this note does not claim release approval.</p>
+<h2>Open Bugs</h2>
+<p>No unresolved P1–P3 defect is known in this candidate. EO-1 from Grok Audit21/Audit25 is closed below. Further external review may identify new defects.</p>
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li><b>1.5.0: clean extreme-input error (EO-1).</b> The launch-state orbital-element calculation now converts NumPy scalar diagnostics to Python floats and rejects non-finite squares and eccentricity before later operations. Reproduction: <code>python main.py --uInit 1e160 --dt 1e-150 --maxSteps 2 --force_law inverse_square</code>. Formerly: three raw <code>RuntimeWarning</code> lines followed by an <code>EarthOrbit:</code> error. Now: only <code>EarthOrbit: summary values must be finite</code> on stderr, with no plot. This changes public error behavior and warrants a minor version bump.</li>
+<li><b>Two tutorial choices.</b> <code>EarthOrbit-claude.html</code> remains the fuller lab manual. New <code>EarthOrbit-grok.html</code> is a shorter terminal sequence across Beats 0–9. Both describe one shared Python build and offer the Matplotlib cursor-coordinate note. The legacy <code>EarthOrbit-original.html</code> remains archived without new edits.</li>
+<li><b>Installation manifest.</b> A minimal <code>requirements.txt</code> now lists the two runtime imports, NumPy and Matplotlib, without imposing version pins that were not established by this review.</li>
+<li><b>Sample guide synchronized.</b> All nine embedded 800 × 800 figures were regenerated from the exact listed commands on 1.5.0, and their key console figures were checked. Beat 9 intentionally has no figure because its commands stop before plotting.</li>
+</ul>
+<h2>Test Suite Growth</h2>
+<ul>
+<li>Baseline 1.4.0 candidate: 90 tests passed in the installed Programs/Documentation pair. The earlier 1.4.0 note's count of 87 predates three subsequent documentation checks.</li>
+<li>1.5.0: 94 tests, adding the EO-1 subprocess regression and three paired-tutorial contracts. The latter require both named tutorial files in one documentation folder, check version/build and Beat sections, and parse every Beat command under the shared command-line interface.</li>
+<li>Run <code>python -m unittest discover -s tests -v</code> from <code>GFTGU-Programs/EarthOrbit</code> with the sibling <code>GFTGU-Documentation/EarthOrbit</code> installed. The Reference Guide is included for historical tests but is not the active tutorial.</li>
+</ul>
+<h2>Known Limitations</h2>
+<ul>
+<li><code>simplified</code> holds gravity at 9.8 m/s² at all heights; <code>inverse_square</code> is the ideal central two-body model with the JPL DE440 Earth gravitational parameter and textbook reference radius.</li>
+<li>The fixed-step, first-order integrator is not symplectic. Even an ideal circular initial state drifts outward; decrease <code>dt</code> and compare results for quantitative work. Five significant digits in output are formatting, not physical accuracy.</li>
+<li>The model is two-dimensional and omits atmosphere, Earth rotation, oblateness and third bodies. Surface crossings, revolution boundaries and extrema are interpolated from the computed samples. The plot retains the first below-surface sample after impact.</li>
+<li>Both tutorials load MathJax from a public CDN for typeset equations; the program itself runs offline. Plots open interactively without a built-in file-output option.</li>
+</ul>
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>The console's <code>Osculating ...</code> and <code>Escape trajectory</code> labels do not themselves say “at launch”; both tutorials explain the launch-state qualification.</li>
+<li>Help snippet tests for the archived Reference Guide still execute in the main test process. An isolated-subprocess rewrite remains optional.</li>
+<li>Related Programs claims have not all been checked against those modules.</li>
+<li>For a negative scientific-notation option value use <code>--vInit=-1e5</code>; <code>--vInit -1e5</code> is not recognized by argparse.</li>
+</ul>
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.5.0<br>BUILD_ID: 5b353c62e594<br>
+BUILD_ID is derived from <code>physics_earthorbit.py</code>, <code>driver_earthorbit.py</code>, <code>main.py</code> and <code>plot_earthorbit.py</code> only. <code>python main.py --version</code> prints <code>EarthOrbit 1.5.0 (build 5b353c62e594)</code>. Both active tutorial guides and the Sample Outputs Guide show the same identifiers.</p>
+<hr>
+<h2>Archived development notes: Version 1.4.0 (2026-09-23)</h2>
+<p>The following section preserves the earlier candidate's release history and its then-open findings. Its status and file inventory are historical, not the current 1.5.0 status.</p>
+
 <h1>EarthOrbit 1.4.0 Release Notes</h1>
 
 <p>
@@ -165,5 +200,5 @@ BUILD_ID is computed from <code>physics_earthorbit.py</code>,
 <code>EarthOrbit 1.4.0 (build 08cdcf30c04d)</code>, and both Help files show the
 same version and build.
 </p>
-</body>
-</html>
+
+</body></html>
