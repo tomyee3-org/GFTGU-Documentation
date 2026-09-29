@@ -8,9 +8,9 @@
 <h1>Multiple 1.5.0 Release Notes — Kickoff4 continuation</h1>
 <p><b>Version:</b> 1.5.0<br><b>Build:</b> 945d118ab595<br><b>Date:</b> 2026-09-29</p>
 <h2>Release Status</h2>
-<p>This round continues the 1.4.0 documentation and Audit34 history archived below. It adds a second active tutorial, resolves Audit34 items M-1 and M-2, pairs the document tests, and rebuilds the instructor guide. Codex's internal adversarial review is recorded in the Kickoff4 summary. Claude's external review of this candidate is pending; no release approval is claimed here.</p>
+<p>This round continues the 1.4.0 documentation and Audit34 history archived below. It adds a second active tutorial, resolves Audit34 items M-1 and M-2, pairs the document tests, and rebuilds the instructor guide. Codex's internal adversarial review is recorded in the Kickoff4 summary. Claude's independent Audit41 approved this candidate for release without a P1, P2 or P3 finding.</p>
 <h2>Open Bugs</h2>
-<p>No unresolved P1–P3 defect is known in the current candidate. Audit34 M-1 (animation memory overclaim) and M-2 (zero-body plotting input errors) have been corrected. Any findings from external review will be recorded in the next response round.</p>
+<p>No unresolved P1–P3 defect is known in the approved 1.5.0 build. Audit34 M-1 (animation memory overclaim) and M-2 (zero-body plotting input errors) have been corrected. Claude's Audit41 found one optional P4 test-coverage suggestion, listed under Known Minor Maintenance Items.</p>
 <h2>Major Improvements in This Release</h2>
 <ul>
 <li><b>Paired tutorials.</b> <code>Multiple-grok.html</code> is a shorter nine-Beat terminal sequence with ten activities. <code>Multiple-claude.html</code> remains the fuller lab guide. Both use version 1.5.0 and the same core Python modules; the archived <code>Multiple-original.html</code> is unchanged.</li>
@@ -29,12 +29,14 @@
 <li>The adaptive predictor–corrector is not symplectic. Check conservation drift and compare numerical runs at a matched simulated time, especially near encounters.</li>
 <li>The COM choice translates the display only; integration and printed totals remain in user-input coordinates. Animation memory includes a per-accepted-step conservation history; its one-million-frame guard does not cap that history.</li>
 <li>Only six default plotting colors are provided, repeating with more bodies. MathJax equations require an online CDN to typeset; the equations remain visible as TeX offline.</li>
+<li>Plots open interactively; the command-line program has no built-in figure-saving option.</li>
 <li>The BUILD_ID covers the four executable Python modules only, not tutorials, tests or Sample Outputs Guide images.</li>
 </ul>
 <h2>Known Minor Maintenance Items</h2>
 <ul>
 <li>The choice of one or both active tutorial formats for students remains with Schutz, Higgs and Taylor.</li>
 <li>The archived Reference Guide's cross-program Binary link has not been independently checked. Optional future enhancements include softening or a launch offset for the galaxy toy model, and a larger default color cycle.</li>
+<li>Claude Audit41 P4: extend the development-jargon regression check to the Grok tutorial and the Sample Outputs Guide. Both documents were clean when checked during Audit41.</li>
 </ul>
 <h2>Version Identification</h2>
 <p>MODEL_VERSION: 1.5.0<br>BUILD_ID: 945d118ab595<br>BUILD_ID hashes <code>physics_multiple.py</code>, <code>driver_multiple.py</code>, <code>main.py</code> and <code>plot_multiple.py</code>. <code>python main.py --version</code> prints <code>Multiple 1.5.0 (build 945d118ab595)</code>. Both active tutorials and the Sample Outputs Guide carry the same identifiers.</p>
