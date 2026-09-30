@@ -479,10 +479,11 @@
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
 <p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 7d6e2d9d542c
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 3d55b592a1b7
 </p>
 <section id="overview">
 <h2>Overview</h2>
+<div class="note"><strong>Plot cursor.</strong> When the cursor hovers over a graphical display, its <code>(x, y)</code> position in graphical coordinates appears in the lower right corner of the Matplotlib window.</div>
 <p><strong>Star</strong> builds a star from the centre outwards. It starts from a central pressure and a central temperature, and at each small step in radius it lets the weight of the gas above push the pressure down, and the gas it passes add to the mass inside. It stops where the pressure reaches zero: that radius is the surface of the star, and the mass inside it is the mass of the star.</p>
 <p>Every run prints the radius and the mass of the star; the radial step it used; the radius and mass of the Lane–Emden solution of the same equations, which the program computes separately and far more accurately than its steps, with the relative difference of the numbers the program integrated; and the pressure, density, temperature and mass at five points inside the star. Then it plots one of pressure, density, temperature or enclosed mass against radius.</p>
 <p>The spine of the lesson is one sentence: <em>a star is gas in balance between its own weight and its own pressure; with one power law linking pressure to density, the balance fixes the whole star — its radius, its mass and every profile inside it — from the central conditions alone, and the program's step-by-step answer can be compared with the Lane–Emden solution of the same equations, computed far more accurately, which shows how large the error of the steps is.</em> Each numbered section below is one beat: a short argument, a command whose printed summary or plot illustrates that argument, and then the equation that the printed numbers follow from.</p>
@@ -490,14 +491,14 @@
 <strong>Scope:</strong> Star is Newtonian. <em>SphereGravity</em> shows why only the mass inside a radius pulls on the gas at that radius; <em>Atmosphere</em> balances pressure against a gravity that does not change with height; <em>Neutron</em> repeats this calculation in general relativity.
     </div>
 <div class="warn"><strong>What this program is, and what it does not model.</strong> Star is a teaching model of a spherical star in Newtonian gravity, held up by gas pressure. The link between pressure and density is one power law, the polytrope, imposed everywhere in the star; nothing in the program generates energy, carries it outwards by radiation or convection, or changes the composition from centre to surface. The temperature is inferred from the pressure and density, not computed from how heat flows. The default inputs are chosen so that the radius and mass come out close to the Sun's, but the interior is not the Sun's interior. The numerical method is the simplest one, forward Euler steps, and it carries an error that the program measures against the Lane–Emden solution of the same equations, computed far more accurately. Beats 5 to 8 show how large that error is and where the model stops.</div>
-<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw TeX source (e.g. <code>\(dp/dr\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div>
+<div class="note"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public content delivery network, so an internet connection is needed to see them typeset; with no connection, the raw TeX source (e.g. <code>\(dp/dr\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div>
 </section>
 <section id="beats">
 <h2>How to read this page</h2>
 <p>Each numbered section below is one beat: a short argument in words, a command whose output illustrates it, and then the equation that the output follows from. Do them in order the first time. After that, any beat can be opened on its own.</p>
 <p>The program's output is a consequence of its equations, so what a beat shows is the equations at work, not independent evidence that they are right. The outside check the program offers is the Lane–Emden solution of the same equations, computed separately and far more accurately, printed beside the numbers it integrated. Beats 5 to 8 compare the two.</p>
 <p>The program has no random numbers, so every command prints the numbers quoted here. Beat 0 shows the default star, Beats 1 to 3 its density, temperature and mass, and Beat 4 how the star changes with its central conditions. Beat 5 gives the Lane–Emden solution, Beats 6 and 7 the error of the steps, and Beat 8 the limits of the model.</p>
-<p>Run every command from the program's folder. Each run prints a summary and then opens a plot window; close the window to end the program. Each beat names the lines of the summary to look at. All quantities are in SI units: metres, kilograms, pascals, kilograms per cubic metre and kelvin.</p>
+<p>Run every command from the program's folder. Each run prints a summary and then opens a plot window; close the window to end the program. Each beat names the lines of the summary to look at. All quantities use the International System of Units (SI): metres, kilograms, pascals, kilograms per cubic metre and kelvin.</p>
 <div class="note"><strong>What kind of statement is each equation?</strong> Each displayed equation in the beats carries a tag. A red <span class="kind kind-law">LAW</span> tag marks a law of nature that the model adopts as it stands; Eq. (4), the ideal gas law, is the only equation with this tag, since Newton's gravity enters through Eqs. (1) and (2). A green <span class="kind kind-ode">ODE</span> tag marks a differential equation that the program integrates: Eqs. (2) and (3). An orange <span class="kind kind-clo">CLOSURE</span> tag marks a relation chosen for teaching rather than derived: Eq. (5), the polytrope, is the only one, and it is the assumption that everything else in the model depends on. A grey <span class="kind kind-def">DEFINITION</span> tag marks a quantity defined by a formula. A blue <span class="kind kind-der">DERIVED</span> tag marks a result that follows from the equations already stated. A violet <span class="kind kind-alg">ALGORITHM</span> tag marks a rule of the calculation, a choice made by the program rather than physics: Eqs. (14) to (17). The tags are there so that a law, an assumption, a definition and a numerical rule are never mistaken for one another. Eighteen equations are numbered.</div>
 </section>
 <section id="beat0">
@@ -855,7 +856,7 @@ python main.py --steps_per_scale 1600 --max_points 8000</pre>
 <section id="summary">
 <h2>Printed Summary</h2>
 <p>Every run prints the program version and build, then a summary, then opens its plot. This is the summary of the default run, <code>python main.py</code>:</p>
-<pre>Star 1.2.0 (build 7d6e2d9d542c)
+<pre>Star 1.2.0 (build 3d55b592a1b7)
 
 Stellar structure summary
   Radius (m):     6.9674e+08

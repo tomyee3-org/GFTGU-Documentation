@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Star – Help File | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+    /* ── Reset & custom properties ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #fdf5e6;
+      --surface:  #ffffff;
+      --border:   #c8bfa0;
+      --accent:   #7b2d00;
+      --accent2:  #a04010;
+      --gold:     #b5811a;
+      --text:     #1c1c1c;
+      --muted:    #5a4a3a;
+      --code-bg:  #f0ede4;
+      --note-bg:  #f4f0e8;
+      --eq-bg:    #f7f2e8;
+      --radius:   5px;
+      --shadow:   0 2px 8px rgba(0,0,0,0.10);
+      --mono:     "Courier New", Courier, monospace;
+      --sans:     "Helvetica Neue", Arial, sans-serif;
+      --serif:    Georgia, "Times New Roman", Times, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Page grid ── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.95rem;
+      font-weight: normal;
+      letter-spacing: -.02em;
+    }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub {
+      margin-top: 6px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: #f0d0b8;
+      line-height: 1.55;
+    }
+    header .sub a {
+      color: #ffd8b8;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,200,150,.4);
+    }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+
+    /* ── Sidebar ── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      padding: 14px 18px 4px;
+    }
+    nav a {
+      display: block;
+      padding: 6px 18px 6px 22px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background .15s, border-color .15s;
+    }
+    nav a:hover {
+      background: var(--bg);
+      border-left-color: var(--accent2);
+      color: var(--accent);
+    }
+    nav a.active {
+      background: var(--note-bg);
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    nav hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 14px;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 38px 48px 60px;
+      max-width: 860px;
+    }
+
+    section { margin-bottom: 52px; }
+
+    h2 {
+      font-size: 1.30rem;
+      font-weight: normal;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 6px;
+      margin-bottom: 18px;
+      letter-spacing: -.01em;
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--accent2);
+      margin: 24px 0 8px;
+    }
+    h4 {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin: 18px 0 6px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    /* ── Equation block ── */
+    .eq {
+      background: var(--eq-bg);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 20px;
+      margin: 18px 0;
+      overflow-x: auto;
+      font-size: 1.05em;
+    }
+    .eq-label {
+      float: right;
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 2px;
+    }
+
+    /* ── Note / tip box ── */
+    .note {
+      background: var(--note-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      margin: 18px 0;
+      font-size: 0.93rem;
+    }
+    .note strong { color: var(--accent); }
+
+    /* ── Restore-defaults box ── */
+    .restore-section {
+      margin: 2.5em auto;
+      max-width: 860px;
+      font-family: inherit;
+    }
+    .restore-box {
+      border: 1.5px solid var(--gold);
+      border-left: 5px solid var(--gold);
+      border-radius: 6px;
+      background: #fffbeb;
+      padding: 1.1em 1.4em;
+      display: flex;
+      gap: 1em;
+      align-items: flex-start;
+    }
+    .restore-icon { font-size: 1.5em; line-height: 1; flex-shrink: 0; }
+    .restore-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      color: var(--accent);
+      margin-bottom: 0.35em;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .restore-intro {
+      margin: 0 0 0.5em;
+      font-size: 0.92em;
+      line-height: 1.6;
+    }
+    .restore-list {
+      margin: 0;
+      padding-left: 1.4em;
+      font-size: 0.92em;
+      line-height: 1.8;
+    }
+    .restore-box kbd {
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.88em;
+    }
+    .restore-link { color: var(--accent); text-decoration: underline; }
+    .restore-footnote {
+      margin: 0.6em 0 0;
+      font-size: 0.88em;
+      color: var(--muted);
+    }
+
+    /* ── Code ── */
+    pre {
+      background: #2b2b2b;
+      color: #f0ede4;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.55;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 0.91em;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    pre code { background: none; padding: 0; font-size: inherit; }
+
+    /* ── Module cards ── */
+    .mc { display: grid; gap: 14px; margin: 18px 0; }
+    .mc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+    }
+    .mc-card .mc-name {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .mc-card .mc-role {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .mc-card p { font-size: 0.92rem; margin-bottom: 0; color: var(--muted); }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 16px 0;
+    }
+    th {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      background: var(--note-bg);
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { font-family: var(--mono); color: var(--accent2); }
+
+    /* ── Output type list ── */
+    .output-list { list-style: none; margin: 14px 0; }
+    .output-list li {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .output-list li:last-child { border-bottom: none; }
+    .output-list .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      white-space: nowrap;
+      color: var(--accent2);
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
+    }
+    footer a { color: #e0c090; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Beats layout additions ── */
+    .eq-kind {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .kind {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-left: 4px;
+      vertical-align: 1px;
+    }
+    .kind-law { background: #f6dcdc; color: #7a1f1f; border: 1px solid #d9a0a0; }
+    .kind-ode { background: #d9ead3; color: #274e13; border: 1px solid #a8c69a; }
+    .kind-def { background: #e4e4e4; color: #3a3a3a; border: 1px solid #b5b5b5; }
+    .kind-der { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
+    .kind-clo { background: #fde8d2; color: #7a3e0a; border: 1px solid #e9bd8c; }
+    .kind-alg { background: #e6e0f8; color: #3d2c73; border: 1px solid #b7abdd; }
+    .related-list li { margin-bottom: 6px; }
+    .warn {
+      background: #fff6e8;
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 12px 18px;
+      margin: 16px 0;
+      font-family: var(--sans);
+      font-size: 0.91rem;
+      color: var(--muted);
+    }
+    .warn strong { color: var(--accent); }
+    .compare-table th:not(:first-child), .compare-table td:not(:first-child) {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .compare-table td:not(:first-child) { font-family: var(--mono); color: var(--text); }
+    main { min-width: 0; }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+    section ul { margin: 0 0 14px 1.4em; }
+    section ul li, section ol li { margin-bottom: 6px; }
+    section ol { margin: 0 0 14px 1.6em; }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 48px; }
+    }
+  
+</style>
+</head>
+
+<body><div class="page-wrap"><header><div class="badge">Newtonian Stellar Structure</div><h1><em>Star</em> — An Evening at the Terminal</h1><div class="sub">Source Code: <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>Documentation: <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a></div></header><nav id="sidebar">
+<div class="nav-label">Start here</div>
+<a href="#overview">The evening at the terminal</a>
+<div class="nav-label">At the terminal</div>
+<a href="#beat0">0 · Find the surface</a>
+<a href="#beat1">1 · Reveal the outer gas</a>
+<a href="#beat2">2 · Read a temperature</a>
+<a href="#beat3">3 · Locate the mass</a>
+<a href="#beat4">4 · Stretch a star</a>
+<a href="#beat5">5 · Check a solvable case</a>
+<a href="#beat6">6 · Halve the step</a>
+<a href="#beat7">7 · Catch a restart</a>
+<a href="#beat8">8 · Approach the limit</a>
+<div class="nav-label">After the runs</div>
+<a href="#parameters">Parameters</a>
+<a href="#wrapup">What to carry away</a>
+<a href="#related">Related programs</a>
+<a href="#license">License</a>
+</nav>
+<main><p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
+  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 3d55b592a1b7
+</p>
+
+<section id="overview"><h2>The evening at the terminal</h2>
+<p>Tonight you will grow a spherical star from its centre until its pressure reaches zero. The program uses Newtonian gravity and a single pressure–density power law, called a polytrope. It prints a radius, a mass, an integration grid, and a more accurate Lane–Emden numerical reference for the same equations. Each run opens one radial profile in Matplotlib.</p>
+<div class="note"><strong>Use the plot cursor.</strong> When the cursor hovers over a graphical display, its <code>(x, y)</code> position in graphical coordinates appears in the lower right corner of the Matplotlib window.</div>
+<p>Open a terminal in the folder containing <code>main.py</code>. Run the commands below in order, read the named lines, and close each plot window before the next run. All quantities use the International System of Units (SI). Use Python 3.10 or later with Matplotlib installed. No network is needed to run the program; the equations on this page use MathJax from a public content delivery network.</p>
+<p>The default radius and mass are close to the Sun's, but this is a teaching polytrope: it has no energy generation, radiation or convection, composition gradient, or relativistic gravity. Its surface temperature of zero is a feature of the model, not a claim about the Sun.</p></section>
+<section id="beat0"><h2>Beat 0 · Find the surface</h2>
+<p>Start with the default pressure profile.</p><pre>python main.py</pre>
+<p>Read <code>Radius (m)</code> and <code>Total mass (kg)</code>: about 6.9674e+08 m and 1.9825e+30 kg. The plotted pressure starts at 7.158e+15 Pa and reaches zero at that radius. Hover over the curve to read a pressure at a chosen radius. Why does pressure have to rise inward? The gas at each radius supports the weight of the gas above it.</p>
+<div class="eq">\[\frac{dp}{dr}=-\frac{Gm(r)\rho(r)}{r^2},\qquad \frac{dm}{dr}=4\pi r^2\rho(r).\]</div>
+<p>Here <code>m(r)</code> is the mass inside radius <code>r</code>, and <code>ρ(r)</code> is density. The exterior shells exert zero net pull at that radius. The program advances these two relations outward in finite radial steps; its pressure reaching zero defines the surface.</p></section>
+<section id="beat1"><h2>Beat 1 · Reveal the outer gas</h2>
+<pre>python main.py --output_type density --log_y</pre>
+<p>The vertical scale is logarithmic, so small positive densities near the surface become visible. Find the density near half the radius, about 2313 kg/m³, and near 0.9 of the radius, about 6.65 kg/m³. The exact zero at the surface cannot appear on a logarithmic axis. The summary's central density is about 49187 kg/m³.</p>
+<p>The program fixes the central density from the ideal gas relation, then uses the same polytropic relation everywhere: \(p=K\rho^\gamma\), with default exponent \(\gamma=1.36\). What happens to density as pressure falls? Try to predict the plot before reading the next run.</p></section>
+<section id="beat2"><h2>Beat 2 · Read a temperature</h2>
+<pre>python main.py --output_type temperature</pre>
+<p>Use the cursor and the printed 50% checkpoint to find roughly 7.53e+06 K at half the radius; compare with 2.263e+07 K at the centre. The program obtains temperature from pressure and density through \(p=\rho k_B T/(\mu m_p)\), with \(\mu\) the mean particle mass in proton-mass units. It does not calculate energy transport. Why is this temperature curve less steep than the pressure curve?</p></section>
+<section id="beat3"><h2>Beat 3 · Locate the mass</h2>
+<pre>python main.py --output_type mass</pre>
+<p>Check the <code>50%</code> radius row of the interior checkpoints: about 1.6732e+30 kg is already enclosed, roughly 84% of the total. At 75% of the radius the enclosed mass is about 99% of the total. The curve flattens outward because density falls. Estimate from the curve where half of the mass lies; it is well inside half the radius.</p></section>
+<section id="beat4"><h2>Beat 4 · Stretch a star</h2>
+<pre>python main.py --T_c 2.4893e7</pre>
+<p>This central temperature is 10% above the default, while central pressure is unchanged. Compare the new radius 7.6641e+08 m and mass 2.3988e+30 kg with Beat 0. The ratios are about 1.10 and 1.21. For this specific change with the other inputs fixed, the radius scales with central temperature and the mass with its square. The pressure profile keeps its shape when radius is measured as a fraction of the new surface radius.</p>
+<p>Check the <code>Restarts</code> line before comparing numerical errors across runs: a restart doubles the step.</p></section>
+<section id="beat5"><h2>Beat 5 · Check a solvable case</h2>
+<pre>python main.py --gamma 2</pre>
+<p>The printed polytropic index \(n=1/(\gamma-1)\) is now 1. This Lane–Emden case has the known profile \(\theta(\xi)=\sin(\xi)/\xi\), whose first zero is \(\xi=\pi\). Read the printed Lane–Emden radius, about 2.6392e+08 m, beside the program's stepwise radius, 2.6239e+08 m. The stepwise radius is about 0.58% smaller. The Lane–Emden number is a numerical reference for the same model, not an observation of a real star.</p></section>
+<section id="beat6"><h2>Beat 6 · Halve the step</h2>
+<pre>python main.py --steps_per_scale 800 --max_points 4000</pre>
+<p>Compare <code>Radial step (m)</code> with Beat 0: about 2.6323e+05 m instead of 5.2645e+05 m. There are 2666 grid points and no restarts. The integrated radius now differs from the Lane–Emden radius by about -0.0075071, versus -0.014174 in Beat 0; the mass difference is -0.00092707, versus -0.0018494. The first-order Euler integration error roughly halves. The two pressure plots look almost the same; use the printed differences to see the change.</p>
+<p>The Lane–Emden reference is calculated independently with a higher-accuracy method, but both calculations implement the same physical assumptions. Its step-halving uncertainty is an estimate, not a guaranteed bound.</p></section>
+<section id="beat7"><h2>Beat 7 · Catch a restart</h2>
+<pre>python main.py --max_points 1000</pre>
+<p>Read <code>Restarts (radial step doubled)</code>: 1. The program could not reach the surface inside the requested 1000-point capacity at its initial step, so it began again with twice the radial step. It finished with 654 points. Compare the -0.02726 radius difference with the default -0.014174; the coarser integration is less accurate. Raising <code>--max_points</code> can prevent a restart, while raising <code>--steps_per_scale</code> directly requests a smaller initial step.</p></section>
+<section id="beat8"><h2>Beat 8 · Approach the limit</h2>
+<pre>python main.py --gamma 1.21</pre>
+<p>The index is about 4.7619, close to the finite-radius boundary at \(n=5\), or \(\gamma=6/5\). The integrated radius is about 7.2406e+09 m, while the Lane–Emden radius is about 9.9626e+09 m: a -0.27322 relative difference after four restarts. Almost all the mass lies in the inner part of this enormous, thin-envelope model. The plot alone hides much of the numerical difficulty.</p>
+<p>For a deliberately extreme case, run:</p><pre>python main.py --gamma 1.2000000001</pre>
+<p>Look for the warning about the Lane–Emden uncertainty and the printed index 4.9999999975. The integrated radius is unreliable here. The program rejects exactly \(\gamma=1.2\), because this single-polytrope model has no finite surface at that boundary.</p>
+<pre>python main.py --gamma 1.2</pre>
+<p>The final command should exit with an input error, not produce a plot.</p></section>
+<section id="parameters"><h2>Parameters</h2>
+<p>All settings are command-line options described in <code>main.py</code>. <code>--output_type</code> and <code>--log_y</code> change only the plot; the printed summary is the same whichever profile is plotted.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table"><thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td>--p_c</td><td>7.158e15</td><td>Positive central pressure in pascals.</td></tr>
+<tr><td>--T_c</td><td>2.263e7</td><td>Positive central temperature in kelvin.</td></tr>
+<tr><td>--mu</td><td>1.285</td><td>Positive mean particle mass in proton-mass units; an effective model value.</td></tr>
+<tr><td>--gamma</td><td>1.36</td><td>Polytropic exponent γ in p = Kρ<sup>γ</sup>; must exceed 1.2 for finite radius.</td></tr>
+<tr><td>--max_points</td><td>2000</td><td>Grid-point capacity per attempt, an integer from 3 to 1000000. Exceeding it restarts at twice the step.</td></tr>
+<tr><td>--steps_per_scale</td><td>400</td><td>Positive integer steps per characteristic radial scale; more means a finer initial step.</td></tr>
+<tr><td>--output_type</td><td>"pressure"</td><td>Plot pressure, density, temperature, or enclosed mass.</td></tr>
+<tr><td>--log_y</td><td>False</td><td>Make the vertical scale logarithmic; incompatible with a mass plot because mass starts at zero.</td></tr>
+</tbody></table></div>
+<p>For option syntax, run <code>python main.py --help</code>. To see the release identifier without opening a plot, run <code>python main.py --version</code>.</p></section>
+<section id="wrapup"><h2>What to carry away</h2>
+<p>Pressure balances gravity and a chosen pressure–density law closes the model. The radius, mass, and profiles follow from the central conditions, but different numerical steps give different approximations. Always read the actual step, restarts and Lane–Emden comparison before interpreting a close-looking plot. The reference is a check on the integration of these equations, not a check on whether a real star obeys them.</p></section>
+<section id="related"><h2>Related programs</h2><p><strong>SphereGravity</strong> explains the interior-mass rule; <strong>Atmosphere</strong> explores pressure support in a layer; <strong>Binary</strong> helps measure stellar masses from orbits; <strong>Neutron</strong> treats a compact star with general relativity.</p></section>
+<section id="license"><h2>License</h2><p>This software is based on the programs by Bernard Schutz accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003) and is distributed under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license. The Python port is by Thomas Yee.</p></section>
+</main>
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+<em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+</footer>
+</div><!-- /page-wrap -->
+<!-- ── Sidebar active-link tracking ── -->
+<script>
+  (function () {
+    const links = document.querySelectorAll('nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector(`nav a[href="#${e.target.id}"]`);
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('main section[id]').forEach(s => observer.observe(s));
+  })();
+</script>
+</body>
+</html>
