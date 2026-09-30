@@ -3,9 +3,47 @@
 <body><h1>Star 1.2.0 Release Notes</h1>
 <p><b>Version:</b> 1.2.0<br><b>Build:</b> 3d55b592a1b7<br><b>Date:</b> 2026-09-29</p>
 <h2>Release Status</h2>
-<p>Kickoff4 preparation for Claude review. Both active tutorial styles now share one program, one regression suite and one Sample Outputs Guide. This round changes a core docstring and therefore the Build ID; it does not change the public API or numerical behavior, so the Version remains 1.2.0. The archived Reference Guide retains its historical stamp.</p>
-<details><summary>Historical Release Notes through 25 September 2026 (Version 1.2.0, build 7d6e2d9d542c)</summary>
-<p>The following prior release notes are retained for this continuation. Their historical status, counts and maintenance items describe that earlier build.</p>
+<p>Claude Audit41: APPROVE, with zero P1/P2 and three acceptable P3 findings corrected in this response. The build and Version are unchanged from Kickoff4. Both active tutorial styles now share one program, one regression suite and one Sample Outputs Guide. This round changes a core docstring and therefore the Build ID; it does not change the public API or numerical behavior, so the Version remains 1.2.0. The archived Reference Guide retains its historical stamp.</p>
+
+<h2>Open Bugs</h2>
+<p>No open numerical or student-facing defect is known after Claude Audit41. The three P3 findings in its approved review have been closed; manual student testing remains pending.</p>
+<h2>Major Improvements in This Release</h2>
+<p>Audit41 response: moved the historical notes after the current seven sections, restored current limitations, and made the Grok quoted-value test check its claims. Also clarified Guide provenance and constants and made the Grok browser-tab title distinct. No core code changed after Kickoff4.</p>
+<ul>
+<li>Added <code>Star-grok.html</code>, a concise nine-run terminal tutorial. The existing <code>Star-claude.html</code> remains the fuller lab-manual path. Both use identical Version and Build stamps and the same core program.</li>
+<li>Explained the Matplotlib cursor coordinates near the beginning of both tutorials. The Grok guide uses the Claude guide's stylesheet, source header and navigation structure.</li>
+<li>Corrected <code>lane_emden_surface()</code> documentation: the 0.1% step and better-than-1e-10 comparison apply to the default <code>relative_step</code>, and a coarser step may be less accurate. The routine's calculation is unchanged. This closes OB-1 from the previous notes.</li>
+<li>Regenerated all nine embedded plots from the current build and verified the printed headline values; updated the Sample Outputs Guide's stamp and provenance to cover both tutorials.</li>
+</ul>
+<h2>Test Suite Growth</h2>
+<ul>
+<li>156 tests at the previous build; 149 at Kickoff4 after retiring 12 archive-coupled tests and adding five active-guide/archive-isolation tests. The Audit41 response runs 151 tests in the extracted program/documentation layout, with one layout-dependent skip (the cross-module documentation link check has no sibling modules in this extracted package). The executable tests check the paired active Help files, each Grok command, its quoted values and default parameter table, release-note heading order, version/build stamps, shared house style and links; the detailed Claude beat and physics checks remain.</li>
+<li>The obsolete tests that demanded current metadata and behavior from the frozen <code>Star-original.html</code> were replaced by a single optional archive isolation check. The package still includes the original byte-for-byte.</li>
+<li>Run <code>python -m unittest discover -s tests -q</code> from <code>GFTGU-Programs/Star</code> with sibling <code>GFTGU-Documentation/Star</code> present. The tests require both active tutorials together. In the flat layout with only the four modules, both active tutorials and the test file, 151 tests run with three skips for absent companion documents.</li>
+</ul>
+<h2>Known Limitations</h2>
+<ul>
+<li>The physics is one Newtonian polytrope, without stellar energy transport, changing composition, rotation, magnetic fields or general relativity; the default radius and mass resembling the Sun do not make its interior a solar model.</li>
+<li>Euler integration is first order; a restart doubles the radial step and is not error control. The surface is found by linear interpolation; its zero temperature belongs to this model only.</li>
+<li>At the <code>gamma = 6/5</code> boundary there is no finite surface. The stepwise radius becomes unreliable near it, and the Lane&ndash;Emden solution is not computed within about 1e-12 of 6/5.</li>
+<li>The Lane–Emden step-halving uncertainty is an estimate, not a bound. The 1e-10 accuracy check for 0 &le; n &le; 4.99 used independent double-precision solutions that are themselves uncertain at about 1e-11. The program warns near the finite-radius boundary.</li>
+<li>The default &mu; = 1.285 is an effective parameter rather than the actual composition of the Sun's core. The red-giant and neutron-star experiments are schematic.</li>
+<li>MathJax in the tutorials needs network access to typeset equations.</li>
+</ul>
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>The archived Reference Guide documents an older signature and is deliberately not synchronized with active code or the current Build ID.</li>
+<li><code>relative_step</code> below 1e-4 is rejected, limiting repeated halving from the default; the build identifier reads <code>unknown</code> if a core file is unreadable.</li>
+<li>The program has no command-line option to save a plot or printed summary. The choice between tutorial formats remains open pending educator review.</li>
+</ul>
+<h2>Version Identification</h2>
+<ul>
+<li><b>Version:</b> 1.2.0, from <code>MODEL_VERSION</code> in <code>physics_star.py</code>.</li>
+<li><b>Build:</b> 3d55b592a1b7, the first 12 hexadecimal digits of the SHA-256 over the four core UTF-8 modules, with normalized line endings and filename/length framing: <code>physics_star.py</code>, <code>driver_star.py</code>, <code>main.py</code> and <code>plot_star.py</code>.</li>
+<li><b>Date:</b> 2026-09-29. Python 3.10 or later. <code>python main.py --version</code>, the first line of each successful run and both active Help files report this release.</li>
+</ul>
+<h2>Historical Release Notes</h2>
+<p>Notes through 25 September 2026, Version 1.2.0, build 7d6e2d9d542c. The following historical text is retained verbatim, including its then-open OB-1 and former maintenance list.</p>
 <h2>Release Status</h2>
 
 <p>
@@ -135,39 +173,5 @@ current Help.</li>
 <li><b>Date:</b> 2026-09-25. Python 3.10 or later.</li>
 <li>Printed by <code>python main.py --version</code>, in the first line of every run, and in the version stamp of
 <code>Star-claude.html</code> and <code>Star-original.html</code>.</li>
-</ul>
-</details>
-<h2>Open Bugs</h2>
-<p>No open numerical or student-facing defect is known at this Kickoff4 handoff; Claude's review and manual student testing remain pending.</p>
-<h2>Major Improvements in This Release</h2>
-<ul>
-<li>Added <code>Star-grok.html</code>, a concise nine-run terminal tutorial. The existing <code>Star-claude.html</code> remains the fuller lab-manual path. Both use identical Version and Build stamps and the same core program.</li>
-<li>Explained the Matplotlib cursor coordinates near the beginning of both tutorials. The Grok guide uses the Claude guide's stylesheet, source header and navigation structure.</li>
-<li>Corrected <code>lane_emden_surface()</code> documentation: the 0.1% step and better-than-1e-10 comparison apply to the default <code>relative_step</code>, and a coarser step may be less accurate. The routine's calculation is unchanged. This closes OB-1 from the previous notes.</li>
-<li>Regenerated all nine embedded plots from the current build and verified the printed headline values; updated the Sample Outputs Guide's stamp and provenance to cover both tutorials.</li>
-</ul>
-<h2>Test Suite Growth</h2>
-<ul>
-<li>149 tests run in the extracted program/documentation layout, with one layout-dependent skip (the cross-module documentation link check has no sibling modules in this extracted package). The executable tests check the paired active Help files, each Grok command and its default parameter table, version/build stamps, shared house style and links; the detailed Claude beat and physics checks remain.</li>
-<li>The obsolete tests that demanded current metadata and behavior from the frozen <code>Star-original.html</code> were replaced by a single optional archive isolation check. The package still includes the original byte-for-byte.</li>
-<li>Run <code>python -m unittest discover -s tests -q</code> from <code>GFTGU-Programs/Star</code> with sibling <code>GFTGU-Documentation/Star</code> present. The tests require both active tutorials together.</li>
-</ul>
-<h2>Known Limitations</h2>
-<ul>
-<li>The physics is one Newtonian polytrope, without stellar energy transport, changing composition, rotation, magnetic fields or general relativity; the default radius and mass resembling the Sun do not make its interior a solar model.</li>
-<li>Euler integration is first order; restarts double the radial step. At the <code>gamma = 6/5</code> boundary there is no finite surface, and the stepwise radius becomes unreliable near it.</li>
-<li>The Lane–Emden step-halving uncertainty is an estimate, not a bound. The program warns near the finite-radius boundary; MathJax in the tutorials needs network access to typeset equations.</li>
-</ul>
-<h2>Known Minor Maintenance Items</h2>
-<ul>
-<li>The archived Reference Guide documents an older signature and is deliberately not synchronized with active code or the current Build ID.</li>
-<li><code>relative_step</code> below 1e-4 is rejected, limiting repeated halving from the default; the build identifier reads <code>unknown</code> if a core file is unreadable.</li>
-<li>The program has no command-line option to save a plot or printed summary. The choice between tutorial formats remains open pending educator review.</li>
-</ul>
-<h2>Version Identification</h2>
-<ul>
-<li><b>Version:</b> 1.2.0, from <code>MODEL_VERSION</code> in <code>physics_star.py</code>.</li>
-<li><b>Build:</b> 3d55b592a1b7, the first 12 hexadecimal digits of the SHA-256 over the four core UTF-8 modules, with normalized line endings and filename/length framing: <code>physics_star.py</code>, <code>driver_star.py</code>, <code>main.py</code> and <code>plot_star.py</code>.</li>
-<li><b>Date:</b> 2026-09-29. Python 3.10 or later. <code>python main.py --version</code>, the first line of each successful run and both active Help files report this release.</li>
 </ul>
 </body></html>

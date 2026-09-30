@@ -210,11 +210,12 @@ body{font-family:Georgia,serif;line-height:1.55;color:#222;background:#f7f3ea;ma
 <li><strong>Exponent and index:</strong> <code>--gamma</code> is the exponent γ of p ∝ ρ<sup>γ</sup>; the printed index is n = 1/(γ − 1), 2.7778 at the default γ = 1.36. γ must exceed 1.2.</li>
 <li><strong>Look-alike figures:</strong> the plots of Beats 0, 6 and 7 differ by about 1% in radius and look alike; the Beats are about the printed grid lines and Lane–Emden differences, not about the curves.</li>
 <li><strong>Restarts:</strong> check that <code>Restarts (radial step doubled)</code> is 0 before comparing a run with the Lane–Emden values; a restart doubles the step.</li>
-<li><strong>The Lane–Emden reference:</strong> it is computed numerically, twice, with the second step half the first. A warning line follows the Lane–Emden mass only within about 1.5e-7 of γ = 6/5, as in the second command of Beat 8.</li>
+<li><strong>Constants for hand calculations:</strong> this program uses G = 6.672e-11 m³ kg⁻¹ s⁻², proton mass m<sub>p</sub> = 1.67e-27 kg, and Boltzmann constant k<sub>B</sub> = 1.38e-23 J/K. Use these rounded values to reproduce the stated density and radius.</li>
+<li><strong>The Lane–Emden reference:</strong> it is computed numerically, twice, with the second step half the first. A warning line follows the Lane–Emden mass only within about 1.4e-7 of γ = 6/5, as in the second command of Beat 8.</li>
 </ul>
 </section>
 
-<section id="provenance"><h2>Image and source provenance</h2><p>All nine figures were regenerated on 29 September 2026 from Star Version 1.2.0, build 3d55b592a1b7, using the commands displayed above, the non-interactive Matplotlib backend, 800 × 600 pixels, and 256-colour indexed PNG encoding. The headline values were checked against the same runs and their stored profiles. This build changes a Lane–Emden docstring, not the numerical calculation. The Claude and Grok tutorials use the same program and these outputs.</p></section>
+<section id="provenance"><h2>Image and source provenance</h2><p>All nine figures were regenerated on 29 September 2026 from Star Version 1.2.0, build 3d55b592a1b7, using the commands displayed above on the non-interactive Matplotlib backend. Each figure was resized to 8 × 6 inches, laid out with <code>tight_layout()</code>, and embedded as an 800 × 600 pixel, 256-colour indexed PNG. The plotted data match the program; the larger canvas and adjusted margins may differ from the default window. Headline values were checked against the same runs and their stored profiles. Both <code>Star-claude.html</code> and <code>Star-grok.html</code> use this program and these outputs.</p></section>
 
 <footer>
 <p>Star — Sample Outputs Guide. Self-contained HTML; all images are embedded.</p>
