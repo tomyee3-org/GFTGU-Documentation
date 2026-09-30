@@ -370,7 +370,7 @@ the conservation table (Beat 3), samples it directly. The initial and final tota
 run happens to start and end away from that excursion, not because the excursion is too small to
 show up. Before reading on, count how many distinct pairs of bodies there are among the three, and
 guess how that count would grow if a fourth body joined.</p>
-<p><em>Then</em> the law that moves all three. Each body pulls on each other body with a force that
+<p>All three bodies move under Newton's law of gravitation. Each body pulls on each other body with a force that
 grows with both masses and falls as the square of their separation, directed along the line between
 them:</p>
 <div class="eq-block">
@@ -451,7 +451,7 @@ vectors: \(2\times(-0.026767,0.011087,0)+1\times(0.042446,0.011087,0)+0.5\times(
 comes to \((0,\,0,\,0)\) to six decimal places. That is Newton's third law summed over every pair at
 once: mass-weighted, the three accelerations cancel exactly, even though the accelerations
 themselves do not.</p>
-<p><em>Then</em> why the cancellation is not a coincidence. Multiply Eq. 2 by \(m_A\) for every body
+<p>The cancellation follows from the pairwise forces. Multiply Eq. 2 by \(m_A\) for every body
 and add all three equations. Every pairwise term \(m_A\,\dfrac{Gm_B}{r_{AB}^3}(\mathbf r_B-\mathbf
 r_A)\) appears twice, once from body A's equation and once, with the opposite sign and \(m_B\)
 swapped for \(m_A\), from body B's, and the pair of terms cancels (this is Eq. 3's pair-loop form).
@@ -500,7 +500,7 @@ printed totals and drift line are identical to each other, run for run, because 
 only changes what the plot subtracts before drawing; the <code>user</code> run's plot drifts across
 its axes as the whole system moves at speed \(u\), and the <code>com</code> run's plot stays
 centered on the moving center of mass.</p>
-<p><em>Then</em> the two ideas behind those numbers. The center of mass and its velocity are:</p>
+<p>Those numbers describe the center of mass and its velocity:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 5 — Center of mass and its velocity <span class="tag tag-def">DEFINITION</span></div>
 \[
@@ -573,8 +573,8 @@ nonzero component here, down the same rows: 2.7600e+15 in every row printed, tho
 <code>Maximum conservation drift</code> line for this run already reported a nonzero angular
 momentum drift of \(3.7074\times10^{-6}\) &mdash; a real, if tiny, departure that eleven rows at
 four significant figures cannot show.</p>
-<p><em>Then</em> the three quantities and why two of them, not three, are exactly conserved by the
-exact equations. Every body carries kinetic energy, and every pair carries a mutual potential
+<p>In the exact equations, total and internal energy are conserved, while kinetic energy
+can change. Every body carries kinetic energy, and every pair carries a mutual potential
 energy:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 7 — Kinetic energy <span class="tag tag-def">DEFINITION</span></div>
@@ -644,7 +644,7 @@ so its own norm is a perfectly good denominator, but \(|\mathbf P_0|=0\) cannot 
 compare 51520.0 with \(2\times(1)(25760)\): the characteristic momentum scale is exactly the sum of
 each body's own momentum magnitude, \(m_A|\mathbf v_A|\), even though those two contributions point
 in opposite directions and cancel in the vector sum.</p>
-<p><em>Then</em> why, and what changed in this release. A fraction with a zero or near-zero
+<p>A fraction with a zero or near-zero
 denominator is not a useful diagnostic, so <code>_energy_drift_scale()</code> in
 <code>driver_multiple.py</code> has long used a fallback for energy: if \(|E_0|\) is smaller than a
 tight tolerance times the characteristic scale \(K_0+|U_0|\) (which can never be zero for a bound,
@@ -710,7 +710,7 @@ acceleration at the start of the step, one for the predicted acceleration, and, 
 corrector pass already satisfies <code>eps2</code>, no further call is needed, because the
 convergence test compares the corrector's own output to the predictor's, not to a fresh force
 evaluation.</p>
-<p><em>Then</em> the two stages that cost those calls. The predictor estimates the end of the step
+<p>The acceleration calls come from two stages of the integration step. The predictor estimates the end of the step
 from the start-of-step acceleration alone, holding that acceleration constant over the step: a
 second-order (constant-acceleration) Taylor prediction for position, paired with a first-order
 (explicit Euler) prediction for velocity:</p>
@@ -782,7 +782,7 @@ regrown, consistent with a tight binary having formed between two of the bodies 
 short steps for as long as the run continues. Despite all of this the run's maximum fractional
 energy drift was still only \(3.2235\times10^{-4}\) (Beat 0): the controller is doing exactly what
 it is meant to, buying the accuracy that the encounter needs without being asked.</p>
-<p><em>Then</em> the rule that produces that behavior. Before the corrector runs at all, the program
+<p>The step controller accounts for this behavior. Before the corrector runs at all, the program
 compares one trial body's acceleration at its predicted position with its acceleration at the start
 of the step:</p>
 <div class="eq-block">
@@ -843,7 +843,7 @@ Choosing a different <code>frame_time</code> only moves which requested sample t
 between the same bracketing states &mdash; it can even land exactly on an accepted state, as the
 \(t=2\times10^5\) s frame above does, making the discrepancy zero for that frame &mdash; it never
 changes the accepted steps the integrator actually took (Beat 6).</p>
-<p><em>Then</em> why a curve, not a straight line, is used to bridge two accepted states. The
+<p>A curve can preserve information that a straight-line interpolation loses. The
 program stores both the position <em>and</em> the velocity at every accepted step, so it can match
 not just the endpoints but the slope at each endpoint too, using the standard cubic-Hermite basis:</p>
 <div class="eq-block">
@@ -898,7 +898,7 @@ python main.py --dt 500 --max_steps 8000 --output_type trajectories --show_energ
 the opposite of ordinary convergence. Before concluding anything from that, notice what it actually
 compares: the two runs do not reach the same simulated time, so the two maxima are each the largest
 drift somewhere in a different stretch of the trajectory, not the same stretch measured twice.</p>
-<p><em>Then</em> compare them properly, over a stretch both runs actually share. Restricted to the
+<p>A fair comparison uses a stretch both runs actually share. Restricted to the
 first 17.5 days &mdash; before either run's reported maximum &mdash; the two integrations agree
 closely: \(7.0649\times10^{-6}\) for \(\Delta t=1000\) against \(7.1182\times10^{-6}\) for
 \(\Delta t=500\), both at essentially the same moment, day 14.851. A third, independently finer run,
@@ -919,7 +919,7 @@ adaptive controller starts shrinking the step for a close encounter (Beat 6), it
 <em>number</em> of accepted steps still available, not the ceiling <code>dt</code>, that decides how
 far a run can push into that encounter; the run with twice as many steps in its budget simply goes
 further before running out.</p>
-<p><em>Then</em> look at what each run's own maximum actually is. The \(\Delta t=500\) run's
+<p>The timing of each run's maximum resolves the apparent discrepancy. The \(\Delta t=500\) run's
 \(3.2449\times10^{-4}\) occurs at day 17.59335, during a sharp, brief close pass where the two
 nearest bodies come within \(1.6394\times10^{8}\) m of each other &mdash; far closer than anything in
 the common stretch above. The \(\Delta t=1000\) run never reaches that pass; it simply runs out of

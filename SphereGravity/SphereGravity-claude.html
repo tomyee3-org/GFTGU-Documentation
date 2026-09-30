@@ -545,7 +545,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py --outputType acceleration</pre>
 <p>Look at the plot, and at the columns <code>predicted g</code> and <code>expected g</code> of the table. <code>predicted g</code> is the program's sum over the tiles; <code>expected g</code> is Newton's shell theorem. Ignore the other columns until Beat 2.</p>
 <p>Three tasks, in order. First, look inside the shell. At <em>r</em> = 0.5 the tiles pull with <code>predicted g</code> = -9.1945e-07, and the theorem expects 0; on the plot the curve lies flat on zero from the centre almost to <em>r</em> = 1. Then look outside. At <em>r</em> = 2 the sum gives 0.0031419 against the expected 0.0031416, and at <em>r</em> = 4 it gives 0.00078544 against 0.0007854; the pull at 2 is 4.000 times the pull at 4, and more than 3400 times the size of the tiny leftover at 0.5, which Beat 4 shows is an error of the sum. Then look at the shell. The plot rises sharply from about zero to about 0.012 across the dashed line at <em>r</em> = 1, where it has a gap; just inside the shell it dips slightly below zero, and just outside it overshoots to more than 0.012 before it falls. Beat 5 explains the dip and the overshoot. Say what would have to be true of the shell's pull for the pull outside to fall to a quarter when the distance doubles.</p>
-<p><em>Then</em> the law. Every tile pulls on a test mass with Newton's inverse-square force.</p>
+<p>Every tile pulls on a test mass with Newton's inverse-square force.</p>
 <div class="eq"><span class="eq-label">(1)</span>
 <div class="eq-kind">Newton's law of gravitation for a point mass <span class="kind kind-law">LAW</span></div>
       \[
@@ -568,7 +568,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py --nDiv 10</pre>
 <p>Look at the three lines under <code>Shell mass comparison</code>, and at the line <code>latitude step h = pi/nDiv</code>.</p>
 <p>Three tasks, in order. First, compare the masses. The tiles add up to <code>numerical midpoint mass</code> 0.012618, while the shell's exact mass is 0.012566; the <code>relative difference</code> is 0.0041242. Then compare with Beat 0, which used 100 tiles each way: its relative difference was 4.1125e-05, a hundred times smaller for ten times as many divisions, ten times finer in latitude. Then read the step: <code>latitude step h = pi/nDiv</code> is 0.31416 here, against 0.031416 in Beat 0. Say why the tiles should carry slightly more mass than the smooth shell, not less.</p>
-<p><em>Then</em> the tiles. Latitude \(\theta\) runs from \(-\pi/2\) at the south pole to \(+\pi/2\) at the north pole, and longitude \(\varphi\) round the equator.</p>
+<p>The tiles are laid out on a latitude–longitude grid. Latitude \(\theta\) runs from \(-\pi/2\) at the south pole to \(+\pi/2\) at the north pole, and longitude \(\varphi\) round the equator.</p>
 <div class="eq"><span class="eq-label">(3)</span>
 <div class="eq-kind">The angular grid <span class="kind kind-def">DEFINITION</span></div>
       \[
@@ -601,7 +601,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py --radii 2 5 10 100 1000</pre>
 <p>Look at the <code>relative difference</code> column and compare it with the mass line <code>relative difference</code> above the table.</p>
 <p>Three tasks, in order. First, read the column from top to bottom: 9.1423e-05, 4.6409e-05, 4.2379e-05, 4.1137e-05 and 4.1125e-05. The difference between the tiled sum and the theorem gets smaller as the test mass moves away, but it does not go to zero. Then compare the last value with the mass: the relative mass difference is also 4.1125e-05. Far away, the tiles pull almost exactly like a point carrying the tiles' own mass, which is too large by that fraction. Then compare with the column <code>h^2 estimate</code>, which is 9.1385e-05 at <em>r</em> = 2 and 4.1123e-05 at <em>r</em> = 1000. Say why the pull of the tiles must approach that of a point of mass \(M_{\rm num}\), not \(M\), however the tiles are arranged.</p>
-<p><em>Then</em> the sum. By symmetry the pull at a point on the axis through the centre points along the axis, so the program puts the test mass on the axis, at \(z=-r\), below the shell's centre. A tile at latitude \(\theta\) is at height \(z=\sin\theta\).</p>
+<p>Symmetry simplifies the sum: the pull at a point on the axis through the centre points along the axis, so the program puts the test mass on the axis, at \(z=-r\), below the shell's centre. A tile at latitude \(\theta\) is at height \(z=\sin\theta\).</p>
 <div class="eq"><span class="eq-label">(6)</span>
 <div class="eq-kind">Distance from a tile to the test mass <span class="kind kind-der">DERIVED</span></div>
       \[
@@ -647,7 +647,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py --radii 0 0.25 0.5 0.75 0.9</pre>
 <p>Look at the <code>predicted g</code> column, at the <code>g/M</code> values in the <code>relative difference</code> column, and at <code>h^2 estimate</code>.</p>
 <p>Three tasks, in order. First, read the centre: <code>predicted g</code> is 1.5217e-18, rounding error in a sum of terms each about \(10^{-4}\), and the estimate is 0. Then read outwards: <code>g/M</code> is -2.3403e-05 at <em>r</em> = 0.25, -7.3167e-05 at 0.5, -0.00032343 at 0.75 and -0.0021036 at 0.9. The pull is tiny everywhere inside but grows towards the shell, and it is negative, pointing away from the centre, towards the nearer part of the shell. Then compare with the estimate: -2.3395e-05, -7.3108e-05, -0.00032227 and -0.0020505. Say why the pulls of the near and far sides of the shell cancel, although the near side is much closer.</p>
-<p><em>Then</em> Newton's argument. Draw a thin double cone from the test point, in opposite directions. It cuts two small patches out of the shell, at distances \(d_1\) and \(d_2\).</p>
+<p>Newton's cancellation argument uses opposite patches of the shell. Draw a thin double cone from the test point, in opposite directions. It cuts two small patches out of the shell, at distances \(d_1\) and \(d_2\).</p>
 <div class="eq"><span class="eq-label">(11)</span>
 <div class="eq-kind">Cancellation of opposite patches <span class="kind kind-der">DERIVED</span></div>
       \[
@@ -665,7 +665,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 python main.py --nDiv 10000</pre>
 <p>Look at the <code>relative difference</code> and <code>h^2 estimate</code> columns at <em>r</em> = 0.5 and 2, in these two runs and in the run of Beat 0, and at the mass line <code>relative difference</code>.</p>
 <p>Three tasks, in order. First, read <em>r</em> = 2: the relative difference is 9.1423e-05 with 100 divisions, 9.1386e-07 with 1000 and 9.1385e-09 with 10000. Then read <em>r</em> = 0.5: <code>g/M</code> is -7.3167e-05, -7.3109e-07 and -7.3108e-09. Each tenfold refinement divides the error by 100, and the mass error goes the same way, from 4.1125e-05 to 4.1123e-07 to 4.1123e-09. Then compare with the estimate: at <em>r</em> = 2 it is 9.1385e-05, 9.1385e-07 and 9.1385e-09, so with 1000 divisions it agrees with the error to four digits, and with 10000 to all five printed digits. Say what kind of formula for the error would make it fall exactly a hundredfold for every tenfold refinement.</p>
-<p><em>Then</em> why the error goes as \(h^2\). The ring sum of Eq. (8) is \(2\pi\varepsilon\) times a midpoint-rule sum \(h\sum_k f(\theta_k)\) with \(f(\theta)=\cos\theta\,(r+\sin\theta)/d(\theta,r)^3\), and the exact field is \(2\pi\varepsilon\) times the integral of \(f\). For a smooth \(f\), the error of the midpoint rule has a known leading term, from the Euler-Maclaurin formula.</p>
+<p>For a smooth integrand, the leading \(h^2\) error is the error of midpoint quadrature. The ring sum of Eq. (8) is \(2\pi\varepsilon\) times a midpoint-rule sum \(h\sum_k f(\theta_k)\) with \(f(\theta)=\cos\theta\,(r+\sin\theta)/d(\theta,r)^3\), and the exact field is \(2\pi\varepsilon\) times the integral of \(f\). For a smooth \(f\), the error of the midpoint rule has a known leading term, from the Euler-Maclaurin formula.</p>
 <div class="eq"><span class="eq-label">(12)</span>
 <div class="eq-kind">Error of the midpoint rule <span class="kind kind-der">DERIVED</span></div>
       \[
@@ -691,7 +691,7 @@ python main.py --nDiv 10000</pre>
 python main.py --nDiv 10000 --radii 0.995 1.005 1.01 1.05 1.1</pre>
 <p>Look at <code>latitude step h = pi/nDiv</code>, at <code>predicted g</code> and <code>relative difference</code>, and at <code>h^2 estimate</code> and the <code>*</code> marks beside it.</p>
 <p>Three tasks, in order. First, the default run. Just inside, at 0.995, <code>g/M</code> is 0.15216, a leftover pull of 0.15 times the mass where there should be none, and just outside, at 1.005, the relative difference is -0.15117, a 15% error; the estimates, -0.82246 and 0.83072, do not even have the right signs. They are marked <code>*</code>, and so are those at 1.01 and 1.05; only at 1.1 do the error, 0.0025682, and the estimate, 0.0024936, agree. Then the fine run. Now nothing is marked, and the estimates agree with the errors at every radius: -8.2331e-05 against -8.2246e-05 at 0.995, and 8.3158e-05 against 8.3072e-05 at 1.005. A row without a mark is not a guarantee, though: just past the marking threshold, with 1257 divisions, the estimate at 1.005 is still about 8% off (Experiment 7). Then read the jump. In the fine run <code>predicted g</code> goes from -1.0346e-06 inside to 0.012443 outside, a jump of 0.012444 across a hundredth of a radius, against the expected 0.012442. Say why the tiles must be small compared with the distance to the shell before the sum can be trusted there.</p>
-<p><em>Then</em> the condition. Near the shell the test mass is within \(|r-1|\) of the nearest tiles, and their pull changes completely over that distance. Eq. (12) is a series in powers of \(h\) measured against the scale on which \(f\) changes, which is the shell radius 1 far from the shell and \(|r-1|\) near it, so the estimate, and the sum, can be trusted only when \(h=\pi/n\ll\min(1,\ |r-1|)\). With 100 divisions \(h=0.031416\), more than six times the distance 0.005, so each tile near the pole is larger than its distance from the test mass, and the sum is poor. With 10000 divisions \(h=0.00031416\), a sixteenth of that distance. The program turns the condition into a rule for its marks.</p>
+<p>This error estimate requires the tiles to resolve the scale on which the pull changes. Near the shell the test mass is within \(|r-1|\) of the nearest tiles, and their pull changes completely over that distance. Eq. (12) is a series in powers of \(h\) measured against the scale on which \(f\) changes, which is the shell radius 1 far from the shell and \(|r-1|\) near it, so the estimate, and the sum, can be trusted only when \(h=\pi/n\ll\min(1,\ |r-1|)\). With 100 divisions \(h=0.031416\), more than six times the distance 0.005, so each tile near the pole is larger than its distance from the test mass, and the sum is poor. With 10000 divisions \(h=0.00031416\), a sixteenth of that distance. The program turns the condition into a rule for its marks.</p>
 <div class="eq"><span class="eq-label">(14)</span>
 <div class="eq-kind">The marking rule <span class="kind kind-alg">ALGORITHM</span></div>
       \[
@@ -714,7 +714,7 @@ python main.py --nDiv 10000 --radii 0.995 1.005 1.01 1.05 1.1</pre>
 <pre>python main.py</pre>
 <p>Look at the plot and at the scale of its vertical axis, and at the rows 0.995, 1.005 and 5 of the table.</p>
 <p>Three tasks, in order. First, the scale. The curve runs from about -0.15 to about +0.15, set by the two spikes on either side of the dashed line, which are the 15% errors of Beat 5 (0.15216 and -0.15117 in the table). Then everywhere else. On this scale the curve lies on zero from the centre to within a few hundredths of the shell, and from just outside the shell to <em>r</em> = 4.995: the errors of Beats 2 to 4 are far too small to see. Then compare the definitions. At <em>r</em> = 5 the table prints 4.6409e-05, most of which, 4.1125e-05, is the mass error; the plotted value just inside <em>r</em> = 5 is only about 5.3e-06, because the plot divides by the tiles' own mass. Say which of the two relative differences measures only the error in the shape of the field.</p>
-<p><em>Then</em> what is plotted.</p>
+<p>The plot uses the following normalized comparison:</p>
 <div class="eq"><span class="eq-label">(16)</span>
 <div class="eq-kind">The plotted relative difference <span class="kind kind-def">DEFINITION</span></div>
       \[
@@ -743,7 +743,7 @@ python main.py --nDiv 10000 --radii 0.995 1.005 1.01 1.05 1.1</pre>
 <pre>python main.py --epsilon 0.002 --outputType acceleration</pre>
 <p>Look at the mass lines, at <code>predicted g</code> and <code>expected g</code>, and at <code>relative difference</code>, and compare them with Beat 0.</p>
 <p>Three tasks, in order. First, the masses: 0.025134 and 0.025133, twice those of Beat 0, with the same relative difference, 4.1125e-05. Then the pulls: 0.0062838 at <em>r</em> = 2, twice the 0.0031419 of Beat 0, and the plot has the same shape with twice the height. Then the comparisons: 9.1423e-05 at <em>r</em> = 2 and <code>g/M</code> = -7.3167e-05 at 0.5, exactly as in Beat 0. Say why no relative difference can depend on <code>--epsilon</code>.</p>
-<p><em>Then</em> the scaling. Every tile mass in Eq. (4) is proportional to \(\varepsilon\), so the sum, the exact mass and the exact field all are.</p>
+<p>Every tile mass in Eq. (4) is proportional to \(\varepsilon\), so the sum, the exact mass and the exact field all are.</p>
 <div class="eq"><span class="eq-label">(18)</span>
 <div class="eq-kind">Scaling with the mass per unit area <span class="kind kind-der">DERIVED</span></div>
       \[
@@ -762,7 +762,7 @@ python main.py --radii 1
 python main.py --nDiv 100001</pre>
 <p>Look, in the first run, at the mass <code>relative difference</code>, at the whole table and its <code>*</code> marks, and at the plot. Then read the two error messages.</p>
 <p>Three tasks, in order. First, the mass: the single ring, at the equator, carries 0.019739 against the shell's 0.012566, a relative difference of 0.5708, which is \(\pi/2-1\) from Eq. (5) with \(h=\pi\). Then the field: inside the shell <code>g/M</code> is 0.56199 at <em>r</em> = 0.5, a strong pull towards the ring's plane, and outside the relative difference rises from 0.12397 at <em>r</em> = 2 to 0.48105 at 5, on its way to the mass error 0.5708 of Eq. (10); every estimate is marked <code>*</code>. Then the errors: <code>--radii 1</code> is refused because the field is discontinuous at the shell, and <code>--nDiv 100001</code> because the program limits the divisions to 100000. Say why a single ring pulls like the whole shell only when the test mass is far away.</p>
-<p><em>Then</em> the rules of the calculation that set these limits.</p>
+<p>The calculation sets these limits through its radius grid, division count and exclusion of the shell surface:</p>
 <div class="eq"><span class="eq-label">(19)</span>
 <div class="eq-kind">Radii, divisions and the omitted surface <span class="kind kind-alg">ALGORITHM</span></div>
       \[

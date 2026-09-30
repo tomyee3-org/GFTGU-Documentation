@@ -381,7 +381,7 @@ expect such an ellipse to reach before reading Beat 2, which works it out; then 
 0.40762 AU the run actually reached. Then look at the plot: a small dashed red circle for the Sun,
 a large dashed green circle for the companion, and Mercury's blue path looping around the Sun
 while the whole pattern turns. The loops do not close on themselves.</p>
-<p><em>Then</em> the equation behind the run. Let \(\mathbf r=(x,y)\) be Mercury's position in the
+<p>Let \(\mathbf r=(x,y)\) be Mercury's position in the
 barycentric frame, \(\mathbf r_\odot(t)\) and \(\mathbf r_c(t)\) the positions of the Sun and the
 companion, and \(M_\odot\), \(M_c\) their masses. Newton's law of gravity from both bodies at
 once gives</p>
@@ -420,7 +420,7 @@ moving: \(r_\odot\omega=14{,}533\) m/s. Mercury's starting velocity of 54,400 m/
 <em>from the Sun</em>, so Mercury's speed in the frame of the plot is quite different, and its
 blue path, swinging between 0.14420 and 0.31804 AU from the Sun, makes loops around a Sun that
 is itself going round in a circle.</p>
-<p><em>Then</em> the equations. For two bodies of masses \(M_\odot\) and \(M_c\) a distance \(d\)
+<p>For two bodies of masses \(M_\odot\) and \(M_c\) a distance \(d\)
 apart moving on circles, Newton's laws give one common angular velocity and two radii:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 2 — Binary angular velocity and radii <span class="tag tag-der">DERIVED</span></div>
@@ -463,7 +463,7 @@ metre values differ only in their fifth figure), over more than 230 days. Then t
 Then go back to Beat 0, which was the same launch <em>with</em> the default companion: there
 Mercury never got beyond 0.40762 AU. The companion, not the numerical method, is what kept it
 0.03 AU closer in.</p>
-<p><em>Then</em> the equations. For one star alone, a circular orbit of radius \(r\) needs gravity
+<p>The one-star calculation provides a useful reference. For one star alone, a circular orbit of radius \(r\) needs gravity
 to supply exactly the centripetal acceleration, \(GM_\odot/r^2=v_c^2/r\). A launch at a
 perihelion \(r_p\) with speed \(v\) larger than \(v_c\) reaches out to the aphelion \(r_a\) given
 by energy and angular-momentum conservation:</p>
@@ -497,7 +497,7 @@ Ten times the companion mass gives, to within a few per cent, ten times the dist
 the signature of a <em>perturbation</em>: a small extra force whose effect is proportional to its
 size. Then look at the last run's plot: even at 0.1 solar mass the orbit is still recognisably a
 slightly off-centre, slowly turning ellipse around the Sun, not yet the tangle of Beat 5.</p>
-<p><em>Then</em> the size of the extra force. At Mercury's distance \(r\) from the Sun and a
+<p>The extra force can be quantified directly. At Mercury's distance \(r\) from the Sun and a
 distance \(\Delta\) from the companion, the companion's direct pull compared with the Sun's is</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 5 — The companion's pull as a fraction of the Sun's <span class="tag tag-der">DERIVED</span></div>
@@ -534,7 +534,7 @@ the second plot, where the drift wanders between about &minus;1.23 &times; 10<su
 and +6.6 &times; 10<sup>&minus;8</sup> without a steady trend. Then compare the two: the same run, the same calculated path, and one
 quantity changes 250,000 times more than the other. The Jacobi constant is the conserved one, and
 its tiny drift is entirely numerical error.</p>
-<p><em>Then</em> why. Mercury's energy is not conserved because the stars move, so the gravity it
+<p>Mercury's energy is not conserved because the stars move, so the gravity it
 feels at a given point changes with time. But in a frame that <em>turns with the binary</em> at
 angular velocity \(\omega\), the two stars stand still, the gravitational field no longer changes
 with time, and there is again a conserved quantity. In the barycentric frame it reads</p>
@@ -575,8 +575,8 @@ the 925.93 days that 40,000 full steps would. Then compare the second run, which
 smaller and <code>eps2</code> tighter: its smallest step is 39.907 s, and 199.63 / 39.907 = 5.00.
 The shortest step the controller allows has shrunk in direct proportion to <code>eps1</code>. The second run also meets the Sun at almost the same distance,
 0.016877 AU, and its reported maximum Jacobi drift is 23 times smaller. However, the tighter run covers only 852.41 days rather than 919.20 days: these are not equal-duration trials, so the drift ratio alone does not measure the effect of tighter tolerances. Beat 8 returns to controlled comparisons.</p>
-<p><em>Then</em> the rules the controller follows. Each step starts with a cheap Euler guess at the
-end of the step, and checks how much the acceleration would change over it:</p>
+<p>The step controller begins with an Euler estimate and checks how much the acceleration
+would change over the step:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 7 — Euler predictor and acceleration-change gate (numerical method, untagged)</div>
 \[
@@ -637,7 +637,7 @@ program has no rule for deciding that Mercury has left for good, and a simple on
 state than it looks: Mercury's energy is not conserved while it is near the moving stars (Beat 4),
 so a positive energy can turn negative again after the next encounter. Experiment 6 builds a
 finite-time criterion that allows for this.</p>
-<p><em>Then</em> how a collision is found. Point masses have no surface, so the program stops Mercury
+<p>Point masses have no surface, so the program stops Mercury
 at a <em>collision radius</em> that you choose: by default the Sun's is its nominal radius,
 \(R_\odot=6.957\times10^{8}\) m, and the companion's is zero, meaning "never stop". After each
 accepted step, before keeping it, the program checks whether Mercury's straight path relative to
@@ -682,7 +682,7 @@ of the binary, as the plot shows. Then check the second run's Sun-distance range
 either way. It is close but not exact: a binary is not a point mass, and its pull on a nearby orbit
 is not quite that of \(2\,M_\odot\) at the centre. Its Jacobi drift is 1.4107e-09, the smallest on
 this page, because this orbit never comes near either star.</p>
-<p><em>Then</em> the conversion the program makes before it starts. With the Sun at
+<p>Before integration begins, the program converts the supplied Sun-relative state to the barycentric frame. With the Sun at
 \(\mathbf r_\odot(0)=(-r_\odot,0)\) moving with \(\mathbf v_\odot(0)=(0,-r_\odot\omega)\), from
 Eq. 3,</p>
 <div class="eq-block">
@@ -725,7 +725,7 @@ with the first command of Beat 5. It halves the maximum step for the Sun-grazing
 0.0051786, is no better than Beat 5's 0.0051623. Near the Sun the step was already being set by
 <code>eps1</code>, not by <code>--dt</code>, so shrinking <code>--dt</code> changes nothing there;
 Beat 5's tighter-<code>eps1</code> run reports 0.00022738, 23 times smaller than its first run, but also stops after 852.41 rather than 919.20 days. Match elapsed time and encounter history before assigning the full difference to the tolerance.</p>
-<p><em>Then</em> the rule this suggests. The corrector of Eq. 8 converges to the trapezoidal rule,
+<p>The corrector of Eq. 8 converges to the trapezoidal rule,
 whose error over a fixed time span shrinks as the square of the step:</p>
 <div class="eq-block">
 <div class="eq-label">Second-order global convergence (unnumbered)</div>
@@ -765,7 +765,7 @@ Newtonian point-mass force is singular there.</code> instead of a Python traceba
 what MercPert does <em>not</em> treat as an error: running out of steps. Every run on this page
 that did not hit a collision surface ended with <code>max_steps reached</code>, a normal outcome,
 so a longer look always means a larger <code>--max_steps</code>.</p>
-<p><em>Then</em> the list of what the model leaves out, which no setting can put back. The problem
+<p>Other limitations belong to the physical model and cannot be removed by changing its settings. The problem
 is two-dimensional, so inclined orbits are impossible. The two stars are points on an exact
 circle, with no eccentric binaries, tides, or stellar sizes except the stopping radii. Mercury has
 no mass, so it never disturbs the stars, and there is no gas, disk, migration, radiation pressure

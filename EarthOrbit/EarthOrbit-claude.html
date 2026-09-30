@@ -391,7 +391,7 @@ reading on: does 14° of arc before impact strike you as a lot, or a little, for
 shortfall? Then look at the plot: rather than a broad, shallow near-miss, the trajectory curves
 sharply back to the ground well within the first quarter-turn. Beat 5 explains why a small speed
 deficit does not buy nearly as much margin here as it would under real gravity.</p>
-<p><em>Then</em> the equations behind the run. Let \((x,y)\) be the projectile's position with the
+<p>Let \((x,y)\) be the projectile's position with the
 origin at Earth's centre, and \((u,v)\) its velocity. Newton's second law gives four coupled
 first-order ODEs:</p>
 <div class="eq-block">
@@ -436,7 +436,7 @@ parts in 10,000 <em>above</em> \(\mu_\oplus\) (<code>K_APPROX</code> in
 ask which law a real satellite obeys: only <code>inverse_square</code> is real physics; the
 default is an approximation that happens to agree with it near the surface, to about 0.02% (the
 1.95-parts-in-10,000 figure above), not by construction.</p>
-<p><em>Then</em> the two laws themselves. Both point from \((x,y)\) toward the origin, along the
+<p>Both acceleration laws point from \((x,y)\) toward the origin, along the
 unit vector \((-x/r,-y/r)\); they differ only in the scalar multiplying it:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 2 — Simplified force law <span class="tag tag-rule">PRESCRIPTION</span></div>
@@ -484,7 +484,7 @@ nonzero eccentricity is picking up: an osculating ellipse whose perigee sits abo
 launch altitude and whose apogee sits exactly on it. Compare the revolution time, 5460.9 s, with the exact
 orbital period below: 5431.3 s, a difference of about 0.5%, consistent with the drift already
 noticed.</p>
-<p><em>Then</em> where 7725.7 m/s comes from. At orbital radius \(r=R_\oplus+h_0\), the circular
+<p>The value 7725.7 m/s follows from the circular-orbit condition. At orbital radius \(r=R_\oplus+h_0\), the circular
 condition balances centripetal acceleration against gravity, \(v_c^2/r=\mu_\oplus/r^2\); the
 escape speed, defined by zero total energy, is \(\sqrt2\) times that:</p>
 <div class="eq-block">
@@ -525,8 +525,8 @@ the per-revolution maximum is a three-point parabola fit to the numerically inte
 (Beat 6). Then ask why 9000 m/s, only 16.5% above the 7725.7 m/s circular speed, produces an
 apogee altitude more than 25 times the perigee altitude: orbital energy and eccentricity both grow
 quickly with speed near circular, which Eq. 5 makes precise.</p>
-<p><em>Then</em> the two-body formulas the console evaluates once, from \((x_0,y_0,u_0,v_0)\)
-alone, to get the osculating elements — the exact ellipse the projectile would follow from this
+<p>The console evaluates the following two-body formulas once, using only \((x_0,y_0,u_0,v_0)\),
+to obtain the osculating elements — the exact ellipse the projectile would follow from this
 instant onward under ideal two-body gravity:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 5 — Specific orbital energy and eccentricity <span class="tag tag-der">DERIVED</span></div>
@@ -571,7 +571,7 @@ an unbound trajectory aimed inward or with a nonzero <code>vInit</code> can desc
 past a perigee, and only then climb away, in which case its final and maximum altitudes differ and
 the summary prints them as two separate lines instead (see the Printed Summary section, which
 states this conditionally rather than as a rule).</p>
-<p><em>Then</em> why 11,500 m/s escapes. Eq. 4 gives \(v_e=10\,925.8\) m/s at 300 km altitude, so
+<p>Eq. 4 gives \(v_e=10\,925.8\) m/s at 300 km altitude, so
 11,500 m/s is 5.3% above it, and Eq. 5's energy \(\mathcal E=\tfrac12v_0^2-\mu_\oplus/r_0\) is
 positive whenever \(v_0&gt;v_e\), which is exactly the condition \(e&gt;1\) in the same equation.
 A positive-energy orbit is not a closed curve at all, so "orbit" is the wrong word for it; the
@@ -619,7 +619,7 @@ itself the lesson: Eq. 6 is a property of each law near exactly circular, not a 
 law's projectile falls back to Earth first at some particular finite deficit, and a demonstration
 that "looks different" is not automatically evidence for a specific claimed reason unless the setup
 actually isolates that reason.</p>
-<p><em>Then</em> the reason a "circular-ish" launch behaves so differently under the two laws.
+<p>The two "circular-ish" trajectories differ in how their radial and angular motions line up.
 Perturb a circular orbit of radius \(r\) very slightly and ask how fast the radius oscillates
 compared with how fast the angle advances. For a central force of magnitude \(f(r)\) (directed
 inward), the ratio of the two frequencies — the epicyclic frequency \(\kappa\) to the orbital
@@ -678,7 +678,7 @@ time, 200.44 s (200.4367 s unrounded): the second-to-last sample is at \(t=200.4
 short of \(t=200.8\) s, and \(0.4\times0.09183\approx0.0367\) s, which is exactly the extra
 0.0367 s the printed flight time adds to 200.4 s — the same 0.09183 interpolation fraction used
 for position, applied to time (Eq. 8).</p>
-<p><em>Then</em> the three estimation rules, described in full under
+<p>The program estimates events in three ways, described in full under
 <a href="#algorithm">Algorithm</a>: a straight-chord/circle intersection for surface impact
 (Eq. 8), linear interpolation in accumulated angle for revolution boundaries, and a local
 three-point parabola for altitude extrema (Eq. 9). All three use the raw stored samples only;
@@ -722,7 +722,7 @@ figure of accuracy costs roughly another factor of ten in step count. Beat 2's 3
 orbit was run at \(\Delta t=1\) s specifically to make the drift visible for teaching purposes; a
 student measuring an orbit quantitatively should use a finer step, such as \(\Delta t=0.1\) s or
 smaller, and confirm the answer stops changing by repeating at an even finer step.</p>
-<p><em>Then</em> the source of the drift: the integration step the driver applies at every
+<p>The drift originates in the integration step the driver applies at every
 iteration, described in full under <a href="#algorithm">Algorithm</a>:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 7 — Averaged-velocity integration step (numerical method, untagged)</div>
@@ -783,8 +783,8 @@ simplified case at this \(\Delta t\), consistent with Beat 7's absolute drift ta
 used the same launch speed at both altitudes — each used its own circular speed from Eq. 4 or its
 simplified-law analogue — which is exactly what a fair test of "does period depend only on radius,
 in this fixed way" requires.</p>
-<p><em>Then</em> the two period formulas, both following from circumference divided by circular
-speed and the corresponding entry in Eq. 4 or its analogue:</p>
+<p>Dividing circumference by circular speed gives a period formula for each force law,
+using the corresponding entry in Eq. 4 or its analogue:</p>
 <div class="eq-block">
 <div class="eq-label">Eq. 10 — Circular period, inverse-square versus simplified <span class="tag tag-der">DERIVED</span></div>
 \[
@@ -848,8 +848,7 @@ budget is treated as a normal, if incomplete, outcome, and the summary says so e
 <code>"Escape trajectory; maxSteps reached"</code>), which is why every escape example on this page
 supplied a generous <code>--maxSteps</code> rather than needing the program to detect and reject a
 too-small one.</p>
-<p><em>Then</em> the list of what the model leaves out, which no command-line setting can restore
-because the program has no parameter for it. The simulation is two-dimensional: it cannot
+<p>Changing command-line settings cannot supply physics absent from the model. The simulation is two-dimensional: it cannot
 represent inclined or out-of-plane orbits. It has no atmosphere or drag, so no re-entry heating or
 deceleration; no wind; no Earth rotation, so no Coriolis effect and no distinction between a
 launch to the east and a launch to the west; no oblateness, so no J<sub>2</sub> precession; no

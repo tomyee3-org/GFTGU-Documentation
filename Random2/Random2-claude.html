@@ -547,7 +547,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py --seed 12</pre>
 <p>Look at the table in the summary: the column <code>N</code>, the column <code>mean scaled distance</code>, and the column <code>ratio to sqrt(N)</code>. Look also at the last line, <code>fitted log-log slope</code>, and at the plot. Ignore the <code>standard error</code> column until Beat 1.</p>
 <p>Three tasks, in order. First, read the last row. After 4096 steps the walkers are on average only 63.0073 step lengths from the start, not 4096. Then compare rows four steps apart in <code>N</code>. From 1024 to 4096 steps the distance goes from 30.6802 to 63.0073, a factor of 2.05, and from 256 to 1024 it goes from 14.9520 to 30.6802, a factor of 2.05 again; four times as many steps take the walker only about twice as far. Then read the last column. Every value lies between 0.9074 and 1.0237, although <code>N</code> changes by a factor of 2048, and the fitted slope of the plot is 0.4964. Say what law connects the distance with the number of steps, and why the plot, which has equal decades on both axes, rises one decade for every two it runs.</p>
-<p><em>Then</em> the assumption behind those numbers. The steps are independent of one another and point, on average, nowhere.</p>
+<p>Those numbers rest on the random-walk assumptions: the steps are independent of one another and point, on average, nowhere.</p>
 <div class="eq"><span class="eq-label">(1)</span>
 <div class="eq-kind">Independent steps with zero mean <span class="kind kind-law">MODEL</span></div>
       \[
@@ -600,7 +600,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 python main.py --seed 12 --n_trials 1000</pre>
 <p>Look, in each run, at the <code>standard error</code> column, at the <code>ratio to sqrt(N)</code> column, at the line <code>large-N prediction for ratio to sqrt(N)</code>, and at <code>fitted log-log slope</code>. Compare them with the 100-trial run of Beat 0.</p>
 <p>Three tasks, in order. First, read the standard error of the last row: 4.2617 with 25 trials, 2.3473 with 100 (Beat 0) and 0.8231 with 1000. Four times as many trials divide it by 1.82, and ten times as many by 2.85. Then read the ratio column against the prediction, 0.9591. With 25 trials the ratios run from 0.8211 to 1.0326; with 1000 trials, from row <code>16</code> onwards, they lie between 0.9521 and 0.9667, all within 0.008 of the prediction. Then look down the standard-error column of the 1000-trial run: 0.0501 at 16 steps and 0.8231 at 4096, 16.4 times larger for 256 times as many steps. Say how the standard error should depend on the number of trials and on \(N\), and why the three fitted slopes, 0.4998, 0.4964 and 0.4969, hardly change.</p>
-<p><em>Then</em> what the standard error is. Each row averages \(n\) independent values of \(d\), where \(n\) is <code>--n_trials</code>. Their spread is measured by the sample standard deviation \(s\), and the uncertainty of their average by the standard error.</p>
+<p>Each row averages \(n\) independent values of \(d\), where \(n\) is <code>--n_trials</code>. Their spread is measured by the sample standard deviation \(s\), and the uncertainty of their average by the standard error.</p>
 <div class="eq"><span class="eq-label">(6)</span>
 <div class="eq-kind">Standard error of a mean <span class="kind kind-def">DEFINITION</span></div>
       \[
@@ -632,7 +632,7 @@ python main.py --seed 12 --n_trials 1000</pre>
 <pre>python main.py --seed 12 --step_distribution gaussian</pre>
 <p>Look at <code>step components</code>, at the <code>ratio to sqrt(N)</code> column, at <code>large-N prediction for ratio to sqrt(N)</code> and at <code>fitted log-log slope</code>, and compare them with Beat 0.</p>
 <p>Three tasks, in order. First, read the slope: 0.4986, against 0.4964 for uniform steps. The exponent has not changed. Then read the prediction. It is now 1.0000 where it was 0.9591, and the ratio column scatters about it: from row <code>64</code> onwards the ratios lie between 0.9408 and 1.0502. Then compare the last rows: 65.1655 with standard error 3.2761 here, against 63.0073 with standard error 2.3473 for uniform steps. The difference, 2.16, is 0.54 of the two standard errors combined, so these two rows cannot tell the distributions apart; the prediction says they should differ by 4%. Say what property of the step distribution the square-root law depends on, and what property sets the constant \(C\).</p>
-<p><em>Then</em> the Gaussian step.</p>
+<p>The Gaussian option draws each step component from a normal distribution:</p>
 <div class="eq"><span class="eq-label">(9)</span>
 <div class="eq-kind">Gaussian step components <span class="kind kind-def">DEFINITION</span></div>
       \[
@@ -667,7 +667,7 @@ python main.py --seed 12 --n_trials 1000</pre>
 <pre>python main.py --display walk2d --seed 12</pre>
 <p>Look at the plot, and at the summary lines <code>star radius R</code>, <code>(R / mean free path)^2</code>, the four <code>walk</code> lines, and <code>escape steps</code>.</p>
 <p>Three tasks, in order. First, read the geometry. The star radius is 89.4427 and every step has length 1 (the <code>mean free path</code>), so the photon needs at least 90 steps to get out if it walks straight; <code>(R / mean free path)^2</code> is 8000.0. Then read the walks. They escape after 11564, 7519, 8246 and 2479 steps, a factor of 4.66 between the slowest and the fastest; the mean is 7452.0 with a standard error of 1876.9. Then look at the plot. Each path is a tangle that revisits the same region many times before it happens to reach the edge, and each ends in a short straight ray outside the circle. Say how many steps a photon should need, on average, to escape from a star of radius \(R\), given Beat 0, and why four walks cannot tell you that number to better than about 25%.</p>
-<p><em>Then</em> the steps. In this display every step has exactly the length \(\lambda\), the option <code>--mean_free_path</code>, and a direction that is equally likely to be any angle.</p>
+<p>In this display every step has exactly the length \(\lambda\), the option <code>--mean_free_path</code>, and a direction that is equally likely to be any angle.</p>
 <div class="eq"><span class="eq-label">(12)</span>
 <div class="eq-kind">Isotropic steps of fixed length <span class="kind kind-law">MODEL</span></div>
       \[
@@ -707,7 +707,7 @@ python main.py --seed 12 --n_trials 1000</pre>
 <pre>python main.py --display walk2d --radius 30 --n_walks 200 --seed 12</pre>
 <p>Look at <code>(R / mean free path)^2</code>, <code>escaped walks</code>, <code>escape steps</code> and <code>mean escape steps / (R / mean free path)^2</code>. With more than 12 walks the summary does not list them one by one.</p>
 <p>Three tasks, in order. First, read the prediction: <code>(R / mean free path)^2</code> is 900.0. Then read the mean: all 200 walks escape, with a mean of 902.7 steps and a standard error of 44.7, so the mean is 1.0030 times the prediction, well within one standard error. Then read the spread: the median is 742.5, the fastest walk escapes in 132 steps and the slowest takes 3797. Say why the mean is larger than the median, and what that says about the shape of the distribution of escape times.</p>
-<p><em>Then</em> why the prediction is \((R/\lambda)^2\). By Eq. (4), each step adds \(\lambda^2\) on average to the square of the distance from the centre, whatever the walk has done before. So the quantity \(r_k^2-k\lambda^2\) stays at zero on average at every step, and stays at zero on average also when it is looked at at the moment of escape. At that moment the photon is between \(R\) and \(R+\lambda\) from the centre, because it was inside one step earlier.</p>
+<p>The prediction \((R/\lambda)^2\) comes from the growth of mean squared distance. By Eq. (4), each step adds \(\lambda^2\) on average to the square of the distance from the centre, whatever the walk has done before. So the quantity \(r_k^2-k\lambda^2\) stays at zero on average at every step, and stays at zero on average also when it is looked at at the moment of escape. At that moment the photon is between \(R\) and \(R+\lambda\) from the centre, because it was inside one step earlier.</p>
 <div class="eq"><span class="eq-label">(16)</span>
 <div class="eq-kind">Mean number of steps to escape <span class="kind kind-der">DERIVED</span></div>
       \[
@@ -724,7 +724,7 @@ python main.py --seed 12 --n_trials 1000</pre>
 python main.py --display walk2d --radius 30 --n_walks 200 --seed 12</pre>
 <p>Look at <code>escape steps</code> and <code>mean escape steps / (R / mean free path)^2</code> in both runs. The second run is the run of Beat 4.</p>
 <p>Three tasks, in order. First, read the small star: all 200 walks escape, with a mean of 227.8 steps and a standard error of 10.5, against a prediction of 225.0. Then divide: the mean for \(R=30\) is 902.7, and 902.7/227.8 = 3.96. The medians, 742.5 and 186.0, give 3.99. Then find the uncertainty of that ratio. The relative standard errors are 44.7/902.7 = 0.050 and 10.5/227.8 = 0.046, so the ratio is uncertain by about \(\sqrt{0.050^2+0.046^2}=0.068\) of itself, or 0.27. Say whether the ratio agrees with 4, and what ratio you would expect if escape took a number of steps proportional to \(R\).</p>
-<p><em>Then</em> the ratio from Eq. (16).</p>
+<p>Applying Eq. (16) at both radii gives the expected ratio and its finite-step bounds:</p>
 <div class="eq"><span class="eq-label">(17)</span>
 <div class="eq-kind">Doubling the radius <span class="kind kind-der">DERIVED</span></div>
       \[
@@ -743,7 +743,7 @@ python main.py --display walk2d --radius 30 --n_walks 200 --seed 12</pre>
 python main.py --display walk2d --mean_free_path 2 --seed 12</pre>
 <p>Look at <code>star radius R</code>, <code>mean free path</code>, <code>(R / mean free path)^2</code> and the four <code>walk</code> lines, and compare them with Beat 3, which used a step length of 1. Compare the plots too, including the numbers on their axes.</p>
 <p>Three tasks, in order. First, read the radii: 44.7214 for a step of 0.5, 89.4427 for 1 (Beat 3) and 178.8854 for 2, while <code>(R / mean free path)^2</code> is 8000.0 in all three. Then read the walks: they escape after 11564, 7519, 8246 and 2479 steps in all three runs, the very same numbers. Then compare the plots: the pictures are the same, and only the scale on the axes differs by a factor of 2. Say why changing the step length changed nothing that is measured in steps.</p>
-<p><em>Then</em> the reason. Divide every position by \(\lambda\): by Eq. (12) the walk becomes a sum of unit vectors \((\cos\theta_i,\sin\theta_i)\), and the escape test of Eq. (15) becomes \(\lvert\mathbf p_k\rvert/\lambda\ge R/\lambda\).</p>
+<p>The scaling becomes clear if you divide every position by \(\lambda\): by Eq. (12) the walk becomes a sum of unit vectors \((\cos\theta_i,\sin\theta_i)\), and the escape test of Eq. (15) becomes \(\lvert\mathbf p_k\rvert/\lambda\ge R/\lambda\).</p>
 <div class="eq"><span class="eq-label">(18)</span>
 <div class="eq-kind">The walk in units of the step length <span class="kind kind-der">DERIVED</span></div>
       \[
@@ -762,7 +762,7 @@ python main.py --display walk2d --mean_free_path 2 --seed 12</pre>
 python main.py --display walk2d --radius 30 --n_walks 200 --step_cap 3000 --seed 12</pre>
 <p>Look at <code>step cap</code>, <code>escaped walks</code>, <code>escape steps</code> and <code>mean escape steps / (R / mean free path)^2</code>, and compare them with Beat 4. On the plot, a walk stopped by the cap ends in an <code>x</code> and has no ray.</p>
 <p>Three tasks, in order. First, read the cap of 900: only 130 of the 200 walks escape, and their mean is 515.7 steps, 0.5730 of the prediction, where Beat 4 found 902.7; the slowest escape counted is 897. Then read the cap of 3000: 196 of 200 escape, with a mean of 837.5, 0.9305 of the prediction. Then compare with Beat 4, where no walk came near the default cap and the mean was 1.0030 of the prediction. Say why the mean of the escaped walks is too small whenever some walks are stopped, even though every number in it is a correct escape count.</p>
-<p><em>Then</em> the rule.</p>
+<p>The step cap changes which walks contribute to the printed mean:</p>
 <div class="eq"><span class="eq-label">(19)</span>
 <div class="eq-kind">The step cap, and the mean it leaves <span class="kind kind-alg">ALGORITHM</span></div>
       \[
@@ -781,7 +781,7 @@ python main.py
 python main.py --max_steps 1</pre>
 <p>Look at the last row of the table and at <code>fitted log-log slope</code> in the first run, and compare them with Beat 0. In the second run, look at the line <code>seed</code>, and run the same command a second time.</p>
 <p>Three tasks, in order. First, compare the seeds. With seed 28 the last row is 62.2140 with standard error 2.5542; with seed 12 it was 63.0073 with standard error 2.3473. The difference is 0.79, and the two standard errors combined are \(\sqrt{2.5542^2+2.3473^2}=3.47\), so the difference is 0.23 of that. The slopes are 0.4974 and 0.4964. Then read the unseeded run: its <code>seed</code> line reads <code>none (results differ from run to run)</code>, and a second run prints different numbers. Then read the error of the third command: <code>max_steps must be at least 2, because the smallest walk has 2 steps</code>. Say how large a difference between two runs with different seeds would make you suspect a mistake rather than chance.</p>
-<p><em>Then</em> the rule for comparing two random estimates.</p>
+<p>To compare two independent random estimates, combine their standard errors:</p>
 <div class="eq"><span class="eq-label">(20)</span>
 <div class="eq-kind">Uncertainty of a difference <span class="kind kind-der">DERIVED</span></div>
       \[

@@ -546,7 +546,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py</pre>
 <p>Look at the plot, and at the two lines under <code>Stellar structure summary</code>, <code>Radius (m)</code> and <code>Total mass (kg)</code>.</p>
 <p>Three tasks, in order. First, read the plot. The pressure starts at the central pressure, 7.158e+15 Pa, falls slowly at the very centre and then steeply, fastest at about a seventh of the radius; on this linear axis it is close to zero over the whole outer half of the star, and it reaches zero at the surface. Then read the size. The star has a radius of 6.9674e+08 m and a mass of 1.9825e+30 kg; the Sun's radius is about 6.957e8 m and its mass about 1.989e30 kg, so the default star is within 0.2% of the Sun's radius and 0.4% of its mass. Then ask why the pressure falls. Say what pushes up on a thin layer of gas, and what pulls it down, if the layer does not move.</p>
-<p><em>Then</em> the balance. Inside a spherical star, the gas at radius \(r\) is pulled towards the centre only by the mass \(m(r)\) inside that radius: by Newton's shell theorem, the shells of gas outside \(r\) pull on it with no net force at all.</p>
+<p>Inside a spherical star, the gas at radius \(r\) is pulled towards the centre only by the mass \(m(r)\) inside that radius: by Newton's shell theorem, the shells of gas outside \(r\) pull on it with no net force at all.</p>
 <div class="eq"><span class="eq-label">(1)</span>
 <div class="eq-kind">Gravity inside a spherical star <span class="kind kind-der">DERIVED</span></div>
       \[
@@ -576,7 +576,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py --output_type density --log_y</pre>
 <p>Look at the plot, and at the columns <code>pressure (Pa)</code> and <code>density (kg/m^3)</code> of the <code>Interior checkpoints</code> table.</p>
 <p>Three tasks, in order. First, the centre. The central density is 49187 kg/m<sup>3</sup>, the row <code>0%</code>; compute it from the central pressure 7.158e+15 Pa, the central temperature 2.263e+07 K and \(\mu=1.285\) with Eq. (6) below. Then halfway out. At half the radius, the row <code>50%</code>, the pressure has fallen to 1.12e+14 Pa and the density to 2313.2 kg/m<sup>3</sup>; check that \(\rho_c\,(p/p_c)^{1/\gamma}\) with \(\gamma=1.36\) gives the same density. Then the plot. On the logarithmic axis the density falls from 49187 kg/m<sup>3</sup> by more than nine powers of ten before the last point, and faster and faster towards the surface, where it reaches zero; the zero itself cannot be drawn on a logarithmic axis, so the last point is left out. Say why a smaller \(\gamma\) makes the density fall faster as the pressure falls.</p>
-<p><em>Then</em> the link between pressure and density. The gas of a star is, to a good approximation, an ideal gas.</p>
+<p>The ideal gas law connects pressure, density and temperature. To a good approximation, the gas of a star obeys it.</p>
 <div class="eq"><span class="eq-label">(4)</span>
 <div class="eq-kind">The ideal gas law <span class="kind kind-law">LAW</span></div>
       \[
@@ -606,7 +606,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py --output_type temperature</pre>
 <p>Look at the plot, and at the columns <code>pressure (Pa)</code> and <code>temperature (K)</code> of the <code>Interior checkpoints</code> table.</p>
 <p>Three tasks, in order. First, the centre and the surface. The temperature is the input 2.263e+07 K at the centre and falls to zero at the surface, because the model's surface is where the pressure is zero; the surface of a real star has a temperature of thousands of kelvin. Then halfway out. At the row <code>50%</code> the temperature is 7.5289e+06 K, a third of the central value; check that \(T_c\,(p/p_c)^{1-1/\gamma}\), with the pressure 1.12e+14 Pa of that row, gives the same number to four figures. Then the shape. The temperature falls far more gently than the pressure: from the centre to half the radius the pressure falls by a factor of 64, the temperature only by a factor of 3. Say why a temperature that follows from the pressure and density alone cannot tell you how much energy the star radiates.</p>
-<p><em>Then</em> where the temperature comes from. Once the density is known from the pressure, the ideal gas law, Eq. (4), gives the temperature; with Eq. (5) it depends on the pressure alone.</p>
+<p>Once the density is known from the pressure, the ideal gas law, Eq. (4), gives the temperature; with Eq. (5) it depends on the pressure alone.</p>
 <div class="eq"><span class="eq-label">(7)</span>
 <div class="eq-kind">The temperature <span class="kind kind-der">DERIVED</span></div>
       \[
@@ -622,7 +622,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py --output_type mass</pre>
 <p>Look at the plot, and at the column <code>mass within r (kg)</code> of the <code>Interior checkpoints</code> table and the line <code>Total mass (kg)</code>.</p>
 <p>Three tasks, in order. First, read the mass inside a quarter of the radius, 6.2826e+29 kg, and inside half the radius, 1.6732e+30 kg: that is 32% and 84% of the total mass 1.9825e+30 kg, although a quarter and a half of the radius enclose only 1.6% and 12.5% of the volume. Then compute the mean density of the star from its mass and radius with Eq. (8): about 1399 kg/m<sup>3</sup>. Then compare it with the central density of Beat 1, 49187 kg/m<sup>3</sup>: the centre is 35.2 times denser than the average. Say why the mass curve on the plot is almost flat over the outer quarter of the radius, which holds only 1% of the mass.</p>
-<p><em>Then</em> the mean density.</p>
+<p>The mean density is the total mass divided by the volume of the star:</p>
 <div class="eq"><span class="eq-label">(8)</span>
 <div class="eq-kind">Mean density <span class="kind kind-def">DEFINITION</span></div>
       \[
@@ -638,7 +638,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py --T_c 2.4893e7</pre>
 <p>Look at <code>Radius (m)</code> and <code>Total mass (kg)</code>, at the three lines under <code>Numerical grid</code>, and at the two relative differences under <code>Lane-Emden solution of the same polytrope (numerical reference)</code>. Compare each with the default run of Beat 0.</p>
 <p>Three tasks, in order. First, the radius: 7.6641e+08 m, against 6.9674e+08 m in Beat 0, a ratio of 1.1000, exactly the ratio of the central temperatures. Then the mass: 2.3988e+30 kg, against 1.9825e+30 kg, a ratio of 1.2100, the square of 1.1. Then the grid: the radial step is 5.791e+05 m, 1.1 times the default 5.2645e+05 m, the number of grid points is 1325 in both runs, and the relative differences from the Lane–Emden solution, -0.014174 and -0.0018494, are the same in both runs. Say what that tells you about the shapes of the two stars.</p>
-<p><em>Then</em> why. The central values set one natural length, the radial scale, and the program's radial step is a fixed fraction of it, <code>--steps_per_scale</code>.</p>
+<p>The central values set one natural length, the radial scale, and the program's radial step is a fixed fraction of it, <code>--steps_per_scale</code>.</p>
 <div class="eq"><span class="eq-label">(9)</span>
 <div class="eq-kind">The radial scale <span class="kind kind-def">DEFINITION</span></div>
       \[
@@ -661,7 +661,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py --gamma 2</pre>
 <p>Look at the three lines under <code>Lane-Emden solution of the same polytrope (numerical reference)</code>, and at <code>Radius (m)</code> and <code>Total mass (kg)</code>.</p>
 <p>Three tasks, in order. First, read the index: <code>Polytropic index n = 1/(gamma - 1)</code> is 1. Then compute the exact radius by hand from Eq. (13) below: \(R=\sqrt{\pi p_c/(2G)}/\rho_c\), with \(p_c=7.158\times10^{15}\) Pa and the central density 49187 kg/m<sup>3</sup> of the <code>0%</code> row, gives 2.6392e+08 m, the printed <code>Lane-Emden radius (m)</code>. Then compare: the program's own radius, 2.6239e+08 m, is short by the printed -0.0058198, and its mass, 1.1565e+30 kg, is larger than the exact 1.1513e+30 kg by 0.004502. Say why a smaller radius and a larger mass can both be errors of the same calculation.</p>
-<p><em>Then</em> the Lane–Emden solution. Write the density as \(\rho=\rho_c\,\theta^n\) and the radius as \(r=a\,\xi\). Eliminating \(m\) between Eqs. (2) and (3), with Eq. (5), leaves one equation for \(\theta(\xi)\), the Lane–Emden equation.</p>
+<p>Write the density as \(\rho=\rho_c\,\theta^n\) and the radius as \(r=a\,\xi\). Eliminating \(m\) between Eqs. (2) and (3), with Eq. (5), leaves one equation for \(\theta(\xi)\), the Lane–Emden equation.</p>
 <div class="eq"><span class="eq-label">(11)</span>
 <div class="eq-kind">The Lane–Emden equation <span class="kind kind-der">DERIVED</span></div>
       \[
@@ -691,7 +691,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py --steps_per_scale 800 --max_points 4000</pre>
 <p>Look at the three lines under <code>Numerical grid</code>, and at the two relative differences under <code>Lane-Emden solution of the same polytrope (numerical reference)</code>. Compare them with the default run of Beat 0.</p>
 <p>Three tasks, in order. First, the grid: the step is 2.6323e+05 m, half the default 5.2645e+05 m, with 2666 grid points and no restart. Then the radius error: -0.0075071, against -0.014174 at the default step, a ratio of 1.888. Then the mass error: -0.00092707, against -0.0018494, a ratio of 1.995. Say what the next halving of the step should give, and check it with Experiment 6.</p>
-<p><em>Then</em> the steps. The program starts at the centre and moves outwards in equal steps \(\Delta r\), using at each step the values at the start of the step.</p>
+<p>The program starts at the centre and moves outwards in equal steps \(\Delta r\), using at each step the values at the start of the step.</p>
 <div class="eq"><span class="eq-label">(14)</span>
 <div class="eq-kind">Forward Euler steps <span class="kind kind-alg">ALGORITHM</span></div>
       \[
@@ -714,7 +714,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py --max_points 1000</pre>
 <p>Look at the three lines under <code>Numerical grid</code>, at <code>Radius (m)</code>, and at the two relative differences.</p>
 <p>Three tasks, in order. First, the restart: <code>Restarts (radial step doubled)</code> is 1, and the step is 1.0529e+06 m, twice the default 5.2645e+05 m. Then the cost: 654 grid points, a radius of 6.8749e+08 m, and a radius error of -0.02726, about twice the default -0.014174. Then run <code>python main.py --steps_per_scale 200</code> and compare: every printed number is the same, except that it reports no restart. Say why giving the program fewer grid points made the answer worse, not just shorter.</p>
-<p><em>Then</em> the last step. The step at which the pressure first becomes zero or negative is not kept. Instead the program draws a straight line through the pressures at its two ends and puts the surface where that line reaches zero.</p>
+<p>The step at which the pressure first becomes zero or negative is not kept. Instead the program draws a straight line through the pressures at its two ends and puts the surface where that line reaches zero.</p>
 <div class="eq"><span class="eq-label">(16)</span>
 <div class="eq-kind">The surface <span class="kind kind-alg">ALGORITHM</span></div>
       \[
@@ -740,7 +740,7 @@ python main.py --gamma 1.2
 python main.py --output_type mass --log_y</pre>
 <p>Look, in the first run, at the three lines under <code>Numerical grid</code>, at the Lane–Emden lines, and at the column <code>mass within r (kg)</code>. Then read the two error messages.</p>
 <p>Three tasks, in order. First, the grid: the program restarted 4 times, and its step, 8.4233e+06 m, is 16 times the default. Then the error: the index is 4.7619, and the integrated radius, 7.2406e+09 m, is short of the Lane–Emden 9.9626e+09 m by -0.27322, a quarter, with the mass short by -0.080272. Then the mass: 2.8287e+30 kg of the total 2.8415e+30 kg lies inside a quarter of the radius, almost all of it. Finally, <code>--gamma 1.2</code> is refused because the polytrope then has no finite radius, and a logarithmic mass plot because the mass at the centre is zero. Say why a star whose outer three quarters hold almost no mass needs so many small steps to reach its surface.</p>
-<p><em>Then</em> the limit. The Lane–Emden function \(\theta\) reaches zero at a finite \(\xi_1\) only for \(n&lt;5\); for \(n=5\) it falls off forever and the star has no surface.</p>
+<p>The Lane–Emden function \(\theta\) reaches zero at a finite \(\xi_1\) only for \(n&lt;5\); for \(n=5\) it falls off forever and the star has no surface.</p>
 <div class="eq"><span class="eq-label">(18)</span>
 <div class="eq-kind">A finite radius <span class="kind kind-der">DERIVED</span></div>
       \[
