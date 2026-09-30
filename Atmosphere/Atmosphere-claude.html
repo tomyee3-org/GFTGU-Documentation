@@ -447,6 +447,46 @@
     }
   
 </style>
+
+<style id="gftgu-common-elements">
+/* Shared Version / Build, Plot tip, License and Footer. */
+main { padding-top: 6px; }
+main > #version_build {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 11.2px; font-weight: normal; line-height: 1.8;
+  color: #666; margin: 0 0 14px; padding: 0; border: 0;
+  background: transparent; letter-spacing: normal;
+}
+main > p.cursor-tip {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; font-weight: normal; line-height: 1.8;
+  color: #1c1c1c; margin: 0 0 14px; padding: 0;
+  border: 0; border-radius: 0; background: transparent;
+}
+main > p.cursor-tip strong { font-weight: bold; color: inherit; }
+main > section.gftgu-license {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; line-height: 1.8; color: #1c1c1c;
+  background: #fdf5e6; margin: 0; padding: 0;
+}
+main > section.gftgu-license h2 {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 22.4px; font-weight: normal; line-height: 1.8;
+  color: #7b2d00; border-bottom: 2px solid #b5811a;
+  padding: 0 0 6px; margin: 0 0 18px;
+}
+main > section.gftgu-license p { margin: 0 0 14px; }
+main > section.gftgu-license a { color: #551a8b; text-decoration: underline; }
+footer.gftgu-footer {
+  grid-column: 1 / -1; background: #7b2d00; color: #fff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 12.5px; font-weight: normal; line-height: 1.7;
+  text-align: center; padding: 18px 24px; margin: 0;
+}
+footer.gftgu-footer a { color: #e0c090; text-decoration: none; }
+footer.gftgu-footer a:hover { text-decoration: underline; }
+@media (max-width: 740px) { main { padding-top: 8px; } }
+</style>
 </head>
 
 <body>
@@ -497,9 +537,9 @@
 </nav>
 <!-- ══════════════════════ MAIN ══════════════════════ -->
 <main>
-<p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.6.0&nbsp;&nbsp;&nbsp;&nbsp;Build cab9929fa0fb
-</p>
+<p id="version_build">Version 1.6.0&nbsp;&nbsp;&nbsp;&nbsp;Build cab9929fa0fb</p>
+<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
+
 <section id="description">
 <h2>Description</h2>
 <p>
@@ -1533,7 +1573,7 @@ python main.py --h_points 0,4400,8800 --T_points 300,20,20 --output_type pressur
         </li>
 </ul>
 </section>
-<section id="license">
+<section id="license" class="gftgu-license">
 <h2>License</h2>
 <p>
       This software is based on programs by <strong>Bernard Schutz</strong> accompanying
@@ -1549,12 +1589,12 @@ python main.py --h_points 0,4400,8800 --T_points 300,20,20 --output_type pressur
 </section>
 </main>
 <!-- ══════════════════════ FOOTER ══════════════════════ -->
-<footer>
-<em>Gravity from the Ground Up</em> — Python Programs ·
+<footer class="gftgu-footer">
+<em>Gravity from the Ground Up</em> ·
       Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
       Python port © 2024–2026 Thomas Yee ·
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> · 
-    </footer>
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
+</footer>
 </div><!-- /.page-wrap -->
 <!-- ── Active nav link via IntersectionObserver ── -->
 <script>

@@ -430,6 +430,46 @@
     }
   
 </style>
+
+<style id="gftgu-common-elements">
+/* Shared Version / Build, Plot tip, License and Footer. */
+main { padding-top: 6px; }
+main > #version_build {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 11.2px; font-weight: normal; line-height: 1.8;
+  color: #666; margin: 0 0 14px; padding: 0; border: 0;
+  background: transparent; letter-spacing: normal;
+}
+main > p.cursor-tip {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; font-weight: normal; line-height: 1.8;
+  color: #1c1c1c; margin: 0 0 14px; padding: 0;
+  border: 0; border-radius: 0; background: transparent;
+}
+main > p.cursor-tip strong { font-weight: bold; color: inherit; }
+main > section.gftgu-license {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; line-height: 1.8; color: #1c1c1c;
+  background: #fdf5e6; margin: 0; padding: 0;
+}
+main > section.gftgu-license h2 {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 22.4px; font-weight: normal; line-height: 1.8;
+  color: #7b2d00; border-bottom: 2px solid #b5811a;
+  padding: 0 0 6px; margin: 0 0 18px;
+}
+main > section.gftgu-license p { margin: 0 0 14px; }
+main > section.gftgu-license a { color: #551a8b; text-decoration: underline; }
+footer.gftgu-footer {
+  grid-column: 1 / -1; background: #7b2d00; color: #fff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 12.5px; font-weight: normal; line-height: 1.7;
+  text-align: center; padding: 18px 24px; margin: 0;
+}
+footer.gftgu-footer a { color: #e0c090; text-decoration: none; }
+footer.gftgu-footer a:hover { text-decoration: underline; }
+@media (max-width: 740px) { main { padding-top: 8px; } }
+</style>
 </head>
 <body>
 <div class="page-wrap">
@@ -460,10 +500,11 @@
 <a href="#related">Related programs</a>
 <a href="#license">License</a></nav>
 <main>
-<p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">Version 1.5.0&nbsp;&nbsp;&nbsp;&nbsp;Build daaef3a0231c</p>
+<p id="version_build">Version 1.5.0&nbsp;&nbsp;&nbsp;&nbsp;Build daaef3a0231c</p>
+<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="overview"><h2>Start here</h2>
 <p>RelativisticOrbit draws a test particle's orbit around a fixed, non-rotating, one-solar-mass black hole. The second model, <code>newtonian</code>, starts from the same diagram position and sideways rate so you can compare the trajectories. Every run prints its numerical result and a prediction from the constants of motion before opening the plot.</p>
-<p>Run commands from the folder containing <code>main.py</code>; close each plot before starting the next. Hover over the graph to see the cursor's graphical <code>(x, y)</code> coordinates at the lower right of the Matplotlib window. All radii are metres and times are seconds. The plot uses areal radius and angle as flat diagram coordinates; <code>--u_init</code> is <code>dy/dtau</code>, a proper-time coordinate rate, not a speed measured by a nearby observer. The central mass is held fixed.</p>
+<p>Run commands from the folder containing <code>main.py</code>; close each plot before starting the next. All radii are metres and times are seconds. The plot uses areal radius and angle as flat diagram coordinates; <code>--u_init</code> is <code>dy/dtau</code>, a proper-time coordinate rate, not a speed measured by a nearby observer. The central mass is held fixed.</p>
 <div class="note"><strong>How to judge a run.</strong> Compare the measured periapsis advance with the <code>predicted from the constants of motion</code> block, then inspect <code>max |ΔE/E0|</code> and <code>max |Δh/h0|</code>. The prediction solves the same orbit equation by a different route: it is an outside check on the integration, not an independent test of the physical model. Periapsides are sampled at accepted steps, so the measured advance can jump about even as the conserved-quantity drift falls.</div></section>
 <section id="beat0"><h2>Beat 0 · Watch a rosette</h2>
 <p><strong>Run.</strong> Begin with the default Schwarzschild orbit.</p>
@@ -553,21 +594,26 @@ python main.py --help</pre>
 <li><strong>Binary</strong> — Two bodies orbiting each other in Newtonian gravity, where neither is fixed.</li>
 </ul>
 </section>
-<section id="license"><h2>License</h2>
-
+<section id="license" class="gftgu-license">
 <h2>License</h2>
 <p>
-      This software is based on the programs by <strong>Bernard Schutz</strong> accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003) and is distributed under the
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
-      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license. It descends from Schutz's original Java program for relativistic orbits; this student-facing version is a Python port by Thomas Yee.
+      This software is based on programs by <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+<p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
     </p>
 </section>
 </main>
-<footer>
-<em>Gravity from the Ground Up</em> — Python Programs ·
-  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
-  Python port © 2024–2026 Thomas Yee ·
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+<footer class="gftgu-footer">
+<em>Gravity from the Ground Up</em> ·
+      Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+      Python port © 2024–2026 Thomas Yee ·
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
 </footer>
 </div><!-- /page-wrap -->
 <!-- ── Sidebar active-link tracking ── -->

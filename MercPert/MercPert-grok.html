@@ -171,7 +171,47 @@
       main { padding: 24px 20px 40px; }
     }
   
-.beat-action{background:var(--note-bg);border-left:4px solid var(--gold);padding:11px 16px;margin:14px 0}.beat-action strong{font-family:var(--sans);font-size:.77rem;color:var(--accent);letter-spacing:.05em;text-transform:uppercase}.beat-action p:last-child{margin-bottom:0}.small-print{font-size:.86rem;color:var(--muted)}.compact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:12px}.compact-grid>div{background:var(--surface);border:1px solid var(--border);padding:12px 15px}.compact-grid p{margin-bottom:0}</style></head><body>
+.beat-action{background:var(--note-bg);border-left:4px solid var(--gold);padding:11px 16px;margin:14px 0}.beat-action strong{font-family:var(--sans);font-size:.77rem;color:var(--accent);letter-spacing:.05em;text-transform:uppercase}.beat-action p:last-child{margin-bottom:0}.small-print{font-size:.86rem;color:var(--muted)}.compact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:12px}.compact-grid>div{background:var(--surface);border:1px solid var(--border);padding:12px 15px}.compact-grid p{margin-bottom:0}</style>
+<style id="gftgu-common-elements">
+/* Shared Version / Build, Plot tip, License and Footer. */
+main { padding-top: 6px; }
+main > #version_build {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 11.2px; font-weight: normal; line-height: 1.8;
+  color: #666; margin: 0 0 14px; padding: 0; border: 0;
+  background: transparent; letter-spacing: normal;
+}
+main > p.cursor-tip {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; font-weight: normal; line-height: 1.8;
+  color: #1c1c1c; margin: 0 0 14px; padding: 0;
+  border: 0; border-radius: 0; background: transparent;
+}
+main > p.cursor-tip strong { font-weight: bold; color: inherit; }
+main > section.gftgu-license {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; line-height: 1.8; color: #1c1c1c;
+  background: #fdf5e6; margin: 0; padding: 0;
+}
+main > section.gftgu-license h2 {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 22.4px; font-weight: normal; line-height: 1.8;
+  color: #7b2d00; border-bottom: 2px solid #b5811a;
+  padding: 0 0 6px; margin: 0 0 18px;
+}
+main > section.gftgu-license p { margin: 0 0 14px; }
+main > section.gftgu-license a { color: #551a8b; text-decoration: underline; }
+footer.gftgu-footer {
+  grid-column: 1 / -1; background: #7b2d00; color: #fff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 12.5px; font-weight: normal; line-height: 1.7;
+  text-align: center; padding: 18px 24px; margin: 0;
+}
+footer.gftgu-footer a { color: #e0c090; text-decoration: none; }
+footer.gftgu-footer a:hover { text-decoration: underline; }
+@media (max-width: 740px) { main { padding-top: 8px; } }
+</style>
+</head><body>
 <a class="skip-link" href="#content">Skip to the tutorial</a><div class="page-wrap">
 <header><div class="badge">GFtGU Programs · Terminal Tutorial</div><h1><em>MercPert</em> — A Planet in a Binary Star System</h1><div class="sub">
         Source Code:
@@ -197,10 +237,11 @@
 <a href="#modules">Code modules</a>
 <a href="#related">Related programs</a>
 <a href="#license">License</a></nav>
-<main id="content" tabindex="-1"><p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 9852baf113f7</p>
+<main id="content" tabindex="-1"><p id="version_build">Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 9852baf113f7</p>
+<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="start"><h2>Start here</h2>
 <p>Put a small test particle near a Sun–companion binary, run a command, then compare the printed diagnostics with the blue trajectory. Follow Beats 0–9 in order on a first pass. Every command starts a fresh run from the MercPert program folder; close the plot window before the next one.</p>
-<p class="note-box">When the cursor hovers over a graphical display, its <strong>(x, y)</strong> position in graph coordinates appears in the lower right corner of the Matplotlib display.</p>
+
 <p>Mercury's input position and velocity are relative to the Sun, while the plotted positions use the system's centre of mass. The dashed red and green circles show the <em>prescribed</em> stellar paths; the solid blue curve is Mercury's calculated path. A crossing of coloured paths on the screen does not mean the bodies met at the same time.</p>
 </section>
 <section id="beat0"><h2>Beat 0 · A test particle in a binary</h2><p>Begin with the default: a 1-solar-mass Sun, a 0.1-solar-mass companion 0.7 astronomical units (AU) away, and Mercury 0.3 AU from the Sun with a 59,220 m/s sideways launch.</p>
@@ -295,9 +336,27 @@ python main.py --x_init 0</code></pre>
 <div><code>main.py</code><p>Command-line options, summary and plotting calls.</p></div><div><code>physics_mercpert.py</code><p>Constants, binary geometry, forces, Jacobi quantity, version and build.</p></div>
 <div><code>driver_mercpert.py</code><p>Adaptive trajectory, collision detection and diagnostics.</p></div><div><code>plot_mercpert.py</code><p>Orbit and Jacobi-drift displays.</p></div></div><p>With both tutorial files installed in the sibling documentation folder, run <code>python -m unittest discover -s tests -v</code> from the program folder.</p></section>
 <section id="related"><h2>Related programs</h2><p><strong>Orbit</strong> studies a single central star. <strong>Binary</strong> evolves two massive bodies; MercPert prescribes the circular binary and follows a massless third body. <strong>Multiple</strong> lets several bodies all gravitate and move.</p></section>
-<section id="license"><h2>License</h2><p>Based on Bernard Schutz's programs accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003). Distributed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International</a>.</p></section>
+<section id="license" class="gftgu-license">
+<h2>License</h2>
+<p>
+      This software is based on programs by <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+<p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
+    </p>
+</section>
 </main>
-<footer><em>Gravity from the Ground Up</em> — Python Programs · CC BY-NC-SA 4.0</footer></div><script>
+<footer class="gftgu-footer">
+<em>Gravity from the Ground Up</em> ·
+      Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+      Python port © 2024–2026 Thomas Yee ·
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
+</footer></div><script>
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('nav a');
   const observer = new IntersectionObserver(entries => {

@@ -431,6 +431,46 @@
     }
   
 </style>
+
+<style id="gftgu-common-elements">
+/* Shared Version / Build, Plot tip, License and Footer. */
+main { padding-top: 6px; }
+main > #version_build {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 11.2px; font-weight: normal; line-height: 1.8;
+  color: #666; margin: 0 0 14px; padding: 0; border: 0;
+  background: transparent; letter-spacing: normal;
+}
+main > p.cursor-tip {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; font-weight: normal; line-height: 1.8;
+  color: #1c1c1c; margin: 0 0 14px; padding: 0;
+  border: 0; border-radius: 0; background: transparent;
+}
+main > p.cursor-tip strong { font-weight: bold; color: inherit; }
+main > section.gftgu-license {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; line-height: 1.8; color: #1c1c1c;
+  background: #fdf5e6; margin: 0; padding: 0;
+}
+main > section.gftgu-license h2 {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 22.4px; font-weight: normal; line-height: 1.8;
+  color: #7b2d00; border-bottom: 2px solid #b5811a;
+  padding: 0 0 6px; margin: 0 0 18px;
+}
+main > section.gftgu-license p { margin: 0 0 14px; }
+main > section.gftgu-license a { color: #551a8b; text-decoration: underline; }
+footer.gftgu-footer {
+  grid-column: 1 / -1; background: #7b2d00; color: #fff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 12.5px; font-weight: normal; line-height: 1.7;
+  text-align: center; padding: 18px 24px; margin: 0;
+}
+footer.gftgu-footer a { color: #e0c090; text-decoration: none; }
+footer.gftgu-footer a:hover { text-decoration: underline; }
+@media (max-width: 740px) { main { padding-top: 8px; } }
+</style>
 </head>
 
 <body><div class="page-wrap"><header><div class="badge">Newtonian Stellar Structure</div><h1><em>Star</em> — An Evening at the Terminal</h1><div class="sub">Source Code: <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>Documentation: <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a></div></header><nav id="sidebar">
@@ -452,13 +492,12 @@
 <a href="#related">Related programs</a>
 <a href="#license">License</a>
 </nav>
-<main><p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 3d55b592a1b7
-</p>
+<main><p id="version_build">Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 3d55b592a1b7</p>
+<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 
 <section id="overview"><h2>The evening at the terminal</h2>
 <p>Tonight you will grow a spherical star from its centre until its pressure reaches zero. The program uses Newtonian gravity and a single pressure–density power law, called a polytrope. It prints a radius, a mass, an integration grid, and a more accurate Lane–Emden numerical reference for the same equations. Each run opens one radial profile in Matplotlib.</p>
-<div class="note"><strong>Use the plot cursor.</strong> When the cursor hovers over a graphical display, its <code>(x, y)</code> position in graphical coordinates appears in the lower right corner of the Matplotlib window.</div>
+
 <p>Open a terminal in the folder containing <code>main.py</code>. Run the commands below in order, read the named lines, and close each plot window before the next run. All quantities use the International System of Units (SI). Use Python 3.10 or later with Matplotlib installed. No network is needed to run the program; the equations on this page use MathJax from a public content delivery network.</p>
 <p>The default radius and mass are close to the Sun's, but this is a teaching polytrope: it has no energy generation, radiation or convection, composition gradient, or relativistic gravity. Its surface temperature of zero is a feature of the model, not a claim about the Sun.</p></section>
 <section id="beat0"><h2>Beat 0 · Find the surface</h2>
@@ -513,14 +552,27 @@
 <section id="wrapup"><h2>What to carry away</h2>
 <p>Pressure balances gravity and a chosen pressure–density law closes the model. The radius, mass, and profiles follow from the central conditions, but different numerical steps give different approximations. Always read the actual step, restarts and Lane–Emden comparison before interpreting a close-looking plot. The reference is a check on the integration of these equations, not a check on whether a real star obeys them.</p></section>
 <section id="related"><h2>Related programs</h2><p><strong>SphereGravity</strong> explains the interior-mass rule; <strong>Atmosphere</strong> explores pressure support in a layer; <strong>Binary</strong> helps measure stellar masses from orbits; <strong>Neutron</strong> treats a compact star with general relativity.</p></section>
-<section id="license"><h2>License</h2><p>This software is based on the programs by Bernard Schutz accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003) and is distributed under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license. The Python port is by Thomas Yee.</p></section>
+<section id="license" class="gftgu-license">
+<h2>License</h2>
+<p>
+      This software is based on programs by <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+<p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
+    </p>
+</section>
 </main>
 <!-- ═══════════════════ FOOTER ═══════════════════ -->
-<footer>
-<em>Gravity from the Ground Up</em> — Python Programs ·
-  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
-  Python port © 2024–2026 Thomas Yee ·
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+<footer class="gftgu-footer">
+<em>Gravity from the Ground Up</em> ·
+      Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+      Python port © 2024–2026 Thomas Yee ·
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
 </footer>
 </div><!-- /page-wrap -->
 <!-- ── Sidebar active-link tracking ── -->

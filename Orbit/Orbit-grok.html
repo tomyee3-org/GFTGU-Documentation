@@ -433,7 +433,47 @@
 .activity strong { color: var(--accent); }
 .stage { font-family: var(--sans); color: var(--accent2); font-weight: bold; font-size: .82rem; text-transform: uppercase; letter-spacing: .07em; }
 section ul { margin-left: 1.6em; }
-</style></head><body>
+</style>
+<style id="gftgu-common-elements">
+/* Shared Version / Build, Plot tip, License and Footer. */
+main { padding-top: 6px; }
+main > #version_build {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 11.2px; font-weight: normal; line-height: 1.8;
+  color: #666; margin: 0 0 14px; padding: 0; border: 0;
+  background: transparent; letter-spacing: normal;
+}
+main > p.cursor-tip {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; font-weight: normal; line-height: 1.8;
+  color: #1c1c1c; margin: 0 0 14px; padding: 0;
+  border: 0; border-radius: 0; background: transparent;
+}
+main > p.cursor-tip strong { font-weight: bold; color: inherit; }
+main > section.gftgu-license {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; line-height: 1.8; color: #1c1c1c;
+  background: #fdf5e6; margin: 0; padding: 0;
+}
+main > section.gftgu-license h2 {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 22.4px; font-weight: normal; line-height: 1.8;
+  color: #7b2d00; border-bottom: 2px solid #b5811a;
+  padding: 0 0 6px; margin: 0 0 18px;
+}
+main > section.gftgu-license p { margin: 0 0 14px; }
+main > section.gftgu-license a { color: #551a8b; text-decoration: underline; }
+footer.gftgu-footer {
+  grid-column: 1 / -1; background: #7b2d00; color: #fff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 12.5px; font-weight: normal; line-height: 1.7;
+  text-align: center; padding: 18px 24px; margin: 0;
+}
+footer.gftgu-footer a { color: #e0c090; text-decoration: none; }
+footer.gftgu-footer a:hover { text-decoration: underline; }
+@media (max-width: 740px) { main { padding-top: 8px; } }
+</style>
+</head><body>
 <div class="page-wrap">
 <header><div class="badge">Chapter 4 · Gravity from the Ground Up · Terminal Tutorial</div><h1><em>Orbit</em> — One evening at the terminal</h1><div class="sub">
     Source Code:
@@ -442,10 +482,12 @@ section ul { margin-left: 1.6em; }
         <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
 </div></header>
 <nav id="sidebar"><div class="nav-label">Start</div><a href="#overview">How to use this session</a><div class="nav-label">Beats</div>
-<a href="#beat0">0 · First orbit</a><a href="#beat1">1 · Escape</a><a href="#beat2">2 · Change direction</a><a href="#beat3">3 · Areas and periods</a><a href="#beat4">4 · Repetition and hodograph</a><a href="#beat5">5 · The corrector</a><a href="#beat6">6 · Step control</a><a href="#beat7">7 · Trust the calculation</a><a href="#beat8">8 · Hard cases</a><div class="nav-label">Reference</div><a href="#parameters">Parameters</a><a href="#limits">Scope and checks</a></nav>
-<main><p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">Version 1.7.1&nbsp;&nbsp;Build 0b77d606baf2</p>
+<a href="#beat0">0 · First orbit</a><a href="#beat1">1 · Escape</a><a href="#beat2">2 · Change direction</a><a href="#beat3">3 · Areas and periods</a><a href="#beat4">4 · Repetition and hodograph</a><a href="#beat5">5 · The corrector</a><a href="#beat6">6 · Step control</a><a href="#beat7">7 · Trust the calculation</a><a href="#beat8">8 · Hard cases</a><div class="nav-label">Reference</div><a href="#parameters">Parameters</a><a href="#limits">Scope and checks</a><a href="#license">License</a>
+</nav>
+<main><p id="version_build">Version 1.7.1&nbsp;&nbsp;&nbsp;&nbsp;Build 0b77d606baf2</p>
+<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="overview"><h2>How to use this session</h2><p>Run each command from the <code>GFTGU-Programs/Orbit</code> folder with Python 3.10 or later, NumPy and Matplotlib. Read the named summary lines, inspect the figure, and answer the numbered activities before going on. Close each plot window to return to the terminal. All nine beats use the same four Python modules and the same command-line interface.</p>
-<div class="note"><strong>Graph coordinates.</strong> When the cursor hovers over a Matplotlib graph, its (x, y) position in graph coordinates appears at the lower right of the display.</div>
+
 <p>The fixed central body sits at the origin. Its gravitational parameter is \(\mu=GM\), supplied by <code>--k</code> in m<sup>3</sup>/s<sup>2</sup>. The particle's mass cancels out. The default state starts at 4.6×10<sup>10</sup> m on the x-axis with a +y velocity of 58,980 m/s, a Mercury-like teaching case rather than an ephemeris.</p>
 <p>Our thread is simple: the inverse-square acceleration determines the orbit; an exact orbit conserves specific energy and angular momentum; the numerical solution's drift and closure tell us how well this integration follows that exact motion.</p></section>
 <section id="beat0"><h2>Beat 0 · Make the first orbit</h2><p class="stage">Run</p><pre>python main.py</pre><p>Trace the oval from its right-hand starting point. In the summary find <code>periapsis radius</code>, <code>apoapsis radius</code>, <code>elapsed simulated time</code> and <code>Keplerian period</code>. The default ends after 761 accepted steps and 1.0000 azimuthal revolution. A stop at one revolution means the direction from the centre has turned through \(2\pi\), not that the position is mathematically exact.</p>
@@ -501,7 +543,27 @@ python main.py --vxInit -1000 --vyInit 0 --maxSteps 20000</pre><p>A slower tange
 <p>The central body's gravitational parameter <code>--k</code> is (GM), not a mass in kilograms. All numeric inputs must be finite. Initial radius must be nonzero; <code>--k</code>, <code>--dt0</code>, <code>--eps1</code> and <code>--eps2</code> must be positive; <code>--maxSteps</code> is a positive integer; <code>--maxOrbits</code> must be at least 1e-9. Invalid input produces an <code>Orbit:</code> error instead of a plot.</p></section>
 <section id="limits"><h2>Scope and checks</h2><p>Orbit computes planar Newtonian motion about a fixed point mass. It omits relativity, drag, finite sizes, tides and a moving primary. An orbit near the numerical singularity guard is a failure of this model's assumptions, not a planetary collision calculation. The exact Keplerian elements derived from the starting state and the energy/angular-momentum drift give complementary checks; none alone certifies an entire computed trajectory.</p>
 <p>The companion Sample Outputs Guide has one representative image for each Beat. The detailed tutorial supplies derivations and longer investigations. Equations on these pages are rendered by MathJax from a public online service; an internet connection is needed to see them typeset. The Python program itself runs offline.</p></section>
-</main><footer>Orbit · Gravity from the Ground Up · Investigation 4.2</footer></div><script>
+
+<section id="license" class="gftgu-license">
+<h2>License</h2>
+<p>
+      This software is based on programs by <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+<p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
+    </p>
+</section>
+</main><footer class="gftgu-footer">
+<em>Gravity from the Ground Up</em> ·
+      Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+      Python port © 2024–2026 Thomas Yee ·
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
+</footer></div><script>
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('nav a');
   const observer = new IntersectionObserver(entries => {

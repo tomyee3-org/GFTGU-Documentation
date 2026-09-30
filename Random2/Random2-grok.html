@@ -431,6 +431,46 @@
     }
   
 </style>
+
+<style id="gftgu-common-elements">
+/* Shared Version / Build, Plot tip, License and Footer. */
+main { padding-top: 6px; }
+main > #version_build {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 11.2px; font-weight: normal; line-height: 1.8;
+  color: #666; margin: 0 0 14px; padding: 0; border: 0;
+  background: transparent; letter-spacing: normal;
+}
+main > p.cursor-tip {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; font-weight: normal; line-height: 1.8;
+  color: #1c1c1c; margin: 0 0 14px; padding: 0;
+  border: 0; border-radius: 0; background: transparent;
+}
+main > p.cursor-tip strong { font-weight: bold; color: inherit; }
+main > section.gftgu-license {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; line-height: 1.8; color: #1c1c1c;
+  background: #fdf5e6; margin: 0; padding: 0;
+}
+main > section.gftgu-license h2 {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 22.4px; font-weight: normal; line-height: 1.8;
+  color: #7b2d00; border-bottom: 2px solid #b5811a;
+  padding: 0 0 6px; margin: 0 0 18px;
+}
+main > section.gftgu-license p { margin: 0 0 14px; }
+main > section.gftgu-license a { color: #551a8b; text-decoration: underline; }
+footer.gftgu-footer {
+  grid-column: 1 / -1; background: #7b2d00; color: #fff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 12.5px; font-weight: normal; line-height: 1.7;
+  text-align: center; padding: 18px 24px; margin: 0;
+}
+footer.gftgu-footer a { color: #e0c090; text-decoration: none; }
+footer.gftgu-footer a:hover { text-decoration: underline; }
+@media (max-width: 740px) { main { padding-top: 8px; } }
+</style>
 </head>
 <body><div class="page-wrap"><header>
 <div class="badge">Chapter 8 · Gravity from the Ground Up · Terminal Tutorial</div>
@@ -441,9 +481,10 @@
     Documentation:
         <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
 </div>
-</header><nav id="sidebar"><div class="nav-label">Start</div><a href="#overview">Overview</a><div class="nav-label">At the terminal</div><a href="#beat0">Beat 0 · Walk far, end near the start</a><a href="#beat1">Beat 1 · Put uncertainty beside an average</a><a href="#beat2">Beat 2 · Change the step distribution</a><a href="#beat3">Beat 3 · Follow four paths through a circle</a><a href="#beat4">Beat 4 · Estimate escape steps</a><a href="#beat5">Beat 5 · Double the radius</a><a href="#beat6">Beat 6 · Rescale every step and the circle</a><a href="#beat7">Beat 7 · Watch a cap censor the sample</a><a href="#beat8">Beat 8 · Repeat, vary, and reject</a><div class="nav-label">More</div><a href="#further">Further investigations</a><a href="#parameters">Command-line parameters</a><a href="#summary">Reading the two summaries</a><a href="#related">Related programs</a><a href="#license">License</a></nav><main><p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 06ebd8fea601</p>
+</header><nav id="sidebar"><div class="nav-label">Start</div><a href="#overview">Overview</a><div class="nav-label">At the terminal</div><a href="#beat0">Beat 0 · Walk far, end near the start</a><a href="#beat1">Beat 1 · Put uncertainty beside an average</a><a href="#beat2">Beat 2 · Change the step distribution</a><a href="#beat3">Beat 3 · Follow four paths through a circle</a><a href="#beat4">Beat 4 · Estimate escape steps</a><a href="#beat5">Beat 5 · Double the radius</a><a href="#beat6">Beat 6 · Rescale every step and the circle</a><a href="#beat7">Beat 7 · Watch a cap censor the sample</a><a href="#beat8">Beat 8 · Repeat, vary, and reject</a><div class="nav-label">More</div><a href="#further">Further investigations</a><a href="#parameters">Command-line parameters</a><a href="#summary">Reading the two summaries</a><a href="#related">Related programs</a><a href="#license">License</a></nav><main><p id="version_build">Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 06ebd8fea601</p>
+<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="overview"><h2>Start here</h2><p>Random2 explores two related random walks. <code>scaled_distance</code> averages three-dimensional endpoint distances over many trials; <code>walk2d</code> draws fixed-length, direction-random paths inside a circular schematic star. Both print their numbers before opening a plot.</p>
-<p>Run each command from the folder containing <code>main.py</code>, then close the plot before the next command. Hover over a graph: Matplotlib displays the cursor's graphical <code>(x, y)</code> coordinates at the lower right. Use <code>--seed 12</code> to repeat the worked numbers; an unseeded run changes each time. MathJax typesets the equations online, but the Python program works offline.</p>
+<p>Run each command from the folder containing <code>main.py</code>, then close the plot before the next command. Use <code>--seed 12</code> to repeat the worked numbers; an unseeded run changes each time. MathJax typesets the equations online, but the Python program works offline.</p>
 <div class="note"><strong>Model boundary:</strong> the circle is a diffusion picture, not a solar model. There is no varying opacity or mean free path, no convection, and the displayed paths are two-dimensional. The escape-time spread therefore cannot be used as the Sun's three-dimensional distribution.</div>
 </section>
 
@@ -536,18 +577,24 @@ python main.py --help</pre>
 
 <section id="related"><h2>Related programs</h2><p><strong>Star</strong> models stellar structure and <strong>Neutron</strong> models neutron-star structure. Random2 instead follows idealized stochastic steps.</p></section>
 
-<section id="license"><h2>License</h2>
+<section id="license" class="gftgu-license">
 <h2>License</h2>
 <p>
-      This software is based on the programs by <strong>Bernard Schutz</strong> accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003) and is distributed under the
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
-      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license. It descends from Schutz's original Java program <em>Random</em>; this student-facing version is a Python port by Thomas Yee.
+      This software is based on programs by <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
     </p>
-</section></main><footer>
-<em>Gravity from the Ground Up</em> — Python Programs ·
-  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
-  Python port © 2024–2026 Thomas Yee ·
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+<p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
+    </p>
+</section></main><footer class="gftgu-footer">
+<em>Gravity from the Ground Up</em> ·
+      Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+      Python port © 2024–2026 Thomas Yee ·
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
 </footer></div><script>
   (function () {
     const links = document.querySelectorAll('nav a');

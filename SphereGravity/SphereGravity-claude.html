@@ -430,6 +430,46 @@
     }
   
 </style>
+
+<style id="gftgu-common-elements">
+/* Shared Version / Build, Plot tip, License and Footer. */
+main { padding-top: 6px; }
+main > #version_build {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 11.2px; font-weight: normal; line-height: 1.8;
+  color: #666; margin: 0 0 14px; padding: 0; border: 0;
+  background: transparent; letter-spacing: normal;
+}
+main > p.cursor-tip {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; font-weight: normal; line-height: 1.8;
+  color: #1c1c1c; margin: 0 0 14px; padding: 0;
+  border: 0; border-radius: 0; background: transparent;
+}
+main > p.cursor-tip strong { font-weight: bold; color: inherit; }
+main > section.gftgu-license {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; line-height: 1.8; color: #1c1c1c;
+  background: #fdf5e6; margin: 0; padding: 0;
+}
+main > section.gftgu-license h2 {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 22.4px; font-weight: normal; line-height: 1.8;
+  color: #7b2d00; border-bottom: 2px solid #b5811a;
+  padding: 0 0 6px; margin: 0 0 18px;
+}
+main > section.gftgu-license p { margin: 0 0 14px; }
+main > section.gftgu-license a { color: #551a8b; text-decoration: underline; }
+footer.gftgu-footer {
+  grid-column: 1 / -1; background: #7b2d00; color: #fff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 12.5px; font-weight: normal; line-height: 1.7;
+  text-align: center; padding: 18px 24px; margin: 0;
+}
+footer.gftgu-footer a { color: #e0c090; text-decoration: none; }
+footer.gftgu-footer a:hover { text-decoration: underline; }
+@media (max-width: 740px) { main { padding-top: 8px; } }
+</style>
 </head>
 
 <body>
@@ -477,12 +517,11 @@
 </nav>
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
-<p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 217c2c26a44a
-</p>
+<p id="version_build">Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 217c2c26a44a</p>
+<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="overview">
 <h2>Overview</h2>
-<p>When the cursor hovers over a graph, Matplotlib shows its (x, y) position in graph coordinates at the lower right of the display.</p>
+
 <p><strong>SphereGravity</strong> tests one of Newton's most useful results, the shell theorem: a thin, uniform spherical shell pulls on anything outside it exactly as if all its mass sat at its centre, and pulls on nothing inside it at all. The program does not assume the theorem. It cuts the shell into small tiles, treats each tile as a point mass, adds up their pulls at many distances from the centre, and compares the total with the theorem.</p>
 <p>Every run prints the shell's mass as the tiles add it up beside its exact value, and a table of the computed and expected pull at a set of radii, with the difference between them and a prediction of how large that difference should be. Then it plots the computed pull, or its relative difference from the pull the theorem gives for the tiles' own mass, from the centre out to five shell radii.</p>
 <p>The spine of the lesson is one sentence: <em>adding up the inverse-square pulls of the tiles of a thin shell gives no pull inside and the pull of a point mass outside, as Newton proved, and the small differences that remain are the error of the sum itself, which falls as the square of the tile size wherever the tiles are small compared with the distance to the shell, and which the program predicts in advance; next to the shell, where that condition fails, the sum needs far finer tiles.</em> Each numbered section below is one beat: a short argument, a command whose printed summary or plot illustrates that argument, and then the equation that the printed numbers follow from.</p>
@@ -1012,21 +1051,27 @@ python main.py --nDiv 3 --radii 10 100 1000</pre>
 </ul>
 <p>Textbook reference: B. F. Schutz, <em>Gravity from the Ground Up</em>, Cambridge University Press, 2003.</p>
 </section>
-<section id="license">
+<section id="license" class="gftgu-license">
 <h2>License</h2>
 <p>
-      This software is based on the programs by <strong>Bernard Schutz</strong> accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003) and is distributed under the
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
-      Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license. It descends from Schutz's original Java program for Investigation 4.3; this student-facing version is a Python port by Thomas Yee.
+      This software is based on programs by <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+<p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
     </p>
 </section>
 </main>
 <!-- ═══════════════════ FOOTER ═══════════════════ -->
-<footer>
-<em>Gravity from the Ground Up</em> — Python Programs ·
-  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
-  Python port © 2024–2026 Thomas Yee ·
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+<footer class="gftgu-footer">
+<em>Gravity from the Ground Up</em> ·
+      Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+      Python port © 2024–2026 Thomas Yee ·
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
 </footer>
 </div><!-- /page-wrap -->
 <!-- ── Sidebar active-link tracking ── -->

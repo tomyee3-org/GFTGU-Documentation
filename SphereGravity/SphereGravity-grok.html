@@ -431,6 +431,46 @@
   
   .prompt { background: #faf5ec; border-left: 4px solid var(--accent2); padding: 12px 18px; margin: 16px 0; }
 </style>
+
+<style id="gftgu-common-elements">
+/* Shared Version / Build, Plot tip, License and Footer. */
+main { padding-top: 6px; }
+main > #version_build {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 11.2px; font-weight: normal; line-height: 1.8;
+  color: #666; margin: 0 0 14px; padding: 0; border: 0;
+  background: transparent; letter-spacing: normal;
+}
+main > p.cursor-tip {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; font-weight: normal; line-height: 1.8;
+  color: #1c1c1c; margin: 0 0 14px; padding: 0;
+  border: 0; border-radius: 0; background: transparent;
+}
+main > p.cursor-tip strong { font-weight: bold; color: inherit; }
+main > section.gftgu-license {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; line-height: 1.8; color: #1c1c1c;
+  background: #fdf5e6; margin: 0; padding: 0;
+}
+main > section.gftgu-license h2 {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 22.4px; font-weight: normal; line-height: 1.8;
+  color: #7b2d00; border-bottom: 2px solid #b5811a;
+  padding: 0 0 6px; margin: 0 0 18px;
+}
+main > section.gftgu-license p { margin: 0 0 14px; }
+main > section.gftgu-license a { color: #551a8b; text-decoration: underline; }
+footer.gftgu-footer {
+  grid-column: 1 / -1; background: #7b2d00; color: #fff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 12.5px; font-weight: normal; line-height: 1.7;
+  text-align: center; padding: 18px 24px; margin: 0;
+}
+footer.gftgu-footer a { color: #e0c090; text-decoration: none; }
+footer.gftgu-footer a:hover { text-decoration: underline; }
+@media (max-width: 740px) { main { padding-top: 8px; } }
+</style>
 </head>
 <body>
 <div class="page-wrap">
@@ -466,8 +506,9 @@
 </nav>
 <main>
 <p id="version_build">Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 217c2c26a44a</p>
+<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="start"><h2>Start here</h2>
-<p>When the cursor hovers over a graph, Matplotlib shows its (x, y) position in graph coordinates at the lower right of the display.</p>
+
 <p>A shell made of many small masses should pull like one mass at its centre when you stand outside, and give no net pull when you stand inside. Run the commands below in order from the SphereGravity program folder. Each run prints a comparison table and opens a graph; close the graph to finish the run. Python 3.10 or later, NumPy and Matplotlib are required.</p>
 <p>The shell radius and gravitational constant are both 1 in the program's dimensionless units. The numerical result is a midpoint sum, so the small deviations from Newton's exact shell theorem are part of the lesson. The point at the shell surface, <em>r</em> = 1, is excluded because the ideal thin shell's field jumps there.</p>
 <p class="note">The equations use MathJax from an online service; the program runs without an internet connection. This page moves from the figure and printed result to the equation. Try each question before reading on.</p></section>
@@ -536,12 +577,25 @@ python main.py --nDiv 100001</pre>
 <li>The plot uses the explicit latitude loops and may be slow for large <code>--nDiv</code>. The model is Newtonian and dimensionless.</li>
 </ul></section>
 <section id="related"><h2>Related programs</h2><p>Atmosphere follows pressure under gravity; Star and Neutron build spherical bodies using enclosed mass; RelativisticOrbit explores motion in a relativistic central field. SphereGravity isolates the shell theorem on which the spherical examples rely.</p></section>
-<section id="license"><h2>License</h2><p>Based on Bernard Schutz's original Java program accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003). Python port by Thomas Yee. Distributed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International</a>.</p></section>
-</main><footer>
-<em>Gravity from the Ground Up</em> — Python Programs ·
-  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
-  Python port © 2024–2026 Thomas Yee ·
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+<section id="license" class="gftgu-license">
+<h2>License</h2>
+<p>
+      This software is based on programs by <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+<p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
+    </p>
+</section>
+</main><footer class="gftgu-footer">
+<em>Gravity from the Ground Up</em> ·
+      Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+      Python port © 2024–2026 Thomas Yee ·
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
 </footer></div>
 <!-- ── Sidebar active-link tracking ── -->
 <script>

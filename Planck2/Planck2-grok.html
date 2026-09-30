@@ -429,6 +429,46 @@
     }
   
 </style>
+
+<style id="gftgu-common-elements">
+/* Shared Version / Build, Plot tip, License and Footer. */
+main { padding-top: 6px; }
+main > #version_build {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 11.2px; font-weight: normal; line-height: 1.8;
+  color: #666; margin: 0 0 14px; padding: 0; border: 0;
+  background: transparent; letter-spacing: normal;
+}
+main > p.cursor-tip {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; font-weight: normal; line-height: 1.8;
+  color: #1c1c1c; margin: 0 0 14px; padding: 0;
+  border: 0; border-radius: 0; background: transparent;
+}
+main > p.cursor-tip strong { font-weight: bold; color: inherit; }
+main > section.gftgu-license {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; line-height: 1.8; color: #1c1c1c;
+  background: #fdf5e6; margin: 0; padding: 0;
+}
+main > section.gftgu-license h2 {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 22.4px; font-weight: normal; line-height: 1.8;
+  color: #7b2d00; border-bottom: 2px solid #b5811a;
+  padding: 0 0 6px; margin: 0 0 18px;
+}
+main > section.gftgu-license p { margin: 0 0 14px; }
+main > section.gftgu-license a { color: #551a8b; text-decoration: underline; }
+footer.gftgu-footer {
+  grid-column: 1 / -1; background: #7b2d00; color: #fff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 12.5px; font-weight: normal; line-height: 1.7;
+  text-align: center; padding: 18px 24px; margin: 0;
+}
+footer.gftgu-footer a { color: #e0c090; text-decoration: none; }
+footer.gftgu-footer a:hover { text-decoration: underline; }
+@media (max-width: 740px) { main { padding-top: 8px; } }
+</style>
 </head>
 <body><div class="page-wrap"><header>
 <div class="badge">Chapter 10 · Gravity from the Ground Up</div>
@@ -439,7 +479,8 @@
     Documentation:
         <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
 </div>
-</header><nav id="sidebar"><div class="nav-label">Start</div><a href="#overview">Overview</a><div class="nav-label">At the terminal</div><a href="#beat0">Beat 0 · Look at one spectrum</a><a href="#beat1">Beat 1 · Change temperature</a><a href="#beat2">Beat 2 · Change the horizontal density</a><a href="#beat3">Beat 3 · Radiance or energy per volume</a><a href="#beat4">Beat 4 · Add up a spectrum</a><a href="#beat5">Beat 5 · Test the fourth power</a><a href="#beat6">Beat 6 · Change the sampling grid</a><a href="#beat7">Beat 7 · Move the approximation switches</a><a href="#beat8">Beat 8 · Cut off the range deliberately</a><div class="nav-label">Reference</div><a href="#further">Two further challenges</a><a href="#parameters">Command-line parameters</a><a href="#summary">How to read the summary</a><a href="#related">Related programs</a><a href="#license">License</a></nav><main><p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">Version 1.5.1&nbsp;&nbsp;&nbsp;&nbsp;Build 1107bea3441f</p><section id="overview"><h2>Start here</h2><p>Planck2 lets you change a black body's temperature and see three related spectra: radiance per wavelength, radiance per frequency, and energy density per frequency. It accompanies Chapter 10, Investigations 10.1–10.3. You will run commands, read the five-line summary, and test where a numerical curve agrees with its exact integral.</p><p>Run commands from the folder containing <code>main.py</code>. Close each plot window before starting the next run. Hover over a graph: Matplotlib shows the cursor's graphical <code>(x, y)</code> coordinates at the lower right of the display. The equations use MathJax from the internet; the Python program runs offline.</p><div class="note"><strong>Model boundary:</strong> this is an ideal black body at one temperature. There are no spectral absorption lines, nonunit emissivity, or radiative transfer.</div></section><section id="beat0"><h2>Beat 0 · Look at one spectrum</h2><p><strong>Run.</strong> Start with the default 5900 K body, plotted as radiance per wavelength.</p><pre>python main.py</pre><p><strong>Observe.</strong> The console gives <code>peak at x = 4.959505</code>, <code>Peak wavelength = 4.917033e-07 m</code>, and both a numerical and an exact integral. The plot box also gives the sampled <code>Peak value</code>, which the console does not. Compare <code>2.187105e+07</code> with <code>2.187106e+07</code> in W m<sup>−2</sup> sr<sup>−1</sup>.</p><p><strong>Your turn.</strong> Move the cursor near the top of the curve. Which physical wavelength is at the maximum? Why might the cursor and the six-digit printed peak disagree slightly?</p><p>The dimensionless coordinate is \(x=hc/(\lambda kT)=h\nu/(kT)\). Planck's law supplies the curve; the printed peak is the largest sampled point, not a continuous optimizer.</p></section><section id="beat1"><h2>Beat 1 · Change temperature</h2><p><strong>Run.</strong> Compare these separate wavelength plots and record each printed peak wavelength.</p><pre>python main.py --T 3000
+</header><nav id="sidebar"><div class="nav-label">Start</div><a href="#overview">Overview</a><div class="nav-label">At the terminal</div><a href="#beat0">Beat 0 · Look at one spectrum</a><a href="#beat1">Beat 1 · Change temperature</a><a href="#beat2">Beat 2 · Change the horizontal density</a><a href="#beat3">Beat 3 · Radiance or energy per volume</a><a href="#beat4">Beat 4 · Add up a spectrum</a><a href="#beat5">Beat 5 · Test the fourth power</a><a href="#beat6">Beat 6 · Change the sampling grid</a><a href="#beat7">Beat 7 · Move the approximation switches</a><a href="#beat8">Beat 8 · Cut off the range deliberately</a><div class="nav-label">Reference</div><a href="#further">Two further challenges</a><a href="#parameters">Command-line parameters</a><a href="#summary">How to read the summary</a><a href="#related">Related programs</a><a href="#license">License</a></nav><main><p id="version_build">Version 1.5.1&nbsp;&nbsp;&nbsp;&nbsp;Build 1107bea3441f</p>
+<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p><section id="overview"><h2>Start here</h2><p>Planck2 lets you change a black body's temperature and see three related spectra: radiance per wavelength, radiance per frequency, and energy density per frequency. It accompanies Chapter 10, Investigations 10.1–10.3. You will run commands, read the five-line summary, and test where a numerical curve agrees with its exact integral.</p><p>Run commands from the folder containing <code>main.py</code>. Close each plot window before starting the next run. The equations use MathJax from the internet; the Python program runs offline.</p><div class="note"><strong>Model boundary:</strong> this is an ideal black body at one temperature. There are no spectral absorption lines, nonunit emissivity, or radiative transfer.</div></section><section id="beat0"><h2>Beat 0 · Look at one spectrum</h2><p><strong>Run.</strong> Start with the default 5900 K body, plotted as radiance per wavelength.</p><pre>python main.py</pre><p><strong>Observe.</strong> The console gives <code>peak at x = 4.959505</code>, <code>Peak wavelength = 4.917033e-07 m</code>, and both a numerical and an exact integral. The plot box also gives the sampled <code>Peak value</code>, which the console does not. Compare <code>2.187105e+07</code> with <code>2.187106e+07</code> in W m<sup>−2</sup> sr<sup>−1</sup>.</p><p><strong>Your turn.</strong> Move the cursor near the top of the curve. Which physical wavelength is at the maximum? Why might the cursor and the six-digit printed peak disagree slightly?</p><p>The dimensionless coordinate is \(x=hc/(\lambda kT)=h\nu/(kT)\). Planck's law supplies the curve; the printed peak is the largest sampled point, not a continuous optimizer.</p></section><section id="beat1"><h2>Beat 1 · Change temperature</h2><p><strong>Run.</strong> Compare these separate wavelength plots and record each printed peak wavelength.</p><pre>python main.py --T 3000
 python main.py --T 5900
 python main.py --T 10000</pre><p><strong>Observe.</strong> A hotter body peaks at a shorter wavelength. The product of temperature and peak wavelength should stay approximately fixed. The sampled \(x\) peak stays near 4.965 with a sufficiently fine grid.</p><p><strong>Your turn.</strong> Multiply the first and third peak wavelength by their temperatures. How close are the products? The law for this plotted density follows from \(\lambda_{\rm peak}=hc/(x_5 kT)\), where \(x_5\approx4.965\).</p></section><section id="beat2"><h2>Beat 2 · Change the horizontal density</h2><p><strong>Run.</strong> Ask for radiance per frequency at two temperatures.</p><pre>python main.py --T 5900 --quantity frequency
 python main.py --T 2.725 --quantity frequency</pre><p><strong>Observe.</strong> These horizontal axes are in hertz; the second run represents the cosmic microwave background as an ideal 2.725 K black body. Its frequency peak is much lower. The frequency peak has \(x_3\approx2.821\), whereas Beat 1 used \(x_5\approx4.965\).</p><p><strong>Your turn.</strong> Calculate \(h\nu_{\rm peak}/(kT)\) from one printed frequency. Why is it wrong to turn the wavelength peak of Beat 1 into the frequency peak simply by using \(\nu=c/\lambda\)? The two spectra are densities per different horizontal intervals.</p></section><section id="beat3"><h2>Beat 3 · Radiance or energy per volume</h2><p><strong>Run.</strong> Keep the temperature fixed while changing the plotted quantity; then inspect a cold example.</p><pre>python main.py --T 5900 --quantity frequency
@@ -475,20 +516,24 @@ python main.py --n_steps 100000</pre><p>Distinguish the continuous root from the
 <tr><td class="pname">--corner</td><td class="pdefault">"upper_right"</td><td>&mdash;</td><td>Annotation location: <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code> or <code>lower_left</code>.</td></tr>
 <tr><td class="pname">--y_frac_window</td><td class="pdefault">0.003</td><td>&mdash;</td><td>Finite fraction of the peak used for plot windowing; 0 shows the full computed range. Does not affect the peak search or the integrals.</td></tr>
 </tbody></table></div></section><section id="summary"><h2>How to read the summary</h2><p>Each successful run prints the version/build and sampled \(x\) peak, the physical peak wavelength or frequency, the dimensionless area beside its zero-to-infinity reference, the physical integral, and its exact bolometric reference. The plot annotation also shows the peak height. Compare numerical and exact physical integrals in the same quantity and units. The exact line describes an ideal zero-to-infinity integral; the numerical line uses your finite domain, grid and switch settings.</p><pre>python main.py --version
-python main.py --help</pre><p><code>--version</code> shows the shared code identifier. <code>--help</code> lists every option; these commands do not draw figures.</p></section><section id="related"><h2>Related programs</h2><p><strong>Star</strong> models stellar structure. <strong>Random2</strong> illustrates radiative diffusion. Planck2 supplies an ideal thermal spectrum at a selected temperature.</p></section><section id="license"><h2>License</h2>
+python main.py --help</pre><p><code>--version</code> shows the shared code identifier. <code>--help</code> lists every option; these commands do not draw figures.</p></section><section id="related"><h2>Related programs</h2><p><strong>Star</strong> models stellar structure. <strong>Random2</strong> illustrates radiative diffusion. Planck2 supplies an ideal thermal spectrum at a selected temperature.</p></section><section id="license" class="gftgu-license">
 <h2>License</h2>
 <p>
-      Planck2 accompanies the black-body-radiation investigations in Bernard Schutz's
-      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003), Chapter 10.
-      This rewritten and extended Python version descends from Schutz's original Java/Triana
-      <em>Planck</em> program for the first edition. It is distributed under the
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license.
+      This software is based on programs by <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
     </p>
-</section></main><footer>
-<em>Gravity from the Ground Up</em> — Python Programs ·
-  Bernard Schutz © 2003 (Cambridge University Press) ·
-  Python programs © 2024–2026 Thomas Yee ·
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+<p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
+    </p>
+</section></main><footer class="gftgu-footer">
+<em>Gravity from the Ground Up</em> ·
+      Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+      Python port © 2024–2026 Thomas Yee ·
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
 </footer></div><script>
   (function () {
     const links = document.querySelectorAll('nav a');

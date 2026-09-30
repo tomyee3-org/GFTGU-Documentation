@@ -462,21 +462,92 @@
     .task { background: var(--note-bg); border-left: 4px solid var(--gold); padding: 12px 16px; margin: 15px 0; }
     .task strong { color: var(--accent); }
     .cue { font-family: var(--sans); font-size: .83rem; font-weight: bold; color: var(--accent2); text-transform: uppercase; letter-spacing: .06em; }
-</style></head><body><a class="skip-link" href="#content">Skip to the tutorial</a><div class="page-wrap">
-<header><div class="badge">CHAPTER 20 · INVESTIGATION 20.1</div><h1><em>Neutron</em> — A Session at the Terminal</h1><div class="sub">
+</style>
+<style id="gftgu-common-elements">
+/* Shared Version / Build, Plot tip, License and Footer. */
+main { padding-top: 6px; }
+main > #version_build {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 11.2px; font-weight: normal; line-height: 1.8;
+  color: #666; margin: 0 0 14px; padding: 0; border: 0;
+  background: transparent; letter-spacing: normal;
+}
+main > p.cursor-tip {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; font-weight: normal; line-height: 1.8;
+  color: #1c1c1c; margin: 0 0 14px; padding: 0;
+  border: 0; border-radius: 0; background: transparent;
+}
+main > p.cursor-tip strong { font-weight: bold; color: inherit; }
+main > section.gftgu-license {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; line-height: 1.8; color: #1c1c1c;
+  background: #fdf5e6; margin: 0; padding: 0;
+}
+main > section.gftgu-license h2 {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 22.4px; font-weight: normal; line-height: 1.8;
+  color: #7b2d00; border-bottom: 2px solid #b5811a;
+  padding: 0 0 6px; margin: 0 0 18px;
+}
+main > section.gftgu-license p { margin: 0 0 14px; }
+main > section.gftgu-license a { color: #551a8b; text-decoration: underline; }
+footer.gftgu-footer {
+  grid-column: 1 / -1; background: #7b2d00; color: #fff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 12.5px; font-weight: normal; line-height: 1.7;
+  text-align: center; padding: 18px 24px; margin: 0;
+}
+footer.gftgu-footer a { color: #e0c090; text-decoration: none; }
+footer.gftgu-footer a:hover { text-decoration: underline; }
+@media (max-width: 740px) { main { padding-top: 8px; } }
+</style>
+</head><body><a class="skip-link" href="#content">Skip to the tutorial</a><div class="page-wrap">
+<header><div class="badge">CHAPTER 20 · INVESTIGATION 20.1</div><h1><em>Neutron</em> — Static Neutron-Star Structure</h1><div class="sub">
         Source Code:
         <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>·
         <br/>
         Documentation:
             <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
       </div><p class="sub">Build a sequence of static neutron-star models from the Tolman–Oppenheimer–Volkoff (TOV) equation of general relativity.</p></header>
-<nav aria-label="Sections"><div class="nav-label">Start</div><a href="#overview">Before you begin</a>
+<nav aria-label="Sections"><div class="nav-label">Start</div><a href="#overview">Overview</a>
 <div class="nav-label">Beats</div><a href="#beat0">0 · First star</a><a href="#beat1">1 · Relativistic gravity</a><a href="#beat2">2 · Equation of state</a><a href="#beat3">3 · Centre</a><a href="#beat4">4 · Resolution</a><a href="#beat5">5 · Surface</a><a href="#beat6">6 · Physical limits</a><a href="#beat7">7 · Mass turnover</a>
-<div class="nav-label">Reference</div><a href="#parameters">Parameters</a><a href="#limits">Model limits</a></nav>
-<main id="content" tabindex="-1"><p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">Version 1.3.1&nbsp;&nbsp;Build 2cd414a64b3a</p>
-<section id="overview"><h2>Before you begin</h2><p>Work from the <code>Neutron</code> program folder with Python 3.10 or later, NumPy and Matplotlib. Each successful run prints a global summary, five radial checkpoints, and a graph. Close the graph to return to your terminal. Run the numbered beats in order the first time; record the values and answer each “Your turn” prompt before reading the next beat.</p>
-<p class="note-box">When the cursor hovers over a Matplotlib graph, its (x, y) position in graph coordinates appears at the lower right of the display.</p>
-<p>The model assumes a static, spherical star with \(p=K\rho^\gamma\). Pressure pushes out, while gravity pulls in. In general relativity, pressure also contributes to the inward pull. We will vary central pressure \(p_C\), inspect the resulting equilibrium profiles, and learn where this teaching model stops being physically credible.</p></section>
+<div class="nav-label">Reference</div><a href="#parameters">Parameters</a><a href="#limits">Model limits</a><a href="#license">License</a>
+</nav>
+<main id="content" tabindex="-1"><p id="version_build">Version 1.3.1&nbsp;&nbsp;&nbsp;&nbsp;Build 2cd414a64b3a</p>
+<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
+<section id="overview">
+<h2>Overview</h2>
+<p>
+<strong>Neutron</strong> computes static, spherically symmetric stellar
+equilibria in general relativity. It integrates the
+Tolman&ndash;Oppenheimer&ndash;Volkoff (TOV) pressure equation and the
+enclosed-mass equation outward from the center until the pressure reaches
+zero, using one simple polytropic equation of state,
+\(p=K\rho^\gamma\). It is introduced in <em>Investigation 20.1</em> of
+Schutz's text, where it serves as the reader's first relativistic
+stellar-structure calculation.
+</p>
+<p>
+The spine of the lesson is one sentence: <em>a star is a battle between
+gravity, which pulls inward, and pressure, which pushes outward &mdash; and
+in general relativity pressure itself adds to the gravity it is resisting,
+so the same battle needs a different equation than it does in Newton's
+theory.</em> Each numbered section below is one beat: a short argument, a
+command whose printed summary illustrates it, and then the equation that
+the printed numbers follow from.
+</p>
+<p>
+By varying the central pressure \(p_C\) and the equation-of-state parameters,
+students can construct equilibrium sequences and locate a maximum
+gravitational mass. The program does not evolve a star in time, so it does
+not simulate collapse; it computes static equilibrium configurations only.
+</p>
+<div class="warn-box"><strong>What this program is, and what it does not model.</strong> Neutron is a teaching model of a static, non-rotating, spherically symmetric star built from one pedagogical polytropic equation of state. It has no crust-plus-core or tabulated nuclear-matter equation of state, no rotation, no magnetic field, no finite temperature, no baryonic-mass or binding-energy bookkeeping, and no time evolution: it cannot simulate collapse, a merger, or oscillation modes. Use it to see how the TOV equation differs from Newtonian hydrostatics and how a relativistic stellar-structure solver locates a surface it is not allowed to overshoot. Beats 6 and 7 collect the limits.</div>
+<div class="note-box"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div>
+
+<p>Work from the <code>Neutron</code> program folder with Python 3.10 or later, NumPy and Matplotlib. Each successful run prints a global summary, five radial checkpoints, and a graph. Close the graph to return to your terminal. Run the numbered beats in order the first time; record the values and answer each “Your turn” prompt before reading the next beat.</p>
+</section>
 <section id="beat0"><h2>Beat 0 · Meet one model star</h2><p class="cue">Run</p><pre class="code-block"><code>python main.py</code></pre><p>Look first at the global radius and mass, then at the pressure plot. The default gives a surface radius near 7.804 km and mass near 0.962591 solar masses. The table samples radius fractions 0, 0.25, 0.50, 0.75, and 0.90. The plotted pressure reaches the model surface at zero.</p><div class="task"><strong>Your turn 0.</strong> Write down the central pressure, surface radius and total gravitational mass. Why do the five printed checkpoints not include the exact surface?</div></section>
 <section id="beat1"><h2>Beat 1 · What relativity changes</h2><p>Newtonian hydrostatic balance uses \(dp/dr=-Gm\rho/r^2\). The TOV equation used here multiplies this by three positive corrections: \((1+p/(\rho c^2))(1+4\pi r^3p/(mc^2))/(1-2Gm/(rc^2))\). For this default star the centre limit of their product is about 1.979374; at the first finite point, \(r=16.375\,\mathrm{m}\), it is about 1.97937253. The ratio changes outward: it is a centre limit, not a universal multiplier.</p><p class="cue">Run</p><pre class="code-block"><code>python main.py --output_type density</code></pre><p>Compare pressure and density checkpoints with Beat 0. The local \(p/(\rho c^2)\) is about 0.10911 at \(r/R\simeq0.504\), about 0.0001331 near \(r/R\simeq0.99884\), and tends to zero at the surface. The relativistic correction also depends on enclosed mass and radius, so a small pressure term alone does not establish a Newtonian interior.</p><div class="task"><strong>Your turn 1.</strong> Identify which printed quantity you would combine with local pressure and density to assess the compactness term. Explain why the centre-limit factor should not be copied to every radial checkpoint.</div></section>
 <section id="beat2"><h2>Beat 2 · Change the equation of state</h2><p class="cue">Run</p><pre class="code-block"><code>python main.py --gamma 1.5 --K 7.374987e6 --pC 1.26e35 --output_type mass
@@ -515,7 +586,27 @@ python main.py --pC 1e27 --output_type mass</code></pre><p>The masses at \(10^{3
 </tbody>
 </table></div><p><code>G=6.67430×10⁻¹¹ m³ kg⁻¹ s⁻²</code> and <code>c=299 792 458 m/s</code> are fixed physical constants, not command-line flags. You can combine the listed options in one command. Close a plot before the next run.</p></section>
 <section id="limits"><h2>Model limits</h2><p>This is a static, spherical, non-rotating single-polytrope teaching model. It has no crust transition, rotation, magnetic field, finite temperature or time evolution. Its printed results test the model's equations and numerical implementation; they do not measure the masses of real neutron stars. Read the <code>Neutron-SampleOutputs_Guide.html</code> for the four representative figures associated with Beats 0, 4, 6 and 7.</p><p>Equations on this page are typeset by MathJax over the internet. Offline, their raw mathematical markup may appear, but the Python program itself runs offline.</p></section>
-</main><footer><p>Neutron · GFtGU · Investigation 20.1</p></footer></div><script>
+
+<section id="license" class="gftgu-license">
+<h2>License</h2>
+<p>
+      This software is based on programs by <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+<p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
+    </p>
+</section>
+</main><footer class="gftgu-footer">
+<em>Gravity from the Ground Up</em> ·
+      Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+      Python port © 2024–2026 Thomas Yee ·
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
+</footer></div><script>
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('nav a');
   const observer = new IntersectionObserver(entries => {

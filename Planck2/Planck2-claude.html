@@ -429,6 +429,46 @@
     }
   
 </style>
+
+<style id="gftgu-common-elements">
+/* Shared Version / Build, Plot tip, License and Footer. */
+main { padding-top: 6px; }
+main > #version_build {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 11.2px; font-weight: normal; line-height: 1.8;
+  color: #666; margin: 0 0 14px; padding: 0; border: 0;
+  background: transparent; letter-spacing: normal;
+}
+main > p.cursor-tip {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; font-weight: normal; line-height: 1.8;
+  color: #1c1c1c; margin: 0 0 14px; padding: 0;
+  border: 0; border-radius: 0; background: transparent;
+}
+main > p.cursor-tip strong { font-weight: bold; color: inherit; }
+main > section.gftgu-license {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px; line-height: 1.8; color: #1c1c1c;
+  background: #fdf5e6; margin: 0; padding: 0;
+}
+main > section.gftgu-license h2 {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 22.4px; font-weight: normal; line-height: 1.8;
+  color: #7b2d00; border-bottom: 2px solid #b5811a;
+  padding: 0 0 6px; margin: 0 0 18px;
+}
+main > section.gftgu-license p { margin: 0 0 14px; }
+main > section.gftgu-license a { color: #551a8b; text-decoration: underline; }
+footer.gftgu-footer {
+  grid-column: 1 / -1; background: #7b2d00; color: #fff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 12.5px; font-weight: normal; line-height: 1.7;
+  text-align: center; padding: 18px 24px; margin: 0;
+}
+footer.gftgu-footer a { color: #e0c090; text-decoration: none; }
+footer.gftgu-footer a:hover { text-decoration: underline; }
+@media (max-width: 740px) { main { padding-top: 8px; } }
+</style>
 </head>
 
 <body>
@@ -476,12 +516,11 @@
 </nav>
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
-<p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">
-  Version 1.5.1&nbsp;&nbsp;&nbsp;&nbsp;Build 1107bea3441f
-</p>
+<p id="version_build">Version 1.5.1&nbsp;&nbsp;&nbsp;&nbsp;Build 1107bea3441f</p>
+<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="overview">
 <h2>Overview</h2>
-<p class="note">Hover over a graph in the Matplotlib display to see the cursor’s graphical <code>(x, y)</code> coordinates at the lower right of the display.</p>
+
 <p><strong>Planck2</strong> is a black-body-radiation investigation for Chapter 10. It plots the user's choice of spectral radiance per unit wavelength \(B_\lambda\), spectral radiance per unit frequency \(B_\nu\), or spectral energy density per unit frequency \(u_\nu\), using physical wavelength or frequency on the horizontal axis. Investigations 10.1, 10.2, and 10.3 are relevant to this program.</p>
 <p>Besides the curve, the program prints and annotates the sampled peak, the area under the dimensionless shape function, and a physical integral over wavelength or frequency, next to the exact value that the integral would have if it ran from zero to infinity. Those last two numbers are what let you check the program, and the Stefan&ndash;Boltzmann \(T^4\) law, without any other tool.</p>
 <p>The spine of the lesson is one sentence: <em>every black-body spectrum is one universal curve \(x^p/(e^x-1)\) in the variable \(x=h\nu/kT\), so temperature only slides and scales it, the choice of what to call the spectrum (per wavelength, per frequency, or as an energy density) changes only the exponent \(p\) and the scale, and the printed comparison with the exact area is how you tell how far to trust a numerical sum over a finite grid.</em> Each numbered section below is one beat: a short argument, a command whose printed summary or figure illustrates it, and then the equation that the printed numbers follow from.</p>
@@ -1108,23 +1147,27 @@ print(r.physical_integral / r.exact_physical_integral)</pre>
 <li><strong>Random2</strong> — Illustrates radiative diffusion through an opaque stellar interior before radiation ultimately emerges from the surface.</li>
 </ul>
 </section>
-<section id="license">
+<section id="license" class="gftgu-license">
 <h2>License</h2>
 <p>
-      Planck2 accompanies the black-body-radiation investigations in Bernard Schutz's
-      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003), Chapter 10.
-      This rewritten and extended Python version descends from Schutz's original Java/Triana
-      <em>Planck</em> program for the first edition. It is distributed under the
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license.
+      This software is based on programs by <strong>Bernard Schutz</strong> accompanying
+      <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003).
+      The port is distributed under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+         International (CC BY-NC-SA 4.0)</a> license.
+    </p>
+<p>
+      You are free to share and adapt the material for non-commercial purposes, provided
+      you give appropriate credit and distribute any adaptations under the same license.
     </p>
 </section>
 </main>
 <!-- ═══════════════════ FOOTER ═══════════════════ -->
-<footer>
-<em>Gravity from the Ground Up</em> — Python Programs ·
-  Bernard Schutz © 2003 (Cambridge University Press) ·
-  Python programs © 2024–2026 Thomas Yee ·
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+<footer class="gftgu-footer">
+<em>Gravity from the Ground Up</em> ·
+      Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+      Python port © 2024–2026 Thomas Yee ·
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
 </footer>
 </div><!-- /page-wrap -->
 <!-- ── Sidebar active-link tracking ── -->
