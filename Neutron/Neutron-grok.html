@@ -463,7 +463,13 @@
     .task strong { color: var(--accent); }
     .cue { font-family: var(--sans); font-size: .83rem; font-weight: bold; color: var(--accent2); text-transform: uppercase; letter-spacing: .06em; }
 </style></head><body><a class="skip-link" href="#content">Skip to the tutorial</a><div class="page-wrap">
-<header><div class="badge">CHAPTER 20 · INVESTIGATION 20.1</div><h1><em>Neutron</em> — A Session at the Terminal</h1><p class="sub">Build a sequence of static neutron-star models from the TOV equation.</p></header>
+<header><div class="badge">CHAPTER 20 · INVESTIGATION 20.1</div><h1><em>Neutron</em> — A Session at the Terminal</h1><div class="sub">
+        Source Code:
+        <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>·
+        <br/>
+        Documentation:
+            <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>·
+      </div><p class="sub">Build a sequence of static neutron-star models from the Tolman–Oppenheimer–Volkoff (TOV) equation of general relativity.</p></header>
 <nav aria-label="Sections"><div class="nav-label">Start</div><a href="#overview">Before you begin</a>
 <div class="nav-label">Beats</div><a href="#beat0">0 · First star</a><a href="#beat1">1 · Relativistic gravity</a><a href="#beat2">2 · Equation of state</a><a href="#beat3">3 · Centre</a><a href="#beat4">4 · Resolution</a><a href="#beat5">5 · Surface</a><a href="#beat6">6 · Physical limits</a><a href="#beat7">7 · Mass turnover</a>
 <div class="nav-label">Reference</div><a href="#parameters">Parameters</a><a href="#limits">Model limits</a></nav>
@@ -480,7 +486,7 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 <section id="beat4"><h2>Beat 4 · Resolve the march outward</h2><p class="cue">Run</p><pre class="code-block"><code>python main.py --steps_per_scale 200 --output_type mass
 python main.py --steps_per_scale 400 --output_type mass
 python main.py --steps_per_scale 800 --output_type mass
-python main.py --steps_per_scale 1600 --output_type mass</code></pre><p>The program takes fourth-order Runge–Kutta steps through the stellar interior, with nominal spacing set by a scale height divided by <code>steps_per_scale</code>. Doubling this parameter makes the radial grid finer and usually increases the number of retained samples. Printed radii are rounded, so identical displayed radii do not prove identical numerical answers. The observed end-to-end surface radius in this sweep should not be called an RK4 fourth-order measurement.</p><div class="task"><strong>Your turn 4.</strong> Record sample counts and printed radii. Where does increasing resolution change a displayed digit? Compare the mass profiles. For unrounded values, open <code>python</code> in the program folder and run these two lines (press Enter after each):<pre class="code-block"><code>from driver_neutron import compute_neutron_star as star
+python main.py --steps_per_scale 1600 --output_type mass</code></pre><p>The program takes fourth-order Runge–Kutta (RK4) steps through the stellar interior, with nominal spacing set by a scale height divided by <code>steps_per_scale</code>. Doubling this parameter makes the radial grid finer and usually increases the number of retained samples. Printed radii are rounded, so identical displayed radii do not prove identical numerical answers. The observed end-to-end surface radius in this sweep should not be called an RK4 fourth-order measurement.</p><div class="task"><strong>Your turn 4.</strong> Record sample counts and printed radii. Where does increasing resolution change a displayed digit? Compare the mass profiles. For unrounded values, open <code>python</code> in the program folder and run these two lines (press Enter after each):<pre class="code-block"><code>from driver_neutron import compute_neutron_star as star
 [(n, star(1.666667, 1.26e35, 5.3802e3, steps_per_scale=n)["surface_radius_m"]) for n in (200, 400, 800, 1600)]</code></pre></div></section>
 <section id="beat5"><h2>Beat 5 · Stop at the surface</h2><p>The surface is where \(p=0\). A full step can cross to negative pressure, making \(p^{(\gamma-1)/\gamma}\) invalid. The solver uses \(q=p^{(\gamma-1)/\gamma}\), which approaches zero with an approximately finite slope, to locate the surface from the last valid state. The tangent-line distance is \(-q/(dq/dr)\); its radius error is second order in the final step size in this calculation.</p><p class="cue">Run</p><pre class="code-block"><code>python main.py --steps_per_scale 800 --output_type pressure</code></pre><p>The printed radius is an estimated zero-pressure surface, beyond the last positive-pressure integration sample. The tests compare it against a separately implemented fine-grid integrator; that is an outside numerical check of this solver, not an exact physical measurement of a star.</p><div class="task"><strong>Your turn 5.</strong> Open <code>python</code> in the program folder and run:<pre class="code-block"><code>from driver_neutron import compute_neutron_star
 model = compute_neutron_star(1.666667, 1.26e35, 5.3802e3, steps_per_scale=800)
@@ -507,6 +513,20 @@ python main.py --pC 1e27 --output_type mass</code></pre><p>The masses at \(10^{3
 <tr><td><code>--log_y</code></td><td>off</td><td>flag</td><td>Logarithmic y-axis for pressure or density; <code>--no-log_y</code> selects linear scaling explicitly. Mass always plots on a linear axis and prints a warning if <code>--log_y</code> is requested with <code>--output_type mass</code>.</td></tr>
 
 </tbody>
-</table></div><p><code>G=6.67430×10⁻¹¹ m³ kg⁻¹ s⁻²</code> and <code>c=299 792 458 m/s</code> are fixed physical constants, not CLI flags. You can combine the listed options in one command. Close a plot before the next run.</p></section>
+</table></div><p><code>G=6.67430×10⁻¹¹ m³ kg⁻¹ s⁻²</code> and <code>c=299 792 458 m/s</code> are fixed physical constants, not command-line flags. You can combine the listed options in one command. Close a plot before the next run.</p></section>
 <section id="limits"><h2>Model limits</h2><p>This is a static, spherical, non-rotating single-polytrope teaching model. It has no crust transition, rotation, magnetic field, finite temperature or time evolution. Its printed results test the model's equations and numerical implementation; they do not measure the masses of real neutron stars. Read the <code>Neutron-SampleOutputs_Guide.html</code> for the four representative figures associated with Beats 0, 4, 6 and 7.</p><p>Equations on this page are typeset by MathJax over the internet. Offline, their raw mathematical markup may appear, but the Python program itself runs offline.</p></section>
-</main><footer><p>Neutron · GFtGU · Investigation 20.1</p></footer></div></body></html>
+</main><footer><p>Neutron · GFtGU · Investigation 20.1</p></footer></div><script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body></html>

@@ -435,7 +435,12 @@
 section ul { margin-left: 1.6em; }
 </style></head><body>
 <div class="page-wrap">
-<header><div class="badge">CHAPTER 4 · INVESTIGATION 4.2</div><h1><em>Orbit</em> — One evening at the terminal</h1><p class="sub">Use one Newtonian force law to connect paths, periods and numerical error.</p></header>
+<header><div class="badge">Chapter 4 · Gravity from the Ground Up · Terminal Tutorial</div><h1><em>Orbit</em> — One evening at the terminal</h1><div class="sub">
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+</div></header>
 <nav id="sidebar"><div class="nav-label">Start</div><a href="#overview">How to use this session</a><div class="nav-label">Beats</div>
 <a href="#beat0">0 · First orbit</a><a href="#beat1">1 · Escape</a><a href="#beat2">2 · Change direction</a><a href="#beat3">3 · Areas and periods</a><a href="#beat4">4 · Repetition and hodograph</a><a href="#beat5">5 · The corrector</a><a href="#beat6">6 · Step control</a><a href="#beat7">7 · Trust the calculation</a><a href="#beat8">8 · Hard cases</a><div class="nav-label">Reference</div><a href="#parameters">Parameters</a><a href="#limits">Scope and checks</a></nav>
 <main><p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">Version 1.7.1&nbsp;&nbsp;Build 0b77d606baf2</p>
@@ -485,7 +490,7 @@ python main.py --vxInit -1000 --vyInit 0 --maxSteps 20000</pre><p>A slower tange
 <tr><td><code>--yInit</code></td><td>0.0</td><td>m</td><td>Initial y-position.</td></tr>
 <tr><td><code>--vxInit</code></td><td>0.0</td><td>m s<sup>&minus;1</sup></td><td>Initial x-velocity.</td></tr>
 <tr><td><code>--vyInit</code></td><td>58980.0</td><td>m s<sup>&minus;1</sup></td><td>Initial y-velocity; the default approximates Mercury's perihelion speed.</td></tr>
-<tr><td><code>--k</code></td><td>1.3271244e20</td><td>m<sup>3</sup> s<sup>&minus;2</sup></td><td>Central gravitational parameter \(GM\), not the central mass in kg; the default is the IAU nominal solar value.</td></tr>
+<tr><td><code>--k</code></td><td>1.3271244e20</td><td>m<sup>3</sup> s<sup>&minus;2</sup></td><td>Central gravitational parameter \(GM\), not the central mass in kg; the default is the International Astronomical Union (IAU) nominal solar value.</td></tr>
 <tr><td><code>--dt0</code></td><td>1e4</td><td>s</td><td>Positive maximum timestep. The adaptive working timestep can shrink and later recover toward this value (Beat 6).</td></tr>
 <tr><td><code>--maxSteps</code></td><td>20000</td><td>steps</td><td>Positive maximum number of accepted integration steps, excluding the initial state.</td></tr>
 <tr><td><code>--eps1</code></td><td>0.05</td><td>&mdash;</td><td>Positive acceleration-vector change threshold for timestep rejection (Beat 6). Smaller values demand smaller timesteps.</td></tr>
@@ -495,5 +500,19 @@ python main.py --vxInit -1000 --vyInit 0 --maxSteps 20000</pre><p>A slower tange
 </tbody></table></div>
 <p>The central body's gravitational parameter <code>--k</code> is (GM), not a mass in kilograms. All numeric inputs must be finite. Initial radius must be nonzero; <code>--k</code>, <code>--dt0</code>, <code>--eps1</code> and <code>--eps2</code> must be positive; <code>--maxSteps</code> is a positive integer; <code>--maxOrbits</code> must be at least 1e-9. Invalid input produces an <code>Orbit:</code> error instead of a plot.</p></section>
 <section id="limits"><h2>Scope and checks</h2><p>Orbit computes planar Newtonian motion about a fixed point mass. It omits relativity, drag, finite sizes, tides and a moving primary. An orbit near the numerical singularity guard is a failure of this model's assumptions, not a planetary collision calculation. The exact Keplerian elements derived from the starting state and the energy/angular-momentum drift give complementary checks; none alone certifies an entire computed trajectory.</p>
-<p>The companion Sample Outputs Guide has one representative image for each Beat. The detailed tutorial supplies derivations and longer investigations. Equations on these pages are rendered by MathJax from a public CDN; an internet connection is needed to see them typeset. The Python program itself runs offline.</p></section>
-</main><footer>Orbit · Gravity from the Ground Up · Investigation 4.2</footer></div></body></html>
+<p>The companion Sample Outputs Guide has one representative image for each Beat. The detailed tutorial supplies derivations and longer investigations. Equations on these pages are rendered by MathJax from a public online service; an internet connection is needed to see them typeset. The Python program itself runs offline.</p></section>
+</main><footer>Orbit · Gravity from the Ground Up · Investigation 4.2</footer></div><script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const hit = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+        if (hit) hit.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body></html>

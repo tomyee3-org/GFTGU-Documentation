@@ -462,7 +462,7 @@ python main.py --x_low 4</pre><p><strong>Observe.</strong> Below <code>--x_low</
 python main.py --x_max 4 --x_high 3
 python main.py --x_min 1 --x_low 1
 python main.py --y_frac_window 0</pre><p><strong>Observe.</strong> The second command stops at \(x=4\), below the wavelength shape's true maximum near 4.965. The reported peak is at the edge and its numerical integral misses part of the spectrum. A window fraction of zero changes only the view, not the integration or peak calculation.</p><p><strong>Your turn.</strong> Explain why the second physical integral departs from the exact reference. Valid settings require <code>x_min &le; x_low &lt; x_high &le; x_max</code>. To isolate the viewing effect, compare the final command with Beat 0.</p></section><section id="further"><h2>Two further challenges</h2><p><strong>After Beat 8.</strong> These optional tasks give you the programming investigations from the longer tutorial without changing the program files.</p><p><strong>Challenge A:</strong> Solve the peak condition \(x=p(1-e^{-x})\) by repeatedly updating \(x\leftarrow p(1-e^{-x})\), starting at \(x=p\), for \(p=3\) and \(p=5\). Compare your answers with the first lines of these runs:</p><pre>python main.py --quantity frequency --n_steps 100000
-python main.py --n_steps 100000</pre><p>Distinguish the continuous root from the sampled maximum.</p><p><strong>Challenge B:</strong> In a Python interpreter opened in the program folder, run <code>from planck2_driver import run_planck2</code>, then <code>r = run_planck2(5900.0, "wavelength", 2000)</code>. Compare <code>r.coord_peak * r.T</code> across temperatures and compute <code>r.physical_integral / r.exact_physical_integral</code>. Check against Beats 1 and 4. The result also exposes <code>x_values</code>, <code>coord_values</code> and <code>y_values</code> for your own plot.</p></section><section id="parameters"><h2>Command-line parameters</h2><p>All ordinary settings are command-line options described in <code>main.py</code>. Physical quantities are in SI units throughout. Options you omit return to their defaults on each run.</p><div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table">
+python main.py --n_steps 100000</pre><p>Distinguish the continuous root from the sampled maximum.</p><p><strong>Challenge B:</strong> In a Python interpreter opened in the program folder, run <code>from planck2_driver import run_planck2</code>, then <code>r = run_planck2(5900.0, "wavelength", 2000)</code>. Compare <code>r.coord_peak * r.T</code> across temperatures and compute <code>r.physical_integral / r.exact_physical_integral</code>. Check against Beats 1 and 4. The result also exposes <code>x_values</code>, <code>coord_values</code> and <code>y_values</code> for your own plot.</p></section><section id="parameters"><h2>Command-line parameters</h2><p>All ordinary settings are command-line options described in <code>main.py</code>. Physical quantities are expressed in the International System of Units (SI). Options you omit return to their defaults on each run.</p><div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table">
 <thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
 <tbody>
 <tr><td class="pname">--T</td><td class="pdefault">5900.0</td><td>K</td><td>Positive finite black-body temperature; the default approximates the Sun's continuum.</td></tr>
@@ -489,4 +489,19 @@ python main.py --help</pre><p><code>--version</code> shows the shared code ident
   Bernard Schutz © 2003 (Cambridge University Press) ·
   Python programs © 2024–2026 Thomas Yee ·
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
-</footer></div></body></html>
+</footer></div><script>
+  (function () {
+    const links = document.querySelectorAll('nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector(`nav a[href="#${e.target.id}"]`);
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('main section[id]').forEach(s => observer.observe(s));
+  })();
+</script>
+</body></html>

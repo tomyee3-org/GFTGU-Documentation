@@ -173,7 +173,13 @@
   
 .beat-action{background:var(--note-bg);border-left:4px solid var(--gold);padding:11px 16px;margin:14px 0}.beat-action strong{font-family:var(--sans);font-size:.77rem;color:var(--accent);letter-spacing:.05em;text-transform:uppercase}.beat-action p:last-child{margin-bottom:0}.small-print{font-size:.86rem;color:var(--muted)}.compact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:12px}.compact-grid>div{background:var(--surface);border:1px solid var(--border);padding:12px 15px}.compact-grid p{margin-bottom:0}</style></head><body>
 <a class="skip-link" href="#content">Skip to the tutorial</a><div class="page-wrap">
-<header><div class="badge">GFtGU Programs · Terminal tutorial</div><h1><em>MercPert</em> — A Planet in a Binary Star System</h1><div class="sub">Ten Beats · One shared Python program</div></header>
+<header><div class="badge">GFtGU Programs · Terminal Tutorial</div><h1><em>MercPert</em> — A Planet in a Binary Star System</h1><div class="sub">
+        Source Code:
+        <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a> ·
+        <br/>
+        Documentation:
+            <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a> ·
+      </div></header>
 <nav id="sidebar"><div class="nav-label">Follow the run</div><a href="#start">Start here</a>
 <a href="#beat0">0 · A test particle in a binary</a>
 <a href="#beat1">1 · The binary is prescribed</a>
@@ -197,7 +203,7 @@
 <p class="note-box">When the cursor hovers over a graphical display, its <strong>(x, y)</strong> position in graph coordinates appears in the lower right corner of the Matplotlib display.</p>
 <p>Mercury's input position and velocity are relative to the Sun, while the plotted positions use the system's centre of mass. The dashed red and green circles show the <em>prescribed</em> stellar paths; the solid blue curve is Mercury's calculated path. A crossing of coloured paths on the screen does not mean the bodies met at the same time.</p>
 </section>
-<section id="beat0"><h2>Beat 0 · A test particle in a binary</h2><p>Begin with the default: a 1-solar-mass Sun, a 0.1-solar-mass companion 0.7 AU away, and Mercury 0.3 AU from the Sun with a 59,220 m/s sideways launch.</p>
+<section id="beat0"><h2>Beat 0 · A test particle in a binary</h2><p>Begin with the default: a 1-solar-mass Sun, a 0.1-solar-mass companion 0.7 astronomical units (AU) away, and Mercury 0.3 AU from the Sun with a 59,220 m/s sideways launch.</p>
 <pre class="code-block"><code>python main.py</code></pre>
 <div class="beat-action"><strong>Read these lines</strong><p>The stellar period is 203.96 days. The run covers 231.48 days and 10,000 accepted steps; Mercury ranges from 0.30000 to 0.40762 AU from the Sun. Find the compact red circle, wider green circle, and blue loops. The stars move on set circles; Mercury responds to both of them.</p></div>
 <p>The program solves Newton's equation for a massless third body: (ddot{mathbf r}=-GM_odot(mathbf r-mathbf r_odot)/|mathbf r-mathbf r_odot|^3-GM_c(mathbf r-mathbf r_c)/|mathbf r-mathbf r_c|^3). Do not call the blue loops closed or stable from this finite run alone.</p>
@@ -272,7 +278,7 @@ python main.py --x_init 0</code></pre>
 <tr><td><code>--position_unit</code></td><td>AU</td><td>Orbit-axis units: <code>AU</code> or <code>m</code>.</td></tr>
 <tr><td><code>--annotation_corner</code></td><td>upper_left</td><td><code>upper_left</code>, <code>upper_right</code>, <code>lower_left</code>, <code>lower_right</code>.</td></tr>
 <tr><td><code>--show_jacobi_diagnostic</code></td><td>off</td><td>Open the second diagnostic plot; <code>--no-show_jacobi_diagnostic</code> selects only the orbit plot.</td></tr>
-</tbody></table></div><p><code>python main.py --version</code> reports the shared version and source build. The program needs Python 3.10 or later and Matplotlib. The page's equations are typeset by MathJax from a public CDN; the program itself needs no connection.</p></section>
+</tbody></table></div><p><code>python main.py --version</code> reports the shared version and source build. The program needs Python 3.10 or later and Matplotlib. The page's equations are typeset by MathJax from a public online service; the program itself needs no connection.</p></section>
 <section id="output"><h2>Reading the output</h2><p>The first console line gives version, build, accepted-step count and stopping reason. Next come the binary's circular period, Mercury's integration time, its minimum and maximum distance <em>from the Sun</em>, maximum absolute fractional Jacobi drift, and the smallest/largest accepted working timestep. A run at <code>max_steps</code> has that many accepted steps plus the initial state. A collision can stop sooner.</p>
 <p>The orbit plot uses dashed red for Sun, dashed green for companion and solid blue for Mercury. A black × appears only for a configured collision. With <code>--show_jacobi_diagnostic</code>, the second plot shows signed ((C-C_0)/|C_0|), whereas the console shows its maximum magnitude. If (C_0=0), the printed fractional drift is undefined. For a collision, the interpolated endpoint contributes to the printed drift. The <a href="SampleOutputs/MercPert-SampleOutputs_Guide.html">Sample Outputs Guide</a> provides representative figures and quoted values for Beats 0–8.</p></section>
 <section id="practice"><h2>Practice tasks</h2><ol>
@@ -291,4 +297,18 @@ python main.py --x_init 0</code></pre>
 <section id="related"><h2>Related programs</h2><p><strong>Orbit</strong> studies a single central star. <strong>Binary</strong> evolves two massive bodies; MercPert prescribes the circular binary and follows a massless third body. <strong>Multiple</strong> lets several bodies all gravitate and move.</p></section>
 <section id="license"><h2>License</h2><p>Based on Bernard Schutz's programs accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003). Distributed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International</a>.</p></section>
 </main>
-<footer><em>Gravity from the Ground Up</em> — Python Programs · CC BY-NC-SA 4.0</footer></div></body></html>
+<footer><em>Gravity from the Ground Up</em> — Python Programs · CC BY-NC-SA 4.0</footer></div><script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body></html>

@@ -11,7 +11,9 @@
 <b>Date:</b> 2026-09-29</p>
 
 <h2>Release Status</h2>
-<p>Kickoff4 documentation and test review candidate for Version 1.4.0, build 217c2c26a44a. The core program is byte-for-byte unchanged from the September 25 build, so its version and build identifier remain the same. The last two code-changing rounds were Kickoff2 and the Audit 21 response, described in the September 25 notes preserved below. Grok's Audit 22 recommended freezing both Help files without a science defect; Codex's Audit 22 reported two P3 documentation defects. The active-guide defect is corrected in this round. The other concerns only the archived Reference Guide, which is intentionally frozen and is no longer a contract for the active program. External Audit41 review of this Kickoff4 candidate is pending.</p>
+<p>Response to Claude’s Audit41 style addendum, 29 September 2026: Rebuilt the Grok page with the Claude guide’s stylesheet, header, sidebar and footer; explained the extreme zoom needed for the Beat 6 cursor comparison; corrected the starred-row claim and all seven minor findings, with stronger regression checks. The core Python files and the program version/build are unchanged. Xedoc’s prepackaging review confirmed the core and archived guides unchanged, checked document structure and references, and found no remaining significant discrepancy.</p>
+
+<p>Kickoff4 documentation and test review candidate for Version 1.4.0, build 217c2c26a44a. The core program is byte-for-byte unchanged from the September 25 build, so its version and build identifier remain the same. The last two code-changing rounds were Kickoff2 and the Audit 21 response, described in the September 25 notes preserved below. Grok's Audit 22 recommended freezing both Help files without a science defect; Codex's Audit 22 reported two P3 documentation defects. The active-guide defect is corrected in this round. The other concerns only the archived Reference Guide, which is intentionally frozen and is no longer a contract for the active program. Claude’s Audit41 verdict was HOLD for a style mismatch and an unstated extreme-zoom requirement. The Response-to-StyleAddendum repairs both, as well as the remaining P3 and convenient P4 findings; external re-review of this response is pending.</p>
 
 <h2>Open Bugs</h2>
 <p>None identified in the active SphereGravity code, paired tutorials, tests, and shared Sample Outputs Guide. OB-1 from the earlier notes is closed: the Claude guide now limits the magnitude-jump statement to the spherical shell and states the general signed-normal-component rule. OB-2 concerns wording in the archived Reference Guide; it is retained without active synchronization, and the earlier report remains below for historical context.</p>
@@ -26,8 +28,8 @@
 
 <h2>Test Suite Growth</h2>
 <ul>
-<li>1.3.0: 74 tests; 1.4.0 at Kickoff2: 135; 1.4.0 after Audit 21: 142; Kickoff4: 133 tests after removing current-API checks against the frozen Reference Guide and adding paired-tutorial and shared-guide tests.</li>
-<li>Run from <code>GFTGU-Programs/SphereGravity</code> with <code>MPLBACKEND=Agg python3 -m unittest discover -s tests -q</code>. The Kickoff4 sibling package ran 133 tests, OK, with one expected skip for inbound-link checks that require unrelated documentation folders. The archived-guide tests are optional and skip when that file is absent.</li>
+<li>1.3.0: 74 tests; 1.4.0 at Kickoff2: 135; 1.4.0 after Audit 21: 142; Kickoff4: 137 tests after removing current-API checks against the frozen Reference Guide and adding paired-tutorial and shared-guide tests.</li>
+<li>Run from <code>GFTGU-Programs/SphereGravity</code> with <code>MPLBACKEND=Agg python3 -m unittest discover -s tests -q</code>. The Kickoff4 sibling package ran 137 tests, OK, with one expected skip for inbound-link checks that require unrelated documentation folders. The archived-guide tests are optional and skip when that file is absent.</li>
 <li>The new paired tests check both files in the same folder, shared release stamps, navigation, student text, documented Grok commands, input rejections and key mass-error claims. Shared-guide tests check commands and indexed PNG metadata. Existing numerical and Claude-guide checks remain.</li>
 </ul>
 
@@ -37,13 +39,13 @@
 <li>The field jumps at r = 1, which is excluded from the table and omitted from the drawn curve. The plotted grid is fixed at 0 to 4.995, even when the table uses other radii.</li>
 <li>Beside the shell a coarse midpoint tiling is inaccurate. A marked h<sup>2</sup> estimate does not apply; an unmarked estimate near the marking threshold can still differ by several per cent.</li>
 <li>The plot uses the tile mass for normalization, whereas the table uses the continuum mass. An interior relative difference from a zero expected field is undefined; the table prints g/M instead.</li>
-<li>Input limits are 1 through 100000 divisions, epsilon from 1e-100 to 1e100, and table radii up to 1e100. The explicit plotted-profile loops can take several seconds for 10000 divisions.</li>
+<li>Input limits are 1 through 100000 divisions, epsilon from 1e-100 to 1e100, and table radii up to 1e100. The explicit plotted-profile loops can take tens of seconds for 10000 divisions.</li>
 <li>Mathematical typesetting in both active tutorials uses online MathJax; the Python program itself works offline. The archived Reference Guide remains frozen and may not match later versions.</li>
 </ul>
 
 <h2>Known Minor Maintenance Items</h2>
 <ul>
-<li>Some NumPy float32 epsilon values emit a RuntimeWarning during validation, though they are accepted or rejected correctly (Grok Audit 22).</li>
+<li>A NumPy float32 epsilon value emits a RuntimeWarning during validation, though they are accepted or rejected correctly (Grok Audit 22).</li>
 <li>The build identifier reads <code>unknown</code> when a core file is missing. Runtime type annotations are conservative.</li>
 <li>The faster NumPy profile implementation is selected by editing two lines in <code>physics_spheregravity.py</code>. The command line has no option to save the figure or table.</li>
 <li>MathJax is not bundled for offline use.</li>

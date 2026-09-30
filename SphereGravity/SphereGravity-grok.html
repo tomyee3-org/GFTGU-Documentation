@@ -1,21 +1,469 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SphereGravity — A shell theorem lab</title>
-<script>MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
-<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SphereGravity – Terminal Tutorial | GFtGU Programs</title>
+<!-- MathJax 3 -->
+<script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(','\\)']],
+        displayMath: [['\\[','\\]']],
+        tags: 'ams',
+        packages: {'[+]': ['textmacros']}
+      },
+      loader: { load: ['[tex]/textmacros'] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 <style>
-:root{--bg:#fdf5e6;--surface:#fff;--border:#c8bfa0;--accent:#7b2d00;--gold:#b5811a;--text:#1c1c1c;--muted:#5a4a3a;--code-bg:#f0ede4;--sans:Arial,Helvetica,sans-serif;--serif:Georgia,"Times New Roman",serif}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.75 var(--serif)}.page-wrap{display:grid;grid-template-columns:215px minmax(0,1fr);max-width:1250px;margin:auto;background:var(--surface);min-height:100vh}
-header{grid-column:1/-1;background:var(--accent);color:white;border-bottom:4px solid var(--gold);padding:20px 32px}header h1{font-size:1.85rem;font-weight:normal;margin:0}header p{margin:.3em 0;color:#f0d0b8;font:13px var(--sans)}header a,footer a{color:#ffd8b8}nav{padding:25px 12px;border-right:1px solid var(--border);position:sticky;top:0;height:100vh;overflow:auto;font:13px/1.35 var(--sans)}nav a{display:block;color:var(--accent);padding:5px 8px;text-decoration:none}nav a:hover{background:var(--bg)}main{min-width:0;max-width:850px;padding:30px 45px 55px}section{margin:2.2em 0}h2{color:var(--accent);font:normal 1.35rem var(--serif);border-bottom:2px solid var(--gold);padding-bottom:.3em}h3{color:var(--accent);font:700 1rem var(--sans)}p{margin:.7em 0}pre{white-space:pre-wrap;overflow:auto;background:var(--code-bg);border-left:4px solid var(--gold);padding:12px 16px;font:14px/1.5 "Courier New",monospace}code{font: .88em "Courier New",monospace;background:var(--code-bg);padding:1px 3px}.note{background:#f4f0e8;border-left:4px solid var(--gold);padding:10px 16px}.prompt{background:#faf5ec;padding:10px 16px;border-left:4px solid #a04010}table{border-collapse:collapse;width:100%;font:13px/1.4 var(--sans)}th,td{border-bottom:1px solid var(--border);padding:8px;text-align:left;vertical-align:top}th{background:var(--accent);color:white}.table-scroll{overflow-x:auto}footer{grid-column:1/-1;text-align:center;padding:16px;background:var(--accent);color:white;font:12px var(--sans)}#version_build{font:11px var(--sans);color:var(--muted);margin:0 0 1.5em}@media(max-width:700px){.page-wrap{display:block}nav{position:static;height:auto;border-right:0;border-bottom:1px solid var(--border)}main{padding:22px}}
+    /* ── Reset & custom properties ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #fdf5e6;
+      --surface:  #ffffff;
+      --border:   #c8bfa0;
+      --accent:   #7b2d00;
+      --accent2:  #a04010;
+      --gold:     #b5811a;
+      --text:     #1c1c1c;
+      --muted:    #5a4a3a;
+      --code-bg:  #f0ede4;
+      --note-bg:  #f4f0e8;
+      --eq-bg:    #f7f2e8;
+      --radius:   5px;
+      --shadow:   0 2px 8px rgba(0,0,0,0.10);
+      --mono:     "Courier New", Courier, monospace;
+      --sans:     "Helvetica Neue", Arial, sans-serif;
+      --serif:    Georgia, "Times New Roman", Times, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.80;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Page grid ── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      padding: 26px 38px 20px;
+      border-bottom: 4px solid var(--gold);
+    }
+    header .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 2px 7px;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      font-size: 1.95rem;
+      font-weight: normal;
+      letter-spacing: -.02em;
+    }
+    header h1 em { font-style: normal; color: #ffc9a0; }
+    header .sub {
+      margin-top: 6px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: #f0d0b8;
+      line-height: 1.55;
+    }
+    header .sub a {
+      color: #ffd8b8;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,200,150,.4);
+    }
+    header .sub a:hover { border-bottom-color: #ffd8b8; }
+
+    /* ── Sidebar ── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0 40px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .nav-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      padding: 14px 18px 4px;
+    }
+    nav a {
+      display: block;
+      padding: 6px 18px 6px 22px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background .15s, border-color .15s;
+    }
+    nav a:hover {
+      background: var(--bg);
+      border-left-color: var(--accent2);
+      color: var(--accent);
+    }
+    nav a.active {
+      background: var(--note-bg);
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    nav hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 14px;
+    }
+
+    /* ── Main content ── */
+    main {
+      padding: 38px 48px 60px;
+      max-width: 860px;
+    }
+
+    section { margin-bottom: 52px; }
+
+    h2 {
+      font-size: 1.30rem;
+      font-weight: normal;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 6px;
+      margin-bottom: 18px;
+      letter-spacing: -.01em;
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--accent2);
+      margin: 24px 0 8px;
+    }
+    h4 {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin: 18px 0 6px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    /* ── Equation block ── */
+    .eq {
+      background: var(--eq-bg);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 20px;
+      margin: 18px 0;
+      overflow-x: auto;
+      font-size: 1.05em;
+    }
+    .eq-label {
+      float: right;
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 2px;
+    }
+
+    /* ── Note / tip box ── */
+    .note {
+      background: var(--note-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      margin: 18px 0;
+      font-size: 0.93rem;
+    }
+    .note strong { color: var(--accent); }
+
+    /* ── Restore-defaults box ── */
+    .restore-section {
+      margin: 2.5em auto;
+      max-width: 860px;
+      font-family: inherit;
+    }
+    .restore-box {
+      border: 1.5px solid var(--gold);
+      border-left: 5px solid var(--gold);
+      border-radius: 6px;
+      background: #fffbeb;
+      padding: 1.1em 1.4em;
+      display: flex;
+      gap: 1em;
+      align-items: flex-start;
+    }
+    .restore-icon { font-size: 1.5em; line-height: 1; flex-shrink: 0; }
+    .restore-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      color: var(--accent);
+      margin-bottom: 0.35em;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .restore-intro {
+      margin: 0 0 0.5em;
+      font-size: 0.92em;
+      line-height: 1.6;
+    }
+    .restore-list {
+      margin: 0;
+      padding-left: 1.4em;
+      font-size: 0.92em;
+      line-height: 1.8;
+    }
+    .restore-box kbd {
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.88em;
+    }
+    .restore-link { color: var(--accent); text-decoration: underline; }
+    .restore-footnote {
+      margin: 0.6em 0 0;
+      font-size: 0.88em;
+      color: var(--muted);
+    }
+
+    /* ── Code ── */
+    pre {
+      background: #2b2b2b;
+      color: #f0ede4;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.55;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 0.91em;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    pre code { background: none; padding: 0; font-size: inherit; }
+
+    /* ── Module cards ── */
+    .mc { display: grid; gap: 14px; margin: 18px 0; }
+    .mc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+    }
+    .mc-card .mc-name {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .mc-card .mc-role {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .mc-card p { font-size: 0.92rem; margin-bottom: 0; color: var(--muted); }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 16px 0;
+    }
+    th {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      background: var(--note-bg);
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { font-family: var(--mono); color: var(--accent2); }
+
+    /* ── Output type list ── */
+    .output-list { list-style: none; margin: 14px 0; }
+    .output-list li {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .output-list li:last-child { border-bottom: none; }
+    .output-list .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      white-space: nowrap;
+      color: var(--accent2);
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      grid-column: 1 / -1;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      text-align: center;
+      padding: 18px 24px;
+      line-height: 1.7;
+    }
+    footer a { color: #e0c090; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Beats layout additions ── */
+    .eq-kind {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .kind {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-left: 4px;
+      vertical-align: 1px;
+    }
+    .kind-law { background: #f6dcdc; color: #7a1f1f; border: 1px solid #d9a0a0; }
+    .kind-ode { background: #d9ead3; color: #274e13; border: 1px solid #a8c69a; }
+    .kind-def { background: #e4e4e4; color: #3a3a3a; border: 1px solid #b5b5b5; }
+    .kind-der { background: #dbe8f5; color: #1c3f63; border: 1px solid #a4c0da; }
+    .kind-alg { background: #e6e0f8; color: #3d2c73; border: 1px solid #b7abdd; }
+    .related-list li { margin-bottom: 6px; }
+    .warn {
+      background: #fff6e8;
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 12px 18px;
+      margin: 16px 0;
+      font-family: var(--sans);
+      font-size: 0.91rem;
+      color: var(--muted);
+    }
+    .warn strong { color: var(--accent); }
+    .compare-table th:not(:first-child), .compare-table td:not(:first-child) {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .compare-table td:not(:first-child) { font-family: var(--mono); color: var(--text); }
+    main { min-width: 0; }
+    .eq-block mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+    .table-scroll { overflow-x: auto; max-width: 100%; margin: 16px 0; }
+    .table-scroll table { margin: 0; }
+    .table-scroll:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
+    section ul { margin: 0 0 14px 1.4em; }
+    section ul li, section ol li { margin-bottom: 6px; }
+    section ol { margin: 0 0 14px 1.6em; }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      nav { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 20px 48px; }
+    }
+  
+  .prompt { background: #faf5ec; border-left: 4px solid var(--accent2); padding: 12px 18px; margin: 16px 0; }
 </style>
 </head>
 <body>
 <div class="page-wrap">
-<header><h1>SphereGravity — a shell theorem lab</h1><p>Source: <a href="https://github.com/tomyee3-org/GFTGU-Programs">GFTGU Programs</a> · Documentation: <a href="https://github.com/tomyee3-org/GFTGU-Documentation">GFTGU Documentation</a></p></header>
-<nav aria-label="Page contents"><a href="#start">Start here</a><a href="#beat0">0 · The outside and inside</a><a href="#beat1">1 · Make the tiles coarse</a><a href="#beat2">2 · Look far away</a><a href="#beat3">3 · Look inside</a><a href="#beat4">4 · Refine the tiling</a><a href="#beat5">5 · Approach the surface</a><a href="#beat6">6 · Read the other plot</a><a href="#beat7">7 · Double the mass</a><a href="#beat8">8 · Break the approximation</a><a href="#parameters">Parameters</a><a href="#limits">Where to trust it</a><a href="#related">Related programs</a><a href="#license">License</a></nav>
+<header>
+<div class="badge">Chapter 4 · Investigation 4.3 · Terminal Tutorial</div>
+<h1><em>SphereGravity</em> — A Shell Theorem Lab</h1>
+<div class="sub">
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+</div>
+</header>
+<nav id="sidebar">
+<div class="nav-label">Overview</div>
+<a href="#start">Start here</a>
+<div class="nav-label">Beats</div>
+<a href="#beat0">0 · Outside it looks like a point</a>
+<a href="#beat1">1 · Make the tiles coarse</a>
+<a href="#beat2">2 · Keep moving outward</a>
+<a href="#beat3">3 · Walk from the centre to the wall</a>
+<a href="#beat4">4 · Refine by ten</a>
+<a href="#beat5">5 · Approach the surface</a>
+<a href="#beat6">6 · Read the error plot</a>
+<a href="#beat7">7 · Double the mass per area</a>
+<a href="#beat8">8 · Break the approximation</a>
+<div class="nav-label">Usage</div>
+<a href="#parameters">Parameters at the terminal</a>
+<a href="#limits">Where to trust the result</a>
+<div class="nav-label">Reference</div>
+<a href="#related">Related programs</a>
+<a href="#license">License</a>
+</nav>
 <main>
 <p id="version_build">Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 217c2c26a44a</p>
 <section id="start"><h2>Start here</h2>
@@ -41,23 +489,23 @@ header{grid-column:1/-1;background:var(--accent);color:white;border-bottom:4px s
 <section id="beat3"><h2>Beat 3 · Walk from the centre to the wall</h2>
 <pre>python main.py --radii 0 0.25 0.5 0.75 0.9</pre>
 <p>The table's <code>expected g</code> is zero throughout. Consequently it reports <code>undefined; g/M=</code> in place of a relative difference. The residual becomes harder to ignore close to the shell.</p>
-<p class="prompt"><strong>Try next.</strong> Why can the program divide an interior pull by the shell mass, but not call the answer a relative error? Ask the graph for an interior cursor coordinate and compare it with a table row.</p>
+<p class="prompt"><strong>Try next.</strong> Why can the program divide an interior pull by the shell mass, but not call the answer a relative error? Near <em>r</em> = 0.9, zoom in vertically before using the cursor to inspect the interior residual, then compare it with the table. At the default scale most interior residuals are smaller than one screen pixel.</p>
 <p>In the continuum, the near and far patches within the same narrow cone have equal and opposite axial pulls. Finite midpoint tiles do not pair exactly, so the residual is a numerical error; division by a zero expected pull would be undefined.</p></section>
 <section id="beat4"><h2>Beat 4 · Refine by ten</h2>
 <pre>python main.py --nDiv 1000
 python main.py --nDiv 10000</pre>
-<p>Compare the mass error and the table's error at a fixed radius with the earlier 100-division run. These long runs refine the graph's full 1000-point profile as well as the short printed table; the 10000-division run can take several seconds.</p>
+<p>Compare the mass error and the table's error at a fixed radius with the earlier 100-division run. These long runs refine the graph's full 1000-point profile as well as the short printed table; the 10000-division run can take tens of seconds.</p>
 <p class="prompt"><strong>Try next.</strong> Record the table's <em>r</em> = 2 relative difference for 100, 1000 and 10000 divisions. Does each tenfold refinement make it about ten times or a hundred times smaller?</p>
 <p>The leading midpoint error scales like \(h^2\), and \(h=\pi/n\). The <code>h^2 estimate</code> is calculated from a formula independently of the tile sum; an unmarked row is an opportunity to compare the two.</p></section>
 <section id="beat5"><h2>Beat 5 · Approach the surface</h2>
 <pre>python main.py --radii 0.995 1.005 1.01 1.05 1.1
 python main.py --nDiv 10000 --radii 0.995 1.005 1.01 1.05 1.1</pre>
-<p>At 100 divisions, the two closest rows have a <code>*</code>: the error estimate there is unreliable and can even have the wrong sign. At 10000 divisions, the marks disappear and the estimate approaches the measured error. Compare the pulls at 0.995 and 1.005 in the fine run.</p>
+<p>At 100 divisions every row except <em>r</em> = 1.1 has a <code>*</code>: the error estimate there is unreliable and can even have the wrong sign. At 10000 divisions, the marks disappear and the estimate approaches the measured error. Compare the pulls at 0.995 and 1.005 in the fine run.</p>
 <p class="prompt"><strong>Try next.</strong> The fine run samples on opposite sides, but does not sample exactly at the surface. Predict the limiting jump, and explain why their finite-distance difference is a little smaller.</p>
 <p>The continuum shell's magnitude rises from zero just inside to \(4\pi G\varepsilon\) just outside. For a general surface layer, it is the <em>signed normal component</em> of the field that has this universal jump; the magnitude statement here uses spherical symmetry. The program marks an estimate when \(h\geq\tfrac12\min(1,|r-1|)\); an unmarked row near the cutoff still calls for caution.</p></section>
 <section id="beat6"><h2>Beat 6 · Read the error plot</h2>
 <pre>python main.py</pre>
-<p>The default graph plots <code>relative_difference</code>. The tall pair of spikes beside <em>r</em> = 1 sets its vertical scale. Move the cursor to <em>r</em> = 2 and compare that plotted value with the table's relative difference at 2: they are not the same number.</p>
+<p>The default graph plots <code>relative_difference</code>. The tall pair of spikes beside <em>r</em> = 1 sets its vertical scale. At the default scale the curve at <em>r</em> = 2 is less than one screen pixel above zero, so the cursor cannot read its value. Use the toolbar magnifier to zoom repeatedly around <em>r</em> = 2, first selecting approximately 0 to 1e-4 on the vertical axis. Even then the cursor gives only about one significant figure. The plotted value is 5.03e-05; the table prints 9.1423e-05. Compare those numbers using the formula below.</p>
 <p class="prompt"><strong>Try next.</strong> The table uses the exact mass \(M\), while the plot uses the tile mass \(M_{\rm num}\). Which view isolates the error in the shape of the field? Why does the plotted far-field error tend to zero?</p>
 <p>Outside, if \(\delta_{\rm table}=g_{\rm num}/(M/r^2)-1\), then \(\delta_{\rm plot}=(1+\delta_{\rm table})/(M_{\rm num}/M)-1\). Inside, the displayed residual is \(g_{\rm num}/M_{\rm num}\), while the table prints \(g_{\rm num}/M\). Do not apply the exterior subtraction to an interior row.</p></section>
 <section id="beat7"><h2>Beat 7 · Double the mass per area</h2>
@@ -89,6 +537,27 @@ python main.py --nDiv 100001</pre>
 </ul></section>
 <section id="related"><h2>Related programs</h2><p>Atmosphere follows pressure under gravity; Star and Neutron build spherical bodies using enclosed mass; RelativisticOrbit explores motion in a relativistic central field. SphereGravity isolates the shell theorem on which the spherical examples rely.</p></section>
 <section id="license"><h2>License</h2><p>Based on Bernard Schutz's original Java program accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003). Python port by Thomas Yee. Distributed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International</a>.</p></section>
-</main><footer><em>Gravity from the Ground Up</em> · Python Programs · CC BY-NC-SA 4.0</footer></div>
+</main><footer>
+<em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+</footer></div>
+<!-- ── Sidebar active-link tracking ── -->
+<script>
+  (function () {
+    const links = document.querySelectorAll('nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector(`nav a[href="#${e.target.id}"]`);
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('main section[id]').forEach(s => observer.observe(s));
+  })();
+</script>
 </body>
 </html>

@@ -449,7 +449,7 @@
 <a href="#beat2">Beat 2 · Read the prediction first</a>
 <a href="#beat3">Beat 3 · Move to a weak field</a>
 <a href="#beat4">Beat 4 · Disturb two circles</a>
-<a href="#beat5">Beat 5 · Cross the ISCO and return</a>
+<a href="#beat5">Beat 5 · Cross the inner circular boundary and return</a>
 <a href="#beat6">Beat 6 · Separate a plunge from a whirl</a>
 <a href="#beat7">Beat 7 · Refine before trusting a digit</a>
 <a href="#beat8">Beat 8 · Escape, Mercury and rejected inputs</a>
@@ -468,7 +468,7 @@
 <section id="beat0"><h2>Beat 0 · Watch a rosette</h2>
 <p><strong>Run.</strong> Begin with the default Schwarzschild orbit.</p>
 <pre>python main.py</pre>
-<p><strong>Observe.</strong> The run stops at 6000 accepted steps after 9.285146 turns. It finds six periapsides at about 15000 m and measures 2.44005 rad of advance per radial period. The independent calculation from the constants of motion predicts 2.44037 rad and an apoapsis of 23954.4 m. The horizon is about 2953.3 m and the ISCO about 8859.8 m, both inside this orbit.</p>
+<p><strong>Observe.</strong> The run stops at 6000 accepted steps after 9.285146 turns. It finds six periapsides at about 15000 m and measures 2.44005 rad of advance per radial period. The independent calculation from the constants of motion predicts 2.44037 rad and an apoapsis of 23954.4 m. The horizon is about 2953.3 m and the innermost stable circular orbit (ISCO) about 8859.8 m, both inside this orbit.</p>
 <p><strong>Your turn.</strong> Point to two successive closest approaches in the plot. Why can their distances agree while their directions differ? The extra Schwarzschild inward term in the orbit equation is (3h^2/(c^2r^2)) times the Newtonian attraction, where (h=x_0u_0) is conserved angular momentum per unit mass. The orbital diagram is not a flat-space map of the geometry.</p></section>
 <section id="beat1"><h2>Beat 1 · Switch off the extra pull</h2>
 <p><strong>Run.</strong> Keep the initial data and change only the force law.</p>
@@ -492,7 +492,7 @@ python main.py --model newtonian --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_s
 python main.py --x_init 7383.12519025 --u_init 212197265.2804 --dt 1e-7 --max_orbits 12 --max_steps 40000</pre>
 <p><strong>Observe.</strong> The first predicts <code>circular (stable)</code> at 11813 m and 6.28319 rad as the advance of a small radial disturbance; a perfectly circular path itself has no periapsis sequence to measure. The second begins inside the ISCO but about 0.1% above its circular proper-time rate: it travels out to 15002.2 m, predicts 24.4301 rad of advance and measures 24.4374 rad.</p>
 <p><strong>Your turn.</strong> Look at the two plots. Why is a small disturbance mild outside the ISCO but dramatic on the unstable inner circle? Do not start a circular run by copying the six-significant-figure <code>circular dy/dtau</code> line; use the full input value shown here or compute it with <code>circular_proper_time_speed()</code>.</p></section>
-<section id="beat5"><h2>Beat 5 · Cross the ISCO and return</h2>
+<section id="beat5"><h2>Beat 5 · Cross the inner circular boundary and return</h2>
 <p><strong>Run.</strong> Start at 20000 m and compare the default numerical settings with a tighter integration.</p>
 <pre>python main.py --x_init 20000 --u_init 8e7 --max_steps 8000
 python main.py --x_init 20000 --u_init 8e7 --dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 20000</pre>
@@ -528,16 +528,16 @@ python main.py --x_init 2000</pre>
 <p>Options override defaults for one run. <code>--show_isco</code> and <code>--show_periapsides</code> only change the picture; <code>--no-show_isco</code> and <code>--no-show_periapsides</code> undo those switches. Negative values for <code>--u_init</code> are allowed.</p><div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table">
 <thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td class="pname">--x_init</td><td class="pdefault">15000</td><td>Starting areal radius \(x_0\) in m, on the \(+x\) axis, Eq. (3). It must be positive, and outside the horizon, 2953.3 m, in Schwarzschild mode.</td></tr>
-<tr><td class="pname">--u_init</td><td class="pdefault">1.2e8</td><td>Starting \(dy/d\tau\), \(u_0\), in m/s, Eq. (3); any finite value, including zero or a negative value. It is a proper-time rate, not a measured speed.</td></tr>
-<tr><td class="pname">--dt</td><td class="pdefault">2e-6</td><td>Largest proper-time step \(\Delta\tau_{\max}\) in s, Eq. (20).</td></tr>
+<tr><td class="pname">--x_init</td><td class="pdefault">15000</td><td>Starting areal radius \(x_0\) in m, on the \(+x\) axis. It must be positive, and outside the horizon, 2953.3 m, in Schwarzschild mode.</td></tr>
+<tr><td class="pname">--u_init</td><td class="pdefault">1.2e8</td><td>Starting \(dy/d\tau\), \(u_0\), in m/s; any finite value, including zero or a negative value. It is a proper-time rate, not a measured speed.</td></tr>
+<tr><td class="pname">--dt</td><td class="pdefault">2e-6</td><td>Largest proper-time step \(\Delta\tau_{\max}\) in s.</td></tr>
 <tr><td class="pname">--max_steps</td><td class="pdefault">6000</td><td>Largest number of accepted steps; a run can stop here before it reaches <code>--max_orbits</code>.</td></tr>
-<tr><td class="pname">--max_orbits</td><td class="pdefault">10</td><td>Number of turns, Eq. (4), after which the run stops; the last step can overshoot it slightly.</td></tr>
-<tr><td class="pname">--eps1</td><td class="pdefault">0.05</td><td>Largest fractional change of the acceleration in one step, \(\varepsilon_1\) of Eq. (20); strictly between 0 and 1.</td></tr>
-<tr><td class="pname">--eps2</td><td class="pdefault">1e-4</td><td>Convergence threshold \(\varepsilon_2\) of the corrector, Eq. (19); strictly between 0 and <code>--eps1</code>.</td></tr>
-<tr><td class="pname">--model</td><td class="pdefault">schwarzschild</td><td><code>schwarzschild</code> integrates Eq. (2); <code>newtonian</code> integrates Eq. (6) from the same start.</td></tr>
+<tr><td class="pname">--max_orbits</td><td class="pdefault">10</td><td>Number of turns, after which the run stops; the last step can overshoot it slightly.</td></tr>
+<tr><td class="pname">--eps1</td><td class="pdefault">0.05</td><td>Largest fractional change of the acceleration in one step, \(\varepsilon_1\); strictly between 0 and 1.</td></tr>
+<tr><td class="pname">--eps2</td><td class="pdefault">1e-4</td><td>Convergence threshold \(\varepsilon_2\) of the corrector; strictly between 0 and <code>--eps1</code>.</td></tr>
+<tr><td class="pname">--model</td><td class="pdefault">schwarzschild</td><td><code>schwarzschild</code> uses relativistic gravity; <code>newtonian</code> uses Newtonian gravity from the same start.</td></tr>
 <tr><td class="pname">--show_isco</td><td class="pdefault">on</td><td>Draw the ISCO circle at \(6GM/c^2\) in Schwarzschild mode; <code>--no-show_isco</code> hides it.</td></tr>
-<tr><td class="pname">--show_periapsides</td><td class="pdefault">off</td><td>Mark the periapsides found by Eq. (5) with an <code>x</code>; <code>--no-show_periapsides</code> hides them.</td></tr>
+<tr><td class="pname">--show_periapsides</td><td class="pdefault">off</td><td>Mark the periapsides found with an <code>x</code>; <code>--no-show_periapsides</code> hides them.</td></tr>
 </tbody></table></div></section>
 <section id="summary"><h2>Reading the output</h2>
 <p><code>termination</code> says why integration stopped, while <code>motion</code> in the predicted block classifies the ideal orbit from the constants. <code>accepted steps</code>, <code>proper time</code>, and <code>azimuthal turns</code> describe the integrated path. <code>periapsides found</code> counts discrete minima; a circular path has no sequence of such events. The advance is printed only when at least two periapsides are found. The exact predicted advance and the weak-field approximation are separately labeled.</p>
@@ -549,7 +549,7 @@ python main.py --help</pre>
 <h2>Related Programs</h2>
 <ul class="related-list">
 <li><strong>Orbit</strong> — Newtonian orbits around a fixed mass with a related adaptive predictor-corrector; its orbits close.</li>
-<li><strong>MercPert</strong> — The precession of Mercury's orbit caused by another planet in Newtonian gravity. Such perturbations account for most of Mercury's observed precession; relativity accounts for the remaining 43 arcseconds per century (Experiment 11).</li>
+<li><strong>MercPert</strong> — The precession of Mercury's orbit caused by another planet in Newtonian gravity. Such perturbations account for most of Mercury's observed precession; relativity accounts for the remaining 43 arcseconds per century (see Beat 8).</li>
 <li><strong>Binary</strong> — Two bodies orbiting each other in Newtonian gravity, where neither is fixed.</li>
 </ul>
 </section>

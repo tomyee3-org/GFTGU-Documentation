@@ -175,7 +175,13 @@
   
 .beat-action{background:var(--note-bg);border-left:4px solid var(--gold);padding:10px 15px;margin:12px 0}.beat-action strong{font-family:var(--sans);font-size:.78rem;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}.small-print{font-size:.84rem;color:var(--muted)}.compact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.compact-grid>div{border:1px solid var(--border);background:var(--surface);padding:10px 14px}</style></head><body>
 <a class="skip-link" href="#content">Skip to the tutorial</a><div class="page-wrap">
-<header><div class="badge">EARTHORBIT · TERMINAL TUTORIAL</div><h1><em>EarthOrbit</em> — Newton's Cannon</h1><div class="sub">Ten short Beats · One shared Python program</div></header>
+<header><div class="badge">CHAPTER 4 · INVESTIGATIONS 4.1–4.2 · Terminal Tutorial</div><h1><em>EarthOrbit</em> — Newton's Cannon</h1><div class="sub">
+        Source Code:
+        <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a> ·
+        <br/>
+        Documentation:
+            <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a> ·
+      </div></header>
 <nav id="sidebar"><div class="nav-label">Follow the run</div><a href="#start">Start here</a>
 <a href="#beat0">0 · A near miss that hits</a>
 <a href="#beat1">1 · Two gravity laws</a>
@@ -271,7 +277,7 @@ python main.py --uInit 1e308 --dt 10</code></pre>
 <tr><td><code>--dt</code></td><td>0.4</td><td>Positive fixed timestep, s.</td></tr>
 <tr><td><code>--maxSteps</code></td><td>15000</td><td>Stored-point cap, including launch; integer at least 2.</td></tr>
 <tr><td><code>--force_law</code></td><td>simplified</td><td><code>simplified</code>: fixed 9.8 m/s² inward; <code>inverse_square</code>: (mu_oplus/r^2) inward.</td></tr>
-</tbody></table></div><p><code>--version</code> reports the common version and source build. The four Python modules require Python, NumPy and Matplotlib; the program does not need an internet connection. Equations on this page use MathJax loaded from a public CDN and need a connection to be typeset.</p></section>
+</tbody></table></div><p><code>--version</code> reports the common version and source build. The four Python modules require Python, NumPy and Matplotlib; the program does not need an internet connection. Equations on this page use MathJax loaded from a public online service and need a connection to be typeset.</p></section>
 <section id="output"><h2>Reading the summary</h2><p>The first line gives version, build and the number of stored trajectory samples. “Surface impact” uses an interpolated crossing; “Orbit completed” means at least one numerically tracked revolution; “Escape trajectory” requires an unbound inverse-square launch and no impact during the run. A maximum-step stop says only where integration ended.</p>
 <p>Completed revolutions, angular travel, flight time, distance and altitude extremes refer to the computed path. The extra <code>Osculating</code> lines in inverse-square runs are ideal two-body elements calculated from the launch state. The two kinds of number can differ because the finite-step integrator drifts. For an unbound launch there is no osculating apogee. A final/maximum altitude line is combined only if both format to the same value.</p></section>
 <section id="experiments"><h2>Practice tasks</h2><ol>
@@ -295,4 +301,18 @@ python main.py --uInit 1e308 --dt 10</code></pre>
 <section id="related"><h2>Related programs</h2><p><strong>CannonTrajectory</strong> is a simpler near-surface projectile problem. <strong>Orbit</strong> extends orbital calculations; <strong>Binary</strong> treats two gravitating bodies. EarthOrbit concentrates on one projectile and two choices of central acceleration.</p></section>
 <section id="license"><h2>License</h2><p>Based on the programs by Bernard Schutz accompanying <em>Gravity from the Ground Up</em> (Cambridge University Press, 2003). Distributed under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International</a> license.</p></section>
 </main>
-<footer><em>Gravity from the Ground Up</em> — Python Programs · CC BY-NC-SA 4.0</footer></div></body></html>
+<footer><em>Gravity from the Ground Up</em> — Python Programs · CC BY-NC-SA 4.0</footer></div><script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body></html>

@@ -516,12 +516,12 @@ print(sum(walk.escaped for walk in star.walks))</pre>
 <tr><td class="pname">--display</td><td class="pdefault">scaled_distance</td><td><code>scaled_distance</code> runs the three-dimensional statistics of Beats 0 to 2; <code>walk2d</code> draws the schematic star of Beats 3 to 7.</td></tr>
 <tr><td class="pname">--max_steps</td><td class="pdefault">4096</td><td>Longest walk in <code>scaled_distance</code>, at least 2; the shorter walks are found by repeated halving. Alias <code>--maxSteps</code>.</td></tr>
 <tr><td class="pname">--n_trials</td><td class="pdefault">100</td><td>Independent walks averaged for each row; the standard error falls as its square root. Alias <code>--nTrials</code>.</td></tr>
-<tr><td class="pname">--step_distribution</td><td class="pdefault">uniform</td><td><code>uniform</code> draws each component from \([-1,1]\), Eq. (2); <code>gaussian</code> from the standard normal distribution, Eq. (9).</td></tr>
-<tr><td class="pname">--reference_steps</td><td class="pdefault">2000</td><td>\(N_{\rm ref}\) in the default radius, Eq. (14). It sizes the drawing and does not limit the walk.</td></tr>
+<tr><td class="pname">--step_distribution</td><td class="pdefault">uniform</td><td><code>uniform</code> draws each component from \([-1,1]\); <code>gaussian</code> from the standard normal distribution (Beat 2).</td></tr>
+<tr><td class="pname">--reference_steps</td><td class="pdefault">2000</td><td>\(N_{\rm ref}\) in the default-radius rule \(R=f\lambda\sqrt{N_{\rm ref}}\). It sizes the drawing and does not limit the walk.</td></tr>
 <tr><td class="pname">--n_walks</td><td class="pdefault">4</td><td>Number of star walks; they are listed one per line in the summary when there are at most 12.</td></tr>
 <tr><td class="pname">--mean_free_path</td><td class="pdefault">1.0</td><td>Step length \(\lambda\) of every star walk, in arbitrary units.</td></tr>
-<tr><td class="pname">--radius_factor</td><td class="pdefault">2.0</td><td>\(f\) in the default radius, Eq. (14).</td></tr>
-<tr><td class="pname">--radius</td><td class="pdefault">omitted</td><td>Explicit positive star radius; when omitted, Eq. (14) sets it.</td></tr>
+<tr><td class="pname">--radius_factor</td><td class="pdefault">2.0</td><td>\(f\) in the default-radius rule \(R=f\lambda\sqrt{N_{\rm ref}}\).</td></tr>
+<tr><td class="pname">--radius</td><td class="pdefault">omitted</td><td>Explicit positive star radius; when omitted, the default-radius rule above sets it.</td></tr>
 <tr><td class="pname">--ray_length_factor</td><td class="pdefault">0.6</td><td>Length of the outgoing ray as a fraction of the radius; 0 draws no ray.</td></tr>
 <tr><td class="pname">--step_cap</td><td class="pdefault">200000</td><td>Largest number of steps in one star walk; a walk that reaches it is stopped and not counted as escaped (Beat 7).</td></tr>
 <tr><td class="pname">--corner</td><td class="pdefault">upper_right</td><td>Position of the annotation box on the star plot: <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code> or <code>lower_left</code>.</td></tr>
@@ -548,4 +548,19 @@ python main.py --help</pre>
   Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
   Python port © 2024–2026 Thomas Yee ·
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
-</footer></div></body></html>
+</footer></div><script>
+  (function () {
+    const links = document.querySelectorAll('nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector(`nav a[href="#${e.target.id}"]`);
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('main section[id]').forEach(s => observer.observe(s));
+  })();
+</script>
+</body></html>

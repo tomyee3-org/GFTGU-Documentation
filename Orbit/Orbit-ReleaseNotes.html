@@ -3,6 +3,8 @@
 <h1>Orbit 1.7.1 Release Notes</h1>
 <p><b>Version:</b> 1.7.1<br><b>Build:</b> 0b77d606baf2<br><b>Date:</b> 2026-09-29</p>
 <h2>Release Status</h2>
+<p>Response to Claude’s Audit41 style addendum, 29 September 2026: Added repository URLs, aligned the Grok badge with the Claude page, enabled sidebar section highlighting, and expanded International Astronomical Union (IAU). The core Python files and the program version/build are unchanged. Xedoc’s prepackaging review confirmed the core and archived guides unchanged, checked document structure and references, and found no remaining significant discrepancy.</p>
+
 <p>Kickoff4 continues the unreleased 1.7.0 audit sequence. The code-changing round is the present 1.7.1 documentation/CLI wording correction; the preceding code-changing round was the 1.7.0 Audit 22 response. Codex's Kickoff4 internal audit is complete and Claude's Audit41 verdict is APPROVE. The Audit41 P3 mixed-line-ending issue in <code>main.py</code> has been corrected by normalizing the file to LF. The numerical solver and figures are unchanged in behavior; the core's version metadata and public <code>--maxOrbits</code> description were the only semantic source changes in Kickoff4. Both active tutorials share the 1.7.1 code and build.</p>
 <h2>Open Bugs</h2>
 <ul><li><b>OB-2</b> (P3; Grok Audit 21 item P3). The detailed Claude-style tutorial quotes results before the student performs some runs; the presentation was retained pending an editorial decision between tutorial styles.<br>Reproduction: read <code>Orbit-claude.html</code> Beat 0. Observed: it gives 761 accepted steps and 7.6025e+06 s before the reader has run the command. Expected (reviewer): let the student first discover these values from the run.</li></ul>

@@ -174,10 +174,16 @@
       main { padding: 24px 20px 40px; }
     }
   </style></head><body><a class="skip-link" href="#content">Skip to the tutorial</a><div class="page-wrap">
-<header><div class="badge">GFtGU Programs</div><h1><em>Multiple</em> — A Night with Three Gravitating Bodies</h1><div class="sub">Source Code: <a href="https://github.com/tomyee3-org/GFTGU-Programs">GFTGU-Programs</a><br>Documentation: <a href="https://github.com/tomyee3-org/GFTGU-Documentation">GFTGU-Documentation</a></div></header>
+<header><div class="badge">GFtGU Programs</div><h1><em>Multiple</em> — A Night with Three Gravitating Bodies</h1><div class="sub">
+        Source Code:
+        <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a> ·
+        <br/>
+        Documentation:
+            <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a> ·
+      </div></header>
 <nav id="sidebar"><div class="nav-label">Start here</div><a href="#start">First run</a><div class="nav-label">Terminal beats</div><a href="#beat0">0 · Many bodies, one force law</a><a href="#beat1">1 · Change the masses</a><a href="#beat2">2 · Move the viewing frame</a><a href="#beat3">3 · Read conserved totals</a><a href="#beat4">4 · A vanishing reference total</a><a href="#beat5">5 · Predict, correct, repeat</a><a href="#beat6">6 · Follow the adaptive step</a><a href="#beat7">7 · Make evenly spaced frames</a><a href="#beat8">8 · Test the limits</a><div class="nav-label">Keep nearby</div><a href="#parameters">Parameters</a><a href="#reading">Reading output</a><a href="#modules">Code files</a><a href="#related">Related programs</a><a href="#license">License</a></nav>
 <main id="content" tabindex="-1"><p id="version_build" style="font-size:0.7em; color:#666; margin-top:-32px;">Version 1.5.0&nbsp;&nbsp;&nbsp;&nbsp;Build 945d118ab595</p>
-<section id="start"><h2>Start here</h2><p>Run each command from the <code>GFTGU-Programs/Multiple</code> folder. Open <code>GFTGU-Documentation/Multiple/SampleOutputs/Multiple-SampleOutputs_Guide.html</code> beside this page when you want a pictured checkpoint. The companion extended tutorial offers fuller derivations and worked exercises for the same program and source build.</p><p>When the cursor hovers over a Matplotlib graph, its <code>(x, y)</code> position in graph coordinates appears at the lower right of the display.</p><p>Start with <code>python main.py --help</code> or <code>python main.py --version</code>. Close a plot window to let a command finish. For every new command, omitted options return to defaults; use double quotes around semicolon-separated triples on Windows or POSIX shells.</p></section>
+<section id="start"><h2>Start here</h2><p>Run each command from the <code>GFTGU-Programs/Multiple</code> folder. Open <code>GFTGU-Documentation/Multiple/SampleOutputs/Multiple-SampleOutputs_Guide.html</code> beside this page when you want a pictured checkpoint. The companion extended tutorial offers fuller derivations and worked exercises for the same program and source build.</p><p>When the cursor hovers over a Matplotlib graph, its <code>(x, y)</code> position in graph coordinates appears at the lower right of the display.</p><p>Start with <code>python main.py --help</code> or <code>python main.py --version</code>. Close a plot window to let a command finish. For every new command, omitted options return to defaults; use double quotes around semicolon-separated triples on Windows or Unix-like shells.</p></section>
 <section id="beat0"><h2>Beat 0 · Many bodies, one force law</h2>
 <p>Start in the program directory. Three equal solar masses occupy the corners of a right triangle. The default display recenters the plotted bodies on their moving centre of mass; the integration still uses the input inertial coordinates.</p>
 <pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories</code></pre>
@@ -193,7 +199,7 @@
 <p>Add 100000 m/s in the x direction to each default velocity, then compare both displays:</p>
 <pre class="code-block"><code>python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_steps 2000 --output_type trajectories --display_frame user
 python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_steps 2000 --output_type trajectories --display_frame com</code></pre>
-<p><b>Read:</b> the user-frame plot carries the system across the axes; COM subtracts the instantaneous centre-of-mass position from the plotted positions. The printed energy, momentum and angular momentum in both commands use the input coordinates. Total momentum after a common boost \(\mathbf u\) increases by \(M\mathbf u\) in the mass-scaled units.</p>
+<p><b>Read:</b> the user-frame plot carries the system across the axes; The centre-of-mass (COM) view subtracts the instantaneous centre-of-mass position from the plotted positions. The printed energy, momentum and angular momentum in both commands use the input coordinates. Total momentum after a common boost \(\mathbf u\) increases by \(M\mathbf u\) in the mass-scaled units.</p>
 <p><b>Try 3:</b> compare the two printed initial momentum vectors, then compare the two plots. Which feature changes only because of the display choice?</p></section>
 <section id="beat3"><h2>Beat 3 · Read conserved totals</h2>
 <pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories --show_energy_diagnostic</code></pre>
@@ -258,4 +264,24 @@ python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0
 <section id="modules"><h2>Program files</h2><p><code>main.py</code> parses command-line options and prints the summary; <code>physics_multiple.py</code> evaluates Newtonian forces and conservation totals; <code>driver_multiple.py</code> integrates and samples the run; <code>plot_multiple.py</code> draws static paths, drift graphs and animation. <code>tests/test_physics_multiple.py</code> exercises code and both tutorial files together.</p></section>
 <section id="related"><h2>Related programs</h2><p><em>Binary</em> studies a two-body orbit with an exact Keplerian comparison. <em>MercPert</em> treats a test particle acted on by a prescribed stellar binary. <em>Multiple</em> advances all masses dynamically.</p></section>
 <section id="license"><h2>License</h2><p>Bernard Schutz, <em>Gravity from the Ground Up</em>. Program and documentation: CC BY-NC-SA 4.0. Derived from the book's Triana/Java educational example, extended as a Python tutorial.</p></section>
-</main></div></body></html>
+</main></div><footer>
+<em>Gravity from the Ground Up</em> — Python Programs ·
+  Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
+  Python port © 2024–2026 Thomas Yee ·
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> ·
+</footer>
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll("nav a");
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove("active"));
+        const hit = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+        if (hit) hit.classList.add("active");
+      }
+    });
+  }, { rootMargin: "-15% 0px -70% 0px" });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body></html>
