@@ -21,7 +21,7 @@
 <h2>Major Improvements in This Release</h2>
 <ul>
 <li>Fixed the circular-speed check at the rounded photon-orbit constant: the exact rational difference from 3GM/c<sup>2</sup> is positive even though a preliminary float subtraction rounded to zero. The same exact difference now determines both the domain and the denominator. A regression checks the named radius and the adjacent representable radius below it.</li>
-<li>Created <code>RelativisticOrbit-grok.html</code> as a nine-Beat terminal tutorial using the same four core modules, commands and Sample Outputs figures as the Claude-style lab manual. The two maintained guides have a short note about the Matplotlib cursor-coordinate display.</li>
+<li>Created <code>RelativisticOrbit-short.html</code> as a nine-Beat terminal tutorial using the same four core modules, commands and Sample Outputs figures as the Extended-style lab manual. The two maintained guides have a short note about the Matplotlib cursor-coordinate display.</li>
 <li>The shared test suite requires both active guides in one folder, verifies their stamps, navigation, parameters, commands, numerical claims and shared figure commands, and no longer expects the archived Reference Guide to follow current code.</li>
 <li>Regenerated all nine self-contained Sample Outputs PNGs from the new build with the guide's exact commands; refreshed their provenance and the guide's purpose to cover both active tutorials.</li>
 </ul>
@@ -89,7 +89,7 @@ finite speed of about 5.54e16 m/s.</li>
 file name <code>RelativisticOrbit.html</code>.<br>
 Reproduction: follow the RelativisticOrbit link in <code>MercPert/MercPert-original.html</code> or
 <code>SphereGravity/SphereGravity.html</code>. Observed: <code>../RelativisticOrbit/RelativisticOrbit.html</code> is not
-found. Expected: the link opens <code>RelativisticOrbit-claude.html</code> or
+found. Expected: the link opens <code>RelativisticOrbit-extended.html</code> or
 <code>RelativisticOrbit-original.html</code>.</li>
 </ul>
 
@@ -126,7 +126,7 @@ the circular <code>dy/dtau</code> at the starting radius, the kind of orbit with
 advance and the weak-field value 6&pi;GM/(c<sup>2</sup>p). The previously printed lines are unchanged.</li>
 <li>New public function <code>predict_orbit()</code>; result objects are frozen, with tuples in place of lists; the parser
 is available as <code>build_parser()</code>.</li>
-<li>New Beats tutorial Help, <code>RelativisticOrbit-claude.html</code>, with nine beats and 12 experiments; the Reference
+<li>New Beats tutorial Help, <code>RelativisticOrbit-extended.html</code>, with nine beats and 12 experiments; the Reference
 Guide Help is retained, kept current, as <code>RelativisticOrbit-original.html</code>. Its Exercise 7 now gives the
 periapsis as about 7565 m (7476 m at the default step), and both Exercise 10 commands use <code>--max_steps 20000</code>
 so that the Newtonian control prints an advance.</li>
@@ -170,7 +170,7 @@ circle within 4 units in the last digit of 6GM/c<sup>2</sup> as the ISCO.</li>
 <ul>
 <li>MathJax is not bundled for offline use.</li>
 <li>The build identifier reads <code>unpackaged</code> when the physics module is loaded without the other core files.</li>
-<li><code>RelativisticOrbit-original.html</code> and <code>RelativisticOrbit-claude.html</code> are both present, and neither is
+<li><code>RelativisticOrbit-original.html</code> and <code>RelativisticOrbit-extended.html</code> are both present, and neither is
 marked as the current Help.</li>
 <li>There is no option to save a figure or the orbit data to a file.</li>
 <li>The DOP853 oracle can be regenerated only where SciPy is installed.</li>
@@ -185,7 +185,7 @@ marked as the current Help.</li>
 <code>plot_relativistic_orbit.py</code>.</li>
 <li><b>Date:</b> 2026-09-24. Python 3.10 or later.</li>
 <li>Printed by <code>python main.py --version</code>, in the first line of every run, and in the version stamp of
-<code>RelativisticOrbit-claude.html</code> and <code>RelativisticOrbit-original.html</code>.</li>
+<code>RelativisticOrbit-extended.html</code> and <code>RelativisticOrbit-original.html</code>.</li>
 </ul>
 
 

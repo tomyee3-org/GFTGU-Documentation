@@ -7,11 +7,11 @@
 
 <p>Kickoff4 continues the unreleased 1.7.0 audit sequence. The code-changing round is the present 1.7.1 documentation/CLI wording correction; the preceding code-changing round was the 1.7.0 Audit 22 response. Codex's Kickoff4 internal audit is complete and Claude's Audit41 verdict is APPROVE. The Audit41 P3 mixed-line-ending issue in <code>main.py</code> has been corrected by normalizing the file to LF. The numerical solver and figures are unchanged in behavior; the core's version metadata and public <code>--maxOrbits</code> description were the only semantic source changes in Kickoff4. Both active tutorials share the 1.7.1 code and build.</p>
 <h2>Open Bugs</h2>
-<ul><li><b>OB-2</b> (P3; Grok Audit 21 item P3). The detailed Claude-style tutorial quotes results before the student performs some runs; the presentation was retained pending an editorial decision between tutorial styles.<br>Reproduction: read <code>Orbit-claude.html</code> Beat 0. Observed: it gives 761 accepted steps and 7.6025e+06 s before the reader has run the command. Expected (reviewer): let the student first discover these values from the run.</li></ul>
+<ul><li><b>OB-2</b> (P3; Grok Audit 21 item P3). The detailed Extended-style tutorial quotes results before the student performs some runs; the presentation was retained pending an editorial decision between tutorial styles.<br>Reproduction: read <code>Orbit-extended.html</code> Beat 0. Observed: it gives 761 accepted steps and 7.6025e+06 s before the reader has run the command. Expected (reviewer): let the student first discover these values from the run.</li></ul>
 <p>Former OB-1 (P3, Codex/Grok Audit 23) is closed: <code>--help</code>, the <code>main.py</code> module description and both active tutorials state the 1e-9 minimum for <code>--maxOrbits</code>. <code>Orbit-original.html</code> is preserved as an archived 1.7.0 Reference Guide and is not an active tutorial.</p>
 <p>Audit41's P3 source-formatting issue is closed: <code>main.py</code> now uses LF throughout. It did not affect runtime behavior or the newline-normalized Build ID. OB-2 remains an editorial choice pending manual review of the two tutorial styles.</p>
 <h2>Major Improvements in This Release</h2>
-<ul><li>Added a styled Grok-style terminal tutorial with nine Beats, fifteen embedded activities, a concise parameter table and runnable commands. It works with the same core Python files and Sample Outputs Guide as the Claude-style tutorial.</li>
+<ul><li>Added a styled Short-style terminal tutorial with nine Beats, fifteen embedded activities, a concise parameter table and runnable commands. It works with the same core Python files and Sample Outputs Guide as the Extended-style tutorial.</li>
 <li>Corrected the public <code>--maxOrbits</code> description and the active Claude guide's input note to the existing minimum of 1e-9 revolutions. Input acceptance and numerical results have not changed.</li>
 <li>Added a graph-coordinate cursor note near the beginning of each active tutorial.</li>
 <li>Regenerated all nine Sample Outputs figures using the exact commands shown, checked their headline values, and updated the guide's version, date and image provenance.</li>
@@ -56,14 +56,14 @@ released separately; the last published notes were for 1.4.0.
 is not stated where accepted inputs are described.<br>
 Reproduction: <code>python main.py --help</code>. Observed: the <code>--maxOrbits</code> line says
 &quot;positive requested accumulated azimuthal revolutions&quot;, and the same wording, &quot;positive&quot;, appears in the
-<code>main.py</code> module description, in the Valid numerical inputs note of <code>Orbit-claude.html</code>, and in
+<code>main.py</code> module description, in the Valid numerical inputs note of <code>Orbit-extended.html</code>, and in
 <code>Orbit-original.html</code>. Expected: each states a minimum of 1e-9, because <code>python main.py --maxOrbits 1e-10</code>
 exits with &quot;Orbit: maxOrbits must be at least 1e-09 revolutions...&quot;.</li>
 
-<li><b>OB-2</b> (P3; Grok Audit 21 item P3). <code>Orbit-claude.html</code> quotes the printed results of runs before the
+<li><b>OB-2</b> (P3; Grok Audit 21 item P3). <code>Orbit-extended.html</code> quotes the printed results of runs before the
 student has made them. Status: reviewed and declined as a house-style decision; open until the book's authors choose a
 Help density.<br>
-Reproduction: open <code>Orbit-claude.html</code> and read the task paragraph of Beat 0. Observed: it states 761 accepted
+Reproduction: open <code>Orbit-extended.html</code> and read the task paragraph of Beat 0. Observed: it states 761 accepted
 steps and 7.6025e+06 s, and Experiments 1, 3, 4, 6, 7, 9, 12 and 13 repeat such numbers. Expected (reviewer): no run
 results quoted in the beats or experiment cards.</li>
 </ul>
@@ -89,7 +89,7 @@ the default, print the same numbers as before.</li>
 <code>longest accepted step</code>.</li>
 <li>The Keplerian block prints <code>specific energy</code> of the starting state.</li>
 <li>The hodograph plot marks the origin (zero velocity) and the initial velocity.</li>
-<li>New Beats tutorial Help, <code>Orbit-claude.html</code>, with nine beats and 15 experiments; the Reference Guide
+<li>New Beats tutorial Help, <code>Orbit-extended.html</code>, with nine beats and 15 experiments; the Reference Guide
 Help is retained as <code>Orbit-original.html</code>.</li>
 </ul>
 
@@ -130,7 +130,7 @@ constants, small <code>--maxOrbits</code> targets, and the version and build in 
 <li>There is no option to save a figure to a file.</li>
 <li>The physics functions still name the gravitational parameter <code>mu</code> in their error messages.</li>
 <li>There is no runtime check that the final azimuth matches <code>--maxOrbits</code>; tests cover the accepted range.</li>
-<li><code>Orbit-original.html</code> and <code>Orbit-claude.html</code> are both present, and neither is marked as
+<li><code>Orbit-original.html</code> and <code>Orbit-extended.html</code> are both present, and neither is marked as
 the current Help.</li>
 <li>Grok Audit 21 items P4 to P6: the spine sentence has three claims, Beat 0 answers its own question, and the
 Printed Summary reproduces the whole default console.</li>
@@ -144,7 +144,7 @@ Printed Summary reproduces the whole default console.</li>
 <code>main.py</code>, <code>physics_orbit.py</code>, <code>driver_orbit.py</code> and <code>plot_orbit.py</code>.</li>
 <li><b>Date:</b> 2026-09-24. Python 3.10 or later.</li>
 <li>Printed by <code>python main.py --version</code>, in the first line of every run, and in the version stamp of
-<code>Orbit-claude.html</code> and <code>Orbit-original.html</code>.</li>
+<code>Orbit-extended.html</code> and <code>Orbit-original.html</code>.</li>
 </ul>
 
 </body></html>

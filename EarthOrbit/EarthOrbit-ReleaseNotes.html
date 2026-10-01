@@ -11,7 +11,7 @@
 <h2>Major Improvements in This Release</h2>
 <ul>
 <li><b>1.5.0: clean extreme-input error (EO-1).</b> The launch-state orbital-element calculation now converts NumPy scalar diagnostics to Python floats and rejects non-finite squares and eccentricity before later operations. Reproduction: <code>python main.py --uInit 1e160 --dt 1e-150 --maxSteps 2 --force_law inverse_square</code>. Formerly: three raw <code>RuntimeWarning</code> lines followed by an <code>EarthOrbit:</code> error. Now: only <code>EarthOrbit: summary values must be finite</code> on stderr, with no plot. This changes public error behavior and warrants a minor version bump.</li>
-<li><b>Two tutorial choices.</b> <code>EarthOrbit-claude.html</code> remains the fuller lab manual. New <code>EarthOrbit-grok.html</code> is a shorter terminal sequence across Beats 0–9. Both describe one shared Python build and offer the Matplotlib cursor-coordinate note. The legacy <code>EarthOrbit-original.html</code> remains archived without new edits.</li>
+<li><b>Two tutorial choices.</b> <code>EarthOrbit-extended.html</code> remains the fuller lab manual. New <code>EarthOrbit-short.html</code> is a shorter terminal sequence across Beats 0–9. Both describe one shared Python build and offer the Matplotlib cursor-coordinate note. The legacy <code>EarthOrbit-original.html</code> remains archived without new edits.</li>
 <li><b>Installation manifest.</b> A minimal <code>requirements.txt</code> now lists the two runtime imports, NumPy and Matplotlib, without imposing version pins that were not established by this review.</li>
 <li><b>Sample guide synchronized.</b> All nine embedded 800 × 800 figures were regenerated from the exact listed commands on 1.5.0, and their key console figures were checked. Beat 9 intentionally has no figure because its commands stop before plotting.</li>
 </ul>
@@ -106,7 +106,7 @@ fails for extremely large but finite single-step displacements. Example:
 <code>python main.py --h0 300000 --uInit 0 --vInit=-1e155 --dt 1 --maxSteps 2
 --force_law inverse_square</code> now stops with the Earth-crossing error
 instead of reporting an escape.</li>
-<li><b>Help.</b> The new tutorial Help file, <code>EarthOrbit-claude.html</code>,
+<li><b>Help.</b> The new tutorial Help file, <code>EarthOrbit-extended.html</code>,
 is organised as numbered Beats (0 to 9) with runnable commands and printed
 values checked against this build. The classic <code>EarthOrbit.html</code> now
 describes the Earth-crossing error as a third way a run can stop.</li>
@@ -123,7 +123,7 @@ a test with extreme input values, and a verified near-miss orbit with a
 +200 m ideal perigee.</li>
 <li>To run the suite, use <code>python -m unittest discover -s tests -v</code>
 from the program folder. The sibling <code>GFTGU-Documentation/EarthOrbit/</code>
-folder must hold <code>EarthOrbit.html</code>, <code>EarthOrbit-claude.html</code>,
+folder must hold <code>EarthOrbit.html</code>, <code>EarthOrbit-extended.html</code>,
 these notes, and <code>SampleOutputs/EarthOrbit-SampleOutputs_Guide.html</code>.
 With this documentation set, 87 of 87 pass.</li>
 </ul>
@@ -174,7 +174,7 @@ raw TeX.</li>
 <li>The <code>Escape trajectory</code> outcome describes the launch state as
 unbound; the console does not say "at launch" (Grok Audit21 P2).</li>
 <li>The Help-file tests read the classic <code>EarthOrbit.html</code>, not
-<code>EarthOrbit-claude.html</code>. Which file should be the test reference is
+<code>EarthOrbit-extended.html</code>. Which file should be the test reference is
 undecided (Grok Audit21 P6).</li>
 <li>Whether students get the long Beats Help or a shorter version is
 undecided.</li>

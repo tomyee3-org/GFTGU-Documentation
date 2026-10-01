@@ -10,7 +10,7 @@
 <p>No unresolved P1–P3 defect is currently known. Claude's Audit41 found no P1 or P2 issue; its one P3 documentation duplication has been corrected. An optional P4 suggestion to broaden a development-jargon test remains for later maintenance.</p>
 <h2>Major Improvements in This Release</h2>
 <ul>
-<li><b>Second tutorial format.</b> New <code>MercPert-grok.html</code> presents the same ten Beat topics as a concise terminal sequence with eight practice tasks. The existing <code>MercPert-claude.html</code> remains the fuller lab-manual version. Both active guides identify the same version and source build; the archived <code>MercPert-original.html</code> remains untouched.</li>
+<li><b>Second tutorial format.</b> New <code>MercPert-short.html</code> presents the same ten Beat topics as a concise terminal sequence with eight practice tasks. The existing <code>MercPert-extended.html</code> remains the fuller lab-manual version. Both active guides identify the same version and source build; the archived <code>MercPert-original.html</code> remains untouched.</li>
 <li><b>Graph-coordinate note.</b> Both active tutorials now tell students that hovering over a Matplotlib display reveals the cursor's <code>(x, y)</code> graph coordinates at the lower right.</li>
 <li><b>Drift-comparison qualification.</b> Beat 5's two 40,000-step runs cover 919.20 and 852.41 days. Both tutorials and the sample guide now state that their 23-fold difference in maximum Jacobi drift is not a matched-duration convergence measurement. The Claude tutorial also confines its five-figure agreement claim in Beat 8 to the printed Sun-distance extrema.</li>
 <li><b>Instructor guide.</b> All nine embedded figures in the self-contained Sample Outputs Guide were regenerated from the exact listed commands for this unchanged 1.1.0 build. Their printed headline values were verified. Beat 9 has no figure because its commands demonstrate error handling.</li>
@@ -80,7 +80,7 @@ policy questions left to Schutz and Higgs.</li>
 
 <ul>
 <li><b>Help.</b> Added a Beats-format tutorial Help file,
-<code>MercPert-claude.html</code> (ten numbered beats, ten governing
+<code>MercPert-extended.html</code> (ten numbered beats, ten governing
 equations, eight Suggested Experiments), alongside the existing classic
 Help. No core module changed.</li>
 <li><b>Classic Help fix.</b> Experiment 7's example command used a
@@ -108,7 +108,7 @@ default run, and that a positive instantaneous energy is not presented as
 proof of permanent escape.</li>
 <li>To run the suite, use <code>python -m unittest discover -s tests -v</code>
 from the program folder. The sibling <code>GFTGU-Documentation/MercPert/</code>
-folder must hold <code>MercPert.html</code>, <code>MercPert-claude.html</code>,
+folder must hold <code>MercPert.html</code>, <code>MercPert-extended.html</code>,
 these notes, and <code>SampleOutputs/MercPert-SampleOutputs_Guide.html</code>.
 With this documentation set, 84 of 84 pass, confirmed on CPython 3.10, 3.11,
 3.12 and 3.13.</li>

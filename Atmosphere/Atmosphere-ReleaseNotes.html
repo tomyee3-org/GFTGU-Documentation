@@ -13,7 +13,7 @@
 
 <h2>Open Bugs</h2>
 <ul>
-<li><b>A48-P3-01</b> (P3, Claude Audit48). Inline statements of k_B, m_u and default mu in the Help files are not compared to the module constants. Reproduction: in both copies of Atmosphere-claude.html or Atmosphere-grok.html change <code>10^{-23}</code> on the k_B line to <code>10^{-22}</code>; the suite still reports OK. Expected: a failure against phys.K_BOLTZMANN.</li>
+<li><b>A48-P3-01</b> (P3, Claude Audit48). Inline statements of k_B, m_u and default mu in the Help files are not compared to the module constants. Reproduction: in both copies of Atmosphere-extended.html or Atmosphere-short.html change <code>10^{-23}</code> on the k_B line to <code>10^{-22}</code>; the suite still reports OK. Expected: a failure against phys.K_BOLTZMANN.</li>
 <li><b>Codex-A48-P3-01</b> (P3, Codex Audit48). The Beat 6 inline Euler multiplier <code>1-\Delta h/H</code> is not pinned in either Help. Reproduction: in Beat 6 of both Helps and both Documentation copies change <code>1-\Delta h/H</code> to <code>1+\Delta h/H</code>; the suite still reports OK. Expected: a failure. The program's first isothermal step is 0.995 p0, not 1.005 p0.</li>
 </ul>
 
@@ -30,7 +30,7 @@
 </ul>
 
 <h2>Test Suite Growth</h2>
-<p>The suite is run from tests/. Program-folder discover counts are unchanged from the Audit47 package: both Helps, 225 tests, 1 skipped; Atmosphere-grok.html only, 225 tests, 31 skipped; Atmosphere-claude.html only, 219 tests, 7 skipped. Full package with SampleOutputs beside the program: both Helps, 225 tests, 0 skipped. This documentation-only round adds no tests.</p>
+<p>The suite is run from tests/. Program-folder discover counts are unchanged from the Audit47 package: both Helps, 225 tests, 1 skipped; Atmosphere-short.html only, 225 tests, 31 skipped; Atmosphere-extended.html only, 219 tests, 7 skipped. Full package with SampleOutputs beside the program: both Helps, 225 tests, 0 skipped. This documentation-only round adds no tests.</p>
 
 <h2>Known Limitations</h2>
 <ul>

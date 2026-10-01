@@ -20,7 +20,7 @@
 
 <h2>Major Improvements in This Release</h2>
 <ul>
-<li>Created <code>SphereGravity-grok.html</code>, a shorter nine-Beat terminal tutorial with questions before explanation, matching the commands and physics of the existing Claude tutorial. Both active guides carry Version 1.4.0 and Build 217c2c26a44a.</li>
+<li>Created <code>SphereGravity-short.html</code>, a shorter nine-Beat terminal tutorial with questions before explanation, matching the commands and physics of the existing Claude tutorial. Both active guides carry Version 1.4.0 and Build 217c2c26a44a.</li>
 <li>Corrected the Claude guide's surface-jump sentence. Both guides now mention Matplotlib's lower-right cursor coordinates near the beginning.</li>
 <li>The Sample Outputs Guide explicitly supports both active tutorials. Its seven embedded 800 by 600 pixel images were independently re-rendered from the displayed commands and compared pixel-for-pixel after the stated 256-colour quantization; all match the current build.</li>
 <li>The test suite requires the two active guides together, checks Grok commands and shared stamps, and treats the old Reference Guide as an optional historical archive rather than requiring it to match current behavior.</li>
@@ -85,7 +85,7 @@ the tests that check them were changed; the program and its build are unchanged.
 <h2>Open Bugs</h2>
 
 <ul>
-<li><b>OB-1</b> (P3; Codex Audit 22 item 1). Beat 5 of <code>SphereGravity-claude.html</code> says that the jump across
+<li><b>OB-1</b> (P3; Codex Audit 22 item 1). Beat 5 of <code>SphereGravity-extended.html</code> says that the jump across
 a surface layer is 4&pi;G&epsilon; &ldquo;whatever the shape of a surface layer&rdquo;, which is true of the signed normal
 component of the field but not of its magnitude.<br>
 Reproduction: read the sentence after Eq. (15) in Beat 5. Observed: the magnitude jump of Eq. (15) is stated for a
@@ -113,7 +113,7 @@ Help files and without chapter numbers. The program and its build did not change
 
 <p>Version 1.4.0, build a43a939a4607 (Kickoff2, not released separately):</p>
 <ul>
-<li>New Beats tutorial Help, <code>SphereGravity-claude.html</code>, with nine beats, 19 equations and 11 experiments.
+<li>New Beats tutorial Help, <code>SphereGravity-extended.html</code>, with nine beats, 19 equations and 11 experiments.
 The Reference Guide Help is retained, kept current, as <code>SphereGravity-original.html</code>.</li>
 <li>New option <code>--radii R [R ...]</code> chooses the comparison radii; the default is the seven radii of 1.3.0.</li>
 <li>The table prints a new line, <code>latitude step h = pi/nDiv</code>, and a new column, <code>h^2 estimate</code>, from
@@ -164,7 +164,7 @@ although it is accepted or rejected correctly (Grok, Audit 22).</li>
 <li>Runtime type annotations are conservative.</li>
 <li>The faster NumPy implementation is selected only by editing two lines of <code>physics_spheregravity.py</code>.</li>
 <li>There is no command-line option to save the figure or the table to a file.</li>
-<li><code>SphereGravity-claude.html</code> and <code>SphereGravity-original.html</code> are both present, and neither is
+<li><code>SphereGravity-extended.html</code> and <code>SphereGravity-original.html</code> are both present, and neither is
 marked as the current Help.</li>
 <li>MathJax is not bundled for offline use.</li>
 </ul>
@@ -178,7 +178,7 @@ marked as the current Help.</li>
 <code>plot_spheregravity.py</code>.</li>
 <li><b>Date:</b> 2026-09-25. Python 3.10 or later.</li>
 <li>Printed by <code>python main.py --version</code>, in the first line of every run, and in the version stamp of
-<code>SphereGravity-claude.html</code> and <code>SphereGravity-original.html</code>.</li>
+<code>SphereGravity-extended.html</code> and <code>SphereGravity-original.html</code>.</li>
 </ul>
 
 

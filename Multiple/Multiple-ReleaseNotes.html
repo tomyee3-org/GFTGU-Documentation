@@ -15,7 +15,7 @@
 <p>No unresolved P1–P3 defect is known in the approved 1.5.0 build. Audit34 M-1 (animation memory overclaim) and M-2 (zero-body plotting input errors) have been corrected. Claude's Audit41 found one optional P4 test-coverage suggestion, listed under Known Minor Maintenance Items.</p>
 <h2>Major Improvements in This Release</h2>
 <ul>
-<li><b>Paired tutorials.</b> <code>Multiple-grok.html</code> is a shorter nine-Beat terminal sequence with ten activities. <code>Multiple-claude.html</code> remains the fuller lab guide. Both use version 1.5.0 and the same core Python modules; the archived <code>Multiple-original.html</code> is unchanged.</li>
+<li><b>Paired tutorials.</b> <code>Multiple-short.html</code> is a shorter nine-Beat terminal sequence with ten activities. <code>Multiple-extended.html</code> remains the fuller lab guide. Both use version 1.5.0 and the same core Python modules; the archived <code>Multiple-original.html</code> is unchanged.</li>
 <li><b>Memory description (M-1).</b> Corrected all three overclaims in the Claude tutorial. Animation stores frames at requested times; shorter <code>frame_time</code> may yield more frames than accepted states. Both modes also keep a conservation record per accepted step.</li>
 <li><b>Public plotting input validation (M-2).</b> Static and animation plotting now reject a result with zero bodies with an informative <code>ValueError</code> before creating a figure. This changes malformed-input behaviour, so the public release version advances from 1.4.0 to 1.5.0.</li>
 <li><b>Instructor guide.</b> All nine embedded figures were regenerated from the exact commands shown under build 945d118ab595. Printed headline values and version/build stamps were synchronized with that build.</li>
@@ -73,7 +73,7 @@ the Beats Help and the public plotting functions, both listed under Open
 Bugs below. Codex's review does not otherwise withhold a release
 recommendation.</li>
 <li><b>Grok (Audit34):</b> accepts the 1.4.0 code and the Beats Help file as
-closed for this patch and recommends freezing Multiple-claude.html.
+closed for this patch and recommends freezing Multiple-extended.html.
 It directs remaining work to the Release Notes and Sample Outputs Guide,
 which this update provides.</li>
 <li>Per program-owner decision, Codex's Audit34 P2 finding (animation memory
@@ -124,7 +124,7 @@ validated case in this module does.</li>
 
 <ul>
 <li><b>Kickoff (1.4.0, build f166d2b70ae6): new tutorial Help file.</b> Added
-<code>Multiple-claude.html</code>, a Beats-format tutorial covering the
+<code>Multiple-extended.html</code>, a Beats-format tutorial covering the
 program end to end with runnable commands and printed values checked against
 the build, alongside the existing classic <code>Multiple.html</code>.</li>
 <li><b>Kickoff (1.4.0): scale-aware near-cancellation fallback.</b> Momentum
@@ -177,7 +177,7 @@ methods, so the method count did not change in those two rounds.</li>
 <li>To run the suite, use <code>python tests/test_physics_multiple.py</code>
 from the program folder (or an equivalent <code>unittest discover</code>).
 The sibling <code>GFTGU-Documentation/Multiple/</code> folder must hold
-<code>Multiple.html</code>, <code>Multiple-claude.html</code>, these notes,
+<code>Multiple.html</code>, <code>Multiple-extended.html</code>, these notes,
 and <code>SampleOutputs/Multiple-SampleOutputs_Guide.html</code>. With this
 documentation set, 125 of 125 pass, verified on Python 3.10, 3.11, 3.12 and
 3.13.</li>
@@ -223,7 +223,7 @@ change it.</li>
 
 <ul>
 <li>Which Help file the regression suite's Help-parsing tests scrape,
-<code>Multiple.html</code> or <code>Multiple-claude.html</code>, is
+<code>Multiple.html</code> or <code>Multiple-extended.html</code>, is
 undecided (Grok, policy).</li>
 <li>Whether students are given the long Beats Help file or a shorter cut is
 undecided (Grok, policy).</li>

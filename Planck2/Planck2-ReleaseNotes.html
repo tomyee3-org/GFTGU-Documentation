@@ -16,7 +16,7 @@
 <h2>Release Status</h2>
 <p>Response to Claude’s Audit41 style addendum, 29 September 2026: Enabled sidebar section highlighting and expanded International System of Units (SI) on the Grok page. The core Python files and the program version/build are unchanged. Xedoc’s prepackaging review confirmed the core and archived guides unchanged, checked document structure and references, and found no remaining significant discrepancy.</p>
 
-<p>Kickoff4, 29 September 2026: the 1.5.1 executable core and build ID remain unchanged. Two active tutorial guides, <code>Planck2-claude.html</code> and <code>Planck2-grok.html</code>, now share this code, test suite and figure guide. Claude's Audit41 verdict is APPROVE: no new P1, P2 or P3 defects and no release hold. The one carried P3, OB-1 below, is accepted as an optional enhancement; the archived <code>Planck2-original.html</code> remains at its historical 1.2.0 stamp and is not maintained against the current program.</p>
+<p>Kickoff4, 29 September 2026: the 1.5.1 executable core and build ID remain unchanged. Two active tutorial guides, <code>Planck2-extended.html</code> and <code>Planck2-short.html</code>, now share this code, test suite and figure guide. Claude's Audit41 verdict is APPROVE: no new P1, P2 or P3 defects and no release hold. The one carried P3, OB-1 below, is accepted as an optional enhancement; the archived <code>Planck2-original.html</code> remains at its historical 1.2.0 stamp and is not maintained against the current program.</p>
 
 <p>
 These notes cover Version 1.5.1 and the two code-changing rounds that produced it: the Audit 23 response (1.5.0) and
@@ -63,7 +63,7 @@ used above <i>x</i> = 700.</li>
 <ul>
 <li>The console summary has a second line, <code>Peak wavelength = ... m</code> or <code>Peak frequency = ... Hz</code>
 (1.3.0). The other four lines and their numbers are unchanged.</li>
-<li>New Beats tutorial Help, <code>Planck2-claude.html</code>, with nine beats and 11 experiments; the Reference Guide
+<li>New Beats tutorial Help, <code>Planck2-extended.html</code>, with nine beats and 11 experiments; the Reference Guide
 Help is retained as <code>Planck2-original.html</code> (1.2.0).</li>
 <li>The Help distinguishes the printed radiance integral (W m<sup>-2</sup> sr<sup>-1</sup>) from the emitted flux, which is
 <i>&pi;</i> times it (1.3.0).</li>
@@ -105,12 +105,12 @@ quote, per-run attribution in Beat 7, input rejection at the floating-point limi
 <ul>
 <li>MathJax is not bundled for offline use; this awaits a decision for the whole program set.</li>
 <li>The Related Programs links point to <code>Star.html</code> and <code>Random2.html</code> and will need updating if those Help files are renamed.</li>
-<li>The historical <code>Planck2-original.html</code> retains its 1.2.0 stamp. The active guides are <code>Planck2-claude.html</code> and <code>Planck2-grok.html</code>; a default Help selection policy for the wider project has not been chosen.</li>
+<li>The historical <code>Planck2-original.html</code> retains its 1.2.0 stamp. The active guides are <code>Planck2-extended.html</code> and <code>Planck2-short.html</code>; a default Help selection policy for the wider project has not been chosen.</li>
 
 <li>The annotation prints the peak <i>x</i> to four decimals and the console to six.</li>
 <li>The <code>--help</code> text for <code>--x_max</code> does not mention that <code>--x_high</code> must not exceed it.</li>
 <li>There is no option to save a figure to a file.</li>
-<li>Audit41 P4: the regression check for internal AI/review-history vocabulary scans <code>Planck2-claude.html</code> only. When convenient, extend it to <code>Planck2-grok.html</code> and the Sample Outputs Guide. Claude directly inspected all current student documents and found no leaked wording; this is a future test-coverage improvement.</li>
+<li>Audit41 P4: the regression check for internal AI/review-history vocabulary scans <code>Planck2-extended.html</code> only. When convenient, extend it to <code>Planck2-short.html</code> and the Sample Outputs Guide. Claude directly inspected all current student documents and found no leaked wording; this is a future test-coverage improvement.</li>
 </ul>
 
 <h2>Version Identification</h2>
@@ -121,7 +121,7 @@ quote, per-run attribution in Beat 7, input rejection at the floating-point limi
 <code>planck2_physics.py</code>, <code>planck2_driver.py</code>, <code>main.py</code> and <code>planck2_plot.py</code>.</li>
 <li><b>Date:</b> 2026-09-29 (Kickoff4 documentation set; executable core last changed 2026-09-24). Python 3.10 or later.</li>
 <li>Printed by <code>python main.py --version</code>, in the first line of every run, and in the version stamp of
-<code>Planck2-claude.html</code> and <code>Planck2-grok.html</code>. The archived original retains its historical stamp.</li>
+<code>Planck2-extended.html</code> and <code>Planck2-short.html</code>. The archived original retains its historical stamp.</li>
 </ul>
 
 </body>
