@@ -292,7 +292,7 @@ python main.py --p0 1.013e6</pre>
 H \propto \frac{T}{\mu\,g}.
 \]
     </div>
-<p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> and <a href="#exp4">Experiment 4</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat4">
@@ -310,7 +310,7 @@ T(h) = T_{i-1} + \frac{T_i-T_{i-1}}{h_i-h_{i-1}}\,(h-h_{i-1}),
     </div>
     <p>Below the first supplied point the temperature is held at \(T_0\). Above the last one, Beat 7 takes over. The default Earth list combines U.S. Standard Atmosphere 1976 values through about 86&nbsp;km with seven rounded NRLMSIS 2.0 thermospheric temperatures (100, 150, 200, 250, 300, 400 and 500&nbsp;km) for one date and place.</p>
 
-    <p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+    <p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat5">
@@ -326,7 +326,7 @@ python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 \
 python main.py --planet_name Jupiter --g_accel 24.8 --mu 2.2 --p0 1e5 \
   --h_points 0,20000,50000,100000 --T_points 165,130,110,150</pre>
     <p>Compute \(H=p_0/(g\rho_0)\) and the column mass \(p_0/g\) from the surface row of each table. Jupiter’s scale height is the largest of the four because \(\mu\) is so small. Venus’s column is about a hundred Earth columns; Mars has little air and a taller scale height than Earth. Jupiter has no solid surface: the run takes the 1-bar level as the reference and the supplied profile ends at 100&nbsp;km; the plotted curve continues a little above that under the Beat 7 closure.</p>
-    <p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+    <p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat6">
@@ -411,15 +411,15 @@ T=\beta\,p^{\alpha},\qquad \alpha=0.5.
 </div>
 
 <div class="scenario-card" id="exp4">
-<h4>4 · Intermediate — Column versus height</h4>
-        <p>For Earth, Mars, Venus and the Jupiter slice, tabulate \(p_0/g\) and \(H\). 
-		Which world is “thickest” on each ranking? Why do the rankings disagree?</p>
+<h4>4 · Intermediate — Cold layer, warm layer</h4>
+        <p>Run the three-point profile of Beat 4. 
+        Show from the table that \(\rho_2/\rho_1=(p_2/p_1)\,(T_1/T_2)\) between 50 and 100&nbsp;km.</p>
 </div>
 
 <div class="scenario-card" id="exp5">
-<h4>5 · Intermediate — Cold layer, warm layer</h4>
-        <p>Run the three-point profile of Beat 4. 
-        Show from the table that \(\rho_2/\rho_1=(p_2/p_1)\,(T_1/T_2)\) between 50 and 100&nbsp;km.</p>
+<h4>5 · Intermediate — Column versus height</h4>
+        <p>For Earth, Mars, Venus and the Jupiter slice, tabulate \(p_0/g\) and \(H\). 
+		Which world is “thickest” on each ranking? Why do the rankings disagree?</p>
 </div>
 
 <div class="scenario-card" id="exp6">
