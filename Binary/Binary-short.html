@@ -133,6 +133,8 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
   <div class="nav-label">Overview</div>
   <a href="#description">Description</a>
   <a href="#setup">Before the first run</a>
+  <a href="#output">Output</a>  
+  
   <div class="nav-label">Beats</div>
   <a href="#beat0">0 · Two bodies, one force</a>
   <a href="#beat1">1 · Who moves</a>
@@ -144,7 +146,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
   <a href="#beat7">7 · How far to trust it</a>
   <div class="nav-label">Reference</div>
   <a href="#parameters">Parameters</a>
-  <a href="#output">Output</a>
+
   <a href="#experiments">Experiments</a>
   <a href="#validity">Domain of Validity</a>
   <a href="#related">Related Programs</a>
@@ -156,9 +158,13 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 
   <section id="description">
     <h2>Description</h2>
-    <p><strong>Binary</strong> integrates two point masses in a plane that interact only through Newtonian gravity. The same command line covers equal-mass ellipses, extreme mass ratios, and unbound encounters.</p>
-    <p>The spine of the lesson is one sentence:</p>
-    <p><em>One force law accelerates both bodies; exact motion under it conserves energy; the printed energy is how you tell how far to trust a step-by-step calculation of that motion.</em></p>
+<p>
+<strong>Binary</strong> simulates two point masses interacting only through
+      Newtonian gravity. The masses, initial positions, and initial velocities are
+      all editable, so the same program can represent bound binaries, extreme
+      mass-ratio systems, and unbound gravitational encounters.
+    </p>
+    <p>The spine of the lesson is one sentence: <em>One force law accelerates both bodies; exact motion under it conserves energy; the printed energy is how you tell how far to trust a step-by-step calculation of that motion.</em></p>
     <div class="warn"><strong>What this program is not.</strong> No tides, collisions, relativity, or third body. The integrator is an Euler predictor plus an iterated trapezoidal corrector; error is largest at close approach. A head-on plunge can hit the timestep floor and stop with an error. The one-revolution stop is a geometric rule about the angle swept by the line joining the bodies, not a proof that the path has closed.</div>
     <div class="note"><strong>Reading this page.</strong> Equations are rendered by MathJax from a public CDN. Without a network connection the raw \(\LaTeX\) remains visible as text. The program itself needs no internet access.</div>
   </section>
@@ -170,6 +176,13 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 python main.py</pre>
     <p>Lengths are metres, speeds metres per second, energies joules. Times in the summary are days. Following the code, \(v=\dot x\) and \(u=\dot y\).</p>
   </section>
+  
+  <section id="output">
+    <h2>Output</h2>
+	<p>Every run prints a summary at the terminal and then opens a plot.</p>
+	<p>In the summary, the first line gives version and build, accepted steps, how it stopped, total revolutions and time, sampled min/max separation, the Keplerian classification of the <em>starting</em> data, a centre-of-mass block for each body, and an energy table at tenths of the run. A plot window then opens. Close it to end the program. The Keplerian block is not the integrated orbit; compare the two when you want a check.</p>
+  </section>
+ 
 
   <section id="beat0">
     <h2>Beat 0 · Two bodies, one force</h2>
@@ -325,10 +338,6 @@ python main.py --dt 1000 --eps2 1e-8</pre>
     </table>
   </section>
 
-  <section id="output">
-    <h2>Output</h2>
-    <p>Every run prints version and build, accepted steps, how it stopped, total revolutions and time, sampled min/max separation, the Keplerian classification of the <em>starting</em> data, a centre-of-mass block for each body, and an energy table at tenths of the run. A plot window then opens. Close it to end the program. The Keplerian block is not the integrated orbit; compare the two when you want a check.</p>
-  </section>
 
 
   
