@@ -1,6 +1,18 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>EarthOrbit — Terminal Tutorial | GFtGU Programs</title>
-<script>MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script><script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<!-- MathJax 3: inline and display equations -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']]
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+};
+</script>
+<script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -172,8 +184,13 @@
       nav { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
       main { padding: 24px 20px 40px; }
     }
-  
-.beat-action{background:var(--note-bg);border-left:4px solid var(--gold);padding:10px 15px;margin:12px 0}.beat-action strong{font-family:var(--sans);font-size:.78rem;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}.small-print{font-size:.84rem;color:var(--muted)}.compact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.compact-grid>div{border:1px solid var(--border);background:var(--surface);padding:10px 14px}</style>
+.beat-action{background:var(--note-bg);border-left:4px solid var(--gold);padding:10px 15px;margin:12px 0}
+.beat-action strong{font-family:var(--sans);font-size:.78rem;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.small-print{font-size:.84rem;color:var(--muted)}
+.compact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.compact-grid>div{border:1px solid var(--border);background:var(--surface);padding:10px 14px}
+</style>
+
 <style id="gftgu-common-elements">
 /* Shared Version / Build, Plot tip, License and Footer. */
 main { padding-top: 6px; }
@@ -222,7 +239,12 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
         Documentation:
             <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a> ·
       </div></header>
-<nav id="sidebar"><div class="nav-label">Follow the run</div><a href="#start">Start here</a>
+<nav id="sidebar">
+<div class="nav-label">Overview</div>
+<a href="#start">Description</a>
+<a href="#output">Reading the summary</a>
+
+<div class="nav-label">Beats</div>
 <a href="#beat0">0 · A near miss that hits</a>
 <a href="#beat1">1 · Two gravity laws</a>
 <a href="#beat2">2 · The circular launch</a>
@@ -233,45 +255,71 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <a href="#beat7">7 · Check the timestep</a>
 <a href="#beat8">8 · Two period laws</a>
 <a href="#beat9">9 · Stop conditions</a>
-<a href="#parameters">Parameters</a>
-<a href="#output">Reading the summary</a>
+
 <a href="#experiments">Practice tasks</a>
+<div class="nav-label">Code</div>
+<a href="#parameters">Parameters</a>
 <a href="#modules">Code modules</a>
+
+
+
+
+
+<div class="nav-label">Reference</div>
+
 <a href="#related">Related programs</a>
 <a href="#license">License</a></nav>
 <main id="content" tabindex="-1"><p id="version_build">Version 1.5.0&nbsp;&nbsp;&nbsp;&nbsp;Build 5b353c62e594</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
-<section id="start"><h2>Start here</h2>
-<p>This is Newton's cannon at a computer: launch a projectile horizontally above Earth, then see whether it lands, circles, or escapes. Follow the numbered Beats in order. Run each command from the EarthOrbit program folder, read the named console line, and close the plot window before the next command. One run does not retain settings from another.</p>
-
+<section id="start"><h2>Description</h2>
+<p>
+<strong>EarthOrbit</strong> is a numerical realisation of Newton's cannon, the thought experiment
+Newton used in the <em>Principia</em> (1687) to argue that falling and orbiting are the same
+motion. A projectile is launched horizontally from a tower above Earth's surface. Launched with
+too large a shortfall from the local circular speed, it falls back to the ground on a curve;
+launched fast enough, it falls at exactly the rate the ground curves away beneath it, tracing a
+path that never lands. Exactly how large a shortfall counts as "too large" depends on how high
+above the surface the tower stands — Experiment 6 works this out precisely, including how the
+answer differs from the program's own numerically integrated outcome. The program integrates the
+projectile's two-dimensional trajectory step by step and reports which of these outcomes a given
+launch produces: impact, a closed orbit, or escape.
+</p>
+<p>
 <p>The dashed blue circle is Earth's reference surface; red is the computed path. The plot uses geocentric metres on equal axes. At launch, <code>uInit</code> points sideways and positive <code>vInit</code> points away from Earth's centre. Each printed number has five significant digits; that is formatting, not a claim of five-digit physical accuracy.</p>
 </section>
+
+<section id="output"><h2>Reading the summary</h2><p>Every run prints a summary at the terminal and then opens a plot.</p>
+<p>In the summary, the first line gives version, build and the number of stored trajectory samples. “Surface impact” uses an interpolated crossing; “Orbit completed” means at least one numerically tracked revolution; “Escape trajectory” requires an unbound inverse-square launch and no impact during the run. A maximum-step stop says only where integration ended.</p>
+<p>Completed revolutions, angular travel, flight time, distance and altitude extremes refer to the computed path. The extra <code>Osculating</code> lines in inverse-square runs are ideal two-body elements calculated from the launch state. The two kinds of number can differ because the finite-step integrator drifts. For an unbound launch there is no osculating apogee. A final/maximum altitude line is combined only if both format to the same value.</p></section>
+
 <section id="beat0"><h2>Beat 0 · A near miss that hits</h2><p>Launch 300 m up at 7900 m/s with the default <code>simplified</code> gravity law.</p>
 <pre class="code-block"><code>python main.py</code></pre>
 <div class="beat-action"><strong>Look for</strong><p>503 samples and <code>Surface impact before one revolution</code>: 0.039512 of a turn, 14.224°, in 200.44 s. On the plot, the red arc joins the blue surface again. The launch is only about 0.08% slower than this law's circular speed, 7906.3 m/s.</p></div>
-<p>At each timestep the program updates position (x, y) and velocity (u, v) under acceleration toward Earth's centre. Its default law keeps that acceleration's <em>magnitude</em> fixed at 9.8 m/s². Ask: would you have expected a tiny speed shortfall to yield such a short flight?</p>
-<p class="small-print">Try task 1 after this Beat.</p></section>
+<p>At each timestep the program updates position \((x,y)\) and velocity \((u,v)\) under acceleration toward Earth's centre. Its default law keeps that acceleration's <em>magnitude</em> fixed at 9.8 m/s². Ask: would you have expected a tiny speed shortfall to yield such a short flight?</p>
+<p class="small-print">Try <a href="#exp1">Task 1</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 <section id="beat1"><h2>Beat 1 · Two gravity laws</h2><p>Change just the force law and compare the outcome lines.</p>
 <pre class="code-block"><code>python main.py
 python main.py --force_law inverse_square</code></pre>
 <div class="beat-action"><strong>Compare</strong><p>The first run impacts in 200.44 s; inverse square takes 221.62 s and travels 0.043687 of a revolution. The inverse-square summary adds osculating elements from the <em>launch state</em>; a negative perigee altitude (−16,265 m) signals a path that intersects Earth.</p></div>
-<p>Both acceleration vectors point inward. The first has constant magnitude (g=9.8) m/s²; the second has magnitude (mu_oplus/r^2), where (mu_oplus=3.98600435507	imes10^{14}) m³/s² and (r=sqrt{x^2+y^2}). The two nearly agree at the reference surface, but differ as altitude grows.</p>
-<p class="small-print">Try tasks 2 and 3.</p></section>
+<p>Both acceleration vectors point inward. The first has constant magnitude \(g=9.8\) m/s²; the second has magnitude \(\mu_\oplus/r^2\), where \(\mu_\oplus=3.98600435507\times10^{14}\) m³/s² and \(r=\sqrt{x^2+y^2}\). The two nearly agree at the reference surface, but differ as altitude grows.</p>
+<p class="small-print">Try <a href="#exp2">Task 2</a> and <a href="#exp3">Task 3</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+
 <section id="beat2"><h2>Beat 2 · The circular launch</h2><p>Move the cannon to 300 km and choose the inverse-square circular speed rounded to 7725.7 m/s.</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 7725.7 --force_law inverse_square --dt 1 --maxSteps 7000</code></pre>
 <div class="beat-action"><strong>Read</strong><p>One completed revolution; its time is 5460.9 s. The integrated maximum altitude reaches 348.47 km, although the launch is at 300 km. The osculating eccentricity from the launch state is only 6.1431e-06. These lines refer to different things: the numerically computed path drifts outward, while the ideal orbit is nearly circular.</p></div>
-<p>The ideal inverse-square speeds at (r=R_oplus+h_0) are (v_c=sqrt{mu_oplus/r}) and (v_e=sqrt{2mu_oplus/r}). At 300 km they are about 7725.72 and 10925.8 m/s; the ideal circular period is 5431.3 s. Compare that with the printed period before moving on.</p>
-<p class="small-print">Try task 4.</p></section>
+<p>The ideal inverse-square speeds at \(r=R_\oplus+h_0\) are \(v_c=\sqrt{\mu_\oplus/r}\) and \(v_e=\sqrt{2\mu_\oplus/r}\). At 300 km they are about 7725.72 and 10925.8 m/s; the ideal circular period is 5431.3 s. Compare that with the printed period before moving on.</p>
+<p class="small-print">Try <a href="#exp4">Task 4</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 <section id="beat3"><h2>Beat 3 · An ellipse</h2><p>Keep the altitude but launch faster than circular and below escape.</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 9000 --force_law inverse_square --dt 1 --maxSteps 10585</code></pre>
 <div class="beat-action"><strong>Read</strong><p>Revolution 1 takes 10580 s and reaches a computed maximum altitude of 7.7644e+06 m. The launch-state osculating apogee is 7.7183e+06 m. The gap measures numerical drift, not a change to the launch-state formula.</p></div>
-<p>Earth is at a focus, not the centre of the ellipse. Since 9000 m/s exceeds the local circular speed, the tangential launch starts at <em>perigee</em>. The ideal eccentricity follows from specific energy (mathcal E=v^2/2-mu_oplus/r) and specific angular momentum (h=xv-yu): (e=sqrt{1+2mathcal E h^2/mu_oplus^2}). Here it is 0.35708.</p>
-<p class="small-print">Try task 5.</p></section>
+<p>Earth is at a focus, not the centre of the ellipse. Since 9000 m/s exceeds the local circular speed, the tangential launch starts at <em>perigee</em>. The ideal eccentricity follows from specific energy \(\mathcal E=v^2/2-\mu_\oplus/r\) and specific angular momentum \(h=xv-yu\): \(e=\sqrt{1+2\mathcal E h^2/\mu_\oplus^2}\). Here it is 0.35708.</p>
+<p class="small-print">Try <a href="#exp5">Task 5</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+
 <section id="beat4"><h2>Beat 4 · Escape</h2><p>Go above the 300 km escape speed.</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 11500 --vInit 0 --dt 2 --maxSteps 3001 --force_law inverse_square</code></pre>
 <div class="beat-action"><strong>Read</strong><p><code>Escape trajectory; maxSteps reached</code>, eccentricity 1.2157, and final/maximum altitude 3.3678e+07 m. The run lasts 6000 s and has not reached infinity: “escape” labels the unbound launch state and a path that did not hit Earth during this run. There is a perigee but no apogee.</p></div>
-<p>For inverse-square gravity the ideal specific energy is nonnegative at or above (v_e). A fast launch aimed inward can still hit Earth, so the console reports impact in that case.</p>
-<p class="small-print">Try task 6.</p></section>
+<p>For inverse-square gravity the ideal specific energy is nonnegative at or above \(v_e\). A fast launch aimed inward can still hit Earth, so the console reports impact in that case.</p>
+<p class="small-print">Try <a href="#exp6">Task 6</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 <section id="beat5"><h2>Beat 5 · Make the comparison fair</h2><p>Try the same speed under both laws at 300 km. Which impacts sooner?</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 7500 --force_law inverse_square --dt 1 --maxSteps 15000
 python main.py --h0 300000 --uInit 7500 --force_law simplified --dt 1 --maxSteps 15000</code></pre>
@@ -279,13 +327,13 @@ python main.py --h0 300000 --uInit 7500 --force_law simplified --dt 1 --maxSteps
 <p>Now match the <em>fractional</em> deficit: <code>7853.53</code> m/s is 2.92% below the simplified circular speed here.</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 7853.53 --force_law simplified --dt 1 --maxSteps 15000</code></pre>
 <p>This time simplified completes two revolutions, with minima of 46686 m and 65796 m. Its noncircular ideal path generally precesses rather than retracing a Kepler ellipse. A comparison at one absolute speed alone cannot establish which law is more forgiving at an equal fractional deficit.</p>
-<p class="small-print">Try task 7.</p></section>
+<p class="small-print">Try <a href="#exp7">Task 7</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 <section id="beat6"><h2>Beat 6 · Between stored samples</h2><p>The plot joins samples; events usually occur between them. Start with a short run and inspect the last two radii.</p>
 <pre class="code-block"><code>python main.py
 python -c "from driver_earthorbit import run_earth_orbit as run; r = run(dt=0.4, maxSteps=15000, return_diagnostics=True); import math; print([math.hypot(x,y) for x,y in zip(r[0][-2:], r[1][-2:])])"</code></pre>
-<div class="beat-action"><strong>Notice</strong><p>The last raw radius is slightly <em>inside</em> (R_oplus=6378200) m, yet the printed flight time is interpolated to the crossing, 200.44 s. Surface impact uses the straight chord's intersection with the Earth circle; revolution boundaries use interpolation in angle; altitude peaks use a local three-point parabola.</p></div>
+<div class="beat-action"><strong>Notice</strong><p>The last raw radius is slightly <em>inside</em> \(R_\oplus=6378200\) m, yet the printed flight time is interpolated to the crossing, 200.44 s. Surface impact uses the straight chord's intersection with the Earth circle; revolution boundaries use interpolation in angle; altitude peaks use a local three-point parabola.</p></div>
 <p>The red plot retains the first below-surface stored point. The summary stops at its estimated surface crossing. These distinctions matter when reading a close miss.</p>
-<p class="small-print">Try task 8.</p></section>
+<p class="small-print">Try <a href="#exp8">Task 8</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 <section id="beat7"><h2>Beat 7 · Check the timestep</h2><p>Launch at the full-precision 300 km circular speed and halve <code>dt</code>, allowing enough points for a revolution.</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 7725.7237298314685 --force_law inverse_square --dt 4 --maxSteps 1450
 python main.py --h0 300000 --uInit 7725.7237298314685 --force_law inverse_square --dt 2 --maxSteps 2890
@@ -294,15 +342,15 @@ python main.py --h0 300000 --uInit 7725.7237298314685 --force_law inverse_square
 python main.py --h0 300000 --uInit 7725.7237298314685 --force_law inverse_square --dt 0.25 --maxSteps 21890</code></pre>
 <div class="beat-action"><strong>Record</strong><p>Revolution 1 maxima: 493240, 396820, 348470, 324250, 312130 m. Subtract 300000 m: the excess nearly halves whenever the timestep halves. The period also approaches the ideal 5431.3 s (printed: 5550.8, 5490.8, 5460.9, 5446.1, 5438.7 s).</p></div>
 <p>The method advances velocity using acceleration at the start of the step, then position using the old and new velocities' average. This first-order method is not symplectic; a five-significant-digit printout cannot certify its accuracy.</p>
-<p class="small-print">Try task 9.</p></section>
+<p class="small-print">Try <a href="#exp9">Task 9</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 <section id="beat8"><h2>Beat 8 · Two period laws</h2><p>Measure one nearly circular revolution at two altitudes under each law.</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 7725.7237 --force_law inverse_square --dt 1 --maxSteps 5481
 python main.py --h0 1500000 --uInit 7113.0422 --force_law inverse_square --dt 1 --maxSteps 7009
 python main.py --h0 300000 --uInit 8089.8925 --force_law simplified --dt 1 --maxSteps 5216
 python main.py --h0 1500000 --uInit 8786.7150 --force_law simplified --dt 1 --maxSteps 5683</code></pre>
-<div class="beat-action"><strong>Compare</strong><p>Printed periods are 5460.9 and 6988.7 s for inverse square, then 5189.8 and 5636.6 s for simplified. Inverse square predicts (T^2/r^3=4pi^2/mu_oplus); simplified predicts (T^2/r=4pi^2/g). Calculate both ratios from the printed times and radii. Their small departures from the exact constants are the numerical drift from Beat 7.</p></div>
+<div class="beat-action"><strong>Compare</strong><p>Printed periods are 5460.9 and 6988.7 s for inverse square, then 5189.8 and 5636.6 s for simplified. Inverse square predicts \(T^2/r^3=4\pi^2/\mu_\oplus\); simplified predicts \(T^2/r=4\pi^2/g\). Calculate both ratios from the printed times and radii. Their small departures from the exact constants are the numerical drift from Beat 7.</p></div>
 <p>The circular speed must be recomputed at each altitude. Do not compare periods using one fixed launch speed at both heights.</p>
-<p class="small-print">Try task 10.</p></section>
+<p class="small-print">Try <a href="#exp10">Task 10</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 <section id="beat9"><h2>Beat 9 · Know when the run stops</h2><p>Each command below should stop with a single <code>EarthOrbit:</code> error and no plot.</p>
 <pre class="code-block"><code>python main.py --h0 -1
 python main.py --dt 0
@@ -310,35 +358,96 @@ python main.py --maxSteps 1
 python main.py --uInit 1e308 --dt 10</code></pre>
 <p>A very coarse step can also send a straight segment all the way through Earth's reference sphere even if both sampled endpoints lie outside. The program rejects that step and asks for a smaller <code>dt</code>. <code>maxSteps</code> itself is a cap on stored points, including the launch point; reaching it is ordinarily a reported outcome, not an error. The model is planar and ignores atmosphere, Earth's rotation, oblateness and third bodies.</p>
 <p class="small-print">For a negative number in scientific notation, use the equals form such as <code>--vInit=-1e5</code>.</p></section>
+
+<section id="experiments">
+<h2>Practice Tasks</h2>
+
+<div class="experiment-card" id="exp1">
+<div class="exp-num">Task 1</div>
+Use Beat 0's output to convert the fraction of a revolution to degrees. Compare with 14.224°.
+</div>
+
+<div class="experiment-card" id="exp2">
+<div class="exp-num">Task 2</div>
+Run both Beat 1 commands; explain why the impact times differ even though both accelerations point inward.
+</div>
+
+<div class="experiment-card" id="exp3">
+<div class="exp-num">Task 3</div>
+At 1500 km, predict which law pulls more strongly and check the two trajectories with matching launch settings.
+</div>
+
+<div class="experiment-card" id="exp4">
+<div class="exp-num">Task 4</div>
+Compute \(v_c\) and \(v_e\) at 300 km from the stated \(\mu_\oplus\) and radius \(R_\oplus=6378200\) m. Which Beat 2 speed was rounded?
+</div>
+
+<div class="experiment-card" id="exp5">
+<div class="exp-num">Task 5</div>
+From Beat 3, identify whether the launch is perigee or apogee and explain why the two printed maximum-altitude quantities disagree.
+</div>
+
+<div class="experiment-card" id="exp6">
+<div class="exp-num">Task 6</div>
+Use Beat 4's escape speed comparison and eccentricity to explain why the console has no apogee line. Try an inward radial launch and watch for impact.
+</div>
+
+<div class="experiment-card" id="exp7">
+<div class="exp-num">Task 7</div>
+Compare both 7500 m/s runs with the matched-fraction 7853.53 m/s simplified run. State precisely which quantity was held fixed in each comparison.
+</div>
+
+<div class="experiment-card" id="exp8">
+<div class="exp-num">Task 8</div>
+For Beat 6, calculate the raw last two radii and explain why the last plotted point can lie below the surface while the summary's impact time stops at the surface.
+
+</div>
+
+<div class="experiment-card" id="exp9">
+<div class="exp-num">Task 9</div>
+Use Beat 7's five maxima to estimate the order of numerical convergence. Repeat at a finer timestep if you need a quantitative period.
+</div>
+
+<div class="experiment-card" id="exp10">
+<div class="exp-num">Task 10</div>
+Calculate \(T^2/r^3\) and \(T^2/r\) from Beat 8's four printed periods. Which ratio stays approximately constant under each law?
+</div>
+
+<p>Record the command, the relevant printed lines and your own explanation. The <a href="SampleOutputs/EarthOrbit-SampleOutputs_Guide.html">Sample Outputs Guide</a> gives representative plots and headline values for Beats 0–8.</p>
+
+</section>
+
+
+
 <section id="parameters"><h2>Parameters</h2><p>Use <code>python main.py --help</code> for the command-line contract. All option changes apply to one run; <code>python main.py</code> restores defaults. Metres, seconds and metres per second are the input units.</p>
-<div class="table-scroll" tabindex="0"><table class="param-table"><thead><tr><th>Option</th><th>Default</th><th>Meaning</th></tr></thead><tbody>
+<div class="table-scroll" tabindex="0">
+<table class="param-table"><thead><tr><th>Option</th><th>Default</th><th>Meaning</th></tr></thead><tbody>
 <tr><td><code>--h0</code></td><td>300.0</td><td>Launch altitude above the reference surface, m; nonnegative.</td></tr>
 <tr><td><code>--uInit</code></td><td>7900.0</td><td>Initial tangential velocity, m/s.</td></tr>
 <tr><td><code>--vInit</code></td><td>0.0</td><td>Initial radial velocity, m/s; positive outward.</td></tr>
 <tr><td><code>--dt</code></td><td>0.4</td><td>Positive fixed timestep, s.</td></tr>
 <tr><td><code>--maxSteps</code></td><td>15000</td><td>Stored-point cap, including launch; integer at least 2.</td></tr>
-<tr><td><code>--force_law</code></td><td>simplified</td><td><code>simplified</code>: fixed 9.8 m/s² inward; <code>inverse_square</code>: (mu_oplus/r^2) inward.</td></tr>
-</tbody></table></div><p><code>--version</code> reports the common version and source build. The four Python modules require Python, NumPy and Matplotlib; the program does not need an internet connection. Equations on this page use MathJax loaded from a public online service and need a connection to be typeset.</p></section>
-<section id="output"><h2>Reading the summary</h2><p>The first line gives version, build and the number of stored trajectory samples. “Surface impact” uses an interpolated crossing; “Orbit completed” means at least one numerically tracked revolution; “Escape trajectory” requires an unbound inverse-square launch and no impact during the run. A maximum-step stop says only where integration ended.</p>
-<p>Completed revolutions, angular travel, flight time, distance and altitude extremes refer to the computed path. The extra <code>Osculating</code> lines in inverse-square runs are ideal two-body elements calculated from the launch state. The two kinds of number can differ because the finite-step integrator drifts. For an unbound launch there is no osculating apogee. A final/maximum altitude line is combined only if both format to the same value.</p></section>
-<section id="experiments"><h2>Practice tasks</h2><ol>
-<li>Use Beat 0's output to convert the fraction of a revolution to degrees. Compare with 14.224°.</li>
-<li>Run both Beat 1 commands; explain why the impact times differ even though both accelerations point inward.</li>
-<li>At 1500 km, predict which law pulls more strongly and check the two trajectories with matching launch settings.</li>
-<li>Compute (v_c) and (v_e) at 300 km from the stated (mu_oplus) and radius (R_oplus=6378200) m. Which Beat 2 speed was rounded?</li>
-<li>From Beat 3, identify whether the launch is perigee or apogee and explain why the two printed maximum-altitude quantities disagree.</li>
-<li>Use Beat 4's escape speed comparison and eccentricity to explain why the console has no apogee line. Try an inward radial launch and watch for impact.</li>
-<li>Compare both 7500 m/s runs with the matched-fraction 7853.53 m/s simplified run. State precisely which quantity was held fixed in each comparison.</li>
-<li>For Beat 6, calculate the raw last two radii and explain why the last plotted point can lie below the surface while the summary's impact time stops at the surface.</li>
-<li>Use Beat 7's five maxima to estimate the order of numerical convergence. Repeat at a finer timestep if you need a quantitative period.</li>
-<li>Calculate (T^2/r^3) and (T^2/r) from Beat 8's four printed periods. Which ratio stays approximately constant under each law?</li>
-</ol><p>Record the command, the relevant printed lines and your own explanation. The <a href="SampleOutputs/EarthOrbit-SampleOutputs_Guide.html">Sample Outputs Guide</a> gives representative plots and headline values for Beats 0–8.</p></section>
+<tr><td><code>--force_law</code></td><td>simplified</td><td><code>simplified</code>: fixed 9.8 m/s² inward; <code>inverse_square</code>: \(\mu_\oplus/r^2\) inward.</td></tr>
+</tbody></table>
+</div><p><code>--version</code> reports the common version and source build. 
+The four Python modules require Python, NumPy and Matplotlib; the program does not need an internet connection. 
+Equations on this page use MathJax loaded from a public online service and need a connection to be typeset.</p>
+</section>
+
 <section id="modules"><h2>Code modules</h2><div class="compact-grid">
 <div><code>main.py</code><p>Reads options, calls the driver, prints the summary and opens the plot.</p></div>
 <div><code>physics_earthorbit.py</code><p>Constants, gravity laws, version and source build.</p></div>
 <div><code>driver_earthorbit.py</code><p>Fixed-step trajectory and numerical summary.</p></div>
 <div><code>plot_earthorbit.py</code><p>Red path and dashed blue Earth circle.</p></div>
 </div><p>Run <code>python -m unittest discover -s tests -v</code> from the program folder to check the physics and both tutorial guides when the sibling documentation folder is installed.</p></section>
+
+
+
+
+
+
+
+
 <section id="related"><h2>Related programs</h2><p><strong>CannonTrajectory</strong> is a simpler near-surface projectile problem. <strong>Orbit</strong> extends orbital calculations; <strong>Binary</strong> treats two gravitating bodies. EarthOrbit concentrates on one projectile and two choices of central acceleration.</p></section>
 <section id="license" class="gftgu-license">
 <h2>License</h2>

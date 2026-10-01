@@ -56,6 +56,38 @@
     .note { background: var(--note-bg); border: 1px solid var(--border); border-left: 4px solid var(--accent2); }
     .warn { background: #fff6e8; border: 1px solid var(--gold); border-left: 4px solid var(--gold); }
     .note strong { color: var(--accent2); }
+    /* ── Scenario card ── */
+    .scenario-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 16px 22px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
+    }
+    .scenario-card h4 {
+      font-family: var(--sans);
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: var(--accent2);
+      margin-bottom: 6px;
+    }
+    .scenario-card p {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .scenario-card .params {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 8px 12px;
+      margin-top: 8px;
+    }
     .warn strong { color: var(--accent); }
     .param-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1rem 0 1.4rem; }
     .param-table th { color: #fff; font-family: var(--sans); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 8px 12px; text-align: left; background: var(--accent); }
@@ -144,20 +176,31 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
   <div class="nav-label">Reference</div>
   <a href="#parameters">Parameters</a>
   <a href="#output">Output</a>
-  <a href="#experiments">Experiments</a>
+  <a href="#experiments">Suggested Experiments</a>
   <a href="#validity">Domain of Validity</a>
   <a href="#related">Related Programs</a>
   <a href="#license">License</a>
 </nav>
 <main>
   <p id="version_build">Version 1.6.0&nbsp;&nbsp;&nbsp;&nbsp;Build cab9929fa0fb</p>
-<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
+<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. 
+Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 
-  <section id="description">
-    <h2>Description</h2>
-    <p><strong>Atmosphere</strong> is the Chapter&nbsp;7 teaching model of a planetary atmosphere in hydrostatic equilibrium (Investigations 7.1 and 7.3). You supply a temperature profile. The program integrates pressure upward from a reference surface and plots pressure, density, or temperature.</p>
-    <p>The spine of the lesson is one sentence:</p>
-    <p><em>Pressure holds up the weight of the air above; the gas law turns that pressure into a density; their ratio is a length — the scale height — set by temperature, gravity and mean molecular mass.</em></p>
+<section id="description">
+<h2>Description</h2>
+<p>
+<strong>Atmosphere</strong> models the vertical pressure, density, and temperature structure
+        of a planetary atmosphere in hydrostatic equilibrium. Starting from a measured sea-level
+        (or reference-level) pressure and a user-supplied temperature profile, the program integrates
+        upward in altitude until the numerical integration reaches its zero-pressure boundary, then plots whichever of the three
+        atmospheric quantities the user selects. This zero-pressure boundary is a numerical stopping
+        condition for the simplified model, not a sharply defined physical surface in a real atmosphere.
+      </p>
+
+	
+	
+    <p>The spine of the lesson is one sentence:
+    <em>Pressure holds up the weight of the air above; the gas law turns that pressure into a density; their ratio is a length — the scale height — set by temperature, gravity and mean molecular mass.</em></p>
     <div class="warn"><strong>What this program is not.</strong> It is not a weather code and not a research atmosphere. Gravity and mean molecular mass are constant with height. Temperature is an input, linearly interpolated between the altitudes you give. Pressure is advanced by a first-order Euler step that also lands on every supplied temperature breakpoint, and shortens a step that would jump temperature by more than about 5%, so a thin or steep layer cannot hide between samples. The altitude where pressure hits zero is a stopping rule, not a physical top of the air.</div>
     <div class="note"><strong>Reading this page.</strong> Equations are rendered by MathJax from a public CDN. Without a network connection the raw \(\LaTeX\) remains visible as text. The program itself needs no internet access.</div>
   </section>
@@ -181,12 +224,16 @@ python main.py</pre>
 \frac{dp}{dh} = -g\,\rho.
 \]
     </div>
-    <p>The slope is steepest where \(\rho\) is largest. Gravity is held constant. The equation cannot be solved alone: it has two unknowns. Beat 1 supplies the missing relation.</p>
+    <p>The slope is steepest where \(\rho\) is largest. Gravity is held constant. 
+	The equation cannot be solved alone: it has two unknowns. Beat 1 supplies the missing relation.</p>
+	
+	<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat1">
     <h2>Beat 1 · Density is not free: the gas law supplies it</h2>
-    <p>Air is a gas. Density follows from pressure and temperature. Plot density this time; the printed table is the same as Beat 0.</p>
+    <p>Air is a gas. Density follows from pressure and temperature. 
+	Plot density this time; the printed table is the same as Beat 0.</p>
 <pre>python main.py --output_type density</pre>
     <p>Read the surface density (it should sit next to \(1.225\,\mathrm{kg\,m^{-3}}\), the U.S. Standard Atmosphere 1976 value). Then divide density by the <code>p/T</code> column in two different rows. The ratio does not move. That constant is \(\mu m_u/k_B\): the <code>p/T</code> column is not itself the density, but density written without the constant factor \(\mu m_u/k_B\).</p>
     <div class="eq-block">
@@ -197,14 +244,22 @@ python main.py</pre>
 \frac{dp}{dh} = -\frac{g\,\mu\,m_u}{k_B\,T(h)}\,p.
 \]
     </div>
-    <p>At fixed pressure, colder air is denser, so density need not fall as fast as pressure. \(T(h)\) is an input. Beat 2 solves the equation when that input is a constant.</p>
+    <p>At fixed pressure, colder air is denser, 
+	so density need not fall as fast as pressure. \(T(h)\) is an input. 
+	Beat 2 solves the equation when that input is a constant.</p>
+
+	<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat2">
     <h2>Beat 2 · One number sets the size of an atmosphere</h2>
     <p>If the temperature is the same at every height, equal steps upward multiply the pressure by the same factor.</p>
 <pre>python main.py --h_points 0,8000,16000,24000,32000 --T_points 288.15,288.15,288.15,288.15,288.15</pre>
-    <p>Read only the table; above the last supplied altitude the program switches to the closure of Beat 7. Divide each pressure by the one below it. Find the height over which the pressure falls by a factor of \(e\). Then compute \(p_0/(g\rho_0)\) from the first row. Those two lengths are two readings of the same model, not an independent check. Expect them to agree to a few tenths of a per cent; Beat 6 says why they differ.</p>
+    <p>Read only the table; above the last supplied altitude the program switches to the closure of Beat 7.
+	Divide each pressure by the one below it. Find the height over which the pressure falls by a 
+	factor of \(e\). Then compute \(p_0/(g\rho_0)\) from the first row. 
+	Those two lengths are two readings of the same model, not an independent check. 
+	Expect them to agree to a few tenths of a per cent; Beat 6 says why they differ.</p>
     <div class="eq-block">
       <div class="eq-label">Barometric formula and scale height — derived</div>
 \[
@@ -213,7 +268,14 @@ p = p_0\,e^{-h/H},
 H = \frac{p_0}{g\,\rho_0} = \frac{k_B\,T_0}{g\,\mu\,m_u}.
 \]
     </div>
-    <p>For the default Earth numbers at 288.15&nbsp;K, \(H\approx 8.43\,\mathrm{km}\). The first integration step is \(H_{\min}/200\), sized from the coldest temperature on the profile so a cold layer is not stepped through too coarsely. The integrator also lands on every supplied temperature breakpoint, even when that breakpoint is closer than \(H_{\min}/200\), and shortens a step that would change temperature by more than about 5% of the temperature at the start of that step. A proposed step shorter than about \(10^{-5}\) of the local scale height is left alone.</p>
+    <p>For the default Earth numbers at 288.15&nbsp;K, \(H\approx 8.43\,\mathrm{km}\). 
+	The first integration step is \(H_{\min}/200\), sized from the coldest temperature on the profile 
+	so a cold layer is not stepped through too coarsely. The integrator also lands on every 
+	supplied temperature breakpoint, even when that breakpoint is closer than \(H_{\min}/200\), 
+	and shortens a step that would change temperature by more than about 5% of the temperature 
+	at the start of that step. A proposed step shorter than about \(10^{-5}\) of the local scale height is left alone.</p>
+	
+	<p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat3">
@@ -230,6 +292,7 @@ python main.py --p0 1.013e6</pre>
 H \propto \frac{T}{\mu\,g}.
 \]
     </div>
+<p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> and <a href="#exp4">Experiment 4</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat4">
@@ -246,6 +309,8 @@ T(h) = T_{i-1} + \frac{T_i-T_{i-1}}{h_i-h_{i-1}}\,(h-h_{i-1}),
 \]
     </div>
     <p>Below the first supplied point the temperature is held at \(T_0\). Above the last one, Beat 7 takes over. The default Earth list combines U.S. Standard Atmosphere 1976 values through about 86&nbsp;km with seven rounded NRLMSIS 2.0 thermospheric temperatures (100, 150, 200, 250, 300, 400 and 500&nbsp;km) for one date and place.</p>
+
+    <p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat5">
@@ -261,6 +326,7 @@ python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 \
 python main.py --planet_name Jupiter --g_accel 24.8 --mu 2.2 --p0 1e5 \
   --h_points 0,20000,50000,100000 --T_points 165,130,110,150</pre>
     <p>Compute \(H=p_0/(g\rho_0)\) and the column mass \(p_0/g\) from the surface row of each table. Jupiter’s scale height is the largest of the four because \(\mu\) is so small. Venus’s column is about a hundred Earth columns; Mars has little air and a taller scale height than Earth. Jupiter has no solid surface: the run takes the 1-bar level as the reference and the supplied profile ends at 100&nbsp;km; the plotted curve continues a little above that under the Beat 7 closure.</p>
+    <p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat6">
@@ -276,6 +342,9 @@ python main.py</pre>
 \]
     </div>
     <p>That Euler estimate is for a slowly varying temperature and a run that did not have to enlarge the step. Against the U.S. Standard Atmosphere the default run is already a fraction of a per cent low at 11&nbsp;km and about 18&nbsp;per cent low at 86&nbsp;km. Do not read the isothermal Euler estimate (a few per cent at 100&nbsp;km) as the 18% figure in that comparison: most of the growing deficit against the standard is constant gravity, not the Euler step. Real \(g\) falls by about 2.6&nbsp;per cent to 86&nbsp;km. Rounded inputs (\(g=9.81\), \(p_0=101300\,\mathrm{Pa}\), \(\mu=28.97\)) take a smaller third share. The factor \(\mu m_u/k_B\) inherits the rounding already present in \(\mu\) and in the measured atomic mass constant. Use the program for scale heights and ratios, not for an 86&nbsp;km pressure to three figures.</p>
+
+    <p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> and <a href="#exp7">Experiment 7</a>  in <a href="#experiments">Suggested Experiments</a>.</p>
+
   </section>
 
   <section id="beat7">
@@ -291,6 +360,8 @@ T=\beta\,p^{\alpha},\qquad \alpha=0.5.
 \]
     </div>
     <p>\(\beta\) is chosen so the first step above the last supplied altitude matches that last temperature. As \(p\to 0\), \(T\to 0\) and the local scale height collapses, so pressure reaches zero at a finite height. If 50,000 steps do not get there, the program doubles \(\Delta h\) and starts again, unless every step in that pass was already shorter than the nominal increment, in which case it raises a budget error instead. A zero pressure reached by that coarser step at or below the last supplied altitude is refused as a numerical failure.</p>
+
+    <p><em>Experiments that go with this beat:</em> <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="parameters">
@@ -318,35 +389,63 @@ T=\beta\,p^{\alpha},\qquad \alpha=0.5.
     <p>Every run prints a heading with version and build, then a checkpoint table of altitude, pressure, density, \(p/T\), and temperature at every supplied altitude that still lies in the positive-pressure domain. After the table it prints one <code>Numerical top</code> line: the last stored altitude and temperature, which is the stopping rule, not a physical top of the air. The density is \(p\,\mu m_u/(k_B T)\), so \(p/T\) is the density stripped of that constant, not the density in other units. Numbers use five significant figures. A plot window then opens unless you pass <code>--no_show</code>; <code>--save_plot PATH</code> writes the same figure to a file. The plotted quantity is the only thing <code>--output_type</code> changes.</p>
   </section>
 
-  <section id="experiments">
-    <h2>Experiments</h2>
-    <div class="exp-grid">
-      <div class="exp-card"><div class="ec-num">EXP-1 · First run</div>
-        <h4>Weigh the column</h4>
-        <p>From the default table, compute \(p_0/g\). What fraction of that mass sits below 11&nbsp;km? Why is the pressure curve steepest near the ground?</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-2 · Beginner</div>
-        <h4>A straight line on log paper</h4>
-        <p>Run Beat 2’s isothermal command. Plot \(\ln p\) against \(h\) from the table. What slope do you expect, and what length is minus one over that slope?</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-3 · Beginner</div>
-        <h4>One dial at a time</h4>
-        <p>From Beat 3, which change moves \(p(11\,\mathrm{km})/p_0\), and which one only rescales every pressure? Predict the \(\mu=44\) fraction from the default fraction before you look.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-4 · Intermediate</div>
-        <h4>Column versus height</h4>
-        <p>For Earth, Mars, Venus and the Jupiter slice, tabulate \(p_0/g\) and \(H\). Which world is “thickest” on each ranking? Why do the rankings disagree?</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-5 · Intermediate</div>
-        <h4>Cold layer, warm layer</h4>
-        <p>Run the three-point profile of Beat 4. Show from the table that \(\rho_2/\rho_1=(p_2/p_1)\,(T_1/T_2)\) between 50 and 100&nbsp;km.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-6 · Intermediate</div>
-        <h4>Grade the Euler step</h4>
-        <p>Compare the isothermal 100&nbsp;km pressure with \(p_0 e^{-h/H}\). Does the Beat 6 formula account for most of the deficit?</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-7 · Advanced</div>
-        <h4>What constant \(g\) costs</h4>
-        <p>At 86&nbsp;km, \(g\) has fallen by about 2.6&nbsp;per cent. Argue, without writing a new integrator, why holding \(g\) fixed makes the model pressure run low, and in which direction the deficit should grow.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-8 · Advanced</div>
-        <h4>Do not name the tail</h4>
-        <p>Run Beat 7’s short profile. Read the printed Numerical top line. Where does the supplied line end, and where does the curve end? Invent one sentence that uses the word “top” only for the stopping rule.</p></div>
-    </div>
-  </section>
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+
+<div class="scenario-card" id="exp1">
+<h4>1 · Introductory — Weigh the column</h4>
+        <p>From the default table, compute \(p_0/g\). 
+        What fraction of that mass sits below 11&nbsp;km? 
+        Why is the pressure curve steepest near the ground?</p>
+</div>
+
+<div class="scenario-card" id="exp2">
+<h4>2 · Beginner — A straight line on log paper</h4>
+<p>Run Beat 2’s isothermal command. Plot \(\ln p\) against \(h\) from the table. What slope do you expect, and what length is minus one over that slope?</p>
+</div>
+
+<div class="scenario-card" id="exp3">
+<h4>3 · Beginner — One dial at a time</h4>
+        <p>From Beat 3, which change moves \(p(11\,\mathrm{km})/p_0\), and which one only rescales every pressure? 
+        Predict the \(\mu=44\) fraction from the default fraction before you look.</p>
+</div>
+
+<div class="scenario-card" id="exp4">
+<h4>4 · Intermediate — Column versus height</h4>
+        <p>For Earth, Mars, Venus and the Jupiter slice, tabulate \(p_0/g\) and \(H\). 
+		Which world is “thickest” on each ranking? Why do the rankings disagree?</p>
+</div>
+
+<div class="scenario-card" id="exp5">
+<h4>5 · Intermediate — Cold layer, warm layer</h4>
+        <p>Run the three-point profile of Beat 4. 
+        Show from the table that \(\rho_2/\rho_1=(p_2/p_1)\,(T_1/T_2)\) between 50 and 100&nbsp;km.</p>
+</div>
+
+<div class="scenario-card" id="exp6">
+<h4>6 · Intermediate — Grade the Euler step</h4>
+        <p>Compare the isothermal 100&nbsp;km pressure with \(p_0 e^{-h/H}\). Does the Beat 6 formula account for most of the deficit?</p>
+</div>
+
+<div class="scenario-card" id="exp7">
+<h4>7 · Advanced — What constant \(g\) costs</h4>
+
+        <p>At 86&nbsp;km, \(g\) has fallen by about 2.6&nbsp;per cent. 
+        Argue, without writing a new integrator, why holding \(g\) fixed makes the model pressure run low, 
+        and in which direction the deficit should grow.</p>
+</div>
+
+<div class="scenario-card" id="exp8">
+<h4>8 · Advanced — Do not name the tail</h4>
+        <p>Run Beat 7’s short profile. Read the printed Numerical top line. 
+        Where does the supplied line end, 
+		and where does the curve end? 
+        Invent one sentence that uses the word “top” only for the stopping rule.</p>
+</div>
+
+</section>
+  
+  
 
   <section id="validity">
     <h2>Domain of Validity</h2>

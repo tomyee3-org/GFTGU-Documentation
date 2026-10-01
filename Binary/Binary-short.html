@@ -36,6 +36,7 @@
     header .badge { display: inline-block; font-family: var(--mono); font-size: 10.5px; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.35); border-radius: 3px; padding: 2px 7px; letter-spacing: .06em; margin-bottom: 10px; }
     header h1 { font-size: 1.95rem; font-weight: normal; letter-spacing: -.02em; }
     header h1 em { font-style: normal; color: #ffc9a0; }
+    section { margin-bottom: 52px; }
     header .sub { margin-top: 6px; font-family: var(--sans); font-size: 0.88rem; color: #f0d0b8; line-height: 1.55; }
     header .sub a { color: #ffd8b8; text-decoration: none; border-bottom: 1px solid rgba(255,200,150,.4); }
     nav { background: var(--surface); border-right: 1px solid var(--border); padding: 24px 0 40px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
@@ -204,6 +205,7 @@ r=\sqrt{(x_A-x_B)^2+(y_A-y_B)^2}.
 \]
     </div>
     <p>Each body accelerates in proportion to the <em>other</em> mass. Adding \(M_A\mathbf a_A+M_B\mathbf a_B\) gives zero, so the centre of mass moves without acceleration. Measured from it, A sits the fraction \(M_B/(M_A+M_B)\) of the separation away. Equal masses alone do not force \(\mathbf v_A=-\mathbf v_B\); that also needs a centre of mass at rest.</p>
+    <p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat2">
@@ -213,6 +215,7 @@ r=\sqrt{(x_A-x_B)^2+(y_A-y_B)^2}.
 python main.py --vInitA 60000 --vInitB 60000</pre>
     <p>The Keplerian block and the sampled separations should match Beat 0. The shifted run only moves the pattern on the plot. The boosted run adds \(\tfrac12(M_A+M_B)V_{\mathrm{CM}}^2\) to the printed kinetic energy and can make the printed total energy positive even though the relative orbit is still the same bound ellipse. The energy that classifies the orbit is the energy in the centre-of-mass frame.</p>
     <div class="note"><strong>A numerical caveat, not a new law.</strong> A large boost changes the speeds the corrector compares to, so the two relative paths agree only to the accuracy of the integrator, not to rounding error. A modest boost agrees far more closely.</div>
+    <p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat3">
@@ -233,6 +236,7 @@ E=K+U.
 \]
     </div>
     <p>The plot of \(E\) looks flat; the column <code>(E-E0)/|E0|</code> is the diagnostic. That column is misleading when \(E_0\) is nearly zero: compare the change in \(E\) with \(K\) instead.</p>
+    <p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat4">
@@ -251,6 +255,7 @@ e=\frac{v_p-v_a}{v_p+v_a}.
 \]
     </div>
     <p><code>Total revolutions</code> is the signed angle swept by \(\mathbf r_A-\mathbf r_B\), divided by \(2\pi\). The run stops at the first accepted step that reaches a full turn, so it can overshoot by up to one <code>dt</code>. That is geometry, not closure of the path.</p>
+    <p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> and <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat5">
@@ -271,6 +276,7 @@ python main.py --eps2 0.5</pre>
 \]
     </div>
     <p>The end acceleration depends on the end position, so the corrector repeats, at most ten times, until both bodies’ velocities have changed by less than <code>eps2</code> between passes. If ten passes fail, the step is halved and retried.</p>
+    <p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat6">
@@ -287,6 +293,7 @@ python main.py --dt 20000 --eps1 0.5</pre>
 \]
     </div>
     <p>If \(\Delta_a>\varepsilon_1\), the trial is rejected and \(\Delta t\) is halved. After an accepted step the working step may grow 10&nbsp;per cent toward the ceiling <code>dt</code>. Forty halvings in a row hit a floor of \(\mathrm{dt}\times 10^{-12}\) and the run stops with an error. Testing body A is enough: the two accelerations are proportional.</p>
+    <p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="beat7">
@@ -297,6 +304,7 @@ python main.py --dt 500
 python main.py --dt 1000 --eps2 1e-8</pre>
     <p>The dip at closest approach (row 0.5) falls roughly as \((\Delta t)^2\). The leftover at the end of the orbit (row 1.0) follows <code>eps2</code> more than <code>dt</code> on this ellipse. A tolerance is not an error bound. Choose the setting by the question: shorter <code>dt</code> for the picture at periapsis, tighter <code>eps2</code> for what remains in \(E\) after many turns.</p>
     <p>The default eccentricity 0.767 is a mild test. An orbit with \(e\approx 0.999\) at the default settings finishes early and drops a few parts in a thousand of its energy at periapsis. A head-on start, <code>--uInitA 0 --uInitB 0</code>, hits the timestep floor.</p>
+    <p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> and <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
   <section id="parameters">
@@ -322,39 +330,44 @@ python main.py --dt 1000 --eps2 1e-8</pre>
     <p>Every run prints version and build, accepted steps, how it stopped, total revolutions and time, sampled min/max separation, the Keplerian classification of the <em>starting</em> data, a centre-of-mass block for each body, and an energy table at tenths of the run. A plot window then opens. Close it to end the program. The Keplerian block is not the integrated orbit; compare the two when you want a check.</p>
   </section>
 
+
+  
   <section id="experiments">
-    <h2>Experiments</h2>
-    <div class="exp-grid">
-      <div class="exp-card"><div class="ec-num">EXP-1 · First run</div>
-        <h4>Not a circle</h4>
-        <p>From the default summary, what fraction of the starting separation is the closest approach? Why does that already rule out a circular orbit?</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-2 · Beginner</div>
-        <h4>Who circles whom</h4>
-        <p>Run Beat 1. Confirm that \(a_A/a_B=M_B/M_A\) and that the two periods agree. Where is the origin on the plot?</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-3 · Beginner</div>
-        <h4>A boost is not unbinding</h4>
-        <p>Run Beat 2’s second command. Why is the printed total energy positive while the Keplerian line still says elliptic?</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-4 · Intermediate</div>
-        <h4>Escape</h4>
-        <p>From Beat 3, compute the relative escape speed \(v_{\mathrm{rel,esc}}=\sqrt{2G(M_A+M_B)/r}\). In the centre-of-mass frame with equal masses each body has half of that. How close is 38091.14&nbsp;m&nbsp;s\(^{-1}\)? For unequal masses the two CM speeds split the same relative speed in the inverse-mass ratio; do not substitute a single mass for \(M_A+M_B\).</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-5 · Intermediate</div>
-        <h4>The hodograph</h4>
-        <p>On the default velocity-space plot, estimate \(e\) from the radius and offset of one body’s circle. Compare with the printed eccentricity.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-6 · Intermediate</div>
-        <h4>Fixed star</h4>
-        <p>Give body B a hundred times A’s mass and park it at the origin. Start A at \(4.6\times 10^{10}\,\mathrm{m}\). Give the pair opposite sideways speeds that keep the centre of mass at rest and a relative speed of 500000&nbsp;m&nbsp;s\(^{-1}\): \(u_A=495049.50495\), \(u_B=-4950.49505\). Circular speed about a <em>fixed</em> \(2\times 10^{32}\,\mathrm{kg}\) mass at that radius is about 539000&nbsp;m&nbsp;s\(^{-1}\); the two-body relative circular speed is about 541000&nbsp;m&nbsp;s\(^{-1}\). So this is a mild ellipse (\(e\approx 0.147\)), not a near-radial plunge. A traces an approximately elliptical laboratory path about the stationary centre of mass at \(x\approx 4.55\times 10^{8}\,\mathrm{m}\); it is a 0.990-scaled and translated version of the relative Kepler ellipse. The sampled run need not close exactly. Compare that laboratory track of A with the one-body problem that <code>Orbit</code> integrates at the same mass, radius and relative speed.</p>
-<pre>python main.py --MB 2e32 --xInitB 0 --yInitB 0 --vInitB 0 --uInitB -4950.49505 --xInitA 4.6e10 --yInitA 0 --vInitA 0 --uInitA 495049.50495</pre>
-        <p>From the Orbit folder, a matched start at the same relative radius and 500000&nbsp;m&nbsp;s\(^{-1}\) is:</p>
-<pre data-program="Orbit">python main.py --xInit 4.6e10 --yInit 0 --vxInit 0 --vyInit 500000 --k 1.33486e22 --dt0 2000 --eps1 0.05 --eps2 0.0001 --maxOrbits 1</pre>
-        <p>Expect about 218 accepted steps and 5.05 days here; the summary prints a Keplerian period of 5.03 days for the pair. A fixed \(2\times 10^{32}\,\mathrm{kg}\) star at the same radius and 500000&nbsp;m&nbsp;s\(^{-1}\) gives a period of about 5.11 days.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-7 · Advanced</div>
-        <h4>Two knobs, two errors</h4>
-        <p>From Beats 5–7, which printed diagnostic follows <code>dt</code>, and which follows <code>eps2</code>? Halve each once and say what you would spend computer time on if you cared about periapsis, or about many orbits.</p></div>
-      <div class="exp-card"><div class="ec-num">EXP-8 · Advanced</div>
-        <h4>When the controller wakes up</h4>
-        <p>Run <code>--uInitA 1000 --uInitB -1000</code> at the defaults, then tighten <code>--eps1</code>. What does the default controller miss on that orbit?</p></div>
-    </div>
-  </section>
+<h2>Suggested Experiments</h2>
+
+<h3 id="exp1">1 · Not a circle — Introductory</h3>
+    <p>From the default summary, what fraction of the starting separation is the closest approach? Why does that already rule out a circular orbit?</p>
+
+<h3 id="exp2">2 · Who circles whom — Beginner</h3>
+    <p>Run Beat 1. Confirm that \(a_A/a_B=M_B/M_A\) and that the two periods agree. Where is the origin on the plot?</p>
+
+<h3 id="exp3">3 · A boost is not unbinding — Beginner</h3>
+    <p>Run Beat 2’s second command. Why is the printed total energy positive while the Keplerian line still says elliptic?</p>
+
+<h3 id="exp4">4 · Escape — Intermediate</h3>
+    <p>From Beat 3, compute the relative escape speed \(v_{\mathrm{rel,esc}}=\sqrt{2G(M_A+M_B)/r}\). In the centre-of-mass frame with equal masses each body has half of that. How close is 38091.14&nbsp;m&nbsp;s\(^{-1}\)? For unequal masses the two CM speeds split the same relative speed in the inverse-mass ratio; do not substitute a single mass for \(M_A+M_B\).</p>
+
+<h3 id="exp5">5 · The hodograph — Intermediate</h3>
+    <p>On the default velocity-space plot, estimate \(e\) from the radius and offset of one body’s circle. Compare with the printed eccentricity.</p>
+
+<h3 id="exp6">6 · Fixed star — Intermediate</h3>
+    <p>Give body B a hundred times A’s mass and park it at the origin. Start A at \(4.6\times 10^{10}\,\mathrm{m}\). Give the pair opposite sideways speeds that keep the centre of mass at rest and a relative speed of 500000&nbsp;m&nbsp;s\(^{-1}\): \(u_A=495049.50495\), \(u_B=-4950.49505\). Circular speed about a <em>fixed</em> \(2\times 10^{32}\,\mathrm{kg}\) mass at that radius is about 539000&nbsp;m&nbsp;s\(^{-1}\); the two-body relative circular speed is about 541000&nbsp;m&nbsp;s\(^{-1}\). So this is a mild ellipse (\(e\approx 0.147\)), not a near-radial plunge. A traces an approximately elliptical laboratory path about the stationary centre of mass at \(x\approx 4.55\times 10^{8}\,\mathrm{m}\); it is a 0.990-scaled and translated version of the relative Kepler ellipse. The sampled run need not close exactly. Compare that laboratory track of A with the one-body problem that <code>Orbit</code> integrates at the same mass, radius and relative speed.</p>
+    
+    <pre>python main.py --MB 2e32 --xInitB 0 --yInitB 0 --vInitB 0 --uInitB -4950.49505 --xInitA 4.6e10 --yInitA 0 --vInitA 0 --uInitA 495049.50495</pre>
+    
+    <p>From the Orbit folder, a matched start at the same relative radius and 500000&nbsp;m&nbsp;s\(^{-1}\) is:</p>
+    
+    <pre data-program="Orbit">python main.py --xInit 4.6e10 --yInit 0 --vxInit 0 --vyInit 500000 --k 1.33486e22 --dt0 2000 --eps1 0.05 --eps2 0.0001 --maxOrbits 1</pre>
+    
+    <p>Expect about 218 accepted steps and 5.05 days here; the summary prints a Keplerian period of 5.03 days for the pair. A fixed \(2\times 10^{32}\,\mathrm{kg}\) star at the same radius and 500000&nbsp;m&nbsp;s\(^{-1}\) gives a period of about 5.11 days.</p>
+
+<h3 id="exp7">7 · Two knobs, two errors — Advanced</h3>
+    <p>From Beats 5–7, which printed diagnostic follows <code>dt</code>, and which follows <code>eps2</code>? Halve each once and say what you would spend computer time on if you cared about periapsis, or about many orbits.</p>
+
+<h3 id="exp8">8 · When the controller wakes up — Advanced</h3>
+    <p>Run <code>--uInitA 1000 --uInitB -1000</code> at the defaults, then tighten <code>--eps1</code>. What does the default controller miss on that orbit?</p>
+
+</section>
 
   <section id="validity">
     <h2>Domain of Validity</h2>
