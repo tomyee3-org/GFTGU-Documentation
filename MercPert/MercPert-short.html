@@ -220,7 +220,16 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
         Documentation:
             <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a> ·
       </div></header>
-<nav id="sidebar"><div class="nav-label">Follow the run</div><a href="#start">Start here</a>
+<nav id="sidebar">
+
+<div class="nav-label">Overview</div>
+
+<a href="#description">Description</a>
+
+<a href="#output">Reading the output</a>
+
+<div class="nav-label">Beats</div>
+<a href="#start">Start here</a>
 <a href="#beat0">0 · A test particle in a binary</a>
 <a href="#beat1">1 · The binary is prescribed</a>
 <a href="#beat2">2 · Switch the companion off</a>
@@ -231,14 +240,73 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <a href="#beat7">7 · Outside the binary</a>
 <a href="#beat8">8 · How far to trust a run</a>
 <a href="#beat9">9 · Where the model and the run stop</a>
+<a href="#experiments">Practice tasks</a>
+
+<div class="nav-label">Code</div>
 <a href="#parameters">Parameters</a>
-<a href="#output">Reading the output</a>
-<a href="#practice">Practice tasks</a>
+
+
 <a href="#modules">Code modules</a>
+
+<div class="nav-label">REFERENCE</div>
+
 <a href="#related">Related programs</a>
 <a href="#license">License</a></nav>
 <main id="content" tabindex="-1"><p id="version_build">Version 1.1.0&nbsp;&nbsp;&nbsp;&nbsp;Build 9852baf113f7</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
+
+<section id="description">
+<h2>Description</h2>
+<p>
+<strong>MercPert</strong> follows a small body — called "Mercury" here, though it can stand for
+any planet, asteroid, or dust grain — as it moves under the gravity of two stars that orbit each
+other. The two massive bodies are a Sun-like <em>primary</em> and a <em>companion</em> whose mass
+you choose; by default the companion has 0.1 solar mass, about 100 Jupiter masses, which puts it
+just above the hydrogen-burning limit: a small red dwarf, not a planet. The two stars move on
+circles about their common centre of mass. Mercury feels both of them but is too light to pull on
+either, so this is the <em>planar circular restricted three-body problem</em>.
+</p>
+<p>
+The question MercPert lets you ask is how much a companion disturbs a planet's orbit, and when the
+disturbance stops being a small correction and becomes the whole story. A light, distant
+companion barely changes a Kepler orbit. A heavy or nearby one makes the orbit precess, drives the
+planet into close encounters with either star, throws it out of the system, or lets it survive
+only far outside the binary. The phenomena explored here are the gravitational part of the
+"cleaning out" of a young planetary system's inner regions.
+</p>
+<p>The spine of the lesson is one sentence: <em>a companion's pull is a perturbation whose size
+grows with its mass and with how close it comes, and although Mercury's ordinary energy is not
+conserved, one combination of energy and angular momentum measured in the frame rotating with the
+binary — the Jacobi constant — is, which both limits where Mercury can go and tells you how far to
+trust the calculation.</em> Beats 2 and 3 measure the perturbation, Beat 4 introduces the Jacobi
+constant, Beats 5 through 7 show what strong perturbations do, and Beat 8 uses the Jacobi constant
+to judge the numbers.</p>
+
+<div class="warn-box"><strong>What this program is, and what it does not model.</strong> MercPert
+is a teaching model. It is planar and uses Newtonian point masses. The two stars are made to move
+on an exact circle, and Mercury has no effect on them. There is no gas, disk, migration, tides,
+relativity, radiation, or physics of impacts. The collision radii are stopping surfaces you
+choose, not models of stars' surfaces, and the program never decides by itself whether an orbit is
+"stable" or "ejected"; you have to choose a criterion and a time span. Its adaptive
+predictor-corrector integrator is second-order and very accurate on smooth orbits, but close
+encounters demand small steps and tight tolerances; Beat 8 says how to tell when they are
+needed.</div>
+
+<div class="note-box"><strong>Reading this page.</strong> The equations on this page are rendered
+by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset;
+with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text
+instead of a formula. This has no effect on the program itself, which needs no internet access to
+run.</div>
+</section>
+
+<section id="output"><h2>Reading the output</h2>
+<p>Every run prints a summary at the console and then opens a plot.</p>
+
+<p>The first console line gives version, build, accepted-step count and stopping reason. Next come the binary's circular period, Mercury's integration time, its minimum and maximum distance <em>from the Sun</em>, maximum absolute fractional Jacobi drift, and the smallest/largest accepted working timestep. A run at <code>max_steps</code> has that many accepted steps plus the initial state. A collision can stop sooner.</p>
+<p>The orbit plot uses dashed red for Sun, dashed green for companion and solid blue for Mercury. A black × appears only for a configured collision. With <code>--show_jacobi_diagnostic</code>, the second plot shows signed \((C-C_0)/|C_0|\), whereas the console shows its maximum magnitude. If \(C_0=0\), the printed fractional drift is undefined. For a collision, the interpolated endpoint contributes to the printed drift. The <a href="SampleOutputs/MercPert-SampleOutputs_Guide.html">Sample Outputs Guide</a> provides representative figures and quoted values for Beats 0–8.</p></section>
+
+
+
 <section id="start"><h2>Start here</h2>
 <p>Put a small test particle near a Sun–companion binary, run a command, then compare the printed diagnostics with the blue trajectory. Follow Beats 0–9 in order on a first pass. Every command starts a fresh run from the MercPert program folder; close the plot window before the next one.</p>
 
@@ -248,48 +316,52 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre class="code-block"><code>python main.py</code></pre>
 <div class="beat-action"><strong>Read these lines</strong><p>The stellar period is 203.96 days. The run covers 231.48 days and 10,000 accepted steps; Mercury ranges from 0.30000 to 0.40762 AU from the Sun. Find the compact red circle, wider green circle, and blue loops. The stars move on set circles; Mercury responds to both of them.</p></div>
 <p>The program solves Newton's equation for a massless third body: \(\ddot{\mathbf r}=-GM_\odot(\mathbf r-\mathbf r_\odot)/|\mathbf r-\mathbf r_\odot|^3-GM_c(\mathbf r-\mathbf r_c)/|\mathbf r-\mathbf r_c|^3\). Do not call the blue loops closed or stable from this finite run alone.</p>
-<p class="small-print">Practice task 1 revisits this launch.</p></section>
+<p class="small-print">Try <a href="#exp1">Task 1</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 <section id="beat1"><h2>Beat 1 · The binary is prescribed</h2><p>Make the companion half as massive as the Sun. Watch what moves in the plot.</p>
 <pre class="code-block"><code>python main.py --m_planet_solar 0.5 --vy_init 54400</code></pre>
 <div class="beat-action"><strong>Check the geometry</strong><p>The printed binary period is 174.66 days. The Sun's red circle has radius 0.23333 AU about the centre of mass; the companion's green one has radius 0.46667 AU. Their 0.7 AU separation remains fixed. Read both radii from the axes, not from Mercury's printed <em>Sun-distance</em> range (0.14420–0.31804 AU).</p></div>
 <p>The stellar angular speed is \(\omega=\sqrt{G(M_\odot+M_c)/d^3}\). At \(t=0\) the Sun moves in the negative \(y\) direction. The 54,400 m/s input is relative to that moving Sun, so it is not Mercury's barycentric speed.</p>
-<p class="small-print">Practice task 2 tests the frame conversion.</p></section>
+<p class="small-print">Try <a href="#exp2">Task 2</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+
 <section id="beat2"><h2>Beat 2 · Switch the companion off</h2><p>The companion mass must remain positive. Make it negligible and try a circular-speed launch, then the default faster launch.</p>
 <pre class="code-block"><code>python main.py --m_planet_solar 1e-12 --vy_init 54379.16
 python main.py --m_planet_solar 1e-12</code></pre>
 <div class="beat-action"><strong>Compare</strong><p>The first Sun-distance range prints 0.30000–0.30000 AU. The second prints 0.30000–0.43707 AU. The default companion in Beat 0 kept the same 59,220 m/s launch within 0.40762 AU over the same run.</p></div>
 <p>For one Sun, \(v_c=\sqrt{GM_\odot/r}\). Starting at perihelion \(r_p\) with tangential speed \(v>v_c\), energy and angular momentum give \(r_a/r_p=[2-(v/v_c)^2]^{-1}(v/v_c)^2\), provided the launch remains bound. At \(r_p=0.3\) AU, this predicts 0.43707 AU for the second run.</p>
-<p class="small-print">Practice task 3 asks for a prediction before rerunning.</p></section>
+<p class="small-print">Try <a href="#exp3">Task 3</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 <section id="beat3"><h2>Beat 3 · Turn the companion back up</h2><p>Keep the near-circular speed and multiply companion mass by ten on each run.</p>
 <pre class="code-block"><code>python main.py --m_planet_solar 0.001 --vy_init 54379.16
 python main.py --m_planet_solar 0.01 --vy_init 54379.16
 python main.py --m_planet_solar 0.1 --vy_init 54379.16</code></pre>
 <div class="beat-action"><strong>Subtract each range</strong><p>The Sun-distance spreads are 0.00049, 0.00491 and 0.05020 AU. For these settings they grow by about a factor of ten each time the companion mass does. The relation is empirical over these three finite runs, not a promise for every mass or encounter.</p></div>
 <p>The companion's direct acceleration relative to the Sun's pull scales as \((M_c/M_\odot)(r/\Delta)^2\), where \(\Delta\) is Mercury's distance from the companion. That ratio changes throughout the orbit; close passages can break the simple proportional pattern.</p>
-<p class="small-print">Practice task 4 tests where the trend stops.</p></section>
+<p class="small-print">Try <a href="#exp4">Task 4</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 <section id="beat4"><h2>Beat 4 · The one number that is conserved</h2><p>Ask for the second plot: signed fractional change of the Jacobi constant in the rotating binary frame.</p>
 <pre class="code-block"><code>python main.py --show_jacobi_diagnostic</code></pre>
 <div class="beat-action"><strong>Read and look</strong><p>The console gives a <em>maximum absolute</em> fractional Jacobi drift of 1.2305e-06. The second plot shows its sign, ranging about −1.23e-06 to +6.6e-08. Close the orbit window if it obscures the diagnostic window.</p></div>
 <p>Ordinary inertial energy of Mercury can change because the moving stars exchange energy with it. In a frame turning with the binary, the stellar field is stationary and \(C=2(\mathbf r\times\mathbf v)_z\omega-v^2+2GM_\odot/r_\odot+2GM_c/r_c\) is conserved by the ideal equations. A small computed drift diagnoses numerical error; it does not prove the entire path is accurate.</p>
-<p class="small-print">Practice task 5 asks which plotted quantity is signed.</p></section>
+<p class="small-print">Try <a href="#exp5">Task 5</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+
+
 <section id="beat5"><h2>Beat 5 · Close encounters and the step controller</h2><p>Run longer, then tighten the acceleration-change and corrector thresholds.</p>
 <pre class="code-block"><code>python main.py --max_steps 40000
 python main.py --max_steps 40000 --eps1 0.01 --eps2 1e-5</code></pre>
 <div class="beat-action"><strong>Compare the runs</strong><p>The first reaches 0.016704 AU from the Sun over 919.20 days; its accepted working timesteps range from 199.63 to 2000.0 s and its Jacobi drift reaches 0.0051623. The tighter run needs steps down to 39.907 s and reports drift 0.00022738, but covers only 852.41 days. The runs have unequal durations, so their drift maxima alone do not measure the benefit of the tighter tolerance. The blue path is much less regular than in Beat 0.</p></div>
 <p>The controller rejects a proposed step when acceleration changes too much and iterates a predictor–corrector until its change is below <code>eps2</code>. <code>dt</code> is the <em>maximum</em> working step, not a guarantee that each accepted step is that long. Drift this large calls for convergence checks before quoting a close-encounter trajectory.</p>
-<p class="small-print">Practice task 6 probes the controller.</p></section>
+<p class="small-print">Try <a href="#exp6">Task 6</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 <section id="beat6"><h2>Beat 6 · Collision and escape</h2><p>Make the companion as massive as the Sun for a collision, then try a launch that heads far outward.</p>
 <pre class="code-block"><code>python main.py --m_planet_solar 1
 python main.py --x_init_au 0.45 --max_steps 30000</code></pre>
 <div class="beat-action"><strong>Read the stopping reason</strong><p>The first stops at <code>collision with Sun</code> after 1920 steps and 41.543 days, at one nominal solar radius (0.0046505 AU); the black × marks that boundary crossing. The second reaches 11.531 AU from the Sun within 694.44 days, but its stopping reason is <code>max_steps reached</code>, not “escaped.”</p></div>
 <p>A point mass has no physical surface in these equations. The positive Sun collision radius is a numerical stop; the companion's default collision radius is zero (disabled). A long outward track in a finite run is evidence of outward motion over that interval. The program does not certify permanent escape, and a positive instantaneous energy near moving stars would not by itself do so.</p>
-<p class="small-print">Practice task 7 asks for a finite-time criterion.</p></section>
+<p class="small-print">Try <a href="#exp7">Task 7</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 <section id="beat7"><h2>Beat 7 · Outside the binary</h2><p>Place two equal Suns 1 AU apart and launch 2.5 AU from the Sun. Try a seemingly plausible relative speed, then include the Sun's motion.</p>
 <pre class="code-block"><code>python main.py --m_planet_solar 1 --binary_separation_au 1 --x_init_au 2.5 --vy_init 30000 --max_steps 40000
 python main.py --m_planet_solar 1 --binary_separation_au 1 --x_init_au 2.5 --vy_init 50846 --max_steps 40000</code></pre>
 <div class="beat-action"><strong>Compare the blue paths</strong><p>Mercury starts 2.0 AU from the barycentre. About 29,785 m/s would circle a point mass of two solar masses there. But the Sun moves initially at about −21,061 m/s in \(y\); the first relative speed makes only about 8,939 m/s barycentric, so Mercury falls into the binary. With 50,846 m/s relative to the Sun, it circles outside. Its Sun-distance range is 1.5463–2.6554 AU.</p></div>
 <p>For a nearby binary, a point-mass circular estimate is only a starting guess. The pair's changing geometry still perturbs the outside orbit.</p>
-<p class="small-print">Practice task 8 checks the sign of the velocity conversion.</p></section>
+<p class="small-print">Try <a href="#exp8">Task 8</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+
 <section id="beat8"><h2>Beat 8 · How far to trust a run</h2><p>Halve the maximum step on a smooth orbit; keep the simulated duration at 20 million seconds by changing <code>max_steps</code>.</p>
 <pre class="code-block"><code>python main.py
 python main.py --dt 1000 --max_steps 20000
@@ -305,7 +377,57 @@ python main.py --binary_separation_au 0.001
 python main.py --x_init 0</code></pre>
 <p>The first three are rejected by the argument parser: masses must be positive, <code>eps2</code> must be smaller than <code>eps1</code>, and the two collision radii must fit within the binary separation. The fourth passes parsing but starts exactly at the Sun's point-mass centre, where gravity is singular; it reports a <code>MercPert error:</code> message with no plot. An ordinary <code>max_steps reached</code> is not an error.</p>
 <p>MercPert is planar, prescribes a circular binary, and neglects Mercury's mass, atmosphere, disks, tides, relativity and impact evolution. A finite-radius collision is interpolated along an accepted segment. Printed five-significant-digit numbers still need a timestep study before they can be trusted quantitatively.</p></section>
-<section id="parameters"><h2>Parameters</h2><p>Run <code>python main.py --help</code> for the complete current interface. Omitted settings take these defaults. Position and velocity inputs are Sun-relative; the graph is barycentric. The <code>_au</code> alternatives replace, rather than accompany, the matching metre option.</p>
+<section id="experiments">
+<h2>Practice Tasks</h2>
+
+<div class="experiment-card" id="exp1">
+<div class="exp-num">Task 1</div>
+From Beat 0, compare the 231.48-day run with the binary's 203.96-day period. State what the blue loops do and what a single run cannot establish.
+</div>
+
+<div class="experiment-card" id="exp2">
+<div class="exp-num">Task 2</div>
+Use Beat 1's mass ratio and 0.7 AU separation to calculate the two stellar orbit radii, then check them against the axes.
+</div>
+
+<div class="experiment-card" id="exp3">
+<div class="exp-num">Task 3</div>
+Predict the isolated-Sun circular speed at 0.3 AU and the aphelion of the 59,220 m/s launch before running both Beat 2 commands.
+</div>
+
+<div class="experiment-card" id="exp4">
+<div class="exp-num">Task 4</div>
+Extend Beat 3's companion-mass sequence to 0.3 and 0.5 solar masses. Record when the nearly proportional spread no longer holds.
+</div>
+
+<div class="experiment-card" id="exp5">
+<div class="exp-num">Task 5</div>
+Explain why Beat 4's console drift is nonnegative while the plotted drift takes both signs.
+</div>
+
+<div class="experiment-card" id="exp6">
+<div class="exp-num">Task 6</div>
+Repeat Beat 5 with a tighter <code>eps1</code>. Record both the smallest working step and the Jacobi drift; compare the actual simulated durations.
+</div>
+
+<div class="experiment-card" id="exp7">
+<div class="exp-num">Task 7</div>
+For Beat 6's outward run, propose a finite observation interval and distance threshold for an operational “ejected during this run” label. Explain why that would not certify permanent escape.
+</div>
+
+<div class="experiment-card" id="exp8">
+<div class="exp-num">Task 8</div>
+For Beat 7, add the Sun's initial barycentric y velocity to each Sun-relative input velocity and predict which launch can circle outside the binary.
+</div>
+
+</section>
+
+
+
+
+<section id="parameters"><h2>Parameters</h2><p>Run <code>python main.py --help</code> for the complete current interface. 
+Omitted settings take these defaults. Position and velocity inputs are Sun-relative; the graph is barycentric. 
+The <code>_au</code> alternatives replace, rather than accompany, the matching metre option.</p>
 <div class="table-scroll" tabindex="0"><table class="param-table"><thead><tr><th>Option</th><th>Default</th><th>Meaning</th></tr></thead><tbody>
 <tr><td><code>--m_sun_solar</code></td><td>1.0</td><td>Sun mass in solar-mass units.</td></tr>
 <tr><td><code>--m_planet_solar</code></td><td>0.1</td><td>Companion mass in solar-mass units; historical option name.</td></tr>
@@ -320,18 +442,6 @@ python main.py --x_init 0</code></pre>
 <tr><td><code>--annotation_corner</code></td><td>upper_left</td><td><code>upper_left</code>, <code>upper_right</code>, <code>lower_left</code>, <code>lower_right</code>.</td></tr>
 <tr><td><code>--show_jacobi_diagnostic</code></td><td>off</td><td>Open the second diagnostic plot; <code>--no-show_jacobi_diagnostic</code> selects only the orbit plot.</td></tr>
 </tbody></table></div><p><code>python main.py --version</code> reports the shared version and source build. The program needs Python 3.10 or later and Matplotlib. The page's equations are typeset by MathJax from a public online service; the program itself needs no connection.</p></section>
-<section id="output"><h2>Reading the output</h2><p>The first console line gives version, build, accepted-step count and stopping reason. Next come the binary's circular period, Mercury's integration time, its minimum and maximum distance <em>from the Sun</em>, maximum absolute fractional Jacobi drift, and the smallest/largest accepted working timestep. A run at <code>max_steps</code> has that many accepted steps plus the initial state. A collision can stop sooner.</p>
-<p>The orbit plot uses dashed red for Sun, dashed green for companion and solid blue for Mercury. A black × appears only for a configured collision. With <code>--show_jacobi_diagnostic</code>, the second plot shows signed \((C-C_0)/|C_0|\), whereas the console shows its maximum magnitude. If \(C_0=0\), the printed fractional drift is undefined. For a collision, the interpolated endpoint contributes to the printed drift. The <a href="SampleOutputs/MercPert-SampleOutputs_Guide.html">Sample Outputs Guide</a> provides representative figures and quoted values for Beats 0–8.</p></section>
-<section id="practice"><h2>Practice tasks</h2><ol>
-<li>From Beat 0, compare the 231.48-day run with the binary's 203.96-day period. State what the blue loops do and what a single run cannot establish.</li>
-<li>Use Beat 1's mass ratio and 0.7 AU separation to calculate the two stellar orbit radii, then check them against the axes.</li>
-<li>Predict the isolated-Sun circular speed at 0.3 AU and the aphelion of the 59,220 m/s launch before running both Beat 2 commands.</li>
-<li>Extend Beat 3's companion-mass sequence to 0.3 and 0.5 solar masses. Record when the nearly proportional spread no longer holds.</li>
-<li>Explain why Beat 4's console drift is nonnegative while the plotted drift takes both signs.</li>
-<li>Repeat Beat 5 with a tighter <code>eps1</code>. Record both the smallest working step and the Jacobi drift; compare the actual simulated durations.</li>
-<li>For Beat 6's outward run, propose a finite observation interval and distance threshold for an operational “ejected during this run” label. Explain why that would not certify permanent escape.</li>
-<li>For Beat 7, add the Sun's initial barycentric y velocity to each Sun-relative input velocity and predict which launch can circle outside the binary.</li>
-</ol><p>Keep each command and its printed lines with your explanation. The fuller tutorial offers worked checks and additional open-ended experiments.</p></section>
 <section id="modules"><h2>Code modules</h2><div class="compact-grid">
 <div><code>main.py</code><p>Command-line options, summary and plotting calls.</p></div><div><code>physics_mercpert.py</code><p>Constants, binary geometry, forces, Jacobi quantity, version and build.</p></div>
 <div><code>driver_mercpert.py</code><p>Adaptive trajectory, collision detection and diagnostics.</p></div><div><code>plot_mercpert.py</code><p>Orbit and Jacobi-drift displays.</p></div></div><p>With both tutorial files installed in the sibling documentation folder, run <code>python -m unittest discover -s tests -v</code> from the program folder.</p></section>
