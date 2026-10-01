@@ -510,12 +510,12 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <p><strong>Run.</strong> Begin with the default Schwarzschild orbit.</p>
 <pre>python main.py</pre>
 <p><strong>Observe.</strong> The run stops at 6000 accepted steps after 9.285146 turns. It finds six periapsides at about 15000 m and measures 2.44005 rad of advance per radial period. The independent calculation from the constants of motion predicts 2.44037 rad and an apoapsis of 23954.4 m. The horizon is about 2953.3 m and the innermost stable circular orbit (ISCO) about 8859.8 m, both inside this orbit.</p>
-<p><strong>Your turn.</strong> Point to two successive closest approaches in the plot. Why can their distances agree while their directions differ? The extra Schwarzschild inward term in the orbit equation is (3h^2/(c^2r^2)) times the Newtonian attraction, where (h=x_0u_0) is conserved angular momentum per unit mass. The orbital diagram is not a flat-space map of the geometry.</p></section>
+<p><strong>Your turn.</strong> Point to two successive closest approaches in the plot. Why can their distances agree while their directions differ? The extra Schwarzschild inward term in the orbit equation is \(3h^2/(c^2r^2)\) times the Newtonian attraction, where \(h=x_0u_0\) is conserved angular momentum per unit mass. The orbital diagram is not a flat-space map of the geometry.</p></section>
 <section id="beat1"><h2>Beat 1 · Switch off the extra pull</h2>
 <p><strong>Run.</strong> Keep the initial data and change only the force law.</p>
 <pre>python main.py --model newtonian</pre>
 <p><strong>Observe.</strong> The Newtonian prediction is an ellipse between 15000 m and 65554 m with zero advance. The numerical run measures only 0.00101314 rad, a residual numerical error. Compare its 2.572195 turns in 6000 steps with Beat 0's 9.285146 turns and its tighter relativistic apoapsis.</p>
-<p><strong>Your turn.</strong> Which output gives the prediction, and which records the integrated path? At the common start, (3u_0^2/c^2approx0.481): the additional inward term is about 48% of the Newtonian one. The two models do not describe the same physical orbit merely because their input numbers match.</p></section>
+<p><strong>Your turn.</strong> Which output gives the prediction, and which records the integrated path? At the common start, \(3u_0^2/c^2\approx0.481\): the additional inward term is about 48% of the Newtonian one. The two models do not describe the same physical orbit merely because their input numbers match.</p></section>
 <section id="beat2"><h2>Beat 2 · Read the prediction first</h2>
 <p><strong>Run.</strong> Lower the starting sideways rate and tighten the step.</p>
 <pre>python main.py --u_init 1.1e8 --dt 5e-7 --max_steps 24000</pre>
@@ -526,9 +526,9 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_steps 20000
 python main.py --model newtonian --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_steps 20000</pre>
 <p><strong>Observe.</strong> The Schwarzschild run measures 0.0280654 rad per radial period; the exact prediction is 0.0280972 rad and the weak-field approximation is 0.0279099 rad. Newtonian gravity predicts zero, while its numerical run measures 0.000315267 rad.</p>
-<p><strong>Your turn.</strong> Compare each measured angle with its own prediction. Why is the Newtonian nonzero result an estimate of numerical contamination? The weak-field formula (6pi GM/(c^2p)), with (p) from the predicted turning points, is an approximation; the exact advance is a different output line.</p></section>
+<p><strong>Your turn.</strong> Compare each measured angle with its own prediction. Why is the Newtonian nonzero result an estimate of numerical contamination? The weak-field formula \(6\pi GM/(c^2p)\), with \(p\) from the predicted turning points, is an approximation; the exact advance is a different output line.</p></section>
 <section id="beat4"><h2>Beat 4 · Disturb two circles</h2>
-<p><strong>Run.</strong> Compare a stable circle at (8GM/c^2) with a near-circle at (5GM/c^2).</p>
+<p><strong>Run.</strong> Compare a stable circle at \(8GM/c^2\) with a near-circle at \(5GM/c^2\).</p>
 <pre>python main.py --x_init 11813.0003044 --u_init 134071263.04595919 --max_orbits 4 --max_steps 8000
 python main.py --x_init 7383.12519025 --u_init 212197265.2804 --dt 1e-7 --max_orbits 12 --max_steps 40000</pre>
 <p><strong>Observe.</strong> The first predicts <code>circular (stable)</code> at 11813 m and 6.28319 rad as the advance of a small radial disturbance; a perfectly circular path itself has no periapsis sequence to measure. The second begins inside the ISCO but about 0.1% above its circular proper-time rate: it travels out to 15002.2 m, predicts 24.4301 rad of advance and measures 24.4374 rad.</p>
@@ -552,7 +552,7 @@ python main.py --u_init 1.045e8</pre>
 python main.py --dt 5e-7 --max_steps 24000
 python main.py --dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 60000</pre>
 <p><strong>Observe.</strong> The energy drifts for default, half, quarter and tenth steps are 1.573e-04, 3.928e-05, 9.875e-06 and 1.587e-06. Measured advances in the same order are 2.44005, 2.44109, 2.44014 and 2.44033 rad; the prediction is 2.44037 rad.</p>
-<p><strong>Your turn.</strong> The drift shrinks almost fourfold on each halving, yet the measured angle first moves farther from the prediction. Why? Periapsides are identified only at accepted points; an angular sampling error of order (omega_pDelta	au/(n-1)) can change sign. Look for stable agreement under refinement as well as a smaller conserved-quantity drift.</p></section>
+<p><strong>Your turn.</strong> The drift shrinks almost fourfold on each halving, yet the measured angle first moves farther from the prediction. Why? Periapsides are identified only at accepted points; an angular sampling error of order \(\omega_p\Delta\tau/(n-1)\) can change sign. Look for stable agreement under refinement as well as a smaller conserved-quantity drift.</p></section>
 <section id="beat8"><h2>Beat 8 · Escape, Mercury and rejected inputs</h2>
 <p><strong>Run.</strong> Watch escape, compare a tiny predicted Mercury advance with two numerical readings, then try an invalid starting radius.</p>
 <pre>python main.py --u_init 1.8e8 --max_steps 12000
