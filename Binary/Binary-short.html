@@ -153,7 +153,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
   <a href="#license">License</a>
 </nav>
 <main>
-  <p id="version_build">Version 1.2.4&nbsp;&nbsp;&nbsp;&nbsp;Build 53b5e2037ced</p>
+  <p id="version_build">Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build 82f6206a5be0</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 
   <section id="description">
@@ -223,10 +223,13 @@ r=\sqrt{(x_A-x_B)^2+(y_A-y_B)^2}.
 
   <section id="beat2">
     <h2>Beat 2 · Only the separation matters</h2>
-    <p>The force depends on the two positions only through \(r\). Shift the pair, then give both bodies the same extra velocity.</p>
+    <p>The force depends on the two positions only through \(r\). Shift the pair, then give both bodies the same extra velocity. The first two commands use the default <code>--frame user</code> view. The last two repeat those starts with <code>--frame com</code>, which follows the centre of mass.</p>
 <pre>python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10
-python main.py --vInitA 60000 --vInitB 60000</pre>
-    <p>The Keplerian block and the sampled separations should match Beat 0. The shifted run only moves the pattern on the plot. The boosted run adds \(\tfrac12(M_A+M_B)V_{\mathrm{CM}}^2\) to the printed kinetic energy and can make the printed total energy positive even though the relative orbit is still the same bound ellipse. The energy that classifies the orbit is the energy in the centre-of-mass frame.</p>
+python main.py --vInitA 60000 --vInitB 60000
+python main.py --vInitA 60000 --vInitB 60000 --frame com
+python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10 --frame com</pre>
+    <p>Compare all four plots with Beat 0. In the input frame, the first run shifts the ellipses and the second draws drifting tracks. In the COM frame, both patterns return to the ellipses centred on the origin: the translation and common velocity have disappeared from the display. The Keplerian block and the sampled separations should match Beat 0 to the accuracy of the integration. The boosted run adds \(\tfrac12(M_A+M_B)V_{\mathrm{CM}}^2\) to the printed kinetic energy and can make the printed total energy positive even though the relative orbit is still the same bound ellipse. The energy that classifies the orbit is the energy in the centre-of-mass frame.</p>
+    <p>This is Galilean relativity: observers moving at constant velocity describe different tracks but the same motion of the bodies relative to one another. The COM view subtracts the mass-weighted centre and velocity, \(\mathbf r'_i=\mathbf r_i-\mathbf R_{\mathrm{CM}}\) and \(\mathbf v'_i=\mathbf v_i-\mathbf V_{\mathrm{CM}}\). Changing <code>--frame</code> changes all seven plots, including the energy plot. It leaves the integration and printed summary in the input frame, so the boosted run still prints its positive total energy. Try <code>--output_type energy_vs_time --frame com</code> with that boost to see the negative internal energy instead.</p>
     <div class="note"><strong>A numerical caveat, not a new law.</strong> A large boost changes the speeds the corrector compares to, so the two relative paths agree only to the accuracy of the integrator, not to rounding error. A modest boost agrees far more closely.</div>
     <p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
@@ -334,6 +337,7 @@ python main.py --dt 1000 --eps2 1e-8</pre>
         <tr><td class="pname">--eps2</td><td class="pdefault">1e-4</td><td>Corrector velocity-change threshold, in (0, 1).</td></tr>
         <tr><td class="pname">--stop_after_one_orbit</td><td class="pdefault">on</td><td>Stop after one relative turn. Off: <code>--no-stop_after_one_orbit</code>.</td></tr>
         <tr><td class="pname">--output_type</td><td class="pdefault">orbits</td><td>orbits, velocity_space, position_vs_time_body_a/b, velocity_vs_time_body_a/b, energy_vs_time.</td></tr>
+        <tr><td class="pname">--frame</td><td class="pdefault">user</td><td>All plots: <code>user</code> uses the input frame; <code>com</code> follows the centre of mass and removes its velocity. The printed summary stays in the input frame.</td></tr>
       </tbody>
     </table>
   </section>

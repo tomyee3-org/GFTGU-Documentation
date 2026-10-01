@@ -515,7 +515,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 </nav>
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <main>
-<p id="version_build">Version 1.2.4&nbsp;&nbsp;&nbsp;&nbsp;Build 53b5e2037ced</p>
+<p id="version_build">Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build 82f6206a5be0</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="overview">
 <h2>Description</h2>
@@ -607,7 +607,10 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <h2>Beat 2 · Only the separation matters</h2>
 <p>Equation (1) contains only the separation \(r\), and Eqs. (2) and (3) contain only the difference \(\Delta x,\Delta y\). So where the pair sits in space, and how fast the pair as a whole drifts, should make no difference to how the two bodies move relative to one another. Test both: shift the pair, then set the whole pair moving.</p>
 <pre>python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10
-python main.py --vInitA 60000 --vInitB 60000</pre>
+python main.py --vInitA 60000 --vInitB 60000
+python main.py --vInitA 60000 --vInitB 60000 --frame com
+python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10 --frame com</pre>
+<p>The first two commands use the default <code>--frame user</code> display. The last two use <code>--frame com</code>. Compare those plots with Beat 0: following the centre of mass removes both the shift and the common drift, so the ellipses return to the origin. This is the visual comparison of Galilean frames; it does not give the bodies a different force law.</p>
 <p>In each run look at the lines from <code>Accepted steps</code> to <code>Speed at apoapsis</code> and compare them with the same lines in Beat 0. In the second run look also at row 0.0 of the energy table and at the orbits plot, in which the pair drifts.</p>
 <p>Three tasks, in order. First, the shifted run: every number down to the Keplerian block is the one from Beat 0, which is 2284 steps, 52.87 days, a minimum separation of 1.2127e+10 m and eccentricity 0.76705. Only the plot has moved: the centre of mass is now at (4&times;10<sup>9</sup>, 1&times;10<sup>10</sup>) m, which is where the pattern is centred. Then the second run: the same printed numbers again, but in the energy table the kinetic energy at row 0.0 is 7.538e+39 J instead of 3.38e+38 J. The difference, 7.2&times;10<sup>39</sup> J, is \(\tfrac12(M_A+M_B)V^2\), which is \(\tfrac12\times4\times10^{30}\times(6\times10^4)^2\), the kinetic energy of the pair as a whole, and the potential energy, &minus;2.9019e+39 J, has not changed. Then read the <code>Total E</code> column: it is +4.6361e+39 J, positive, although the orbit is exactly the same ellipse with eccentricity 0.76705, which is bound. Say why the sign of the printed total energy cannot tell you here whether the pair is bound. One printed number does change: row 0.5 of the last column reads &minus;6.7536e-04 in this run and &minus;1.2814e-03 in the first, because the same absolute change in \(E\), about \(3\times10^{36}\) J, is divided by a different \(|E_0|\).</p>
 <p>Add the same vector \(\mathbf d\) to both positions and \(r\) is unchanged. Add the same velocity \(\mathbf V_0\) to both bodies and the motion \(\mathbf r_i(t)\to\mathbf r_i(t)+\mathbf V_0t\) satisfies the same Eqs. (2) and (3), because \(\mathbf V_0t\) has no acceleration. The bodies' motion relative to one another does not change; only the kinetic energy does, by exactly the amount of the motion of the whole:</p>
@@ -618,6 +621,7 @@ python main.py --vInitA 60000 --vInitB 60000</pre>
       \]
     </div>
 <p>Only the relative separation controls the mutual force. Translating both positions by the same vector therefore leaves the relative orbit unchanged, and adding the same constant velocity to both bodies produces a Galilean boost without changing their motion relative to one another. The energy the program prints uses the velocities in the frame you supply, so it includes the first term above. The energy that says whether the orbit is bound is the second term, measured in the frame in which the centre of mass is at rest (Beat 3).</p>
+<p>The COM display subtracts the mass-weighted centre and velocity at each saved time: \(\mathbf r'_i=\mathbf r_i-\mathbf R_{\rm CM}\) and \(\mathbf v'_i=\mathbf v_i-\mathbf V_{\rm CM}\). The same choice applies to all seven plots. In a COM energy plot, kinetic energy is calculated from these relative velocities, so the boost energy is absent. The numerical integration and the printed summary always retain the input frame. Repeat the boosted energy view with <code>--output_type energy_vs_time --frame com</code> to see a negative internal total energy alongside the positive total energy printed for the input frame.</p>
 <p>In the program the boost invariance holds to the accuracy of the integration, not to rounding error. The corrector's convergence test (Beat 5) compares each body's change in velocity with that body's own speed, and a boost changes those speeds, larger for one body and possibly smaller for the other, so the test is applied differently. For the boost above the corrector repeats in 192 steps instead of 127, and the two relative paths agree to about 5 parts in 10<sup>6</sup> of the starting separation. For a boost of 10<sup>6</sup> m s<sup>&minus;1</sup>, far faster than any orbital speed here, they differ by about 7 parts in 10<sup>4</sup>. For a boost of 500 m s<sup>&minus;1</sup>, as in Experiment 3, the corrector makes the same decisions as without it, and the two paths differ by about 2 parts in 10<sup>15</sup>, which is rounding error.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> and <a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
@@ -1020,6 +1024,7 @@ python main.py --help</pre>
 <tr><td><code>--eps2</code></td><td>1e-4</td><td>—</td><td>Corrector velocity-change threshold</td></tr>
 <tr><td><code>--stop_after_one_orbit</code>, <code>--no-stop_after_one_orbit</code></td><td>stop</td><td>—</td><td>Stop after a relative revolution or run to max_steps</td></tr>
 <tr><td><code>--output_type</code></td><td>orbits</td><td>—</td><td>Choose one of the seven plots below</td></tr>
+<tr><td><code>--frame</code></td><td>user</td><td>—</td><td><code>user</code>: input-frame plots; <code>com</code>: centre-of-mass positions, velocities and energies. The summary stays in the input frame.</td></tr>
 </tbody></table></div>
 <div class="note">All numeric inputs must be finite real numbers. Masses and <code>dt</code> must be positive; <code>max_steps</code> must be a positive integer; both tolerances must lie strictly between zero and one (0 and 1 are not allowed); and the bodies must have nonzero initial separation. Extremely large or small inputs that put a derived displacement, acceleration, or energy outside the range of double-precision arithmetic are rejected with an error. For both bodies' accelerations and for potential, kinetic, and total energy, this includes overflow and a nonzero result so small that it would round to zero.</div>
 </section>

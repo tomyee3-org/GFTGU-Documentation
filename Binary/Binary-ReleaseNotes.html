@@ -2,13 +2,15 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Binary 1.2.4 Release Notes</title>
+<title>Binary 1.3.0 Release Notes</title>
 </head>
 <body>
-<h1>Binary 1.2.4 Release Notes</h1>
+<h1>Binary 1.3.0 Release Notes</h1>
+<p><b>Current version:</b> 1.3.0<br><b>Current build:</b> 82f6206a5be0<br><b>Date:</b> 2026-10-01</p>
+<h2>Version 1.2.4 — Release History</h2>
 <p><b>Version:</b> 1.2.4<br><b>Build:</b> 53b5e2037ced<br><b>Date:</b> 2026-09-26</p>
 
-<h2>Release Status</h2>
+<h2>Version 1.2.4 — Previous Release Status</h2>
 <p>Version 1.2.4 is one core build plus documentation-and-test rounds. Audit41 made the only code change: <code>orbital_elements()</code> classifies an exactly radial state before forming r·v (Codex A41-P2-02) and closed 1.2.3's OB-1 range failures. Claude Audit47 and Codex Audit47 both recommend ACCEPT. Claude Audit46 recommended accepting the code and Help after one P3 (EXP-6 placed the centre of mass at the origin). Codex Audit46 recommended HOLD on one P2 (a second <code>data-program="Orbit"</code> block can hide a broken Binary command). This package closes those items. BUILD_ID stays 53b5e2037ced. Default-run numbers are unchanged.</p>
 
 <h2>Open Bugs</h2>
@@ -51,5 +53,16 @@
 <h2>Version Identification</h2>
 <p>MODEL_VERSION: 1.2.4<br>BUILD_ID: 53b5e2037ced</p>
 <p>BUILD_ID identifies the executable program core formed by <code>physics_binary.py</code>, <code>driver_binary.py</code>, <code>main.py</code> and <code>plot_binary.py</code>. The Help, tests, reports and release notes are outside this core hash.</p>
+
+<h2>Version 1.3.0 — Centre-of-Mass Display (2026-10-01)</h2>
+<p><b>Version:</b> 1.3.0<br><b>Build:</b> 82f6206a5be0<br><b>Date:</b> 2026-10-01</p>
+<ul>
+<li>Added <code>--frame user|com</code>. The default <code>user</code> view retains the existing plots. The <code>com</code> view removes the sampled mass-weighted centre and velocity from orbit, position and velocity plots, and calculates kinetic and total energies in that frame. COM plot titles identify the frame.</li>
+<li>The display choice does not change initial conditions, integration, termination, orbital diagnostics or the printed input-frame energy table. <code>BinaryResult</code> now carries the two input masses for plotting. Results created manually without those masses still support user-frame plots, but COM plots require finite positive masses.</li>
+<li>Beat 2 in both current tutorials now compares translated and boosted input-frame plots with their COM views. The Sample Outputs Guide includes the boosted COM plot. A common boost preserves the exact relative motion, while the existing corrector's convergence decisions can introduce small frame-dependent numerical differences.</li>
+<li>Added regression checks for unequal masses, translation and two-component boosts, all seven COM plot types, energy decomposition, unchanged saved results and summaries, CLI routing and rejected frame values.</li>
+<li>Updated stale Help tests to accept the edited prose without requiring emphasized “Then”, and to find Experiment 6 by its existing anchor.</li>
+</ul>
+<p>Validation: 277 tests run, 0 skipped, OK with <code>MPLBACKEND=Agg python -W error::RuntimeWarning -m unittest discover -s tests</code>; both current tutorials and the sample guide pass HTML parsing and MathJax delimiter checks; the COM orbit and energy plots were visually checked. The MINOR version increases because a new public CLI and plotting option was added. The integrator and default numerical results are unchanged.</p>
 </body>
 </html>
