@@ -8,9 +8,9 @@
 <h1>Binary 1.3.0 Release Notes</h1>
 <p><b>Version:</b> 1.3.0<br><b>Build:</b> 82f6206a5be0<br><b>Date:</b> 2026-10-01</p>
 <h2>Release Status</h2>
-<p>The COM-frame audit corrections are incorporated. The four executable modules are unchanged from the independently accepted 1.3.0 core. This round updates documentation, figures and tests, so MODEL_VERSION and BUILD_ID remain 1.3.0 and 82f6206a5be0.</p>
+<p>ACCEPTED for release. Grok’s Audit_COM_Frame2 dated 2026-10-01 and Claude’s Audit_COM_Frame2 dated 2026-10-02 both recommend ACCEPT, with no P1 or P2 findings. Final documentation corrections carry forward the known limitations and maintenance items and correct the Beat 6 figure description. The four executable modules are unchanged; MODEL_VERSION remains 1.3.0 and BUILD_ID remains 82f6206a5be0.</p>
 <h2>Open Bugs</h2>
-<p>None recorded for this release. Both reviewers' P2 focus-versus-centre finding is corrected in the short tutorial, extended tutorial and figure description.</p>
+<p>None recorded for this release. The limitations and maintenance items below remain applicable.</p>
 <h2>Major Improvements in This Release</h2>
 <ul>
 <li><code>--frame user|com</code> selects the display frame for all seven plots. The default user view retains the input coordinates. The COM view uses mass-weighted relative positions and velocities and recalculates kinetic and total energies in that frame.</li>
@@ -21,8 +21,50 @@
 <li>Regression tests preserve the order of the substantive tasks without requiring emphasized “Then”. Missing or reversed task sequences fail. Command checks include the COM energy and hodograph examples; focus wording, figure provenance and zero-momentum frame qualifications are checked.</li>
 </ul>
 <h2>Test Suite Growth</h2>
-<p>265 tests before the COM feature; 277 in the initial 1.3.0 COM package; 282 tests in this audited package, 0 skipped, OK. Command: <code>MPLBACKEND=Agg python -W error::RuntimeWarning -m unittest discover -s tests</code>. The guide's nine live figures were also visually checked after regeneration.</p>
+<p>265 tests before the COM feature; 277 in the initial 1.3.0 COM package; 282 tests in this audited package, 0 skipped, OK. Command: <code>MPLBACKEND=Agg python -W error::RuntimeWarning -m unittest discover -s tests</code>. Both current tutorials and the sample guide pass HTML parsing and MathJax delimiter checks. The guide's nine live figures were visually checked after regeneration; Claude’s second audit independently reproduced all nine figures pixel for pixel.</p>
 <h2>Known Limitations</h2>
+<ul>
+<li>Educational Newtonian point-mass model; no relativity, tides, finite size, collisions or third bodies.</li>
+<li><code>--frame com</code> changes plots only. The printed summary and energy table stay in the input frame, so a boosted bound pair can print positive total energy while its COM energy plot shows negative internal energy. The plot title identifies the COM frame.</li>
+<li>The corrector compares velocity changes with input-frame speeds, so a common boost can change convergence decisions and leave small differences in the integrated relative paths. Display-frame selection does not alter those decisions.</li>
+<li>Highly eccentric orbits are inaccurate at the default <code>eps1</code>; check convergence with tighter settings. A head-on start hits the timestep floor rather than an impact. One relative revolution is not proof of exact path closure.</li>
+<li>Some near-radial states at extreme scale (around 1e140 m) are rejected as out of range.</li>
+<li>The eleven printed energy rows are interpolated; fractional departures are poorly conditioned when the starting total energy is near zero.</li>
+<li>There is no CLI plot-save option. MathJax uses a public content delivery network; offline equations remain untypeset.</li>
+</ul>
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li><b>M-3.</b> The "60 retries" error is reached in tests only by mocking the timestep floor.</li>
+<li><b>M-4.</b> The summary does not print the largest sampled energy departure or its time.</li>
+<li><b>M-5.</b> <code>--help</code> prints defaults such as 46000000000.0. <code>plot_binary.py</code> still lists a singular "orbit" output type the CLI never sends.</li>
+<li><b>M-6.</b> Dense phrase pins live on <code>Binary-extended.html</code>; <code>Binary-short.html</code> has equation, table and fragment pins.</li>
+<li><b>M-7.</b> Repository-wide CI and lockfiles remain outside this module.</li>
+</ul>
+<p>Cross-program CLI naming, explicit frame labels on plot axes and user-view titles, a frame line in the printed summary, and cosmetic differences between the short and extended tutorials remain deferred. Input-frame orbit plots with a large boost can appear as thin strips because the axes use equal physical scales; the guide explains the zoom option.</p>
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.3.0<br>BUILD_ID: 82f6206a5be0</p>
+<p>The hash covers <code>physics_binary.py</code>, <code>driver_binary.py</code>, <code>main.py</code> and <code>plot_binary.py</code>. Help, figures, tests, audit responses and release history remain outside it.</p>
+<section id="historical-release-notes">
+<h2>Historical Release Notes</h2>
+<p>The following entries are newest first. Their test counts and release-status statements describe their respective packages.</p>
+<h3>COM Audit Response Package (2026-10-01)</h3>
+<p><b>Archived package version:</b> 1.3.0<br><b>Archived package build:</b> 82f6206a5be0</p>
+<h4>Release Status</h4>
+<p>The COM-frame audit corrections are incorporated. The four executable modules are unchanged from the independently accepted 1.3.0 core. This round updates documentation, figures and tests, so MODEL_VERSION and BUILD_ID remain 1.3.0 and 82f6206a5be0.</p>
+<h4>Open Bugs</h4>
+<p>None recorded for this release. Both reviewers' P2 focus-versus-centre finding is corrected in the short tutorial, extended tutorial and figure description.</p>
+<h4>Major Improvements in This Release</h4>
+<ul>
+<li><code>--frame user|com</code> selects the display frame for all seven plots. The default user view retains the input coordinates. The COM view uses mass-weighted relative positions and velocities and recalculates kinetic and total energies in that frame.</li>
+<li>Beat 2 explicitly compares a 60000 m/s boosted run in the input-frame orbit view, COM orbit view and COM energy view. The restored ellipses each have a focus at the centre of mass, not their geometric centre. The short tutorial asks which energy classifies the internal orbit.</li>
+<li>The energy and hodograph lessons distinguish printed input-frame values from COM plot values. A worked velocity-space comparison shows why the origin-inside-circle test requires velocities relative to the centre of mass.</li>
+<li>Both tutorials define COM, its equivalence to the Newtonian centre-of-momentum frame, and the CM equation subscripts. Abbreviations in the short tutorial are expanded.</li>
+<li>All nine sample figures are regenerated together from this core build. Beat 2 retains the input/COM comparison pair. Image count, provenance, figure descriptions and numerical-accuracy qualifications are corrected.</li>
+<li>Regression tests preserve the order of the substantive tasks without requiring emphasized “Then”. Missing or reversed task sequences fail. Command checks include the COM energy and hodograph examples; focus wording, figure provenance and zero-momentum frame qualifications are checked.</li>
+</ul>
+<h4>Test Suite Growth</h4>
+<p>265 tests before the COM feature; 277 in the initial 1.3.0 COM package; 282 tests in this audited package, 0 skipped, OK. Command: <code>MPLBACKEND=Agg python -W error::RuntimeWarning -m unittest discover -s tests</code>. The guide's nine live figures were also visually checked after regeneration.</p>
+<h4>Known Limitations</h4>
 <ul>
 <li>Educational Newtonian point-mass model; no relativity, tides, finite size, collisions or third bodies.</li>
 <li><code>--frame com</code> changes plots only. The printed summary and energy table stay in the input frame, so a boosted bound pair can print positive total energy while its COM energy plot shows negative internal energy. The plot title identifies the COM frame.</li>
@@ -31,27 +73,32 @@
 <li>The eleven printed energy rows are interpolated; fractional departures are poorly conditioned when the starting total energy is near zero.</li>
 <li>There is no CLI plot-save option. MathJax uses a public content delivery network; offline equations remain untypeset.</li>
 </ul>
-<h2>Known Minor Maintenance Items</h2>
+<h4>Known Minor Maintenance Items</h4>
 <p>The older M-3 through M-7 items are retained in the historical notes. Cross-program CLI naming, frame labels on user-view plot titles and cosmetic differences between the short and extended tutorials remain outside this focused correction. Input-frame orbit plots with a large boost can appear as thin strips because the axes use equal physical scales; the guide explains the zoom option.</p>
-<h2>Version Identification</h2>
+<h4>Version Identification</h4>
 <p>MODEL_VERSION: 1.3.0<br>BUILD_ID: 82f6206a5be0</p>
 <p>The hash covers <code>physics_binary.py</code>, <code>driver_binary.py</code>, <code>main.py</code> and <code>plot_binary.py</code>. Help, figures, tests, audit responses and release history remain outside it.</p>
-<section id="historical-release-notes">
-<h2>Historical Release Notes</h2>
-<p>The following notes describe the initial 1.3.0 COM package and the preceding 1.2.4 release. Their version identifications, test counts and release-status statements are historical.</p>
+<h3>Initial 1.3.0 — Centre-of-Mass Display (2026-10-01)</h3>
+<p><b>Version:</b> 1.3.0<br><b>Build:</b> 82f6206a5be0<br><b>Date:</b> 2026-10-01</p>
+<ul>
+<li>Added <code>--frame user|com</code>. The default <code>user</code> view retains the existing plots. The <code>com</code> view removes the sampled mass-weighted centre and velocity from orbit, position and velocity plots, and calculates kinetic and total energies in that frame. COM plot titles identify the frame.</li>
+<li>The display choice does not change initial conditions, integration, termination, orbital diagnostics or the printed input-frame energy table. <code>BinaryResult</code> now carries the two input masses for plotting. Results created manually without those masses still support user-frame plots, but COM plots require finite positive masses.</li>
+<li>Beat 2 in both current tutorials now compares translated and boosted input-frame plots with their COM views. The Sample Outputs Guide includes the boosted COM plot. A common boost preserves the exact relative motion, while the existing corrector's convergence decisions can introduce small frame-dependent numerical differences.</li>
+<li>Added regression checks for unequal masses, translation and two-component boosts, all seven COM plot types, energy decomposition, unchanged saved results and summaries, CLI routing and rejected frame values.</li>
+<li>Updated stale Help tests to accept the edited prose without requiring emphasized “Then”, and to find Experiment 6 by its existing anchor.</li>
+</ul>
+<p>Validation: 277 tests run, 0 skipped, OK with <code>MPLBACKEND=Agg python -W error::RuntimeWarning -m unittest discover -s tests</code>; both current tutorials and the sample guide pass HTML parsing and MathJax delimiter checks; the COM orbit and energy plots were visually checked. The MINOR version increases because a new public CLI and plotting option was added. The integrator and default numerical results are unchanged.</p>
 
-<h3>Initial 1.3.0 COM Package and Earlier Release Notes</h3>
-<p><b>Archived package version:</b> 1.3.0<br><b>Archived package build:</b> 82f6206a5be0<br><b>Date:</b> 2026-10-01</p>
-<h2>Version 1.2.4 — Release History</h2>
+<h3>Version 1.2.4 — Release History</h3>
 <p><b>Version:</b> 1.2.4<br><b>Build:</b> 53b5e2037ced<br><b>Date:</b> 2026-09-26</p>
 
-<h2>Version 1.2.4 — Previous Release Status</h2>
+<h4>Version 1.2.4 — Previous Release Status</h4>
 <p>Version 1.2.4 is one core build plus documentation-and-test rounds. Audit41 made the only code change: <code>orbital_elements()</code> classifies an exactly radial state before forming r·v (Codex A41-P2-02) and closed 1.2.3's OB-1 range failures. Claude Audit47 and Codex Audit47 both recommend ACCEPT. Claude Audit46 recommended accepting the code and Help after one P3 (EXP-6 placed the centre of mass at the origin). Codex Audit46 recommended HOLD on one P2 (a second <code>data-program="Orbit"</code> block can hide a broken Binary command). This package closes those items. BUILD_ID stays 53b5e2037ced. Default-run numbers are unchanged.</p>
 
-<h2>Open Bugs</h2>
+<h4>Open Bugs</h4>
 <p>None recorded for this release.</p>
 
-<h2>Major Improvements in This Release</h2>
+<h4>Major Improvements in This Release</h4>
 <ul>
 <li><b>Audit41 / Codex A41-P2-02 (code).</b> <code>orbital_elements()</code> returns kind radial, eccentricity 1, when h = 0, without forming r·v. Command: <code>python main.py --MA 1e8 --MB 1e8 --xInitA 1e160 --xInitB 0 --vInitA 1e149 --vInitB 0 --uInitA 0 --uInitB 0 --dt 1e-3 --max_steps 2 --no-stop_after_one_orbit</code>.</li>
 <li><b>Codex A43-P2-01 / Claude A43-P3-01 / Codex A46-P3-01 / Claude A46-P3-01.</b> EXP-6 is a zero centre-of-mass velocity start: A at 495049.50495 m/s, B at -4950.49505 m/s, relative speed 500000 m/s. Compare with a fixed 2e32 kg star at that same relative speed (about 5.11 days). Circular speed about that fixed mass is about 539000 m/s; 541000 m/s is the two-body relative circular speed. The centre of mass sits at x ≈ 4.55e8 m, not the origin. A matched Orbit command with <code>--k 1.33486e22</code> and <code>--vyInit 500000</code> is given. Initial K and E differ from the earlier parked-B start; accepted steps, period and e do not.</li>
@@ -59,12 +106,12 @@
 <li><b>Claude A43-P3-03.</b> Grok pins now include the Parameters table against program defaults, Beat 0 start against the default run (e = 0.767), a live head-on timestep-floor check, exact display-equation blocks, and EXP-6 quoted numbers against the live run and the fixed-star Kepler period.</li>
 </ul>
 
-<h2>Test Suite Growth</h2>
+<h4>Test Suite Growth</h4>
 <p>248 &rarr; 255 &rarr; 261 &rarr; 265. Full-tree gate with Help only under GFTGU-Documentation:</p>
 <p><code>MPLBACKEND=Agg python -W error::RuntimeWarning -m unittest discover -s tests</code> — 265 run, 0 skipped, OK.</p>
 <p>Dense classes still skip in a Grok-only or no-Help layout that has no documentation tree. Missing dense Help fails when that tree is present. Duplicate Help copies must match byte for byte.</p>
 
-<h2>Known Limitations</h2>
+<h4>Known Limitations</h4>
 <ul>
 <li>Educational Newtonian two-body model. No relativity, tides, finite size, collisions or third bodies.</li>
 <li>A head-on start hits the timestep floor rather than an impact.</li>
@@ -76,7 +123,7 @@
 <li>Help loads MathJax from a public CDN; offline, equations appear as untypeset LaTeX.</li>
 </ul>
 
-<h2>Known Minor Maintenance Items</h2>
+<h4>Known Minor Maintenance Items</h4>
 <ul>
 <li><b>M-3.</b> The "60 retries" error is reached in tests only by mocking the timestep floor.</li>
 <li><b>M-4.</b> The summary does not print the largest sampled energy departure or its time.</li>
@@ -85,20 +132,9 @@
 <li><b>M-7.</b> Repository-wide CI and lockfiles remain outside this module.</li>
 </ul>
 
-<h2>Version Identification</h2>
+<h4>Version Identification</h4>
 <p>MODEL_VERSION: 1.2.4<br>BUILD_ID: 53b5e2037ced</p>
 <p>BUILD_ID identifies the executable program core formed by <code>physics_binary.py</code>, <code>driver_binary.py</code>, <code>main.py</code> and <code>plot_binary.py</code>. The Help, tests, reports and release notes are outside this core hash.</p>
-
-<h2>Version 1.3.0 — Centre-of-Mass Display (2026-10-01)</h2>
-<p><b>Version:</b> 1.3.0<br><b>Build:</b> 82f6206a5be0<br><b>Date:</b> 2026-10-01</p>
-<ul>
-<li>Added <code>--frame user|com</code>. The default <code>user</code> view retains the existing plots. The <code>com</code> view removes the sampled mass-weighted centre and velocity from orbit, position and velocity plots, and calculates kinetic and total energies in that frame. COM plot titles identify the frame.</li>
-<li>The display choice does not change initial conditions, integration, termination, orbital diagnostics or the printed input-frame energy table. <code>BinaryResult</code> now carries the two input masses for plotting. Results created manually without those masses still support user-frame plots, but COM plots require finite positive masses.</li>
-<li>Beat 2 in both current tutorials now compares translated and boosted input-frame plots with their COM views. The Sample Outputs Guide includes the boosted COM plot. A common boost preserves the exact relative motion, while the existing corrector's convergence decisions can introduce small frame-dependent numerical differences.</li>
-<li>Added regression checks for unequal masses, translation and two-component boosts, all seven COM plot types, energy decomposition, unchanged saved results and summaries, CLI routing and rejected frame values.</li>
-<li>Updated stale Help tests to accept the edited prose without requiring emphasized “Then”, and to find Experiment 6 by its existing anchor.</li>
-</ul>
-<p>Validation: 277 tests run, 0 skipped, OK with <code>MPLBACKEND=Agg python -W error::RuntimeWarning -m unittest discover -s tests</code>; both current tutorials and the sample guide pass HTML parsing and MathJax delimiter checks; the COM orbit and energy plots were visually checked. The MINOR version increases because a new public CLI and plotting option was added. The integrator and default numerical results are unchanged.</p>
 
 </section>
 </body>
