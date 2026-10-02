@@ -6,7 +6,42 @@
 </head>
 <body>
 <h1>Binary 1.3.0 Release Notes</h1>
-<p><b>Current version:</b> 1.3.0<br><b>Current build:</b> 82f6206a5be0<br><b>Date:</b> 2026-10-01</p>
+<p><b>Version:</b> 1.3.0<br><b>Build:</b> 82f6206a5be0<br><b>Date:</b> 2026-10-01</p>
+<h2>Release Status</h2>
+<p>The COM-frame audit corrections are incorporated. The four executable modules are unchanged from the independently accepted 1.3.0 core. This round updates documentation, figures and tests, so MODEL_VERSION and BUILD_ID remain 1.3.0 and 82f6206a5be0.</p>
+<h2>Open Bugs</h2>
+<p>None recorded for this release. Both reviewers' P2 focus-versus-centre finding is corrected in the short tutorial, extended tutorial and figure description.</p>
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li><code>--frame user|com</code> selects the display frame for all seven plots. The default user view retains the input coordinates. The COM view uses mass-weighted relative positions and velocities and recalculates kinetic and total energies in that frame.</li>
+<li>Beat 2 explicitly compares a 60000 m/s boosted run in the input-frame orbit view, COM orbit view and COM energy view. The restored ellipses each have a focus at the centre of mass, not their geometric centre. The short tutorial asks which energy classifies the internal orbit.</li>
+<li>The energy and hodograph lessons distinguish printed input-frame values from COM plot values. A worked velocity-space comparison shows why the origin-inside-circle test requires velocities relative to the centre of mass.</li>
+<li>Both tutorials define COM, its equivalence to the Newtonian centre-of-momentum frame, and the CM equation subscripts. Abbreviations in the short tutorial are expanded.</li>
+<li>All nine sample figures are regenerated together from this core build. Beat 2 retains the input/COM comparison pair. Image count, provenance, figure descriptions and numerical-accuracy qualifications are corrected.</li>
+<li>Regression tests preserve the order of the substantive tasks without requiring emphasized “Then”. Missing or reversed task sequences fail. Command checks include the COM energy and hodograph examples; focus wording, figure provenance and zero-momentum frame qualifications are checked.</li>
+</ul>
+<h2>Test Suite Growth</h2>
+<p>265 tests before the COM feature; 277 in the initial 1.3.0 COM package; 282 tests in this audited package, 0 skipped, OK. Command: <code>MPLBACKEND=Agg python -W error::RuntimeWarning -m unittest discover -s tests</code>. The guide's nine live figures were also visually checked after regeneration.</p>
+<h2>Known Limitations</h2>
+<ul>
+<li>Educational Newtonian point-mass model; no relativity, tides, finite size, collisions or third bodies.</li>
+<li><code>--frame com</code> changes plots only. The printed summary and energy table stay in the input frame, so a boosted bound pair can print positive total energy while its COM energy plot shows negative internal energy. The plot title identifies the COM frame.</li>
+<li>The corrector compares velocity changes with input-frame speeds, so a common boost can change convergence decisions and leave small differences in the integrated relative paths. Display-frame selection does not alter those decisions.</li>
+<li>Highly eccentric orbits need convergence checks. A head-on start hits the timestep floor rather than an impact. One relative revolution is not proof of exact path closure.</li>
+<li>The eleven printed energy rows are interpolated; fractional departures are poorly conditioned when the starting total energy is near zero.</li>
+<li>There is no CLI plot-save option. MathJax uses a public content delivery network; offline equations remain untypeset.</li>
+</ul>
+<h2>Known Minor Maintenance Items</h2>
+<p>The older M-3 through M-7 items are retained in the historical notes. Cross-program CLI naming, frame labels on user-view plot titles and cosmetic differences between the short and extended tutorials remain outside this focused correction. Input-frame orbit plots with a large boost can appear as thin strips because the axes use equal physical scales; the guide explains the zoom option.</p>
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.3.0<br>BUILD_ID: 82f6206a5be0</p>
+<p>The hash covers <code>physics_binary.py</code>, <code>driver_binary.py</code>, <code>main.py</code> and <code>plot_binary.py</code>. Help, figures, tests, audit responses and release history remain outside it.</p>
+<section id="historical-release-notes">
+<h2>Historical Release Notes</h2>
+<p>The following notes describe the initial 1.3.0 COM package and the preceding 1.2.4 release. Their version identifications, test counts and release-status statements are historical.</p>
+
+<h3>Initial 1.3.0 COM Package and Earlier Release Notes</h3>
+<p><b>Archived package version:</b> 1.3.0<br><b>Archived package build:</b> 82f6206a5be0<br><b>Date:</b> 2026-10-01</p>
 <h2>Version 1.2.4 — Release History</h2>
 <p><b>Version:</b> 1.2.4<br><b>Build:</b> 53b5e2037ced<br><b>Date:</b> 2026-09-26</p>
 
@@ -64,5 +99,7 @@
 <li>Updated stale Help tests to accept the edited prose without requiring emphasized “Then”, and to find Experiment 6 by its existing anchor.</li>
 </ul>
 <p>Validation: 277 tests run, 0 skipped, OK with <code>MPLBACKEND=Agg python -W error::RuntimeWarning -m unittest discover -s tests</code>; both current tutorials and the sample guide pass HTML parsing and MathJax delimiter checks; the COM orbit and energy plots were visually checked. The MINOR version increases because a new public CLI and plotting option was added. The integrator and default numerical results are unchanged.</p>
+
+</section>
 </body>
 </html>

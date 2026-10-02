@@ -166,7 +166,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
     </p>
     <p>The spine of the lesson is one sentence: <em>One force law accelerates both bodies; exact motion under it conserves energy; the printed energy is how you tell how far to trust a step-by-step calculation of that motion.</em></p>
     <div class="warn"><strong>What this program is not.</strong> No tides, collisions, relativity, or third body. The integrator is an Euler predictor plus an iterated trapezoidal corrector; error is largest at close approach. A head-on plunge can hit the timestep floor and stop with an error. The one-revolution stop is a geometric rule about the angle swept by the line joining the bodies, not a proof that the path has closed.</div>
-    <div class="note"><strong>Reading this page.</strong> Equations are rendered by MathJax from a public CDN. Without a network connection the raw \(\LaTeX\) remains visible as text. The program itself needs no internet access.</div>
+    <div class="note"><strong>Reading this page.</strong> Equations are rendered by MathJax from a public content delivery network (CDN). Without a network connection the raw \(\LaTeX\) remains visible as text. The program itself needs no internet access.</div>
   </section>
 
   <section id="setup">
@@ -180,6 +180,7 @@ python main.py</pre>
   <section id="output">
     <h2>Output</h2>
 	<p>Every run prints a summary at the terminal and then opens a plot.</p>
+    <p>The printed energy table always uses the input (<code>user</code>) frame. With <code>--frame com</code>, the plot title identifies the centre-of-mass view; its kinetic and total energies can differ from the printed ones.</p>
 	<p>In the summary, the first line gives version and build, accepted steps, how it stopped, total revolutions and time, sampled min/max separation, the Keplerian classification of the <em>starting</em> data, a centre-of-mass block for each body, and an energy table at tenths of the run. A plot window then opens. Close it to end the program. The Keplerian block is not the integrated orbit; compare the two when you want a check.</p>
   </section>
  
@@ -223,13 +224,17 @@ r=\sqrt{(x_A-x_B)^2+(y_A-y_B)^2}.
 
   <section id="beat2">
     <h2>Beat 2 · Only the separation matters</h2>
-    <p>The force depends on the two positions only through \(r\). Shift the pair, then give both bodies the same extra velocity. The first two commands use the default <code>--frame user</code> view. The last two repeat those starts with <code>--frame com</code>, which follows the centre of mass.</p>
-<pre>python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10
-python main.py --vInitA 60000 --vInitB 60000
+    <p>The force depends on the two positions only through \(r\). Give both bodies the same extra velocity, 60 km/s along \(x\), and look at the same run three ways.</p>
+<pre>python main.py --vInitA 60000 --vInitB 60000
 python main.py --vInitA 60000 --vInitB 60000 --frame com
+python main.py --vInitA 60000 --vInitB 60000 --frame com --output_type energy_vs_time</pre>
+    <p>Look at the first two plots and at the summary lines from <code>Accepted steps</code> to the two <code>Body A/B about centre of mass</code> blocks. The first plot uses the input frame (<code>--frame user</code>): the centre of mass drifts about \(2.7\times10^{11}\) m to the right during the run, and the bodies trace drifting tracks. The second view follows the centre of mass (COM), the frame in which the total momentum is zero. The Beat 0 ellipses return, each with one focus at the origin. In this Newtonian model the centre-of-mass and centre-of-momentum frames are the same. The subscripts CM in the equations also mean centre of mass.</p>
+    <p>All three printed summaries are identical. The orbital diagnostics match Beat 0 to the printed figures, but the energy table does not. Row 0.0 shows kinetic energy larger by \(\tfrac12(M_A+M_B)V_{\mathrm{CM}}^2=7.2\times10^{39}\) J and positive total energy, \(E=+4.6361\times10^{39}\) J. Look at the third plot: its total energy is negative, about \(-2.564\times10^{39}\) J, as in Beat 0. Which energy tells you that the pair is bound? Explain why changing the observer's velocity cannot unbind the pair.</p>
+    <p>This is Galilean relativity: observers moving at constant velocity describe different tracks but the same motion of the bodies relative to one another. The COM view subtracts the mass-weighted centre and velocity, \(\mathbf r'_i=\mathbf r_i-\mathbf R_{\mathrm{CM}}\) and \(\mathbf v'_i=\mathbf v_i-\mathbf V_{\mathrm{CM}}\). The option <code>--frame</code> applies to all seven plots, including energy. It leaves the integration and printed summary in the input frame, so the boosted run still prints positive total energy while its COM energy plot shows negative internal energy.</p>
+    <p><strong>Shift the start instead.</strong> These two commands change both starting positions by the same vector. Compare their plots with Beat 0.</p>
+<pre>python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10
 python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10 --frame com</pre>
-    <p>Compare all four plots with Beat 0. In the input frame, the first run shifts the ellipses and the second draws drifting tracks. In the COM frame, both patterns return to the ellipses centred on the origin: the translation and common velocity have disappeared from the display. The Keplerian block and the sampled separations should match Beat 0 to the accuracy of the integration. The boosted run adds \(\tfrac12(M_A+M_B)V_{\mathrm{CM}}^2\) to the printed kinetic energy and can make the printed total energy positive even though the relative orbit is still the same bound ellipse. The energy that classifies the orbit is the energy in the centre-of-mass frame.</p>
-    <p>This is Galilean relativity: observers moving at constant velocity describe different tracks but the same motion of the bodies relative to one another. The COM view subtracts the mass-weighted centre and velocity, \(\mathbf r'_i=\mathbf r_i-\mathbf R_{\mathrm{CM}}\) and \(\mathbf v'_i=\mathbf v_i-\mathbf V_{\mathrm{CM}}\). Changing <code>--frame</code> changes all seven plots, including the energy plot. It leaves the integration and printed summary in the input frame, so the boosted run still prints its positive total energy. Try <code>--output_type energy_vs_time --frame com</code> with that boost to see the negative internal energy instead.</p>
+    <p>In the input frame the pair's centre of mass is at \((4\times10^9,1\times10^{10})\) m, and the ellipses move with it. In the COM view that shift disappears. What has changed in the picture, and what has stayed the same in the orbital diagnostics?</p>
     <div class="note"><strong>A numerical caveat, not a new law.</strong> A large boost changes the speeds the corrector compares to, so the two relative paths agree only to the accuracy of the integrator, not to rounding error. A modest boost agrees far more closely.</div>
     <p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
@@ -240,7 +245,7 @@ python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10 --fram
 <pre>python main.py --output_type energy_vs_time
 python main.py --uInitA 38091.14 --uInitB -38091.14 --no-stop_after_one_orbit --max_steps 1000 --output_type energy_vs_time
 python main.py --uInitA 60000 --uInitB -60000 --no-stop_after_one_orbit --max_steps 1000 --output_type energy_vs_time</pre>
-    <p>Read row 0.0 of the energy table and the <code>Initial Keplerian orbit</code> line. \(U\) is the same in all three runs. \(K\) is not. The sign of \(E=K+U\) in the centre-of-mass frame is elliptic, parabolic, or hyperbolic. The middle speed is escape rounded to seven digits; treat the printed eccentricity of 1 as “that rounding.”</p>
+    <p>Read row 0.0 of the energy table and the <code>Initial Keplerian orbit</code> line. \(U\) is the same in all three runs. \(K\) is not. For non-radial motion, negative, zero or positive \(E=K+U\) in the centre-of-mass frame means an elliptic, parabolic or hyperbolic orbit. These equal-and-opposite starts already have zero total momentum, so their input-frame energies are also their internal energies. The middle speed is escape rounded to seven digits; treat the printed eccentricity of 1 as “that rounding.”</p>
     <div class="eq-block">
       <div class="eq-label">Mechanical energy</div>
 \[
@@ -271,6 +276,7 @@ e=\frac{v_p-v_a}{v_p+v_a}.
 \]
     </div>
     <p><code>Total revolutions</code> is the signed angle swept by \(\mathbf r_A-\mathbf r_B\), divided by \(2\pi\). The run stops at the first accepted step that reaches a full turn, so it can overshoot by up to one <code>dt</code>. That is geometry, not closure of the path.</p>
+    <p>The origin-inside-circle test uses velocities relative to the centre of mass. For the boosted start of Beat 2, add <code>--output_type velocity_space</code> to its first two commands: the origin lies outside both circles in the input-frame view and inside them with <code>--frame com</code>. The pair remains bound in both views.</p>
     <p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> and <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
@@ -355,10 +361,12 @@ python main.py --dt 1000 --eps2 1e-8</pre>
     <p>Run Beat 1. Confirm that \(a_A/a_B=M_B/M_A\) and that the two periods agree. Where is the origin on the plot?</p>
 
 <h3 id="exp3">3 · A boost is not unbinding — Beginner</h3>
-    <p>Run Beat 2’s second command. Why is the printed total energy positive while the Keplerian line still says elliptic?</p>
+    <p>Run the boosted energy view below and compare its negative total energy with row 0.0 of the printed table. Why is the printed total energy positive while the Keplerian line still says elliptic? Which term disappears from the energy in the centre-of-mass frame?</p>
+<pre>python main.py --vInitA 60000 --vInitB 60000 --frame com --output_type energy_vs_time</pre>
+<p>Use the orbit and velocity-space views to check the same conclusion visually.</p>
 
 <h3 id="exp4">4 · Escape — Intermediate</h3>
-    <p>From Beat 3, compute the relative escape speed \(v_{\mathrm{rel,esc}}=\sqrt{2G(M_A+M_B)/r}\). In the centre-of-mass frame with equal masses each body has half of that. How close is 38091.14&nbsp;m&nbsp;s\(^{-1}\)? For unequal masses the two CM speeds split the same relative speed in the inverse-mass ratio; do not substitute a single mass for \(M_A+M_B\).</p>
+    <p>From Beat 3, compute the relative escape speed \(v_{\mathrm{rel,esc}}=\sqrt{2G(M_A+M_B)/r}\). In the centre-of-mass frame with equal masses each body has half of that. How close is 38091.14&nbsp;m&nbsp;s\(^{-1}\)? For unequal masses the two speeds relative to the centre of mass split the same relative speed in the inverse-mass ratio; do not substitute a single mass for \(M_A+M_B\).</p>
 
 <h3 id="exp5">5 · The hodograph — Intermediate</h3>
     <p>On the default velocity-space plot, estimate \(e\) from the radius and offset of one body’s circle. Compare with the printed eccentricity.</p>
@@ -389,7 +397,7 @@ python main.py --dt 1000 --eps2 1e-8</pre>
       <li>The Keplerian block classifies the starting data, not the integrated path.</li>
       <li>Energy conservation is a diagnostic of the integrator. A small \(\Delta E\) does not bound the error in period or phase.</li>
       <li>Very close encounters can hit the timestep floor. Head-on starts will.</li>
-      <li>The printed \(E\) includes centre-of-mass kinetic energy. Classify bound versus unbound in the CM frame.</li>
+      <li>The printed \(E\) includes centre-of-mass kinetic energy. Classify bound versus unbound in the centre-of-mass frame; the energy plot with <code>--frame com</code> shows that internal energy.</li>
     </ul>
   </section>
 
@@ -399,7 +407,7 @@ python main.py --dt 1000 --eps2 1e-8</pre>
       <li><strong>Orbit</strong> — one body around a fixed mass. The limit of this program when one mass dominates.</li>
       <li><strong>Multiple</strong> — the same Newtonian idea with more than two bodies. Neighbour.</li>
       <li><strong>RelativisticOrbit</strong> — Schwarzschild orbits. Not this force law.</li>
-      <li><strong>CannonTrajectory</strong> — the first look at stepping an ODE. The integrator here is the grown-up version of that lesson.</li>
+      <li><strong>CannonTrajectory</strong> — the first look at stepping an ordinary differential equation. The integrator here is the grown-up version of that lesson.</li>
     </ul>
   </section>
 
