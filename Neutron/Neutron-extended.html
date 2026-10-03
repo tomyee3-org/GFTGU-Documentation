@@ -600,7 +600,8 @@ not simulate collapse; it computes static equilibrium configurations only.
 </section>
 <section id="beat0">
 <h2>Beat 0 · A star held up by its own pressure</h2>
-<p>A star is nothing but a stand-off between gravity, pulling inward, and pressure, pushing outward. Ask the program to referee that stand-off for one central pressure and one simple equation of state, and read what balance it finds.</p>
+<p>A star is nothing but a stand-off between gravity, pulling inward, and pressure, pushing outward. 
+Ask the program to referee that stand-off for one central pressure and one simple equation of state, and read what balance it finds.</p>
 <pre class="code-block"><code>python main.py --gamma 1.666667 --K 5380.2 --pC 1.26e+35 --steps_per_scale 400 --max_steps 200000 \
   --output_type pressure</code></pre>
 <p>Look at the two parts of the printed summary: the nine global lines, and the five-row checkpoint table beneath them.</p>
@@ -1026,6 +1027,7 @@ Radial checkpoints (fraction of surface radius)
 </ul>
 <p>The five-row checkpoint table then reports pressure, density and enclosed mass at 0, &frac14;, &frac12;, &frac34; and 0.90 of the surface radius, each to five significant figures; pressure and mass are linearly interpolated between the stored radial samples, and density is recomputed from the interpolated pressure with Eq. 3 rather than itself interpolated. A run that cannot finish prints one line beginning <code>Neutron:</code> and no summary at all (Beat 7).</p>
 </section>
+
 <section id="experiments">
 <h2>Suggested Experiments</h2>
 <div class="note-box">
@@ -1168,6 +1170,7 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 <p><strong>Check:</strong> <code>--pC 1e28</code> prints 0.020979 M<sub>sun</sub>, just above the threshold, and <code>--pC 1e27</code> prints 0.010529 M<sub>sun</sub>, below it (Beat 7).</p>
 </div>
 </section>
+
 <section class="restore-section" style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
 <div style="
     border: 1.5px solid #b5811a;
@@ -1220,6 +1223,7 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 </div>
 </div>
 </section>
+
 <section id="related">
 <h2>Related Programs</h2>
 <div class="related-grid">
@@ -1229,6 +1233,7 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 <p>Explores equatorial Schwarzschild geodesic motion around a compact object, the exterior counterpart to the interior solution built here.</p></div>
 </div>
 </section>
+
 <section id="license" class="gftgu-license">
 <h2>License</h2>
 <p>
