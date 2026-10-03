@@ -276,7 +276,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <a href="#license">License</a>
 </nav>
 <main id="content" tabindex="-1">
-<p id="version_build">Version 1.5.0&nbsp;&nbsp;&nbsp;&nbsp;Build 945d118ab595</p>
+<p id="version_build">Version 1.6.0&nbsp;&nbsp;&nbsp;&nbsp;Build 6a18d58408dc</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 
 
@@ -355,7 +355,7 @@ happens.</p>
 <pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories --n_bodies 3 --masses_solar 1,1,1 \
   --positions_init "46000000000,0,0;-46000000000,0,0;0,46000000000,0" \
   --velocities_init "0,0,0;0,-30000,0;-30000,0,0" --dt 2000 --eps1 0.005 --eps2 1e-07 --display_frame com</code></pre>
-<p>Look at the six lines from <code>Multiple 1.5.0 ...</code> through <code>Maximum conservation
+<p>Look at the six lines from <code>Multiple 1.6.0 ...</code> through <code>Maximum conservation
 drift</code>, and at fraction 0.0 of the conservation table.</p>
 <p>Three tasks, in order. First, read <code>accepted steps: 8000; simulated time: 1.8094e+01
 days</code>: 8000 accepted steps cover 18.094 days. Then read the initial totals:
@@ -560,6 +560,7 @@ its <code>Maximum conservation drift</code> line reported an excursion far large
 precision, hidden between the two printed totals. Read the full conservation table for that same
 run to see more of what happens in between, not just at the two ends.</p>
 <pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories --no-show_energy_diagnostic</code></pre>
+<p>The conservation samples use aligned columns, with space reserved for minus signs in every numeric value. Times are in days; each energy, momentum and angular-momentum value retains five significant digits.</p>
 <p>Look at all eleven rows of <code>Conservation over ten equal time intervals</code>, in
 particular the <code>K</code> column and the <code>E</code> and <code>E_internal</code> columns.</p>
 <p>Three tasks, in order. First, read \(K\) down the table: 9.0000e+08, 8.5502e+08, 9.2612e+08,
@@ -1218,20 +1219,18 @@ run.</p>
 <h2>Printed Summary</h2>
 <p>Every run prints a summary before opening a plot. This is Beat 0's default run,
 <code>python main.py --max_steps 8000 --output_type trajectories</code>:</p>
-<pre class="code-block"><code>Multiple 1.5.0 (build 945d118ab595) — accepted steps: 8000; simulated time: 1.8094e+01 days
+<pre class="code-block"><code>Multiple 1.6.0 (build 6a18d58408dc) — accepted steps: 8000; simulated time: 1.8094e+01 days
 Display frame: COM (center of mass). Plots subtract the instantaneous center-of-mass position R_CM; printed E, P and L use input coordinates.
 Initial user-frame totals (scaled by one solar mass): E=-4.6226e+09 m^2/s^2; E_internal=-4.9226e+09 m^2/s^2; P=(-3.0000e+04, -3.0000e+04, 0.0000e+00) m/s; L=(0.0000e+00, 0.0000e+00, 2.7600e+15) m^2/s
 Final user-frame totals (scaled by one solar mass): E=-4.6226e+09 m^2/s^2; E_internal=-4.9226e+09 m^2/s^2; P=(-3.0000e+04, -3.0000e+04, 0.0000e+00) m/s; L=(0.0000e+00, 0.0000e+00, 2.7600e+15) m^2/s
 Maximum conservation drift: energy=3.2235e-04, momentum=6.8454e-14, angular momentum=3.7074e-06
 Conservation over ten equal time intervals (user coordinates, scaled by one solar mass):
-E, E_internal, K [m^2/s^2]; P [m/s]; L [m^2/s]
-  Fraction 0.0; t=0.0000e+00 days: E=-4.6226e+09; E_internal=-4.9226e+09; K=9.0000e+08
-    P=(-3.0000e+04, -3.0000e+04, 0.0000e+00); L=(0.0000e+00, 0.0000e+00, 2.7600e+15)
-  Fraction 0.5; t=9.0470e+00 days: E=-4.6226e+09; E_internal=-4.9226e+09; K=2.1326e+09
-    P=(-3.0000e+04, -3.0000e+04, 0.0000e+00); L=(0.0000e+00, 0.0000e+00, 2.7600e+15)
-  Fraction 1.0; t=1.8094e+01 days: E=-4.6226e+09; E_internal=-4.9226e+09; K=1.6084e+10
-    P=(-3.0000e+04, -3.0000e+04, 0.0000e+00); L=(0.0000e+00, 0.0000e+00, 2.7600e+15)</code></pre>
-<p>(Fractions 0.1 through 0.9 are omitted here for length; Beat 3 quotes every row of the
+t [days]; E, E_internal, K [m^2/s^2]; P [m/s]; L [m^2/s]
+Fraction t            E            E_internal   K            P                                       L
+0.0        0.0000e+00  -4.6226e+09  -4.9226e+09   9.0000e+08 (-3.0000e+04, -3.0000e+04,  0.0000e+00) ( 0.0000e+00,  0.0000e+00,  2.7600e+15)
+0.5        9.0470e+00  -4.6226e+09  -4.9226e+09   2.1326e+09 (-3.0000e+04, -3.0000e+04,  0.0000e+00) ( 0.0000e+00,  0.0000e+00,  2.7600e+15)
+1.0        1.8094e+01  -4.6226e+09  -4.9226e+09   1.6084e+10 (-3.0000e+04, -3.0000e+04,  0.0000e+00) ( 0.0000e+00,  0.0000e+00,  2.7600e+15)</code></pre>
+<p>(Only fractions 0.0, 0.5 and 1.0 are shown here for length; Beat 3 quotes every row of the
 <code>K</code> column.) Line by line:</p>
 <ul>
 <li>The first line gives the version, build, accepted step count, and simulated time in days.</li>
