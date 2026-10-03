@@ -368,7 +368,8 @@ method, not physics, and are not tagged. Ten equations are numbered.</div>
 <h2>Beat 0 · A test particle in a binary</h2>
 <p>Put a Sun and a 0.1-solar-mass companion 0.7 AU apart, and start Mercury 0.3 AU from the Sun,
 on the side facing the companion, moving sideways at 59,220 m/s. Run it.</p>
-<pre class="code-block"><code>python main.py</code></pre>
+<pre class="code-block"><code>python main.py --m_sun_solar 1 --m_planet_solar 0.1 --binary_separation_au 0.7 --x_init_au 0.3 \
+  --vy_init 59220 --dt 2000 --max_steps 10000 --eps1 0.05 --eps2 0.0001</code></pre>
 <p>Look at the six printed lines and at the orbit plot.</p>
 <p>Three tasks, in order. First, read the numbers: the run took its full 10,000 steps
 (<code>termination: max_steps reached</code>), covering 231.48 days, while the two stars go round
@@ -407,7 +408,8 @@ solar-mass units.</p>
 <p>The two stars are not integrated at all. The program puts them on circles about their centre of
 mass and moves them at a fixed rate. Make the companion heavier, so the Sun's own circle is big
 enough to see.</p>
-<pre class="code-block"><code>python main.py --m_planet_solar 0.5 --vy_init 54400</code></pre>
+<p>For comparison, the default settings are <code>--m_planet_solar 0.1</code>, <code>--vy_init 59220</code>.</p>
+<pre class="code-block"><code>python main.py --m_planet_solar 0.5 --vy_init 54400 --m_sun_solar 1</code></pre>
 <p>Look at the <code>Circular period</code> line and at the two dashed circles on the plot.</p>
 <p>Three tasks, in order. First, read the printed period, 174.66 days, and check it by hand from
 Kepler's third law for two bodies of total mass \(1.5\,M_\odot\) a distance 0.7 AU apart
@@ -452,8 +454,9 @@ historical; the second is simply the companion's mass.</p>
 <h2>Beat 2 · Switch the companion off</h2>
 <p>Before measuring what the companion does, take it away and check that the program reproduces a
 plain Kepler orbit. The companion mass must be positive, so make it tiny instead of zero.</p>
+<p>For comparison, the default settings are <code>--m_planet_solar 0.1</code>, <code>--vy_init 59220</code>.</p>
 <pre class="code-block"><code>python main.py --m_planet_solar 1e-12 --vy_init 54379.16
-python main.py --m_planet_solar 1e-12</code></pre>
+python main.py --m_planet_solar 1e-12 --vy_init 59220</code></pre>
 <p>Look at the <code>Sun-distance range</code> line of each run.</p>
 <p>Three tasks, in order. First, the first run launches Mercury at exactly the circular speed
 54,379.16 m/s, and the Sun-distance range prints as 0.30000 to 0.30000 AU: a circle, to the precision printed in AU (the
@@ -486,6 +489,7 @@ measurable effect.</p>
 <h2>Beat 3 · Turn the companion back up</h2>
 <p>Now keep Mercury on the circular-speed launch of Beat 2 and bring the companion back in steps of
 a factor of ten in mass: roughly one Jupiter mass, ten, and then the default 0.1 solar mass.</p>
+<p>For comparison, the default settings are <code>--m_planet_solar 0.1</code>.</p>
 <pre class="code-block"><code>python main.py --m_planet_solar 0.001 --vy_init 54379.16
 python main.py --m_planet_solar 0.01 --vy_init 54379.16
 python main.py --m_planet_solar 0.1 --vy_init 54379.16</code></pre>
@@ -521,7 +525,7 @@ integrates it rather than using Eq. 5.</p>
 <p>With a single star, Mercury's energy would stay fixed. With a moving companion, the gravity
 Mercury feels changes with time, so its energy does not stay fixed. Measure that, and then
 measure what does stay fixed.</p>
-<pre class="code-block"><code>python main.py --show_jacobi_diagnostic
+<pre class="code-block"><code>python main.py --show_jacobi_diagnostic --m_planet_solar 0.1 --vy_init 59220
 python -c "import math, physics_mercpert as p, driver_mercpert as d; b=p.BinarySystemParams(1.0, 0.1, 0.7*p.AU); o=d.run_mercpert(b, p.MercuryInitialConditions(0.3*p.AU, 0.0, 0.0, 59220.0), d.MercPertRunParams(2000.0, 10000, 0.05, 1e-4, p.R_SUN)); E=[0.5*(u*u+v*v) - p.GM_SUN*(1.0/math.hypot(x-sx, y-sy) + 0.1/math.hypot(x-cx, y-cy)) for x, y, u, v, sx, sy, cx, cy in zip(o.merc_x, o.merc_y, o.merc_vx, o.merc_vy, o.sun_x, o.sun_y, o.planet_x, o.planet_y)]; print(f'{(max(E)-min(E))/abs(E[0]):.4f}')"</code></pre>
 <p>The first command is the default run with a second plot, of the Jacobi constant's fractional
 change against time. The second repeats the same default run inside Python and prints the largest
@@ -561,7 +565,7 @@ stored step, and the printed drift is the largest \(|C-C_0|/|C_0|\) over the run
 <h2>Beat 5 · Close encounters and the step controller</h2>
 <p>Beat 0's run was short. Let the default system run four times longer and see what the companion
 does to Mercury over two and a half years. Then run it again with a stricter accuracy setting.</p>
-<pre class="code-block"><code>python main.py --max_steps 40000
+<pre class="code-block"><code>python main.py --max_steps 40000 --eps1 0.05 --eps2 0.0001
 python main.py --max_steps 40000 --eps1 0.01 --eps2 1e-5</code></pre>
 <p>Look at the <code>Sun-distance range</code> and <code>Adaptive controller working timestep
 range</code> lines of each run.</p>
@@ -616,8 +620,9 @@ they do not misbehave when one component passes through zero.</p>
 <h2>Beat 6 · Collision and escape</h2>
 <p>Strong perturbations end in one of two dramatic ways: Mercury hits a star, or it leaves.
 Here is one of each.</p>
-<pre class="code-block"><code>python main.py --m_planet_solar 1
-python main.py --x_init_au 0.45 --max_steps 30000</code></pre>
+<p>For comparison, the default settings are <code>--m_planet_solar 0.1</code>, <code>--x_init_au 0.3</code>, <code>--max_steps 10000</code>.</p>
+<pre class="code-block"><code>python main.py --m_planet_solar 1 --x_init_au 0.3 --max_steps 10000
+python main.py --x_init_au 0.45 --max_steps 30000 --m_planet_solar 0.1</code></pre>
 <p>Look at the first printed line of the first run, and at the <code>Sun-distance range</code>
 line of both.</p>
 <p>Three tasks, in order. First, the first run makes the companion as heavy as the Sun and changes
@@ -710,7 +715,8 @@ share the same \(C\), so a run can keep \(C\) well and still be early or late on
 differ in where an encounter sends it; for those, compare runs at tighter settings over the same
 stretch of time. Use the drift twice here: once on the smooth default orbit, once on the close
 encounter of Beat 5.</p>
-<pre class="code-block"><code>python main.py
+<p>For comparison, the default settings are <code>--dt 2000</code>, <code>--max_steps 10000</code>.</p>
+<pre class="code-block"><code>python main.py --dt 2000 --max_steps 10000
 python main.py --dt 1000 --max_steps 20000
 python main.py --dt 500 --max_steps 40000
 python main.py --max_steps 80000 --dt 1000</code></pre>

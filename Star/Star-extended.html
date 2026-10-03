@@ -543,7 +543,8 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <section id="beat0">
 <h2>Beat 0 · A star that holds itself up</h2>
 <p>Run the program with all its defaults. The plot shows the pressure from the centre to the surface.</p>
-<pre>python main.py</pre>
+<pre>python main.py --p_c 7.158e+15 --T_c 22630000 --mu 1.285 --gamma 1.36 --steps_per_scale 400 \
+  --max_points 2000 --output_type pressure</pre>
 <p>Look at the plot, and at the two lines under <code>Stellar structure summary</code>, <code>Radius (m)</code> and <code>Total mass (kg)</code>.</p>
 <p>Three tasks, in order. First, read the plot. The pressure starts at the central pressure, 7.158e+15 Pa, falls slowly at the very centre and then steeply, fastest at about a seventh of the radius; on this linear axis it is close to zero over the whole outer half of the star, and it reaches zero at the surface. Then read the size. The star has a radius of 6.9674e+08 m and a mass of 1.9825e+30 kg; the Sun's radius is about 6.957e8 m and its mass about 1.989e30 kg, so the default star is within 0.2% of the Sun's radius and 0.4% of its mass. Then ask why the pressure falls. Say what pushes up on a thin layer of gas, and what pulls it down, if the layer does not move.</p>
 <p>Inside a spherical star, the gas at radius \(r\) is pulled towards the centre only by the mass \(m(r)\) inside that radius: by Newton's shell theorem, the shells of gas outside \(r\) pull on it with no net force at all.</p>
@@ -635,7 +636,8 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <section id="beat4">
 <h2>Beat 4 · One star, a family of stars</h2>
 <p>Make the centre 10% hotter, at the same central pressure.</p>
-<pre>python main.py --T_c 2.4893e7</pre>
+<p>For comparison, the default settings are <code>--T_c 22630000</code>.</p>
+<pre>python main.py --T_c 2.4893e7 --p_c 7.158e+15</pre>
 <p>Look at <code>Radius (m)</code> and <code>Total mass (kg)</code>, at the three lines under <code>Numerical grid</code>, and at the two relative differences under <code>Lane-Emden solution of the same polytrope (numerical reference)</code>. Compare each with the default run of Beat 0.</p>
 <p>Three tasks, in order. First, the radius: 7.6641e+08 m, against 6.9674e+08 m in Beat 0, a ratio of 1.1000, exactly the ratio of the central temperatures. Then the mass: 2.3988e+30 kg, against 1.9825e+30 kg, a ratio of 1.2100, the square of 1.1. Then the grid: the radial step is 5.791e+05 m, 1.1 times the default 5.2645e+05 m, the number of grid points is 1325 in both runs, and the relative differences from the Lane–Emden solution, -0.014174 and -0.0018494, are the same in both runs. Say what that tells you about the shapes of the two stars.</p>
 <p>The central values set one natural length, the radial scale, and the program's radial step is a fixed fraction of it, <code>--steps_per_scale</code>.</p>
@@ -658,6 +660,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <section id="beat5">
 <h2>Beat 5 · The Lane–Emden solution</h2>
 <p>Change the exponent to \(\gamma=2\), for which the exact solution is a simple formula.</p>
+<p>For comparison, the default settings are <code>--gamma 1.36</code>.</p>
 <pre>python main.py --gamma 2</pre>
 <p>Look at the three lines under <code>Lane-Emden solution of the same polytrope (numerical reference)</code>, and at <code>Radius (m)</code> and <code>Total mass (kg)</code>.</p>
 <p>Three tasks, in order. First, read the index: <code>Polytropic index n = 1/(gamma - 1)</code> is 1. Then compute the exact radius by hand from Eq. (13) below: \(R=\sqrt{\pi p_c/(2G)}/\rho_c\), with \(p_c=7.158\times10^{15}\) Pa and the central density 49187 kg/m<sup>3</sup> of the <code>0%</code> row, gives 2.6392e+08 m, the printed <code>Lane-Emden radius (m)</code>. Then compare: the program's own radius, 2.6239e+08 m, is short by the printed -0.0058198, and its mass, 1.1565e+30 kg, is larger than the exact 1.1513e+30 kg by 0.004502. Say why a smaller radius and a larger mass can both be errors of the same calculation.</p>
@@ -688,6 +691,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <section id="beat6">
 <h2>Beat 6 · Euler steps and their error</h2>
 <p>Halve the radial step: 800 steps per radial scale instead of 400. The star then needs more grid points than the default 2000, so allow 4000.</p>
+<p>For comparison, the default settings are <code>--steps_per_scale 400</code>, <code>--max_points 2000</code>.</p>
 <pre>python main.py --steps_per_scale 800 --max_points 4000</pre>
 <p>Look at the three lines under <code>Numerical grid</code>, and at the two relative differences under <code>Lane-Emden solution of the same polytrope (numerical reference)</code>. Compare them with the default run of Beat 0.</p>
 <p>Three tasks, in order. First, the grid: the step is 2.6323e+05 m, half the default 5.2645e+05 m, with 2666 grid points and no restart. Then the radius error: -0.0075071, against -0.014174 at the default step, a ratio of 1.888. Then the mass error: -0.00092707, against -0.0018494, a ratio of 1.995. Say what the next halving of the step should give, and check it with Experiment 6.</p>
@@ -711,7 +715,8 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <section id="beat7">
 <h2>Beat 7 · The surface and the restart</h2>
 <p>Allow only 1000 grid points, fewer than the default star needs at the default step.</p>
-<pre>python main.py --max_points 1000</pre>
+<p>For comparison, the default settings are <code>--max_points 2000</code>.</p>
+<pre>python main.py --max_points 1000 --steps_per_scale 400</pre>
 <p>Look at the three lines under <code>Numerical grid</code>, at <code>Radius (m)</code>, and at the two relative differences.</p>
 <p>Three tasks, in order. First, the restart: <code>Restarts (radial step doubled)</code> is 1, and the step is 1.0529e+06 m, twice the default 5.2645e+05 m. Then the cost: 654 grid points, a radius of 6.8749e+08 m, and a radius error of -0.02726, about twice the default -0.014174. Then run <code>python main.py --steps_per_scale 200</code> and compare: every printed number is the same, except that it reports no restart. Say why giving the program fewer grid points made the answer worse, not just shorter.</p>
 <p>The step at which the pressure first becomes zero or negative is not kept. Instead the program draws a straight line through the pressures at its two ends and puts the surface where that line reaches zero.</p>
@@ -734,10 +739,11 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <section id="beat8">
 <h2>Beat 8 · Where one polytrope stops</h2>
 <p>Take \(\gamma\) close to its lower limit of 1.2, then much closer, and then try the limit itself and a logarithmic mass plot. The last two commands are rejected; the messages say why.</p>
-<pre>python main.py --gamma 1.21
-python main.py --gamma 1.2000000001
-python main.py --gamma 1.2
-python main.py --output_type mass --log_y</pre>
+<p>For comparison, the default settings are <code>--gamma 1.36</code>.</p>
+<pre>python main.py --gamma 1.21 --output_type pressure
+python main.py --gamma 1.2000000001 --output_type pressure
+python main.py --gamma 1.2 --output_type pressure
+python main.py --output_type mass --log_y --gamma 1.36</pre>
 <p>Look, in the first run, at the three lines under <code>Numerical grid</code>, at the Lane–Emden lines, and at the column <code>mass within r (kg)</code>. Then read the two error messages.</p>
 <p>Three tasks, in order. First, the grid: the program restarted 4 times, and its step, 8.4233e+06 m, is 16 times the default. Then the error: the index is 4.7619, and the integrated radius, 7.2406e+09 m, is short of the Lane–Emden 9.9626e+09 m by -0.27322, a quarter, with the mass short by -0.080272. Then the mass: 2.8287e+30 kg of the total 2.8415e+30 kg lies inside a quarter of the radius, almost all of it. Finally, <code>--gamma 1.2</code> is refused because the polytrope then has no finite radius, and a logarithmic mass plot because the mass at the centre is zero. Say why a star whose outer three quarters hold almost no mass needs so many small steps to reach its surface.</p>
 <p>The Lane–Emden function \(\theta\) reaches zero at a finite \(\xi_1\) only for \(n&lt;5\); for \(n=5\) it falls off forever and the star has no surface.</p>

@@ -293,18 +293,19 @@ launch produces: impact, a closed orbit, or escape.
 <p>Completed revolutions, angular travel, flight time, distance and altitude extremes refer to the computed path. The extra <code>Osculating</code> lines in inverse-square runs are ideal two-body elements calculated from the launch state. The two kinds of number can differ because the finite-step integrator drifts. For an unbound launch there is no osculating apogee. A final/maximum altitude line is combined only if both format to the same value.</p></section>
 
 <section id="beat0"><h2>Beat 0 · A near miss that hits</h2><p>Launch 300 m up at 7900 m/s with the default <code>simplified</code> gravity law.</p>
-<pre class="code-block"><code>python main.py</code></pre>
+<pre class="code-block"><code>python main.py --h0 300 --uInit 7900 --vInit 0 --force_law simplified --dt 0.4 --maxSteps 15000</code></pre>
 <div class="beat-action"><strong>Look for</strong><p>503 samples and <code>Surface impact before one revolution</code>: 0.039512 of a turn, 14.224°, in 200.44 s. On the plot, the red arc joins the blue surface again. The launch is only about 0.08% slower than this law's circular speed, 7906.3 m/s.</p></div>
 <p>At each timestep the program updates position \((x,y)\) and velocity \((u,v)\) under acceleration toward Earth's centre. Its default law keeps that acceleration's <em>magnitude</em> fixed at 9.8 m/s². Ask: would you have expected a tiny speed shortfall to yield such a short flight?</p>
 <p class="small-print">Try <a href="#exp1">Task 1</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 <section id="beat1"><h2>Beat 1 · Two gravity laws</h2><p>Change just the force law and compare the outcome lines.</p>
-<pre class="code-block"><code>python main.py
-python main.py --force_law inverse_square</code></pre>
+<pre class="code-block"><code>python main.py --h0 300 --uInit 7900 --vInit 0 --dt 0.4 --force_law simplified
+python main.py --force_law inverse_square --h0 300 --uInit 7900 --vInit 0 --dt 0.4</code></pre>
 <div class="beat-action"><strong>Compare</strong><p>The first run impacts in 200.44 s; inverse square takes 221.62 s and travels 0.043687 of a revolution. The inverse-square summary adds osculating elements from the <em>launch state</em>; a negative perigee altitude (−16,265 m) signals a path that intersects Earth.</p></div>
 <p>Both acceleration vectors point inward. The first has constant magnitude \(g=9.8\) m/s²; the second has magnitude \(\mu_\oplus/r^2\), where \(\mu_\oplus=3.98600435507\times10^{14}\) m³/s² and \(r=\sqrt{x^2+y^2}\). The two nearly agree at the reference surface, but differ as altitude grows.</p>
 <p class="small-print">Try <a href="#exp2">Task 2</a> and <a href="#exp3">Task 3</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 
 <section id="beat2"><h2>Beat 2 · The circular launch</h2><p>Move the cannon to 300 km and choose the inverse-square circular speed rounded to 7725.7 m/s.</p>
+<p>For comparison, the default settings are <code>--h0 300</code>, <code>--uInit 7900</code>, <code>--dt 0.4</code>, <code>--maxSteps 15000</code>.</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 7725.7 --force_law inverse_square --dt 1 --maxSteps 7000</code></pre>
 <div class="beat-action"><strong>Read</strong><p>One completed revolution; its time is 5460.9 s. The integrated maximum altitude reaches 348.47 km, although the launch is at 300 km. The osculating eccentricity from the launch state is only 6.1431e-06. These lines refer to different things: the numerically computed path drifts outward, while the ideal orbit is nearly circular.</p></div>
 <p>The ideal inverse-square speeds at \(r=R_\oplus+h_0\) are \(v_c=\sqrt{\mu_\oplus/r}\) and \(v_e=\sqrt{2\mu_\oplus/r}\). At 300 km they are about 7725.72 and 10925.8 m/s; the ideal circular period is 5431.3 s. Compare that with the printed period before moving on.</p>
@@ -329,7 +330,7 @@ python main.py --h0 300000 --uInit 7500 --force_law simplified --dt 1 --maxSteps
 <p>This time simplified completes two revolutions, with minima of 46686 m and 65796 m. Its noncircular ideal path generally precesses rather than retracing a Kepler ellipse. A comparison at one absolute speed alone cannot establish which law is more forgiving at an equal fractional deficit.</p>
 <p class="small-print">Try <a href="#exp7">Task 7</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 <section id="beat6"><h2>Beat 6 · Between stored samples</h2><p>The plot joins samples; events usually occur between them. Start with a short run and inspect the last two radii.</p>
-<pre class="code-block"><code>python main.py
+<pre class="code-block"><code>python main.py --dt 0.4
 python -c "from driver_earthorbit import run_earth_orbit as run; r = run(dt=0.4, maxSteps=15000, return_diagnostics=True); import math; print([math.hypot(x,y) for x,y in zip(r[0][-2:], r[1][-2:])])"</code></pre>
 <div class="beat-action"><strong>Notice</strong><p>The last raw radius is slightly <em>inside</em> \(R_\oplus=6378200\) m, yet the printed flight time is interpolated to the crossing, 200.44 s. Surface impact uses the straight chord's intersection with the Earth circle; revolution boundaries use interpolation in angle; altitude peaks use a local three-point parabola.</p></div>
 <p>The red plot retains the first below-surface stored point. The summary stops at its estimated surface crossing. These distinctions matter when reading a close miss.</p>

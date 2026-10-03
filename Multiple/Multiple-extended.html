@@ -352,7 +352,9 @@ definition, and a numerical rule are never mistaken for one another.</div>
 &mdash; \((4.6\times10^{10},0,0)\), \((-4.6\times10^{10},0,0)\) and \((0,4.6\times10^{10},0)\) m
 &mdash; with two of them already moving at 30 km/s and the third at rest. Ask the program what
 happens.</p>
-<pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories --n_bodies 3 --masses_solar 1,1,1 \
+  --positions_init "46000000000,0,0;-46000000000,0,0;0,46000000000,0" \
+  --velocities_init "0,0,0;0,-30000,0;-30000,0,0" --dt 2000 --eps1 0.005 --eps2 1e-07 --display_frame com</code></pre>
 <p>Look at the six lines from <code>Multiple 1.5.0 ...</code> through <code>Maximum conservation
 drift</code>, and at fraction 0.0 of the conservation table.</p>
 <p>Three tasks, in order. First, read <code>accepted steps: 8000; simulated time: 1.8094e+01
@@ -422,7 +424,9 @@ pulling. Beat 1 asks what that means for how far each body actually moves.</p>
 <p>Equation 2 sums the pulls of every other body, but says nothing about the mass of the body being
 pulled. Keep the default positions and velocities from Beat 0 but make the three masses unequal, and
 see what each body's initial acceleration depends on.</p>
-<pre class="code-block"><code>python main.py --masses_solar 2,1,0.5 --max_steps 2000 --output_type trajectories</code></pre>
+<p>For comparison, the default settings are <code>--masses_solar 1,1,1</code>.</p>
+<pre class="code-block"><code>python main.py --masses_solar 2,1,0.5 --max_steps 2000 --output_type trajectories \
+  --velocities_init "0,0,0;0,-30000,0;-30000,0,0"</code></pre>
 <p>Look at the same six lines as Beat 0. Compare the initial totals with Beat 0's: energy is now
 \(-5.2701\times10^9\), momentum \((-1.5\times10^4,-3.0\times10^4,0)\) m/s, and angular momentum
 \((0,0,2.07\times10^{15})\) m\(^2\)/s.</p>
@@ -479,6 +483,7 @@ center of mass, the main subject.</p>
 <p>Beat 1 showed that the total momentum \(\mathbf P\) of an isolated system never changes. Test
 what happens to \(\mathbf P\), and to the plot, when every body is given the same extra velocity
 &mdash; a Galilean boost &mdash; and compare the program's two ways of displaying the result.</p>
+<p>For comparison, the default settings are <code>--velocities_init "0,0,0;0,-30000,0;-30000,0,0"</code>.</p>
 <pre class="code-block"><code>python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_steps 2000 --output_type trajectories --display_frame user
 python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_steps 2000 --output_type trajectories --display_frame com</code></pre>
 <p>The velocities above are Beat 0's default \((0,0,0)\), \((0,-30000,0)\), \((-30000,0,0)\) with
@@ -554,7 +559,7 @@ the frame you supplied in <code>positions_init</code> and <code>velocities_init<
 its <code>Maximum conservation drift</code> line reported an excursion far larger than that
 precision, hidden between the two printed totals. Read the full conservation table for that same
 run to see more of what happens in between, not just at the two ends.</p>
-<pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories --no-show_energy_diagnostic</code></pre>
 <p>Look at all eleven rows of <code>Conservation over ten equal time intervals</code>, in
 particular the <code>K</code> column and the <code>E</code> and <code>E_internal</code> columns.</p>
 <p>Three tasks, in order. First, read \(K\) down the table: 9.0000e+08, 8.5502e+08, 9.2612e+08,
@@ -691,8 +696,9 @@ in small steps, the same predictor-then-corrector scheme Binary uses for two bod
 body's acceleration and every body's convergence tested on its own. Run Beat 0's default calculation
 with the corrector tightened and loosened, and count how many times the force law, Eq. 2, actually
 gets evaluated.</p>
-<pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories --eps2 1e-10
-python main.py --max_steps 8000 --output_type trajectories --eps2 0.004</code></pre>
+<p>For comparison, the default settings are <code>--eps2 1e-07</code>.</p>
+<pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories --eps2 1e-10 --dt 2000
+python main.py --max_steps 8000 --output_type trajectories --eps2 0.004 --dt 2000</code></pre>
 <p>Multiple's console does not print a force-evaluation count, so this beat instruments
 <code>compute_accelerations()</code> with a call counter around <code>run_simulation()</code> for
 the same three <code>eps2</code> values, the default \(10^{-7}\) plus these two, all with
@@ -765,7 +771,7 @@ halved and the whole step, predictor included, is retried from the start-of-step
 <p>Beat 0's default run never once mentioned a timestep problem, yet three equal-mass bodies
 starting fairly far apart cannot stay gentle forever. Look inside the same 8000-step default run at
 the actual step size used, accepted step by accepted step, not just its final report.</p>
-<pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories --dt 2000</code></pre>
 <p>The console prints only the final <code>Maximum conservation drift</code> line; this beat reads
 the run's <code>dt_used</code> array directly, the per-step timestep that <code>run_simulation()</code>
 records for every accepted state when <code>output_type='trajectories'</code>.</p>
@@ -817,7 +823,9 @@ Beat 0 eventually reaches (Beat 8 returns to this run for exactly that reason).<
 state at whatever irregular times the adaptive controller of Beat 6 produced. A movie needs frames
 at regular intervals instead. Run the Beat-4 two-body configuration as an animation and see how the
 program gets from one to the other.</p>
-<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "5e10,0,0;-5e10,0,0" --velocities_init "0,25760,0;0,-25760,0" --max_steps 3000 --output_type animation --frame_time 2e5</code></pre>
+<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "5e10,0,0;-5e10,0,0" \
+  --velocities_init "0,25760,0;0,-25760,0" --max_steps 3000 --output_type animation --frame_time 2e5 \
+  --animation_mode trails</code></pre>
 <p>Look at the <code>Animation frames</code> line the console prints just before the plot window
 opens.</p>
 <p>Three tasks, in order. First, with <code>--max_steps 600</code> in place of 3000 (so the run
@@ -887,8 +895,12 @@ Keplerian orbit, Binary can check the integration against an exact formula. Mult
 formula once three or more bodies interact, so the only way to judge a number is to change the
 numerical controls and see whether the number changes. Do that with the classic Help's own
 "Numerical convergence" scenario, then push a genuinely singular configuration until it breaks.</p>
-<pre class="code-block"><code>python main.py --dt 1000 --max_steps 4000 --output_type trajectories --show_energy_diagnostic
-python main.py --dt 500 --max_steps 8000 --output_type trajectories --show_energy_diagnostic</code></pre>
+<pre class="code-block"><code>python main.py --dt 1000 --max_steps 4000 --output_type trajectories --show_energy_diagnostic --n_bodies 3 \
+  --masses_solar 1,1,1 --positions_init "46000000000,0,0;-46000000000,0,0;0,46000000000,0" \
+  --velocities_init "0,0,0;0,-30000,0;-30000,0,0"
+python main.py --dt 500 --max_steps 8000 --output_type trajectories --show_energy_diagnostic --n_bodies 3 \
+  --masses_solar 1,1,1 --positions_init "46000000000,0,0;-46000000000,0,0;0,46000000000,0" \
+  --velocities_init "0,0,0;0,-30000,0;-30000,0,0"</code></pre>
 <p>Look at <code>Maximum conservation drift</code>'s energy figure in both runs.</p>
 <p>Three tasks, in order. First, the smaller-<code>dt</code> run: \(\Delta t=1000\) s,
 \(\varepsilon_1\) and \(\varepsilon_2\) at their defaults, reaches 4000 accepted steps and day
@@ -950,8 +962,12 @@ mismatched one. At the far
 end of this scale sits an exact singularity. Two \(10^{11}\,M_\odot\)
 point masses, 50 kpc apart, launched directly at one another with zero impact parameter (the classic
 Help's "Galaxy collision" scenario) head for \(r=0\), where Eq. 1 is infinite:</p>
-<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 17500 --output_type trajectories
-python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 17800 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" \
+  --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 17500 --output_type trajectories \
+  --no-show_energy_diagnostic
+python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" \
+  --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 17800 --output_type trajectories \
+  --no-show_energy_diagnostic</code></pre>
 <p>The first command, <code>max_steps=17500</code>, completes normally. The second,
 <code>max_steps=17800</code>, only 300 steps further into the same head-on approach, stops with
 <code>Multiple error: The adaptive timestep became too small to advance simulation time in

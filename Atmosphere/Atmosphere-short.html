@@ -216,7 +216,9 @@ python main.py</pre>
   <section id="beat0">
     <h2>Beat 0 · Pressure is the weight of the air above you</h2>
     <p>Climb, and there is less air overhead. That is the whole idea of atmospheric structure. Ask the program only to show it for the Earth.</p>
-<pre>python main.py</pre>
+<pre>python main.py --g_accel 9.81 --mu 28.97 --p0 101300 \
+  --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 \
+  --T_points 288.15,216.65,216.65,228.65,270.65,270.65,214.65,186.946,190,800,1080,1190,1225,1240,1240</pre>
     <p>Look at the first two rows of the checkpoint table — altitudes 0 and 11019&nbsp;m — and at the pressure curve. Ignore the other columns. Surface pressure over \(g\) is the mass sitting on each square metre of ground. The pressure at 11&nbsp;km is already a fraction of the surface value; most of the column is below that height. The curve is steepest near the ground. Write one sentence that says why, before you read the equation.</p>
     <div class="eq-block">
       <div class="eq-label">Hydrostatic equilibrium — the ODE</div>
@@ -254,7 +256,8 @@ python main.py</pre>
   <section id="beat2">
     <h2>Beat 2 · One number sets the size of an atmosphere</h2>
     <p>If the temperature is the same at every height, equal steps upward multiply the pressure by the same factor.</p>
-<pre>python main.py --h_points 0,8000,16000,24000,32000 --T_points 288.15,288.15,288.15,288.15,288.15</pre>
+<pre>python main.py --h_points 0,8000,16000,24000,32000 --T_points 288.15,288.15,288.15,288.15,288.15 \
+  --g_accel 9.81 --mu 28.97 --p0 101300</pre>
     <p>Read only the table; above the last supplied altitude the program switches to the closure of Beat 7.
 	Divide each pressure by the one below it. Find the height over which the pressure falls by a 
 	factor of \(e\). Then compute \(p_0/(g\rho_0)\) from the first row. 
@@ -281,10 +284,11 @@ H = \frac{p_0}{g\,\rho_0} = \frac{k_B\,T_0}{g\,\mu\,m_u}.
   <section id="beat3">
     <h2>Beat 3 · What the scale height depends on — and what it does not</h2>
     <p>\(H\) contains \(T\), \(g\) and \(\mu\). It does not contain the surface pressure. Test that, one dial at a time, on the default Earth temperature profile.</p>
-<pre>python main.py --mu 18
-python main.py --mu 44
-python main.py --g_accel 19.62
-python main.py --p0 1.013e6</pre>
+<p>For comparison, the default settings are <code>--g_accel 9.81</code>, <code>--mu 28.97</code>, <code>--p0 101300</code>.</p>
+<pre>python main.py --mu 18 --g_accel 9.81 --p0 101300
+python main.py --mu 44 --g_accel 9.81 --p0 101300
+python main.py --g_accel 19.62 --mu 28.97 --p0 101300
+python main.py --p0 1.013e6 --mu 28.97 --g_accel 9.81</pre>
     <p>Compare the fraction \(p(11019\,\mathrm{m})/p_0\) with the default run. Light gas or weak gravity stretches the atmosphere; heavy gas or strong gravity makes pressure fall more rapidly with altitude. Raising \(p_0\) by ten multiplies every pressure by ten and leaves the fraction alone. \(p_0/g\) is the column mass; \(H\) is the height.</p>
     <div class="eq-block">
       <div class="eq-label">From the scale-height formula</div>
@@ -298,8 +302,10 @@ H \propto \frac{T}{\mu\,g}.
   <section id="beat4">
     <h2>Beat 4 · Real air is not isothermal</h2>
     <p>The program does not compute the layered temperature of a real atmosphere. You give temperatures at chosen altitudes; it joins them with straight lines. The scale height then changes with height.</p>
-<pre>python main.py --output_type temperature
-python main.py --h_points 0,50000,100000 --T_points 288,200,350</pre>
+<pre>python main.py --output_type temperature \
+  --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 \
+  --T_points 288.15,216.65,216.65,228.65,270.65,270.65,214.65,186.946,190,800,1080,1190,1225,1240,1240
+python main.py --h_points 0,50000,100000 --T_points 288,200,350 --output_type pressure</pre>
     <p>On the default temperature plot find the four layers: troposphere cooling, stratosphere warming, mesosphere cooling, thermosphere rising. Local \(H\) tracks \(T\). In the second run, check the fall factors from 50 to 100&nbsp;km: the density fall factor is the pressure fall factor multiplied by \(T(100\,\mathrm{km})/T(50\,\mathrm{km})=350/200=1.75\).</p>
     <div class="eq-block">
       <div class="eq-label">Piecewise-linear temperature — prescribed</div>
@@ -333,7 +339,9 @@ python main.py --planet_name Jupiter --g_accel 24.8 --mu 2.2 --p0 1e5 \
     <h2>Beat 6 · How far to trust the numbers</h2>
     <p>The isothermal atmosphere of Beat 2 has an exact answer. Use it, then compare the default Earth run with the standard atmosphere it is meant to mimic.</p>
 <pre>python main.py --h_points 0,100000 --T_points 288.15,288.15
-python main.py</pre>
+python main.py \
+  --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 \
+  --T_points 288.15,216.65,216.65,228.65,270.65,270.65,214.65,186.946,190,800,1080,1190,1225,1240,1240</pre>
     <p>At 100&nbsp;km the exact isothermal pressure is \(p_0 e^{-h/H}\). The printed value will be a few per cent low. That is the Euler step: each increment multiplies \(p\) by \(1-\Delta h/H\) instead of by \(e^{-\Delta h/H}\). With \(N=H/\Delta h=200\),</p>
     <div class="eq-block">
       <div class="eq-label">Size of the Euler error, isothermal case — derived</div>
@@ -350,7 +358,9 @@ python main.py</pre>
   <section id="beat7">
     <h2>Beat 7 · The top of the model is a stopping rule</h2>
     <p>A real atmosphere fades into space. The program needs a temperature above the last altitude you supplied, and a place to stop. Neither is a discovery about the air.</p>
-<pre>python main.py --output_type temperature
+<pre>python main.py --output_type temperature \
+  --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 \
+  --T_points 288.15,216.65,216.65,228.65,270.65,270.65,214.65,186.946,190,800,1080,1190,1225,1240,1240
 python main.py --h_points 0,20000 --T_points 288.15,216.65 --output_type temperature</pre>
     <p>In the default run the temperature holds at 1240&nbsp;K to 500&nbsp;km and then falls toward zero where the curve ends. Read the printed <code>Numerical top</code> line for the last stored altitude and temperature; it is a stopping rule, not a physical top. In the short profile the fall begins at 20&nbsp;km. That falling tail is the closure, not the mesosphere.</p>
     <div class="eq-block">

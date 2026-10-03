@@ -376,7 +376,7 @@ ones are derived inside the beats where they are needed.</div>
 <h2>Beat 0 · Newton's cannon, launched</h2>
 <p>Launch a projectile 300 m over Newton's mountain at 7900 m/s, sideways, with the default
 near-surface gravity model. Ask the program what happens.</p>
-<pre class="code-block"><code>python main.py</code></pre>
+<pre class="code-block"><code>python main.py --h0 300 --uInit 7900 --vInit 0 --force_law simplified --dt 0.4 --maxSteps 15000</code></pre>
 <p>Look at the four printed lines below the sample count, and at the plot: a blue dashed circle
 for Earth's surface and a red trajectory line.</p>
 <p>Three tasks, in order. First, read the numbers: 503 trajectory samples, and an outcome of
@@ -412,8 +412,8 @@ force_law)</code> in <code>physics_earthorbit.py</code> returns \((a_x,a_y)\) at
 <h2>Beat 1 · Two ways to point at the centre</h2>
 <p>Both force laws point straight at Earth's centre; they disagree only about how the magnitude
 changes with distance. Run the same launch under both.</p>
-<pre class="code-block"><code>python main.py
-python main.py --force_law inverse_square</code></pre>
+<pre class="code-block"><code>python main.py --h0 300 --uInit 7900 --vInit 0 --dt 0.4 --force_law simplified
+python main.py --force_law inverse_square --h0 300 --uInit 7900 --vInit 0 --dt 0.4</code></pre>
 <p>Compare the printed outcome lines of the two runs.</p>
 <p>Three tasks, in order. First, compare the sample counts: 503 for the default
 <code>simplified</code> run against 556 for <code>inverse_square</code>, and the outcome lines
@@ -466,6 +466,7 @@ a clear <code>ValueError</code> instead of a silent overflow.</p>
 <p>Newton's cannon predicts one exact speed, at any given altitude, for which the projectile's
 fall matches the curvature of the ground beneath it: a circular orbit. Launch at that speed, 300
 km up, under the real inverse-square law.</p>
+<p>For comparison, the default settings are <code>--h0 300</code>, <code>--uInit 7900</code>, <code>--dt 0.4</code>, <code>--maxSteps 15000</code>.</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 7725.7 --force_law inverse_square --dt 1 --maxSteps 7000</code></pre>
 <p>Look at the outcome line, the per-revolution line, and the three osculating-element lines.</p>
 <p>Three tasks, in order. First, the outcome: <code>Orbit completed; termination: maxSteps
@@ -658,7 +659,7 @@ of Eq. 6.</div>
 boundaries, and altitude extrema almost never land exactly on a stored sample, so the printed
 summary estimates them between samples rather than reading them off directly. See what the
 default run has to work with.</p>
-<pre class="code-block"><code>python main.py
+<pre class="code-block"><code>python main.py --dt 0.4
 python -c "from driver_earthorbit import run_earth_orbit as run; r = run(dt=0.4, maxSteps=15000, return_diagnostics=True); import math; print([math.hypot(x,y) for x,y in zip(r[0][-2:], r[1][-2:])])"</code></pre>
 <p>The first command prints the summary. The second, run from the program's folder, prints the
 radii of the last two stored points. Look at the printed range and the printed flight time, and

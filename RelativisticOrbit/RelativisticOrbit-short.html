@@ -508,34 +508,37 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <div class="note"><strong>How to judge a run.</strong> Compare the measured periapsis advance with the <code>predicted from the constants of motion</code> block, then inspect <code>max |ΔE/E0|</code> and <code>max |Δh/h0|</code>. The prediction solves the same orbit equation by a different route: it is an outside check on the integration, not an independent test of the physical model. Periapsides are sampled at accepted steps, so the measured advance can jump about even as the conserved-quantity drift falls.</div></section>
 <section id="beat0"><h2>Beat 0 · Watch a rosette</h2>
 <p><strong>Run.</strong> Begin with the default Schwarzschild orbit.</p>
-<pre>python main.py</pre>
+<pre>python main.py --model schwarzschild --x_init 15000 --u_init 120000000 --dt 2e-06 --eps1 0.05 --eps2 0.0001 \
+  --max_steps 6000 --max_orbits 10</pre>
 <p><strong>Observe.</strong> The run stops at 6000 accepted steps after 9.285146 turns. It finds six periapsides at about 15000 m and measures 2.44005 rad of advance per radial period. The independent calculation from the constants of motion predicts 2.44037 rad and an apoapsis of 23954.4 m. The horizon is about 2953.3 m and the innermost stable circular orbit (ISCO) about 8859.8 m, both inside this orbit.</p>
 <p><strong>Your turn.</strong> Point to two successive closest approaches in the plot. Why can their distances agree while their directions differ? The extra Schwarzschild inward term in the orbit equation is \(3h^2/(c^2r^2)\) times the Newtonian attraction, where \(h=x_0u_0\) is conserved angular momentum per unit mass. The orbital diagram is not a flat-space map of the geometry.</p></section>
 <section id="beat1"><h2>Beat 1 · Switch off the extra pull</h2>
 <p><strong>Run.</strong> Keep the initial data and change only the force law.</p>
-<pre>python main.py --model newtonian</pre>
+<pre>python main.py --model newtonian --x_init 15000 --u_init 120000000</pre>
 <p><strong>Observe.</strong> The Newtonian prediction is an ellipse between 15000 m and 65554 m with zero advance. The numerical run measures only 0.00101314 rad, a residual numerical error. Compare its 2.572195 turns in 6000 steps with Beat 0's 9.285146 turns and its tighter relativistic apoapsis.</p>
 <p><strong>Your turn.</strong> Which output gives the prediction, and which records the integrated path? At the common start, \(3u_0^2/c^2\approx0.481\): the additional inward term is about 48% of the Newtonian one. The two models do not describe the same physical orbit merely because their input numbers match.</p></section>
 <section id="beat2"><h2>Beat 2 · Read the prediction first</h2>
 <p><strong>Run.</strong> Lower the starting sideways rate and tighten the step.</p>
+<p>For comparison, the default settings are <code>--u_init 120000000</code>, <code>--dt 2e-06</code>, <code>--max_steps 6000</code>.</p>
 <pre>python main.py --u_init 1.1e8 --dt 5e-7 --max_steps 24000</pre>
 <p><strong>Observe.</strong> The starting radius of 15000 m is now the apoapsis. The prediction gives a periapsis of 13171.1 m and an advance of 4.07222 rad; the run finds 13170.9 m and 4.07277 rad. Beat 0's predicted advance was 2.44037 rad.</p>
 <p><strong>Your turn.</strong> Explain why going closer to the hole makes the excess angle larger. The predicted turning points and advance follow from energy and angular momentum, without taking integration steps. Compare the measured and predicted values as a numerical check; agreement does not independently prove the Schwarzschild model.</p></section>
 <section id="beat3"><h2>Beat 3 · Move to a weak field</h2>
 <p><strong>Run.</strong> Compare the two models farther from the mass.</p>
-<pre>python main.py --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_steps 20000
+<pre>python main.py --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_steps 20000 --model schwarzschild
 python main.py --model newtonian --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_steps 20000</pre>
 <p><strong>Observe.</strong> The Schwarzschild run measures 0.0280654 rad per radial period; the exact prediction is 0.0280972 rad and the weak-field approximation is 0.0279099 rad. Newtonian gravity predicts zero, while its numerical run measures 0.000315267 rad.</p>
 <p><strong>Your turn.</strong> Compare each measured angle with its own prediction. Why is the Newtonian nonzero result an estimate of numerical contamination? The weak-field formula \(6\pi GM/(c^2p)\), with \(p\) from the predicted turning points, is an approximation; the exact advance is a different output line.</p></section>
 <section id="beat4"><h2>Beat 4 · Disturb two circles</h2>
 <p><strong>Run.</strong> Compare a stable circle at \(8GM/c^2\) with a near-circle at \(5GM/c^2\).</p>
-<pre>python main.py --x_init 11813.0003044 --u_init 134071263.04595919 --max_orbits 4 --max_steps 8000
+<p>For comparison, the default settings are <code>--x_init 15000</code>, <code>--u_init 120000000</code>, <code>--dt 2e-06</code>, <code>--max_orbits 10</code>.</p>
+<pre>python main.py --x_init 11813.0003044 --u_init 134071263.04595919 --max_orbits 4 --max_steps 8000 --dt 2e-06
 python main.py --x_init 7383.12519025 --u_init 212197265.2804 --dt 1e-7 --max_orbits 12 --max_steps 40000</pre>
 <p><strong>Observe.</strong> The first predicts <code>circular (stable)</code> at 11813 m and 6.28319 rad as the advance of a small radial disturbance; a perfectly circular path itself has no periapsis sequence to measure. The second begins inside the ISCO but about 0.1% above its circular proper-time rate: it travels out to 15002.2 m, predicts 24.4301 rad of advance and measures 24.4374 rad.</p>
 <p><strong>Your turn.</strong> Look at the two plots. Why is a small disturbance mild outside the ISCO but dramatic on the unstable inner circle? Do not start a circular run by copying the six-significant-figure <code>circular dy/dtau</code> line; use the full input value shown here or compute it with <code>circular_proper_time_speed()</code>.</p></section>
 <section id="beat5"><h2>Beat 5 · Cross the inner circular boundary and return</h2>
 <p><strong>Run.</strong> Start at 20000 m and compare the default numerical settings with a tighter integration.</p>
-<pre>python main.py --x_init 20000 --u_init 8e7 --max_steps 8000
+<pre>python main.py --x_init 20000 --u_init 8e7 --max_steps 8000 --dt 2e-06 --eps1 0.05 --eps2 0.0001
 python main.py --x_init 20000 --u_init 8e7 --dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 20000</pre>
 <p><strong>Observe.</strong> The predicted orbit is bound, with periapsis 7564.95 m, inside the ISCO at 8859.8 m. The coarse run finds periapsides near 7476 m and a measured advance of 10.0873 rad against the predicted 9.40306 rad. The tighter run finds 7564.13 m and 9.40766 rad, with energy drift falling from 4.988e-03 to 5.746e-05.</p>
 <p><strong>Your turn.</strong> Which picture deserves more trust, and what two numbers justify it? The ISCO is a limit for stable <em>circular</em> paths, not a wall for eccentric orbits. The closer passage is where errors in a coarse integration become most conspicuous.</p></section>
@@ -543,22 +546,25 @@ python main.py --x_init 20000 --u_init 8e7 --dt 2e-7 --eps1 0.01 --eps2 1e-6 --m
 <p><strong>Run.</strong> Test two nearby initial rates with tight settings, then repeat the second at default settings.</p>
 <pre>python main.py --u_init 1.044e8 --dt 1e-7 --eps1 0.005 --eps2 1e-6 --max_steps 12000
 python main.py --u_init 1.045e8 --dt 1e-7 --eps1 0.005 --eps2 1e-6 --max_steps 40000
-python main.py --u_init 1.045e8</pre>
+python main.py --u_init 1.045e8 --dt 2e-06 --eps1 0.05 --eps2 0.0001 --max_steps 6000</pre>
 <p><strong>Observe.</strong> The first prediction is <code>plunge</code> and the run crosses the horizon after 9266 steps and 2.844796 turns. The second is predicted <code>bound</code>, with periapsis 7710.01 m and advance 13.5506 rad; the tight run measures 13.5564 rad. The default-step run from that same second start crosses the horizon instead, with energy drift 2.686e-02.</p>
 <p><strong>Your turn.</strong> Why can the coarse calculation make a bound input appear to plunge? Near the unstable potential peak, a small change in conserved energy changes the fate. Read the termination, drift and prediction together; the horizon end point is interpolated between the last two accepted states and omitted from drift maxima.</p></section>
 <section id="beat7"><h2>Beat 7 · Refine before trusting a digit</h2>
 <p><strong>Run.</strong> Halve the default maximum step twice, then run at one tenth of it with tighter tolerances.</p>
-<pre>python main.py --dt 1e-6 --max_steps 12000
-python main.py --dt 5e-7 --max_steps 24000
+<p>For comparison, the default settings are <code>--dt 2e-06</code>, <code>--max_steps 6000</code>.</p>
+<pre>python main.py --dt 1e-6 --max_steps 12000 --eps1 0.05 --eps2 0.0001
+python main.py --dt 5e-7 --max_steps 24000 --eps1 0.05 --eps2 0.0001
 python main.py --dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 60000</pre>
 <p><strong>Observe.</strong> The energy drifts for default, half, quarter and tenth steps are 1.573e-04, 3.928e-05, 9.875e-06 and 1.587e-06. Measured advances in the same order are 2.44005, 2.44109, 2.44014 and 2.44033 rad; the prediction is 2.44037 rad.</p>
 <p><strong>Your turn.</strong> The drift shrinks almost fourfold on each halving, yet the measured angle first moves farther from the prediction. Why? Periapsides are identified only at accepted points; an angular sampling error of order \(\omega_p\Delta\tau/(n-1)\) can change sign. Look for stable agreement under refinement as well as a smaller conserved-quantity drift.</p></section>
 <section id="beat8"><h2>Beat 8 · Escape, Mercury and rejected inputs</h2>
 <p><strong>Run.</strong> Watch escape, compare a tiny predicted Mercury advance with two numerical readings, then try an invalid starting radius.</p>
-<pre>python main.py --u_init 1.8e8 --max_steps 12000
-python main.py --x_init 4.6e10 --u_init 58980 --dt 1e4 --max_steps 4000 --max_orbits 5
+<pre>python main.py --u_init 1.8e8 --max_steps 12000 --x_init 15000 --dt 2e-06 --max_orbits 10 \
+  --model schwarzschild
+python main.py --x_init 4.6e10 --u_init 58980 --dt 1e4 --max_steps 4000 --max_orbits 5 --model schwarzschild
 python main.py --model newtonian --x_init 4.6e10 --u_init 58980 --dt 1e4 --max_steps 4000 --max_orbits 5
-python main.py --x_init 2000</pre>
+python main.py --x_init 2000 --u_init 120000000 --max_steps 6000 --dt 2e-06 --max_orbits 10 \
+  --model schwarzschild</pre>
 <p><strong>Observe.</strong> The first prediction is <code>escape</code>, although the run ends at the 12000-step limit because the program has no escape detector. The Mercury input predicts 5.01831e-07 rad of relativistic advance, while the Schwarzschild and Newtonian integrations report 0.000121605 and 0.000119678 rad. The final command is expected to fail: 2000 m lies inside the horizon.</p>
 <p><strong>Your turn.</strong> Why is neither measured Mercury angle evidence of 43 arcseconds per century? The control that should have zero advance produces nearly the same spurious angle. Use the predicted angle for this small effect; the coarse integration and accepted-step periapsis sampling cannot resolve it. The invalid input stops before a plot opens.</p></section>
 <section id="further"><h2>Try next</h2>

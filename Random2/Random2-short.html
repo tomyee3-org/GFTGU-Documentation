@@ -489,46 +489,55 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 </section>
 
 <section id="beat0"><h2>Beat 0 · Walk far, end near the start</h2><p><strong>Run.</strong> Send 100 walkers out for each step count.</p>
-<pre>python main.py --seed 12</pre>
+<pre>python main.py --seed 12 --display scaled_distance --max_steps 4096 --n_trials 100 \
+  --step_distribution uniform</pre>
 <p><strong>Observe.</strong> In the last row, 4096 steps produce a mean scaled distance of 63.0073, with a fitted log-log slope of 0.4964. Compare the rows at 256, 1024 and 4096 steps: four times the steps roughly doubles the endpoint distance. The scale divides each walk's net displacement by that walk's own mean step length.</p>
 <p><strong>Your turn.</strong> Point to two rows in the table that support \(d\propto\sqrt N\). Does a single trajectory need to follow that relation exactly? The exact independent-step identity is \(\langle r_N^2\rangle=N\langle |s|^2\rangle\). The printed mean of scaled distance follows \(C\sqrt N\) only as a large-\(N\) approximation. In particular, a two-step row need not equal its large-\(N\) prediction.</p></section>
 
 <section id="beat1"><h2>Beat 1 · Put uncertainty beside an average</h2><p><strong>Run.</strong> Compare 25 and 1000 independent trials with the 100-trial run from Beat 0.</p>
+<p>For comparison, the default settings are <code>--n_trials 100</code>.</p>
 <pre>python main.py --seed 12 --n_trials 25
 python main.py --seed 12 --n_trials 1000</pre>
 <p><strong>Observe.</strong> At 4096 steps the standard errors are 4.2617 (25 trials), 2.3473 (100), and 0.8231 (1000). The large-\(N\) predicted ratio to \(\sqrt N\) is 0.9591; measured rows scatter around it.</p>
 <p><strong>Your turn.</strong> How many times did the standard error fall as trial count rose from 25 to 1000? Compare that finite-sample answer with the ideal scaling \(\mathrm{SE}=s/\sqrt n\), where \(s\) is the measured spread and \(n\) is the number of trials. More trials narrow uncertainty but cannot remove the short-walk bias of the large-\(N\) formula.</p></section>
 
 <section id="beat2"><h2>Beat 2 · Change the step distribution</h2><p><strong>Run.</strong> Switch the three-dimensional components from uniform draws on \([-1,1]\) to standard Gaussian draws.</p>
-<pre>python main.py --seed 12 --step_distribution gaussian</pre>
+<p>For comparison, the default settings are <code>--step_distribution uniform</code>.</p>
+<pre>python main.py --seed 12 --step_distribution gaussian --n_trials 100</pre>
 <p><strong>Observe.</strong> The fitted slope is 0.4986, close to 0.4964 for uniform components. The large-\(N\) constant changes from 0.9591 to 1.0000. The two last-row means, 63.0073 and 65.1655, differ by less than their combined standard error.</p>
 <p><strong>Your turn.</strong> Which conclusion concerns the exponent and which concerns the constant? Independent, zero-mean steps with finite variance give the square-root scaling. The step distribution and the definition of scaled distance set its prefactor. Uniform components fill a cube; they are not direction-isotropic, unlike the steps used in the star picture.</p></section>
 
 <section id="beat3"><h2>Beat 3 · Follow four paths through a circle</h2><p><strong>Run.</strong> Switch to the two-dimensional schematic star.</p>
-<pre>python main.py --display walk2d --seed 12</pre>
+<pre>python main.py --display walk2d --seed 12 --n_walks 4 --mean_free_path 1 --reference_steps 2000 \
+  --radius_factor 2 --step_cap 200000</pre>
 <p><strong>Observe.</strong> The default radius is 89.4427 step-length units, so \((R/\lambda)^2=8000.0\). The four paths escape after 11564, 7519, 8246 and 2479 steps; their mean is 7452.0 with standard error 1876.9. A path ends at the circle's exit point, and its outward ray is only a display convention.</p>
 <p><strong>Your turn.</strong> Why do four independent paths give such a noisy mean? In this display each step has fixed length \(\lambda\) and a uniform random angle. The default radius follows \(R=f\lambda\sqrt{N_{\rm ref}}\) with \(f=2\) and \(N_{\rm ref}=2000\); <code>--reference_steps</code> sizes the circle and does not cap a walk.</p></section>
 
 <section id="beat4"><h2>Beat 4 · Estimate escape steps</h2><p><strong>Run.</strong> Use a smaller circle and 200 walkers so the sample mean is more useful.</p>
-<pre>python main.py --display walk2d --radius 30 --n_walks 200 --seed 12</pre>
+<p>For comparison, the default settings are <code>--n_walks 4</code>.</p>
+<pre>python main.py --display walk2d --radius 30 --n_walks 200 --seed 12 --mean_free_path 1 --step_cap 200000</pre>
 <p><strong>Observe.</strong> The geometric scale is \((R/\lambda)^2=900.0\). All 200 escape; the sampled mean is 902.7 with standard error 44.7, and the median is 742.5. Individual counts are suppressed when there are more than 12 walks, but the summary keeps their statistics.</p>
 <p><strong>Your turn.</strong> Is the measured mean consistent with the theoretical expectation between 900 and 961 steps? Account for its standard error. The bound applies to the expected uncapped escape count: \((R/\lambda)^2\leq\langle N_{\rm escape}\rangle<(R/\lambda+1)^2\). A finite sample mean can fall outside the bound by chance; capped walks are excluded from the printed mean.</p></section>
 
 <section id="beat5"><h2>Beat 5 · Double the radius</h2><p><strong>Run.</strong> Compare radii 15 and 30 with the same fixed step length and 200 walks each.</p>
-<pre>python main.py --display walk2d --radius 15 --n_walks 200 --seed 12
-python main.py --display walk2d --radius 30 --n_walks 200 --seed 12</pre>
+<pre>python main.py --display walk2d --radius 15 --n_walks 200 --seed 12 --mean_free_path 1
+python main.py --display walk2d --radius 30 --n_walks 200 --seed 12 --mean_free_path 1</pre>
 <p><strong>Observe.</strong> The mean escape counts are 227.8 ± 10.5 and 902.7 ± 44.7, a ratio of about 3.96. The ideal large-radius comparison tends toward four, rather than two, because the walker repeatedly changes direction.</p>
 <p><strong>Your turn.</strong> Check the two printed \((R/\lambda)^2\) values, 225.0 and 900.0. How much uncertainty should you assign to the observed ratio? The radius-dependent one-step overshoot and Monte Carlo error matter for these finite circles.</p></section>
 
 <section id="beat6"><h2>Beat 6 · Rescale every step and the circle</h2><p><strong>Run.</strong> Leave the radius at its default rule and change only the mean free path.</p>
-<pre>python main.py --display walk2d --mean_free_path 0.5 --seed 12
-python main.py --display walk2d --mean_free_path 2 --seed 12</pre>
+<p>For comparison, the default settings are <code>--mean_free_path 1</code>.</p>
+<pre>python main.py --display walk2d --mean_free_path 0.5 --seed 12 --reference_steps 2000 --radius_factor 2 \
+  --n_walks 4
+python main.py --display walk2d --mean_free_path 2 --seed 12 --reference_steps 2000 --radius_factor 2 \
+  --n_walks 4</pre>
 <p><strong>Observe.</strong> The radii are 44.7214 and 178.8854; Beat 3 gave 89.4427 at step length 1. In all three runs \(R/\lambda=2\sqrt{2000}\), \((R/\lambda)^2=8000.0\), and the same seed gives counts 11564, 7519, 8246 and 2479. The axes change physical scale.</p>
 <p><strong>Your turn.</strong> Why do the counts match despite the different radii? The same angular draws give the same paths in step-length units. The exact count identity here uses binary-exact scale factors 0.5 and 2; other factors can differ at a boundary because of floating-point rounding.</p></section>
 
 <section id="beat7"><h2>Beat 7 · Watch a cap censor the sample</h2><p><strong>Run.</strong> Stop each radius-30 walk at 900 steps, then at 3000, and compare with Beat 4's generous default cap.</p>
-<pre>python main.py --display walk2d --radius 30 --n_walks 200 --step_cap 900 --seed 12
-python main.py --display walk2d --radius 30 --n_walks 200 --step_cap 3000 --seed 12</pre>
+<p>For comparison, the default settings are <code>--step_cap 200000</code>.</p>
+<pre>python main.py --display walk2d --radius 30 --n_walks 200 --step_cap 900 --seed 12 --mean_free_path 1
+python main.py --display walk2d --radius 30 --n_walks 200 --step_cap 3000 --seed 12 --mean_free_path 1</pre>
 <p><strong>Observe.</strong> At cap 900, 130 of 200 escape; their mean is 515.7. At cap 3000, 196 escape; their mean is 837.5. With the generous default, all 200 escape and their mean is 902.7. A stopped path ends in an <code>x</code> and has no outward ray.</p>
 <p><strong>Your turn.</strong> Why is 515.7 not an estimate of the uncapped mean near 900? The printed escape statistics omit stopped walks, preferentially discarding slow paths. Read both <code>escaped walks</code> and <code>step cap</code> before interpreting the mean.</p></section>
 

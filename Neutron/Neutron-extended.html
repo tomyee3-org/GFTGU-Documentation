@@ -601,7 +601,8 @@ not simulate collapse; it computes static equilibrium configurations only.
 <section id="beat0">
 <h2>Beat 0 · A star held up by its own pressure</h2>
 <p>A star is nothing but a stand-off between gravity, pulling inward, and pressure, pushing outward. Ask the program to referee that stand-off for one central pressure and one simple equation of state, and read what balance it finds.</p>
-<pre class="code-block"><code>python main.py</code></pre>
+<pre class="code-block"><code>python main.py --gamma 1.666667 --K 5380.2 --pC 1.26e+35 --steps_per_scale 400 --max_steps 200000 \
+  --output_type pressure</code></pre>
 <p>Look at the two parts of the printed summary: the nine global lines, and the five-row checkpoint table beneath them.</p>
 <pre class="code-block"><code>Neutron 1.3.1 (build 2cd414a64b3a)
 Neutron-star model summary
@@ -678,6 +679,7 @@ print('pressure source ratio  4pi r^3 p/(m c^2) :', pressure_source_ratio)</code
 <section id="beat2">
 <h2>Beat 2 · The equation of state</h2>
 <p>Eqs. 1 and 2 relate \(p\), \(m\) and \(\rho\), but they are two equations for three unknown functions of \(r\). Closing the system takes one more relation between pressure and density &mdash; the equation of state &mdash; and Neutron uses the simplest one with the right qualitative behavior. See what happens when that relation is allowed to degenerate.</p>
+<p>For comparison, the default settings are <code>--gamma 1.666667</code>, <code>--K 5380.2</code>, <code>--pC 1.26e+35</code>.</p>
 <pre class="code-block"><code>python main.py --gamma 1</code></pre>
 <p>Look at what the program prints instead of a model summary.</p>
 <p>Three tasks, in order. First, the rejection itself: the program exits immediately with <code>Neutron: error: --gamma must be greater than 1</code> and never reaches <code>compute_neutron_star()</code>. Then call the underlying solver directly from Python with the same exponent, <code>compute_neutron_star(1.0, 1.26e35, 5.3802e3)</code>, and the message changes to <code>gamma must be finite and greater than 1.</code> &mdash; the same restriction enforced a second time, independently, inside the physics layer rather than only in the command-line parser. Then ask why: with the pure choice \(\gamma=1\), pressure and density in Eq. 3 below are proportional, so a star built from it has no finite radius at all &mdash; pressure only approaches zero asymptotically as \(r\to\infty\) &mdash; and the surface-locating algorithm of Beat 5 divides by \(\gamma-1\), which would be a division by zero. The restriction \(\gamma&gt;1\) protects the model's physical and numerical definition; it is not merely limiting how far a student may push the exponent.</p>
@@ -717,6 +719,7 @@ for r0 in (16.375, 1.0):
 <section id="beat4">
 <h2>Beat 4 · Marching outward: RK4 and the scale height</h2>
 <p>From the central state of Beat 3, the solver takes one numerical step at a time, each one calling <code>structure_derivatives()</code> (Eq. 2) at several trial points and combining them. Refine the step and see the model settle down.</p>
+<p>For comparison, the default settings are <code>--steps_per_scale 400</code>.</p>
 <pre class="code-block"><code>python main.py --steps_per_scale 200 --output_type mass
 python main.py --steps_per_scale 400 --output_type mass
 python main.py --steps_per_scale 800 --output_type mass
@@ -781,6 +784,7 @@ for n in (200, 400, 800, 1600):
 <section id="beat6">
 <h2>Beat 6 · Compactness, causality, and Buchdahl's bound</h2>
 <p>Every completed model is checked against two independent limits: a mathematical bound on how compact any static fluid star can be, and a physical requirement that nothing travel faster than light inside the model equation of state. They do not have to fail together. Push the central pressure up and watch each one separately.</p>
+<p>For comparison, the default settings are <code>--pC 1.26e+35</code>.</p>
 <pre class="code-block"><code>python main.py --pC 1e34 --output_type mass
 python main.py --pC 1e35 --output_type mass
 python main.py --pC 1e36 --output_type mass
@@ -800,13 +804,14 @@ python main.py --pC 1e37 --output_type mass</code></pre>
 <section id="beat7">
 <h2>Beat 7 · A sequence of stars, and where the model stops</h2>
 <p>One star is a single point. A sequence of stars, built by varying only the central pressure, is where the model earns its keep &mdash; and where it also shows where a single polytrope runs out of road, from below as well as from above.</p>
-<pre class="code-block"><code>python main.py --pC 1e34 --output_type mass
-python main.py --pC 1e35 --output_type mass
-python main.py --pC 1e36 --output_type mass
-python main.py --pC 1e28 --output_type mass
-python main.py --pC 1e27 --output_type mass
-python main.py --max_steps 100
-python main.py --gamma 1</code></pre>
+<p>For comparison, the default settings are <code>--pC 1.26e+35</code>.</p>
+<pre class="code-block"><code>python main.py --pC 1e34 --output_type mass --max_steps 200000 --gamma 1.666667
+python main.py --pC 1e35 --output_type mass --max_steps 200000 --gamma 1.666667
+python main.py --pC 1e36 --output_type mass --max_steps 200000 --gamma 1.666667
+python main.py --pC 1e28 --output_type mass --max_steps 200000 --gamma 1.666667
+python main.py --pC 1e27 --output_type mass --max_steps 200000 --gamma 1.666667
+python main.py --max_steps 100 --pC 1.26e+35 --output_type pressure --gamma 1.666667
+python main.py --gamma 1 --pC 1.26e+35 --output_type pressure --max_steps 200000</code></pre>
 <p>Look at the total mass printed by each of the first five runs, and at what the last two print instead of a summary.</p>
 <p>Three tasks, in order. First, the turnover: total mass is 0.818445, 0.963016 and 0.849747 solar masses at \(p_C=10^{34}\), \(10^{35}\) and \(10^{36}\) Pa (a slightly finer sample than Beat 6's own runs, since a controlled central-pressure sweep is exactly Experiment 4). Mass rises and then falls as central pressure increases, so somewhere between \(10^{35}\) and \(10^{36}\) Pa this one-parameter family has a maximum &mdash; the same turning point behind the usual instability argument, which the program does not itself test dynamically. Then the low-pressure end, the puzzle of Investigation 20.1: at \(p_C=10^{28}\) Pa the total mass is 0.020979 solar masses, and at \(p_C=10^{27}\) Pa it falls to 0.010529 solar masses, below the approximate 0.02-solar-mass threshold the textbook flags as implausibly low-density for a real neutron star. The numerical result is not wrong; it simply extrapolates one high-density polytrope into a regime where the crust, neutron-drip physics, and changing composition that a real low-density neutron star has are entirely absent from this single power law. Then the last two commands: <code>--max_steps 100</code> prints <code>Neutron: The stellar surface was not reached within 100 radial steps. Increase max_steps or reconsider the model parameters.</code> and exits with status 1 rather than returning a truncated profile, and <code>--gamma 1</code> is rejected exactly as it was in Beat 2, before any integration begins.</p>
 <p>Further limitations come from physics the program does not include and offers no setting to test. The equation of state is a single polytrope, not a modern piecewise or tabulated nuclear-matter model, and cannot represent a crust, neutron drip, or composition change with radius. The star is static, spherically symmetric, isotropic and non-rotating; there is no rotation, magnetic field, finite temperature, tidal deformability, or baryonic-versus-gravitational mass bookkeeping. The program computes equilibrium configurations only: it can display a model on either side of the mass maximum found above, but it does not evolve an unstable star, model a collapse, or compute quasi-normal modes. And even a model that finishes and prints a summary, like the acausal \(p_C=10^{37}\) Pa run of Beat 6, is not automatically trustworthy: it ran to completion, but its own causality check said so, which is exactly why that diagnostic is printed on every run rather than only on ones that fail to finish.</p>

@@ -188,7 +188,8 @@ python main.py</pre>
   <section id="beat0">
     <h2>Beat 0 · Two bodies, one force</h2>
     <p>Two solar-mass bodies start \(9.2\times 10^{10}\,\mathrm{m}\) apart. Each is given 13&nbsp;km&nbsp;s\(^{-1}\) sideways, in opposite directions.</p>
-<pre>python main.py</pre>
+<pre>python main.py --MA 2e+30 --MB 2e+30 --xInitA 46000000000 --xInitB -46000000000 --yInitA 0 --yInitB 0 \
+  --vInitA 0 --vInitB 0 --uInitA 13000 --uInitB -13000 --dt 2000 --eps1 0.05 --eps2 0.0001</pre>
     <p>Look at the orbits plot and at the six summary lines from <code>Accepted steps</code> to <code>Maximum separation (sampled)</code>. The maximum separation is the starting separation, so they begin as far apart as they ever get. The minimum is a fraction of that, so the paths are not circles. The two curves are mirror images through the origin. <code>Termination: one relative revolution</code> is the geometric stop. Write one sentence about how the pull should change if you doubled the separation.</p>
     <div class="eq-block">
       <div class="eq-label">Newton’s law of gravitation</div>
@@ -204,6 +205,7 @@ r=\sqrt{(x_A-x_B)^2+(y_A-y_B)^2}.
   <section id="beat1">
     <h2>Beat 1 · Who moves, and how much</h2>
     <p>The force on A equals the force on B. The accelerations do not. Make A twice B and start them circling a common point.</p>
+<p>For comparison, the default settings are <code>--MA 2e+30</code>, <code>--MB 2e+30</code>.</p>
 <pre>python main.py --MA 2e30 --MB 1e30 --xInitA 3.0666666667e10 --xInitB -6.1333333333e10 \
   --uInitA 15550.5265 --uInitB -31101.053</pre>
     <p>Read the two <code>Body A/B about centre of mass</code> blocks. The semi-major axes should sit in the inverse mass ratio. The periods should match. The plot is two circles about the origin: the centre of mass.</p>
@@ -225,15 +227,21 @@ r=\sqrt{(x_A-x_B)^2+(y_A-y_B)^2}.
   <section id="beat2">
     <h2>Beat 2 · Only the separation matters</h2>
     <p>The force depends on the two positions only through \(r\). Give both bodies the same extra velocity, 60 km/s along \(x\), and look at the same run three ways.</p>
-<pre>python main.py --vInitA 60000 --vInitB 60000
-python main.py --vInitA 60000 --vInitB 60000 --frame com
-python main.py --vInitA 60000 --vInitB 60000 --frame com --output_type energy_vs_time</pre>
+<p>For comparison, the default settings are <code>--vInitA 0</code>, <code>--vInitB 0</code>, <code>--xInitA 46000000000</code>, <code>--xInitB -46000000000</code>, <code>--yInitA 0</code>, <code>--yInitB 0</code>.</p>
+<pre>python main.py --vInitA 60000 --vInitB 60000 --frame user --output_type orbits --xInitA 46000000000 \
+  --xInitB -46000000000 --yInitA 0 --yInitB 0
+python main.py --vInitA 60000 --vInitB 60000 --frame com --output_type orbits --xInitA 46000000000 \
+  --xInitB -46000000000 --yInitA 0 --yInitB 0
+python main.py --vInitA 60000 --vInitB 60000 --frame com --output_type energy_vs_time --xInitA 46000000000 \
+  --xInitB -46000000000 --yInitA 0 --yInitB 0</pre>
     <p>Look at the first two plots and at the summary lines from <code>Accepted steps</code> to the two <code>Body A/B about centre of mass</code> blocks. The first plot uses the input frame (<code>--frame user</code>): the centre of mass drifts about \(2.7\times10^{11}\) m to the right during the run, and the bodies trace drifting tracks. The second view follows the centre of mass (COM), the frame in which the total momentum is zero. The Beat 0 ellipses return, each with one focus at the origin. In this Newtonian model the centre-of-mass and centre-of-momentum frames are the same. The subscripts CM in the equations also mean centre of mass.</p>
     <p>All three printed summaries are identical. The orbital diagnostics match Beat 0 to the printed figures, but the energy table does not. Row 0.0 shows kinetic energy larger by \(\tfrac12(M_A+M_B)V_{\mathrm{CM}}^2=7.2\times10^{39}\) J and positive total energy, \(E=+4.6361\times10^{39}\) J. Look at the third plot: its total energy is negative, about \(-2.564\times10^{39}\) J, as in Beat 0. Which energy tells you that the pair is bound? Explain why changing the observer's velocity cannot unbind the pair.</p>
     <p>This is Galilean relativity: observers moving at constant velocity describe different tracks but the same motion of the bodies relative to one another. The COM view subtracts the mass-weighted centre and velocity, \(\mathbf r'_i=\mathbf r_i-\mathbf R_{\mathrm{CM}}\) and \(\mathbf v'_i=\mathbf v_i-\mathbf V_{\mathrm{CM}}\). The option <code>--frame</code> applies to all seven plots, including energy. It leaves the integration and printed summary in the input frame, so the boosted run still prints positive total energy while its COM energy plot shows negative internal energy.</p>
     <p><strong>Shift the start instead.</strong> Both commands use the same shifted start; the second views it with <code>--frame com</code>. Compare their plots with Beat 0.</p>
-<pre>python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10
-python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10 --frame com</pre>
+<pre>python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10 --vInitA 0 --vInitB 0 --frame user \
+  --output_type orbits
+python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10 --frame com --vInitA 0 --vInitB 0 \
+  --output_type orbits</pre>
     <p>In the input frame the pair's centre of mass is at \((4\times10^9,1\times10^{10})\) m, and the ellipses move with it. In the COM view that shift disappears. What has changed in the picture, and what has stayed the same in the orbital diagnostics?</p>
     <div class="note"><strong>A numerical caveat, not a new law.</strong> A large boost changes the speeds the corrector compares to, so the two relative paths agree only to the accuracy of the integrator, not to rounding error. A modest boost agrees far more closely.</div>
     <p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
@@ -242,7 +250,8 @@ python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10 --fram
   <section id="beat3">
     <h2>Beat 3 · Energy separates bound from unbound</h2>
     <p>Three starting speeds, same masses and same separation. Plot energy against time. Unbound runs never complete a turn, so the one-revolution stop has to come off.</p>
-<pre>python main.py --output_type energy_vs_time
+<pre>python main.py --output_type energy_vs_time --uInitA 13000 --uInitB -13000 --stop_after_one_orbit \
+  --max_steps 10000
 python main.py --uInitA 38091.14 --uInitB -38091.14 --no-stop_after_one_orbit --max_steps 1000 --output_type energy_vs_time
 python main.py --uInitA 60000 --uInitB -60000 --no-stop_after_one_orbit --max_steps 1000 --output_type energy_vs_time</pre>
     <p>Read row 0.0 of the energy table and the <code>Initial Keplerian orbit</code> line. \(U\) is the same in all three runs. \(K\) is not. For non-radial motion, negative, zero or positive \(E=K+U\) in the centre-of-mass frame means an elliptic, parabolic or hyperbolic orbit. These equal-and-opposite starts already have zero total momentum, so their input-frame energies are also their internal energies. The middle speed is escape rounded to seven digits; treat the printed eccentricity of 1 as “that rounding.”</p>
@@ -264,7 +273,7 @@ E=K+U.
     <h2>Beat 4 · Reading the shape of an orbit</h2>
     <p>Before any step is taken, the program computes the exact two-body orbit of the starting data and prints it as the Keplerian block. That block is the outside check. Compare a near-circle with the default ellipse, in velocity space.</p>
 <pre>python main.py --uInitA 26934.5 --uInitB -26934.5 --output_type velocity_space
-python main.py --output_type velocity_space</pre>
+python main.py --output_type velocity_space --uInitA 13000 --uInitB -13000</pre>
     <p>On a circle the sampled min and max separations agree. On the default ellipse they do not, and \(r_p v_p=r_a v_a\) at the two apsides. The Keplerian period should match <code>Total time</code> to the figures printed. In velocity space a bound orbit with the centre of mass at rest is a circle whose origin sits inside it; \(e=(v_p-v_a)/(v_p+v_a)\).</p>
     <div class="eq-block">
       <div class="eq-label">Kepler III, and the hodograph</div>
@@ -283,8 +292,9 @@ e=\frac{v_p-v_a}{v_p+v_a}.
   <section id="beat5">
     <h2>Beat 5 · The corrector</h2>
     <p>Two point masses have an exact conic-section solution about the centre of mass. The program integrates anyway, so you can see a method that still works when there is no such solution. Each step is an Euler predictor plus an iterated trapezoidal corrector. <code>--eps2</code> decides when to stop iterating. It is not the step size.</p>
-<pre>python main.py --eps2 1e-8
-python main.py --eps2 0.5</pre>
+<p>For comparison, the default settings are <code>--eps2 0.0001</code>.</p>
+<pre>python main.py --eps2 1e-8 --dt 2000
+python main.py --eps2 0.5 --dt 2000</pre>
     <p>Compare <code>Accepted steps</code> and rows 0.5 and 1.0 of <code>(E-E0)/|E0|</code> with the default <code>eps2=1e-4</code>. Row 0.5 sits at or near closest approach on these apoapsis-start runs. The dip there moves far less than the end-of-orbit residual does when you change <code>eps2</code>. What does move is how completely the energy returns at the end of the orbit. A corrector that actually solves the trapezoid is time-symmetric; an orbit that starts at apoapsis then undoes on the way out much of the error it made on the way in.</p>
     <div class="eq-block">
       <div class="eq-label">Predictor, then trapezoidal corrector — algorithm</div>
@@ -304,7 +314,8 @@ python main.py --eps2 0.5</pre>
   <section id="beat6">
     <h2>Beat 6 · The step control</h2>
     <p>No accepted step is longer than <code>--dt</code>. A step is shortened when the acceleration changes too much across the trial. With the default 2000&nbsp;s that never happens on this orbit. Make <code>dt</code> ten times larger and watch the controller work.</p>
-<pre>python main.py --dt 20000
+<p>For comparison, the default settings are <code>--dt 2000</code>.</p>
+<pre>python main.py --dt 20000 --eps1 0.05
 python main.py --dt 20000 --eps1 0.5</pre>
     <p>The first run takes more steps than \(T/\Delta t\) because many steps around periapsis are shorter than 20,000&nbsp;s. The second run takes steps of exactly 20,000&nbsp;s; the dip in row 0.5 and the error in the sampled minimum separation both get worse.</p>
     <div class="eq-block">
@@ -321,8 +332,9 @@ python main.py --dt 20000 --eps1 0.5</pre>
   <section id="beat7">
     <h2>Beat 7 · How far to trust it</h2>
     <p>Halve <code>dt</code>, then tighten <code>eps2</code> as well. Watch the number you care about, not the tolerance.</p>
-<pre>python main.py --dt 1000
-python main.py --dt 500
+<p>For comparison, the default settings are <code>--dt 2000</code>, <code>--eps2 0.0001</code>.</p>
+<pre>python main.py --dt 1000 --eps2 0.0001
+python main.py --dt 500 --eps2 0.0001
 python main.py --dt 1000 --eps2 1e-8</pre>
     <p>The dip at closest approach (row 0.5) falls roughly as \((\Delta t)^2\). The leftover at the end of the orbit (row 1.0) follows <code>eps2</code> more than <code>dt</code> on this ellipse. A tolerance is not an error bound. Choose the setting by the question: shorter <code>dt</code> for the picture at periapsis, tighter <code>eps2</code> for what remains in \(E\) after many turns.</p>
     <p>The default eccentricity 0.767 is a mild test. An orbit with \(e\approx 0.999\) at the default settings finishes early and drops a few parts in a thousand of its energy at periapsis. A head-on start, <code>--uInitA 0 --uInitB 0</code>, hits the timestep floor.</p>

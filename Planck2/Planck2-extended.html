@@ -541,7 +541,8 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <section id="beat0">
 <h2>Beat 0 · One curve for a hot body</h2>
 <p>A body at 5900 K, about the temperature of the Sun's visible surface, glows across the spectrum but most strongly in one band. Ask the program for its spectral radiance per unit wavelength.</p>
-<pre>python main.py</pre>
+<pre>python main.py --T 5900 --quantity wavelength --n_steps 2000 --x_min 0.01 --x_max 100 --x_low 0.05 \
+  --x_high 20 --y_frac_window 0.003</pre>
 <p>Look at the plot, at the first line of the summary (<code>peak at x</code>), at <code>Dimensionless area</code> and its bracketed exact value, and at the last two lines, <code>Physical integral</code> and <code>Exact 0..infinity bolometric value</code>. Look also at the second line, <code>Peak wavelength</code>, and, in the annotation box, at <code>Peak value</code>.</p>
 <p>Three tasks, in order. First, read the peak. The second summary line gives <code>Peak wavelength = 4.917033e-07</code> m, which is 491.70 nm, in the green part of the spectrum, and the annotation gives <code>Peak value = 2.9281e+13</code> W m<sup>&minus;3</sup> sr<sup>&minus;1</sup>. The summary line says the peak is at <code>x = 4.959505</code>, where <em>x</em> is a dimensionless number that the equations below define. Then read the comparison. <code>Dimensionless area = 122.081167</code> and the bracketed exact value is also 122.081167, so the sum over the grid reproduces the exact area to the printed digits. <code>Physical integral = 2.187105e+07</code> and <code>Exact 0..infinity bolometric value = 2.187106e+07</code> W m<sup>&minus;2</sup> sr<sup>&minus;1</sup> differ in the seventh digit. Say which of the two areas has a physical unit, and what its unit, W m<sup>&minus;2</sup> sr<sup>&minus;1</sup>, says it measures: radiance added up over the whole spectrum, which is the power per unit area of the surface and per unit solid angle, and not yet the power that leaves each square metre (Beat 4). The other area is a pure number. Then look at the plot: one hump, rising steeply on the short-wavelength side and falling slowly on the long side, drawn only where the curve is above 0.3% of its peak (the option <code>--y_frac_window</code>, Beat 8). Before reading on, write down what you expect to happen to the hump when the temperature is lowered.</p>
 <p>Planck's law gives the curve. A body in thermal equilibrium with radiation emits, per unit area, per unit solid angle and per unit wavelength, a spectrum that depends only on its temperature.</p>
@@ -664,8 +665,8 @@ python main.py --T 2.725 --quantity energy_density</pre>
 <section id="beat4">
 <h2>Beat 4 · Adding up the spectrum</h2>
 <p>The Stefan&ndash;Boltzmann law is about what a black body radiates, and it comes from adding up the area under the spectrum. The program adds up two different areas, and it is easy to take the wrong one for the physical result. Run the wavelength curve and the frequency curve, and compare their printed integrals.</p>
-<pre>python main.py
-python main.py --quantity frequency</pre>
+<pre>python main.py --T 5900 --quantity wavelength
+python main.py --quantity frequency --T 5900</pre>
 <p>Look, in each run, at <code>Dimensionless area</code> and the exact value in brackets, and at <code>Physical integral</code> and <code>Exact 0..infinity bolometric value</code>. Ignore the plots this time.</p>
 <p>Three tasks, in order. First, compare the two dimensionless areas: 122.081167 for the wavelength curve and 6.493935 for the frequency curve, with brackets 122.081167 and 6.493939. They are the areas of \(f_5\) and \(f_3\) of Eq. (3) over the grid, and they are very different numbers. Then compare the two physical integrals. Both runs print <code>2.187105e+07</code> W m<sup>&minus;2</sup> sr<sup>&minus;1</sup>, against <code>2.187106e+07</code> for the exact value. So the two curves, which look so different, have the same integrated radiance; the 122.08 is not a radiance or any other physical quantity. Then find the small difference. The dimensionless area of the frequency curve is 6.493935 against 6.493939, low by 4.5&times;10<sup>&minus;6</sup>, or 7&times;10<sup>&minus;7</sup> of the total. The physical integral of the <em>wavelength</em> curve is low by the same fraction, 6.9&times;10<sup>&minus;7</sup>, although its dimensionless area is not the same number as that of the frequency curve. Say why the physical integral of the wavelength curve follows the area of the <em>other</em> curve.</p>
 <p>The areas can be checked against exact integrals over the whole range from zero to infinity.</p>
@@ -741,11 +742,11 @@ python main.py --T 12000 --quantity energy_density</pre>
 <section id="beat6">
 <h2>Beat 6 · The sampled grid</h2>
 <p>So far every run used the default grid of 2000 equal steps. The grid decides how well the sum follows the curve, and how well the peak is found. Change only <code>--n_steps</code>.</p>
-<pre>python main.py --n_steps 10
-python main.py --n_steps 100
-python main.py --n_steps 1000
-python main.py --n_steps 2000
-python main.py --n_steps 20000</pre>
+<pre>python main.py --n_steps 10 --T 5900
+python main.py --n_steps 100 --T 5900
+python main.py --n_steps 1000 --T 5900
+python main.py --n_steps 2000 --T 5900
+python main.py --n_steps 20000 --T 5900</pre>
 <p>Look at <code>peak at x</code>, <code>Dimensionless area</code> and <code>Physical integral</code> in each run, and compare them with the exact values 122.081167 and 2.187106e+07 that are printed with them. The 2000-step run is the default of Beat 0.</p>
 <p>Three tasks, in order. First, read the sums. With 10 steps the dimensionless area is 45.259090 and the physical integral <code>1.521580e+06</code>, about 7% of the true value: the grid step is 10 units of <em>x</em>, and the whole hump of the curve lies between the first two of its eleven grid points. With 100 steps the area is 122.083459 and the integral <code>2.185156e+07</code>, low by 9&times;10<sup>&minus;4</sup>; with 1000 steps the area is 122.081167 and the integral <code>2.187101e+07</code>, low by 2.7&times;10<sup>&minus;6</sup>; with 2000 the integral is <code>2.187105e+07</code>, low by 6.9&times;10<sup>&minus;7</sup>. Going from 1000 to 2000 steps divides the error by 3.9, close to 4. Then read the peak. The printed <code>x</code> is 10.009000, 5.009500, 5.009500, 4.959505 and 4.964504, against the exact 4.965114. The peak does not improve steadily: the 1000-step grid, ten times finer than the 100-step one, gives exactly the same peak, and the 2000-step grid happens to land closer than the 1000-step grid. Then read the 20000-step integral, <code>2.187107e+07</code>, which is not below the exact value but slightly above it, by 8.7&times;10<sup>&minus;8</sup>. Ten times more steps did not make the error ten times, or a hundred times, smaller. The next beat says where the remaining error comes from.</p>
 <p>The program divides the range of \(x\) into \(N\) equal intervals, so the peak it reports is one of the grid points.</p>
@@ -767,11 +768,12 @@ python main.py --n_steps 20000</pre>
 <section id="beat7">
 <h2>Beat 7 · The approximation switches</h2>
 <p>The program does not evaluate \(x^p/(e^x-1)\) directly across the whole range. For very small \(x\), \(e^x-1\) is nearly \(x\); for very large \(x\), \(e^x\) is so big that the &minus;1 does not matter, and the exponential would overflow. Two options set where the program switches: <code>--x_low</code> and <code>--x_high</code>. The first command below turns both switches off. The second and third move them inwards, the fourth moves them to the middle of the peak, and the fifth moves only the lower one to just below it.</p>
-<pre>python main.py --x_low 0.01 --x_high 100
-python main.py --x_low 1 --x_high 3
+<p>For comparison, the default settings are <code>--x_low 0.05</code>, <code>--x_high 20</code>.</p>
+<pre>python main.py --x_low 0.01 --x_high 100 --quantity wavelength
+python main.py --x_low 1 --x_high 3 --quantity wavelength
 python main.py --quantity frequency --x_low 1 --x_high 3
-python main.py --x_low 5 --x_high 6
-python main.py --x_low 4</pre>
+python main.py --x_low 5 --x_high 6 --quantity wavelength
+python main.py --x_low 4 --quantity wavelength --x_high 20</pre>
 <p>Look at <code>peak at x</code>, <code>Dimensionless area</code> and its bracketed exact value, and <code>Physical integral</code> and the exact value below it. Compare each run with the default of Beat 0. In the annotation boxes of the fourth and fifth runs, look at <code>Peak value</code>.</p>
 <p>Three tasks, in order. First, read the run with no approximations. <code>Dimensionless area = 122.081167</code> and <code>Physical integral = 2.187105e+07</code> are the printed values of the default run, so at the default thresholds 0.05 and 20 the approximations cost nothing that is visible in seven digits. Then read the run with the thresholds at 1 and 3. The area is 121.281452, low by 0.66%, and the physical integral is <code>2.201527e+07</code>, high by 0.66%. The frequency version of the same run has the area 6.536758, against 6.493939, high by 0.66%, and the same physical integral <code>2.201527e+07</code> as the wavelength version. Say why the physical integrals of the two quantities are exactly equal, when the two areas are not. Then read the fourth run, <code>--x_low 5 --x_high 6</code>, in which the thresholds sit on the two sides of the peak. The area is 689.653453, 5.6 times its exact value, and the physical integral is <code>1.444356e+08</code>, 6.6 times its exact value. The printed peak, <code>x = 4.959505</code>, is the same as in Beat 0. Say why that is not evidence that the run is right. In the annotation, <code>Peak value = 8.3555e+14</code> is 29 times the 2.9281e+13 of the default run. Then read the fifth run, <code>--x_low 4</code>. The true peak, at \(x=4.965\), is above the switch and in the exact branch, yet the printed peak is <code>x = 3.959605</code>, a whole unit away, and the physical integral is <code>7.989500e+07</code>, 3.65 times its exact value, and in the annotation <code>Peak value = 3.3949e+14</code> is 11.6 times that of the default run. The Rayleigh&ndash;Jeans form below \(x=4\) over-estimates the curve so much that a grid point there is higher than any point near the true peak. Keeping the curve unchanged near the peak is not enough to trust the printed peak.</p>
 <p>To avoid overflow, the program evaluates the logarithm of the shape function and replaces the difficult part by a simple formula at each end.</p>
@@ -810,11 +812,12 @@ python main.py --x_low 4</pre>
 <section id="beat8">
 <h2>Beat 8 · The hard cases</h2>
 <p>The defaults sample \(x\) from 0.01 to 100, which contains almost all of the curve. Change that range, and see how the summary shows what has been cut off. The first command below is rejected; the message tells you what to change.</p>
-<pre>python main.py --x_max 10
-python main.py --x_max 10 --x_high 9
-python main.py --x_max 4 --x_high 3
-python main.py --x_min 1 --x_low 1
-python main.py --y_frac_window 0</pre>
+<p>For comparison, the default settings are <code>--x_min 0.01</code>, <code>--x_max 100</code>, <code>--x_low 0.05</code>, <code>--x_high 20</code>, <code>--y_frac_window 0.003</code>.</p>
+<pre>python main.py --x_max 10 --x_min 0.01 --x_low 0.05 --x_high 20 --y_frac_window 0.003
+python main.py --x_max 10 --x_high 9 --x_min 0.01 --x_low 0.05 --y_frac_window 0.003
+python main.py --x_max 4 --x_high 3 --x_min 0.01 --x_low 0.05 --y_frac_window 0.003
+python main.py --x_min 1 --x_low 1 --x_max 100 --x_high 20 --y_frac_window 0.003
+python main.py --y_frac_window 0 --x_min 0.01 --x_max 100 --x_low 0.05 --x_high 20</pre>
 <p>Look at <code>peak at x</code>, <code>Dimensionless area</code>, <code>Physical integral</code> and the exact values. For the last command only the plot changes, so look at the horizontal axis of the plot.</p>
 <p>Three tasks, in order. First, read the rejected command. The program stops with <code>Require x_min &lt;= x_low &lt; x_high &lt;= x_max</code> and the four numbers <code>x_min=0.01, x_low=0.05, x_high=20, x_max=10</code>. Lowering <code>--x_max</code> below the default <code>--x_high</code> of 20 is not allowed, and the second command lowers both. Then read that run. The area is 114.030238, low by 6.6%, but the physical integral is <code>2.166218e+07</code>, low by only 0.96%. The peak is found correctly, at <code>x = 4.965040</code>. Say why cutting the range at \(x=10\) costs the two integrals different amounts. Then read the third command, with the range cut at \(x=4\), below the peak. The printed peak is <code>x = 4.000000</code>: the last point of the range, and not a peak of the curve. The physical integral, <code>1.291514e+07</code>, is 59% of the exact value. The second summary line is <code>Peak wavelength = 6.096512e-07</code> m. Then read the fourth command, which starts at \(x=1\). The area is 121.952341, low by only 0.1%, while the physical integral, <code>2.111337e+07</code>, is low by 3.5%. Finally, run the last command. The numbers are the same as the default run; only the display differs. It shows the whole range, from \(x=100\) at 2.4&times;10<sup>&minus;8</sup> m to \(x=0.01\) at 2.4&times;10<sup>&minus;4</sup> m, a factor of 10<sup>4</sup>, and the hump is squeezed into the left edge of it. The option only changes the display; it never changes a number in the summary.</p>
 <p>For the exact shape integrated continuously, restricting the range removes two tails. The printed sum also has grid and switch errors (Beats 6 and 7), which come on top of this.</p>

@@ -227,17 +227,22 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <section id="start"><h2>Start here</h2><p>Run each command from the <code>GFTGU-Programs/Multiple</code> folder. Open <code>GFTGU-Documentation/Multiple/SampleOutputs/Multiple-SampleOutputs_Guide.html</code> beside this page when you want a pictured checkpoint. The companion extended tutorial offers fuller derivations and worked exercises for the same program and source build.</p><p>Start with <code>python main.py --help</code> or <code>python main.py --version</code>. Close a plot window to let a command finish. For every new command, omitted options return to defaults; use double quotes around semicolon-separated triples on Windows or Unix-like shells.</p></section>
 <section id="beat0"><h2>Beat 0 · Many bodies, one force law</h2>
 <p>Start in the program directory. Three equal solar masses occupy the corners of a right triangle. The default display recenters the plotted bodies on their moving centre of mass; the integration still uses the input inertial coordinates.</p>
-<pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories --n_bodies 3 --masses_solar 1,1,1 \
+  --positions_init "46000000000,0,0;-46000000000,0,0;0,46000000000,0" \
+  --velocities_init "0,0,0;0,-30000,0;-30000,0,0" --dt 2000 --eps1 0.005 --eps2 1e-07 --display_frame com</code></pre>
 <p><b>Read:</b> 8000 accepted steps span 18.094 days. Follow the red, green and blue curves into the close encounter. The initial momentum is (−30000, −30000, 0) m/s, while the energy and angular-momentum totals remain approximately conserved.</p>
 <p><b>Try 1:</b> rerun at <code>--max_steps 2000</code>. Describe the geometry before the close encounter. Compare the two simulated durations: accepted-step count is not elapsed time when the timestep adapts.</p>
 <p><b>Why:</b> each body feels every other body. The pairwise gravitational acceleration is proportional to the other body's mass and inversely proportional to separation squared; there is no fixed central mass.</p></section>
 <section id="beat1"><h2>Beat 1 · Change the masses</h2>
-<pre class="code-block"><code>python main.py --masses_solar 2,1,0.5 --max_steps 2000 --output_type trajectories</code></pre>
+<p>For comparison, the default settings are <code>--masses_solar 1,1,1</code>.</p>
+<pre class="code-block"><code>python main.py --masses_solar 2,1,0.5 --max_steps 2000 --output_type trajectories \
+  --velocities_init "0,0,0;0,-30000,0;-30000,0,0"</code></pre>
 <p><b>Read:</b> the three paths differ because all three masses now affect the forces. The initial acceleration magnitudes computed from the starting geometry are 0.028972, 0.043871 and 0.070121 m/s² for bodies 1–3. The heaviest body's path is the smallest in this particular configuration.</p>
 <p><b>Try 2:</b> switch the order of the three masses with <code>--masses_solar 0.5,1,2</code>. Predict which initial acceleration changes and then compare the shapes. Each command starts from the defaults unless you specify another option.</p>
 <p><b>Why:</b> acceleration of body <i>i</i> is \(\mathbf a_i=G M_\odot\sum_{j\ne i}m_j(\mathbf r_j-\mathbf r_i)/|\mathbf r_j-\mathbf r_i|^3\), with <i>m</i> in solar masses. The body's own mass cancels from its acceleration but affects the others.</p></section>
 <section id="beat2"><h2>Beat 2 · Move the viewing frame</h2>
 <p>Add 100000 m/s in the x direction to each default velocity, then compare both displays:</p>
+<p>For comparison, the default settings are <code>--velocities_init "0,0,0;0,-30000,0;-30000,0,0"</code>.</p>
 <pre class="code-block"><code>python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_steps 2000 --output_type trajectories --display_frame user
 python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_steps 2000 --output_type trajectories --display_frame com</code></pre>
 <p><b>Read:</b> the user-frame plot carries the system across the axes; The centre-of-mass (COM) view subtracts the instantaneous centre-of-mass position from the plotted positions. The printed energy, momentum and angular momentum in both commands use the input coordinates. Total momentum after a common boost \(\mathbf u\) increases by \(M\mathbf u\) in the mass-scaled units.</p>
@@ -254,28 +259,39 @@ python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_st
 <p><b>Try 6:</b> change <code>--projection yz</code> on the original two-body command. Why does a face-on circle collapse to a nearly straight trace? Return to <code>xy</code> for the rest of the evening.</p></section>
 <section id="beat5"><h2>Beat 5 · Predict, correct, repeat</h2>
 <p>Keep the same initial state and accepted-step ceiling while changing the corrector threshold:</p>
-<pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories --eps2 1e-10
-python main.py --max_steps 8000 --output_type trajectories --eps2 0.004</code></pre>
+<p>For comparison, the default settings are <code>--eps2 1e-07</code>.</p>
+<pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories --eps2 1e-10 --dt 2000
+python main.py --max_steps 8000 --output_type trajectories --eps2 0.004 --dt 2000</code></pre>
 <p><b>Read:</b> the corrector revises the predictor's new velocity using accelerations evaluated at trial positions. <code>eps2</code> sets a velocity-increment stopping criterion; <code>eps1</code> controls predictor acceleration change. These are algorithm thresholds, not promised fractional errors in the final path.</p>
 <p><b>Try 7:</b> compare elapsed days and maximum conservation drifts with Beat 0. Eight thousand accepted steps at different settings need not cover the same physical interval. For a convergence claim, compare at a common simulated time and check positions as well as drift.</p></section>
 <section id="beat6"><h2>Beat 6 · Follow the adaptive step</h2>
-<pre class="code-block"><code>python main.py --max_steps 6000 --output_type trajectories
-python main.py --max_steps 8000 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --max_steps 6000 --output_type trajectories --dt 2000
+python main.py --max_steps 8000 --output_type trajectories --dt 2000</code></pre>
 <p><b>Read:</b> the late close encounter forces a smaller working timestep, so 2000 additional accepted steps can cover much less time than the earlier 2000. The requested <code>--dt 2000</code> is a ceiling. Rejected trials are halved; after acceptance the working timestep may grow by 10% toward the ceiling.</p>
 <p><b>Try 8:</b> compare simulated days for the two commands and calculate the time gained per added accepted step. Would a fixed 2000-second step have resolved the deepest encounter equally well?</p></section>
 <section id="beat7"><h2>Beat 7 · Make evenly spaced frames</h2>
-<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "5e10,0,0;-5e10,0,0" --velocities_init "0,25760,0;0,-25760,0" --max_steps 3000 --output_type animation --frame_time 2e5
+<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "5e10,0,0;-5e10,0,0" \
+  --velocities_init "0,25760,0;0,-25760,0" --max_steps 3000 --output_type animation --frame_time 2e5 \
+  --animation_mode trails
 python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "5e10,0,0;-5e10,0,0" --velocities_init "0,25760,0;0,-25760,0" --max_steps 3000 --output_type animation --frame_time 4e5 --animation_mode current_positions</code></pre>
 <p><b>Read:</b> animation requests regular simulated times, interpolating positions and velocities between accepted states using a cubic Hermite curve. Use Space to pause, arrows to step, Home/End to jump, and F to toggle the display frame. The second command has a coarser frame interval and omits trails.</p>
 <p><b>Try 9:</b> compare the frame counts. A short <code>frame_time</code> can yield <em>more</em> stored frames than accepted states; a long one can yield fewer. Both modes also retain a conservation record for every accepted step. The animation guard limits requested frames to one million, not that conservation history.</p></section>
 <section id="beat8"><h2>Beat 8 · Test the limits</h2>
 <p>A smaller timestep is useful only when the two runs can be compared over the same physical interval:</p>
-<pre class="code-block"><code>python main.py --dt 1000 --max_steps 4000 --output_type trajectories --show_energy_diagnostic
-python main.py --dt 500 --max_steps 8000 --output_type trajectories --show_energy_diagnostic</code></pre>
+<pre class="code-block"><code>python main.py --dt 1000 --max_steps 4000 --output_type trajectories --show_energy_diagnostic --n_bodies 3 \
+  --masses_solar 1,1,1 --positions_init "46000000000,0,0;-46000000000,0,0;0,46000000000,0" \
+  --velocities_init "0,0,0;0,-30000,0;-30000,0,0"
+python main.py --dt 500 --max_steps 8000 --output_type trajectories --show_energy_diagnostic --n_bodies 3 \
+  --masses_solar 1,1,1 --positions_init "46000000000,0,0;-46000000000,0,0;0,46000000000,0" \
+  --velocities_init "0,0,0;0,-30000,0;-30000,0,0"</code></pre>
 <p><b>Read:</b> the first reaches day 17.559. Compare the drift curves over their shared time span. Each run's printed <em>maximum</em> is over its own complete duration, so do not use those two maxima alone as a matched-time convergence measure.</p>
 <p><b>Try 10:</b> predict what happens if two point masses approach an exact collision without any collision radius or softening. First run the shorter case, then the longer one:</p>
-<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 17500 --output_type trajectories
-python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 17800 --output_type trajectories</code></pre>
+<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" \
+  --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 17500 --output_type trajectories \
+  --no-show_energy_diagnostic
+python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" \
+  --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 17800 --output_type trajectories \
+  --no-show_energy_diagnostic</code></pre>
 <p>The longer command stops when the adaptive step can no longer advance floating-point time. That limit is a property of this unsoftened point-mass model and integrator, not evidence of a physical merger.</p></section>
 <section id="parameters"><h2>Parameters</h2><p>Supply only options you want to change. The default run is a three-body animation; the Beat commands request static trajectories when they need a complete path or an energy graph. Each initial-state list must have one entry per body.</p><div class="table-scroll" role="region" tabindex="0" aria-label="Command-line options">
 <table class="param-table">

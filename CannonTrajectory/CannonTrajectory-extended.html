@@ -596,7 +596,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <section id="beat0">
 <h2>Beat 0 · One launch, two motions</h2>
 <p>A cannonball leaves the ground at 100&nbsp;m/s, 45° above the horizontal. Gravity pulls it downward with the same strength all along its path, and nothing else acts on it: no air, no wind. Ask the program where it comes down.</p>
-<pre class="code-block"><code>python main.py</code></pre>
+<pre class="code-block"><code>python main.py --speed 100 --angle_deg 45 --dt 0.1 --method improved --max_steps 100000</code></pre>
 <p>Look at the trajectory plot and at the four printed lines: the number of trajectory samples, the range, the maximum height and the flight time.</p>
 <p>Three tasks, in order. First, read the numbers: 146 trajectory samples, a range of 1019.7 m, a maximum height of 254.93 m and a flight time of 14.421 s. The ball travels about a kilometre sideways and climbs to about a quarter of that. Then look at the plot: one symmetric arch, highest at about 509.9 m along, halfway to the landing point, and its last plotted point lies a little below the ground line. Both axes use the same scale, so the arch is drawn true to shape. Then count: the samples are 0.1 s apart and there are 146 of them, so the last one is 145 steps after the launch, at 14.5 s. That is later than the flight time of 14.421 s because the program stops at the first sample below the ground and then estimates where the ball actually crossed it (Beat 5). Before reading on, write down what you expect to happen to the range, the height and the flight time if the launch speed is doubled.</p>
 <p>Let \(x\) be the horizontal distance, \(h\) the height, \(u\) the horizontal velocity and \(v\) the vertical velocity. Gravity has no horizontal part, so \(u\) never changes; its vertical part changes \(v\) at the constant rate \(-g\):</p>
@@ -620,10 +620,11 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <section id="beat1">
 <h2>Beat 1 · The angle splits the speed</h2>
 <p>Because the sideways and the vertical motion do not affect each other, all that a launch angle does is decide how the launch speed is shared between them: a fraction cos&thinsp;θ of it goes sideways and a fraction sin&thinsp;θ goes upward. Try four angles at the same speed.</p>
-<pre class="code-block"><code>python main.py --angle_deg 30
-python main.py --angle_deg 60
-python main.py --angle_deg 0
-python main.py --angle_deg 90</code></pre>
+<p>For comparison, the default settings are <code>--angle_deg 45</code>.</p>
+<pre class="code-block"><code>python main.py --angle_deg 30 --speed 100
+python main.py --angle_deg 60 --speed 100
+python main.py --angle_deg 0 --speed 100
+python main.py --angle_deg 90 --speed 100</code></pre>
 <p>In each run look at the four printed lines and at the arch. Keep the default run of Beat 0 beside you: 45° gave 1019.7 m, 254.93 m and 14.421 s.</p>
 <p>Three tasks, in order. First, compare 30° and 60°. The ranges are 883.1 m and 883.09 m, the same to four figures, although the two arches are very different: at 30° the ball reaches 127.46 m in a flight of 10.197 s, and at 60° it reaches 382.39 m in a flight of 17.662 s. The steeper launch goes higher and stays up longer, yet lands at the same place. (The two printed ranges differ in the fifth figure. That is not physics; Beat 5 explains it.) Then the two limiting angles. At 0° the ball is fired along the ground and is already below it after the first step: 2 samples, and a range, height and flight time of 0. At 90° it goes straight up and comes back down: 205 samples, a height of 509.86 m and a flight time of 20.394 s. The range prints as 1.2488e-13 m, not 0. The sideways speed is \(100\cos 90°\) evaluated in floating point, 6.123e-15 m/s and not exactly zero, and the tiny drift it produces over the flight is what is printed. Then compare all four with the default: 45° gave the largest range of the five, 1019.7 m. Say how you would find out whether any other angle does better (Experiment 1).</p>
 <p>The program converts the angle to radians and splits the speed into the two starting velocities. The projectile starts on the ground at the origin:</p>
@@ -639,8 +640,9 @@ python main.py --angle_deg 90</code></pre>
 <section id="beat2">
 <h2>Beat 2 · The exact solution</h2>
 <p>With the sideways speed constant and the vertical speed changing at the steady rate &minus;<em>g</em>, both motions can be worked out exactly on paper. The result predicts the range, the height and the time for any launch, so the program can be checked against it. Before reading the formulas, predict what doubling the speed will do to the three printed results, then run it.</p>
-<pre class="code-block"><code>python main.py --speed 200
-python main.py --speed 50</code></pre>
+<p>For comparison, the default settings are <code>--speed 100</code>.</p>
+<pre class="code-block"><code>python main.py --speed 200 --angle_deg 45
+python main.py --speed 50 --angle_deg 45</code></pre>
 <p>Compare the three printed results in each run with those of Beat 0: 1019.7 m, 254.93 m and 14.421 s.</p>
 <p>Three tasks, in order. First, the doubled launch: a range of 4078.9 m, a height of 1019.7 m and a flight time of 28.842 s. Divide each by the default value. The range and the height are about four times as large, and the time is about twice as large. The half-speed launch does the reverse: 254.92 m, 63.732 m and 7.2104 s, about a quarter, a quarter and a half. (Its range prints as 254.92 and not as 254.93, which is a quarter of the exact range to five figures; the last digit is an interpolation effect, Beat 5.) Then ask why the range and the height depend on the square of the speed and the time only on the speed itself. Then check the default run against the formulas below. They give 1019.72 m, 254.93 m and 14.4210 s, the printed numbers to the figures shown.</p>
 <p>Integrating Eq. 1 once gives a constant \(u=u_0\), and again \(x=u_0t\). Integrating Eq. 2 once gives \(v=v_{0y}-gt\), and again the height:</p>
@@ -671,7 +673,8 @@ python main.py --speed 50</code></pre>
 <section id="beat3">
 <h2>Beat 3 · Stepping forward: Euler's method</h2>
 <p>The formulas of Beat 2 need someone who can integrate. The program instead advances the state a small step \(\Delta t\) at a time, using only the rates of change of Eqs. 1 and 2, and stores the state after every step. The simplest way to take a step is to assume that the rates stay as they are at its start. This is forward Euler. Run it with a coarse step and compare with the exact answer of Beat 2.</p>
-<pre class="code-block"><code>python main.py --method euler --dt 0.5</code></pre>
+<p>For comparison, the default settings are <code>--dt 0.1</code>, <code>--method improved</code>.</p>
+<pre class="code-block"><code>python main.py --method euler --dt 0.5 --speed 100 --angle_deg 45</code></pre>
 <p>Look at the four printed lines and compare them with Beat 0, and look at the arch.</p>
 <p>Three tasks, in order. First, compare with the default run, which is very close to the exact answer. There are 31 samples instead of 146. The range is 1054.9 m against 1019.72 m, so 35.2 m, or 3.5%, too long. The maximum height is 272.91 m against 254.93 m, 18.0 m too high. The flight time is 14.919 s against 14.4210 s, 0.50 s too long. All three errors have the same sign: Euler's ball goes too high, stays up too long and lands too far away. Then repeat the same command with <code>--dt 0.2</code>, <code>0.1</code>, <code>0.05</code> and <code>0.02</code>. The printed ranges are 1054.9, 1033.8, 1026.8, 1023.2 and 1021.1 m for \(\Delta t=\) 0.5, 0.2, 0.1, 0.05 and 0.02 s, so the errors are 35.2, 14.1, 7.06, 3.53 and 1.41 m. Then divide each error by its \(\Delta t\): the quotients are 70.4, 70.6, 70.6, 70.7 and 70.7 m/s. Every one is close to the sideways speed \(u_0=70.711\) m/s. Halving the step halves the error, which is what &ldquo;first-order&rdquo; means.</p>
 <p>In the forward Euler update, \(\mathbf f(\mathbf s)=[u,\,v,\,0,\,{-g}]\) is the derivative vector of Eqs. 1 and 2:</p>
@@ -695,9 +698,9 @@ python main.py --speed 50</code></pre>
 <section id="beat4">
 <h2>Beat 4 · A better step: improved Euler</h2>
 <p>Euler's flaw is that it uses the vertical velocity from the start of a step for the whole step, although the velocity is changing during it. Improved Euler, also called Heun's method, first makes a trial step to find the rates at the end of the step, and then advances with the average of the rates at the start and at the end. Run it beside Euler at the coarsest step used so far, \(\Delta t=1\) s.</p>
-<pre class="code-block"><code>python main.py --dt 1
+<pre class="code-block"><code>python main.py --dt 1 --method improved
 python main.py --method euler --dt 1</code></pre>
-<p>In each run look at the four printed lines. The improved method is the default, so the first command needs no <code>--method</code>.</p>
+<p>In each run look at the four printed lines. The improved method is the default, so the first command makes <code>--method improved</code> explicit.</p>
 <p>Three tasks, in order. First, the maximum height. The improved run prints 254.93 m, the exact value, although its highest stored sample, at \(t=7\) s, is only 254.71 m: the top of the arch, at 7.210 s, falls between two samples, and the program recovered it (Beat 5). Euler prints 291.51 m, which is 36.6 m too high. Then the range and the time. The improved run prints 1018.5 m and 14.404 s, which are 1.18 m and 0.017 s short of the exact 1019.72 m and 14.4210 s. Euler prints 1089.3 m and 15.405 s, 69.6 m and 0.98 s too long. Compare the two range errors: about one metre against about seventy. Then decide how much of the improved run's small remaining error belongs to the integrator. The answer is in the next beat, and it is none of it.</p>
 <p>Heun's predictor is the Euler trial step of Eq. 6; its corrector averages the derivative at both ends:</p>
 <div class="eq-block">
@@ -725,7 +728,7 @@ python main.py --method euler --dt 1</code></pre>
 <section id="beat5">
 <h2>Beat 5 · Between the samples</h2>
 <p>The stored trajectory is a list of points that are \(\Delta t\) apart. The ball lands, and reaches its peak, between two of them. The last stored point is the first one below the ground, and the printed range, height and time are not read off the samples; they are estimated from them. See what the program has to work with in the \(\Delta t=1\) s run, where the effect is largest.</p>
-<pre class="code-block"><code>python main.py --dt 1
+<pre class="code-block"><code>python main.py --dt 1 --method improved
 python -c "from driver_cannon import run_cannon_trajectory as run; xs, hs = run(dt=1.0); print(xs[-2:], hs[-2:])"</code></pre>
 <p>The first command prints the summary. The second, run from the program's folder, prints the last two stored x coordinates and then the last two stored heights. Look at the printed range and flight time and at those two pairs of numbers.</p>
 <p>Three tasks, in order. First, the raw endpoint. The last stored point is at \(x=1060.66\) m and \(h=-42.59\) m, so the ball is 42.59 m below the ground there, and its \(x\) is 40.9 m beyond the exact range. The raw endpoint is a poor estimate of the range. Then interpolate by hand. The ball was 28.90 m above the ground at \(x=989.95\) m and 42.59 m below it at \(x=1060.66\) m. If it moved in a straight line between them, it crossed the ground a fraction 28.90&nbsp;/&nbsp;(28.90&nbsp;+&nbsp;42.59) = 0.404 of the way along, at <em>x</em> = 989.95 + 0.404 &times; (1060.66 &minus; 989.95) &approx; 1018.5 m, which is the printed range. The flight time is found the same way: 14 s + 0.404 &times; 1 s = 14.404 s, which is the printed time. Then the height. The highest stored sample is 254.71 m, at 7 s, between samples of 247.74 m and 251.87 m, and the printed height is 254.93 m. Explain why a parabola drawn through those three samples gives the exact maximum (Beat 4).</p>
@@ -818,9 +821,10 @@ for method in ("euler", "improved"):
 <section id="beat7">
 <h2>Beat 7 · Where the model and the run stop</h2>
 <p>Everything so far assumed that the model is right and that the run finishes. Both assumptions have limits, and the program reports the second kind itself. Try three commands that reach them.</p>
-<pre class="code-block"><code>python main.py --max_steps 145
-python main.py --max_steps 146
-python main.py --speed 1000</code></pre>
+<p>For comparison, the default settings are <code>--max_steps 100000</code>, <code>--speed 100</code>.</p>
+<pre class="code-block"><code>python main.py --max_steps 145 --speed 100
+python main.py --max_steps 146 --speed 100
+python main.py --speed 1000 --max_steps 100000</code></pre>
 <p>Look at what each command prints. The first prints no summary at all.</p>
 <p>Three tasks, in order. First, the ceiling. <code>--max_steps 145</code> prints <code>CannonTrajectory: max_steps was reached before the projectile landed; increase max_steps or use a larger timestep</code> and stops, and <code>--max_steps 146</code> runs normally. The ceiling counts stored points, including the launch point, and the default flight needs 145 steps, which is 146 stored points (Beat 0), so 146 is the smallest ceiling that works. The program refuses to return an incomplete trajectory, which would give a wrong range without a warning; the same thing raises a <code>RuntimeError</code> when <code>run_cannon_trajectory()</code> is called from Python. Then the model. A launch at 1000 m/s prints a range of 1.0197e+05 m, about 102 km, a height of 25493 m and a flight time of 144.21 s, from 1,444 trajectory samples. The program takes the ground to be flat and gravity to be constant and vertical. Over 102 km the Earth's surface curves away from a flat plane by about \(R^2/(2R_\oplus)\approx816\) m, with \(R_\oplus=6.371\times10^6\) m, and the direction of gravity turns by about 0.9°. The number is a rough guide at that distance, and the constant-<em>g</em>, flat-Earth model is what breaks down first. The programs <em>EarthOrbit</em> and <em>Orbit</em> treat gravity over larger scales. Then the numbers themselves: try <code>python main.py --speed 1e308 --dt 1e-3</code>. The intermediate numbers overflow, and the program stops with <code>CannonTrajectory: trajectory became non-finite; reduce speed or timestep</code> rather than print infinity or not-a-number.</p>
 <p>Some physical effects remain outside the model regardless of its settings. Air resistance shortens the range even at ordinary projectile speeds, though the trajectory keeps its rising-and-falling form. Wind and spin change the path. The curvature and the rotation of the Earth, and the weakening of gravity with height, matter over long distances. The launch is always from the ground, at a height of 0, so a launch from a cliff or a roof cannot be set. Omitting drag is what makes the exact solution of Beat 2 possible, and that solution is the reason the numerical results here can be checked at all.</p>

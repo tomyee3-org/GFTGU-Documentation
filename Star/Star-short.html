@@ -501,7 +501,8 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <p>Open a terminal in the folder containing <code>main.py</code>. Run the commands below in order, read the named lines, and close each plot window before the next run. All quantities use the International System of Units (SI). Use Python 3.10 or later with Matplotlib installed. No network is needed to run the program; the equations on this page use MathJax from a public content delivery network.</p>
 <p>The default radius and mass are close to the Sun's, but this is a teaching polytrope: it has no energy generation, radiation or convection, composition gradient, or relativistic gravity. Its surface temperature of zero is a feature of the model, not a claim about the Sun.</p></section>
 <section id="beat0"><h2>Beat 0 · Find the surface</h2>
-<p>Start with the default pressure profile.</p><pre>python main.py</pre>
+<p>Start with the default pressure profile.</p><pre>python main.py --p_c 7.158e+15 --T_c 22630000 --mu 1.285 --gamma 1.36 --steps_per_scale 400 \
+  --max_points 2000 --output_type pressure</pre>
 <p>Read <code>Radius (m)</code> and <code>Total mass (kg)</code>: about 6.9674e+08 m and 1.9825e+30 kg. The plotted pressure starts at 7.158e+15 Pa and reaches zero at that radius. Hover over the curve to read a pressure at a chosen radius. Why does pressure have to rise inward? The gas at each radius supports the weight of the gas above it.</p>
 <div class="eq">\[\frac{dp}{dr}=-\frac{Gm(r)\rho(r)}{r^2},\qquad \frac{dm}{dr}=4\pi r^2\rho(r).\]</div>
 <p>Here <code>m(r)</code> is the mass inside radius <code>r</code>, and <code>ρ(r)</code> is density. The exterior shells exert zero net pull at that radius. The program advances these two relations outward in finite radial steps; its pressure reaching zero defines the surface.</p></section>
@@ -516,20 +517,25 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <pre>python main.py --output_type mass</pre>
 <p>Check the <code>50%</code> radius row of the interior checkpoints: about 1.6732e+30 kg is already enclosed, roughly 84% of the total. At 75% of the radius the enclosed mass is about 99% of the total. The curve flattens outward because density falls. Estimate from the curve where half of the mass lies; it is well inside half the radius.</p></section>
 <section id="beat4"><h2>Beat 4 · Stretch a star</h2>
-<pre>python main.py --T_c 2.4893e7</pre>
+<p>For comparison, the default settings are <code>--T_c 22630000</code>.</p>
+<pre>python main.py --T_c 2.4893e7 --p_c 7.158e+15</pre>
 <p>This central temperature is 10% above the default, while central pressure is unchanged. Compare the new radius 7.6641e+08 m and mass 2.3988e+30 kg with Beat 0. The ratios are about 1.10 and 1.21. For this specific change with the other inputs fixed, the radius scales with central temperature and the mass with its square. The pressure profile keeps its shape when radius is measured as a fraction of the new surface radius.</p>
 <p>Check the <code>Restarts</code> line before comparing numerical errors across runs: a restart doubles the step.</p></section>
 <section id="beat5"><h2>Beat 5 · Check a solvable case</h2>
+<p>For comparison, the default settings are <code>--gamma 1.36</code>.</p>
 <pre>python main.py --gamma 2</pre>
 <p>The printed polytropic index \(n=1/(\gamma-1)\) is now 1. This Lane–Emden case has the known profile \(\theta(\xi)=\sin(\xi)/\xi\), whose first zero is \(\xi=\pi\). Read the printed Lane–Emden radius, about 2.6392e+08 m, beside the program's stepwise radius, 2.6239e+08 m. The stepwise radius is about 0.58% smaller. The Lane–Emden number is a numerical reference for the same model, not an observation of a real star.</p></section>
 <section id="beat6"><h2>Beat 6 · Halve the step</h2>
+<p>For comparison, the default settings are <code>--steps_per_scale 400</code>, <code>--max_points 2000</code>.</p>
 <pre>python main.py --steps_per_scale 800 --max_points 4000</pre>
 <p>Compare <code>Radial step (m)</code> with Beat 0: about 2.6323e+05 m instead of 5.2645e+05 m. There are 2666 grid points and no restarts. The integrated radius now differs from the Lane–Emden radius by about -0.0075071, versus -0.014174 in Beat 0; the mass difference is -0.00092707, versus -0.0018494. The first-order Euler integration error roughly halves. The two pressure plots look almost the same; use the printed differences to see the change.</p>
 <p>The Lane–Emden reference is calculated independently with a higher-accuracy method, but both calculations implement the same physical assumptions. Its step-halving uncertainty is an estimate, not a guaranteed bound.</p></section>
 <section id="beat7"><h2>Beat 7 · Catch a restart</h2>
-<pre>python main.py --max_points 1000</pre>
+<p>For comparison, the default settings are <code>--max_points 2000</code>.</p>
+<pre>python main.py --max_points 1000 --steps_per_scale 400</pre>
 <p>Read <code>Restarts (radial step doubled)</code>: 1. The program could not reach the surface inside the requested 1000-point capacity at its initial step, so it began again with twice the radial step. It finished with 654 points. Compare the -0.02726 radius difference with the default -0.014174; the coarser integration is less accurate. Raising <code>--max_points</code> can prevent a restart, while raising <code>--steps_per_scale</code> directly requests a smaller initial step.</p></section>
 <section id="beat8"><h2>Beat 8 · Approach the limit</h2>
+<p>For comparison, the default settings are <code>--gamma 1.36</code>.</p>
 <pre>python main.py --gamma 1.21</pre>
 <p>The index is about 4.7619, close to the finite-radius boundary at \(n=5\), or \(\gamma=6/5\). The integrated radius is about 7.2406e+09 m, while the Lane–Emden radius is about 9.9626e+09 m: a -0.27322 relative difference after four restarts. Almost all the mass lies in the inner part of this enormous, thin-envelope model. The plot alone hides much of the numerical difficulty.</p>
 <p>For a deliberately extreme case, run:</p><pre>python main.py --gamma 1.2000000001</pre>

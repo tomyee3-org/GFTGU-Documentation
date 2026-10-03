@@ -197,7 +197,7 @@ python main.py</pre>
     <h2>Beat 0 · One launch, two motions</h2>
     <p>A ball leaves the ground at 100&nbsp;m&nbsp;s\(^{-1}\), 45° above the horizontal. 
 	Nothing acts on it but a constant downward acceleration.</p>
-<pre>python main.py</pre>
+<pre>python main.py --speed 100 --angle_deg 45 --dt 0.1 --method improved --max_steps 100000</pre>
     <p>Read the four printed lines — sample count, range, maximum height, flight time — and look at the arch. 
 	Both axes use the same scale. The last plotted point sits a little below the ground: 
 	the program stops at the first sample that has crossed, then estimates the crossing (Beat 5). 
@@ -217,10 +217,11 @@ python main.py</pre>
   <section id="beat1">
     <h2>Beat 1 · The angle splits the speed</h2>
     <p>All a launch angle does is share \(v_0\) between the two motions. Try four angles at the same speed.</p>
-<pre>python main.py --angle_deg 30
-python main.py --angle_deg 60
-python main.py --angle_deg 0
-python main.py --angle_deg 90</pre>
+<p>For comparison, the default settings are <code>--angle_deg 45</code>.</p>
+<pre>python main.py --angle_deg 30 --speed 100
+python main.py --angle_deg 60 --speed 100
+python main.py --angle_deg 0 --speed 100
+python main.py --angle_deg 90 --speed 100</pre>
     <p>Keep Beat 0 beside you. 30° and 60° should land in the same place and climb to very different heights. 
 	0° is already below the ground after one step. 90° comes back down on top of the muzzle; 
 	the printed range is a floating-point crumb of \(\cos 90^\circ\), not physics. 45° is the longest of these five. 
@@ -237,8 +238,9 @@ x_0=0,\quad h_0=0,\quad u_0=v_0\cos\theta,\quad v_{0y}=v_0\sin\theta.
     <h2>Beat 2 · Analytic solutions</h2>
     <p>Constant sideways speed and a vertical speed that changes at a steady rate can be integrated on paper. 
 	Predict what doubling \(v_0\) does, then run it.</p>
-<pre>python main.py --speed 200
-python main.py --speed 50</pre>
+<p>For comparison, the default settings are <code>--speed 100</code>.</p>
+<pre>python main.py --speed 200 --angle_deg 45
+python main.py --speed 50 --angle_deg 45</pre>
     <p>Range and height should scale as \(v_0^2\); flight time as \(v_0\). 
 	The default 100&nbsp;m&nbsp;s\(^{-1}\) at 45° has analytically calculated values \(T=2v_{0y}/g=14.4210\,\mathrm{s}\), \(H=v_{0y}^2/(2g)=254.929\,\mathrm{m}\), \(R=v_0^2/g=1019.72\,\mathrm{m}\). The printed default run should match those to the figures shown. That is the grade for every later beat.</p>
     <div class="eq-block">
@@ -259,7 +261,8 @@ R=\frac{v_0^2\sin 2\theta}{g}.
     <h2>Beat 3 · Stepping forward: Euler’s method</h2>
     <p>The program does not calculate trajectories analytically, as described in Beat 2. It advances the state by \(\Delta t\), 
 	using the rates at the start of the step. That is forward Euler. Run it coarse.</p>
-<pre>python main.py --method euler --dt 0.5</pre>
+<p>For comparison, the default settings are <code>--dt 0.1</code>, <code>--method improved</code>.</p>
+<pre>python main.py --method euler --dt 0.5 --speed 100 --angle_deg 45</pre>
     <p>Compare with Beat 0. Euler’s ball goes too high, stays up too long and lands too far away. 
 	Repeat at <code>--dt 0.2</code>, <code>0.1</code>, <code>0.05</code>. Halving the step should roughly halve the range error. 
 	Divide each range error by its \(\Delta t\): the quotient sits next to the sideways speed \(u_0\).</p>
@@ -280,9 +283,9 @@ R=\frac{v_0^2\sin 2\theta}{g}.
     <h2>Beat 4 · A better step: improved Euler</h2>
     <p>Euler uses the vertical velocity from the start of the step for the whole step. Improved Euler (Heun) takes a trial step, 
 	then advances with the average of the rates at the two ends. Compare the two methods at a coarse \(\Delta t=1\,\mathrm{s}\).</p>
-<pre>python main.py --dt 1
+<pre>python main.py --dt 1 --method improved
 python main.py --method euler --dt 1</pre>
-    <p>Improved Euler is the default, so the first command needs no <code>--method</code>. 
+    <p>Improved Euler is the default, so the first command makes <code>--method improved</code> explicit. 
 	The printed height should already be the exact 254.93&nbsp;m, even though the highest stored sample is a 
 	little low — the peak falls between samples (Beat 5). The printed range is short by about a metre. 
 	Euler at the same step is tens of metres long.</p>
@@ -303,7 +306,7 @@ python main.py --method euler --dt 1</pre>
     <h2>Beat 5 · Between the samples</h2>
     <p>The ball lands, and reaches its peak, between two stored points. The printed numbers are interpolations. 
 	Look at what the program has to work with when \(\Delta t=1\,\mathrm{s}\).</p>
-<pre>python main.py --dt 1
+<pre>python main.py --dt 1 --method improved
 python -c "from driver_cannon import run_cannon_trajectory as run; xs, hs = run(dt=1.0); print(xs[-2:], hs[-2:])"</pre>
     <p>The last stored point is below the ground and past the true range. A straight line between the last 
 	two samples crosses \(h=0\) at the printed range and the printed flight time. A parabola through the three 
@@ -329,8 +332,8 @@ T^*=t_{n-1}+\frac{h_{n-1}}{h_{n-1}-h_n}\,\Delta t.
 	We make several runs, steadily decreasing \(\Delta t\), while watching the figures we care about.</p>
 <pre>python main.py --method euler --dt 0.5
 python main.py --method euler --dt 0.1
-python main.py --dt 0.5
-python main.py --dt 0.1</pre>
+python main.py --dt 0.5 --method improved
+python main.py --dt 0.1 --method improved</pre>
     <p>Euler’s range error tracks \(+u_0\Delta t\); its time error tracks \(+\Delta t\). Heun’s printed height 
 	does not move. Heun’s printed range is short by an amount that shrinks faster than \(\Delta t\), and not always 
 	by the same factor, because the landing sits a different fraction of the way between samples at each step. 
@@ -341,9 +344,10 @@ python main.py --dt 0.1</pre>
   <section id="beat7">
     <h2>Beat 7 · Where the model and the run stop</h2>
     <p>The program reports a failed run itself. The model’s limits it cannot report, because it has no setting for them.</p>
-<pre>python main.py --max_steps 145
-python main.py --max_steps 146
-python main.py --speed 1000</pre>
+<p>For comparison, the default settings are <code>--max_steps 100000</code>, <code>--speed 100</code>.</p>
+<pre>python main.py --max_steps 145 --speed 100
+python main.py --max_steps 146 --speed 100
+python main.py --speed 1000 --max_steps 100000</pre>
     <p>The first command prints no summary: 145 stored points is one short of a default landing, and the program 
 	refuses to hand back an incomplete trajectory. The second command runs. A 1000&nbsp;m&nbsp;s\(^{-1}\) launch 
 	prints a range of about 102&nbsp;km. Over that distance a flat Earth has already dropped by hundreds of metres 
