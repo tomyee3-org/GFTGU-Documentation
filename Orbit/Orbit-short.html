@@ -496,6 +496,8 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <a href="#beat6">6 · The step control</a>
 <a href="#beat7">7 · How far to trust it</a>
 <a href="#beat8">8 · The hard cases</a>
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
 <div class="nav-label">Reference</div>
 <a href="#parameters">Parameters</a>
 <a href="#limits">Scope and checks</a>
@@ -519,8 +521,9 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <p class="stage">Run</p>
 <pre>python main.py --xInit 46000000000 --vxInit 0 --vyInit 58980 --k 1.3271244e+20 --dt0 10000 --eps1 0.05 --eps2 0.0001 --maxSteps 20000 --maxOrbits 1</pre><p>Trace the oval from its right-hand starting point. In the summary find <code>periapsis radius</code>, <code>apoapsis radius</code>, <code>elapsed simulated time</code> and <code>Keplerian period</code>. The default ends after 761 accepted steps and 1.0000 azimuthal revolution. A stop at one revolution means the direction from the centre has turned through \(2\pi\), not that the position is mathematically exact.</p>
 <div class="activity"><strong>1. Predict.</strong> If the particle's distance from the central body doubled, by what factor would the magnitude of its acceleration change?</div><p>The force law used by the code is \(\mathbf a=-\mu\,\mathbf r/r^3\). That is an adopted law of this model. The integrator advances x, y, \(v_x\), and \(v_y\), with \(d\mathbf r/dt=\mathbf v\).</p>
-<div class="activity"><strong>2. Record.</strong> Compare 7.6025×10<sup>6</sup> s of simulated time with the 7.6019×10<sup>6</sup> s Keplerian period derived from the initial state. What could account for the difference within this model?</div></section>
-
+<div class="activity"><strong>2. Record.</strong> Compare 7.6025×10<sup>6</sup> s of simulated time with the 7.6019×10<sup>6</sup> s Keplerian period derived from the initial state. What could account for the difference within this model?</div>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp14">Experiment 14</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
 <section id="beat1">
 <h2>Beat 1 · Energy decides bound or unbound</h2>
 <p>The particle can be given any starting speed at the same place. Below a certain speed it stays bound to the central mass, and above it the particle leaves for ever. The dividing speed follows from one number, the energy per unit mass. Give the particle three different speeds and read what the program says about each.</p>
@@ -530,8 +533,10 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 python main.py --vyInit 75961 --maxSteps 600
 python main.py --vyInit 85000 --maxSteps 600</pre><p>Compare <code>specific energy</code>, <code>conic classification</code>, <code>eccentricity</code> and <code>termination</code>. The first is elliptic; the last is hyperbolic and stops at the accepted-step limit before completing a revolution. Near escape, 75961 m/s is still slightly bound but its initial energy is so close to zero that a large <em>fractional</em> energy drift is a poor diagnostic on its own.</p>
 <div class="activity"><strong>3. Estimate.</strong> Calculate \(\sqrt{2\mu/r_0}\) with the printed initial radius and \(\mu\). Is 75961 m/s below or above it?</div><p>Only after comparing the runs, use the specific-energy definition: \(\mathcal E=v^2/2-\mu/r\). Its sign sets elliptic, parabolic or hyperbolic ideal motion, subject to the program's small near-zero classification tolerance. The printed elements describe the <em>initial</em> state, while the last accepted state can drift.</p>
-<div class="activity"><strong>4. Check.</strong> For the 85000 m/s run, find the printed <code>final radius</code> and <code>final speed</code>. Why is <code>closure radius residual</code> reported <code>n/a</code>?</div></section>
+<div class="activity"><strong>4. Check.</strong> For the 85000 m/s run, find the printed <code>final radius</code> and <code>final speed</code>. Why is <code>closure radius residual</code> reported <code>n/a</code>?</div>
+<p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> and <a href="#exp5">Experiment 5</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 
+</section>
 <section id="beat2">
 <h2>Beat 2 · Speed sets size, direction sets shape</h2>
 <p>Two particles at the same place with the same speed, aimed differently, have the same energy. What can differ between them? Keep the speed of the default run and turn its direction through 45 degrees.</p>
@@ -541,6 +546,7 @@ python main.py --vyInit 85000 --maxSteps 600</pre><p>Compare <code>specific ener
 <div class="activity"><strong>6. Explain.</strong> Use \(y_0=0\) to show why reducing \(v_y\) while adding \(v_x\) reduces \(h\), even though the total speed stays fixed.</div>
 
 
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 
 <section id="beat3">
@@ -551,8 +557,9 @@ python main.py --vyInit 85000 --maxSteps 600</pre><p>Compare <code>specific ener
 python main.py --xInit 3.626e8 --vyInit 1082 --k 3.986e14 --dt0 1000</pre><p>In the first run the Mercury-like particle starts near apoapsis, where its tangential speed is smaller than at periapsis. The second run uses an Earth-like gravitational parameter and a Moon-like starting state. It is still a fixed-centre two-body <em>approximation</em>; it does not include other bodies.</p>
 <div class="activity"><strong>7. Calculate.</strong> Multiply the default periapsis radius and speed to obtain \(h\). Divide by the apoapsis radius. Compare with 38851.5 m/s.</div><p>Equal areas in equal times follow from \(dA/dt=|h|/2\). The ideal period of a bound ellipse is \(T=2\pi\sqrt{a^3/\mu}\), so \(T^2\mu/a^3=4\pi^2\). The printed <code>Keplerian period</code> is computed from the starting state; it is a useful check on the integrated elapsed time.</p>
 <div class="activity"><strong>8. Check.</strong> Use the printed \(a,T,\mu\) from each run to estimate \(T^2\mu/a^3\). Expect about 39.48. Explain why \(T^2/a^3\) alone differs between the two central bodies.</div>
-</section>
 
+<p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a>, <a href="#exp7">Experiment 7</a>, <a href="#exp10">Experiment 10</a> and <a href="#exp11">Experiment 11</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
 <section id="beat4">
 <h2>Beat 4 · Position and velocity both repeat</h2>
 <p>An exact orbit around a fixed centre closes on itself: after one revolution the particle is back at its starting position with its starting velocity, and the next revolution retraces the first. The program counts revolutions by the angle the particle has turned through, and then compares the end state of the run with the start state. Run the default orbit for one, two and five revolutions, and look at the velocity-space plot of the first.</p>
@@ -561,7 +568,10 @@ python main.py --maxOrbits 2 --output orbit --vyInit 58980
 python main.py --maxOrbits 1.5 --output orbit --vyInit 58980
 python main.py --vyInit -58980 --output velocity --maxOrbits 1</pre><p>The velocity plot is a <em>hodograph</em>: its horizontal and vertical axes are \((v_x,v_y)\), and its near-circle is not the path in space. The red marker shows the initial velocity and the cross marks zero velocity. Reversing the tangential velocity reverses the direction of travel and flips the hodograph's offset.</p>
 <div class="activity"><strong>9. Measure.</strong> Compare the default one-revolution closure radius residual, 5.2282e-09, with the two-revolution value, 2.0868e-08. Where do numerical errors show up when an exact Kepler orbit would retrace itself?</div><p>The program accumulates wrapped changes of the position angle. For whole-number revolution targets it reports normalized end-to-start radius and velocity differences. For 1.5 revolutions both closure lines are <code>n/a</code>, since that endpoint is not meant to coincide with the start. The hodograph circle's radius is \(\mu/|h|\) for a nonradial inverse-square orbit.</p>
-<div class="activity"><strong>10. Probe.</strong> Contrast the two hodographs, then run <code>python main.py --maxOrbits 1e-10</code>. Record the controlled minimum-input error. The accepted minimum is 1e-9 revolutions.</div></section>
+<div class="activity"><strong>10. Probe.</strong> Contrast the two hodographs, then run <code>python main.py --maxOrbits 1e-10</code>. Record the controlled minimum-input error. The accepted minimum is 1e-9 revolutions.</div>
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a>, <a href="#exp8">Experiment 8</a> and <a href="#exp12">Experiment 12</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
 <section id="beat5">
 <h2>Beat 5 · The corrector</h2>
 <p>Newton's laws of orbital motion have an exact solution for a single fixed centre: the conic sections of Beat 2, from which the printed elements come. 
@@ -572,7 +582,10 @@ but the end position depends on that acceleration. The way out has two stages. A
 <pre>python main.py --eps2 1e-8 --eps1 0.05 --dt0 10000
 python main.py --eps2 10 --eps1 0.05 --dt0 10000
 python main.py --dt0 1e6 --eps1 10 --eps2 1e-12</pre><p>Compare with Beat 0. Tight and loose corrector settings both use 761 accepted steps in the first two runs. Their acceleration-evaluation counts are 3062 and 1534, versus 2301 at default tolerance. The loose run has a worse closure radius residual, although its reported maximum energy drift is slightly smaller; a single diagnostic is not a general measure of accuracy.</p>
-<div class="activity"><strong>11. Compare.</strong> Record accepted steps, acceleration evaluations, energy drift and closure for all three commands. Why is the strict long-step example a different test from merely tightening <code>eps2</code> at default <code>dt0</code>?</div><p>A predictor estimates the end of a step; an iterated corrector evaluates the acceleration at its estimated endpoint and updates the velocity. <code>eps2</code> controls convergence of the velocity <em>increment</em>, not the orbit's error. If it fails to converge within the pass limit, that trial step is rejected and retried shorter.</p></section>
+<div class="activity"><strong>11. Compare.</strong> Record accepted steps, acceleration evaluations, energy drift and closure for all three commands. Why is the strict long-step example a different test from merely tightening <code>eps2</code> at default <code>dt0</code>?</div><p>A predictor estimates the end of a step; an iterated corrector evaluates the acceleration at its estimated endpoint and updates the velocity. <code>eps2</code> controls convergence of the velocity <em>increment</em>, not the orbit's error. If it fails to converge within the pass limit, that trial step is rejected and retried shorter.</p>
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp9">Experiment 9</a> and <a href="#exp15">Experiment 15</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
 <section id="beat6">
 <h2>Beat 6 · The step control</h2>
 <p>The program never takes a step longer than <code>dt0</code>, and it takes a shorter one when the acceleration changes too much during a step for the predictor to be trusted. The option <code>eps1</code> sets how much is too much. With the default <code>dt0</code> of 10<sup>4</sup> s this never happens: the 761 steps of Beat 0 are 760 steps of exactly 10<sup>4</sup> s and one last, shortened step that lands the run on the requested revolution (Beat 4, about 2.5&times;10<sup>3</sup> s). To watch the controller work, make <code>dt0</code> ten times longer, then loosen <code>eps1</code> so far that it cannot object, and then make <code>dt0</code> a hundred times longer while it still cannot object.</p>
@@ -580,14 +593,20 @@ python main.py --dt0 1e6 --eps1 10 --eps2 1e-12</pre><p>Compare with Beat 0. Tig
 <pre>python main.py --dt0 1e5 --eps1 0.05
 python main.py --dt0 1e5 --eps1 10
 python main.py --dt0 1e6 --eps1 10</pre><p>The default 10,000 s maximum step is conservative for this initial orbit. Raising it to 100,000 s with the usual <code>eps1</code> gives 181 accepted steps; loosening <code>eps1</code> to 10 gives 77. The third run has only 14 accepted steps and appreciably worse energy drift. <code>dt0</code> is a ceiling, while <code>eps1</code> controls trial-step rejection when acceleration changes too much.</p>
-<div class="activity"><strong>12. Inspect.</strong> Compare the printed <code>shortest accepted step</code>, <code>longest accepted step</code> and <code>angular-step rejections</code>. Which run is controlled mainly by <code>dt0</code>, and which is repeatedly shortened?</div><p>An additional angular safeguard keeps a trial step from turning through more than half a revolution; a coarse trial intersection is a rejected step, not a physical singularity report.</p></section>
+<div class="activity"><strong>12. Inspect.</strong> Compare the printed <code>shortest accepted step</code>, <code>longest accepted step</code> and <code>angular-step rejections</code>. Which run is controlled mainly by <code>dt0</code>, and which is repeatedly shortened?</div><p>An additional angular safeguard keeps a trial step from turning through more than half a revolution; a coarse trial intersection is a rejected step, not a physical singularity report.</p>
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp9">Experiment 9</a> and <a href="#exp15">Experiment 15</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
 <section id="beat7">
 <h2>Beat 7 · How far to trust it</h2>
 <p>Every number printed so far came from an approximation, and Beats 5 and 6 showed settings that change it. The way to decide when a result is good enough is to change the numerical settings and see whether the numbers you care about change. Halve <code>dt0</code> three times.</p>
 <p>For comparison, the default settings are <code>--dt0 10000</code>.</p>
 <pre>python main.py --dt0 5000 --output energy
 python main.py --dt0 1250 --output energy</pre><p>As the step ceiling shrinks, the energy drift and one-revolution closure normally improve; the finer run shows about 8.3504e-07 maximum fractional energy drift and 1.2675e-12 closure radius residual. Read the <code>final specific energy</code> separately from the Keplerian block's <code>specific energy</code> for the starting state. The energy plot shows specific kinetic, potential and total energy; the total should be nearly flat.</p>
-<div class="activity"><strong>13. Quantify.</strong> Compare the default, 5000 s, and 1250 s runs. How does the energy-drift ratio change as the maximum step is halved? Do not infer an order from a single pair without checking the actual accepted steps.</div><p>Exact energy and angular momentum are conserved under the adopted force law. A small fractional drift is useful when the initial invariant is safely nonzero; near escape or radial infall, inspect the <em>absolute</em> drift and the scale of the initial quantity as well.</p></section>
+<div class="activity"><strong>13. Quantify.</strong> Compare the default, 5000 s, and 1250 s runs. How does the energy-drift ratio change as the maximum step is halved? Do not infer an order from a single pair without checking the actual accepted steps.</div><p>Exact energy and angular momentum are conserved under the adopted force law. A small fractional drift is useful when the initial invariant is safely nonzero; near escape or radial infall, inspect the <em>absolute</em> drift and the scale of the initial quantity as well.</p>
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp9">Experiment 9</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
 
 <section id="beat8">
 <h2>Beat 8 · The hard cases</h2>
@@ -596,7 +615,9 @@ python main.py --dt0 1250 --output energy</pre><p>As the step ceiling shrinks, t
 <pre>python main.py --vyInit 10000 --dt0 10000 --eps1 0.05 --vxInit 0 --maxSteps 20000
 python main.py --vyInit 10000 --eps1 0.005 --dt0 10000 --vxInit 0 --maxSteps 20000
 python main.py --vxInit -1000 --vyInit 0 --maxSteps 20000 --dt0 10000 --eps1 0.05</pre><p>A slower tangential start makes a very elongated ellipse with a near-centre passage. The first run's maximum fractional energy drift is about 0.011176; tightening <code>eps1</code> in the second run reduces it considerably. With zero tangential velocity the last run approaches the point-mass singularity guard: the program stops there instead of claiming to simulate passage through \(r=0\).</p>
-<div class="activity"><strong>14. Test.</strong> Compare accepted steps and the energy drift of the first two runs. Why can more steps be worthwhile near periapsis?</div><div class="activity"><strong>15. Diagnose.</strong> In the radial run, read termination, shortest accepted step and maximum <em>absolute</em> angular-momentum drift. Explain why fractional angular-momentum drift is unavailable when initial \(h=0\), and why this teaching model does not determine what a real particle does at the central body's surface.</div></section>
+<div class="activity"><strong>14. Test.</strong> Compare accepted steps and the energy drift of the first two runs. Why can more steps be worthwhile near periapsis?</div><div class="activity"><strong>15. Diagnose.</strong> In the radial run, read termination, shortest accepted step and maximum <em>absolute</em> angular-momentum drift. Explain why fractional angular-momentum drift is unavailable when initial \(h=0\), and why this teaching model does not determine what a real particle does at the central body's surface.</div>
+<p><em>Experiments that go with this beat:</em> <a href="#exp13">Experiment 13</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
 <section id="parameters"><h2>Parameters</h2><p>Run <code>python main.py --help</code> for the command summary and <code>python main.py --version</code> for the core version and Build ID. Omitted options keep these defaults. <code>--output</code> selects one of five figures and does not change the integration.</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Command-line options"><table><thead><tr><th>Option</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>--xInit</code></td><td>4.6e10</td><td>m</td><td>Initial x-position; the default approximates Mercury's perihelion.</td></tr>
@@ -612,6 +633,110 @@ python main.py --vxInit -1000 --vyInit 0 --maxSteps 20000 --dt0 10000 --eps1 0.0
 <tr><td><code>--output</code></td><td>orbit</td><td>&mdash;</td><td>Display selector; the five alternatives are listed under Output Modes. It changes only the plot, not the integration.</td></tr>
 </tbody></table></div>
 <p>The central body's gravitational parameter <code>--k</code> is (GM), not a mass in kilograms. All numeric inputs must be finite. Initial radius must be nonzero; <code>--k</code>, <code>--dt0</code>, <code>--eps1</code> and <code>--eps2</code> must be positive; <code>--maxSteps</code> is a positive integer; <code>--maxOrbits</code> must be at least 1e-9. Invalid input produces an <code>Orbit:</code> error instead of a plot.</p></section>
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<p>The experiments are arranged in approximate order of difficulty. The first few need only command-line changes; later ones ask you to interpret conservation laws, orbital geometry, or the numerical method, and the last few are programming exercises. Each cites the beat whose numbers it builds on.</p>
+<h3 id="exp1">1 · Reproduce Planetary Orbits — Introductory</h3>
+<pre><code>python main.py
+python main.py --xInit 1.471e11 --vyInit 30290</code></pre>
+<p>
+      Start with the default Mercury orbit (Beat 0). Then use the perihelion distances and maximum orbital speeds from Table 4.3 of <em>Gravity from the Ground Up</em> to model other planets: place the planet on the positive x-axis at the perihelion distance in the second column and give it only the maximum y-direction speed from the third column. From the plotted perihelion and aphelion distances, estimate the eccentricity and compare it with the first column, using the formula in the table caption. This directly tests whether Newton's inverse-square law reproduces the observed shapes of planetary orbits. As a check on your method, the second command uses commonly quoted values for the Earth, a perihelion of about 1.471&times;10<sup>11</sup> m and a speed of about 30.29 km s<sup>&minus;1</sup>; it prints an eccentricity of 0.016950 and a period of 3.1570e+07 s, which is 365.4 days. To use the book's values, replace the numbers in this template with those of the planet you choose:
+    </p>
+<pre><code>python main.py --xInit PERIHELION_M --yInit 0 \
+    --vxInit 0 --vyInit MAX_SPEED_M_PER_S</code></pre>
+<h3 id="exp2">2 · Measure Planetary Periods — Introductory</h3>
+<pre><code>python main.py --maxOrbits 1 --output position_time
+python main.py --maxOrbits 1 --output velocity_time</code></pre>
+<p>
+      For several of the planetary orbits from Experiment 1, set <code>--maxOrbits 1</code> and compare the reported <code>elapsed simulated time</code> with the observed orbital period. You can also read the period from the time axis of the position-against-time or velocity-against-time plot. Compare your results with the planetary periods in Table 4.2 of the book. For the default orbit the run reports 7.6025e+06 s against the exact 7.6019e+06 s of Eq. (9), which is 88.0 days (Beat 3).
+    </p>
+<h3 id="exp3">3 · Position and Velocity Both Repeat — Introductory to Intermediate</h3>
+<pre><code>python main.py --maxOrbits 1 --output velocity</code></pre>
+<p>
+      A closed orbit must return not only to its starting position but also to its starting velocity. Run one complete bound orbit and select <code>--output velocity</code>. The velocity-space curve should close just as the position-space orbit does. The console closure residuals give a numerical check: after an integral number of revolutions, both the final radius and velocity should be close to their initial values. Check the numbers of Beat 4: the circle has a radius of 48916 m s<sup>&minus;1</sup> and its centre is 10064 m s<sup>&minus;1</sup> from the origin. Try <code>--vyInit -58980</code> as well: the orbit runs clockwise and the centre moves to the other side of the origin.
+    </p>
+<h3 id="exp4">4 · Energy Conservation — Intermediate</h3>
+<pre><code># Bound default
+python main.py --output energy
+
+# Hyperbolic comparison
+python main.py --vyInit 85000 --maxSteps 600 --output energy</code></pre>
+<p>
+      After reading the introduction to gravitational energy in Chapter 6, select <code>--output energy</code> for a bound orbit. The kinetic and potential specific energies change continually, but their sum should remain nearly constant. Then make an unbound orbit and compare its total specific energy with that of the bound orbit: bound Kepler orbits have negative specific energy, hyperbolic orbits positive, and the marginal parabolic case zero. From Eq. (3) the total is &minus;1.1457&times;10<sup>9</sup> J kg<sup>&minus;1</sup> for the first command and +7.2745&times;10<sup>8</sup> J kg<sup>&minus;1</sup> for the second. The console's drift lines show the remaining numerical error and give a quantitative check on conservation. Use the absolute drift for the parabolic case, where a fractional change from zero is undefined (Beat 1).
+    </p>
+<h3 id="exp5">5 · Bound, Parabolic, and Hyperbolic Motion — Intermediate</h3>
+<pre><code>python main.py --vyInit 70000
+python main.py --vyInit 75961 --maxSteps 600
+python main.py --vyInit 75961.2143594 --maxSteps 600
+python main.py --vyInit 85000 --maxSteps 600</code></pre>
+<p>
+      At a fixed starting radius \(r\), vary the initial speed through the escape value \(v_{\rm esc}=\sqrt{2\mu/r}\), Eq. (5). Below it the orbit is bound, at it the orbit is parabolic, and above it the orbit is hyperbolic. For unbound cases, increase <code>--maxSteps</code> if necessary, because the requested <code>--maxOrbits</code> may never be reached. Compare the trajectory class with the sign of the initial specific energy. A decimal value typed for \(v_{\rm esc}\) is rounded to floating-point precision, so its computed energy may be slightly positive or negative rather than exactly zero. The program therefore calls a start parabolic when its energy is within one part in 10<sup>12</sup> of zero on the energy scale of the problem, which the third command satisfies and 75961 does not (Beat 1). Try speeds just below and above the threshold, and inspect the absolute drift, comparing it with the size of the initial specific energy, since the fractional drift is unreliable there and a trajectory whose drift exceeds that energy cannot be trusted (Beat 1).
+    </p>
+<h3 id="exp6">6 · Direction Independence of Binding — Intermediate</h3>
+<pre><code># These two velocities have the same speed
+python main.py --vxInit 0 --vyInit 58980
+python main.py --vxInit 41705.15 --vyInit 41705.15</code></pre>
+<p>
+      Keep \(v_x^2+v_y^2\) fixed while rotating the initial velocity vector at a fixed starting position. The orbit's shape and angular momentum change, but its bound or unbound classification, its semimajor axis and its period do not, because the specific energy depends on the speed and not on the direction of the velocity. Check numbers from Beat 2: the eccentricity moves from 0.20575 to 0.72192 and the periapsis from 4.6000e+10 m to 1.6105e+10 m, while the semimajor axis stays at 5.7916e+10 m. Try other angles at the same speed. What is the largest eccentricity you can reach?
+    </p>
+<h3 id="exp7">7 · Approximate Moon Around a Fixed Earth — Intermediate</h3>
+<pre><code>python main.py --xInit 3.626e8 --yInit 0 \
+    --vxInit 0 --vyInit 1082 --k 3.986e14 \
+    --dt0 1000 --maxOrbits 1</code></pre>
+<p>
+      Replace the solar gravitational parameter by \(GM_\oplus\approx3.9860\times10^{14}\ \mathrm{m^3\,s^{-2}}\), and try <code>xInit</code> = 3.626e8 m with <code>vyInit</code> = 1082 m s<sup>&minus;1</sup>. This fixed-Earth test-particle model has a Kepler period of about <strong>27.8 days</strong> (the printed 2.4034e+06 s), and an eccentricity of 0.064989. Compare the result with the model's prediction, remembering that the real Earth&ndash;Moon system differs because the Moon's mass is not negligible. Beat 3 uses this run to test Kepler's third law.
+    </p>
+<h3 id="exp8">8 · Repeat Several Revolutions — Intermediate</h3>
+<pre><code>python main.py --maxOrbits 2
+python main.py --maxOrbits 5
+python main.py --maxOrbits 1.5</code></pre>
+<p>
+      Set <code>--maxOrbits 2</code> or 5 and examine whether successive numerical ellipses lie on top of one another. This makes accumulated integration error visible: the closure lines of Beat 4 grow with the number of revolutions. Fractional values such as 1.5 are also allowed, although closure residuals are reported only when the requested endpoint is an integral number of revolutions, so the third command prints <code>n/a</code> for both.
+    </p>
+<h3 id="exp9">9 · Numerical Convergence — Intermediate to Advanced</h3>
+<pre><code># Baseline
+python main.py
+
+# Smaller maximum step and tighter tolerances
+python main.py --dt0 5000 --eps1 0.01 --eps2 1e-6</code></pre>
+<p>
+      Reduce <code>--dt0</code> and tighten <code>--eps1</code> and <code>--eps2</code>. Compare the orbital period, the energy drift, the angular-momentum drift and the closure residuals rather than judging accuracy from the orbit plot alone. Change one numerical control at a time so that you can tell which effect it has. In the second command above, the extra tightening changes nothing: the run is identical to <code>--dt0 5000</code> alone, 1521 steps and a drift of 1.3361e-05, because at that step size neither the <code>eps1</code> test nor the <code>eps2</code> test is the limit. You can also make either tolerance deliberately large to see what happens when that accuracy control is effectively relaxed (Beats 5 and 6).
+    </p>
+<h3 id="exp10">10 · Verify Kepler's Third Law — Advanced</h3>
+<pre><code>python main.py
+# Repeat with the Table 4.3 perihelion position and speed for other planets.</code></pre>
+<p>
+      Run several bound planetary orbits with <code>--maxOrbits 1</code>. For each, use the printed <code>Keplerian period</code> \(T\) and <code>semimajor axis</code> \(a\), then compare \(T^2/a^3\). It should be approximately constant when the central mass is unchanged, and \(T^2\mu/a^3\) should equal \(4\pi^2\approx39.48\) whatever the central body (Beat 3). The calculation itself still requires you to record values from several runs and compare them.
+    </p>
+<h3 id="exp11">11 · Verify Kepler's Second Law — Advanced Programming</h3>
+<p>
+      Use the returned \(x,y,t\) arrays to check that equal areas are swept in equal times. Approximate the area swept during each step by the triangle formed by the origin and the two successive radius vectors, and divide by the length of the step, because the steps are not all equal. The rates should be nearly equal, and equal to \(h/2\), Eq. (8). Insert your analysis in <code>main.py</code> immediately after <code>run_orbit()</code> returns; the arrays are available there as <code>result.xs</code>, <code>result.ys</code> and <code>result.ts</code>. For the default orbit the rate should be close to 1.3565&times;10<sup>15</sup> m<sup>2</sup> s<sup>&minus;1</sup> and stay within a few parts in 10<sup>5</sup> of it. One way to start:
+    </p>
+<pre><code>import numpy as np
+areas = 0.5 * (result.xs[:-1] * result.ys[1:] - result.xs[1:] * result.ys[:-1])
+rate = areas / np.diff(result.ts)          # area swept per second
+print(rate.min(), rate.max(), 0.5 * result.Hs[0])</code></pre>
+<h3 id="exp12">12 · Explore the Velocity Hodograph — Advanced</h3>
+<pre><code>python main.py --output velocity
+python main.py --vyInit 85000 --maxSteps 600 --output velocity</code></pre>
+<p>
+      For a non-radial Kepler orbit the velocity vectors lie on a circle: a bound ellipse traces the full circle, whereas parabolic and hyperbolic trajectories trace only part of it. Compare several eccentricities and then an unbound orbit. From Eq. (10), the hyperbolic case has a circle of radius 33942 m s<sup>&minus;1</sup> whose centre is 51059 m s<sup>&minus;1</sup> from the origin, so the origin lies outside the circle, as an eccentricity of 1.5043 requires.
+    </p>
+<h3 id="exp13">13 · Point-Mass Radial Infall — Advanced</h3>
+<pre><code>python main.py --vxInit -1000 --vyInit 0 --maxSteps 20000
+python main.py --vxInit -1000 --vyInit 0 --maxSteps 20000 --eps1 0.001</code></pre>
+<p>
+      Give the particle zero or nearly zero angular momentum and an inward velocity. Observe what happens as the trajectory approaches the mathematical point-mass singularity. The program contains a numerical guard to prevent evaluation at \(r=0\); the guard radius is not the physical surface of a star or planet (Beat 8). The first command stops at the singularity with an energy drift of 1.8426e+05. The second, with <code>--eps1 0.001</code>, uses all 20000 steps before it gets there, and its drift is only 9.9444e-05 up to that point. Try increasing <code>--maxSteps</code> for it, and compare how the energy drift behaves as the particle approaches the centre.
+    </p>
+<h3 id="exp14">14 · Try a Different Central Force Law — Advanced Programming Extension</h3>
+<p>
+      As an optional programming exercise, make a copy of the program and replace the Newtonian inverse-square acceleration with other central-force laws. A particularly instructive comparison is a Hooke-law acceleration proportional to \(-\mathbf r\), the other force for which Bertrand's theorem gives closed orbits (Beat 4). You can also try small non-Newtonian corrections and look for orbital precession. Historically, modified Newtonian force laws were proposed as explanations for Mercury's anomalous perihelion precession, while modern alternatives such as MOND have been proposed as alternatives to dark matter in some astrophysical settings. After experimenting with the code, research these topics and investigate why modified force laws have not replaced general relativity as the accepted explanation of Mercury's perihelion precession. Keep this as a separate experimental copy so the standard <code>Orbit</code> program continues to represent Newtonian gravity.
+    </p>
+<h3 id="exp15">15 · Compare Error Measures — Advanced Programming Extension</h3>
+<p>
+      Make a separate experimental copy and replace the Euclidean-norm comparisons in <code>_relative_vector_change()</code> and <code>_relative_increment_change()</code> with sums of absolute component differences. Run the same eccentric orbit with each version, then compare accepted-step counts, period error, conservation drift and closure residuals. Rotate the initial position and velocity together and repeat: which error measure is unchanged by a rotation of the coordinate axes, and does the difference matter at the tolerances you tested? Beats 5 and 6 describe what the two tests do.
+    </p>
+</section>
 <section id="limits"><h2>Scope and checks</h2><p>Orbit computes planar Newtonian motion about a fixed point mass. It omits relativity, drag, finite sizes, tides and a moving primary. An orbit near the numerical singularity guard is a failure of this model's assumptions, not a planetary collision calculation. The exact Keplerian elements derived from the starting state and the energy/angular-momentum drift give complementary checks; none alone certifies an entire computed trajectory.</p>
 <p>The companion Sample Outputs Guide has one representative image for each Beat. The detailed tutorial supplies derivations and longer investigations. Equations on these pages are rendered by MathJax from a public online service; an internet connection is needed to see them typeset. The Python program itself runs offline.</p></section>
 
