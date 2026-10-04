@@ -1017,7 +1017,7 @@ the Jacobi drift of any run whose numbers you intend to quote (Beat 8).
 <div class="experiment-card" id="exp1">
 <div class="exp-num">Experiment 1 · Introductory</div>
 <div class="exp-title">A quieter orbit</div>
-<p class="exp-beat">Goes with <a href="#beat0">Beat 0</a> and <a href="#beat2">Beat 2</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat00</a> and <a href="#beat22</a>.</p>
 <p>The default launch is 8.9% faster than circular, so Mercury starts on an ellipse. Launch it at
 close to the circular speed instead, with <code>python main.py --vy_init 54400</code>, and compare
 the Sun-distance range and the plot with the default run. Then try a few speeds between 50,000 and
@@ -1030,7 +1030,7 @@ about 0.05 AU (Beat 3).</p>
 <div class="experiment-card" id="exp2">
 <div class="exp-num">Experiment 2 · Introductory</div>
 <div class="exp-title">Where does the perturbation stop being small?</div>
-<p class="exp-beat">Goes with <a href="#beat3">Beat 3</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat33</a>.</p>
 <p>Extend Beat 3's sequence to heavier companions, keeping <code>--vy_init 54379.16</code>: try
 <code>--m_planet_solar</code> 0.3 and 0.5 as well as 0.001, 0.01 and 0.1. Plot the spread of the
 Sun-distance range against companion mass on logarithmic axes. Where does the straight line of
@@ -1043,7 +1043,7 @@ simple proportion has broken down by a few tenths of a solar mass.</p>
 <div class="experiment-card" id="exp3">
 <div class="exp-num">Experiment 3 · Introductory–Intermediate</div>
 <div class="exp-title">Prograde and retrograde</div>
-<p class="exp-beat">Goes with <a href="#beat3">Beat 3</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat33</a>.</p>
 <p>Reverse the direction of Mercury's orbit by changing the sign of its starting velocity, so that
 it goes round the Sun against the binary's motion: compare <code>python main.py --vy_init
 54400</code> with <code>python main.py --vy_init -54400</code>, and then the same pair at other
@@ -1055,7 +1055,7 @@ retrograde orbit passes the companion faster, so each encounter lasts a shorter 
 <div class="experiment-card" id="exp4">
 <div class="exp-num">Experiment 4 · Intermediate</div>
 <div class="exp-title">Longer runs, and giving the companion a size</div>
-<p class="exp-beat">Goes with <a href="#beat5">Beat 5</a> and <a href="#beat6">Beat 6</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat55</a> and <a href="#beat66</a>.</p>
 <p>Continue Beat 5's run further, with <code>--max_steps 60000</code> and then 100,000, and watch
 the closest Sun distance, the smallest working step and the Jacobi drift. At 100,000 steps
 Mercury also passes extremely close to the companion, which by default has no collision radius.
@@ -1070,7 +1070,7 @@ trusting a long run.</p>
 <div class="experiment-card" id="exp5">
 <div class="exp-num">Experiment 5 · Intermediate</div>
 <div class="exp-title">Which setting controls the error?</div>
-<p class="exp-beat">Goes with <a href="#beat8">Beat 8</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat88</a>.</p>
 <p>On the smooth default orbit, compare <code>python main.py --dt 1000 --max_steps 20000</code>
 with <code>python main.py --dt 1000 --max_steps 20000 --eps1 0.01 --eps2 1e-5</code>. On the
 Sun-grazing run of Beat 5, compare changing <code>--dt</code> with changing <code>--eps1</code>.
@@ -1083,7 +1083,7 @@ it is the other way round (Beat 8): halving <code>--dt</code> leaves the drift n
 <div class="experiment-card" id="exp6">
 <div class="exp-num">Experiment 6 · Advanced</div>
 <div class="exp-title">Map a finite-time stability boundary</div>
-<p class="exp-beat">Goes with <a href="#beat6">Beat 6</a> and <a href="#beat9">Beat 9</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat66</a> and <a href="#beat99</a>.</p>
 <p>Hold the default binary fixed and vary Mercury's starting distance from the Sun, for example
 <code>python main.py --x_init_au 0.25 --max_steps 30000</code>, then 0.35 and 0.45, and more
 values in between. Decide in advance how you will classify each run after 30,000 steps: still
@@ -1107,7 +1107,7 @@ stability limit.</p>
 <div class="experiment-card" id="exp7">
 <div class="exp-num">Experiment 7 · Advanced</div>
 <div class="exp-title">The smallest orbit around both stars</div>
-<p class="exp-beat">Goes with <a href="#beat1">Beat 1</a> and <a href="#beat7">Beat 7</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat11</a> and <a href="#beat77</a>.</p>
 <p>Using Beat 7's equal-mass binary, launch Mercury on circular orbits around the centre of mass at
 different distances \(R\) from it. For each, <code>--x_init_au</code> is \(R+0.5\) and
 <code>--vy_init</code> is \(\sqrt{G(2M_\odot)/R}\) plus the Sun's 21,061 m/s. Run each for 60,000
@@ -1123,7 +1123,7 @@ this length.</p>
 <div class="experiment-card" id="exp8">
 <div class="exp-num">Experiment 8 · Capstone</div>
 <div class="exp-title">Balancing at the inner Lagrange point</div>
-<p class="exp-beat">Goes with <a href="#beat4">Beat 4</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat44</a>.</p>
 <p>Between the two stars there is a point, \(L_1\), where a body turning with the binary feels no
 net force in the rotating frame. With the default binary, find it: put Mercury on the line between
 the stars (<code>--y_init 0 --vx_init 0</code>), give it the speed that turns with the binary,

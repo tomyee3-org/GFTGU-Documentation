@@ -1040,7 +1040,7 @@ some experiments additionally ask you to inspect raw samples or change the code.
 <div class="experiment-card" id="exp1">
 <div class="exp-num">Experiment 1 · Introductory–Intermediate</div>
 <div class="exp-title">Optimal firing angle</div>
-<p class="exp-beat">Goes with <a href="#beat1">Beat 1</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat11</a>.</p>
 <p>
           <strong>Core task:</strong> Keep the default speed of 100 m/s and
           timestep of 0.1 s, and run several launch angles, for example
@@ -1057,7 +1057,7 @@ some experiments additionally ask you to inspect raw samples or change the code.
 <div class="experiment-card" id="exp2">
 <div class="exp-num">Experiment 2 · Introductory</div>
 <div class="exp-title">What does the timestep change?</div>
-<p class="exp-beat">Goes with <a href="#beat3">Beat 3</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat33</a>.</p>
 <p>
           Run the same 100 m/s, 45° trajectory with several timesteps, for example
           <code>python main.py --dt 0.5</code>, then 0.2, 0.1, 0.05, and 0.02 s.
@@ -1076,7 +1076,7 @@ some experiments additionally ask you to inspect raw samples or change the code.
 <div class="experiment-card" id="exp3">
 <div class="exp-num">Experiment 3 · Intermediate</div>
 <div class="exp-title">Effect of muzzle speed</div>
-<p class="exp-beat">Goes with <a href="#beat2">Beat 2</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat22</a>.</p>
 <p>
           Fix the angle at 45° and vary <code>--speed</code>, for example with
           <code>python main.py --speed 50</code> through <code>--speed 500</code>.
@@ -1094,7 +1094,7 @@ some experiments additionally ask you to inspect raw samples or change the code.
 <div class="experiment-card" id="exp4">
 <div class="exp-num">Experiment 4 · Intermediate</div>
 <div class="exp-title">Overlay several trajectories</div>
-<p class="exp-beat">Goes with <a href="#beat1">Beat 1</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat11</a>.</p>
 <p>
           Call <code>run_cannon_trajectory</code> for launch angles of 15°, 30°, 45°, 60°, and 75°
           at <code>speed = 100</code> m/s. The overlay helper makes a single figure without
@@ -1123,7 +1123,7 @@ plot_cannon_overlay(trajectories)</code></pre>
 <div class="experiment-card" id="exp5">
 <div class="exp-num">Experiment 5 · Intermediate · Schutz suggestion</div>
 <div class="exp-title">Interpolate the landing point</div>
-<p class="exp-beat">Goes with <a href="#beat5">Beat 5</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat55</a>.</p>
 <p>
           The loop stops after storing the first point for which \(h&lt;0\), so the projectile has
           actually crossed the ground between the last two stored samples. If those heights are
@@ -1147,7 +1147,7 @@ plot_cannon_overlay(trajectories)</code></pre>
 <div class="experiment-card" id="exp6">
 <div class="exp-num">Experiment 6 · Intermediate–Advanced</div>
 <div class="exp-title">Accuracy of the two integrators</div>
-<p class="exp-beat">Goes with <a href="#beat6">Beat 6</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat66</a>.</p>
 <p>
           Run the same trajectory with <code>--method euler</code> and
           <code>--method improved</code>. Use the printed interpolated landing range
@@ -1164,7 +1164,7 @@ plot_cannon_overlay(trajectories)</code></pre>
 <div class="experiment-card" id="exp7">
 <div class="exp-num">Experiment 7 · Advanced · Schutz suggestion</div>
 <div class="exp-title">Deliberately degrade the vertical-position update</div>
-<p class="exp-beat">Goes with <a href="#beat4">Beat 4</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat44</a>.</p>
 <p>
           Schutz suggested making the vertical step less accurate by advancing the height with
           the velocity at the <em>end</em> of the timestep instead of the average velocity over

@@ -742,7 +742,7 @@ m/s, <code>simplified</code>). It completes 25 full revolutions rather than impa
 per-revolution altitude climbs from a minimum of about 192 m to a maximum of 4.78 million metres
 by the 25th — a runaway numerical energy gain, not a physical one, for a launch that impacted
 almost immediately at the default \(\Delta t=0.4\) s. This is the sharpest illustration on this
-page of why <a href="#beat9">Beat 9</a> and the warning under <a href="#description">Description</a>
+page of why <a href="#beat99</a> and the warning under <a href="#description">Description</a>
 say the algorithm is not symplectic: two runs that differ only in timestep can disagree not just
 in a few digits but in the entire qualitative outcome.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp9">Experiment 9</a> in
@@ -1112,7 +1112,7 @@ you.
 <div class="experiment-card" id="exp1">
 <div class="exp-num">Experiment 1 · Introductory</div>
 <div class="exp-title">Find the circular speed by bisection</div>
-<p class="exp-beat">Goes with <a href="#beat0">Beat 0</a> and <a href="#beat2">Beat 2</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat00</a> and <a href="#beat22</a>.</p>
 <p><strong>Core task:</strong> Without using Eq. 4, find the inverse-square circular speed at
 \(h_0=300\) km by bisection: run <code>python main.py --h0 300000 --uInit &lt;guess&gt;
 --force_law inverse_square --dt 1 --maxSteps 8000</code> at a few guessed speeds. The osculating
@@ -1135,7 +1135,7 @@ print an eccentricity below 0.001, with both perigee and apogee close to \(h_0\)
 <div class="experiment-card" id="exp2">
 <div class="exp-num">Experiment 2 · Introductory</div>
 <div class="exp-title">Push maxSteps and dt to their edges</div>
-<p class="exp-beat">Goes with <a href="#beat9">Beat 9</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat99</a>.</p>
 <p>Run <code>python main.py --maxSteps 2</code>, then <code>--maxSteps 1</code>, then
 <code>--dt 0</code>, then <code>--h0 -1</code>. Read each program's response and identify, for
 each, which validation rule in <a href="#algorithm">Algorithm</a> step 1 it triggers. Then run
@@ -1148,7 +1148,7 @@ integer &gt;= 2</code>.</p>
 <div class="experiment-card" id="exp3">
 <div class="exp-num">Experiment 3 · Introductory–Intermediate</div>
 <div class="exp-title">Where the two force laws start to disagree</div>
-<p class="exp-beat">Goes with <a href="#beat1">Beat 1</a> and <a href="#beat5">Beat 5</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat11</a> and <a href="#beat55</a>.</p>
 <p>Beat 1 already found the two laws measurably different at 300 m altitude over 200 s — different
 sample counts, different flight times — even though both still end in impact. This experiment asks
 a different question: not <em>when</em> the two laws first differ, but when that difference starts
@@ -1168,7 +1168,7 @@ Beat 7 measures is an energy <em>gain</em>, so successive close approaches under
 <div class="experiment-card" id="exp4">
 <div class="exp-num">Experiment 4 · Intermediate</div>
 <div class="exp-title">Geostationary altitude</div>
-<p class="exp-beat">Goes with <a href="#beat2">Beat 2</a> and <a href="#beat8">Beat 8</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat22</a> and <a href="#beat88</a>.</p>
 <p>Use Eq. 4 to find the circular speed at geostationary altitude,
 \(h_0=35{,}786{,}000\) m, where the orbital period should equal one sidereal day. Run
 <code>python main.py --h0 35786000 --uInit &lt;your value&gt; --force_law inverse_square --dt 5
@@ -1183,7 +1183,7 @@ Beat 7.</p>
 <div class="experiment-card" id="exp5">
 <div class="exp-num">Experiment 5 · Intermediate</div>
 <div class="exp-title">Add a radial launch velocity</div>
-<p class="exp-beat">Goes with <a href="#beat3">Beat 3</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat33</a>.</p>
 <p>All the orbital examples on this page use a purely tangential launch, <code>vInit=0</code>. Add
 a nonzero <code>--vInit</code> to the default near-surface launch, for example
 <code>python main.py --vInit 50</code>, and compare the outcome with Beat 0's default. Then try a
@@ -1199,8 +1199,8 @@ extra time before the surface is reached again.</p>
 <div class="exp-num">Experiment 6 · Intermediate</div>
 <div class="exp-title">Two impact boundaries, not one: the analytic threshold versus the numerical
 threshold</div>
-<p class="exp-beat">Goes with <a href="#beat2">Beat 2</a>, <a href="#beat3">Beat 3</a>, and
-<a href="#beat4">Beat 4</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat22</a>, <a href="#beat33</a>, and
+<a href="#beat44</a>.</p>
 <p>At \(h_0=300\) km under <code>inverse_square</code>, run a sequence of launch speeds spanning
 well below \(v_c=7725.7\) m/s to well above \(v_e=10{,}925.8\) m/s — for example every 500 m/s
 from 6000 to 12000 — and record each run's outcome and, when printed, its osculating eccentricity.
@@ -1276,7 +1276,7 @@ on \(\Delta t\) near the ground.</p>
 <div class="experiment-card" id="exp7">
 <div class="exp-num">Experiment 7 · Intermediate–Advanced</div>
 <div class="exp-title">Plot the rosette</div>
-<p class="exp-beat">Goes with <a href="#beat5">Beat 5</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat55</a>.</p>
 <p>Call <code>run_earth_orbit()</code> directly with <code>force_law="simplified"</code> at a
 speed noticeably below the local simplified-law circular speed (Beat 5 uses 7500 m/s against
 8089.9 m/s at 300 km) but small enough not to impact within a few thousand stored points, and plot
@@ -1292,7 +1292,7 @@ launch point itself.</p>
 <div class="experiment-card" id="exp8">
 <div class="exp-num">Experiment 8 · Intermediate–Advanced</div>
 <div class="exp-title">Interpolate the impact point by hand</div>
-<p class="exp-beat">Goes with <a href="#beat6">Beat 6</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat66</a>.</p>
 <p>Write a short script that calls <code>run_earth_orbit(return_diagnostics=True)</code> for the
 default launch, takes the last two stored \((x,y)\) points, and solves Eq. 8's quadratic in
 \(s\) yourself with <code>numpy</code> or the quadratic formula. Compare your \(s\) and the
@@ -1305,7 +1305,7 @@ interpolation 0.1479 (Beat 6 explains the difference).</p>
 <div class="experiment-card" id="exp9">
 <div class="exp-num">Experiment 9 · Advanced</div>
 <div class="exp-title">Reproduce the drift table</div>
-<p class="exp-beat">Goes with <a href="#beat7">Beat 7</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat77</a>.</p>
 <p>Reproduce Beat 7's five-row table yourself: run the 300 km circular launch at
 \(\Delta t=4,\,2,\,1,\,0.5,\,0.25\) s (or add a finer \(\Delta t=0.1\) s row of your own), record
 each run's interpolated maximum altitude, and confirm that the drift above 300 km very nearly
@@ -1319,7 +1319,7 @@ halve the drift.</p>
 <div class="experiment-card" id="exp10">
 <div class="exp-num">Experiment 10 · Advanced</div>
 <div class="exp-title">Verify Kepler's third law numerically</div>
-<p class="exp-beat">Goes with <a href="#beat8">Beat 8</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat88</a>.</p>
 <p>Run circular orbits under <code>inverse_square</code> at three or more altitudes of your
 choosing, each at its own circular speed from Eq. 4, using a small enough \(\Delta t\) that
 Beat 7's drift does not confuse the comparison. Record each run's per-revolution time and compute

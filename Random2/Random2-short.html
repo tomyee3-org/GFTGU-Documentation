@@ -473,7 +473,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 </style>
 </head>
 <body><div class="page-wrap"><header>
-<div class="badge">Chapter 8 · Gravity from the Ground Up · Help File</div>
+<div class="badge">Gravity from the Ground Up · Help File</div>
 <h1><em>Random2</em> — Random Walks and Radiative Diffusion</h1>
 <div class="sub">
     Source Code:
@@ -481,83 +481,184 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
     Documentation:
         <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
 </div>
-</header><nav id="sidebar"><div class="nav-label">Start</div><a href="#overview">Overview</a><div class="nav-label">At the terminal</div><a href="#beat0">Beat 0 · Walk far, end near the start</a><a href="#beat1">Beat 1 · Put uncertainty beside an average</a><a href="#beat2">Beat 2 · Change the step distribution</a><a href="#beat3">Beat 3 · Follow four paths through a circle</a><a href="#beat4">Beat 4 · Estimate escape steps</a><a href="#beat5">Beat 5 · Double the radius</a><a href="#beat6">Beat 6 · Rescale every step and the circle</a><a href="#beat7">Beat 7 · Watch a cap censor the sample</a><a href="#beat8">Beat 8 · Repeat, vary, and reject</a><div class="nav-label">More</div><a href="#further">Further investigations</a><a href="#parameters">Command-line parameters</a><a href="#summary">Reading the two summaries</a><a href="#related">Related programs</a><a href="#license">License</a></nav><main><p id="version_build">Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 06ebd8fea601</p>
+</header>
+<nav id="sidebar">
+<div class="nav-label">Overview</div>
+<a href="#overview">Discussion</a>
+<a href="#summary">Reading the two summaries</a>
+<div class="nav-label">Beats</div>
+<a href="#beat0">0 · Random steps add up as √N</a>
+<a href="#beat1">1 · Put uncertainty beside an average</a>
+<a href="#beat2">2 · Only the variance matters</a>
+<a href="#beat3">3 · A photon in a schematic star</a>
+<a href="#beat4">4 · Escape takes (R/λ)² steps</a>
+<a href="#beat5">5 · Twice the radius, four times the steps</a>
+<a href="#beat6">6 · Only R/λ matters</a>
+<a href="#beat7">7 · The step cap</a>
+<a href="#beat8">8 · Seeds and the hard cases</a>
+
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
+<div class="nav-label">Reference</div>
+<a href="#parameters">Command-line parameters</a>
+
+<a href="#related">Related programs</a>
+<a href="#license">License</a></nav>
+<main>
+<p id="version_build">Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 06ebd8fea601</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
-<section id="overview"><h2>Start here</h2><p>Random2 explores two related random walks. <code>scaled_distance</code> averages three-dimensional endpoint distances over many trials; <code>walk2d</code> draws fixed-length, direction-random paths inside a circular schematic star. Both print their numbers before opening a plot.</p>
-<p>Run each command from the folder containing <code>main.py</code>, then close the plot before the next command. Use <code>--seed 12</code> to repeat the worked numbers; an unseeded run changes each time. MathJax typesets the equations online, but the Python program works offline.</p>
+<section id="overview">
+<h2>Discussion</h2>
+<p><strong>Random2</strong> explores the square-root law of random walks and uses it to picture how radiation leaks out of a star. Energy released in the Sun's core does not stream outwards; it is absorbed and re-emitted so often that its path is a random walk, and its net displacement increases much more slowly than its total path length. For many independent, zero-mean steps of finite variance, the typical distance from the start grows approximately as \(\sqrt N\), rather than \(N\).</p>
+<p>The program has two displays. <code>scaled_distance</code> runs many three-dimensional random walks of different lengths and prints and plots their average distance from the start. <code>walk2d</code> draws a few fixed-length, equally-likely-in-every-direction walks from the centre of a circle, a schematic star, and counts the steps each one takes to reach the edge. Every run prints a summary of the numbers before it opens its plot.</p>
+<p>The spine of the lesson is one sentence: <em>independent, zero-mean steps give a mean net displacement that grows approximately as \(\sqrt N\) when the step count \(N\) is large; in the fixed-step circular model, reaching radius \(R\) takes on the order of \((R/\lambda)^2\) steps of length \(\lambda\), and the printed standard errors help you judge an average made from a finite number of random trials.</em></p>
 <div class="note"><strong>Model boundary:</strong> the circle is a diffusion picture, not a solar model. There is no varying opacity or mean free path, no convection, and the displayed paths are two-dimensional. The escape-time spread therefore cannot be used as the Sun's three-dimensional distribution.</div>
 </section>
 
-<section id="beat0"><h2>Beat 0 · Walk far, end near the start</h2><p><strong>Run.</strong> Send 100 walkers out for each step count.</p>
+<section id="summary"><h2>Reading the two summaries</h2><p><code>scaled_distance</code> prints a row for each step count: mean scaled distance, standard error, and ratio to \(\sqrt N\). Read the large-\(N\) prediction and fitted slope below the rows. <code>walk2d</code> prints the radius, step length, \((R/\lambda)^2\), step cap, escaped count and escape statistics. It lists individual paths only when there are at most 12. The plot repeats a selection of these quantities.</p>
+</section>
+<section id="beat0">
+<h2>Beat 0 · Random steps add up as √N</h2>
+<p>A walker takes steps in three dimensions, each one in a random direction and of random length, with no memory of the steps before. The program sends out 100 such walkers for each of twelve walk lengths, from 2 steps to 4096, and averages how far they end up from where they started.</p>
 <pre>python main.py --seed 12 --display scaled_distance --max_steps 4096 --n_trials 100 \
   --step_distribution uniform</pre>
-<p><strong>Observe.</strong> In the last row, 4096 steps produce a mean scaled distance of 63.0073, with a fitted log-log slope of 0.4964. Compare the rows at 256, 1024 and 4096 steps: four times the steps roughly doubles the endpoint distance. The scale divides each walk's net displacement by that walk's own mean step length.</p>
-<p><strong>Your turn.</strong> Point to two rows in the table that support \(d\propto\sqrt N\). Does a single trajectory need to follow that relation exactly? The exact independent-step identity is \(\langle r_N^2\rangle=N\langle |s|^2\rangle\). The printed mean of scaled distance follows \(C\sqrt N\) only as a large-\(N\) approximation. In particular, a two-step row need not equal its large-\(N\) prediction.</p></section>
+<p>In the last row, 4096 steps produce a mean scaled distance of 63.0073, with a fitted log-log slope of 0.4964. Compare the rows at 256, 1024 and 4096 steps: four times the steps roughly doubles the endpoint distance. The scale divides each walk's net displacement by that walk's own mean step length.</p>
+<p>Point to two rows in the table that support \(d\propto\sqrt N\). Does a single trajectory need to follow that relation exactly? The exact independent-step identity is \(\langle r_N^2\rangle=N\langle |s|^2\rangle\). The printed mean of scaled distance follows \(C\sqrt N\) only as a large-\(N\) approximation. In particular, a two-step row need not equal its large-\(N\) prediction.</p>
 
-<section id="beat1"><h2>Beat 1 · Put uncertainty beside an average</h2><p><strong>Run.</strong> Compare 25 and 1000 independent trials with the 100-trial run from Beat 0.</p>
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat1">
+<h2>Beat 1 · Put uncertainty beside an average</h2>
+<p>An average of random numbers is itself random. Run the same experiment with a quarter as many trials, and then with ten times as many.</p>
 <p>For comparison, the default settings are <code>--n_trials 100</code>.</p>
 <pre>python main.py --seed 12 --n_trials 25
 python main.py --seed 12 --n_trials 1000</pre>
-<p><strong>Observe.</strong> At 4096 steps the standard errors are 4.2617 (25 trials), 2.3473 (100), and 0.8231 (1000). The large-\(N\) predicted ratio to \(\sqrt N\) is 0.9591; measured rows scatter around it.</p>
-<p><strong>Your turn.</strong> How many times did the standard error fall as trial count rose from 25 to 1000? Compare that finite-sample answer with the ideal scaling \(\mathrm{SE}=s/\sqrt n\), where \(s\) is the measured spread and \(n\) is the number of trials. More trials narrow uncertainty but cannot remove the short-walk bias of the large-\(N\) formula.</p></section>
+<p>At 4096 steps the standard errors are 4.2617 (25 trials), 2.3473 (100), and 0.8231 (1000). The large-\(N\) predicted ratio to \(\sqrt N\) is 0.9591; measured rows scatter around it.</p>
+<p>How many times did the standard error fall as trial count rose from 25 to 1000? Compare that finite-sample answer with the ideal scaling \(\mathrm{SE}=s/\sqrt n\), where \(s\) is the measured spread and \(n\) is the number of trials. More trials narrow uncertainty but cannot remove the short-walk bias of the large-\(N\) formula.</p>
 
-<section id="beat2"><h2>Beat 2 · Change the step distribution</h2><p><strong>Run.</strong> Switch the three-dimensional components from uniform draws on \([-1,1]\) to standard Gaussian draws.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> and <a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat2">
+<h2>Beat 2 · Only the variance matters</h2>
+<p>The uniform steps of Beat 0 are one choice among many. Replace them with steps whose components follow the bell-shaped Gaussian distribution, which gives some very long steps and many short ones.</p>
 <p>For comparison, the default settings are <code>--step_distribution uniform</code>.</p>
 <pre>python main.py --seed 12 --step_distribution gaussian --n_trials 100</pre>
-<p><strong>Observe.</strong> The fitted slope is 0.4986, close to 0.4964 for uniform components. The large-\(N\) constant changes from 0.9591 to 1.0000. The two last-row means, 63.0073 and 65.1655, differ by less than their combined standard error.</p>
-<p><strong>Your turn.</strong> Which conclusion concerns the exponent and which concerns the constant? Independent, zero-mean steps with finite variance give the square-root scaling. The step distribution and the definition of scaled distance set its prefactor. Uniform components fill a cube; they are not direction-isotropic, unlike the steps used in the star picture.</p></section>
-
-<section id="beat3"><h2>Beat 3 · Follow four paths through a circle</h2><p><strong>Run.</strong> Switch to the two-dimensional schematic star.</p>
+<p>The fitted slope is 0.4986, close to 0.4964 for uniform components. The large-\(N\) constant changes from 0.9591 to 1.0000. The two last-row means, 63.0073 and 65.1655, differ by less than their combined standard error.</p>
+<p>Which conclusion concerns the exponent and which concerns the constant? Independent, zero-mean steps with finite variance give the square-root scaling. The step distribution and the definition of scaled distance set its prefactor. Uniform components fill a cube; they are not direction-isotropic, unlike the steps used in the star picture.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> and <a href="#exp5">Experiment 5</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat3">
+<h2>Beat 3 · A photon in a schematic star</h2>
+<p>Now picture the walk. A photon starts at the centre of a circle, the schematic star, and takes steps of one fixed length in directions chosen with no preference, until it crosses the edge. The program draws four such walks.</p>
 <pre>python main.py --display walk2d --seed 12 --n_walks 4 --mean_free_path 1 --reference_steps 2000 \
   --radius_factor 2 --step_cap 200000</pre>
-<p><strong>Observe.</strong> The default radius is 89.4427 step-length units, so \((R/\lambda)^2=8000.0\). The four paths escape after 11564, 7519, 8246 and 2479 steps; their mean is 7452.0 with standard error 1876.9. A path ends at the circle's exit point, and its outward ray is only a display convention.</p>
-<p><strong>Your turn.</strong> Why do four independent paths give such a noisy mean? In this display each step has fixed length \(\lambda\) and a uniform random angle. The default radius follows \(R=f\lambda\sqrt{N_{\rm ref}}\) with \(f=2\) and \(N_{\rm ref}=2000\); <code>--reference_steps</code> sizes the circle and does not cap a walk.</p></section>
-
-<section id="beat4"><h2>Beat 4 · Estimate escape steps</h2><p><strong>Run.</strong> Use a smaller circle and 200 walkers so the sample mean is more useful.</p>
+<p>The default radius is 89.4427 step-length units, so \((R/\lambda)^2=8000.0\). The four paths escape after 11564, 7519, 8246 and 2479 steps; their mean is 7452.0 with standard error 1876.9. A path ends at the circle's exit point, and its outward ray is only a display convention.</p>
+<p>Why do four independent paths give such a noisy mean? In this display each step has fixed length \(\lambda\) and a uniform random angle. The default radius follows \(R=f\lambda\sqrt{N_{\rm ref}}\) with \(f=2\) and \(N_{\rm ref}=2000\); <code>--reference_steps</code> sizes the circle and does not cap a walk.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat4">
+<h2>Beat 4 · Escape takes (R/λ)² steps</h2>
+<p>Use a smaller circle and 200 walkers so the sample mean is more useful.</p>
 <p>For comparison, the default settings are <code>--n_walks 4</code>.</p>
 <pre>python main.py --display walk2d --radius 30 --n_walks 200 --seed 12 --mean_free_path 1 --step_cap 200000</pre>
-<p><strong>Observe.</strong> The geometric scale is \((R/\lambda)^2=900.0\). All 200 escape; the sampled mean is 902.7 with standard error 44.7, and the median is 742.5. Individual counts are suppressed when there are more than 12 walks, but the summary keeps their statistics.</p>
-<p><strong>Your turn.</strong> Is the measured mean consistent with the theoretical expectation between 900 and 961 steps? Account for its standard error. The bound applies to the expected uncapped escape count: \((R/\lambda)^2\leq\langle N_{\rm escape}\rangle<(R/\lambda+1)^2\). A finite sample mean can fall outside the bound by chance; capped walks are excluded from the printed mean.</p></section>
-
-<section id="beat5"><h2>Beat 5 · Double the radius</h2><p><strong>Run.</strong> Compare radii 15 and 30 with the same fixed step length and 200 walks each.</p>
+<p>The geometric scale is \((R/\lambda)^2=900.0\). All 200 escape; the sampled mean is 902.7 with standard error 44.7, and the median is 742.5. Individual counts are suppressed when there are more than 12 walks, but the summary keeps their statistics.</p>
+<p>Is the measured mean consistent with the theoretical expectation between 900 and 961 steps? Account for its standard error. The bound applies to the expected uncapped escape count: \((R/\lambda)^2\leq\langle N_{\rm escape}\rangle<(R/\lambda+1)^2\). A finite sample mean can fall outside the bound by chance; capped walks are excluded from the printed mean.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp8">Experiment 8</a> and <a href="#exp10">Experiment 10</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat5">
+<h2>Beat 5 · Twice the radius, four times the steps</h2>
+<p>Run the 200 walks of Beat 4 again in a star of half the radius.</p>
 <pre>python main.py --display walk2d --radius 15 --n_walks 200 --seed 12 --mean_free_path 1
 python main.py --display walk2d --radius 30 --n_walks 200 --seed 12 --mean_free_path 1</pre>
-<p><strong>Observe.</strong> The mean escape counts are 227.8 ± 10.5 and 902.7 ± 44.7, a ratio of about 3.96. The ideal large-radius comparison tends toward four, rather than two, because the walker repeatedly changes direction.</p>
-<p><strong>Your turn.</strong> Check the two printed \((R/\lambda)^2\) values, 225.0 and 900.0. How much uncertainty should you assign to the observed ratio? The radius-dependent one-step overshoot and Monte Carlo error matter for these finite circles.</p></section>
-
-<section id="beat6"><h2>Beat 6 · Rescale every step and the circle</h2><p><strong>Run.</strong> Leave the radius at its default rule and change only the mean free path.</p>
+<p>The mean escape counts are 227.8 ± 10.5 and 902.7 ± 44.7, a ratio of about 3.96. The ideal large-radius comparison tends toward four, rather than two, because the walker repeatedly changes direction.</p>
+<p>Check the two printed \((R/\lambda)^2\) values, 225.0 and 900.0. How much uncertainty should you assign to the observed ratio? The radius-dependent one-step overshoot and Monte Carlo error matter for these finite circles.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp9">Experiment 9</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat6">
+<h2>Beat 6 · Only R/λ matters</h2>
+<p>Change the step length and leave the radius to the default rule of Beat 3, which scales it with the step length.</p>
 <p>For comparison, the default settings are <code>--mean_free_path 1</code>.</p>
 <pre>python main.py --display walk2d --mean_free_path 0.5 --seed 12 --reference_steps 2000 --radius_factor 2 \
   --n_walks 4
 python main.py --display walk2d --mean_free_path 2 --seed 12 --reference_steps 2000 --radius_factor 2 \
   --n_walks 4</pre>
-<p><strong>Observe.</strong> The radii are 44.7214 and 178.8854; Beat 3 gave 89.4427 at step length 1. In all three runs \(R/\lambda=2\sqrt{2000}\), \((R/\lambda)^2=8000.0\), and the same seed gives counts 11564, 7519, 8246 and 2479. The axes change physical scale.</p>
-<p><strong>Your turn.</strong> Why do the counts match despite the different radii? The same angular draws give the same paths in step-length units. The exact count identity here uses binary-exact scale factors 0.5 and 2; other factors can differ at a boundary because of floating-point rounding.</p></section>
-
-<section id="beat7"><h2>Beat 7 · Watch a cap censor the sample</h2><p><strong>Run.</strong> Stop each radius-30 walk at 900 steps, then at 3000, and compare with Beat 4's generous default cap.</p>
+<p>The radii are 44.7214 and 178.8854; Beat 3 gave 89.4427 at step length 1. In all three runs \(R/\lambda=2\sqrt{2000}\), \((R/\lambda)^2=8000.0\), and the same seed gives counts 11564, 7519, 8246 and 2479. The axes change physical scale.</p>
+<p>Why do the counts match despite the different radii? The same angular draws give the same paths in step-length units. The exact count identity here uses binary-exact scale factors 0.5 and 2; other factors can differ at a boundary because of floating-point rounding.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat7">
+<h2>Beat 7 · The step cap</h2>
+<p>A walk could in principle go on for ever, so the program stops any walk that has not escaped after <code>--step_cap</code> steps (200000 by default). Set the cap to the mean escape time of Beat 4, and then to three times it.</p>
 <p>For comparison, the default settings are <code>--step_cap 200000</code>.</p>
 <pre>python main.py --display walk2d --radius 30 --n_walks 200 --step_cap 900 --seed 12 --mean_free_path 1
 python main.py --display walk2d --radius 30 --n_walks 200 --step_cap 3000 --seed 12 --mean_free_path 1</pre>
-<p><strong>Observe.</strong> At cap 900, 130 of 200 escape; their mean is 515.7. At cap 3000, 196 escape; their mean is 837.5. With the generous default, all 200 escape and their mean is 902.7. A stopped path ends in an <code>x</code> and has no outward ray.</p>
-<p><strong>Your turn.</strong> Why is 515.7 not an estimate of the uncapped mean near 900? The printed escape statistics omit stopped walks, preferentially discarding slow paths. Read both <code>escaped walks</code> and <code>step cap</code> before interpreting the mean.</p></section>
-
-<section id="beat8"><h2>Beat 8 · Repeat, vary, and reject</h2><p><strong>Run.</strong> Compare a new seed with Beat 0. Then run without a seed twice.</p>
+<p>At cap 900, 130 of 200 escape; their mean is 515.7. At cap 3000, 196 escape; their mean is 837.5. With the generous default, all 200 escape and their mean is 902.7. A stopped path ends in an <code>x</code> and has no outward ray.</p>
+<p>Why is 515.7 not an estimate of the uncapped mean near 900? The printed escape statistics omit stopped walks, preferentially discarding slow paths. Read both <code>escaped walks</code> and <code>step cap</code> before interpreting the mean.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat8">
+<h2>Beat 8 · Seeds and the hard cases</h2>
+<p>Every beat so far used <code>--seed 12</code>. Run the default experiment of Beat 0 with another seed, then with none, and then try a walk too short to have a length. The last command is rejected; the message says why.</p>
 <pre>python main.py --seed 28
 python main.py</pre>
-<p><strong>Observe.</strong> At seed 28 the last-row mean is 62.2140 with standard error 2.5542, versus 63.0073 ± 2.3473 at seed 12. The difference is only 0.23 of their combined standard error \(\sqrt{\mathrm{SE}_1^2+\mathrm{SE}_2^2}\). The unseeded summary says its results differ from run to run.</p>
-<p><strong>Your turn.</strong> How would you decide whether two independent random estimates disagree meaningfully? Try <code>python main.py --max_steps 1</code>: this command is <strong>expected to fail</strong> because the minimum is 2. A rejected input is different from a random difference between valid runs.</p></section>
+<p>At seed 28 the last-row mean is 62.2140 with standard error 2.5542, versus 63.0073 ± 2.3473 at seed 12. The difference is only 0.23 of their combined standard error \(\sqrt{\mathrm{SE}_1^2+\mathrm{SE}_2^2}\). The unseeded summary says its results differ from run to run.</p>
+<p>How would you decide whether two independent random estimates disagree meaningfully? Try <code>python main.py --max_steps 1</code>: this command is <strong>expected to fail</strong> because the minimum is 2. A rejected input is different from a random difference between valid runs.</p></section>
 
-<section id="further"><h2>Further investigations</h2><p><strong>Change the measure.</strong> In a separate copy of the program, inspect <code>_perform_trials_3d_with_error()</code> and replace the per-walk scaled distance by the net distance. Predict what happens to the slope and to its prefactor. Keep the original modules intact for the preceding exercises.</p>
-<p><strong>Use the result objects.</strong> At a Python prompt in the program folder, run this short script. Compare its final average and escape flags with Beats 0 and 4.</p>
-<pre>import random2_physics
-from random2_driver import run_scaled_distance_statistics, run_walk2d
-random2_physics.seed_generator(12)
-table = run_scaled_distance_statistics(4096, 100)
-print(table.averages[-1])
-random2_physics.seed_generator(12)
-star = run_walk2d(radius=30, n_walks=200)
-print(sum(walk.escaped for walk in star.walks))</pre>
-<p><strong>Estimate a solar scale.</strong> If \(R=7\times10^8\) m and a highly simplified constant \(\lambda=0.01\) m, calculate \((R/\lambda)^2\) and multiply by \(\lambda/c\). Explain why a real solar opacity profile and convection make that number only an order-of-magnitude thought experiment.</p></section>
+
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<p>The experiments are ranked from introductory to advanced, and each is cited by the beat it extends. Each command is run from the program's folder. Leave out <code>--seed</code> to see how much the results change from run to run.</p>
+<h3 id="exp1">1 · Verify the √N Law — Introductory</h3>
+<p>Run the default experiment several times without a seed. Check that the ratio column stays near the large-\(N\) prediction, and that the plotted points lie close to a line of slope 1/2, one vertical decade for two horizontal decades.</p>
+<pre>python main.py --display scaled_distance --max_steps 4096 --n_trials 100</pre>
+<h3 id="exp2">2 · Reduce Statistical Scatter — Introductory</h3>
+<p>Repeat the calculation with more and more trials. Record the standard error of the last row each time and check that it falls roughly as one over the square root of the number of trials. Notice the trade-off between precision and run time.</p>
+<pre>python main.py --n_trials 25
+python main.py --n_trials 100
+python main.py --n_trials 500
+python main.py --n_trials 1000</pre>
+<h3 id="exp3">3 · Measure the Log-Log Slope by Hand — Introductory to Intermediate</h3>
+<p>Take two well-separated rows of the table and compute the exponent \(\alpha\) in \(\langle d\rangle\propto N^\alpha\) from them, as \(\log(d_2/d_1)/\log(N_2/N_1)\). Compare it with the printed fitted slope, which uses all the rows, and repeat with more trials.</p>
+<pre>python main.py --max_steps 4096 --n_trials 500</pre>
+<h3 id="exp4">4 · Change the Step Distribution — Intermediate</h3>
+<p>Compare uniform and Gaussian step components with the same seed. The exponent stays at 1/2 and only the constant changes, from 0.9591 to 1. This is one of Schutz's suggested modifications.</p>
+<pre>python main.py --step_distribution uniform --seed 12
+python main.py --step_distribution gaussian --seed 12</pre>
+<h3 id="exp5">5 · Change the Definition of Scaled Distance — Intermediate Programming</h3>
+<p>Test whether the square-root law depends on dividing by each walk's mean step length. In a separate copy of the program, average <code>net_distance</code> instead of <code>net_distance / mean_step</code> in <code>_perform_trials_3d_with_error()</code>. The constant changes, to 0.9213 for uniform and 1.5958 for Gaussian steps by Eq. (10), but the exponent stays near 1/2.</p>
+<h3 id="exp6">6 · Mean Free Path and Geometric Scaling — Intermediate</h3>
+<p>Leave <code>--radius</code> out and change <code>--mean_free_path</code>. With a seed, the escape step counts do not change at all (Beat 6); without one, compare the statistics of many walks.</p>
+<pre>python main.py --display walk2d --mean_free_path 0.5
+python main.py --display walk2d --mean_free_path 1.0
+python main.py --display walk2d --mean_free_path 2.0</pre>
+<h3 id="exp7">7 · Individual Walks and Statistical Variety — Intermediate</h3>
+<p>Display a few walks at a time and compare their shapes and escape step counts. Individual paths look very different although they follow the same rules. Keep the number small enough that the paths can be told apart.</p>
+<pre>python main.py --display walk2d --n_walks 4
+python main.py --display walk2d --n_walks 6
+python main.py --display walk2d --n_walks 10</pre>
+<h3 id="exp8">8 · Explore the Escape-Time Distribution — Intermediate to Advanced</h3>
+<p>Run many walks in a small star and compare the mean, median, minimum and maximum escape step counts. Then lower the step cap until some walks are stopped, and watch the mean of the escaped walks fall (Beat 7).</p>
+<pre>python main.py --display walk2d --radius 20 --n_walks 500
+python main.py --display walk2d --radius 20 --n_walks 500 --step_cap 400</pre>
+<h3 id="exp9">9 · Verify Escape Steps ∝ R² — Advanced</h3>
+<p>Hold the mean free path fixed and use several radii. For each, divide the mean escape step count by \((R/\lambda)^2\), which the summary prints as <code>mean escape steps / (R / mean free path)^2</code>. Eq. (16) says the result lies between 1 and \((1+\lambda/R)^2\); check it, using the standard error, and check that every walk escaped. Then repeat one radius with <code>--mean_free_path 2</code>: only \(R/\lambda\) matters (Beat 6).</p>
+<pre>python main.py --display walk2d --radius 30 --mean_free_path 1 --n_walks 100
+python main.py --display walk2d --radius 40 --mean_free_path 1 --n_walks 100
+python main.py --display walk2d --radius 50 --mean_free_path 1 --n_walks 100
+python main.py --display walk2d --radius 60 --mean_free_path 1 --n_walks 100
+python main.py --display walk2d --radius 60 --mean_free_path 2 --n_walks 100</pre>
+<h3 id="exp10">10 · A Photon's Escape from the Sun — Advanced</h3>
+<p>Take a solar radius of \(7\times10^{8}\) m and suppose, very roughly, that the photon mean free path were 1 cm everywhere. How many steps would escape take, and how long would that be if each step took \(\lambda/c\)? Then say which assumptions of the estimate are the weakest, using the limitations in the Overview: the mean free path changes enormously with depth, and the outer part of the Sun carries its energy by convection. Treat the answer only as an order of magnitude.</p>
+
+<section id="related">
+<h2>Related Programs</h2>
+<ul class="related-list">
+<li><strong>Star</strong> — Stellar structure and the physical conditions through a star, including the temperatures and densities through which radiation diffuses.</li>
+<li><strong>Neutron</strong> — Relativistic neutron-star structure.</li>
+</ul>
+</section>
 
 <section id="parameters"><h2>Command-line parameters</h2><p>All ordinary settings are command-line options described in <code>main.py</code>. Options for the display that is not selected may be given, but only the selected display uses them. Omitted options return to their defaults on each run.</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table">
@@ -579,10 +680,7 @@ print(sum(walk.escaped for walk in star.walks))</pre>
 </tbody></table></div>
 </section>
 
-<section id="summary"><h2>Reading the two summaries</h2><p><code>scaled_distance</code> prints a row for each step count: mean scaled distance, standard error, and ratio to \(\sqrt N\). Read the large-\(N\) prediction and fitted slope below the rows. <code>walk2d</code> prints the radius, step length, \((R/\lambda)^2\), step cap, escaped count and escape statistics. It lists individual paths only when there are at most 12. The plot repeats a selection of these quantities.</p>
-<pre>python main.py --version
-python main.py --help</pre>
-<p>These two commands identify the shared code and list options; neither starts a walk.</p></section>
+
 
 <section id="related"><h2>Related programs</h2><p><strong>Star</strong> models stellar structure and <strong>Neutron</strong> models neutron-star structure. Random2 instead follows idealized stochastic steps.</p></section>
 
