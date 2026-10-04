@@ -471,7 +471,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 </style>
 </head>
 <body><div class="page-wrap"><header>
-<div class="badge">Chapter 10 · Gravity from the Ground Up</div>
+<div class="badge">Gravity from the Ground Up</div>
 <h1><em>Planck2</em> — Black-Body Radiation · Terminal Guide</h1>
 <div class="sub">
     Source Code:
@@ -479,34 +479,313 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
     Documentation:
         <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
 </div>
-</header><nav id="sidebar"><div class="nav-label">Start</div><a href="#overview">Overview</a><div class="nav-label">At the terminal</div><a href="#beat0">Beat 0 · Look at one spectrum</a><a href="#beat1">Beat 1 · Change temperature</a><a href="#beat2">Beat 2 · Change the horizontal density</a><a href="#beat3">Beat 3 · Radiance or energy per volume</a><a href="#beat4">Beat 4 · Add up a spectrum</a><a href="#beat5">Beat 5 · Test the fourth power</a><a href="#beat6">Beat 6 · Change the sampling grid</a><a href="#beat7">Beat 7 · Move the approximation switches</a><a href="#beat8">Beat 8 · Cut off the range deliberately</a><div class="nav-label">Reference</div><a href="#further">Two further challenges</a><a href="#parameters">Command-line parameters</a><a href="#summary">How to read the summary</a><a href="#related">Related programs</a><a href="#license">License</a></nav><main><p id="version_build">Version 1.5.1&nbsp;&nbsp;&nbsp;&nbsp;Build 1107bea3441f</p>
-<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p><section id="overview"><h2>Start here</h2><p>Planck2 lets you change a black body's temperature and see three related spectra: radiance per wavelength, radiance per frequency, and energy density per frequency. It accompanies Chapter 10, Investigations 10.1–10.3. You will run commands, read the five-line summary, and test where a numerical curve agrees with its exact integral.</p><p>Run commands from the folder containing <code>main.py</code>. Close each plot window before starting the next run. The equations use MathJax from the internet; the Python program runs offline.</p><div class="note"><strong>Model boundary:</strong> this is an ideal black body at one temperature. There are no spectral absorption lines, nonunit emissivity, or radiative transfer.</div></section><section id="beat0"><h2>Beat 0 · Look at one spectrum</h2><p><strong>Run.</strong> Start with the default 5900 K body, plotted as radiance per wavelength.</p><pre>python main.py --T 5900 --quantity wavelength --n_steps 2000 --x_min 0.01 --x_max 100 --x_low 0.05 \
-  --x_high 20 --y_frac_window 0.003</pre><p><strong>Observe.</strong> The console gives <code>peak at x = 4.959505</code>, <code>Peak wavelength = 4.917033e-07 m</code>, and both a numerical and an exact integral. The plot box also gives the sampled <code>Peak value</code>, which the console does not. Compare <code>2.187105e+07</code> with <code>2.187106e+07</code> in W m<sup>−2</sup> sr<sup>−1</sup>.</p><p><strong>Your turn.</strong> Move the cursor near the top of the curve. Which physical wavelength is at the maximum? Why might the cursor and the six-digit printed peak disagree slightly?</p><p>The dimensionless coordinate is \(x=hc/(\lambda kT)=h\nu/(kT)\). Planck's law supplies the curve; the printed peak is the largest sampled point, not a continuous optimizer.</p></section><section id="beat1"><h2>Beat 1 · Change temperature</h2><p><strong>Run.</strong> Compare these separate wavelength plots and record each printed peak wavelength.</p><pre>python main.py --T 3000
+</header>
+<nav id="sidebar">
+<div class="nav-label">Start</div>
+<a href="#overview">Description</a>
+<a href="#summary">How to read the summary</a>
+<div class="nav-label">Beats</div>
+<a href="#beat0">Beat 0 · Look at one spectrum</a>
+<a href="#beat1">Beat 1 · Change temperature</a>
+<a href="#beat2">Beat 2 · Per wavelength or per frequency</a>
+<a href="#beat3">Beat 3 · Radiance and energy density</a>
+<a href="#beat4">Beat 4 · Add up a spectrum</a>
+<a href="#beat5">Beat 5 · Test the fourth power</a>
+<a href="#beat6">Beat 6 · Change the sampling grid</a>
+<a href="#beat7">Beat 7 · Move the approximation switches</a>
+<a href="#beat8">Beat 8 · Cut off the range deliberately</a>
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
+<a href="#further">Advanced programming challenges</a>
+<div class="nav-label">Reference</div>
+
+<a href="#parameters">Command-line parameters</a>
+
+<a href="#related">Related programs</a>
+<a href="#license">License</a></nav>
+<main><p id="version_build">Version 1.5.1&nbsp;&nbsp;&nbsp;&nbsp;Build 1107bea3441f</p>
+<p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
+<section id="overview">
+<h2>Description</h2>
+<p><strong>Planck2</strong> is a black-body-radiation investigation. 
+It plots the user's choice of spectral radiance per unit wavelength \(B_\lambda\), 
+spectral radiance per unit frequency \(B_\nu\), 
+or spectral energy density per unit frequency \(u_\nu\), 
+using physical wavelength or frequency on the horizontal axis.</p>
+
+<p>Besides the curve, the program prints and annotates the sampled peak, the area under the dimensionless shape function, and a physical integral over wavelength or frequency, next to the exact value that the integral would have if it ran from zero to infinity. Those last two numbers are what let you check the program, and the Stefan&ndash;Boltzmann \(T^4\) law, without any other tool.</p>
+<p>The spine of the lesson is one sentence: <em>every black-body spectrum is one universal 
+curve \(x^p/(e^x-1)\) in the variable \(x=h\nu/kT\), 
+so temperature only slides and scales it, the choice of what to call the 
+spectrum (per wavelength, per frequency, or as an energy density) changes only the 
+exponent \(p\) and the scale.</em></p>
+<div class="note"><strong>Model boundary:</strong> this is an ideal black body at one temperature. There are no spectral absorption lines, nonunit emissivity, or radiative transfer.</div></section>
+
+<section id="summary"><h2>How to read the summary</h2>
+<p>Each successful run prints the version/build and sampled \(x\) peak, 
+the physical peak wavelength or frequency, the dimensionless area beside its zero-to-infinity reference, 
+the physical integral, and its exact bolometric reference. 
+The plot annotation also shows the peak height. 
+Compare numerical and exact physical integrals in the same quantity and units. 
+The exact line describes an ideal zero-to-infinity integral; 
+the numerical line uses your finite domain, grid and switch settings.</p>
+</section>
+
+<section id="beat0"><h2>Beat 0 · Look at one spectrum</h2>
+<p>A body at 5900 K, about the temperature of the Sun's visible surface, 
+glows across the spectrum but most strongly in one band. 
+The following command plots spectral radiance per unit wavelength.</p>
+
+<pre>python main.py --T 5900 --quantity wavelength --n_steps 2000 --x_min 0.01 --x_max 100 --x_low 0.05 --x_high 20 --y_frac_window 0.003</pre><p>The console gives <code>peak at x = 4.959505</code>, <code>Peak wavelength = 4.917033e-07 m</code>, and both a numerical and an exact integral. The plot box also gives the sampled <code>Peak value</code>, which the console does not. Compare <code>2.187105e+07</code> with <code>2.187106e+07</code> in W m<sup>−2</sup> sr<sup>−1</sup>.</p>
+<p>Move the cursor near the top of the curve. 
+Which physical wavelength is at the maximum? 
+Why might the cursor and the six-digit printed peak disagree slightly?
+Use the Zoom feature to magnify the top of the curve. Observe how the plot is drawn from short segments.</p>
+<p>The dimensionless coordinate is \(x=hc/(\lambda kT)=h\nu/(kT)\). 
+Planck's law supplies the curve; the printed peak is the largest sampled point, not a continuous optimizer.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat1"><h2>Beat 1 · Change temperature</h2><p>
+
+<p>Run the default spectrum at a cooler and a hotter temperature. The middle run is the default of Beat 0.</p>
+<pre>python main.py --T 3000
 python main.py --T 5900
-python main.py --T 10000</pre><p><strong>Observe.</strong> A hotter body peaks at a shorter wavelength. The product of temperature and peak wavelength should stay approximately fixed. The sampled \(x\) peak stays near 4.965 with a sufficiently fine grid.</p><p><strong>Your turn.</strong> Multiply the first and third peak wavelength by their temperatures. How close are the products? The law for this plotted density follows from \(\lambda_{\rm peak}=hc/(x_5 kT)\), where \(x_5\approx4.965\).</p></section><section id="beat2"><h2>Beat 2 · Change the horizontal density</h2><p><strong>Run.</strong> Ask for radiance per frequency at two temperatures.</p><pre>python main.py --T 5900 --quantity frequency
-python main.py --T 2.725 --quantity frequency</pre><p><strong>Observe.</strong> These horizontal axes are in hertz; the second run represents the cosmic microwave background as an ideal 2.725 K black body. Its frequency peak is much lower. The frequency peak has \(x_3\approx2.821\), whereas Beat 1 used \(x_5\approx4.965\).</p><p><strong>Your turn.</strong> Calculate \(h\nu_{\rm peak}/(kT)\) from one printed frequency. Why is it wrong to turn the wavelength peak of Beat 1 into the frequency peak simply by using \(\nu=c/\lambda\)? The two spectra are densities per different horizontal intervals.</p></section><section id="beat3"><h2>Beat 3 · Radiance or energy per volume</h2><p><strong>Run.</strong> Keep the temperature fixed while changing the plotted quantity; then inspect a cold example.</p><pre>python main.py --T 5900 --quantity frequency
+python main.py --T 10000</pre>
+
+<p>A hotter body peaks at a shorter wavelength. The product of temperature and peak wavelength should stay approximately fixed. The sampled \(x\) peak stays near 4.965 with a sufficiently fine grid.</p>
+<p>Multiply the first and third peak wavelength by their temperatures. 
+How close are the products? The law for this plotted density follows 
+from \(\lambda_{\rm peak}=hc/(x_5 kT)\), where \(x_5\approx4.965\).</p>
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a>, <a href="#exp2">Experiment 2</a> and <a href="#exp10">Experiment 10</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat2">
+<h2>Beat 2 · Change the horizontal density</h2>
+<p>Radiation can be sorted by wavelength or by frequency. 
+Ask for the same 5900 K body sorted by frequency, 
+and then for the cold radiation that fills the universe.</p>
+<pre>python main.py --T 5900 --quantity frequency 
+python main.py --T 2.725 --quantity frequency</pre>
+<p>These horizontal axes are in hertz; 
+the second run represents the cosmic microwave background as an ideal 2.725 K black body. 
+Its frequency peak is much lower. The frequency peak has \(x_3\approx2.821\), 
+whereas Beat 1 used \(x_5\approx4.965\).</p>
+<p>Calculate \(h\nu_{\rm peak}/(kT)\) from one printed frequency. 
+Why is it wrong to turn the wavelength peak of Beat 1 into the frequency peak 
+simply by using \(\nu=c/\lambda\)? 
+The two spectra are densities per different horizontal intervals.</p>
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> and <a href="#exp4">Experiment 4</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat3">
+<h2>Beat 3 · Radiance or energy per volume</h2>
+<p>The program has a third quantity, the energy stored in the radiation field. Run it beside the frequency radiance of Beat 2, and then at the temperature of the cosmic microwave background.</p>
+<pre>python main.py --T 5900 --quantity frequency
 python main.py --T 5900 --quantity energy_density
-python main.py --T 2.725 --quantity energy_density</pre><p><strong>Observe.</strong> Both frequency curves peak at the same \(x\) and physical frequency for a fixed \(T\), but their vertical axes and integrated units differ. Frequency radiance integrates to W m<sup>−2</sup> sr<sup>−1</sup>; energy density integrates to J m<sup>−3</sup>. For isotropic black-body radiation, \(u_\nu=4\pi B_\nu/c\).</p><p><strong>Your turn.</strong> Compare the first two physical integrals only after accounting for \(4\pi/c\). Do not compare the numbers as if they shared units.</p></section><section id="beat4"><h2>Beat 4 · Add up a spectrum</h2><p><strong>Run.</strong> Compare both radiance representations at 5900 K.</p><pre>python main.py --T 5900 --quantity wavelength
-python main.py --quantity frequency --T 5900</pre><p><strong>Observe.</strong> The peak positions differ but both physical integrals should approach the same radiance, \(\sigma T^4/\pi\). The dimensionless shape is \(f_p(x)=x^p/(e^x-1)\), with \(p=5\) for wavelength radiance and \(p=3\) for the two frequency quantities. Their dimensionless areas therefore differ; their physical radiance integrals agree.</p><p><strong>Your turn.</strong> Subtract the printed physical integral from its exact zero-to-infinity reference in each run. Which is closer? The emitted flux from a black surface is \(\pi\) times the integrated radiance; the printed radiance is not the emitted flux.</p></section><section id="beat5"><h2>Beat 5 · Test the fourth power</h2><p><strong>Run.</strong> Record the physical integral in each mode at 3000, 6000 and 12000 K.</p><pre>python main.py --T 3000 --quantity frequency
+python main.py --T 2.725 --quantity energy_density</pre>
+<p>The frequency and energy density curves peak at the same \(x\) and physical frequency for a fixed \(T\), 
+but their vertical axes and integrated units differ. Frequency radiance integrates to W m<sup>−2</sup> sr<sup>−1</sup>; energy density integrates to J m<sup>−3</sup>. For isotropic black-body radiation, \(u_\nu=4\pi B_\nu/c\).</p><p>Compare the first two physical integrals only after accounting for \(4\pi/c\). Do not compare the numbers as if they shared units.</p>
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> and <a href="#exp5">Experiment 5</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+
+<section id="beat4">
+<h2>Beat 4 · Add up a spectrum</h2>
+<p>The Stefan&ndash;Boltzmann law is about what a black body radiates, and it comes from adding up the area under the spectrum. The program adds up two different areas, and it is easy to take the wrong one for the physical result. Run the wavelength curve and the frequency curve, and compare their printed integrals.</p>
+<pre>python main.py --T 5900 --quantity wavelength
+python main.py --quantity frequency --T 5900</pre>
+<p>The peak positions differ but both physical integrals should approach the same radiance, \(\sigma T^4/\pi\). The dimensionless shape is \(f_p(x)=x^p/(e^x-1)\), with \(p=5\) for wavelength radiance and \(p=3\) for the two frequency quantities. Their dimensionless areas therefore differ; their physical radiance integrals agree.</p><p>Subtract the printed physical integral from its exact zero-to-infinity reference in each run. Which is closer? The emitted flux from a black surface is \(\pi\) times the integrated radiance; the printed radiance is not the emitted flux.</p>
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> and <a href="#exp11">Experiment 11</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat5">
+<h2>Beat 5 · Test the fourth power</h2>
+<p>The integrated areas under the spectrum depend on the temperature as \(T^4\). Check that the program's sum does too, with three temperatures for each of the frequency quantities. Each run doubles the temperature of the one before.</p>
+<pre>python main.py --T 3000 --quantity frequency
 python main.py --T 6000 --quantity frequency
 python main.py --T 12000 --quantity frequency
 python main.py --T 3000 --quantity energy_density
 python main.py --T 6000 --quantity energy_density
-python main.py --T 12000 --quantity energy_density</pre><p><strong>Observe.</strong> Doubling the temperature multiplies a bolometric integral by \(2^4=16\) within numerical precision. The radiance reference is \(\sigma T^4/\pi\); energy density uses \(4\sigma T^4/c\).</p><p><strong>Your turn.</strong> Take two successive ratios within each mode. Never divide an energy density by a radiance without the \(4\pi/c\) conversion.</p></section><section id="beat6"><h2>Beat 6 · Change the sampling grid</h2><p><strong>Run.</strong> Keep the same physical model and vary the number of equal intervals in \(x\).</p><pre>python main.py --n_steps 10 --T 5900
+python main.py --T 12000 --quantity energy_density</pre><p>Doubling the temperature multiplies a bolometric integral by \(2^4=16\) within numerical precision. The radiance reference is \(\sigma T^4/\pi\); energy density uses \(4\sigma T^4/c\).</p><p>Take two successive ratios within each mode. Never divide an energy density by a radiance without the \(4\pi/c\) conversion.</p>
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat6">
+<h2>Beat 6 · Change the sampling grid</h2>
+<p>So far every run used the default grid of 2000 equal steps. The grid decides how well the sum follows the curve, and how well the peak is found. Change only <code>--n_steps</code>.</p>
+<pre>python main.py --n_steps 10 --T 5900
 python main.py --n_steps 100 --T 5900
 python main.py --n_steps 1000 --T 5900
 python main.py --n_steps 2000 --T 5900
-python main.py --n_steps 20000 --T 5900</pre><p><strong>Observe.</strong> There are \(N+1\) samples for <code>--n_steps N</code>. The ten-step peak is coarse, although the exact reference remains fixed. The sampled peak can lie as much as one grid step from the true maximum when the exact peak is inside the range and switches do not create a higher false maximum; a half-step bound is not guaranteed.</p><p><strong>Your turn.</strong> Compare the first-line \(x\) values and the numerical-versus-exact integrals. Which converges more quickly? The area is a trapezoidal sum over a finite range.</p></section><section id="beat7"><h2>Beat 7 · Move the approximation switches</h2><p><strong>Run.</strong> First keep both limiting approximations in the tails. Then move them into the body of the curve.</p><p>For comparison, the default settings are <code>--x_low 0.05</code>, <code>--x_high 20</code>.</p>
+python main.py --n_steps 20000 --T 5900</pre>
+<p>There are \(N+1\) samples for <code>--n_steps N</code>. 
+The ten-step peak is coarse, although the exact reference remains fixed. 
+The sampled peak can lie as much as one grid step from the true maximum when 
+the exact peak is inside the range and switches do not create a higher false maximum; 
+a half-step bound is not guaranteed.</p>
+<p>Compare the first-line \(x\) values and the numerical-versus-exact integrals. 
+Which converges more quickly? The area is a trapezoidal sum over a finite range.</p>
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat7">
+<h2>Beat 7 · Move the approximation switches</h2>
+<p>The program does not evaluate \(x^p/(e^x-1)\) directly across the whole range. For very small \(x\), \(e^x-1\) is nearly \(x\); for very large \(x\), \(e^x\) is so big that the &minus;1 does not matter, and the exponential would overflow. Two options set where the program switches: <code>--x_low</code> and <code>--x_high</code>. The first command below turns both switches off. The second and third move them inwards, the fourth moves them to the middle of the peak, and the fifth moves only the lower one to just below it.</p>
+
+<p>For comparison, 
+the default settings are <code>--x_low 0.05</code>, <code>--x_high 20</code>.</p>
 <pre>python main.py --x_low 0.01 --x_high 100 --quantity wavelength
 python main.py --x_low 1 --x_high 3 --quantity wavelength
 python main.py --quantity frequency --x_low 1 --x_high 3
 python main.py --x_low 5 --x_high 6 --quantity wavelength
-python main.py --x_low 4 --quantity wavelength --x_high 20</pre><p><strong>Observe.</strong> Below <code>--x_low</code> the program uses the small-\(x\) Rayleigh–Jeans approximation; above <code>--x_high</code> it uses the large-\(x\) Wien approximation. The fourth and fifth commands can create a false maximum or a visibly distorted curve.</p><p><strong>Your turn.</strong> For each run, compare its numerical integral with its exact reference, and look for a change in the reported peak. The exact value remains a fixed check for each temperature and quantity; moving the switches changes the numerical approximation.</p></section><section id="beat8"><h2>Beat 8 · Cut off the range deliberately</h2><p><strong>Try a rejected command.</strong> <code>python main.py --x_max 10</code> is expected to fail: the default <code>--x_high 20</code> is now beyond the end of the range.</p><p><strong>Run.</strong> Move both limits together, then cut below the wavelength peak; compare with a truncated low end and a full horizontal plot.</p><p>For comparison, the default settings are <code>--x_min 0.01</code>, <code>--x_max 100</code>, <code>--x_low 0.05</code>, <code>--x_high 20</code>, <code>--y_frac_window 0.003</code>.</p>
+python main.py --x_low 4 --quantity wavelength --x_high 20</pre>
+
+<p>Below <code>--x_low</code> the program uses the small-\(x\) Rayleigh–Jeans approximation; 
+above <code>--x_high</code> it uses the large-\(x\) Wien approximation. 
+The fourth and fifth commands can create a false maximum or a visibly distorted curve.</p>
+<p>For each run, compare its numerical integral with its exact reference, 
+and look for a change in the reported peak. 
+The exact value remains a fixed check for each temperature and quantity; 
+moving the switches changes the numerical approximation.</p>
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat8">
+<h2>Beat 8 · Cut off the range deliberately</h2>
+<p>The defaults sample \(x\) from 0.01 to 100, which contains almost all of the curve. Change that range, and see how the summary shows what has been cut off. The first command below is rejected; the message tells you what to change.</p>
+
+<p>Move both limits together, then cut below the wavelength peak; 
+compare with a truncated low end and a full horizontal plot.</p>
+<p>For comparison, the default settings are <code>--x_min 0.01</code>, <code>--x_max 100</code>, 
+<code>--x_low 0.05</code>, <code>--x_high 20</code>, <code>--y_frac_window 0.003</code>.</p>
 <pre>python main.py --x_max 10 --x_high 9 --x_min 0.01 --x_low 0.05 --y_frac_window 0.003
 python main.py --x_max 4 --x_high 3 --x_min 0.01 --x_low 0.05 --y_frac_window 0.003
 python main.py --x_min 1 --x_low 1 --x_max 100 --x_high 20 --y_frac_window 0.003
-python main.py --y_frac_window 0 --x_min 0.01 --x_max 100 --x_low 0.05 --x_high 20</pre><p><strong>Observe.</strong> The second command stops at \(x=4\), below the wavelength shape's true maximum near 4.965. The reported peak is at the edge and its numerical integral misses part of the spectrum. A window fraction of zero changes only the view, not the integration or peak calculation.</p><p><strong>Your turn.</strong> Explain why the second physical integral departs from the exact reference. Valid settings require <code>x_min &le; x_low &lt; x_high &le; x_max</code>. To isolate the viewing effect, compare the final command with Beat 0.</p></section><section id="further"><h2>Two further challenges</h2><p><strong>After Beat 8.</strong> These optional tasks give you the programming investigations from the longer tutorial without changing the program files.</p><p><strong>Challenge A:</strong> Solve the peak condition \(x=p(1-e^{-x})\) by repeatedly updating \(x\leftarrow p(1-e^{-x})\), starting at \(x=p\), for \(p=3\) and \(p=5\). Compare your answers with the first lines of these runs:</p><pre>python main.py --quantity frequency --n_steps 100000
-python main.py --n_steps 100000</pre><p>Distinguish the continuous root from the sampled maximum.</p><p><strong>Challenge B:</strong> In a Python interpreter opened in the program folder, run <code>from planck2_driver import run_planck2</code>, then <code>r = run_planck2(5900.0, "wavelength", 2000)</code>. Compare <code>r.coord_peak * r.T</code> across temperatures and compute <code>r.physical_integral / r.exact_physical_integral</code>. Check against Beats 1 and 4. The result also exposes <code>x_values</code>, <code>coord_values</code> and <code>y_values</code> for your own plot.</p></section><section id="parameters"><h2>Command-line parameters</h2><p>All ordinary settings are command-line options described in <code>main.py</code>. Physical quantities are expressed in the International System of Units (SI). Options you omit return to their defaults on each run.</p><div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table">
+python main.py --y_frac_window 0 --x_min 0.01 --x_max 100 --x_low 0.05 --x_high 20</pre><p>The second command stops at \(x=4\), below the wavelength shape's true maximum near 4.965. The reported peak is at the edge and its numerical integral misses part of the spectrum. A window fraction of zero changes only the view, not the integration or peak calculation.</p><p>Explain why the second physical integral departs from the exact reference. Valid settings require <code>x_min &le; x_low &lt; x_high &le; x_max</code>. To isolate the viewing effect, compare the final command with Beat 0.</p></section>
+
+
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<p>The experiments are ranked from introductory to advanced, and each is cited by the beat it extends. Each command is run from the program's folder.</p>
+<h3 id="exp1">1 · Solar Black-Body Approximation — Introductory</h3>
+<p>Compare the sampled wavelength peak at 5900 K with Wien's displacement law. It should be near 490 nm. A real solar spectrum also has absorption lines, and the Sun's effective temperature is nearer 5800 K, which moves the peak to slightly longer wavelength.</p>
+<pre>python main.py --T 5900 --quantity wavelength</pre>
+<h3 id="exp2">2 · Wien's Displacement Law and Temperature — Introductory</h3>
+<p>Verify that <code>x_peak</code> stays nearly constant while \(\lambda_{\rm peak}T\) stays near \(2.898\times10^{-3}\,\text{m K}\). Compare frequency peaks at different temperatures to see that they are proportional to \(T\).</p>
+<pre>python main.py --T 3000 --quantity wavelength
+python main.py --T 5900 --quantity wavelength
+python main.py --T 10000 --quantity wavelength
+python main.py --T 3000 --quantity frequency
+python main.py --T 10000 --quantity frequency</pre>
+<h3 id="exp3">3 · Cosmic Microwave Background — Introductory</h3>
+<p>The 2.725 K frequency peak should be near 160 GHz. As an optional research extension, consider why the background's nearly ideal black-body spectrum supports a hot early universe.</p>
+<pre>python main.py --T 2.725 --quantity frequency</pre>
+<h3 id="exp4">4 · Wavelength vs. Frequency Peaks — Intermediate</h3>
+<p>At the same temperature, record the \(B_\lambda\) peak wavelength, the \(B_\nu\) peak frequency, and \(c/\nu_{\max}\). The two wavelengths differ because the curves are densities with respect to different variables.</p>
+<pre>python main.py --T 5900 --quantity wavelength
+python main.py --T 5900 --quantity frequency</pre>
+<h3 id="exp5">5 · Frequency Radiance vs. Energy Density — Intermediate</h3>
+<p>Verify that <code>x_peak</code> and the peak frequency agree. Compare the plotted peak values and the printed physical integrals, and explain why their ratios equal \(4\pi/c\), with the corresponding change of units.</p>
+<pre>python main.py --T 5900 --quantity frequency
+python main.py --T 5900 --quantity energy_density</pre>
+<h3 id="exp6">6 · Stefan–Boltzmann T⁴ Scaling — Intermediate</h3>
+<p>Record the printed physical integrals, divide by <code>T**4</code>, and compare with \(\sigma/\pi\) for the radiance or \(4\sigma/c\) for the energy density. Doubling \(T\) should increase the integral by a factor of 16. Multiply the radiance integral by \(\pi\) to get the emitted flux \(\sigma T^4\) in W m<sup>&minus;2</sup>.</p>
+<pre>python main.py --T 3000 --quantity frequency
+python main.py --T 6000 --quantity frequency
+python main.py --T 12000 --quantity frequency
+# Repeat with --quantity energy_density to compare 4σ/c.</pre>
+<h3 id="exp7">7 · Resolution and Peak Sampling — Intermediate</h3>
+<p>Compare the printed <code>x_peak</code> and the dimensionless area with the exact values printed beside them. For the physical integral, remember that its exact reference spans \(0&lt;x&lt;\infty\) while the numerical result uses the finite range. The sampled peak need not converge at the same rate as the trapezoidal area.</p>
+<pre>python main.py --n_steps 10
+python main.py --n_steps 100
+python main.py --n_steps 1000
+python main.py --n_steps 2000
+python main.py --n_steps 20000</pre>
+<h3 id="exp8">8 · Rayleigh–Jeans and Wien Limits — Intermediate</h3>
+<p>Compare the default peak and integrals with a run that applies the small- and large-\(x\) approximations well beyond their usual regimes. These thresholds change the approximation regions while preserving the physical range. Then try moving only one of the two thresholds.</p>
+<pre>python main.py
+python main.py --x_low 1 --x_high 3</pre>
+<h3 id="exp9">9 · Truncating the Range — Intermediate to Advanced</h3>
+<p>Predict from Eq. (21) how much each printed integral will lose when the range is cut at \(x_{\max}=10\), then run it and compare. Repeat with \(x_{\min}=1\) and with \(x_{\max}=4\), and say for each which of the three quantities is hurt most and why the peak line cannot warn you.</p>
+<pre>python main.py --x_max 10 --x_high 9
+python main.py --x_max 4 --x_high 3
+python main.py --x_min 1 --x_low 1</pre>
+
+</section>
+
+<section id="further"><h2>Advanced programming challenges</h2>
+
+
+<h3 id="exp10">The Peak Condition by Iteration — Advanced Programming</h3>
+<p>Solve Eq. (5) by repeating \(x\leftarrow p(1-e^{-x})\) and compare the roots with the sampled peaks of a very fine grid. The script imports the driver directly, so run it from the program's folder.</p>
+<pre>import math
+from planck2_driver import run_planck2
+
+for quantity, p in (("wavelength", 5), ("frequency", 3)):
+    x = float(p)
+    for _ in range(50):
+        x = p * (1.0 - math.exp(-x))
+    sampled = run_planck2(5900.0, quantity, 100000).x_peak
+    print(quantity, x, sampled)</pre>
+
+<h3 id="exp11">Read the Result Object — Advanced Programming</h3>
+<p>Every number the summary prints, and the whole curve, is available from the result of <code>run_planck2()</code>. Compute \(\lambda_{\rm peak}T\) and the ratio of the physical integral to its exact reference without opening a plot, and compare them with Beats 1 and 4.</p>
+<pre>from planck2_driver import run_planck2
+
+r = run_planck2(5900.0, "wavelength", 2000)
+print(r.coord_peak * r.T)
+print(r.physical_integral / r.exact_physical_integral)</pre>
+</section>
+
+
+
+<section class="restore-section" aria-labelledby="restore-title">
+<div class="restore-box">
+<!-- Icon -->
+<div class="restore-icon">↩️</div>
+<!-- Content -->
+<div>
+<div class="restore-title" id="restore-title">Restoring Defaults and Program Files</div>
+<p class="restore-intro">
+        A new run with <code>python main.py</code> uses all default settings; options in a previous command do not carry over. If you edit <code>main.py</code> or another program file for an exercise, restore it using any of the following methods:
+      </p>
+<ul class="restore-list">
+<li>
+<strong>Same session:</strong>
+          Press <kbd>Ctrl+Z</kbd>
+          (Windows) or <kbd>Cmd+Z</kbd>
+          (macOS) repeatedly in your editor to undo your edits.
+        </li>
+<li>
+<strong>If you are using PyCharm:</strong>
+          Right-click the edited file in the Project panel → <em>Local History → Show History</em> → select a version from before your changes → click <em>Revert</em>.
+        </li>
+<li>
+<strong>Full reset:</strong>
+          Re-download the ZIP from
+          <a class="restore-link" href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">
+            github.com/tomyee3-org/GFTGU-Programs
+          </a>
+          and replace this program's folder with the fresh copy.
+        </li>
+</ul>
+<p class="restore-footnote">
+        For additional ways to restore program files, see the corresponding
+        recovery instructions in the <em>GFTGU Python Setup Guide</em>.
+      </p>
+</div>
+</div>
+</section>
+
+<section id="parameters">
+<h2>Command-line parameters</h2>
+<p>All ordinary settings are command-line options described in <code>main.py</code>. 
+Physical quantities are expressed in the International System of Units (SI). 
+Options you omit return to their defaults on each run.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table">
 <thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
 <tbody>
 <tr><td class="pname">--T</td><td class="pdefault">5900.0</td><td>K</td><td>Positive finite black-body temperature; the default approximates the Sun's continuum.</td></tr>
@@ -518,8 +797,15 @@ python main.py --n_steps 100000</pre><p>Distinguish the continuous root from the
 <tr><td class="pname">--x_high</td><td class="pdefault">20.0</td><td>&mdash;</td><td>Above this value, use the large-\(x\) Wien approximation. Require <code>x_min &le; x_low &lt; x_high &le; x_max</code>, so lowering <code>--x_max</code> below 20 also needs a lower <code>--x_high</code>.</td></tr>
 <tr><td class="pname">--corner</td><td class="pdefault">"upper_right"</td><td>&mdash;</td><td>Annotation location: <code>upper_right</code>, <code>upper_left</code>, <code>lower_right</code> or <code>lower_left</code>.</td></tr>
 <tr><td class="pname">--y_frac_window</td><td class="pdefault">0.003</td><td>&mdash;</td><td>Finite fraction of the peak used for plot windowing; 0 shows the full computed range. Does not affect the peak search or the integrals.</td></tr>
-</tbody></table></div></section><section id="summary"><h2>How to read the summary</h2><p>Each successful run prints the version/build and sampled \(x\) peak, the physical peak wavelength or frequency, the dimensionless area beside its zero-to-infinity reference, the physical integral, and its exact bolometric reference. The plot annotation also shows the peak height. Compare numerical and exact physical integrals in the same quantity and units. The exact line describes an ideal zero-to-infinity integral; the numerical line uses your finite domain, grid and switch settings.</p><pre>python main.py --version
-python main.py --help</pre><p><code>--version</code> shows the shared code identifier. <code>--help</code> lists every option; these commands do not draw figures.</p></section><section id="related"><h2>Related programs</h2><p><strong>Star</strong> models stellar structure. <strong>Random2</strong> illustrates radiative diffusion. Planck2 supplies an ideal thermal spectrum at a selected temperature.</p></section><section id="license" class="gftgu-license">
+</tbody></table></div></section>
+
+
+
+<section id="related"><h2>Related programs</h2><p><strong>Star</strong> models stellar structure. 
+<strong>Random2</strong> illustrates radiative diffusion. 
+Planck2 supplies an ideal thermal spectrum at a selected temperature.</p></section>
+
+<section id="license" class="gftgu-license">
 <h2>License</h2>
 <p>
       This software is based on programs by <strong>Bernard Schutz</strong> accompanying
@@ -532,12 +818,15 @@ python main.py --help</pre><p><code>--version</code> shows the shared code ident
       You are free to share and adapt the material for non-commercial purposes, provided
       you give appropriate credit and distribute any adaptations under the same license.
     </p>
-</section></main><footer class="gftgu-footer">
+</section></main>
+<footer class="gftgu-footer">
 <em>Gravity from the Ground Up</em> ·
       Original Java © 2003 Bernard Schutz (Cambridge University Press) ·
       Python port © 2024–2026 Thomas Yee ·
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
-</footer></div><script>
+</footer>
+</div>
+<script>
   (function () {
     const links = document.querySelectorAll('nav a');
     const observer = new IntersectionObserver(entries => {
@@ -552,4 +841,5 @@ python main.py --help</pre><p><code>--version</code> shows the shared code ident
     document.querySelectorAll('main section[id]').forEach(s => observer.observe(s));
   })();
 </script>
-</body></html>
+</body>
+</html>
