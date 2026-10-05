@@ -486,93 +486,41 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 </header>
 <nav id="sidebar">
 <div class="nav-label">Overview</div>
-<a href="#start">Start here</a>
+<a href="#start">Discussion</a>
+<a href="#limits">Where to trust the result</a>
 <div class="nav-label">Beats</div>
 <a href="#beat0">0 · Outside it looks like a point</a>
-<a href="#beat1">1 · Make the tiles coarse</a>
-<a href="#beat2">2 · Keep moving outward</a>
-<a href="#beat3">3 · Walk from the centre to the wall</a>
-<a href="#beat4">4 · Refine by ten</a>
+<a href="#beat1">1 · The shell as tiles</a>
+<a href="#beat2">2 · Far away, a point of the tiled mass</a>
+<a href="#beat3">3 · Inside, the pulls cancel</a>
+<a href="#beat4">4 · Ten times the divisions, a hundredth of the error</a>
 <a href="#beat5">5 · Approach the surface</a>
-<a href="#beat6">6 · Read the error plot</a>
-<a href="#beat7">7 · Double the mass per area</a>
+<a href="#beat6">6 · The relative-difference plot</a>
+<a href="#beat7">7 · Epsilon only sets the scale</a>
 <a href="#beat8">8 · Break the approximation</a>
-<div class="nav-label">Usage</div>
-<a href="#parameters">Parameters at the terminal</a>
-<a href="#limits">Where to trust the result</a>
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
 <div class="nav-label">Reference</div>
+
+
+
+<a href="#parameters">Parameters</a>
+
+
 <a href="#related">Related programs</a>
 <a href="#license">License</a>
 </nav>
 <main>
 <p id="version_build">Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 217c2c26a44a</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
-<section id="start"><h2>Start here</h2>
+<section id="start">
+<h2>Discussion</h2>
 
-<p>A shell made of many small masses should pull like one mass at its centre when you stand outside, and give no net pull when you stand inside. Run the commands below in order from the SphereGravity program folder. Each run prints a comparison table and opens a graph; close the graph to finish the run. Python 3.10 or later, NumPy and Matplotlib are required.</p>
-<p>The shell radius and gravitational constant are both 1 in the program's dimensionless units. The numerical result is a midpoint sum, so the small deviations from Newton's exact shell theorem are part of the lesson. The point at the shell surface, <em>r</em> = 1, is excluded because the ideal thin shell's field jumps there.</p>
-<p class="note">The equations use MathJax from an online service; the program runs without an internet connection. This page moves from the figure and printed result to the equation. Try each question before reading on.</p></section>
-<section id="beat0"><h2>Beat 0 · Outside it looks like a point</h2>
-<p>Begin with the pull itself, not the error scale.</p><pre>python main.py --outputType acceleration --nDiv 100 --epsilon 0.001 --radii 0.5 0.995 1.005 2 3 4 5</pre>
-<p>Compare the printed <code>predicted g</code> and <code>expected g</code> at <em>r</em> = 0.5, 2 and 4. The pull is almost zero inside and falls by about a factor of four between 2 and 4. The line has a gap at the dashed shell boundary.</p>
-<p class="prompt"><strong>Try next.</strong> If you double the outside radius again, what pull do you expect relative to that at 4? Check with <code>python main.py --radii 4 8</code>; this changes the table's radii but leaves the graph's radius grid alone.</p>
-<p>The continuum rule is \(g(r)=0\) for \(r&lt;1\), and \(g(r)=M/r^2\) for \(r&gt;1\). With mass per unit area \(\varepsilon=0.001\), \(M=4\pi\varepsilon\). The small nonzero interior number comes from the finite tile sum.</p></section>
-<section id="beat1"><h2>Beat 1 · Make the tiles coarse</h2>
-<p>For comparison, the default settings are <code>--nDiv 100</code>.</p>
-<pre>python main.py --nDiv 10 --outputType relative_difference</pre>
-<p>The program uses ten divisions in each angular direction. Look at <code>numerical midpoint mass</code>, <code>continuum mass</code>, and <code>latitude step h = pi/nDiv</code>. The numerical mass is slightly high; compared with Beat 0, its fractional error grows about a hundredfold.</p>
-<p class="prompt"><strong>Try next.</strong> Which part of the graph changes most as you coarsen the tiles? Compare the two sides of the dashed line rather than just the far right of the plot.</p>
-<p>The midpoint latitudes are \(\theta_k=-\pi/2+(k+1/2)h\), \(h=\pi/n\). Their summed mass is \(M_{\rm num}=4\pi\varepsilon\,(h/2)/\sin(h/2)\); thus \(M_{\rm num}/M-1\approx h^2/24\) for fine tiles. The latitude bands are approximated, not integrated exactly.</p></section>
-<section id="beat2"><h2>Beat 2 · Keep moving outward</h2>
-<pre>python main.py --radii 2 5 10 100 1000</pre>
-<p>Follow the printed relative difference as distance grows. It approaches the small excess in the tile mass rather than zero. The graph did not change: <code>--radii</code> selects table entries, while the graph still stops at 4.995.</p>
-<p class="prompt"><strong>Try next.</strong> At a very large radius, which mass does the tiled shell act like: the exact smooth-shell mass or the sum of its tile masses?</p>
-<p>Far away, \(g_{\rm num}\simeq M_{\rm num}/r^2\). The table compares against \(M/r^2\), so its relative difference tends to \(M_{\rm num}/M-1\). Beat 6 asks why the graph's normalization gives a different far-field limit.</p></section>
-<section id="beat3"><h2>Beat 3 · Walk from the centre to the wall</h2>
-<pre>python main.py --radii 0 0.25 0.5 0.75 0.9</pre>
-<p>The table's <code>expected g</code> is zero throughout. Consequently it reports <code>undefined; g/M=</code> in place of a relative difference. The residual becomes harder to ignore close to the shell.</p>
-<p class="prompt"><strong>Try next.</strong> Why can the program divide an interior pull by the shell mass, but not call the answer a relative error? Near <em>r</em> = 0.9, zoom in vertically before using the cursor to inspect the interior residual, then compare it with the table. At the default scale most interior residuals are smaller than one screen pixel.</p>
-<p>In the continuum, the near and far patches within the same narrow cone have equal and opposite axial pulls. Finite midpoint tiles do not pair exactly, so the residual is a numerical error; division by a zero expected pull would be undefined.</p></section>
-<section id="beat4"><h2>Beat 4 · Refine by ten</h2>
-<p>For comparison, the default settings are <code>--nDiv 100</code>.</p>
-<pre>python main.py --nDiv 1000 --radii 0.5 0.995 1.005 2 3 4 5
-python main.py --nDiv 10000 --radii 0.5 0.995 1.005 2 3 4 5</pre>
-<p>Compare the mass error and the table's error at a fixed radius with the earlier 100-division run. These long runs refine the graph's full 1000-point profile as well as the short printed table; the 10000-division run can take tens of seconds.</p>
-<p class="prompt"><strong>Try next.</strong> Record the table's <em>r</em> = 2 relative difference for 100, 1000 and 10000 divisions. Does each tenfold refinement make it about ten times or a hundred times smaller?</p>
-<p>The leading midpoint error scales like \(h^2\), and \(h=\pi/n\). The <code>h^2 estimate</code> is calculated from a formula independently of the tile sum; an unmarked row is an opportunity to compare the two.</p></section>
-<section id="beat5"><h2>Beat 5 · Approach the surface</h2>
-<pre>python main.py --radii 0.995 1.005 1.01 1.05 1.1 --nDiv 100
-python main.py --nDiv 10000 --radii 0.995 1.005 1.01 1.05 1.1</pre>
-<p>At 100 divisions every row except <em>r</em> = 1.1 has a <code>*</code>: the error estimate there is unreliable and can even have the wrong sign. At 10000 divisions, the marks disappear and the estimate approaches the measured error. Compare the pulls at 0.995 and 1.005 in the fine run.</p>
-<p class="prompt"><strong>Try next.</strong> The fine run samples on opposite sides, but does not sample exactly at the surface. Predict the limiting jump, and explain why their finite-distance difference is a little smaller.</p>
-<p>The continuum shell's magnitude rises from zero just inside to \(4\pi G\varepsilon\) just outside. For a general surface layer, it is the <em>signed normal component</em> of the field that has this universal jump; the magnitude statement here uses spherical symmetry. The program marks an estimate when \(h\geq\tfrac12\min(1,|r-1|)\); an unmarked row near the cutoff still calls for caution.</p></section>
-<section id="beat6"><h2>Beat 6 · Read the error plot</h2>
-<pre>python main.py --nDiv 100 --outputType relative_difference</pre>
-<p>The default graph plots <code>relative_difference</code>. The tall pair of spikes beside <em>r</em> = 1 sets its vertical scale. At the default scale the curve at <em>r</em> = 2 is less than one screen pixel above zero, so the cursor cannot read its value. Use the toolbar magnifier to zoom repeatedly around <em>r</em> = 2, first selecting approximately 0 to 1e-4 on the vertical axis. Even then the cursor gives only about one significant figure. The plotted value is 5.03e-05; the table prints 9.1423e-05. Compare those numbers using the formula below.</p>
-<p class="prompt"><strong>Try next.</strong> The table uses the exact mass \(M\), while the plot uses the tile mass \(M_{\rm num}\). Which view isolates the error in the shape of the field? Why does the plotted far-field error tend to zero?</p>
-<p>Outside, if \(\delta_{\rm table}=g_{\rm num}/(M/r^2)-1\), then \(\delta_{\rm plot}=(1+\delta_{\rm table})/(M_{\rm num}/M)-1\). Inside, the displayed residual is \(g_{\rm num}/M_{\rm num}\), while the table prints \(g_{\rm num}/M\). Do not apply the exterior subtraction to an interior row.</p></section>
-<section id="beat7"><h2>Beat 7 · Double the mass per area</h2>
-<p>For comparison, the default settings are <code>--epsilon 0.001</code>.</p>
-<pre>python main.py --epsilon 0.002 --outputType acceleration --nDiv 100</pre>
-<p>Compare the graph and mass lines with Beat 0. The masses and pulls double; the graph's shape, shell location and the relative errors do not. <code>--epsilon</code> sets mass per unit area, not a geometric shell thickness.</p>
-<p class="prompt"><strong>Try next.</strong> Run <code>python main.py --epsilon 0.002</code>. Why is the relative-difference graph unchanged even though the acceleration graph doubles?</p>
-<p>Every tile mass is proportional to \(\varepsilon\), and so is each summed pull. A ratio of a pull to a comparison pull from the same shell cancels \(\varepsilon\).</p></section>
-<section id="beat8"><h2>Beat 8 · Break the approximation</h2>
-<p>For comparison, the default settings are <code>--nDiv 100</code>.</p>
-<pre>python main.py --nDiv 1
-python main.py --radii 1
-python main.py --nDiv 100001</pre>
-<p>The first run collapses the shell to an equatorial ring: its inside field no longer resembles zero and all error estimates are marked. The next two commands are deliberately rejected: the ideal surface is discontinuous and the division count is capped at 100000.</p>
-<p class="prompt"><strong>Try next.</strong> Use <code>python main.py --nDiv 2</code>, then 10 and 100. At which radii does the ring picture start to resemble the shell? Which marked rows remain a poor basis for extrapolation?</p>
-<p>This is a convergence experiment, not a promise that every finite tiling is accurate. The exact theorem applies to the smooth uniform sphere, not to one ring.</p></section>
-<section id="parameters"><h2>Parameters at the terminal</h2>
-<p>All settings are command-line options in <code>main.py</code>. Use <code>python main.py --help</code> for the parser's live descriptions or <code>python main.py --version</code> for the current stamp. <code>--radii</code> affects only the table; <code>--outputType</code> affects only the plot.</p>
-<div class="table-scroll"><table><thead><tr><th>Option</th><th>Default</th><th>Meaning</th></tr></thead><tbody>
-<tr><td><code>--nDiv</code></td><td>100</td><td>Number of angular divisions in each direction; an integer from 1 through 100000.</td></tr>
-<tr><td><code>--outputType</code></td><td>relative_difference</td><td><code>acceleration</code> plots the raw pull; <code>relative_difference</code> plots its mass-normalized deviation.</td></tr>
-<tr><td><code>--epsilon</code></td><td>0.001</td><td>Positive mass per area in dimensionless units, from 1e-100 to 1e100; scales mass and acceleration.</td></tr>
-<tr><td><code>--radii</code></td><td>0.5 0.995 1.005 2 3 4 5</td><td>One or more table radii, nonnegative and at most 1e100, excluding 1.</td></tr>
-</tbody></table></div></section>
+<p><strong>SphereGravity</strong> tests one of Newton's most useful results, the shell theorem: a thin, uniform spherical shell pulls on anything outside it exactly as if all its mass sat at its centre, and pulls on nothing inside it at all. The program does not assume the theorem. It cuts the shell into small tiles, treats each tile as a point mass, adds up their pulls at many distances from the centre, and compares the total with the theorem.</p>
+<p>Every run prints the shell's mass as the tiles add it up beside its exact value, and a table of the computed and expected pull at a set of radii, with the difference between them and a prediction of how large that difference should be. Then it plots the computed pull, or its relative difference from the pull the theorem gives for the tiles' own mass, from the centre out to five shell radii.</p>
+<p>The spine of the lesson is one sentence: <em>adding up the inverse-square pulls of the tiles of a thin shell gives no pull inside and the pull of a point mass outside, as Newton proved, and the small differences that remain are the error of the sum itself, which falls as the square of the tile size wherever the tiles are small compared with the distance to the shell, and which the program predicts in advance; next to the shell, where that condition fails, the sum needs far finer tiles.</em></p>
+</section>
+
 <section id="limits"><h2>Where to trust the result</h2><ul>
 <li>The ideal shell has zero thickness and radius 1. Its field is only calculated on one symmetry axis.</li>
 <li>The numerical profile uses 1000 fixed radii from 0 to 4.995. The value at 1 is a placeholder, omitted from the drawn curve; the table rejects radius 1.</li>
@@ -580,6 +528,164 @@ python main.py --nDiv 100001</pre>
 <li>The table compares to the continuum mass. The relative-difference plot compares to the tiled mass. An interior relative difference from zero is undefined, so the program shows a mass-normalized residual there.</li>
 <li>The plot uses the explicit latitude loops and may be slow for large <code>--nDiv</code>. The model is Newtonian and dimensionless.</li>
 </ul></section>
+
+<section id="beats">
+<section id="beat0"><h2>Beat 0 · Outside it looks like a point</h2>
+<p>Run the program with its default tiling and plot the pull itself.</p>
+<pre>python main.py --outputType acceleration --nDiv 100 --epsilon 0.001 --radii 0.5 0.995 1.005 2 3 4 5</pre>
+<p>Compare the printed <code>predicted g</code> and <code>expected g</code> at <em>r</em> = 0.5, 2 and 4. The pull is almost zero inside and falls by about a factor of four between 2 and 4. The line has a gap at the dashed shell boundary.</p>
+<p class="prompt"><strong>Try next.</strong> If you double the outside radius again, what pull do you expect relative to that at 4? Check with <code>python main.py --radii 4 8</code>; this changes the table's radii but leaves the graph's radius grid alone.</p>
+<p>The continuum rule is \(g(r)=0\) for \(r&lt;1\), and \(g(r)=M/r^2\) for \(r&gt;1\). With mass per unit area \(\varepsilon=0.001\), \(M=4\pi\varepsilon\). The small nonzero interior number comes from the finite tile sum.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat1">
+<h2>Beat 1 · The shell as tiles</h2>
+<p>The program cuts the shell into a grid of tiles, <code>--nDiv</code> in latitude and <code>--nDiv</code> in longitude. Use very coarse tiles, ten by ten, so that the effect of the tiling is large.</p>
+<p>For comparison, the default settings are <code>--nDiv 100</code>.</p>
+<pre>python main.py --nDiv 10 --outputType relative_difference</pre>
+<p>The program uses ten divisions in each angular direction. Look at <code>numerical midpoint mass</code>, <code>continuum mass</code>, and <code>latitude step h = pi/nDiv</code>. The numerical mass is slightly high; compared with Beat 0, its fractional error grows about a hundredfold.</p>
+<p class="prompt"><strong>Try next.</strong> Which part of the graph changes most as you coarsen the tiles? Compare the two sides of the dashed line rather than just the far right of the plot.</p>
+<p>The midpoint latitudes are \(\theta_k=-\pi/2+(k+1/2)h\), \(h=\pi/n\). Their summed mass is \(M_{\rm num}=4\pi\varepsilon\,(h/2)/\sin(h/2)\); thus \(M_{\rm num}/M-1\approx h^2/24\) for fine tiles. The latitude bands are approximated, not integrated exactly.</p>
+
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat2">
+<h2>Beat 2 · Far away, a point of the tiled mass</h2>
+<p>Print the comparison at points farther and farther from the shell, from 2 to 1000 shell radii.</p>
+<pre>python main.py --radii 2 5 10 100 1000</pre>
+<p>Follow the printed relative difference as distance grows. It approaches the small excess in the tile mass rather than zero. The graph did not change: <code>--radii</code> selects table entries, while the graph still stops at 4.995.</p>
+<p class="prompt"><strong>Try next.</strong> At a very large radius, which mass does the tiled shell act like: the exact smooth-shell mass or the sum of its tile masses?</p>
+<p>Far away, \(g_{\rm num}\simeq M_{\rm num}/r^2\). The table compares against \(M/r^2\), so its relative difference tends to \(M_{\rm num}/M-1\). Beat 6 asks why the graph's normalization gives a different far-field limit.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat3">
+<h2>Beat 3 · Inside, the pulls cancel</h2>
+<p>Print the comparison at five points inside the shell, from the centre to nine tenths of the way to the shell.</p>
+<pre>python main.py --radii 0 0.25 0.5 0.75 0.9</pre>
+<p>The table's <code>expected g</code> is zero throughout. Consequently it reports <code>undefined; g/M=</code> in place of a relative difference. The residual becomes harder to ignore close to the shell.</p>
+<p class="prompt"><strong>Try next.</strong> Why can the program divide an interior pull by the shell mass, but not call the answer a relative error? Near <em>r</em> = 0.9, zoom in vertically before using the cursor to inspect the interior residual, then compare it with the table. At the default scale most interior residuals are smaller than one screen pixel.</p>
+<p>In the continuum, the near and far patches within the same narrow cone have equal and opposite axial pulls. Finite midpoint tiles do not pair exactly, so the residual is a numerical error; division by a zero expected pull would be undefined.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> and <a href="#exp10">Experiment 10</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat4">
+<h2>Beat 4 · Ten times the divisions, a hundredth of the error</h2>
+<p>Run the default comparison again with ten times and then a hundred times as many divisions. The second run takes noticeably longer, about ten seconds on the computer used to write this page, because it computes the plotted profile with ten thousand rings at each of a thousand radii.</p>
+<p>For comparison, the default settings are <code>--nDiv 100</code>.</p>
+<pre>python main.py --nDiv 1000 --radii 0.5 0.995 1.005 2 3 4 5
+python main.py --nDiv 10000 --radii 0.5 0.995 1.005 2 3 4 5</pre>
+<p>Compare the mass error and the table's error at a fixed radius with the earlier 100-division run. These long runs refine the graph's full 1000-point profile as well as the short printed table; the 10000-division run can take tens of seconds.</p>
+<p class="prompt"><strong>Try next.</strong> Record the table's <em>r</em> = 2 relative difference for 100, 1000 and 10000 divisions. Does each tenfold refinement make it about ten times or a hundred times smaller?</p>
+<p>The leading midpoint error scales like \(h^2\), and \(h=\pi/n\). The <code>h^2 estimate</code> is calculated from a formula independently of the tile sum; an unmarked row is an opportunity to compare the two.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat5">
+<h2>Beat 5 · Approach the surface</h2>
+<p>Go close to the shell, half a hundredth of a radius inside and outside it, and a little farther out, first with the default 100 divisions and then with 10000. The second run takes about ten seconds, like the second run of Beat 4.</p>
+<pre>python main.py --radii 0.995 1.005 1.01 1.05 1.1 --nDiv 100
+python main.py --nDiv 10000 --radii 0.995 1.005 1.01 1.05 1.1</pre>
+<p>At 100 divisions every row except <em>r</em> = 1.1 has a <code>*</code>: the error estimate there is unreliable and can even have the wrong sign. At 10000 divisions, the marks disappear and the estimate approaches the measured error. Compare the pulls at 0.995 and 1.005 in the fine run.</p>
+<p class="prompt"><strong>Try next.</strong> The fine run samples on opposite sides, but does not sample exactly at the surface. Predict the limiting jump, and explain why their finite-distance difference is a little smaller.</p>
+<p>The continuum shell's magnitude rises from zero just inside to \(4\pi G\varepsilon\) just outside. For a general surface layer, it is the <em>signed normal component</em> of the field that has this universal jump; the magnitude statement here uses spherical symmetry. The program marks an estimate when \(h\geq\tfrac12\min(1,|r-1|)\); an unmarked row near the cutoff still calls for caution.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> and <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat6">
+<h2>Beat 6 · The relative-difference plot</h2>
+<p>Run the program with all its defaults. The plot now shows the relative difference, not the pull.</p>
+<pre>python main.py --nDiv 100 --outputType relative_difference</pre>
+<p>The default graph plots <code>relative_difference</code>. The tall pair of spikes beside <em>r</em> = 1 sets its vertical scale. At the default scale the curve at <em>r</em> = 2 is less than one screen pixel above zero, so the cursor cannot read its value. Use the toolbar magnifier to zoom repeatedly around <em>r</em> = 2, first selecting approximately 0 to 1e-4 on the vertical axis. Even then the cursor gives only about one significant figure. The plotted value is 5.03e-05; the table prints 9.1423e-05. Compare those numbers using the formula below.</p>
+<p class="prompt"><strong>Try next.</strong> The table uses the exact mass \(M\), while the plot uses the tile mass \(M_{\rm num}\). Which view isolates the error in the shape of the field? Why does the plotted far-field error tend to zero?</p>
+<p>Outside, if \(\delta_{\rm table}=g_{\rm num}/(M/r^2)-1\), then \(\delta_{\rm plot}=(1+\delta_{\rm table})/(M_{\rm num}/M)-1\). Inside, the displayed residual is \(g_{\rm num}/M_{\rm num}\), while the table prints \(g_{\rm num}/M\). Do not apply the exterior subtraction to an interior row.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat7">
+<h2>Beat 7 · Epsilon only sets the scale</h2>
+<p>Double the shell's mass per unit area and plot the pull again.</p>
+<p>For comparison, the default settings are <code>--epsilon 0.001</code>.</p>
+<pre>python main.py --epsilon 0.002 --outputType acceleration --nDiv 100</pre>
+<p>Compare the graph and mass lines with Beat 0. The masses and pulls double; the graph's shape, shell location and the relative errors do not. <code>--epsilon</code> sets mass per unit area, not a geometric shell thickness.</p>
+<p class="prompt"><strong>Try next.</strong> Run <code>python main.py --epsilon 0.002</code>. Why is the relative-difference graph unchanged even though the acceleration graph doubles?</p>
+<p>Every tile mass is proportional to \(\varepsilon\), and so is each summed pull. A ratio of a pull to a comparison pull from the same shell cancels \(\varepsilon\).</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat8">
+<h2>Beat 8 · Break the approximation</h2>
+<p>Use the coarsest possible tiling, a single ring, and then try a comparison radius on the shell and more divisions than the program allows. The last two commands are rejected; the messages say why.</p>
+<p>For comparison, the default settings are <code>--nDiv 100</code>.</p>
+<pre>python main.py --nDiv 1
+python main.py --radii 1
+python main.py --nDiv 100001</pre>
+<p>The first run collapses the shell to an equatorial ring: its inside field no longer resembles zero and all error estimates are marked. The next two commands are deliberately rejected: the ideal surface is discontinuous and the division count is capped at 100000.</p>
+<p class="prompt"><strong>Try next.</strong> Use <code>python main.py --nDiv 2</code>, then 10 and 100. At which radii does the ring picture start to resemble the shell? Which marked rows remain a poor basis for extrapolation?</p>
+<p>This is a convergence experiment, not a promise that every finite tiling is accurate. The exact theorem applies to the smooth uniform sphere, not to one ring.</p>
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp9">Experiment 9</a> and <a href="#exp11">Experiment 11</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<p>The experiments are ranked from introductory to advanced, and each is cited by the beat it extends. Each command is run from the program's folder.</p>
+<h3 id="exp1">1 · See the Theorem — Introductory</h3>
+<p>Plot the pull with the default tiling and with ten times as many divisions. Check that it is essentially zero inside and falls as \(1/r^2\) outside, and look at how the small wiggles on either side of the shell change.</p>
+<pre>python main.py --outputType acceleration
+python main.py --nDiv 1000 --outputType acceleration</pre>
+<h3 id="exp2">2 · The Inverse-Square Law from the Table — Introductory</h3>
+<p>Print the comparison at radii that double each time. Divide each <code>predicted g</code> by the next one and check that the ratio is close to 4; then say how close it should be, using the <code>relative difference</code> column, and why the five printed digits cannot show the departure for the most distant pair.</p>
+<pre>python main.py --radii 1.5 3 6 12 24</pre>
+<h3 id="exp3">3 · The Mass of the Tiles — Introductory to Intermediate</h3>
+<p>Run a few coarse tilings and compare the printed mass <code>relative difference</code> with \((h/2)/\sin(h/2)-1\) of Eq. (5), computed on a calculator from the printed \(h\), and with \(h^2/24\). How coarse must the tiling be before the two formulas differ in the second digit?</p>
+<pre>python main.py --nDiv 3
+python main.py --nDiv 30
+python main.py --nDiv 300</pre>
+<h3 id="exp4">4 · Schutz's Convergence Test at r = 1.1 — Intermediate</h3>
+<p>Print the comparison at \(r=1.1\) for 100, 1000 and 10000 divisions. The relative differences are about \(2.6\times10^{-3}\), \(2.5\times10^{-5}\) and \(2.5\times10^{-7}\): each tenfold refinement gives a hundredfold improvement. Compare each with <code>h^2 estimate</code>, and say why a statement about convergence must compare errors at the same radius.</p>
+<pre>python main.py --radii 1.1
+python main.py --nDiv 1000 --radii 1.1
+python main.py --nDiv 10000 --radii 1.1</pre>
+<h3 id="exp5">5 · Map the Interior — Intermediate</h3>
+<p>Print <code>g/M</code> at many interior radii and plot it by hand against \(r\), with the estimate beside it. Where does the first <code>*</code> appear, and how well does the estimate do just before it?</p>
+<pre>python main.py --radii 0.1 0.3 0.5 0.7 0.9 0.95 0.98</pre>
+<h3 id="exp6">6 · Read and Save the Plotted Profile — Intermediate Programming</h3>
+<p>The driver returns the plotted radii and values as two arrays, on the grid \(r_j=0.005\,j\), so a radius on that grid is found from its index. Run this script from the program's folder. It prints the plotted relative difference of Eq. (16) at three radii; compare the value at \(r=2\) with the table's 9.1423e-05 of Beat 2 through Eq. (17). Then extend it: after <code>from plot_spheregravity import plot_spheregravity</code>, <code>plot_spheregravity(radius, accel, outputType="relative difference")</code> returns the figure and axes, and <code>figure.savefig("profile.png")</code> saves the plot once its window is closed.</p>
+<pre>from driver_spheregravity import run_spheregravity
+
+radius, accel = run_spheregravity(nDiv=100, outputType="relative difference")
+for r in (1.1, 2.0, 4.995):
+    i = round(r / 0.005)
+    print(radius[i], accel[i])</pre>
+<h3 id="exp7">7 · How Fine Near the Shell? — Intermediate to Advanced</h3>
+<p>Find the smallest number of divisions for which the row at \(r=1.005\) loses its <code>*</code>, first from Eq. (14) and the marking rule, then by running the program on either side of it. Compare the error with the estimate in both runs, and then at ten times that number of divisions.</p>
+<pre>python main.py --nDiv 1256 --radii 1.005
+python main.py --nDiv 1257 --radii 1.005</pre>
+<h3 id="exp8">8 · Measure the Jump — Intermediate to Advanced</h3>
+<p>Print the pull a hundredth of a radius inside and outside the shell with fine tiles, for two values of \(\varepsilon\). Compare the difference of the two <code>predicted g</code> values with \(4\pi\varepsilon/1.01^2\), the jump of Eq. (15) less the fall-off of the outer field, and check that it doubles with \(\varepsilon\). Then move the two radii closer to the shell: where does the error of the sum, shown by <code>h^2 estimate</code>, become larger than the fall-off correction?</p>
+<pre>python main.py --nDiv 10000 --radii 0.99 1.01
+python main.py --nDiv 10000 --epsilon 0.002 --radii 0.99 1.01</pre>
+<h3 id="exp9">9 · Coarse Tilings — Advanced</h3>
+<p>With very few divisions the tiled shell is far from spherical. Print the comparison far from the shell for one, two and three divisions and check that the relative difference approaches the mass error, Eq. (10), in every case. Then look at the plots: for which tilings does the interior still look like a hollow shell?</p>
+<pre>python main.py --nDiv 1 --radii 10 100 1000
+python main.py --nDiv 2 --radii 10 100 1000
+python main.py --nDiv 3 --radii 10 100 1000</pre>
+<h3 id="exp10">10 · Replace the Sphere by an Ellipsoidal Homoeoid — Advanced Programming</h3>
+<p>In a separate copy of the program, replace the spherical shell by a thin ellipsoidal shell of the kind called a homoeoid: the material between two similar, concentric, similarly oriented ellipsoids of uniform density. Deforming the spherical coordinates while keeping the spherical tile masses is not enough; derive the correct mass of each tile and compute every component of the pull, including at points off the symmetry axis. Check that the pull inside tends to zero as the tiling is refined, while the pull outside depends on direction and so cannot be that of a point mass.</p>
+<h3 id="exp11">11 · NumPy Vectorization and Computational Tradeoffs — Advanced Programming</h3>
+<p>Compare <code>compute_acceleration_profile_textbook()</code> with <code>compute_acceleration_profile_optimized()</code>. 
+Identify which loops the NumPy array operations replace and how the ring geometry is computed once and reused. 
+Select each in turn by swapping the comment marks: 
+
+<pre>compute_acceleration_profile = compute_acceleration_profile_textbook
+# compute_acceleration_profile = compute_acceleration_profile_optimized</pre>
+
+Check that they give the same profile in both output modes, time them for several values of <code>--nDiv</code>, and explain why the optimized version works through the radii in bounded chunks rather than building one array for every radius and ring. Which is better for learning the method, and which for large calculations?</p>
+</section>
+<section id="parameters">
+<h2>Parameters</h2>
+<p>All settings are command-line options in <code>main.py</code>. Use <code>python main.py --help</code> for the parser's live descriptions or <code>python main.py --version</code> for the current stamp. <code>--radii</code> affects only the table; <code>--outputType</code> affects only the plot.</p>
+<div class="table-scroll"><table><thead><tr><th>Option</th><th>Default</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><code>--nDiv</code></td><td>100</td><td>Number of angular divisions in each direction; an integer from 1 through 100000.</td></tr>
+<tr><td><code>--outputType</code></td><td>relative_difference</td><td><code>acceleration</code> plots the raw pull; <code>relative_difference</code> plots its mass-normalized deviation.</td></tr>
+<tr><td><code>--epsilon</code></td><td>0.001</td><td>Positive mass per area in dimensionless units, from 1e-100 to 1e100; scales mass and acceleration.</td></tr>
+<tr><td><code>--radii</code></td><td>0.5 0.995 1.005 2 3 4 5</td><td>One or more table radii, nonnegative and at most 1e100, excluding 1.</td></tr>
+</tbody></table></div></section>
 <section id="related"><h2>Related programs</h2><p>Atmosphere follows pressure under gravity; Star and Neutron build spherical bodies using enclosed mass; RelativisticOrbit explores motion in a relativistic central field. SphereGravity isolates the shell theorem on which the spherical examples rely.</p></section>
 <section id="license" class="gftgu-license">
 <h2>License</h2>
