@@ -673,7 +673,7 @@ printed results of each command before comparing them.
 <div class="experiment-card" id="exp1">
 <div class="exp-num">Experiment 1 · Introductory</div>
 <div class="exp-title">Profile shapes: pressure, density, and mass</div>
-<p class="exp-beat">Goes with <a href="#beat00</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat0">Beat 0</a>.</p>
 <p>
           Run the default model with <code>--output_type</code> set in turn to
           <code>pressure</code>, <code>density</code>, and <code>mass</code>. Describe
@@ -686,7 +686,7 @@ printed results of each command before comparing them.
 <div class="experiment-card" id="exp2">
 <div class="exp-num">Experiment 2 · Introductory&ndash;Intermediate</div>
 <div class="exp-title">Numerical convergence</div>
-<p class="exp-beat">Goes with <a href="#beat44</a> and <a href="#beat55</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat4">Beat 4</a> and <a href="#beat5">Beat 5</a>.</p>
 <p>
           Repeat the default model with <code>--steps_per_scale</code> = 200,
           400, 800, and 1600. Compare surface radius, total mass, and
@@ -699,7 +699,7 @@ printed results of each command before comparing them.
 <div class="experiment-card" id="exp3">
 <div class="exp-num">Experiment 3 · Intermediate</div>
 <div class="exp-title">Comparison with Newtonian hydrostatics</div>
-<p class="exp-beat">Goes with <a href="#beat11</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat1">Beat 1</a>.</p>
 <p>
           Run <strong>Star</strong> separately and match its central density and
           pressure into <strong>Neutron</strong>. <strong>Star</strong> obtains its
@@ -716,7 +716,7 @@ printed results of each command before comparing them.
 <div class="experiment-card" id="exp4">
 <div class="exp-num">Experiment 4 · Intermediate</div>
 <div class="exp-title">Mass&ndash;central-pressure sequence and the maximum mass</div>
-<p class="exp-beat">Goes with <a href="#beat77</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat7">Beat 7</a>.</p>
 <p>
           Run a logarithmically spaced series of <code>--pC</code> values and
           record <code>data["total_mass_solar"]</code> and
@@ -733,7 +733,7 @@ printed results of each command before comparing them.
 <div class="experiment-card" id="exp5">
 <div class="exp-num">Experiment 5 · Intermediate</div>
 <div class="exp-title">Buchdahl compactness along a sequence</div>
-<p class="exp-beat">Goes with <a href="#beat66</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat6">Beat 6</a>.</p>
 <p>
           Plot <code>data["compactness"]</code> for the same sequence of models
           used in Experiment 4. Every configuration must remain at or below
@@ -747,7 +747,7 @@ printed results of each command before comparing them.
 <div class="experiment-card" id="exp6">
 <div class="exp-num">Experiment 6 · Intermediate&ndash;Advanced</div>
 <div class="exp-title">Controlled equation-of-state stiffness comparison</div>
-<p class="exp-beat">Goes with <a href="#beat22</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat2">Beat 2</a>.</p>
 <p>
           Because \(K\)'s dimensions depend on \(\gamma\) (Beat 2), comparing
           exponents at a fixed numerical \(K\) is not a controlled comparison.
@@ -770,7 +770,7 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 <div class="experiment-card" id="exp7">
 <div class="exp-num">Experiment 7 · Advanced</div>
 <div class="exp-title">Limits of a single polytrope at high density</div>
-<p class="exp-beat">Goes with <a href="#beat66</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat6">Beat 6</a>.</p>
 <p>
           Explore a wide central-pressure range with
           <code>python main.py --pC 1e35 --output_type density --log_y</code> and
@@ -788,7 +788,7 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 <div class="experiment-card" id="exp8">
 <div class="exp-num">Experiment 8 · Advanced · Schutz suggestion</div>
 <div class="exp-title">The minimum-mass puzzle of Investigation 20.1</div>
-<p class="exp-beat">Goes with <a href="#beat77</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat7">Beat 7</a>.</p>
 <p>
           Reduce <code>--pC</code> below <code>1e28</code> until the computed
           mass falls below 0.02 solar masses, the approximate lower bound

@@ -600,10 +600,8 @@ not simulate collapse; it computes static equilibrium configurations only.
 </section>
 <section id="beat0">
 <h2>Beat 0 · A star held up by its own pressure</h2>
-<p>A star is nothing but a stand-off between gravity, pulling inward, and pressure, pushing outward. 
-Ask the program to referee that stand-off for one central pressure and one simple equation of state, and read what balance it finds.</p>
-<pre class="code-block"><code>python main.py --gamma 1.666667 --K 5380.2 --pC 1.26e+35 --steps_per_scale 400 --max_steps 200000 \
-  --output_type pressure</code></pre>
+<p>A star is nothing but a stand-off between gravity, pulling inward, and pressure, pushing outward. Ask the program to referee that stand-off for one central pressure and one simple equation of state, and read what balance it finds.</p>
+<pre class="code-block"><code>python main.py</code></pre>
 <p>Look at the two parts of the printed summary: the nine global lines, and the five-row checkpoint table beneath them.</p>
 <pre class="code-block"><code>Neutron 1.3.1 (build 2cd414a64b3a)
 Neutron-star model summary
@@ -680,7 +678,6 @@ print('pressure source ratio  4pi r^3 p/(m c^2) :', pressure_source_ratio)</code
 <section id="beat2">
 <h2>Beat 2 · The equation of state</h2>
 <p>Eqs. 1 and 2 relate \(p\), \(m\) and \(\rho\), but they are two equations for three unknown functions of \(r\). Closing the system takes one more relation between pressure and density &mdash; the equation of state &mdash; and Neutron uses the simplest one with the right qualitative behavior. See what happens when that relation is allowed to degenerate.</p>
-<p>For comparison, the default settings are <code>--gamma 1.666667</code>, <code>--K 5380.2</code>, <code>--pC 1.26e+35</code>.</p>
 <pre class="code-block"><code>python main.py --gamma 1</code></pre>
 <p>Look at what the program prints instead of a model summary.</p>
 <p>Three tasks, in order. First, the rejection itself: the program exits immediately with <code>Neutron: error: --gamma must be greater than 1</code> and never reaches <code>compute_neutron_star()</code>. Then call the underlying solver directly from Python with the same exponent, <code>compute_neutron_star(1.0, 1.26e35, 5.3802e3)</code>, and the message changes to <code>gamma must be finite and greater than 1.</code> &mdash; the same restriction enforced a second time, independently, inside the physics layer rather than only in the command-line parser. Then ask why: with the pure choice \(\gamma=1\), pressure and density in Eq. 3 below are proportional, so a star built from it has no finite radius at all &mdash; pressure only approaches zero asymptotically as \(r\to\infty\) &mdash; and the surface-locating algorithm of Beat 5 divides by \(\gamma-1\), which would be a division by zero. The restriction \(\gamma&gt;1\) protects the model's physical and numerical definition; it is not merely limiting how far a student may push the exponent.</p>
@@ -720,7 +717,6 @@ for r0 in (16.375, 1.0):
 <section id="beat4">
 <h2>Beat 4 · Marching outward: RK4 and the scale height</h2>
 <p>From the central state of Beat 3, the solver takes one numerical step at a time, each one calling <code>structure_derivatives()</code> (Eq. 2) at several trial points and combining them. Refine the step and see the model settle down.</p>
-<p>For comparison, the default settings are <code>--steps_per_scale 400</code>.</p>
 <pre class="code-block"><code>python main.py --steps_per_scale 200 --output_type mass
 python main.py --steps_per_scale 400 --output_type mass
 python main.py --steps_per_scale 800 --output_type mass
@@ -785,7 +781,6 @@ for n in (200, 400, 800, 1600):
 <section id="beat6">
 <h2>Beat 6 · Compactness, causality, and Buchdahl's bound</h2>
 <p>Every completed model is checked against two independent limits: a mathematical bound on how compact any static fluid star can be, and a physical requirement that nothing travel faster than light inside the model equation of state. They do not have to fail together. Push the central pressure up and watch each one separately.</p>
-<p>For comparison, the default settings are <code>--pC 1.26e+35</code>.</p>
 <pre class="code-block"><code>python main.py --pC 1e34 --output_type mass
 python main.py --pC 1e35 --output_type mass
 python main.py --pC 1e36 --output_type mass
@@ -805,14 +800,13 @@ python main.py --pC 1e37 --output_type mass</code></pre>
 <section id="beat7">
 <h2>Beat 7 · A sequence of stars, and where the model stops</h2>
 <p>One star is a single point. A sequence of stars, built by varying only the central pressure, is where the model earns its keep &mdash; and where it also shows where a single polytrope runs out of road, from below as well as from above.</p>
-<p>For comparison, the default settings are <code>--pC 1.26e+35</code>.</p>
-<pre class="code-block"><code>python main.py --pC 1e34 --output_type mass --max_steps 200000 --gamma 1.666667
-python main.py --pC 1e35 --output_type mass --max_steps 200000 --gamma 1.666667
-python main.py --pC 1e36 --output_type mass --max_steps 200000 --gamma 1.666667
-python main.py --pC 1e28 --output_type mass --max_steps 200000 --gamma 1.666667
-python main.py --pC 1e27 --output_type mass --max_steps 200000 --gamma 1.666667
-python main.py --max_steps 100 --pC 1.26e+35 --output_type pressure --gamma 1.666667
-python main.py --gamma 1 --pC 1.26e+35 --output_type pressure --max_steps 200000</code></pre>
+<pre class="code-block"><code>python main.py --pC 1e34 --output_type mass
+python main.py --pC 1e35 --output_type mass
+python main.py --pC 1e36 --output_type mass
+python main.py --pC 1e28 --output_type mass
+python main.py --pC 1e27 --output_type mass
+python main.py --max_steps 100
+python main.py --gamma 1</code></pre>
 <p>Look at the total mass printed by each of the first five runs, and at what the last two print instead of a summary.</p>
 <p>Three tasks, in order. First, the turnover: total mass is 0.818445, 0.963016 and 0.849747 solar masses at \(p_C=10^{34}\), \(10^{35}\) and \(10^{36}\) Pa (a slightly finer sample than Beat 6's own runs, since a controlled central-pressure sweep is exactly Experiment 4). Mass rises and then falls as central pressure increases, so somewhere between \(10^{35}\) and \(10^{36}\) Pa this one-parameter family has a maximum &mdash; the same turning point behind the usual instability argument, which the program does not itself test dynamically. Then the low-pressure end, the puzzle of Investigation 20.1: at \(p_C=10^{28}\) Pa the total mass is 0.020979 solar masses, and at \(p_C=10^{27}\) Pa it falls to 0.010529 solar masses, below the approximate 0.02-solar-mass threshold the textbook flags as implausibly low-density for a real neutron star. The numerical result is not wrong; it simply extrapolates one high-density polytrope into a regime where the crust, neutron-drip physics, and changing composition that a real low-density neutron star has are entirely absent from this single power law. Then the last two commands: <code>--max_steps 100</code> prints <code>Neutron: The stellar surface was not reached within 100 radial steps. Increase max_steps or reconsider the model parameters.</code> and exits with status 1 rather than returning a truncated profile, and <code>--gamma 1</code> is rejected exactly as it was in Beat 2, before any integration begins.</p>
 <p>Further limitations come from physics the program does not include and offers no setting to test. The equation of state is a single polytrope, not a modern piecewise or tabulated nuclear-matter model, and cannot represent a crust, neutron drip, or composition change with radius. The star is static, spherically symmetric, isotropic and non-rotating; there is no rotation, magnetic field, finite temperature, tidal deformability, or baryonic-versus-gravitational mass bookkeeping. The program computes equilibrium configurations only: it can display a model on either side of the mass maximum found above, but it does not evolve an unstable star, model a collapse, or compute quasi-normal modes. And even a model that finishes and prints a summary, like the acausal \(p_C=10^{37}\) Pa run of Beat 6, is not automatically trustworthy: it ran to completion, but its own causality check said so, which is exactly why that diagnostic is printed on every run rather than only on ones that fail to finish.</p>
@@ -1027,7 +1021,6 @@ Radial checkpoints (fraction of surface radius)
 </ul>
 <p>The five-row checkpoint table then reports pressure, density and enclosed mass at 0, &frac14;, &frac12;, &frac34; and 0.90 of the surface radius, each to five significant figures; pressure and mass are linearly interpolated between the stored radial samples, and density is recomputed from the interpolated pressure with Eq. 3 rather than itself interpolated. A run that cannot finish prints one line beginning <code>Neutron:</code> and no summary at all (Beat 7).</p>
 </section>
-
 <section id="experiments">
 <h2>Suggested Experiments</h2>
 <div class="note-box">
@@ -1039,7 +1032,7 @@ printed results of each command before comparing them.
 <div class="experiment-card" id="exp1">
 <div class="exp-num">Experiment 1 · Introductory</div>
 <div class="exp-title">Profile shapes: pressure, density, and mass</div>
-<p class="exp-beat">Goes with <a href="#beat00</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat0">Beat 0</a>.</p>
 <p>
           Run the default model with <code>--output_type</code> set in turn to
           <code>pressure</code>, <code>density</code>, and <code>mass</code>. Describe
@@ -1052,7 +1045,7 @@ printed results of each command before comparing them.
 <div class="experiment-card" id="exp2">
 <div class="exp-num">Experiment 2 · Introductory&ndash;Intermediate</div>
 <div class="exp-title">Numerical convergence</div>
-<p class="exp-beat">Goes with <a href="#beat44</a> and <a href="#beat55</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat4">Beat 4</a> and <a href="#beat5">Beat 5</a>.</p>
 <p>
           Repeat the default model with <code>--steps_per_scale</code> = 200,
           400, 800, and 1600. Compare surface radius, total mass, and
@@ -1065,7 +1058,7 @@ printed results of each command before comparing them.
 <div class="experiment-card" id="exp3">
 <div class="exp-num">Experiment 3 · Intermediate</div>
 <div class="exp-title">Comparison with Newtonian hydrostatics</div>
-<p class="exp-beat">Goes with <a href="#beat11</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat1">Beat 1</a>.</p>
 <p>
           Run <strong>Star</strong> separately and match its central density and
           pressure into <strong>Neutron</strong>. <strong>Star</strong> obtains its
@@ -1082,7 +1075,7 @@ printed results of each command before comparing them.
 <div class="experiment-card" id="exp4">
 <div class="exp-num">Experiment 4 · Intermediate</div>
 <div class="exp-title">Mass&ndash;central-pressure sequence and the maximum mass</div>
-<p class="exp-beat">Goes with <a href="#beat77</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat7">Beat 7</a>.</p>
 <p>
           Run a logarithmically spaced series of <code>--pC</code> values and
           record <code>data["total_mass_solar"]</code> and
@@ -1099,7 +1092,7 @@ printed results of each command before comparing them.
 <div class="experiment-card" id="exp5">
 <div class="exp-num">Experiment 5 · Intermediate</div>
 <div class="exp-title">Buchdahl compactness along a sequence</div>
-<p class="exp-beat">Goes with <a href="#beat66</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat6">Beat 6</a>.</p>
 <p>
           Plot <code>data["compactness"]</code> for the same sequence of models
           used in Experiment 4. Every configuration must remain at or below
@@ -1113,7 +1106,7 @@ printed results of each command before comparing them.
 <div class="experiment-card" id="exp6">
 <div class="exp-num">Experiment 6 · Intermediate&ndash;Advanced</div>
 <div class="exp-title">Controlled equation-of-state stiffness comparison</div>
-<p class="exp-beat">Goes with <a href="#beat22</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat2">Beat 2</a>.</p>
 <p>
           Because \(K\)'s dimensions depend on \(\gamma\) (Beat 2), comparing
           exponents at a fixed numerical \(K\) is not a controlled comparison.
@@ -1136,7 +1129,7 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 <div class="experiment-card" id="exp7">
 <div class="exp-num">Experiment 7 · Advanced</div>
 <div class="exp-title">Limits of a single polytrope at high density</div>
-<p class="exp-beat">Goes with <a href="#beat66</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat6">Beat 6</a>.</p>
 <p>
           Explore a wide central-pressure range with
           <code>python main.py --pC 1e35 --output_type density --log_y</code> and
@@ -1154,7 +1147,7 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 <div class="experiment-card" id="exp8">
 <div class="exp-num">Experiment 8 · Advanced · Schutz suggestion</div>
 <div class="exp-title">The minimum-mass puzzle of Investigation 20.1</div>
-<p class="exp-beat">Goes with <a href="#beat77</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat7">Beat 7</a>.</p>
 <p>
           Reduce <code>--pC</code> below <code>1e28</code> until the computed
           mass falls below 0.02 solar masses, the approximate lower bound
@@ -1170,7 +1163,6 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 <p><strong>Check:</strong> <code>--pC 1e28</code> prints 0.020979 M<sub>sun</sub>, just above the threshold, and <code>--pC 1e27</code> prints 0.010529 M<sub>sun</sub>, below it (Beat 7).</p>
 </div>
 </section>
-
 <section class="restore-section" style="margin: 2.5em auto; max-width: 860px; font-family: inherit;">
 <div style="
     border: 1.5px solid #b5811a;
@@ -1223,7 +1215,6 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 </div>
 </div>
 </section>
-
 <section id="related">
 <h2>Related Programs</h2>
 <div class="related-grid">
@@ -1233,7 +1224,6 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 <p>Explores equatorial Schwarzschild geodesic motion around a compact object, the exterior counterpart to the interior solution built here.</p></div>
 </div>
 </section>
-
 <section id="license" class="gftgu-license">
 <h2>License</h2>
 <p>
