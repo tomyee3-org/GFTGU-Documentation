@@ -449,6 +449,23 @@ section ul { margin-left: 1.6em; }
   font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.88rem;
   color: #5a4a3a; margin-bottom: 6px;
 }
+
+    #experiments .planet-data caption {
+      font-family: var(--sans); font-weight: 700; color: var(--gold);
+      text-align: left; padding: 0 0 10px; caption-side: top;
+    }
+    #experiments .planet-data th[scope="row"] {
+      font-family: var(--sans); font-size: 0.88rem; font-weight: 600;
+      text-transform: none; letter-spacing: normal; color: var(--text);
+      background: transparent; border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    #experiments .planet-data td {
+      font-family: var(--mono); text-align: right; white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+    #experiments .planet-data th[scope="col"] { vertical-align: bottom; }
+    #experiments .planet-data-note { font-size: 0.88rem; color: var(--muted); }
 </style>
 <style id="gftgu-common-elements">
 /* Shared Version / Build, Plot tip, License and Footer. */
@@ -655,6 +672,42 @@ python main.py --vxInit -1000 --vyInit 0 --maxSteps 20000 --dt0 10000 --eps1 0.0
 <p>The central body's gravitational parameter <code>--k</code> is (GM), not a mass in kilograms. All numeric inputs must be finite. Initial radius must be nonzero; <code>--k</code>, <code>--dt0</code>, <code>--eps1</code> and <code>--eps2</code> must be positive; <code>--maxSteps</code> is a positive integer; <code>--maxOrbits</code> must be at least 1e-9. Invalid input produces an <code>Orbit:</code> error instead of a plot.</p></section>
 <section id="experiments">
 <h2>Suggested Experiments</h2>
+
+<p class="planet-data-note">The following reference data are adapted from Tables 4.3 and 4.2 of Bernard Schutz's <em>Gravity from the Ground Up</em> (pp. 32 and 28 respectively), retaining the book's rounded values. Pluto is included for comparison as in the book; it is now classified as a dwarf planet.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Table 4.3: eccentricities, perihelion distances and maximum speeds">
+<table class="planet-data" id="table4-3">
+<caption>Table 4.3 · Orbital shapes and perihelion conditions</caption>
+<thead><tr><th scope="col">Body</th><th scope="col">Eccentricity<br>\(e\)</th><th scope="col">Perihelion distance<br>(10<sup>6</sup> km)</th><th scope="col">Maximum speed<br>(km s<sup>&minus;1</sup>)</th></tr></thead>
+<tbody>
+<tr><th scope="row">Mercury</th><td>0.206</td><td>46.0</td><td>59.22</td></tr>
+<tr><th scope="row">Venus</th><td>0.007</td><td>107.5</td><td>35.34</td></tr>
+<tr><th scope="row">Earth</th><td>0.017</td><td>147.1</td><td>30.27</td></tr>
+<tr><th scope="row">Mars</th><td>0.093</td><td>206.8</td><td>26.22</td></tr>
+<tr><th scope="row">Jupiter</th><td>0.049</td><td>740.3</td><td>13.52</td></tr>
+<tr><th scope="row">Saturn</th><td>0.053</td><td>1349.0</td><td>10.15</td></tr>
+<tr><th scope="row">Uranus</th><td>0.046</td><td>2735.0</td><td>7.105</td></tr>
+<tr><th scope="row">Neptune</th><td>0.012</td><td>4432.0</td><td>5.506</td></tr>
+<tr><th scope="row">Pluto</th><td>0.249</td><td>4423.0</td><td>6.17</td></tr>
+</tbody></table></div>
+<p class="planet-data-note">Perihelion is the closest approach to the Sun; the maximum speed occurs there and is perpendicular to the Sun&ndash;planet direction. If \(a\) and \(b\) are the semimajor and semiminor axes, the caption's definition is \(e=\sqrt{1-(b/a)^2}\). From the plotted aphelion and perihelion distances, use the equivalent relation \(e=(r_{\mathrm{ap}}-r_{\mathrm{per}})/(r_{\mathrm{ap}}+r_{\mathrm{per}})\). For the command-line inputs, multiply a listed perihelion distance by 10<sup>9</sup> to obtain metres and a listed speed by 10<sup>3</sup> to obtain metres per second.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Table 4.2: distances, periods, average speeds and masses">
+<table class="planet-data" id="table4-2">
+<caption>Table 4.2 · Distances, periods, average speeds and masses</caption>
+<thead><tr><th scope="col">Body</th><th scope="col">Average distance<br>\(R\) (10<sup>6</sup> km)</th><th scope="col">Average distance<br>\(R\) (AU)</th><th scope="col">Period<br>\(P\) (y)</th><th scope="col">\(P^2/R^3\)<br>(10<sup>&minus;10</sup> s<sup>2</sup> km<sup>&minus;3</sup>)</th><th scope="col">Average orbital speed<br>(km s<sup>&minus;1</sup>)</th><th scope="col">Mass<br>(10<sup>24</sup> kg)</th></tr></thead>
+<tbody>
+<tr><th scope="row">Mercury</th><td>57.9</td><td>0.387</td><td>0.241</td><td>2.98</td><td>47.9</td><td>0.33</td></tr>
+<tr><th scope="row">Venus</th><td>108.2</td><td>0.72</td><td>0.615</td><td>2.97</td><td>35.1</td><td>4.87</td></tr>
+<tr><th scope="row">Earth</th><td>149.6</td><td>1.00</td><td>1.00</td><td>2.97</td><td>29.8</td><td>5.97</td></tr>
+<tr><th scope="row">Mars</th><td>228.0</td><td>1.52</td><td>1.88</td><td>2.97</td><td>24.1</td><td>0.642</td></tr>
+<tr><th scope="row">Jupiter</th><td>778.3</td><td>5.20</td><td>11.86</td><td>2.97</td><td>13.1</td><td>1900</td></tr>
+<tr><th scope="row">Saturn</th><td>1429.4</td><td>9.54</td><td>29.46</td><td>2.99</td><td>9.65</td><td>568.41</td></tr>
+<tr><th scope="row">Uranus</th><td>2871.0</td><td>19.22</td><td>84.01</td><td>2.98</td><td>6.80</td><td>86.83</td></tr>
+<tr><th scope="row">Neptune</th><td>4504</td><td>30.06</td><td>164.1</td><td>2.97</td><td>5.43</td><td>102.47</td></tr>
+<tr><th scope="row">Pluto</th><td>5913.5</td><td>39.5</td><td>247.0</td><td>2.97</td><td>4.74</td><td>0.0127</td></tr>
+<tr><th scope="row">Moon</th><td>0.384</td><td>&mdash;</td><td>0.0748</td><td>9.84 &times; 10<sup>5</sup></td><td>1.02</td><td>0.073</td></tr>
+</tbody></table></div>
+<p class="planet-data-note">The planetary distances are from the Sun; the Moon's distance is from Earth, and its period is for its orbit around Earth. Its \(P^2/R^3\) therefore involves Earth's gravitational parameter rather than the Sun's. For period comparisons, use the book's conversion 1 year = 3.1557 &times; 10<sup>7</sup> s. The average orbital speeds in Table 4.2 are not the perihelion speeds needed for Experiment 1.</p>
+
 <p>The experiments are arranged in approximate order of difficulty. The first few need only command-line changes; later ones ask you to interpret conservation laws, orbital geometry, or the numerical method, and the last few are programming exercises. Each cites the beat whose numbers it builds on.</p>
 
 <div class="scenario-card" id="exp1">
@@ -662,7 +715,7 @@ python main.py --vxInit -1000 --vyInit 0 --maxSteps 20000 --dt0 10000 --eps1 0.0
 <pre><code>python main.py
 python main.py --xInit 1.471e11 --vyInit 30290</code></pre>
 <p>
-      Start with the default Mercury orbit (Beat 0). Then use the perihelion distances and maximum orbital speeds from Table 4.3 of <em>Gravity from the Ground Up</em> to model other planets: place the planet on the positive x-axis at the perihelion distance in the second column and give it only the maximum y-direction speed from the third column. From the plotted perihelion and aphelion distances, estimate the eccentricity and compare it with the first column, using the formula in the table caption. This directly tests whether Newton's inverse-square law reproduces the observed shapes of planetary orbits. As a check on your method, the second command uses commonly quoted values for the Earth, a perihelion of about 1.471&times;10<sup>11</sup> m and a speed of about 30.29 km s<sup>&minus;1</sup>; it prints an eccentricity of 0.016950 and a period of 3.1570e+07 s, which is 365.4 days. To use the book's values, replace the numbers in this template with those of the planet you choose:
+      Start with the default Mercury orbit (Beat 0). Then use the perihelion distances and maximum orbital speeds from <a href="#table4-3">Table 4.3 above</a> to model other planets: place the planet on the positive x-axis at the listed perihelion distance and give it only the listed maximum y-direction speed, converting both to SI units as explained above. From the plotted perihelion and aphelion distances, estimate the eccentricity and compare it with the eccentricity column, using the radial-distance formula below the table. This directly tests whether Newton's inverse-square law reproduces the observed shapes of planetary orbits. As a check on your method, the second command uses commonly quoted values for the Earth, a perihelion of about 1.471&times;10<sup>11</sup> m and a speed of about 30.29 km s<sup>&minus;1</sup>; it prints an eccentricity of 0.016950 and a period of 3.1570e+07 s, which is 365.4 days. To use the book's values, replace the numbers in this template with those of the planet you choose:
     </p>
 <pre><code>python main.py --xInit PERIHELION_M --yInit 0 \
     --vxInit 0 --vyInit MAX_SPEED_M_PER_S</code></pre>
@@ -673,7 +726,7 @@ python main.py --xInit 1.471e11 --vyInit 30290</code></pre>
 <pre><code>python main.py --maxOrbits 1 --output position_time
 python main.py --maxOrbits 1 --output velocity_time</code></pre>
 <p>
-      For several of the planetary orbits from Experiment 1, set <code>--maxOrbits 1</code> and compare the reported <code>elapsed simulated time</code> with the observed orbital period. You can also read the period from the time axis of the position-against-time or velocity-against-time plot. Compare your results with the planetary periods in Table 4.2 of the book. For the default orbit the run reports 7.6025e+06 s against the Keplerian 7.6019e+06 s from the period formula in Beat 3, which is 88.0 days (Beat 3).
+      For several of the planetary orbits from Experiment 1, set <code>--maxOrbits 1</code> and compare the reported <code>elapsed simulated time</code> with the observed orbital period. You can also read the period from the time axis of the position-against-time or velocity-against-time plot. Compare your results with the planetary periods in <a href="#table4-2">Table 4.2 above</a>. For the default orbit the run reports 7.6025e+06 s against the Keplerian 7.6019e+06 s from the period formula in Beat 3, which is 88.0 days (Beat 3).
     </p>
 </div>
 

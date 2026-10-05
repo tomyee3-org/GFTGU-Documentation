@@ -541,9 +541,7 @@ equilibria in general relativity. It integrates the
 Tolman&ndash;Oppenheimer&ndash;Volkoff (TOV) pressure equation and the
 enclosed-mass equation outward from the center until the pressure reaches
 zero, using one simple polytropic equation of state,
-\(p=K\rho^\gamma\). In this model \(\rho c^2\) is the total energy density entering the TOV equation; the code does not separately calculate baryon rest-mass density. It is introduced in <em>Investigation 20.1</em> of
-Schutz's text, where it serves as the reader's first relativistic
-stellar-structure calculation.
+\(p=K\rho^\gamma\). In this model \(\rho c^2\) is the total energy density entering the TOV equation; the code does not separately calculate baryon rest-mass density. It accompanies the relativistic stellar-structure discussion in Chapter 20 of Schutz's text.
 </p>
 <p>
 The spine of the lesson is one sentence: <em>a star is a battle between
@@ -786,21 +784,13 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 <p><strong>Check:</strong> central sound speed rises from \(v_s/c=0.566689\) at \(p_C=10^{35}\) Pa to \(v_s/c=1.423460\) at \(p_C=10^{37}\) Pa, crossing 1 somewhere between the two (Beat 6).</p>
 </div>
 <div class="experiment-card" id="exp8">
-<div class="exp-num">Experiment 8 · Advanced · Schutz suggestion</div>
-<div class="exp-title">The minimum-mass puzzle of Investigation 20.1</div>
+<div class="exp-num">Experiment 8 · Advanced · Research question</div>
+<div class="exp-title">Why are the minimum-mass estimates so different?</div>
 <p class="exp-beat">Goes with <a href="#beat7">Beat 7</a>.</p>
-<p>
-          Reduce <code>--pC</code> below <code>1e28</code> until the computed
-          mass falls below 0.02 solar masses, the threshold quoted for the exercise in
-          Investigation 20.1. It is not a universal physical minimum mass. Does the numerical result invalidate that discussion? Examine
-          how this single high-density polytrope extrapolates into the
-          low-density regime, and identify the crust, neutron-drip,
-          composition-change, or other low-density physics the simple
-          equation of state leaves out entirely. Distinguish a mathematical
-          equilibrium of the toy equation of state from a physically
-          credible low-mass neutron star.
-        </p>
-<p><strong>Check:</strong> <code>--pC 1e28</code> prints 0.020979 M<sub>sun</sub>, just above the threshold, and <code>--pC 1e27</code> prints 0.010529 M<sub>sun</sub>, below it (Beat 7).</p>
+<p>Why does the chapter's simple binding estimate suggest a minimum neutron-star mass of about \(0.02\,M_\odot\), whereas more detailed matter models have given \(0.067\)&ndash;\(0.093\,M_\odot\), and the often-quoted low-mass observational benchmark is about \(1.17\,M_\odot\)? Research the assumptions and evidence behind each number and develop your own explanation of the gaps.</p>
+<p>Are these numbers estimates of the same physical limit? What changes when a model includes low-density nuclear matter and a crust? How might temperature, stability, formation history, or observational selection affect the comparison? Check the current literature for lower-mass candidates and assess how their masses and their identification as neutron stars are established.</p>
+<p><strong>Numerical starting point:</strong> Beat 7 reports \(0.020979\,M_\odot\) for <code>--pC 1e28</code> and \(0.010529\,M_\odot\) for <code>--pC 1e27</code>. This solver can produce equilibria below the chapter's estimate; it does not establish a physical minimum mass or simulate how such an object would form. Use this contrast as evidence to investigate, rather than treating the smallest mass in a chosen run as a prediction of a minimum.</p>
+<p><strong>Reading starting points:</strong> <a href="https://ntrs.nasa.gov/citations/19730031176">Leung and Wang (1972)</a> obtained the model-dependent \(0.067\) and \(0.093\,M_\odot\) values. <a href="https://arxiv.org/abs/1509.08805">Martinez et al. (2015)</a> measured \(1.174\pm0.004\,M_\odot\) for the companion of PSR J0453+1559, interpreted as a neutron star. Compare these with the formation calculations of <a href="https://arxiv.org/abs/1808.02328">Suwa et al. (2018)</a> and the lower, model-dependent mass inference for HESS J1731&minus;347 in <a href="https://www.nature.com/articles/s41550-022-01800-1">Doroshenko et al. (2022)</a>. Thus \(1.17\,M_\odot\) is a precise binary-system benchmark, not an absolute observational lower limit.</p>
 </div>
 </section>
 
