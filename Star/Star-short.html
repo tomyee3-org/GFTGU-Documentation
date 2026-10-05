@@ -473,75 +473,213 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 </style>
 </head>
 
-<body><div class="page-wrap"><header><div class="badge">Newtonian Stellar Structure</div><h1><em>Star</em> — An Evening at the Terminal</h1><div class="sub">Source Code: <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>Documentation: <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a></div></header><nav id="sidebar">
-<div class="nav-label">Start here</div>
-<a href="#overview">The evening at the terminal</a>
-<div class="nav-label">At the terminal</div>
-<a href="#beat0">0 · Find the surface</a>
+<body>
+<div class="page-wrap">
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+<div class="badge">Newtonian Stellar Structure</div>
+<h1><em>Star</em> — A Ball of Gas That Holds Itself Up</h1>
+<div class="sub">
+    Source Code:
+    <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a><br/>
+    Documentation:
+        <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank">https://github.com/tomyee3-org/GFTGU-Documentation</a>
+</div>
+</header>
+<nav id="sidebar">
+<div class="nav-label">Overview</div>
+<a href="#overview">Introduction</a>
+<a href="#wrapup">What to carry away</a>
+<div class="nav-label">Beats</div>
+<a href="#beat0">0 · A star that holds itself up</a>
 <a href="#beat1">1 · Reveal the outer gas</a>
 <a href="#beat2">2 · Read a temperature</a>
 <a href="#beat3">3 · Locate the mass</a>
-<a href="#beat4">4 · Stretch a star</a>
-<a href="#beat5">5 · Check a solvable case</a>
-<a href="#beat6">6 · Halve the step</a>
-<a href="#beat7">7 · Catch a restart</a>
-<a href="#beat8">8 · Approach the limit</a>
-<div class="nav-label">After the runs</div>
+<a href="#beat4">4 · One star, a family of stars</a>
+<a href="#beat5">5 · The Lane–Emden solution</a>
+<a href="#beat6">6 · Euler steps and their error</a>
+<a href="#beat7">7 · The surface and the restart</a>
+<a href="#beat8">8 · Where one polytrope stops</a>
+
+<div class="nav-label">Experiments</div>
+<a href="#experiments">Suggested Experiments</a>
+<div class="nav-label">Reference</div>
 <a href="#parameters">Parameters</a>
-<a href="#wrapup">What to carry away</a>
+
 <a href="#related">Related programs</a>
 <a href="#license">License</a>
 </nav>
-<main><p id="version_build">Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 3d55b592a1b7</p>
+<main>
+<p id="version_build">Version 1.2.0&nbsp;&nbsp;&nbsp;&nbsp;Build 3d55b592a1b7</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 
-<section id="overview"><h2>The evening at the terminal</h2>
-<p>Tonight you will grow a spherical star from its centre until its pressure reaches zero. The program uses Newtonian gravity and a single pressure–density power law, called a polytrope. It prints a radius, a mass, an integration grid, and a more accurate Lane–Emden numerical reference for the same equations. Each run opens one radial profile in Matplotlib.</p>
+<section id="overview">
+<h2>Introduction</h2>
+<p><strong>Star</strong> builds a star from the centre outwards. It starts from a central pressure and a central temperature, and at each small step in radius it lets the weight of the gas above push the pressure down, and the gas it passes add to the mass inside. It stops where the pressure reaches zero: that radius is the surface of the star, and the mass inside it is the mass of the star.</p>
+<p>Every run prints the radius and the mass of the star; the radial step it used; the radius and mass of the Lane–Emden solution of the same equations, which the program computes separately and far more accurately than its steps, with the relative difference of the numbers the program integrated; and the pressure, density, temperature and mass at five points inside the star. Then it plots one of pressure, density, temperature or enclosed mass against radius.</p>
+<p>The spine of the lesson is one sentence: <em>a star is gas in balance between its own weight and its own pressure; with one power law linking pressure to density, the balance fixes the whole star — its radius, its mass and every profile inside it — from the central conditions alone, and the program's step-by-step answer can be compared with the Lane–Emden solution of the same equations, computed far more accurately, which shows how large the error of the steps is.</em></p>
 
-<p>Open a terminal in the folder containing <code>main.py</code>. Run the commands below in order, read the named lines, and close each plot window before the next run. All quantities use the International System of Units (SI). Use Python 3.10 or later with Matplotlib installed. No network is needed to run the program; the equations on this page use MathJax from a public content delivery network.</p>
-<p>The default radius and mass are close to the Sun's, but this is a teaching polytrope: it has no energy generation, radiation or convection, composition gradient, or relativistic gravity. Its surface temperature of zero is a feature of the model, not a claim about the Sun.</p></section>
-<section id="beat0"><h2>Beat 0 · Find the surface</h2>
-<p>Start with the default pressure profile.</p><pre>python main.py --p_c 7.158e+15 --T_c 22630000 --mu 1.285 --gamma 1.36 --steps_per_scale 400 \
+</section>
+<section id="wrapup"><h2>What to carry away</h2>
+<p>Pressure balances gravity and a chosen pressure–density law closes the model. 
+The radius, mass, and profiles follow from the central conditions, 
+but different numerical steps give different approximations. 
+Always read the actual step, restarts and Lane–Emden comparison before 
+interpreting a close-looking plot. The reference is a check on the integration of these equations, 
+not a check on whether a real star obeys them.</p>
+
+</section>
+
+
+<section id="beat0">
+<h2>Beat 0 · A star that holds itself up</h2>
+<p>Run the program with all its defaults. The plot shows the pressure from the centre to the surface.</p>
+<pre>python main.py --p_c 7.158e+15 --T_c 22630000 --mu 1.285 --gamma 1.36 --steps_per_scale 400 \
   --max_points 2000 --output_type pressure</pre>
 <p>Read <code>Radius (m)</code> and <code>Total mass (kg)</code>: about 6.9674e+08 m and 1.9825e+30 kg. The plotted pressure starts at 7.158e+15 Pa and reaches zero at that radius. Hover over the curve to read a pressure at a chosen radius. Why does pressure have to rise inward? The gas at each radius supports the weight of the gas above it.</p>
 <div class="eq">\[\frac{dp}{dr}=-\frac{Gm(r)\rho(r)}{r^2},\qquad \frac{dm}{dr}=4\pi r^2\rho(r).\]</div>
-<p>Here <code>m(r)</code> is the mass inside radius <code>r</code>, and <code>ρ(r)</code> is density. The exterior shells exert zero net pull at that radius. The program advances these two relations outward in finite radial steps; its pressure reaching zero defines the surface.</p></section>
-<section id="beat1"><h2>Beat 1 · Reveal the outer gas</h2>
+<p>Here <code>m(r)</code> is the mass inside radius <code>r</code>, and <code>ρ(r)</code> is density. The exterior shells exert zero net pull at that radius. The program advances these two relations outward in finite radial steps; its pressure reaching zero defines the surface.</p>
+
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat1">
+<h2>Beat 1 · What the pressure needs: a density</h2>
+<p>Plot the density on a logarithmic axis, so that the thin outer layers can be seen.</p>
 <pre>python main.py --output_type density --log_y</pre>
 <p>The vertical scale is logarithmic, so small positive densities near the surface become visible. Find the density near half the radius, about 2313 kg/m³, and near 0.9 of the radius, about 6.65 kg/m³. The exact zero at the surface cannot appear on a logarithmic axis. The summary's central density is about 49187 kg/m³.</p>
-<p>The program fixes the central density from the ideal gas relation, then uses the same polytropic relation everywhere: \(p=K\rho^\gamma\), with default exponent \(\gamma=1.36\). What happens to density as pressure falls? Try to predict the plot before reading the next run.</p></section>
-<section id="beat2"><h2>Beat 2 · Read a temperature</h2>
+<p>The program fixes the central density from the ideal gas relation, then uses the same polytropic relation everywhere: \(p=K\rho^\gamma\), with default exponent \(\gamma=1.36\). What happens to density as pressure falls? Try to predict the plot before reading the next run.</p>
+
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp4">Experiment 4</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat2">
+<h2>Beat 2 · Read a temperature</h2>
+<p>Plot the temperature.</p>
 <pre>python main.py --output_type temperature</pre>
-<p>Use the cursor and the printed 50% checkpoint to find roughly 7.53e+06 K at half the radius; compare with 2.263e+07 K at the centre. The program obtains temperature from pressure and density through \(p=\rho k_B T/(\mu m_p)\), with \(\mu\) the mean particle mass in proton-mass units. It does not calculate energy transport. Why is this temperature curve less steep than the pressure curve?</p></section>
-<section id="beat3"><h2>Beat 3 · Locate the mass</h2>
+<p>Use the cursor and the printed 50% checkpoint to find roughly 7.53e+06 K at half the radius; compare with 2.263e+07 K at the centre. The program obtains temperature from pressure and density through \(p=\rho k_B T/(\mu m_p)\), with \(\mu\) the mean particle mass in proton-mass units. It does not calculate energy transport. Why is this temperature curve less steep than the pressure curve?</p>
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+
+</section>
+<section id="beat3">
+<h2>Beat 3 · Locate the mass</h2>
+<p>Plot the mass inside each radius.</p>
+
 <pre>python main.py --output_type mass</pre>
-<p>Check the <code>50%</code> radius row of the interior checkpoints: about 1.6732e+30 kg is already enclosed, roughly 84% of the total. At 75% of the radius the enclosed mass is about 99% of the total. The curve flattens outward because density falls. Estimate from the curve where half of the mass lies; it is well inside half the radius.</p></section>
+<p>Check the <code>50%</code> radius row of the interior checkpoints: about 1.6732e+30 kg is already enclosed, roughly 84% of the total. At 75% of the radius the enclosed mass is about 99% of the total. The curve flattens outward because density falls. Estimate from the curve where half of the mass lies; it is well inside half the radius.</p>
+
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
 <section id="beat4"><h2>Beat 4 · Stretch a star</h2>
 <p>For comparison, the default settings are <code>--T_c 22630000</code>.</p>
 <pre>python main.py --T_c 2.4893e7 --p_c 7.158e+15</pre>
 <p>This central temperature is 10% above the default, while central pressure is unchanged. Compare the new radius 7.6641e+08 m and mass 2.3988e+30 kg with Beat 0. The ratios are about 1.10 and 1.21. For this specific change with the other inputs fixed, the radius scales with central temperature and the mass with its square. The pressure profile keeps its shape when radius is measured as a fraction of the new surface radius.</p>
-<p>Check the <code>Restarts</code> line before comparing numerical errors across runs: a restart doubles the step.</p></section>
+<p>Check the <code>Restarts</code> line before comparing numerical errors across runs: a restart doubles the step.</p>
+
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a>, <a href="#exp3">Experiment 3</a>, <a href="#exp4">Experiment 4</a>, <a href="#exp5">Experiment 5</a> and <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
 <section id="beat5"><h2>Beat 5 · Check a solvable case</h2>
 <p>For comparison, the default settings are <code>--gamma 1.36</code>.</p>
 <pre>python main.py --gamma 2</pre>
-<p>The printed polytropic index \(n=1/(\gamma-1)\) is now 1. This Lane–Emden case has the known profile \(\theta(\xi)=\sin(\xi)/\xi\), whose first zero is \(\xi=\pi\). Read the printed Lane–Emden radius, about 2.6392e+08 m, beside the program's stepwise radius, 2.6239e+08 m. The stepwise radius is about 0.58% smaller. The Lane–Emden number is a numerical reference for the same model, not an observation of a real star.</p></section>
-<section id="beat6"><h2>Beat 6 · Halve the step</h2>
+<p>The printed polytropic index \(n=1/(\gamma-1)\) is now 1. This Lane–Emden case has the known profile \(\theta(\xi)=\sin(\xi)/\xi\), whose first zero is \(\xi=\pi\). Read the printed Lane–Emden radius, about 2.6392e+08 m, beside the program's stepwise radius, 2.6239e+08 m. The stepwise radius is about 0.58% smaller. The Lane–Emden number is a numerical reference for the same model, not an observation of a real star.</p>
+
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat6">
+<h2>Beat 6 · Euler steps and their error</h2>
+<p>Halve the radial step: 800 steps per radial scale instead of 400. The star then needs more grid points than the default 2000, so allow 4000.</p>
 <p>For comparison, the default settings are <code>--steps_per_scale 400</code>, <code>--max_points 2000</code>.</p>
 <pre>python main.py --steps_per_scale 800 --max_points 4000</pre>
 <p>Compare <code>Radial step (m)</code> with Beat 0: about 2.6323e+05 m instead of 5.2645e+05 m. There are 2666 grid points and no restarts. The integrated radius now differs from the Lane–Emden radius by about -0.0075071, versus -0.014174 in Beat 0; the mass difference is -0.00092707, versus -0.0018494. The first-order Euler integration error roughly halves. The two pressure plots look almost the same; use the printed differences to see the change.</p>
-<p>The Lane–Emden reference is calculated independently with a higher-accuracy method, but both calculations implement the same physical assumptions. Its step-halving uncertainty is an estimate, not a guaranteed bound.</p></section>
-<section id="beat7"><h2>Beat 7 · Catch a restart</h2>
+<p>The Lane–Emden reference is calculated independently with a higher-accuracy method, but both calculations implement the same physical assumptions. Its step-halving uncertainty is an estimate, not a guaranteed bound.</p>
+
+
+</section>
+<section id="beat7">
+<h2>Beat 7 · The surface and the restart</h2>
+<p>Allow only 1000 grid points, fewer than the default star needs at the default step.</p>
 <p>For comparison, the default settings are <code>--max_points 2000</code>.</p>
 <pre>python main.py --max_points 1000 --steps_per_scale 400</pre>
-<p>Read <code>Restarts (radial step doubled)</code>: 1. The program could not reach the surface inside the requested 1000-point capacity at its initial step, so it began again with twice the radial step. It finished with 654 points. Compare the -0.02726 radius difference with the default -0.014174; the coarser integration is less accurate. Raising <code>--max_points</code> can prevent a restart, while raising <code>--steps_per_scale</code> directly requests a smaller initial step.</p></section>
-<section id="beat8"><h2>Beat 8 · Approach the limit</h2>
+<p>Read <code>Restarts (radial step doubled)</code>: 1. The program could not reach the surface inside the requested 1000-point capacity at its initial step, so it began again with twice the radial step. It finished with 654 points. Compare the -0.02726 radius difference with the default -0.014174; the coarser integration is less accurate. Raising <code>--max_points</code> can prevent a restart, while raising <code>--steps_per_scale</code> directly requests a smaller initial step.</p>
+
+
+<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
+<section id="beat8">
+<h2>Beat 8 · Approach the limit</h2>
 <p>For comparison, the default settings are <code>--gamma 1.36</code>.</p>
 <pre>python main.py --gamma 1.21</pre>
 <p>The index is about 4.7619, close to the finite-radius boundary at \(n=5\), or \(\gamma=6/5\). The integrated radius is about 7.2406e+09 m, while the Lane–Emden radius is about 9.9626e+09 m: a -0.27322 relative difference after four restarts. Almost all the mass lies in the inner part of this enormous, thin-envelope model. The plot alone hides much of the numerical difficulty.</p>
 <p>For a deliberately extreme case, run:</p><pre>python main.py --gamma 1.2000000001</pre>
 <p>Look for the warning about the Lane–Emden uncertainty and the printed index 4.9999999975. The integrated radius is unreliable here. The program rejects exactly \(\gamma=1.2\), because this single-polytrope model has no finite surface at that boundary.</p>
 <pre>python main.py --gamma 1.2</pre>
-<p>The final command should exit with an input error, not produce a plot.</p></section>
+<p>The final command should exit with an input error, not produce a plot.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp9">Experiment 9</a>, <a href="#exp10">Experiment 10</a> and <a href="#exp11">Experiment 11</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+
+
+</section>
+<section id="experiments">
+<h2>Suggested Experiments</h2>
+<p>The experiments are ranked from introductory to advanced, and each is cited by the beat it extends. Each command is run from the program's folder.</p>
+<h3 id="exp1">1 · The Four Profiles — Introductory</h3>
+<p>Plot all four profiles of the default star. Find where the pressure, the density and the temperature have fallen to half their central values, and where the mass has reached half the total. Which of the four halves is reached first, and why?</p>
+<pre>python main.py --output_type pressure
+python main.py --output_type density --log_y
+python main.py --output_type temperature
+python main.py --output_type mass</pre>
+<h3 id="exp2">2 · A Hotter Centre, a Cooler Centre — Introductory to Intermediate</h3>
+<p>Change \(T_c\) by 10% either way at the same central pressure. Check that the radius changes in proportion to \(T_c\) and the mass in proportion to \(T_c^2\), Eq. (10), and that the checkpoint temperatures change in proportion to \(T_c\) while the checkpoint pressures do not change.</p>
+<pre>python main.py --T_c 2.0367e7
+python main.py --T_c 2.263e7
+python main.py --T_c 2.4893e7</pre>
+<h3 id="exp3">3 · Four Times the Central Pressure — Intermediate</h3>
+<p>Multiply and divide the central pressure by four at the same central temperature. By Eq. (10) both the radius and the mass should change by a factor of two. Why does a higher central pressure at the same temperature make a <em>smaller</em> star?</p>
+<pre>python main.py --p_c 1.7895e15
+python main.py --p_c 7.158e15
+python main.py --p_c 2.8632e16</pre>
+<h3 id="exp4">4 · The Mean Particle Mass — Intermediate</h3>
+<p>Change \(\mu\), the mean mass of a gas particle in units of the proton mass, at the same central pressure and temperature. Check that the radius scales as \(\mu^{-1}\) and the mass as \(\mu^{-2}\). A fully ionised gas of hydrogen has \(\mu=0.5\) and one of helium \(\mu=4/3\); why does a star with heavier particles come out smaller at the same central conditions?</p>
+<pre>python main.py --mu 0.6
+python main.py --mu 1.0
+python main.py --mu 1.285</pre>
+<h3 id="exp5">5 · Restore the Mass — Intermediate</h3>
+<p>Make the centre 10% hotter, then find by trial the central pressure that brings the mass back to that of the default star, 1.9825e+30 kg. Use Eq. (10) to predict the pressure first. Is the radius then back to its default value too? What does this say about how much a measured mass alone tells us about a star?</p>
+<pre>python main.py --T_c 2.4893e7 --p_c 7.158e15
+python main.py --T_c 2.4893e7 --p_c 1.048e16</pre>
+<h3 id="exp6">6 · How Fine Is Fine Enough? — Intermediate to Advanced</h3>
+<p>Halve the step three times, allowing enough points each time to avoid a restart, and tabulate the relative differences from the Lane–Emden solution. Check that each halving roughly halves the error, Beat 6. Then take \(\gamma=1.21\), where the default run restarted four times and missed the radius by a quarter (Beat 8), and find how fine a run has to be to bring the error below 1%.</p>
+<pre>python main.py --steps_per_scale 200
+python main.py --steps_per_scale 400
+python main.py --steps_per_scale 800 --max_points 4000
+python main.py --steps_per_scale 1600 --max_points 8000
+python main.py --gamma 1.21 --steps_per_scale 1000 --max_points 100000</pre>
+<h3 id="exp7">7 · The Shape of a Polytrope — Intermediate to Advanced</h3>
+<p>Run the default star with \(\gamma\) = 4, 2, 5/3, 1.36, 4/3 and 1.25, and read the index \(n\) and the radius and mass of the Lane–Emden solution from each. For each, compute the ratio of central to mean density, \(\rho_c/\bar\rho\), from the integrated radius and mass with Eq. (8) and from the Lane–Emden values with Eq. (8) again. Check that <code>Restarts (radial step doubled)</code> is 0 in each run; \(\gamma=1.25\) needs more than the default 2000 points. How does the concentration of the star change with \(n\), and how well does the default step reproduce it?</p>
+<pre>python main.py --gamma 4
+python main.py --gamma 2
+python main.py --gamma 1.6666667
+python main.py --gamma 1.36
+python main.py --gamma 1.3333333
+python main.py --gamma 1.25 --max_points 4000</pre>
+<h3 id="exp8">8 · Two Kinds of Family — Advanced</h3>
+<p>The families of Experiments 2 to 4 keep \(\gamma\) but not the constant \(K\) of Eq. (5). Build a family with one fixed equation of state instead: keep \(\mu\) and \(\gamma\), and set \(T_c=T_{c,0}(p_c/p_{c,0})^{1-1/\gamma}\) so that \(D\), and hence \(K\), does not change. For this family the Lane–Emden solution gives \(R\propto p_c^{(\gamma-2)/(2\gamma)}\) and \(M\propto p_c^{(3\gamma-4)/(2\gamma)}\). Check the exponents with the three commands below, and explain why the mass does not depend on the central pressure at all when \(\gamma=4/3\).</p>
+<pre>python main.py --p_c 1.7895e15 --T_c 1.5678905e7
+python main.py --p_c 7.158e15 --T_c 2.263e7
+python main.py --p_c 2.8632e16 --T_c 3.2662797e7</pre>
+<h3 id="exp9">9 · A Schematic Red Giant — Advanced</h3>
+<p>Take \(\gamma=1.335\) and look for central values that give about the default mass with a radius about a hundred times larger; then try for ten times the mass. A real red giant has a dense core and a vast, thin envelope with different equations of state, so this is a sketch of the size of such a star, not a model of one.</p>
+<pre>python main.py --gamma 1.335 --p_c 7.158e7 --T_c 2.263e5
+python main.py --gamma 1.335 --p_c 7.158e9 --T_c 2.263e6</pre>
+<h3 id="exp10">10 · A Newtonian Neutron Star — Advanced</h3>
+<p>With \(\gamma=2\) and \(\mu=1\), look for central values that give a radius of about 10 km and a mass of about 1.4 solar masses, 2.8e+30 kg. The central pressure and the formal temperature come out enormous; here they only normalise the polytrope, since neutron-star matter is not an ideal gas and gravity this strong needs general relativity. Compare the result with the Neutron program.</p>
+<pre>python main.py --mu 1 --gamma 2 --p_c 1.9888e34 --T_c 1.1188e12 --output_type mass</pre>
+<h3 id="exp11">11 · More Than One Polytrope — Advanced Programming</h3>
+<p>In a separate copy of the program, divide the star into two or three regions in radius with different values of \(\gamma\), for example a stiffer core and a softer envelope. At each boundary keep the pressure continuous, and choose the new constant \(D\) so that the density is continuous too, unless a jump is intended. Compare the radius, the mass and the profiles with those of one polytrope. Command-line options alone cannot do this; it needs changes to <code>driver_star.py</code>.</p>
+</section>
 <section id="parameters"><h2>Parameters</h2>
 <p>All settings are command-line options described in <code>main.py</code>. <code>--output_type</code> and <code>--log_y</code> change only the plot; the printed summary is the same whichever profile is plotted.</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Command-line parameters"><table class="param-table"><thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead><tbody>
@@ -555,8 +693,6 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <tr><td>--log_y</td><td>False</td><td>Make the vertical scale logarithmic; incompatible with a mass plot because mass starts at zero.</td></tr>
 </tbody></table></div>
 <p>For option syntax, run <code>python main.py --help</code>. To see the release identifier without opening a plot, run <code>python main.py --version</code>.</p></section>
-<section id="wrapup"><h2>What to carry away</h2>
-<p>Pressure balances gravity and a chosen pressure–density law closes the model. The radius, mass, and profiles follow from the central conditions, but different numerical steps give different approximations. Always read the actual step, restarts and Lane–Emden comparison before interpreting a close-looking plot. The reference is a check on the integration of these equations, not a check on whether a real star obeys them.</p></section>
 <section id="related"><h2>Related programs</h2><p><strong>SphereGravity</strong> explains the interior-mass rule; <strong>Atmosphere</strong> explores pressure support in a layer; <strong>Binary</strong> helps measure stellar masses from orbits; <strong>Neutron</strong> treats a compact star with general relativity.</p></section>
 <section id="license" class="gftgu-license">
 <h2>License</h2>
