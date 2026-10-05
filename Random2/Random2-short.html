@@ -484,7 +484,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 </header>
 <nav id="sidebar">
 <div class="nav-label">Overview</div>
-<a href="#overview">Discussion</a>
+<a href="#overview">Description</a>
 <a href="#summary">Reading the two summaries</a>
 <div class="nav-label">Beats</div>
 <a href="#beat0">0 · Random steps add up as √N</a>
@@ -508,7 +508,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <p id="version_build">Version 1.4.0&nbsp;&nbsp;&nbsp;&nbsp;Build 06ebd8fea601</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="overview">
-<h2>Discussion</h2>
+<h2>Description</h2>
 <p><strong>Random2</strong> explores the square-root law of random walks and uses it to picture how radiation leaks out of a star. Energy released in the Sun's core does not stream outwards; it is absorbed and re-emitted so often that its path is a random walk, and its net displacement increases much more slowly than its total path length. For many independent, zero-mean steps of finite variance, the typical distance from the start grows approximately as \(\sqrt N\), rather than \(N\).</p>
 <p>The program has two displays. <code>scaled_distance</code> runs many three-dimensional random walks of different lengths and prints and plots their average distance from the start. <code>walk2d</code> draws a few fixed-length, equally-likely-in-every-direction walks from the centre of a circle, a schematic star, and counts the steps each one takes to reach the edge. Every run prints a summary of the numbers before it opens its plot.</p>
 <p>The spine of the lesson is one sentence: <em>independent, zero-mean steps give a mean net displacement that grows approximately as \(\sqrt N\) when the step count \(N\) is large; in the fixed-step circular model, reaching radius \(R\) takes on the order of \((R/\lambda)^2\) steps of length \(\lambda\), and the printed standard errors help you judge an average made from a finite number of random trials.</em></p>

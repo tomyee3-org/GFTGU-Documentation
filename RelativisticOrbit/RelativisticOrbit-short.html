@@ -485,7 +485,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 </header>
 <nav id="sidebar">
 <div class="nav-label">OVERVIEW</div>
-<a href="#overview">Discussion</a>
+<a href="#overview">Description</a>
 <a href="#summary">Reading the output</a>
 <div class="nav-label">BEATS</div>
 <a href="#beat0">0 · The rosette</a>
@@ -511,7 +511,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <p id="version_build">Version 1.5.0&nbsp;&nbsp;&nbsp;&nbsp;Build daaef3a0231c</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="overview">
-<h2>Discussion</h2>
+<h2>Description</h2>
 <p><strong>RelativisticOrbit</strong> follows a small particle falling freely around a non-rotating black hole of one solar mass, and draws its orbit. Close to the hole the orbit is not an ellipse. Its closest approach, the periapsis, moves forward from one pass to the next, so that the path traces a rosette; much closer in, the particle can whirl round several times before it swings out again, or it can fall through the horizon and never come back. A second model, Newtonian gravity started from the same point with the same velocity, runs beside it for comparison.</p>
 <p>The program integrates the orbit step by step in the particle's own time, its proper time \(\tau\), and prints a summary before it opens the plot: why the run stopped, how far the particle turned, where it found the periapsides and how far each one advanced, and how well two quantities that should stay constant did stay constant. Beneath that it prints what the constants of motion say the orbit must do, worked out exactly without integrating anything: whether it is bound, where it turns, and by how much its periapsis advances.</p>
 <p>The spine of the lesson is one sentence: <em>a freely falling particle outside a black hole obeys a Newtonian-looking equation with one extra inward pull, \(3h^2/(c^2r^2)\) times the Newtonian one, and that pull makes each periapsis advance by an angle that the particle's energy and angular momentum fix exactly: a fraction of a degree far away, more than a whole turn close in, and, below a critical angular momentum, no return at all; the exact prediction printed beside each run and the printed drift of the conserved quantities are how you tell how far to trust the step-by-step orbit.</em></p>
