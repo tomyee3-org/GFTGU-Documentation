@@ -1,5 +1,5 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>MercPert — Help File | GFtGU Programs</title>
-<script>MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script><script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>MercPert – Help File</title>
+<script>MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script><script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script><style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg:          #fdf5e6;
@@ -213,7 +213,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 </style>
 </head><body>
 <a class="skip-link" href="#content">Skip to the tutorial</a><div class="page-wrap">
-<header><div class="badge">GFtGU Programs · Help File</div><h1><em>MercPert</em> — A Planet in a Binary Star System</h1><div class="sub">
+<header><div class="badge">Gravity from the Ground Up</div><h1><em>MercPert</em> — A Planet in a Binary Star System</h1><div class="sub">
         Source Code:
         <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a> ·
         <br/>
@@ -318,6 +318,7 @@ run.</div>
 <div class="beat-action"><strong>Read these lines</strong><p>The stellar period is 203.96 days. The run covers 231.48 days and 10,000 accepted steps; Mercury ranges from 0.30000 to 0.40762 AU from the Sun. Find the compact red circle, wider green circle, and blue loops. The stars move on set circles; Mercury responds to both of them.</p></div>
 <p>The program solves Newton's equation for a massless third body: \(\ddot{\mathbf r}=-GM_\odot(\mathbf r-\mathbf r_\odot)/|\mathbf r-\mathbf r_\odot|^3-GM_c(\mathbf r-\mathbf r_c)/|\mathbf r-\mathbf r_c|^3\). Do not call the blue loops closed or stable from this finite run alone.</p>
 <p class="small-print">Try <a href="#exp1">Task 1</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+</section>
 <section id="beat1"><h2>Beat 1 · The binary is prescribed</h2><p>Make the companion half as massive as the Sun. Watch what moves in the plot.</p>
 <p>For comparison, the default settings are <code>--m_planet_solar 0.1</code>, <code>--vy_init 59220</code>.</p>
 <pre class="code-block"><code>python main.py --m_planet_solar 0.5 --vy_init 54400 --m_sun_solar 1</code></pre>
@@ -325,6 +326,7 @@ run.</div>
 <p>The stellar angular speed is \(\omega=\sqrt{G(M_\odot+M_c)/d^3}\). At \(t=0\) the Sun moves in the negative \(y\) direction. The 54,400 m/s input is relative to that moving Sun, so it is not Mercury's barycentric speed.</p>
 <p class="small-print">Try <a href="#exp2">Task 2</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 
+</section>
 <section id="beat2"><h2>Beat 2 · Switch the companion off</h2><p>The companion mass must remain positive. Make it negligible and try a circular-speed launch, then the default faster launch.</p>
 <p>For comparison, the default settings are <code>--m_planet_solar 0.1</code>, <code>--vy_init 59220</code>.</p>
 <pre class="code-block"><code>python main.py --m_planet_solar 1e-12 --vy_init 54379.16
@@ -332,6 +334,7 @@ python main.py --m_planet_solar 1e-12 --vy_init 59220</code></pre>
 <div class="beat-action"><strong>Compare</strong><p>The first Sun-distance range prints 0.30000–0.30000 AU. The second prints 0.30000–0.43707 AU. The default companion in Beat 0 kept the same 59,220 m/s launch within 0.40762 AU over the same run.</p></div>
 <p>For one Sun, \(v_c=\sqrt{GM_\odot/r}\). Starting at perihelion \(r_p\) with tangential speed \(v>v_c\), energy and angular momentum give \(r_a/r_p=[2-(v/v_c)^2]^{-1}(v/v_c)^2\), provided the launch remains bound. At \(r_p=0.3\) AU, this predicts 0.43707 AU for the second run.</p>
 <p class="small-print">Try <a href="#exp3">Task 3</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+</section>
 <section id="beat3"><h2>Beat 3 · Turn the companion back up</h2><p>Keep the near-circular speed and multiply companion mass by ten on each run.</p>
 <p>For comparison, the default settings are <code>--m_planet_solar 0.1</code>.</p>
 <pre class="code-block"><code>python main.py --m_planet_solar 0.001 --vy_init 54379.16
@@ -340,6 +343,7 @@ python main.py --m_planet_solar 0.1 --vy_init 54379.16</code></pre>
 <div class="beat-action"><strong>Subtract each range</strong><p>The Sun-distance spreads are 0.00049, 0.00491 and 0.05020 AU. For these settings they grow by about a factor of ten each time the companion mass does. The relation is empirical over these three finite runs, not a promise for every mass or encounter.</p></div>
 <p>The companion's direct acceleration relative to the Sun's pull scales as \((M_c/M_\odot)(r/\Delta)^2\), where \(\Delta\) is Mercury's distance from the companion. That ratio changes throughout the orbit; close passages can break the simple proportional pattern.</p>
 <p class="small-print">Try <a href="#exp4">Task 4</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+</section>
 <section id="beat4"><h2>Beat 4 · The one number that is conserved</h2><p>Ask for the second plot: signed fractional change of the Jacobi constant in the rotating binary frame.</p>
 <pre class="code-block"><code>python main.py --show_jacobi_diagnostic --m_planet_solar 0.1 --vy_init 59220</code></pre>
 <div class="beat-action"><strong>Read and look</strong><p>The console gives a <em>maximum absolute</em> fractional Jacobi drift of 1.2305e-06. The second plot shows its sign, ranging about −1.23e-06 to +6.6e-08. Close the orbit window if it obscures the diagnostic window.</p></div>
@@ -347,12 +351,14 @@ python main.py --m_planet_solar 0.1 --vy_init 54379.16</code></pre>
 <p class="small-print">Try <a href="#exp5">Task 5</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 
 
+</section>
 <section id="beat5"><h2>Beat 5 · Close encounters and the step controller</h2><p>Run longer, then tighten the acceleration-change and corrector thresholds.</p>
 <pre class="code-block"><code>python main.py --max_steps 40000 --eps1 0.05 --eps2 0.0001
 python main.py --max_steps 40000 --eps1 0.01 --eps2 1e-5</code></pre>
 <div class="beat-action"><strong>Compare the runs</strong><p>The first reaches 0.016704 AU from the Sun over 919.20 days; its accepted working timesteps range from 199.63 to 2000.0 s and its Jacobi drift reaches 0.0051623. The tighter run needs steps down to 39.907 s and reports drift 0.00022738, but covers only 852.41 days. The runs have unequal durations, so their drift maxima alone do not measure the benefit of the tighter tolerance. The blue path is much less regular than in Beat 0.</p></div>
 <p>The controller rejects a proposed step when acceleration changes too much and iterates a predictor–corrector until its change is below <code>eps2</code>. <code>dt</code> is the <em>maximum</em> working step, not a guarantee that each accepted step is that long. Drift this large calls for convergence checks before quoting a close-encounter trajectory.</p>
 <p class="small-print">Try <a href="#exp6">Task 6</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+</section>
 <section id="beat6"><h2>Beat 6 · Collision and escape</h2><p>Make the companion as massive as the Sun for a collision, then try a launch that heads far outward.</p>
 <p>For comparison, the default settings are <code>--m_planet_solar 0.1</code>, <code>--x_init_au 0.3</code>, <code>--max_steps 10000</code>.</p>
 <pre class="code-block"><code>python main.py --m_planet_solar 1 --x_init_au 0.3 --max_steps 10000
@@ -360,6 +366,7 @@ python main.py --x_init_au 0.45 --max_steps 30000 --m_planet_solar 0.1</code></p
 <div class="beat-action"><strong>Read the stopping reason</strong><p>The first stops at <code>collision with Sun</code> after 1920 steps and 41.543 days, at one nominal solar radius (0.0046505 AU); the black × marks that boundary crossing. The second reaches 11.531 AU from the Sun within 694.44 days, but its stopping reason is <code>max_steps reached</code>, not “escaped.”</p></div>
 <p>A point mass has no physical surface in these equations. The positive Sun collision radius is a numerical stop; the companion's default collision radius is zero (disabled). A long outward track in a finite run is evidence of outward motion over that interval. The program does not certify permanent escape, and a positive instantaneous energy near moving stars would not by itself do so.</p>
 <p class="small-print">Try <a href="#exp7">Task 7</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+</section>
 <section id="beat7"><h2>Beat 7 · Outside the binary</h2><p>Place two equal Suns 1 AU apart and launch 2.5 AU from the Sun. Try a seemingly plausible relative speed, then include the Sun's motion.</p>
 <pre class="code-block"><code>python main.py --m_planet_solar 1 --binary_separation_au 1 --x_init_au 2.5 --vy_init 30000 --max_steps 40000
 python main.py --m_planet_solar 1 --binary_separation_au 1 --x_init_au 2.5 --vy_init 50846 --max_steps 40000</code></pre>
@@ -367,6 +374,7 @@ python main.py --m_planet_solar 1 --binary_separation_au 1 --x_init_au 2.5 --vy_
 <p>For a nearby binary, a point-mass circular estimate is only a starting guess. The pair's changing geometry still perturbs the outside orbit.</p>
 <p class="small-print">Try <a href="#exp8">Task 8</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
 
+</section>
 <section id="beat8"><h2>Beat 8 · How far to trust a run</h2><p>Halve the maximum step on a smooth orbit; keep the simulated duration at 20 million seconds by changing <code>max_steps</code>.</p>
 <p>For comparison, the default settings are <code>--dt 2000</code>, <code>--max_steps 10000</code>.</p>
 <pre class="code-block"><code>python main.py --dt 2000 --max_steps 10000

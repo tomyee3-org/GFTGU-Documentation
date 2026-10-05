@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>EarthOrbit — Help File | GFtGU Programs</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>EarthOrbit – Help File</title>
 <!-- MathJax 3: inline and display equations -->
 <script>
 window.MathJax = {
@@ -232,7 +232,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 </style>
 </head><body>
 <a class="skip-link" href="#content">Skip to the tutorial</a><div class="page-wrap">
-<header><div class="badge">CHAPTER 4 · EarthOrbit</div><h1><em>EarthOrbit</em> — Newton's Cannon</h1><div class="sub">
+<header><div class="badge">Gravity from the Ground Up</div><h1><em>EarthOrbit</em> — Newton's Cannon</h1><div class="sub">
         Source Code:
         <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a> ·
         <br/>
@@ -256,7 +256,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <a href="#beat8">8 · Two period laws</a>
 <a href="#beat9">9 · Stop conditions</a>
 
-<a href="#experiments">Practice tasks</a>
+<a href="#experiments">Suggested Experiments</a>
 <div class="nav-label">Code</div>
 <a href="#parameters">Parameters</a>
 <a href="#modules">Code modules</a>
@@ -279,12 +279,10 @@ motion. A projectile is launched horizontally from a tower above Earth's surface
 too large a shortfall from the local circular speed, it falls back to the ground on a curve;
 launched fast enough, it falls at exactly the rate the ground curves away beneath it, tracing a
 path that never lands. Exactly how large a shortfall counts as "too large" depends on how high
-above the surface the tower stands — Experiment 6 works this out precisely, including how the
-answer differs from the program's own numerically integrated outcome. The program integrates the
+above the surface the tower stands — Beats 2–5 compare launch speeds and outcomes, while Beat 7 shows how the numerical result changes with the timestep. The program integrates the
 projectile's two-dimensional trajectory step by step and reports which of these outcomes a given
-launch produces: impact, a closed orbit, or escape.
+launch produces: impact, completed orbital revolutions, or an escape-classified launch.
 </p>
-<p>
 <p>The dashed blue circle is Earth's reference surface; red is the computed path. The plot uses geocentric metres on equal axes. At launch, <code>uInit</code> points sideways and positive <code>vInit</code> points away from Earth's centre. Each printed number has five significant digits; that is formatting, not a claim of five-digit physical accuracy.</p>
 </section>
 
@@ -296,31 +294,36 @@ launch produces: impact, a closed orbit, or escape.
 <pre class="code-block"><code>python main.py --h0 300 --uInit 7900 --vInit 0 --force_law simplified --dt 0.4 --maxSteps 15000</code></pre>
 <div class="beat-action"><strong>Look for</strong><p>503 samples and <code>Surface impact before one revolution</code>: 0.039512 of a turn, 14.224°, in 200.44 s. On the plot, the red arc joins the blue surface again. The launch is only about 0.08% slower than this law's circular speed, 7906.3 m/s.</p></div>
 <p>At each timestep the program updates position \((x,y)\) and velocity \((u,v)\) under acceleration toward Earth's centre. Its default law keeps that acceleration's <em>magnitude</em> fixed at 9.8 m/s². Ask: would you have expected a tiny speed shortfall to yield such a short flight?</p>
-<p class="small-print">Try <a href="#exp1">Task 1</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+<p class="small-print">Try <a href="#exp1">Task 1</a> in <a href="#experiments">Suggested Experiments</a> after this beat.</p>
+</section>
 <section id="beat1"><h2>Beat 1 · Two gravity laws</h2><p>Change just the force law and compare the outcome lines.</p>
 <pre class="code-block"><code>python main.py --h0 300 --uInit 7900 --vInit 0 --dt 0.4 --force_law simplified
 python main.py --force_law inverse_square --h0 300 --uInit 7900 --vInit 0 --dt 0.4</code></pre>
 <div class="beat-action"><strong>Compare</strong><p>The first run impacts in 200.44 s; inverse square takes 221.62 s and travels 0.043687 of a revolution. The inverse-square summary adds osculating elements from the <em>launch state</em>; a negative perigee altitude (−16,265 m) signals a path that intersects Earth.</p></div>
 <p>Both acceleration vectors point inward. The first has constant magnitude \(g=9.8\) m/s²; the second has magnitude \(\mu_\oplus/r^2\), where \(\mu_\oplus=3.98600435507\times10^{14}\) m³/s² and \(r=\sqrt{x^2+y^2}\). The two nearly agree at the reference surface, but differ as altitude grows.</p>
-<p class="small-print">Try <a href="#exp2">Task 2</a> and <a href="#exp3">Task 3</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+<p class="small-print">Try <a href="#exp2">Task 2</a> and <a href="#exp3">Task 3</a> in <a href="#experiments">Suggested Experiments</a> after this beat.</p>
 
+</section>
 <section id="beat2"><h2>Beat 2 · The circular launch</h2><p>Move the cannon to 300 km and choose the inverse-square circular speed rounded to 7725.7 m/s.</p>
 <p>For comparison, the default settings are <code>--h0 300</code>, <code>--uInit 7900</code>, <code>--dt 0.4</code>, <code>--maxSteps 15000</code>.</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 7725.7 --force_law inverse_square --dt 1 --maxSteps 7000</code></pre>
 <div class="beat-action"><strong>Read</strong><p>One completed revolution; its time is 5460.9 s. The integrated maximum altitude reaches 348.47 km, although the launch is at 300 km. The osculating eccentricity from the launch state is only 6.1431e-06. These lines refer to different things: the numerically computed path drifts outward, while the ideal orbit is nearly circular.</p></div>
 <p>The ideal inverse-square speeds at \(r=R_\oplus+h_0\) are \(v_c=\sqrt{\mu_\oplus/r}\) and \(v_e=\sqrt{2\mu_\oplus/r}\). At 300 km they are about 7725.72 and 10925.8 m/s; the ideal circular period is 5431.3 s. Compare that with the printed period before moving on.</p>
-<p class="small-print">Try <a href="#exp4">Task 4</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+<p class="small-print">Try <a href="#exp4">Task 4</a> in <a href="#experiments">Suggested Experiments</a> after this beat.</p>
+</section>
 <section id="beat3"><h2>Beat 3 · An ellipse</h2><p>Keep the altitude but launch faster than circular and below escape.</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 9000 --force_law inverse_square --dt 1 --maxSteps 10585</code></pre>
 <div class="beat-action"><strong>Read</strong><p>Revolution 1 takes 10580 s and reaches a computed maximum altitude of 7.7644e+06 m. The launch-state osculating apogee is 7.7183e+06 m. The gap measures numerical drift, not a change to the launch-state formula.</p></div>
 <p>Earth is at a focus, not the centre of the ellipse. Since 9000 m/s exceeds the local circular speed, the tangential launch starts at <em>perigee</em>. The ideal eccentricity follows from specific energy \(\mathcal E=v^2/2-\mu_\oplus/r\) and specific angular momentum \(h=xv-yu\): \(e=\sqrt{1+2\mathcal E h^2/\mu_\oplus^2}\). Here it is 0.35708.</p>
-<p class="small-print">Try <a href="#exp5">Task 5</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+<p class="small-print">Try <a href="#exp5">Task 5</a> in <a href="#experiments">Suggested Experiments</a> after this beat.</p>
 
+</section>
 <section id="beat4"><h2>Beat 4 · Escape</h2><p>Go above the 300 km escape speed.</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 11500 --vInit 0 --dt 2 --maxSteps 3001 --force_law inverse_square</code></pre>
 <div class="beat-action"><strong>Read</strong><p><code>Escape trajectory; maxSteps reached</code>, eccentricity 1.2157, and final/maximum altitude 3.3678e+07 m. The run lasts 6000 s and has not reached infinity: “escape” labels the unbound launch state and a path that did not hit Earth during this run. There is a perigee but no apogee.</p></div>
 <p>For inverse-square gravity the ideal specific energy is nonnegative at or above \(v_e\). A fast launch aimed inward can still hit Earth, so the console reports impact in that case.</p>
-<p class="small-print">Try <a href="#exp6">Task 6</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+<p class="small-print">Try <a href="#exp6">Task 6</a> in <a href="#experiments">Suggested Experiments</a> after this beat.</p>
+</section>
 <section id="beat5"><h2>Beat 5 · Make the comparison fair</h2><p>Try the same speed under both laws at 300 km. Which impacts sooner?</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 7500 --force_law inverse_square --dt 1 --maxSteps 15000
 python main.py --h0 300000 --uInit 7500 --force_law simplified --dt 1 --maxSteps 15000</code></pre>
@@ -328,13 +331,15 @@ python main.py --h0 300000 --uInit 7500 --force_law simplified --dt 1 --maxSteps
 <p>Now match the <em>fractional</em> deficit: <code>7853.53</code> m/s is 2.92% below the simplified circular speed here.</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 7853.53 --force_law simplified --dt 1 --maxSteps 15000</code></pre>
 <p>This time simplified completes two revolutions, with minima of 46686 m and 65796 m. Its noncircular ideal path generally precesses rather than retracing a Kepler ellipse. A comparison at one absolute speed alone cannot establish which law is more forgiving at an equal fractional deficit.</p>
-<p class="small-print">Try <a href="#exp7">Task 7</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+<p class="small-print">Try <a href="#exp7">Task 7</a> in <a href="#experiments">Suggested Experiments</a> after this beat.</p>
+</section>
 <section id="beat6"><h2>Beat 6 · Between stored samples</h2><p>The plot joins samples; events usually occur between them. Start with a short run and inspect the last two radii.</p>
 <pre class="code-block"><code>python main.py --dt 0.4
 python -c "from driver_earthorbit import run_earth_orbit as run; r = run(dt=0.4, maxSteps=15000, return_diagnostics=True); import math; print([math.hypot(x,y) for x,y in zip(r[0][-2:], r[1][-2:])])"</code></pre>
 <div class="beat-action"><strong>Notice</strong><p>The last raw radius is slightly <em>inside</em> \(R_\oplus=6378200\) m, yet the printed flight time is interpolated to the crossing, 200.44 s. Surface impact uses the straight chord's intersection with the Earth circle; revolution boundaries use interpolation in angle; altitude peaks use a local three-point parabola.</p></div>
 <p>The red plot retains the first below-surface stored point. The summary stops at its estimated surface crossing. These distinctions matter when reading a close miss.</p>
-<p class="small-print">Try <a href="#exp8">Task 8</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+<p class="small-print">Try <a href="#exp8">Task 8</a> in <a href="#experiments">Suggested Experiments</a> after this beat.</p>
+</section>
 <section id="beat7"><h2>Beat 7 · Check the timestep</h2><p>Launch at the full-precision 300 km circular speed and halve <code>dt</code>, allowing enough points for a revolution.</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 7725.7237298314685 --force_law inverse_square --dt 4 --maxSteps 1450
 python main.py --h0 300000 --uInit 7725.7237298314685 --force_law inverse_square --dt 2 --maxSteps 2890
@@ -343,7 +348,8 @@ python main.py --h0 300000 --uInit 7725.7237298314685 --force_law inverse_square
 python main.py --h0 300000 --uInit 7725.7237298314685 --force_law inverse_square --dt 0.25 --maxSteps 21890</code></pre>
 <div class="beat-action"><strong>Record</strong><p>Revolution 1 maxima: 493240, 396820, 348470, 324250, 312130 m. Subtract 300000 m: the excess nearly halves whenever the timestep halves. The period also approaches the ideal 5431.3 s (printed: 5550.8, 5490.8, 5460.9, 5446.1, 5438.7 s).</p></div>
 <p>The method advances velocity using acceleration at the start of the step, then position using the old and new velocities' average. This first-order method is not symplectic; a five-significant-digit printout cannot certify its accuracy.</p>
-<p class="small-print">Try <a href="#exp9">Task 9</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+<p class="small-print">Try <a href="#exp9">Task 9</a> in <a href="#experiments">Suggested Experiments</a> after this beat.</p>
+</section>
 <section id="beat8"><h2>Beat 8 · Two period laws</h2><p>Measure one nearly circular revolution at two altitudes under each law.</p>
 <pre class="code-block"><code>python main.py --h0 300000 --uInit 7725.7237 --force_law inverse_square --dt 1 --maxSteps 5481
 python main.py --h0 1500000 --uInit 7113.0422 --force_law inverse_square --dt 1 --maxSteps 7009
@@ -351,7 +357,8 @@ python main.py --h0 300000 --uInit 8089.8925 --force_law simplified --dt 1 --max
 python main.py --h0 1500000 --uInit 8786.7150 --force_law simplified --dt 1 --maxSteps 5683</code></pre>
 <div class="beat-action"><strong>Compare</strong><p>Printed periods are 5460.9 and 6988.7 s for inverse square, then 5189.8 and 5636.6 s for simplified. Inverse square predicts \(T^2/r^3=4\pi^2/\mu_\oplus\); simplified predicts \(T^2/r=4\pi^2/g\). Calculate both ratios from the printed times and radii. Their small departures from the exact constants are the numerical drift from Beat 7.</p></div>
 <p>The circular speed must be recomputed at each altitude. Do not compare periods using one fixed launch speed at both heights.</p>
-<p class="small-print">Try <a href="#exp10">Task 10</a> in <a href="#experiments">Practice Tasks</a> after this beat.</p>
+<p class="small-print">Try <a href="#exp10">Task 10</a> in <a href="#experiments">Suggested Experiments</a> after this beat.</p>
+</section>
 <section id="beat9"><h2>Beat 9 · Know when the run stops</h2><p>Each command below should stop with a single <code>EarthOrbit:</code> error and no plot.</p>
 <pre class="code-block"><code>python main.py --h0 -1
 python main.py --dt 0
@@ -361,7 +368,7 @@ python main.py --uInit 1e308 --dt 10</code></pre>
 <p class="small-print">For a negative number in scientific notation, use the equals form such as <code>--vInit=-1e5</code>.</p></section>
 
 <section id="experiments">
-<h2>Practice Tasks</h2>
+<h2>Suggested Experiments</h2>
 
 <div class="experiment-card" id="exp1">
 <div class="exp-num">Task 1</div>

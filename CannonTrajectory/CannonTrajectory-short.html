@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CannonTrajectory – Help File | GFTGU Programs</title>
+  <title>CannonTrajectory – Help File</title>
   <script>
     MathJax = {
       tex: {
@@ -13,7 +13,7 @@
         packages: {'[+]': ['textmacros']}
       },
       loader: { load: ['[tex]/textmacros'] },
-      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
@@ -119,7 +119,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <body>
 <div class="page-wrap">
 <header>
-  <div class="badge">Chapter 1 · Investigation 1.3</div>
+  <div class="badge">Gravity from the Ground Up</div>
 <h1><em>CannonTrajectory</em> — Newtonian Projectile Motion</h1>
   <div class="sub">
     Source Code:
@@ -144,7 +144,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
   <div class="nav-label">Reference</div>
   <a href="#parameters">Parameters</a>
   <a href="#output">Output</a>
-  <a href="#experiments">Experiments</a>
+  <a href="#experiments">Suggested Experiments</a>
   <a href="#validity">Domain of Validity</a>
   <a href="#related">Related Programs</a>
   <a href="#license">License</a>
@@ -328,7 +328,7 @@ T^*=t_{n-1}+\frac{h_{n-1}}{h_{n-1}-h_n}\,\Delta t.
     <h2>Beat 6 · How far to trust a printed number</h2>
     <p>Unlike the situation that we have here with Newton's cannon, the differential equations of importance in
 	physics usually do not have exact analytic solutions. The practical check that we make to assess the accuracy
-	of a numeric solution is the one that will illustrate here:
+	of a numeric solution is the one that we illustrate here:
 	We make several runs, steadily decreasing \(\Delta t\), while watching the figures we care about.</p>
 <pre>python main.py --method euler --dt 0.5
 python main.py --method euler --dt 0.1
@@ -350,7 +350,7 @@ python main.py --max_steps 146 --speed 100
 python main.py --speed 1000 --max_steps 100000</pre>
     <p>The first command prints no summary: 145 stored points is one short of a default landing, and the program 
 	refuses to hand back an incomplete trajectory. The second command runs. A 1000&nbsp;m&nbsp;s\(^{-1}\) launch 
-	prints a range of about 102&nbsp;km. Over that distance a flat Earth has already dropped by hundreds of metres 
+	prints a range of about 102&nbsp;km. Over that distance Earth’s curved surface lies hundreds of metres below the launch-point tangent plane 
 	and the direction of \(g\) has turned by about a degree. <code>EarthOrbit</code> and <code>Orbit</code> are the
 	programs for that scale. An overflowing state stops with a clear error rather than printing infinity.</p>
     <p>Air resistance shortens a real range even at ordinary speeds. Wind, spin, curvature, rotation, and the 
@@ -378,7 +378,7 @@ python main.py --speed 1000 --max_steps 100000</pre>
   </section>
 
   <section id="experiments">
-    <h2>Experiments</h2>
+    <h2>Suggested Experiments</h2>
     <div class="exp-grid">
       <div class="exp-card"><div class="ec-num">EXP-1 · First run</div>
         <h4>Best angle</h4>
@@ -396,7 +396,7 @@ python main.py --speed 1000 --max_steps 100000</pre>
 		</div>
       <div class="exp-card"><div class="ec-num">EXP-4 · Intermediate</div>
         <h4>Halve the step</h4>
-        <p>For Euler at 45°, record the range error at \(\Delta t=0.5\), 0.2 and 0.1&nbsp;s. Does each halving halve the error? What quotient should error\(/\Delta t\) approach?</p>
+        <p>For Euler at 45°, record the range error at \(\Delta t=0.4\), 0.2 and 0.1&nbsp;s. Does each halving roughly halve the error? What quotient should error\(/\Delta t\) approach?</p>
 		</div>
 
       <div class="exp-card"><div class="ec-num">EXP-5 · Intermediate</div>

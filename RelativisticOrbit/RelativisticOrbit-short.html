@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RelativisticOrbit – Help File | GFtGU Programs</title>
+<title>RelativisticOrbit – Help File</title>
 <!-- MathJax 3 -->
 <script>
     MathJax = {
@@ -14,7 +14,7 @@
         packages: {'[+]': ['textmacros']}
       },
       loader: { load: ['[tex]/textmacros'] },
-      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
     };
   </script>
 <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
@@ -429,6 +429,22 @@
       main { padding: 24px 20px 48px; }
     }
   
+
+/* Suggested Experiments: common Atmosphere-short card presentation. */
+#experiments .scenario-card {
+  font-size: 16px; line-height: 1.8;
+  background: #ffffff; border: 1px solid #c8bfa0; border-left: 5px solid #a04010;
+  border-radius: 5px; padding: 16px 22px; margin: 0 0 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+#experiments .scenario-card h4 {
+  font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.97rem;
+  font-weight: 700; color: #a04010; margin: 0 0 6px;
+}
+#experiments .scenario-card p {
+  font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.88rem;
+  color: #5a4a3a; margin-bottom: 6px;
+}
 </style>
 
 <style id="gftgu-common-elements">
@@ -474,7 +490,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <body>
 <div class="page-wrap">
 <header>
-<div class="badge">Chapter 21 · Gravity from the Ground Up · Help File</div>
+<div class="badge">Gravity from the Ground Up</div>
 <h1><em>RelativisticOrbit</em> — Orbital Precession in Schwarzschild Geometry</h1>
 <div class="sub">
     Source Code:
@@ -499,7 +515,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <a href="#beat8">8 · Escape, Mercury and rejected inputs</a>
 <a href="#further">Try next</a>
 
-<div class="nav-label">Experiments</div>
+<div class="nav-label">Suggested Experiments</div>
 <a href="#experiments">Suggested Experiments</a>
 
 <div class="nav-label">Reference</div>
@@ -561,7 +577,7 @@ python main.py --model newtonian --x_init 1e6 --u_init 1.153e7 --dt 1e-4 --max_s
 </section>
 <section id="beat4">
 <h2>Beat 4 · Circular orbits and the ISCO</h2>
-<p>Put the particle on a circle at \(8GM/c^2\), with exactly the circular speed there. Then put it on a circle at \(5GM/c^2\), inside the innermost stable circular orbit, with a start 0.1% faster than circular.</p>
+<p>Put the particle on a circle at \(8GM/c^2\), with exactly the circular speed there. Then start it at \(5GM/c^2\), inside the innermost stable circular orbit, with a rate 0.1% faster than the circular value.</p>
 <p>For comparison, the default settings are <code>--x_init 15000</code>, <code>--u_init 120000000</code>, <code>--dt 2e-06</code>, <code>--max_orbits 10</code>.</p>
 <pre>python main.py --x_init 11813.0003044 --u_init 134071263.04595919 --max_orbits 4 --max_steps 8000 --dt 2e-06
 python main.py --x_init 7383.12519025 --u_init 212197265.2804 --dt 1e-7 --max_orbits 12 --max_steps 40000</pre>
@@ -616,35 +632,51 @@ python main.py --x_init 2000 --u_init 120000000 --max_steps 6000 --dt 2e-06 --ma
 <p>Why is neither measured Mercury angle evidence of 43 arcseconds per century? The control that should have zero advance produces nearly the same spurious angle. Use the predicted angle for this small effect; the coarse integration and accepted-step periapsis sampling cannot resolve it. The invalid input stops before a plot opens.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp11">Experiment 11</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-</section>
 <section id="further"><h2>Try next</h2>
 <p><strong>Check a plot marker.</strong> Run <code>python main.py --show_periapsides</code> and inspect the marked accepted-step minima. Compare a marker's radius with the printed periapsis range. The cursor coordinate display can help you locate it.</p>
 <p><strong>Run a clockwise path.</strong> Try <code>python main.py --u_init -1.2e8</code>. Compare its turn count, predicted fate and advance with Beat 0; what changes sign, and what should remain a magnitude?</p>
 <p><strong>Measure the other boundary.</strong> Use <code>python main.py --u_init 1.0444e8 --max_steps 10</code> and <code>python main.py --u_init 1.04445e8 --max_steps 10</code> to bracket the plunge/bound threshold from the prediction alone. Ten steps do not trace the eventual fate.</p></section>
 <section id="experiments">
 <h2>Suggested Experiments</h2>
-<p>The experiments are ranked from introductory to advanced, and each is cited by the beat it extends. Each command is run from the program's folder. When choosing a step for a new orbit, a useful first estimate for \(N\) steps per turn at radius \(r\) is \(\Delta\tau\sim2\pi r/(u_0N)\); the adaptive rule of Eq. (20) shortens it where it must.</p>
-<h3 id="exp1">1 · Mark the Periapsides — Introductory</h3>
-<p>Run the default with the periapsides marked. Check that successive marks are equally far from the hole and equally spaced in angle, and estimate the angle between neighbouring marks from the plot. Compare it with the printed advance plus a whole turn.</p>
+<p>The experiments are ranked from introductory to advanced, and each is cited by the beat it extends. Each command is run from the program's folder. When choosing a step for a new orbit, a useful first estimate for \(N\) steps per turn at radius \(r\) is \(\Delta\tau\sim2\pi r/(|u_0|N)\); the acceleration-change and corrector tests shorten trial steps when needed.</p>
+
+<div class="scenario-card" id="exp1">
+<h4>1 · Introductory — Mark the Periapsides</h4>
+<p>Run the default with the periapsides marked. Check that successive marks are equally far from the hole and equally spaced in angle, and estimate the angle between neighbouring marks from the plot. Compare the angle accumulated between successive periapsides with the printed advance plus a whole turn; the plotted directions themselves show that angle modulo a whole turn.</p>
 <pre>python main.py --show_periapsides</pre>
-<h3 id="exp2">2 · Count the Turns — Introductory</h3>
+</div>
+
+<div class="scenario-card" id="exp2">
+<h4>2 · Introductory — Count the Turns</h4>
 <p>Stop the default orbit after three turns. How many periapsides does it find, and why not three? Read <code>azimuthal turns</code>: the run stops at the first step that completes three turns, so the count slightly exceeds 3.</p>
 <pre>python main.py --max_orbits 3 --show_periapsides</pre>
-<h3 id="exp3">3 · Same Start, Two Laws — Introductory</h3>
+</div>
+
+<div class="scenario-card" id="exp3">
+<h4>3 · Introductory — Same Start, Two Laws</h4>
 <p>Run both models for three turns from the same start and compare the plots and the apoapsis radii. Which orbit closes, and which one is pulled in more tightly?</p>
 <pre>python main.py --max_orbits 3 --max_steps 7000
 python main.py --model newtonian --max_orbits 3 --max_steps 7000</pre>
-<h3 id="exp4">4 · Which Turning Point? — Intermediate</h3>
+</div>
+
+<div class="scenario-card" id="exp4">
+<h4>4 · Intermediate — Which Turning Point?</h4>
 <p>Start just below and just above the circular value at 15000 m, 1.12051e+08 m/s. In each run, read from the <code>motion</code> line whether the start is the periapsis or the apoapsis, and compare the measured and predicted advances. Why do both runs have nearly the same advance, although their starts are on opposite sides of the circular value?</p>
 <pre>python main.py --u_init 1.12e8
 python main.py --u_init 1.125e8</pre>
-<h3 id="exp5">5 · How Weak Is Weak? — Intermediate</h3>
-<p>Only the prediction is needed here, so ten steps are enough. For each radius, divide <code>apsidal advance</code> by <code>weak-field 6piGM/(c^2 p)</code> and compare the ratio minus 1 with \((18+e^2)/4\) times \(GM/(c^2p)\), Beat 3. How far out must an orbit be for Eq. (12) to be right to 1%?</p>
+</div>
+
+<div class="scenario-card" id="exp5">
+<h4>5 · Intermediate — How Weak Is Weak?</h4>
+<p>Only the prediction is needed here, so ten steps are enough. For each radius, divide <code>apsidal advance</code> by <code>weak-field 6piGM/(c^2 p)</code> and compare the ratio minus 1 with \((18+e^2)/4\) times \(GM/(c^2p)\), Beat 3. How far out must an orbit be for the weak-field formula in Beat 3 to agree with the exact prediction to 1%?</p>
 <pre>python main.py --x_init 1e5 --u_init 3.8e7 --max_steps 10
 python main.py --x_init 1e7 --u_init 3.7e6 --max_steps 10
 python main.py --x_init 1e9 --u_init 3.7e5 --max_steps 10</pre>
-<h3 id="exp6">6 · Circular Speeds and Stability — Intermediate Programming</h3>
-<p>Run this script from the program's folder. It prints each radius and the full circular value of Eq. (14), which can be copied into <code>--x_init</code> and <code>--u_init</code>, and the predicted kind of orbit at radii from 4.5 to 10 times \(GM/c^2\), started exactly at the circular value. Where does the kind change from unstable to stable? Then start one of the stable circles 0.1% faster than circular, with a small step, and compare its measured advance with the printed prediction.</p>
+</div>
+
+<div class="scenario-card" id="exp6">
+<h4>6 · Intermediate Programming — Circular Speeds and Stability</h4>
+<p>Run this script from the program's folder. It prints each radius and the full circular proper-time rate \(u_{\rm circ}=\sqrt{GM/(r-3GM/c^2)}\) (Beat 4), which can be copied into <code>--x_init</code> and <code>--u_init</code>, and the predicted kind of orbit at radii from 4.5 to 10 times \(GM/c^2\), started exactly at the circular value. Where does the kind change from unstable to stable? Then start one of the stable circles 0.1% faster than circular, with a small step, and compare its measured advance with the printed prediction.</p>
 <pre>import physics_relativistic_orbit as physics
 
 m = physics.GM_SUN / physics.C2
@@ -653,25 +685,43 @@ for factor in (4.5, 5, 6.5, 8, 10):
     u = physics.circular_proper_time_speed(r)
     prediction = physics.predict_orbit(r, u)
     print(factor, repr(r), repr(u), prediction.kind, prediction.apsidal_advance)</pre>
-<h3 id="exp7">7 · The Deepest Return — Intermediate to Advanced</h3>
-<p>From 20000 m, lower <code>--u_init</code> below 8e7 in small steps, keeping the tight settings of Beat 5. The first command still returns and the second plunges. Narrow the interval between them and record the smallest periapsis that still returns. Compare it with the ISCO and with \(r_-\) of Eq. (16).</p>
+</div>
+
+<div class="scenario-card" id="exp7">
+<h4>7 · Intermediate to Advanced — The Deepest Return</h4>
+<p>From 20000 m, lower <code>--u_init</code> below 8e7 in small steps, keeping the tight settings of Beat 5. The first command still returns and the second plunges. Narrow the interval between them and record the smallest periapsis that still returns. Compare it with the ISCO and with the unstable potential maximum \(r_- = h^2[1-\sqrt{1-12(GM/(ch))^2}]/(2GM)\), where \(h=x_0u_0\) must be recalculated for each launch. This maximum exists for \(|h|>\sqrt{12}\,GM/c\); its limiting value is the ISCO at equality.</p>
 <pre>python main.py --x_init 20000 --u_init 7.99e7 --dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 20000
 python main.py --x_init 20000 --u_init 7.95e7 --dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 20000</pre>
-<h3 id="exp8">8 · Toward the Photon Orbit — Advanced</h3>
-<p>At 5000 m, just outside the photon orbit, the circular value is 4.82471e+08 m/s, well above the speed of light, because it is a proper-time rate. Start well below it and then just above it. Why does the faster start escape rather than stay bound, and which part of Beat 8 explains it?</p>
+</div>
+
+<div class="scenario-card" id="exp8">
+<h4>8 · Advanced — Toward the Photon Orbit</h4>
+<p>At 5000 m, just outside the photon orbit, the circular value is 4.82471e+08 m/s, well above the speed of light, because it is a proper-time rate. Start well below it and then just above it. Why does the faster start escape rather than stay bound, Compare both predictions with the energy-based escape discussion in Beat 8. A rate dy/dτ above c is not a locally measured speed above c.</p>
 <pre>python main.py --x_init 5000 --u_init 2e8 --dt 1e-7 --max_steps 10000
 python main.py --x_init 5000 --u_init 4.83e8 --dt 1e-8 --max_steps 20000</pre>
-<h3 id="exp9">9 · Hunt the Zoom-Whirl Boundary — Advanced</h3>
+</div>
+
+<div class="scenario-card" id="exp9">
+<h4>9 · Advanced — Hunt the Zoom-Whirl Boundary</h4>
 <p>Between 1.044e8 and 1.045e8 m/s at 15000 m the orbit changes from a plunge to a bound zoom-whirl. Use the <code>motion</code> line, which needs only ten steps, to narrow the boundary; then run a start just above it with the tight settings of Beat 6 and many steps, and count the whirls.</p>
 <pre>python main.py --u_init 1.0444e8 --max_steps 10
 python main.py --u_init 1.04445e8 --max_steps 10</pre>
-<h3 id="exp10">10 · Convergence Inside the ISCO — Advanced</h3>
-<p>Repeat the orbit of Beat 5 with smaller steps and tighter tolerances. Check that the periapsis radius and the advance approach the predicted 7564.95 m and 9.40306 rad and that the energy drift falls, and compare the remaining error in the advance with the sampling bound of Eq. (21).</p>
+</div>
+
+<div class="scenario-card" id="exp10">
+<h4>10 · Advanced — Convergence Inside the ISCO</h4>
+<p>Repeat the orbit of Beat 5 with smaller steps and tighter tolerances. Check that the periapsis radius and the advance approach the predicted 7564.95 m and 9.40306 rad and that the energy drift falls, and compare the remaining error in the advance with the angular sampling scale \(\omega_p\Delta\tau/(n-1)\) in Beat 7, where \(\omega_p=|h|/r_p^2\) and \(n\) is the number of detected periapsides.</p>
 <pre>python main.py --x_init 20000 --u_init 8e7 --dt 1e-7 --eps1 0.005 --eps2 1e-6 --max_steps 40000</pre>
-<h3 id="exp11">11 · Mercury's 43 Arcseconds — Advanced</h3>
+</div>
+
+<div class="scenario-card" id="exp11">
+<h4>11 · Advanced — Mercury's 43 Arcseconds</h4>
 <p>Read the predicted advance for Mercury's orbit from ten steps. Convert it to arcseconds per century, using 415 orbits per century and 206265 arcseconds per radian, and compare it with the 43 arcseconds per century that Einstein explained in 1915. Why can the prediction do what the integration of Beat 8 cannot?</p>
 <pre>python main.py --x_init 4.6e10 --u_init 58980 --max_steps 10</pre>
-<h3 id="exp12">12 · Read the Result and the Prediction — Advanced Programming</h3>
+</div>
+
+<div class="scenario-card" id="exp12">
+<h4>12 · Advanced Programming — Read the Result and the Prediction</h4>
 <p>Every number in the summary is available from the driver's result and from <code>predict_orbit()</code>. Run this script from the program's folder and compare its numbers with Beat 0; then extend it, for example to print the angle of each periapsis or the radius at every step.</p>
 <pre>import physics_relativistic_orbit as physics
 from driver_relativistic_orbit import RelativisticOrbitParams, integrate_relativistic_orbit
@@ -681,6 +731,7 @@ params = RelativisticOrbitParams(x_init=1.5e4, u_init=1.2e8, dt=2e-6,
 result = integrate_relativistic_orbit(params)
 prediction = physics.predict_orbit(params.x_init, params.u_init)
 print(len(result.periapsis_radius), result.mean_periapsis_advance, prediction.apsidal_advance)</pre>
+</div>
 </section>
 <section id="parameters"><h2>Command-line parameters</h2>
 <p>Options override defaults for one run. <code>--show_isco</code> 
@@ -702,11 +753,9 @@ and <code>--no-show_periapsides</code> undo those switches. Negative values for 
 <tr><td class="pname">--show_periapsides</td><td class="pdefault">off</td><td>Mark the periapsides found with an <code>x</code>; <code>--no-show_periapsides</code> hides them.</td></tr>
 </tbody></table></div></section>
 <section id="related"><h2>Related programs</h2>
-
-<h2>Related Programs</h2>
 <ul class="related-list">
 <li><strong>Orbit</strong> — Newtonian orbits around a fixed mass with a related adaptive predictor-corrector; its orbits close.</li>
-<li><strong>MercPert</strong> — The precession of Mercury's orbit caused by another planet in Newtonian gravity. Such perturbations account for most of Mercury's observed precession; relativity accounts for the remaining 43 arcseconds per century (see Beat 8).</li>
+<li><strong>MercPert</strong> — A Newtonian test particle in a prescribed circular stellar binary. It illustrates perturbations, but its default companion is a star and it does not calculate the Solar System’s full Mercury-precession budget. RelativisticOrbit’s weak-field prediction illustrates the remaining relativistic contribution (Beat 8).</li>
 <li><strong>Binary</strong> — Two bodies orbiting each other in Newtonian gravity, where neither is fixed.</li>
 </ul>
 </section>

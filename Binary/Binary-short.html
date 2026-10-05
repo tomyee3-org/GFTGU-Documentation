@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Binary – Help File | GFTGU Programs</title>
+  <title>Binary – Help File</title>
   <script>
     MathJax = {
       tex: {
@@ -13,7 +13,7 @@
         packages: {'[+]': ['textmacros']}
       },
       loader: { load: ['[tex]/textmacros'] },
-      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
@@ -75,6 +75,22 @@
     footer { grid-column: 1 / -1; background: var(--accent); color: #fff; font-family: var(--sans); font-size: 12.5px; text-align: center; padding: 18px 24px; line-height: 1.7; }
     footer a { color: #e0c090; text-decoration: none; }
     @media (max-width: 740px) { .page-wrap { grid-template-columns: 1fr; } nav { position: static; height: auto; } main { padding: 24px 20px 48px; } }
+
+/* Suggested Experiments: common Atmosphere-short card presentation. */
+#experiments .scenario-card {
+  font-size: 16px; line-height: 1.8;
+  background: #ffffff; border: 1px solid #c8bfa0; border-left: 5px solid #a04010;
+  border-radius: 5px; padding: 16px 22px; margin: 0 0 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+#experiments .scenario-card h4 {
+  font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.97rem;
+  font-weight: 700; color: #a04010; margin: 0 0 6px;
+}
+#experiments .scenario-card p {
+  font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.88rem;
+  color: #5a4a3a; margin-bottom: 6px;
+}
 </style>
 
 <style id="gftgu-common-elements">
@@ -120,7 +136,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <body>
 <div class="page-wrap">
 <header>
-  <div class="badge">GFtGU Programs</div>
+  <div class="badge">Gravity from the Ground Up</div>
 <h1><em>Binary</em> —  Orbital Motion of a Binary System</h1>
   <div class="sub">
     Source Code:
@@ -147,7 +163,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
   <div class="nav-label">Reference</div>
   <a href="#parameters">Parameters</a>
 
-  <a href="#experiments">Experiments</a>
+  <a href="#experiments">Suggested Experiments</a>
   <a href="#validity">Domain of Validity</a>
   <a href="#related">Related Programs</a>
   <a href="#license">License</a>
@@ -204,7 +220,7 @@ r=\sqrt{(x_A-x_B)^2+(y_A-y_B)^2}.
 
   <section id="beat1">
     <h2>Beat 1 · Who moves, and how much</h2>
-    <p>The force on A equals the force on B. The accelerations do not. Make A twice B and start them circling a common point.</p>
+    <p>The forces on A and B have equal magnitudes and opposite directions. The accelerations do not. Make A twice B and start them circling a common point.</p>
 <p>For comparison, the default settings are <code>--MA 2e+30</code>, <code>--MB 2e+30</code>.</p>
 <pre>python main.py --MA 2e30 --MB 1e30 --xInitA 3.0666666667e10 --xInitB -6.1333333333e10 \
   --uInitA 15550.5265 --uInitB -31101.053</pre>
@@ -220,7 +236,7 @@ r=\sqrt{(x_A-x_B)^2+(y_A-y_B)^2}.
 \ddot y_B=+\frac{G M_A\,\Delta y}{r^3}.
 \]
     </div>
-    <p>Each body accelerates in proportion to the <em>other</em> mass. Adding \(M_A\mathbf a_A+M_B\mathbf a_B\) gives zero, so the centre of mass moves without acceleration. Measured from it, A sits the fraction \(M_B/(M_A+M_B)\) of the separation away. Equal masses alone do not force \(\mathbf v_A=-\mathbf v_B\); that also needs a centre of mass at rest.</p>
+    <p>Here \(\Delta x=x_A-x_B\) and \(\Delta y=y_A-y_B\). Each body accelerates in proportion to the <em>other</em> mass. Adding \(M_A\mathbf a_A+M_B\mathbf a_B\) gives zero, so the centre of mass moves without acceleration. Measured from it, A sits the fraction \(M_B/(M_A+M_B)\) of the separation away. Equal masses alone do not force \(\mathbf v_A=-\mathbf v_B\); that also needs a centre of mass at rest.</p>
     <p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
   </section>
 
@@ -274,7 +290,7 @@ E=K+U.
     <p>Before any step is taken, the program computes the exact two-body orbit of the starting data and prints it as the Keplerian block. That block is the outside check. Compare a near-circle with the default ellipse, in velocity space.</p>
 <pre>python main.py --uInitA 26934.5 --uInitB -26934.5 --output_type velocity_space
 python main.py --output_type velocity_space --uInitA 13000 --uInitB -13000</pre>
-    <p>On a circle the sampled min and max separations agree. On the default ellipse they do not, and \(r_p v_p=r_a v_a\) at the two apsides. The Keplerian period should match <code>Total time</code> to the figures printed. In velocity space a bound orbit with the centre of mass at rest is a circle whose origin sits inside it; \(e=(v_p-v_a)/(v_p+v_a)\).</p>
+    <p>On a circle the sampled min and max separations agree. On the default ellipse they do not, and \(r_p v_p=r_a v_a\) at the two apsides. The integrated <code>Total time</code> should approach the Keplerian period as the timestep is reduced; the full-turn stop can overshoot by one accepted step. In velocity space a bound orbit with the centre of mass at rest is a circle whose origin sits inside it; \(e=(v_p-v_a)/(v_p+v_a)\).</p>
     <div class="eq-block">
       <div class="eq-label">Kepler III, and the hodograph</div>
 \[
@@ -366,25 +382,37 @@ python main.py --dt 1000 --eps2 1e-8</pre>
   <section id="experiments">
 <h2>Suggested Experiments</h2>
 
-<h3 id="exp1">1 · Not a circle — Introductory</h3>
-    <p>From the default summary, what fraction of the starting separation is the closest approach? Why does that already rule out a circular orbit?</p>
 
-<h3 id="exp2">2 · Who circles whom — Beginner</h3>
-    <p>Run Beat 1. Confirm that \(a_A/a_B=M_B/M_A\) and that the two periods agree. Where is the origin on the plot?</p>
+<div class="scenario-card" id="exp1">
+<h4>1 · Introductory — Not a circle</h4>
+<p>From the default summary, what fraction of the starting separation is the closest approach? Why does that already rule out a circular orbit?</p>
+</div>
 
-<h3 id="exp3">3 · A boost is not unbinding — Beginner</h3>
-    <p>Run the boosted energy view below and compare its negative total energy with row 0.0 of the printed table. Why is the printed total energy positive while the Keplerian line still says elliptic? Which term disappears from the energy in the centre-of-mass frame?</p>
+<div class="scenario-card" id="exp2">
+<h4>2 · Beginner — Who circles whom</h4>
+<p>Run Beat 1. Confirm that \(a_A/a_B=M_B/M_A\) and that the two periods agree. Where is the origin on the plot?</p>
+</div>
+
+<div class="scenario-card" id="exp3">
+<h4>3 · Beginner — A boost is not unbinding</h4>
+<p>Run the boosted energy view below and compare its negative total energy with row 0.0 of the printed table. Why is the printed total energy positive while the Keplerian line still says elliptic? Which term disappears from the energy in the centre-of-mass frame?</p>
 <pre>python main.py --vInitA 60000 --vInitB 60000 --frame com --output_type energy_vs_time</pre>
 <p>Use the orbit and velocity-space views to check the same conclusion visually.</p>
+</div>
 
-<h3 id="exp4">4 · Escape — Intermediate</h3>
-    <p>From Beat 3, compute the relative escape speed \(v_{\mathrm{rel,esc}}=\sqrt{2G(M_A+M_B)/r}\). In the centre-of-mass frame with equal masses each body has half of that. How close is 38091.14&nbsp;m&nbsp;s\(^{-1}\)? For unequal masses the two speeds relative to the centre of mass split the same relative speed in the inverse-mass ratio; do not substitute a single mass for \(M_A+M_B\).</p>
+<div class="scenario-card" id="exp4">
+<h4>4 · Intermediate — Escape</h4>
+<p>From Beat 3, compute the relative escape speed \(v_{\mathrm{rel,esc}}=\sqrt{2G(M_A+M_B)/r}\). In the centre-of-mass frame with equal masses each body has half of that. How close is 38091.14&nbsp;m&nbsp;s\(^{-1}\)? For unequal masses the two speeds relative to the centre of mass split the same relative speed in the inverse-mass ratio; do not substitute a single mass for \(M_A+M_B\).</p>
+</div>
 
-<h3 id="exp5">5 · The hodograph — Intermediate</h3>
-    <p>On the default velocity-space plot, estimate \(e\) from the radius and offset of one body’s circle. Compare with the printed eccentricity.</p>
+<div class="scenario-card" id="exp5">
+<h4>5 · Intermediate — The hodograph</h4>
+<p>On the default velocity-space plot, estimate \(e\) from the radius and offset of one body’s circle. Compare with the printed eccentricity.</p>
+</div>
 
-<h3 id="exp6">6 · Fixed star — Intermediate</h3>
-    <p>Give body B a hundred times A’s mass and park it at the origin. Start A at \(4.6\times 10^{10}\,\mathrm{m}\). Give the pair opposite sideways speeds that keep the centre of mass at rest and a relative speed of 500000&nbsp;m&nbsp;s\(^{-1}\): \(u_A=495049.50495\), \(u_B=-4950.49505\). Circular speed about a <em>fixed</em> \(2\times 10^{32}\,\mathrm{kg}\) mass at that radius is about 539000&nbsp;m&nbsp;s\(^{-1}\); the two-body relative circular speed is about 541000&nbsp;m&nbsp;s\(^{-1}\). So this is a mild ellipse (\(e\approx 0.147\)), not a near-radial plunge. A traces an approximately elliptical laboratory path about the stationary centre of mass at \(x\approx 4.55\times 10^{8}\,\mathrm{m}\); it is a 0.990-scaled and translated version of the relative Kepler ellipse. The sampled run need not close exactly. Compare that laboratory track of A with the one-body problem that <code>Orbit</code> integrates at the same mass, radius and relative speed.</p>
+<div class="scenario-card" id="exp6">
+<h4>6 · Intermediate — A dominant star</h4>
+<p>Give body B a hundred times A’s mass and place it initially at the origin. Start A at \(4.6\times 10^{10}\,\mathrm{m}\). Give the pair opposite sideways speeds that keep the centre of mass at rest and a relative speed of 500000&nbsp;m&nbsp;s\(^{-1}\): \(u_A=495049.50495\), \(u_B=-4950.49505\). Circular speed about a <em>fixed</em> \(2\times 10^{32}\,\mathrm{kg}\) mass at that radius is about 539000&nbsp;m&nbsp;s\(^{-1}\); the two-body relative circular speed is about 541000&nbsp;m&nbsp;s\(^{-1}\). So this is a mild ellipse (\(e\approx 0.147\)), not a near-radial plunge. A traces an approximately elliptical laboratory path about the stationary centre of mass at \(x\approx 4.55\times 10^{8}\,\mathrm{m}\); it is a 0.990-scaled and translated version of the relative Kepler ellipse. The sampled run need not close exactly. Compare that laboratory track of A with the one-body problem that <code>Orbit</code> integrates at the same mass, radius and relative speed.</p>
     
     <pre>python main.py --MB 2e32 --xInitB 0 --yInitB 0 --vInitB 0 --uInitB -4950.49505 --xInitA 4.6e10 --yInitA 0 --vInitA 0 --uInitA 495049.50495</pre>
     
@@ -393,13 +421,17 @@ python main.py --dt 1000 --eps2 1e-8</pre>
     <pre data-program="Orbit">python main.py --xInit 4.6e10 --yInit 0 --vxInit 0 --vyInit 500000 --k 1.33486e22 --dt0 2000 --eps1 0.05 --eps2 0.0001 --maxOrbits 1</pre>
     
     <p>Expect about 218 accepted steps and 5.05 days here; the summary prints a Keplerian period of 5.03 days for the pair. A fixed \(2\times 10^{32}\,\mathrm{kg}\) star at the same radius and 500000&nbsp;m&nbsp;s\(^{-1}\) gives a period of about 5.11 days.</p>
+</div>
 
-<h3 id="exp7">7 · Two knobs, two errors — Advanced</h3>
-    <p>From Beats 5–7, which printed diagnostic follows <code>dt</code>, and which follows <code>eps2</code>? Halve each once and say what you would spend computer time on if you cared about periapsis, or about many orbits.</p>
+<div class="scenario-card" id="exp7">
+<h4>7 · Advanced — Two knobs, two errors</h4>
+<p>From Beats 5–7, which printed diagnostic follows <code>dt</code>, and which follows <code>eps2</code>? Halve each once and say what you would spend computer time on if you cared about periapsis, or about many orbits.</p>
+</div>
 
-<h3 id="exp8">8 · When the controller wakes up — Advanced</h3>
-    <p>Run <code>--uInitA 1000 --uInitB -1000</code> at the defaults, then tighten <code>--eps1</code>. What does the default controller miss on that orbit?</p>
-
+<div class="scenario-card" id="exp8">
+<h4>8 · Advanced — When the controller wakes up</h4>
+<p>Run <code>--uInitA 1000 --uInitB -1000</code> at the defaults, then tighten <code>--eps1</code>. What does the default controller miss on that orbit?</p>
+</div>
 </section>
 
   <section id="validity">

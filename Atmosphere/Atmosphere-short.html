@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Atmosphere – Help File | GFTGU Programs</title>
+  <title>Atmosphere – Help File</title>
   <script>
     MathJax = {
       tex: {
@@ -13,7 +13,7 @@
         packages: {'[+]': ['textmacros']}
       },
       loader: { load: ['[tex]/textmacros'] },
-      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
@@ -151,7 +151,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <body>
 <div class="page-wrap">
 <header>
-  <div class="badge">Chapter 7 · Atmospheres</div>
+  <div class="badge">Gravity from the Ground Up</div>
 <h1><em>Atmosphere</em> – Planetary Atmosphere Structure</h1>
   <div class="sub">
     Source Code:
@@ -210,7 +210,7 @@ Its (x, y) position in the graph’s coordinates appears in the lower right corn
     <p>Unpack the program zip so you have a folder named <code>Atmosphere</code> that contains <code>main.py</code>. Open a terminal in that folder. You need <strong>Python 3.10 or newer</strong> with NumPy and Matplotlib. If you do not already have that environment, follow the project-wide <a href="https://github.com/tomyee3-org/GFTGU-Documentation" target="_blank"><em>GFTGU Python Setup Guide</em></a>. Then:</p>
 <pre>python main.py --version
 python main.py</pre>
-    <p>Every command on this page assumes that working directory. Give altitude and temperature lists with commas and no brackets. A list that starts with a negative altitude can be typed as <code>--h_points -1000,0,10000</code>.</p>
+    <p>Every command on this page assumes that working directory. Give altitude and temperature lists with commas and no brackets. A list that starts with a negative altitude can be typed as <code>--h_points=-1000,0,10000</code>.</p>
   </section>
 
   <section id="beat0">
@@ -386,7 +386,7 @@ T=\beta\,p^{\alpha},\qquad \alpha=0.5.
         <tr><td class="pname">--p0</td><td class="pdefault">1.013e5</td><td>Pressure at altitude zero, Pa.</td></tr>
         <tr><td class="pname">--h_points</td><td class="pdefault">0 … 500000</td><td>Strictly increasing altitudes in metres. May start below zero.</td></tr>
         <tr><td class="pname">--T_points</td><td class="pdefault">288.15 … 1240</td><td>Matching positive temperatures in kelvin. Same length as <code>--h_points</code>.</td></tr>
-        <tr><td class="pname">--output_type</td><td class="pdefault">pressure</td><td>pressure, density, or temperature. The checkpoint table always prints all four columns.</td></tr>
+        <tr><td class="pname">--output_type</td><td class="pdefault">pressure</td><td>pressure, density, or temperature. The checkpoint table always prints altitude, pressure, density, p/T, and temperature.</td></tr>
         <tr><td class="pname">--save_plot</td><td class="pdefault">(none)</td><td>Write the figure to this path (PNG, PDF, &hellip;).</td></tr>
         <tr><td class="pname">--no_show</td><td class="pdefault">off</td><td>Do not open a plot window. Use with <code>--save_plot</code> for batch runs.</td></tr>
         <tr><td class="pname">--version</td><td class="pdefault"></td><td>Print the version and build identifier and exit.</td></tr>
@@ -471,7 +471,7 @@ T=\beta\,p^{\alpha},\qquad \alpha=0.5.
   <section id="related">
     <h2>Related Programs</h2>
     <ul class="related-list">
-      <li><strong>Star</strong> — hydrostatic equilibrium for a self-gravitating polytrope. Gravity now varies with radius; mass continuity replaces the ideal-gas closure.</li>
+      <li><strong>Star</strong> — hydrostatic equilibrium for a self-gravitating polytrope. Gravity now varies with radius; mass continuity and a polytropic pressure–density relation complete the structure equations.</li>
       <li><strong>Neutron</strong> — the same idea under the TOV equation. A neighbour, not a prerequisite.</li>
     </ul>
   </section>

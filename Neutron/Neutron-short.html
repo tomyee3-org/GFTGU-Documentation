@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Neutron — Help File | GFtGU Programs</title>
-<script>MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+<title>Neutron – Help File</title>
+<script>MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 <style>
     /* ── Reset & custom properties ── */
@@ -503,7 +503,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 @media (max-width: 740px) { main { padding-top: 8px; } }
 </style>
 </head><body><a class="skip-link" href="#content">Skip to the tutorial</a><div class="page-wrap">
-<header><div class="badge">CHAPTER 20 · INVESTIGATION 20.1</div><h1><em>Neutron</em> — Static Neutron-Star Structure</h1><div class="sub">
+<header><div class="badge">Gravity from the Ground Up</div><h1><em>Neutron</em> — Static Neutron-Star Structure</h1><div class="sub">
         Source Code:
         <a href="https://github.com/tomyee3-org/GFTGU-Programs" target="_blank">https://github.com/tomyee3-org/GFTGU-Programs</a>·
         <br/>
@@ -522,7 +522,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <a href="#beat6">6 · Read the physical checks</a>
 <a href="#beat7">7 · Follow the mass turnover</a>
 
-<div class="nav-label">Experiments</div>
+<div class="nav-label">Suggested Experiments</div>
 <a href="#experiments">Suggested Experiments</a>
 
 
@@ -541,7 +541,7 @@ equilibria in general relativity. It integrates the
 Tolman&ndash;Oppenheimer&ndash;Volkoff (TOV) pressure equation and the
 enclosed-mass equation outward from the center until the pressure reaches
 zero, using one simple polytropic equation of state,
-\(p=K\rho^\gamma\). It is introduced in <em>Investigation 20.1</em> of
+\(p=K\rho^\gamma\). In this model \(\rho c^2\) is the total energy density entering the TOV equation; the code does not separately calculate baryon rest-mass density. It is introduced in <em>Investigation 20.1</em> of
 Schutz's text, where it serves as the reader's first relativistic
 stellar-structure calculation.
 </p>
@@ -590,7 +590,7 @@ not simulate collapse; it computes static equilibrium configurations only.
 <p class="cue">Run</p><p>For comparison, the default settings are <code>--gamma 1.666667</code>, <code>--K 5380.2</code>, <code>--pC 1.26e+35</code>.</p>
 <pre class="code-block"><code>python main.py --gamma 1.5 --K 7.374987e6 --pC 1.26e35 --output_type mass
 python main.py --gamma 1.666667 --K 5.3802e3 --pC 1.26e35 --output_type mass
-python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code></pre><p>The different \(K\) values keep the central density approximately fixed while (gamma) changes. Their units change with (gamma); using the same numeric \(K\) across different exponents is not a controlled comparison. Each run computes a new star.</p>
+python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code></pre><p>The different \(K\) values keep the central density approximately fixed while \(\gamma\) changes. Their units change with \(\gamma\); using the same numeric \(K\) across different exponents is not a controlled comparison. Each run computes a new star.</p>
 <div class="task"><strong>Task:</strong> Compare the three radii and masses. Which exponent gives the most extended equilibrium here? For an input check, run <code>python main.py --gamma 1</code>: the solver must reject it before integration, because its surface transformation requires \(\gamma&gt;1\).</div>
 
 
@@ -627,13 +627,13 @@ model["pressure"][-2:], model["radius"][-2], model["surface_radius_m"]</code></p
 </section>
 <section id="beat6">
 <h2>Beat 6 · Read the physical checks</h2>
-<p>Every completed model is checked against two independent limits: a mathematical bound on how compact any static fluid star can be, and a physical requirement that nothing travel faster than light inside the model equation of state. They do not have to fail together. Push the central pressure up and watch each one separately.</p>
+<p>Every completed model is checked against two independent limits: a mathematical compactness bound for a static, spherical fluid with isotropic pressure and nonincreasing energy density, and a physical requirement that nothing travel faster than light inside the model equation of state. They do not have to fail together. Push the central pressure up and watch each one separately.</p>
 
 <p class="cue">Run</p><p>For comparison, the default settings are <code>--pC 1.26e+35</code>.</p>
 <pre class="code-block"><code>python main.py --pC 1e34 --output_type mass
 python main.py --pC 1e35 --output_type mass
 python main.py --pC 1e36 --output_type mass
-python main.py --pC 1e37 --output_type mass</code></pre><p>Read both the compactness \(2GM/(Rc^2)\) and central sound speed divided by (c) in each summary. Compactness is approximately 0.203957, 0.349845, 0.462172, 0.466203. Central sound-speed ratios are approximately 0.357557, 0.566689, 0.898142, 1.423460. The last violates the model's causality check, even though its compactness remains below the Buchdahl bound \(8/9\). Passing one check does not imply passing the other.</p><div class="task"><strong>Task:</strong> Find the first pressure in this list at which the central sound speed exceeds (c). Does the displayed model also violate the compactness bound?</div>
+python main.py --pC 1e37 --output_type mass</code></pre><p>Read both the compactness \(2GM/(Rc^2)\) and central sound speed divided by \(c\) in each summary. Compactness is approximately 0.203957, 0.349845, 0.462172, 0.466203. Central sound-speed ratios are approximately 0.357557, 0.566689, 0.898142, 1.423460. The last violates the model's causality check, even though its compactness remains below the Buchdahl bound \(8/9\). Passing one check does not imply passing the other.</p><div class="task"><strong>Task:</strong> Find the first pressure in this list at which the central sound speed exceeds \(c\). Does the displayed model also violate the compactness bound?</div>
 <p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> and <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 <section id="beat7"><h2>Beat 7 · Follow the mass turnover</h2><p class="cue">Run</p><p>For comparison, the default settings are <code>--pC 1.26e+35</code>.</p>
@@ -641,8 +641,8 @@ python main.py --pC 1e37 --output_type mass</code></pre><p>Read both the compact
 python main.py --pC 1e35 --output_type mass
 python main.py --pC 1e36 --output_type mass
 python main.py --pC 1e28 --output_type mass
-python main.py --pC 1e27 --output_type mass</code></pre><p>The masses at \(10^{34},10^{35},10^{36}\) Pa are about 0.818445, 0.963016, 0.849747 solar masses. Thus the equilibrium sequence has a maximum somewhere between \(10^{35}\) and \(10^{36}\) Pa. This calculation does not evolve a perturbation or establish dynamic stability. At \(10^{28}\) and \(10^{27}\) Pa it reports about 0.020979 and 0.010529 solar masses; extrapolating one high-density polytrope this far omits real crust and composition physics.</p>
-<div class="task"><strong>Task:</strong> Sketch mass versus central pressure from the five runs, marking the turnover bracket. Try <code>python main.py --max_steps 100</code> and explain why it exits with an error instead of reporting a truncated star.</div>
+python main.py --pC 1e27 --output_type mass</code></pre><p>The masses at \(10^{34},10^{35},10^{36}\) Pa are about 0.818445, 0.963016, 0.849747 solar masses. These samples show a turnover but do not bracket its maximum between the last two pressures. Refining the sequence gives a mass near 0.96320 solar masses at \(p_C\simeq1.1\times10^{35}\) Pa; the default at \(1.26\times10^{35}\) Pa is already slightly beyond the maximum. This calculation does not evolve a perturbation or establish dynamic stability. At \(10^{28}\) and \(10^{27}\) Pa it reports about 0.020979 and 0.010529 solar masses; extrapolating one high-density polytrope this far omits real crust and composition physics.</p>
+<div class="task"><strong>Task:</strong> Sketch mass versus central pressure from the five runs, marking the coarse turnover region. Add runs near 1.0e35, 1.1e35 and 1.2e35 Pa to locate the peak more closely. Try <code>python main.py --max_steps 100</code> and explain why it exits with an error instead of reporting a truncated star.</div>
 <p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> and <a href="#exp8">Experiment 8</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 <section id="parameters"><h2>Parameters</h2><p>Run <code>python main.py --help</code> for the current command summary and <code>python main.py --version</code> for the model version and Build ID. Any options omitted from the command use the defaults below. The program requires Python 3.10 or later, NumPy, and Matplotlib.</p>
@@ -652,7 +652,7 @@ python main.py --pC 1e27 --output_type mass</code></pre><p>The masses at \(10^{3
 <tr><td><code>--gamma</code></td><td>1.666667</td><td>dimensionless</td><td>Polytropic exponent in \(p=K\rho^\gamma\). Must be greater than 1 (Beat 2).</td></tr>
 <tr><td><code>--pC</code></td><td>1.26e35</td><td>Pa</td><td>Central pressure. Positive and finite.</td></tr>
 <tr><td><code>--K</code></td><td>5.3802e3</td><td>depends on \(\gamma\)</td><td>Polytropic constant. Its dimensions depend on \(\gamma\); see the comparison note in Beat 2.</td></tr>
-<tr><td><code>--steps_per_scale</code></td><td>400</td><td>&mdash;</td><td>Nominal radial resolution, \(N_{\rm scale}\) in Eq. 6. Integer from 50 through 10000000.</td></tr>
+<tr><td><code>--steps_per_scale</code></td><td>400</td><td>&mdash;</td><td>Nominal radial resolution: the characteristic scale is divided by \(N_{\rm scale}=\mathtt{steps\_per\_scale}\) (Beat 4). Integer from 50 through 10000000.</td></tr>
 <tr><td><code>--max_steps</code></td><td>200000</td><td>&mdash;</td><td>Safety limit on radial integration steps. Integer from 100 through 10000000. Reaching it before the surface raises an error (Beat 7).</td></tr>
 <tr><td><code>--output_type</code></td><td>pressure</td><td>selector</td><td><code>pressure</code>: radial pressure; <code>density</code>: radial density; <code>mass</code>: enclosed gravitational mass. Capitalization and surrounding spaces are ignored.</td></tr>
 <tr><td><code>--log_y</code></td><td>off</td><td>flag</td><td>Logarithmic y-axis for pressure or density; <code>--no-log_y</code> selects linear scaling explicitly. Mass always plots on a linear axis and prints a warning if <code>--log_y</code> is requested with <code>--output_type mass</code>.</td></tr>
@@ -711,7 +711,7 @@ printed results of each command before comparing them.
           radius, and pressure and density profiles between the two programs.
           Relativistic differences should grow as compactness increases.
         </p>
-<p><strong>Check:</strong> the weak-field agreement demonstrated numerically in Beat 1 is the limiting case in which the two programs must agree closely; the default <strong>Neutron</strong> model, at compactness 0.3643, is far from that limit.</p>
+<p><strong>Check:</strong> the local correction factors in Beat 1 identify the weak-field limit in which a matched Newtonian model should agree closely; the default <strong>Neutron</strong> model, at compactness 0.3643, is far from that limit.</p>
 </div>
 <div class="experiment-card" id="exp4">
 <div class="exp-num">Experiment 4 · Intermediate</div>
@@ -728,7 +728,7 @@ printed results of each command before comparing them.
           Three? Explain why such a result is not, by itself, evidence for a
           realistic neutron-star equation of state.
         </p>
-<p><strong>Check:</strong> the default equation of state gives 0.818445, 0.963016 and 0.849747 M<sub>sun</sub> at \(p_C=10^{34}\), \(10^{35}\) and \(10^{36}\) Pa, so the maximum lies between the last two (Beat 7).</p>
+<p><strong>Check:</strong> the default equation of state gives 0.818445, 0.963016 and 0.849747 M<sub>sun</sub> at \(p_C=10^{34}\), \(10^{35}\) and \(10^{36}\) Pa, a coarse indication of a turnover. The finer sweep in Beat 7 places the peak near \(1.1\times10^{35}\) Pa, rather than bracketing it between the last two samples.</p>
 </div>
 <div class="experiment-card" id="exp5">
 <div class="exp-num">Experiment 5 · Intermediate</div>
@@ -737,7 +737,7 @@ printed results of each command before comparing them.
 <p>
           Plot <code>data["compactness"]</code> for the same sequence of models
           used in Experiment 4. Every configuration must remain at or below
-          8/9 (Eq. 8). Investigate how close the chosen sequence comes to the
+          \(8/9\), the Buchdahl bound discussed in Beat 6. Investigate how close the chosen sequence comes to the
           bound, and separately track <code>data["causality_satisfied"]</code>
           across the same sequence: does the model become acausal before or
           after it approaches the Buchdahl bound?
@@ -791,9 +791,8 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 <p class="exp-beat">Goes with <a href="#beat7">Beat 7</a>.</p>
 <p>
           Reduce <code>--pC</code> below <code>1e28</code> until the computed
-          mass falls below 0.02 solar masses, the approximate lower bound
-          Investigation 20.1 discusses for a physically credible neutron
-          star. Does the numerical result invalidate that discussion? Examine
+          mass falls below 0.02 solar masses, the threshold quoted for the exercise in
+          Investigation 20.1. It is not a universal physical minimum mass. Does the numerical result invalidate that discussion? Examine
           how this single high-density polytrope extrapolates into the
           low-density regime, and identify the crust, neutron-drip,
           composition-change, or other low-density physics the simple

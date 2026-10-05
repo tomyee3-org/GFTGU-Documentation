@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Random2 – Help File | GFtGU Programs</title>
+<title>Random2 – Help File</title>
 <!-- MathJax 3 -->
 <script>
     MathJax = {
@@ -14,7 +14,7 @@
         packages: {'[+]': ['textmacros']}
       },
       loader: { load: ['[tex]/textmacros'] },
-      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
     };
   </script>
 <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
@@ -430,6 +430,22 @@
       main { padding: 24px 20px 48px; }
     }
   
+
+/* Suggested Experiments: common Atmosphere-short card presentation. */
+#experiments .scenario-card {
+  font-size: 16px; line-height: 1.8;
+  background: #ffffff; border: 1px solid #c8bfa0; border-left: 5px solid #a04010;
+  border-radius: 5px; padding: 16px 22px; margin: 0 0 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+#experiments .scenario-card h4 {
+  font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.97rem;
+  font-weight: 700; color: #a04010; margin: 0 0 6px;
+}
+#experiments .scenario-card p {
+  font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.88rem;
+  color: #5a4a3a; margin-bottom: 6px;
+}
 </style>
 
 <style id="gftgu-common-elements">
@@ -473,7 +489,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 </style>
 </head>
 <body><div class="page-wrap"><header>
-<div class="badge">Gravity from the Ground Up · Help File</div>
+<div class="badge">Gravity from the Ground Up</div>
 <h1><em>Random2</em> — Random Walks and Radiative Diffusion</h1>
 <div class="sub">
     Source Code:
@@ -497,7 +513,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <a href="#beat7">7 · The step cap</a>
 <a href="#beat8">8 · Seeds and the hard cases</a>
 
-<div class="nav-label">Experiments</div>
+<div class="nav-label">Suggested Experiments</div>
 <a href="#experiments">Suggested Experiments</a>
 <div class="nav-label">Reference</div>
 <a href="#parameters">Command-line parameters</a>
@@ -511,7 +527,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <h2>Description</h2>
 <p><strong>Random2</strong> explores the square-root law of random walks and uses it to picture how radiation leaks out of a star. Energy released in the Sun's core does not stream outwards; it is absorbed and re-emitted so often that its path is a random walk, and its net displacement increases much more slowly than its total path length. For many independent, zero-mean steps of finite variance, the typical distance from the start grows approximately as \(\sqrt N\), rather than \(N\).</p>
 <p>The program has two displays. <code>scaled_distance</code> runs many three-dimensional random walks of different lengths and prints and plots their average distance from the start. <code>walk2d</code> draws a few fixed-length, equally-likely-in-every-direction walks from the centre of a circle, a schematic star, and counts the steps each one takes to reach the edge. Every run prints a summary of the numbers before it opens its plot.</p>
-<p>The spine of the lesson is one sentence: <em>independent, zero-mean steps give a mean net displacement that grows approximately as \(\sqrt N\) when the step count \(N\) is large; in the fixed-step circular model, reaching radius \(R\) takes on the order of \((R/\lambda)^2\) steps of length \(\lambda\), and the printed standard errors help you judge an average made from a finite number of random trials.</em></p>
+<p>The spine of the lesson is one sentence: <em>independent, zero-mean steps give a mean distance from the starting point that grows approximately as \(\sqrt N\) when the step count \(N\) is large; in the fixed-step circular model, reaching radius \(R\) takes on the order of \((R/\lambda)^2\) steps of length \(\lambda\), and the printed standard errors help you judge an average made from a finite number of random trials.</em></p>
 <div class="note"><strong>Model boundary:</strong> the circle is a diffusion picture, not a solar model. There is no varying opacity or mean free path, no convection, and the displayed paths are two-dimensional. The escape-time spread therefore cannot be used as the Sun's three-dimensional distribution.</div>
 </section>
 
@@ -600,7 +616,7 @@ python main.py --display walk2d --radius 30 --n_walks 200 --step_cap 3000 --seed
 </section>
 <section id="beat8">
 <h2>Beat 8 · Seeds and the hard cases</h2>
-<p>Every beat so far used <code>--seed 12</code>. Run the default experiment of Beat 0 with another seed, then with none, and then try a walk too short to have a length. The last command is rejected; the message says why.</p>
+<p>Every beat so far used <code>--seed 12</code>. Run the experiment of Beat 0 with another seed and then with none. The two commands below are valid; the separate one-step input check at the end of this beat is rejected.</p>
 <pre>python main.py --seed 28
 python main.py</pre>
 <p>At seed 28 the last-row mean is 62.2140 with standard error 2.5542, versus 63.0073 ± 2.3473 at seed 12. The difference is only 0.23 of their combined standard error \(\sqrt{\mathrm{SE}_1^2+\mathrm{SE}_2^2}\). The unseeded summary says its results differ from run to run.</p>
@@ -610,48 +626,78 @@ python main.py</pre>
 <section id="experiments">
 <h2>Suggested Experiments</h2>
 <p>The experiments are ranked from introductory to advanced, and each is cited by the beat it extends. Each command is run from the program's folder. Leave out <code>--seed</code> to see how much the results change from run to run.</p>
-<h3 id="exp1">1 · Verify the √N Law — Introductory</h3>
+
+<div class="scenario-card" id="exp1">
+<h4>1 · Introductory — Verify the √N Law</h4>
 <p>Run the default experiment several times without a seed. Check that the ratio column stays near the large-\(N\) prediction, and that the plotted points lie close to a line of slope 1/2, one vertical decade for two horizontal decades.</p>
 <pre>python main.py --display scaled_distance --max_steps 4096 --n_trials 100</pre>
-<h3 id="exp2">2 · Reduce Statistical Scatter — Introductory</h3>
+</div>
+
+<div class="scenario-card" id="exp2">
+<h4>2 · Introductory — Reduce Statistical Scatter</h4>
 <p>Repeat the calculation with more and more trials. Record the standard error of the last row each time and check that it falls roughly as one over the square root of the number of trials. Notice the trade-off between precision and run time.</p>
 <pre>python main.py --n_trials 25
 python main.py --n_trials 100
 python main.py --n_trials 500
 python main.py --n_trials 1000</pre>
-<h3 id="exp3">3 · Measure the Log-Log Slope by Hand — Introductory to Intermediate</h3>
+</div>
+
+<div class="scenario-card" id="exp3">
+<h4>3 · Introductory to Intermediate — Measure the Log-Log Slope by Hand</h4>
 <p>Take two well-separated rows of the table and compute the exponent \(\alpha\) in \(\langle d\rangle\propto N^\alpha\) from them, as \(\log(d_2/d_1)/\log(N_2/N_1)\). Compare it with the printed fitted slope, which uses all the rows, and repeat with more trials.</p>
 <pre>python main.py --max_steps 4096 --n_trials 500</pre>
-<h3 id="exp4">4 · Change the Step Distribution — Intermediate</h3>
+</div>
+
+<div class="scenario-card" id="exp4">
+<h4>4 · Intermediate — Change the Step Distribution</h4>
 <p>Compare uniform and Gaussian step components with the same seed. The exponent stays at 1/2 and only the constant changes, from 0.9591 to 1. This is one of Schutz's suggested modifications.</p>
 <pre>python main.py --step_distribution uniform --seed 12
 python main.py --step_distribution gaussian --seed 12</pre>
-<h3 id="exp5">5 · Change the Definition of Scaled Distance — Intermediate Programming</h3>
-<p>Test whether the square-root law depends on dividing by each walk's mean step length. In a separate copy of the program, average <code>net_distance</code> instead of <code>net_distance / mean_step</code> in <code>_perform_trials_3d_with_error()</code>. The constant changes, to 0.9213 for uniform and 1.5958 for Gaussian steps by Eq. (10), but the exponent stays near 1/2.</p>
-<h3 id="exp6">6 · Mean Free Path and Geometric Scaling — Intermediate</h3>
-<p>Leave <code>--radius</code> out and change <code>--mean_free_path</code>. With a seed, the escape step counts do not change at all (Beat 6); without one, compare the statistics of many walks.</p>
+</div>
+
+<div class="scenario-card" id="exp5">
+<h4>5 · Intermediate Programming — Change the Definition of Scaled Distance</h4>
+<p>Test whether the square-root law depends on dividing by each walk's mean step length. In a separate copy of the program, average <code>net_distance</code> instead of <code>net_distance / mean_step</code> in <code>_perform_trials_3d_with_error()</code>. The constant changes, to \(2\sqrt{2/(3\pi)}\simeq0.9213\) for uniform components and \(2\sqrt{2/\pi}\simeq1.5958\) for unit-variance Gaussian components, but the exponent stays near 1/2.</p>
+</div>
+
+<div class="scenario-card" id="exp6">
+<h4>6 · Intermediate — Mean Free Path and Geometric Scaling</h4>
+<p>Leave <code>--radius</code> out and change <code>--mean_free_path</code>. With the same seed and the binary-exact factors 0.5 and 2 used here, the escape step counts match (Beat 6); without one, compare the statistics of many walks.</p>
 <pre>python main.py --display walk2d --mean_free_path 0.5
 python main.py --display walk2d --mean_free_path 1.0
 python main.py --display walk2d --mean_free_path 2.0</pre>
-<h3 id="exp7">7 · Individual Walks and Statistical Variety — Intermediate</h3>
+</div>
+
+<div class="scenario-card" id="exp7">
+<h4>7 · Intermediate — Individual Walks and Statistical Variety</h4>
 <p>Display a few walks at a time and compare their shapes and escape step counts. Individual paths look very different although they follow the same rules. Keep the number small enough that the paths can be told apart.</p>
 <pre>python main.py --display walk2d --n_walks 4
 python main.py --display walk2d --n_walks 6
 python main.py --display walk2d --n_walks 10</pre>
-<h3 id="exp8">8 · Explore the Escape-Time Distribution — Intermediate to Advanced</h3>
+</div>
+
+<div class="scenario-card" id="exp8">
+<h4>8 · Intermediate to Advanced — Explore the Escape-Time Distribution</h4>
 <p>Run many walks in a small star and compare the mean, median, minimum and maximum escape step counts. Then lower the step cap until some walks are stopped, and watch the mean of the escaped walks fall (Beat 7).</p>
 <pre>python main.py --display walk2d --radius 20 --n_walks 500
 python main.py --display walk2d --radius 20 --n_walks 500 --step_cap 400</pre>
-<h3 id="exp9">9 · Verify Escape Steps ∝ R² — Advanced</h3>
-<p>Hold the mean free path fixed and use several radii. For each, divide the mean escape step count by \((R/\lambda)^2\), which the summary prints as <code>mean escape steps / (R / mean free path)^2</code>. Eq. (16) says the result lies between 1 and \((1+\lambda/R)^2\); check it, using the standard error, and check that every walk escaped. Then repeat one radius with <code>--mean_free_path 2</code>: only \(R/\lambda\) matters (Beat 6).</p>
+</div>
+
+<div class="scenario-card" id="exp9">
+<h4>9 · Advanced — Verify Escape Steps ∝ R²</h4>
+<p>Hold the mean free path fixed and use several radii. For each, divide the mean escape step count by \((R/\lambda)^2\), which the summary prints as <code>mean escape steps / (R / mean free path)^2</code>. The expected uncapped mean, divided by this scale, lies between 1 and \((1+\lambda/R)^2\) (Beat 4); a finite sample mean can fall outside that interval by chance; check it, using the standard error, and check that every walk escaped. Then repeat one radius with <code>--mean_free_path 2</code>: only \(R/\lambda\) matters (Beat 6).</p>
 <pre>python main.py --display walk2d --radius 30 --mean_free_path 1 --n_walks 100
 python main.py --display walk2d --radius 40 --mean_free_path 1 --n_walks 100
 python main.py --display walk2d --radius 50 --mean_free_path 1 --n_walks 100
 python main.py --display walk2d --radius 60 --mean_free_path 1 --n_walks 100
 python main.py --display walk2d --radius 60 --mean_free_path 2 --n_walks 100</pre>
-<h3 id="exp10">10 · A Photon's Escape from the Sun — Advanced</h3>
-<p>Take a solar radius of \(7\times10^{8}\) m and suppose, very roughly, that the photon mean free path were 1 cm everywhere. How many steps would escape take, and how long would that be if each step took \(\lambda/c\)? Then say which assumptions of the estimate are the weakest, using the limitations in the Overview: the mean free path changes enormously with depth, and the outer part of the Sun carries its energy by convection. Treat the answer only as an order of magnitude.</p>
+</div>
 
+<div class="scenario-card" id="exp10">
+<h4>10 · Advanced — A Photon's Escape from the Sun</h4>
+<p>Take a solar radius of \(7\times10^{8}\) m and suppose, very roughly, that the photon mean free path were 1 cm everywhere. How many steps would escape take, and how long would that be if each step took \(\lambda/c\)? Then say which assumptions of the estimate are the weakest, using the limitations in the Overview: the mean free path changes enormously with depth, and the outer part of the Sun carries its energy by convection. Treat the answer only as an order of magnitude.</p>
+</div>
+</section>
 <section id="related">
 <h2>Related Programs</h2>
 <ul class="related-list">
@@ -666,7 +712,7 @@ python main.py --display walk2d --radius 60 --mean_free_path 2 --n_walks 100</pr
 <tbody>
 <tr><td class="pname">--display</td><td class="pdefault">scaled_distance</td><td><code>scaled_distance</code> runs the three-dimensional statistics of Beats 0 to 2; <code>walk2d</code> draws the schematic star of Beats 3 to 7.</td></tr>
 <tr><td class="pname">--max_steps</td><td class="pdefault">4096</td><td>Longest walk in <code>scaled_distance</code>, at least 2; the shorter walks are found by repeated halving. Alias <code>--maxSteps</code>.</td></tr>
-<tr><td class="pname">--n_trials</td><td class="pdefault">100</td><td>Independent walks averaged for each row; the standard error falls as its square root. Alias <code>--nTrials</code>.</td></tr>
+<tr><td class="pname">--n_trials</td><td class="pdefault">100</td><td>Independent walks averaged for each row; the standard error falls approximately as the inverse square root of the trial count. Alias <code>--nTrials</code>.</td></tr>
 <tr><td class="pname">--step_distribution</td><td class="pdefault">uniform</td><td><code>uniform</code> draws each component from \([-1,1]\); <code>gaussian</code> from the standard normal distribution (Beat 2).</td></tr>
 <tr><td class="pname">--reference_steps</td><td class="pdefault">2000</td><td>\(N_{\rm ref}\) in the default-radius rule \(R=f\lambda\sqrt{N_{\rm ref}}\). It sizes the drawing and does not limit the walk.</td></tr>
 <tr><td class="pname">--n_walks</td><td class="pdefault">4</td><td>Number of star walks; they are listed one per line in the summary when there are at most 12.</td></tr>
@@ -682,7 +728,7 @@ python main.py --display walk2d --radius 60 --mean_free_path 2 --n_walks 100</pr
 
 
 
-<section id="related"><h2>Related programs</h2><p><strong>Star</strong> models stellar structure and <strong>Neutron</strong> models neutron-star structure. Random2 instead follows idealized stochastic steps.</p></section>
+
 
 <section id="license" class="gftgu-license">
 <h2>License</h2>

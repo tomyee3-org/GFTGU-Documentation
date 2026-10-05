@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Multiple – Help File | GFtGU Programs</title>
+<title>Multiple – Help File</title>
+<script>MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"]}};</script>
 <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -217,7 +218,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 </style>
 </head><body><a class="skip-link" href="#content">Skip to the tutorial</a><div class="page-wrap">
 <header>
-<div class="badge">GFtGU Programs</div>
+<div class="badge">Gravity from the Ground Up</div>
 <h1><em>Multiple</em> — N-Body Gravitational Simulation in Three Dimensions</h1>
 <div class="sub">
         Source Code:
@@ -244,7 +245,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <div class="nav-label">Code</div>
 <a href="#parameters">Parameters</a>
 <a href="#modules">Code files</a>
-<div class="nav-label">Experiments</div>
+<div class="nav-label">Suggested Experiments</div>
 <a href="#experiments">Suggested Experiments</a>
 
 
@@ -308,75 +309,93 @@ happens.</p>
   --velocities_init "0,0,0;0,-30000,0;-30000,0,0" --dt 2000 --eps1 0.005 --eps2 1e-07 --display_frame com</code></pre>
 <p>8000 accepted steps span 18.094 days. Follow the red, green and blue curves into the close encounter. The initial momentum is (−30000, −30000, 0) m/s, while the energy and angular-momentum totals remain approximately conserved.</p>
 <p>Rerun at <code>--max_steps 2000</code>. Describe the geometry before the close encounter. Compare the two simulated durations: accepted-step count is not elapsed time when the timestep adapts.</p>
-<p><b>Note:</b> each body feels every other body. The pairwise gravitational acceleration is proportional to the other body's mass and inversely proportional to separation squared; there is no fixed central mass.</p></section>
+<p><b>Note:</b> each body feels every other body. The pairwise gravitational acceleration is proportional to the other body's mass and inversely proportional to separation squared; there is no fixed central mass.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> in
 <a href="#experiments">Suggested Experiments</a>.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> in
+<a href="#experiments">Suggested Experiments</a>.</p>
 </section>
+
+<section id="beat1">
 <h2>Beat 1 · Every body answers to every other</h2>
 <p>For comparison, the default settings are <code>--masses_solar 1,1,1</code>.</p>
 <pre class="code-block"><code>python main.py --masses_solar 2,1,0.5 --max_steps 2000 --output_type trajectories \
   --velocities_init "0,0,0;0,-30000,0;-30000,0,0"</code></pre>
 <p>The three paths differ because all three masses now affect the forces. The initial acceleration magnitudes computed from the starting geometry are 0.028972, 0.043871 and 0.070121 m/s² for bodies 1–3. The heaviest body's path is the smallest in this particular configuration.</p>
 <p>Switch the order of the three masses with <code>--masses_solar 0.5,1,2</code>. Predict which initial acceleration changes and then compare the shapes. Each command starts from the defaults unless you specify another option.</p>
-<p><b>Note:</b> acceleration of body <i>i</i> is \(\mathbf a_i=G M_\odot\sum_{j\ne i}m_j(\mathbf r_j-\mathbf r_i)/|\mathbf r_j-\mathbf r_i|^3\), with <i>m</i> in solar masses. The body's own mass cancels from its acceleration but affects the others.</p></section>
+<p><b>Note:</b> acceleration of body <i>i</i> is \(\mathbf a_i=G M_\odot\sum_{j\ne i}m_j(\mathbf r_j-\mathbf r_i)/|\mathbf r_j-\mathbf r_i|^3\), with <i>m</i> in solar masses. The body's own mass cancels from its acceleration but affects the others.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp3">Experiment 3</a> in
 <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-<section id="beat2"><h2>Beat 2 · Move the viewing frame</h2>
+
+<section id="beat2">
+<h2>Beat 2 · Move the viewing frame</h2>
 <p>Add 100000 m/s in the x direction to each default velocity, then compare both displays:</p>
 <p>For comparison, the default settings are <code>--velocities_init "0,0,0;0,-30000,0;-30000,0,0"</code>.</p>
 <pre class="code-block"><code>python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_steps 2000 --output_type trajectories --display_frame user
 python main.py --velocities_init "100000,0,0;100000,-30000,0;70000,0,0" --max_steps 2000 --output_type trajectories --display_frame com</code></pre>
-The user-frame plot carries the system across the axes; The centre-of-mass (COM) view subtracts the instantaneous centre-of-mass position from the plotted positions. The printed energy, momentum and angular momentum in both commands use the input coordinates. Total momentum after a common boost \(\mathbf u\) increases by \(M\mathbf u\) in the mass-scaled units.</p>
-<p>Compare the two printed initial momentum vectors, then compare the two plots. Which feature changes only because of the display choice?</p></section>
-<section id="beat3"><h2>Beat 3 · Read conserved totals</h2>
+<p>The user-frame plot carries the system across the axes; the centre-of-mass (COM) view subtracts the instantaneous centre-of-mass position from the plotted positions. The printed energy, momentum and angular momentum in both commands use the input coordinates. Total momentum after a common boost \(\mathbf u\) increases by \(M\mathbf u\), where \(M=\sum_i m_i\) is the total mass in solar-mass units. The printed momentum is the physical total divided by one solar mass, not the centre-of-mass velocity.</p>
+<p>Confirm that the two commands print the same initial momentum vector, then compare that vector with the unboosted run of Beat 0. Compare the two plots: which feature changes only because of the display choice?</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in
 <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
+
+<section id="beat3">
+<h2>Beat 3 · Read conserved totals</h2>
+
 <pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories --show_energy_diagnostic</code></pre>
 <p>Eleven console samples cover fractions 0.0 through 1.0 of the elapsed time. <code>E</code> includes kinetic and gravitational potential energy; <code>K</code> is kinetic energy alone. <code>E_internal</code> subtracts the bulk centre-of-mass kinetic energy. <code>P</code> and <code>L</code> are the total linear and angular momentum in user coordinates.</p>
 <p>Locate the largest sampled kinetic energy, then compare the maximum energy drift line and graph with just the start and end totals. The maximum can occur between printed rows; agreement of rounded endpoints does not bound it.</p>
-<p><b>Note:</b> pairwise forces conserve momentum and angular momentum analytically; an isolated Newtonian system conserves total energy. The displayed drift diagnoses numerical error, rather than a new physical force.</p></section>
+<p><b>Note:</b> pairwise forces conserve momentum and angular momentum analytically; an isolated Newtonian system conserves total energy. The displayed drift diagnoses numerical error, rather than a new physical force.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> and
 <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-<section id="beat4"><h2>Beat 4 · A vanishing reference total</h2>
+
+<section id="beat4">
+<h2>Beat 4 · A vanishing reference total</h2>
 <pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "5e10,0,0;-5e10,0,0" --velocities_init "0,25760,0;0,-25760,0" --max_steps 3000 --output_type trajectories</code></pre>
 <p>Equal and opposite initial momenta cancel. A fractional error divided by the initial momentum norm would divide by zero. The code instead normalizes against the sum of individual initial momentum magnitudes when the total nearly cancels; the initial-scale value is 51520 m/s for this example.</p>
 <p>Change only the second body's y velocity to −25759 m/s. Compare the reported momentum drift with the exact-cancellation run. The scale-aware fallback also applies near cancellation, not only at exact zero.</p>
-<p>Change <code>--projection yz</code> on the original two-body command. Why does a face-on circle collapse to a nearly straight trace? Return to <code>xy</code> for the rest of the evening.</p></section>
+<p>Change <code>--projection yz</code> on the original two-body command. Why does a face-on circle collapse to a nearly straight trace? Return to <code>xy</code> for the rest of the evening.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in
 <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-<section id="beat5"><h2>Beat 5 · Predict, correct, repeat</h2>
+
+<section id="beat5">
+<h2>Beat 5 · Predict, correct, repeat</h2>
 <p>Keep the same initial state and accepted-step ceiling while changing the corrector threshold:</p>
 <p>For comparison, the default settings are <code>--eps2 1e-07</code>.</p>
 <pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories --eps2 1e-10 --dt 2000
 python main.py --max_steps 8000 --output_type trajectories --eps2 0.004 --dt 2000</code></pre>
 <p>The corrector revises the predictor's new velocity using accelerations evaluated at trial positions. <code>eps2</code> sets a velocity-increment stopping criterion; <code>eps1</code> controls predictor acceleration change. These are algorithm thresholds, not promised fractional errors in the final path.</p>
-<p>compare elapsed days and maximum conservation drifts with Beat 0. Eight thousand accepted steps at different settings need not cover the same physical interval. For a convergence claim, compare at a common simulated time and check positions as well as drift.</p></section>
+<p>Compare elapsed days and maximum conservation drifts with Beat 0. Eight thousand accepted steps at different settings need not cover the same physical interval. For a convergence claim, compare at a common simulated time and check positions as well as drift.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> in
 <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-<section id="beat6"><h2>Beat 6 · Follow the adaptive step</h2>
+
+<section id="beat6">
+<h2>Beat 6 · Follow the adaptive step</h2>
 <pre class="code-block"><code>python main.py --max_steps 6000 --output_type trajectories --dt 2000
 python main.py --max_steps 8000 --output_type trajectories --dt 2000</code></pre>
 <p>The late close encounter forces a smaller working timestep, so 2000 additional accepted steps can cover much less time than the earlier 2000. The requested <code>--dt 2000</code> is a ceiling. Rejected trials are halved; after acceptance the working timestep may grow by 10% toward the ceiling.</p>
-<p>Compare simulated days for the two commands and calculate the time gained per added accepted step. Would a fixed 2000-second step have resolved the deepest encounter equally well?</p></section>
+<p>Compare simulated days for the two commands and calculate the time gained per added accepted step. Would a fixed 2000-second step have resolved the deepest encounter equally well?</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> and
 <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-<section id="beat7"><h2>Beat 7 · Animation</h2>
+
+<section id="beat7">
+<h2>Beat 7 · Animation</h2>
 <pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "5e10,0,0;-5e10,0,0" \
   --velocities_init "0,25760,0;0,-25760,0" --max_steps 3000 --output_type animation --frame_time 2e5 \
   --animation_mode trails
 python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "5e10,0,0;-5e10,0,0" --velocities_init "0,25760,0;0,-25760,0" --max_steps 3000 --output_type animation --frame_time 4e5 --animation_mode current_positions</code></pre>
 <p>Animation requests regular simulated times, interpolating positions and velocities between accepted states using a cubic Hermite curve. Use Space to pause, arrows to step, Home/End to jump, and F to toggle the display frame. The second command has a coarser frame interval and omits trails.</p>
-Compare the frame counts. A short <code>frame_time</code> can yield <em>more</em> stored frames than accepted states; a long one can yield fewer. Both modes also retain a conservation record for every accepted step. The animation guard limits requested frames to one million, not that conservation history.</p></section>
-<p><em>Experiments that go with this beat:</em> <a href="#exp4">Experiment 4</a> in
-<a href="#experiments">Suggested Experiments</a>.</p>
+<p>Compare the frame counts. A short <code>frame_time</code> can yield <em>more</em> stored frames than accepted states; a long one can yield fewer. Both modes also retain a conservation record for every accepted step. The animation guard limits requested frames to one million, not that conservation history.</p>
+
 </section>
-<section id="beat8"><h2>Beat 8 · Test the limits</h2>
+
+<section id="beat8">
+<h2>Beat 8 · Test the limits</h2>
 <p>A smaller timestep is useful only when the two runs can be compared over the same physical interval:</p>
 <pre class="code-block"><code>python main.py --dt 1000 --max_steps 4000 --output_type trajectories --show_energy_diagnostic --n_bodies 3 \
   --masses_solar 1,1,1 --positions_init "46000000000,0,0;-46000000000,0,0;0,46000000000,0" \
@@ -392,7 +411,8 @@ python main.py --dt 500 --max_steps 8000 --output_type trajectories --show_energ
 python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" \
   --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 17800 --output_type trajectories \
   --no-show_energy_diagnostic</code></pre>
-<p>The longer command stops when the adaptive step can no longer advance floating-point time. That limit is a property of this unsoftened point-mass model and integrator, not evidence of a physical merger.</p></section>
+<p>The longer command stops when the adaptive step can no longer advance floating-point time. That limit is a property of this unsoftened point-mass model and integrator, not evidence of a physical merger.</p>
+</section>
 <section id="parameters"><h2>Parameters</h2><p>Supply only options you want to change. The default run is a three-body animation; the Beat commands request static trajectories when they need a complete path or an energy graph. Each initial-state list must have one entry per body.</p><div class="table-scroll" role="region" tabindex="0" aria-label="Command-line options">
 <table class="param-table">
 <thead><tr><th>Command-line flag</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead>
@@ -416,7 +436,7 @@ python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0
 <tr><td><code>--show_energy_diagnostic</code></td><td>off</td><td>—</td><td>Add an energy-drift graph with <code>--output_type trajectories</code>.</td></tr>
 </tbody>
 </table>
-</div><p>The default initial coordinates and velocities are printed in <code>main.py</code>. For matrix inputs, quote the whole semicolon-separated list. <code>--no-show_energy_diagnostic</code> reverses the boolean flag.</p></section>
+</div><p>The default initial coordinates and velocities are defined in <code>main.py</code> and are written explicitly in Beat 0. For matrix inputs, quote the whole semicolon-separated list. <code>--no-show_energy_diagnostic</code> reverses the boolean flag.</p></section>
 <section id="modules"><h2>Code files</h2><p><code>main.py</code> parses command-line options and prints the summary; <code>physics_multiple.py</code> evaluates Newtonian forces and conservation totals; <code>driver_multiple.py</code> integrates and samples the run; <code>plot_multiple.py</code> draws static paths, drift graphs and animation. <code>tests/test_physics_multiple.py</code> exercises code and both tutorial files together.</p></section>
 
 <section id="experiments">
@@ -551,8 +571,8 @@ default encounter, because this configuration never brings two bodies as close t
 <div class="exp-num" id="exp9">Experiment 9 — Advanced</div>
 <div class="exp-title">Compare with MercPert</div>
 <pre class="code-block"><code>python main.py --n_bodies 3 --masses_solar 1,0.1,1e-8 --positions_init "0,0,0;1e11,0,0;4e10,0,0" --velocities_init "0,-3450,0;0,34500,0;0,57500,0" --max_steps 4000 --output_type trajectories</code></pre>
-<p>Recreate the same physical Sun&ndash;perturber&ndash;test-particle configuration as MercPert, but
-express every body's initial state in one inertial frame here. Keep the default COM display so the
+<p>Use a Sun–perturber–test-particle configuration, and choose matching masses, separation, and relative launch data in <em>MercPert</em>. The command above is an illustrative near-circular binary, not an exact match to MercPert’s defaults; the stellar relative speed for an exact circular binary must be computed from its masses and separation. 
+Express every body's initial state in one inertial frame here. Keep the default COM display so the
 plot stays centered. Agreement should be approximate, because MercPert prescribes its primary orbit
 whereas Multiple integrates all three masses mutually.</p>
 <p><strong>Check:</strong> the run reaches 4000 accepted steps at 92.593 days with a near-zero
@@ -570,7 +590,7 @@ printed momentum, \(\mathbf P\approx(0,5.75\times10^{-4},0)\) m/s, and maximum r
 the infall, so this exactly radial pair reaches closest approach sooner, near \(2.4\times10^8\) yr.
 Place a few companion particles about 10 kpc from each core; at that radius a
 \(10^{11}\,M_\odot\) point mass has a circular speed of about 207 km/s and an escape speed of about
-293 km/s. First give the companions negligible mass so the cores pass through; then raise them
+293 km/s. First give the companions negligible mass and follow the approach only while the calculation remains resolved; then raise them
 toward \(10^{10}\,M_\odot\). This is a handful of point masses, not a collisionless galaxy or a
 merger with gas, friction, or radiation.</p>
 <p>Then push the same head-on pair, with no companions and no softening, past where the program can
@@ -579,7 +599,7 @@ still integrate it:</p>
 <p><strong>Check:</strong> <code>--max_steps 10000</code> and <code>17500</code> both complete
 normally; <code>--max_steps 17800</code>, only 300 steps further into the same approach, stops with
 <code>Multiple error: The adaptive timestep became too small to advance simulation time in
-floating-point arithmetic.</code>, the exact-coincidence singularity of Beat 8.</p>
+floating-point arithmetic.</code>, the loss of numerical resolution on approach to the point-mass singularity discussed in Beat 8.</p>
 <div class="exp-beat">Extends Beat 8.</div>
 </div>
 </section>

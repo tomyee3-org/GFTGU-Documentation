@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Star – Help File | GFtGU Programs</title>
+<title>Star – Help File</title>
 <!-- MathJax 3 -->
 <script>
     MathJax = {
@@ -14,7 +14,7 @@
         packages: {'[+]': ['textmacros']}
       },
       loader: { load: ['[tex]/textmacros'] },
-      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
     };
   </script>
 <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
@@ -430,6 +430,22 @@
       main { padding: 24px 20px 48px; }
     }
   
+
+/* Suggested Experiments: common Atmosphere-short card presentation. */
+#experiments .scenario-card {
+  font-size: 16px; line-height: 1.8;
+  background: #ffffff; border: 1px solid #c8bfa0; border-left: 5px solid #a04010;
+  border-radius: 5px; padding: 16px 22px; margin: 0 0 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+#experiments .scenario-card h4 {
+  font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.97rem;
+  font-weight: 700; color: #a04010; margin: 0 0 6px;
+}
+#experiments .scenario-card p {
+  font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.88rem;
+  color: #5a4a3a; margin-bottom: 6px;
+}
 </style>
 
 <style id="gftgu-common-elements">
@@ -477,7 +493,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <div class="page-wrap">
 <!-- ═══════════════════ HEADER ═══════════════════ -->
 <header>
-<div class="badge">Newtonian Stellar Structure</div>
+<div class="badge">Gravity from the Ground Up</div>
 <h1><em>Star</em> — A Ball of Gas That Holds Itself Up</h1>
 <div class="sub">
     Source Code:
@@ -492,16 +508,16 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <a href="#wrapup">What to carry away</a>
 <div class="nav-label">Beats</div>
 <a href="#beat0">0 · A star that holds itself up</a>
-<a href="#beat1">1 · Reveal the outer gas</a>
+<a href="#beat1">1 · What the pressure needs: a density</a>
 <a href="#beat2">2 · Read a temperature</a>
 <a href="#beat3">3 · Locate the mass</a>
-<a href="#beat4">4 · One star, a family of stars</a>
-<a href="#beat5">5 · The Lane–Emden solution</a>
+<a href="#beat4">4 · Stretch a star</a>
+<a href="#beat5">5 · Check a solvable case</a>
 <a href="#beat6">6 · Euler steps and their error</a>
 <a href="#beat7">7 · The surface and the restart</a>
-<a href="#beat8">8 · Where one polytrope stops</a>
+<a href="#beat8">8 · Approach the limit</a>
 
-<div class="nav-label">Experiments</div>
+<div class="nav-label">Suggested Experiments</div>
 <a href="#experiments">Suggested Experiments</a>
 <div class="nav-label">Reference</div>
 <a href="#parameters">Parameters</a>
@@ -563,7 +579,7 @@ not a check on whether a real star obeys them.</p>
 
 </section>
 <section id="beat3">
-<h2>Beat 3 · Locate the mass</h2>
+<h2>Beat 3 · Locate the mass</h2><p>The mean density is \(\bar\rho=3M/(4\pi R^3)\), so the central concentration is \(\rho_c/\bar\rho=4\pi R^3\rho_c/(3M)\).</p>
 <p>Plot the mass inside each radius.</p>
 
 <pre>python main.py --output_type mass</pre>
@@ -572,7 +588,7 @@ not a check on whether a real star obeys them.</p>
 
 <p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> and <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-<section id="beat4"><h2>Beat 4 · Stretch a star</h2>
+<section id="beat4"><h2>Beat 4 · Stretch a star</h2><p>For fixed \(\gamma\), the model scales as \(R\propto T_c\mu^{-1}p_c^{-1/2}\) and \(M\propto T_c^2\mu^{-2}p_c^{-1/2}\). Changing these inputs generally changes \(K\), so this is not a sequence at one fixed equation of state.</p>
 <p>For comparison, the default settings are <code>--T_c 22630000</code>.</p>
 <pre>python main.py --T_c 2.4893e7 --p_c 7.158e+15</pre>
 <p>This central temperature is 10% above the default, while central pressure is unchanged. Compare the new radius 7.6641e+08 m and mass 2.3988e+30 kg with Beat 0. The ratios are about 1.10 and 1.21. For this specific change with the other inputs fixed, the radius scales with central temperature and the mass with its square. The pressure profile keeps its shape when radius is measured as a fraction of the new surface radius.</p>
@@ -625,60 +641,93 @@ not a check on whether a real star obeys them.</p>
 <section id="experiments">
 <h2>Suggested Experiments</h2>
 <p>The experiments are ranked from introductory to advanced, and each is cited by the beat it extends. Each command is run from the program's folder.</p>
-<h3 id="exp1">1 · The Four Profiles — Introductory</h3>
+
+<div class="scenario-card" id="exp1">
+<h4>1 · Introductory — The Four Profiles</h4>
 <p>Plot all four profiles of the default star. Find where the pressure, the density and the temperature have fallen to half their central values, and where the mass has reached half the total. Which of the four halves is reached first, and why?</p>
 <pre>python main.py --output_type pressure
 python main.py --output_type density --log_y
 python main.py --output_type temperature
 python main.py --output_type mass</pre>
-<h3 id="exp2">2 · A Hotter Centre, a Cooler Centre — Introductory to Intermediate</h3>
-<p>Change \(T_c\) by 10% either way at the same central pressure. Check that the radius changes in proportion to \(T_c\) and the mass in proportion to \(T_c^2\), Eq. (10), and that the checkpoint temperatures change in proportion to \(T_c\) while the checkpoint pressures do not change.</p>
+</div>
+
+<div class="scenario-card" id="exp2">
+<h4>2 · Introductory to Intermediate — A Hotter Centre, a Cooler Centre</h4>
+<p>Change \(T_c\) by 10% either way at the same central pressure. Check that the radius changes in proportion to \(T_c\) and the mass in proportion to \(T_c^2\), the scaling laws in Beat 4, and that the checkpoint temperatures change in proportion to \(T_c\) while the checkpoint pressures do not change.</p>
 <pre>python main.py --T_c 2.0367e7
 python main.py --T_c 2.263e7
 python main.py --T_c 2.4893e7</pre>
-<h3 id="exp3">3 · Four Times the Central Pressure — Intermediate</h3>
-<p>Multiply and divide the central pressure by four at the same central temperature. By Eq. (10) both the radius and the mass should change by a factor of two. Why does a higher central pressure at the same temperature make a <em>smaller</em> star?</p>
+</div>
+
+<div class="scenario-card" id="exp3">
+<h4>3 · Intermediate — Four Times the Central Pressure</h4>
+<p>Multiply and divide the central pressure by four at the same central temperature. By the scaling laws in Beat 4 both the radius and the mass should change by a factor of two. Why does a higher central pressure at the same temperature make a <em>smaller</em> star?</p>
 <pre>python main.py --p_c 1.7895e15
 python main.py --p_c 7.158e15
 python main.py --p_c 2.8632e16</pre>
-<h3 id="exp4">4 · The Mean Particle Mass — Intermediate</h3>
+</div>
+
+<div class="scenario-card" id="exp4">
+<h4>4 · Intermediate — The Mean Particle Mass</h4>
 <p>Change \(\mu\), the mean mass of a gas particle in units of the proton mass, at the same central pressure and temperature. Check that the radius scales as \(\mu^{-1}\) and the mass as \(\mu^{-2}\). A fully ionised gas of hydrogen has \(\mu=0.5\) and one of helium \(\mu=4/3\); why does a star with heavier particles come out smaller at the same central conditions?</p>
 <pre>python main.py --mu 0.6
 python main.py --mu 1.0
 python main.py --mu 1.285</pre>
-<h3 id="exp5">5 · Restore the Mass — Intermediate</h3>
-<p>Make the centre 10% hotter, then find by trial the central pressure that brings the mass back to that of the default star, 1.9825e+30 kg. Use Eq. (10) to predict the pressure first. Is the radius then back to its default value too? What does this say about how much a measured mass alone tells us about a star?</p>
+</div>
+
+<div class="scenario-card" id="exp5">
+<h4>5 · Intermediate — Restore the Mass</h4>
+<p>Make the centre 10% hotter, then find by trial the central pressure that brings the mass back to that of the default star, 1.9825e+30 kg. Use the scaling laws in Beat 4 to predict the pressure first. Is the radius then back to its default value too? What does this say about how much a measured mass alone tells us about a star?</p>
 <pre>python main.py --T_c 2.4893e7 --p_c 7.158e15
 python main.py --T_c 2.4893e7 --p_c 1.048e16</pre>
-<h3 id="exp6">6 · How Fine Is Fine Enough? — Intermediate to Advanced</h3>
+</div>
+
+<div class="scenario-card" id="exp6">
+<h4>6 · Intermediate to Advanced — How Fine Is Fine Enough?</h4>
 <p>Halve the step three times, allowing enough points each time to avoid a restart, and tabulate the relative differences from the Lane–Emden solution. Check that each halving roughly halves the error, Beat 6. Then take \(\gamma=1.21\), where the default run restarted four times and missed the radius by a quarter (Beat 8), and find how fine a run has to be to bring the error below 1%.</p>
 <pre>python main.py --steps_per_scale 200
 python main.py --steps_per_scale 400
 python main.py --steps_per_scale 800 --max_points 4000
 python main.py --steps_per_scale 1600 --max_points 8000
 python main.py --gamma 1.21 --steps_per_scale 1000 --max_points 100000</pre>
-<h3 id="exp7">7 · The Shape of a Polytrope — Intermediate to Advanced</h3>
-<p>Run the default star with \(\gamma\) = 4, 2, 5/3, 1.36, 4/3 and 1.25, and read the index \(n\) and the radius and mass of the Lane–Emden solution from each. For each, compute the ratio of central to mean density, \(\rho_c/\bar\rho\), from the integrated radius and mass with Eq. (8) and from the Lane–Emden values with Eq. (8) again. Check that <code>Restarts (radial step doubled)</code> is 0 in each run; \(\gamma=1.25\) needs more than the default 2000 points. How does the concentration of the star change with \(n\), and how well does the default step reproduce it?</p>
+</div>
+
+<div class="scenario-card" id="exp7">
+<h4>7 · Intermediate to Advanced — The Shape of a Polytrope</h4>
+<p>Run the default star with \(\gamma\) = 4, 2, 5/3, 1.36, 4/3 and 1.25, and read the index \(n\) and the radius and mass of the Lane–Emden solution from each. For each, compute the ratio of central to mean density, \(\rho_c/\bar\rho\), from the integrated radius and mass with the mean-density relation in Beat 3, then repeat with the Lane–Emden radius and mass. Check that <code>Restarts (radial step doubled)</code> is 0 in each run; \(\gamma=1.25\) needs more than the default 2000 points. How does the concentration of the star change with \(n\), and how well does the default step reproduce it?</p>
 <pre>python main.py --gamma 4
 python main.py --gamma 2
 python main.py --gamma 1.6666667
 python main.py --gamma 1.36
 python main.py --gamma 1.3333333
 python main.py --gamma 1.25 --max_points 4000</pre>
-<h3 id="exp8">8 · Two Kinds of Family — Advanced</h3>
-<p>The families of Experiments 2 to 4 keep \(\gamma\) but not the constant \(K\) of Eq. (5). Build a family with one fixed equation of state instead: keep \(\mu\) and \(\gamma\), and set \(T_c=T_{c,0}(p_c/p_{c,0})^{1-1/\gamma}\) so that \(D\), and hence \(K\), does not change. For this family the Lane–Emden solution gives \(R\propto p_c^{(\gamma-2)/(2\gamma)}\) and \(M\propto p_c^{(3\gamma-4)/(2\gamma)}\). Check the exponents with the three commands below, and explain why the mass does not depend on the central pressure at all when \(\gamma=4/3\).</p>
+</div>
+
+<div class="scenario-card" id="exp8">
+<h4>8 · Advanced — Two Kinds of Family</h4>
+<p>The families of Experiments 2 to 4 keep \(\gamma\) but not the constant \(K\) in \(p=K\rho^\gamma\) (Beat 1). Build a family with one fixed equation of state instead: keep \(\mu\) and \(\gamma\), and set \(T_c=T_{c,0}(p_c/p_{c,0})^{1-1/\gamma}\) so that \(K\) does not change. The density form is \(\rho=Dp^{1/\gamma}\), with \(D=K^{-1/\gamma}\). For this family the Lane–Emden solution gives \(R\propto p_c^{(\gamma-2)/(2\gamma)}\) and \(M\propto p_c^{(3\gamma-4)/(2\gamma)}\). Check the exponents with the three commands below, and explain why the mass does not depend on the central pressure at all when \(\gamma=4/3\).</p>
 <pre>python main.py --p_c 1.7895e15 --T_c 1.5678905e7
 python main.py --p_c 7.158e15 --T_c 2.263e7
 python main.py --p_c 2.8632e16 --T_c 3.2662797e7</pre>
-<h3 id="exp9">9 · A Schematic Red Giant — Advanced</h3>
+</div>
+
+<div class="scenario-card" id="exp9">
+<h4>9 · Advanced — A Schematic Red Giant</h4>
 <p>Take \(\gamma=1.335\) and look for central values that give about the default mass with a radius about a hundred times larger; then try for ten times the mass. A real red giant has a dense core and a vast, thin envelope with different equations of state, so this is a sketch of the size of such a star, not a model of one.</p>
 <pre>python main.py --gamma 1.335 --p_c 7.158e7 --T_c 2.263e5
 python main.py --gamma 1.335 --p_c 7.158e9 --T_c 2.263e6</pre>
-<h3 id="exp10">10 · A Newtonian Neutron Star — Advanced</h3>
+</div>
+
+<div class="scenario-card" id="exp10">
+<h4>10 · Advanced — A Newtonian Neutron Star</h4>
 <p>With \(\gamma=2\) and \(\mu=1\), look for central values that give a radius of about 10 km and a mass of about 1.4 solar masses, 2.8e+30 kg. The central pressure and the formal temperature come out enormous; here they only normalise the polytrope, since neutron-star matter is not an ideal gas and gravity this strong needs general relativity. Compare the result with the Neutron program.</p>
 <pre>python main.py --mu 1 --gamma 2 --p_c 1.9888e34 --T_c 1.1188e12 --output_type mass</pre>
-<h3 id="exp11">11 · More Than One Polytrope — Advanced Programming</h3>
-<p>In a separate copy of the program, divide the star into two or three regions in radius with different values of \(\gamma\), for example a stiffer core and a softer envelope. At each boundary keep the pressure continuous, and choose the new constant \(D\) so that the density is continuous too, unless a jump is intended. Compare the radius, the mass and the profiles with those of one polytrope. Command-line options alone cannot do this; it needs changes to <code>driver_star.py</code>.</p>
+</div>
+
+<div class="scenario-card" id="exp11">
+<h4>11 · Advanced Programming — More Than One Polytrope</h4>
+<p>In a separate copy of the program, divide the star into two or three regions in radius with different values of \(\gamma\), for example a stiffer core and a softer envelope. At each boundary keep the pressure continuous, and choose the new density-normalization constant \(D=\rho/p^{1/\gamma}\) at that boundary so that the density is continuous too, unless a jump is intended. Compare the radius, the mass and the profiles with those of one polytrope. Command-line options alone cannot do this; it needs changes to <code>driver_star.py</code>.</p>
+</div>
 </section>
 <section id="parameters"><h2>Parameters</h2>
 <p>All settings are command-line options described in <code>main.py</code>. <code>--output_type</code> and <code>--log_y</code> change only the plot; the printed summary is the same whichever profile is plotted.</p>

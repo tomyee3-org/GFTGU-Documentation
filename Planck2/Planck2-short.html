@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Planck2 – Help File | GFtGU Programs</title>
+<title>Planck2 – Help File</title>
 <!-- MathJax 3 -->
 <script>
     MathJax = {
@@ -14,7 +14,7 @@
         packages: {'[+]': ['textmacros']}
       },
       loader: { load: ['[tex]/textmacros'] },
-      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
     };
   </script>
 <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
@@ -428,6 +428,22 @@
       main { padding: 24px 20px 48px; }
     }
   
+
+/* Suggested Experiments: common Atmosphere-short card presentation. */
+#experiments .scenario-card {
+  font-size: 16px; line-height: 1.8;
+  background: #ffffff; border: 1px solid #c8bfa0; border-left: 5px solid #a04010;
+  border-radius: 5px; padding: 16px 22px; margin: 0 0 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+#experiments .scenario-card h4 {
+  font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.97rem;
+  font-weight: 700; color: #a04010; margin: 0 0 6px;
+}
+#experiments .scenario-card p {
+  font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.88rem;
+  color: #5a4a3a; margin-bottom: 6px;
+}
 </style>
 
 <style id="gftgu-common-elements">
@@ -494,7 +510,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <a href="#beat6">6 · Change the sampling grid</a>
 <a href="#beat7">7 · Move the approximation switches</a>
 <a href="#beat8">8 · Cut off the range deliberately</a>
-<div class="nav-label">Experiments</div>
+<div class="nav-label">Suggested Experiments</div>
 <a href="#experiments">Suggested Experiments</a>
 <a href="#further">Advanced programming challenges</a>
 <div class="nav-label">Reference</div>
@@ -546,7 +562,7 @@ Planck's law supplies the curve; the printed peak is the largest sampled point, 
 <p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
 
-<section id="beat1"><h2>Beat 1 · Change temperature</h2><p>
+<section id="beat1"><h2>Beat 1 · Change temperature</h2>
 
 <p>Run the default spectrum at a cooler and a hotter temperature. The middle run is the default of Beat 0.</p>
 <pre>python main.py --T 3000
@@ -554,11 +570,11 @@ python main.py --T 5900
 python main.py --T 10000</pre>
 
 <p>A hotter body peaks at a shorter wavelength. The product of temperature and peak wavelength should stay approximately fixed. The sampled \(x\) peak stays near 4.965 with a sufficiently fine grid.</p>
-<p>Multiply the first and third peak wavelength by their temperatures. 
+<p>Multiply the first and third peak wavelengths by their temperatures. 
 How close are the products? The law for this plotted density follows 
 from \(\lambda_{\rm peak}=hc/(x_5 kT)\), where \(x_5\approx4.965\).</p>
 
-<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a>, <a href="#exp2">Experiment 2</a> and <a href="#exp10">Experiment 10</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a>, <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>, plus <a href="#exp10">The Peak Condition by Iteration</a> in <a href="#further">Advanced programming challenges</a>.</p>
 </section>
 
 <section id="beat2">
@@ -599,7 +615,7 @@ but their vertical axes and integrated units differ. Frequency radiance integrat
 python main.py --quantity frequency --T 5900</pre>
 <p>The peak positions differ but both physical integrals should approach the same radiance, \(\sigma T^4/\pi\). The dimensionless shape is \(f_p(x)=x^p/(e^x-1)\), with \(p=5\) for wavelength radiance and \(p=3\) for the two frequency quantities. Their dimensionless areas therefore differ; their physical radiance integrals agree.</p><p>Subtract the printed physical integral from its exact zero-to-infinity reference in each run. Which is closer? The emitted flux from a black surface is \(\pi\) times the integrated radiance; the printed radiance is not the emitted flux.</p>
 
-<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> and <a href="#exp11">Experiment 11</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>, plus <a href="#exp11">Read the Result Object</a> in <a href="#further">Advanced programming challenges</a>.</p>
 </section>
 <section id="beat5">
 <h2>Beat 5 · Test the fourth power</h2>
@@ -655,7 +671,7 @@ moving the switches changes the numerical approximation.</p>
 </section>
 <section id="beat8">
 <h2>Beat 8 · Cut off the range deliberately</h2>
-<p>The defaults sample \(x\) from 0.01 to 100, which contains almost all of the curve. Change that range, and see how the summary shows what has been cut off. The first command below is rejected; the message tells you what to change.</p>
+<p>The defaults sample \(x\) from 0.01 to 100, which contains almost all of the curve. Change that range, and see how the summary shows what has been cut off. All four commands below satisfy the switch-ordering rule; each changes the sampled range or the view.</p>
 
 <p>Move both limits together, then cut below the wavelength peak; 
 compare with a truncated low end and a full horizontal plot.</p>
@@ -670,50 +686,76 @@ python main.py --y_frac_window 0 --x_min 0.01 --x_max 100 --x_low 0.05 --x_high 
 <section id="experiments">
 <h2>Suggested Experiments</h2>
 <p>The experiments are ranked from introductory to advanced, and each is cited by the beat it extends. Each command is run from the program's folder.</p>
-<h3 id="exp1">1 · Solar Black-Body Approximation — Introductory</h3>
+
+<div class="scenario-card" id="exp1">
+<h4>1 · Introductory — Solar Black-Body Approximation</h4>
 <p>Compare the sampled wavelength peak at 5900 K with Wien's displacement law. It should be near 490 nm. A real solar spectrum also has absorption lines, and the Sun's effective temperature is nearer 5800 K, which moves the peak to slightly longer wavelength.</p>
 <pre>python main.py --T 5900 --quantity wavelength</pre>
-<h3 id="exp2">2 · Wien's Displacement Law and Temperature — Introductory</h3>
+</div>
+
+<div class="scenario-card" id="exp2">
+<h4>2 · Introductory — Wien's Displacement Law and Temperature</h4>
 <p>Verify that <code>x_peak</code> stays nearly constant while \(\lambda_{\rm peak}T\) stays near \(2.898\times10^{-3}\,\text{m K}\). Compare frequency peaks at different temperatures to see that they are proportional to \(T\).</p>
 <pre>python main.py --T 3000 --quantity wavelength
 python main.py --T 5900 --quantity wavelength
 python main.py --T 10000 --quantity wavelength
 python main.py --T 3000 --quantity frequency
 python main.py --T 10000 --quantity frequency</pre>
-<h3 id="exp3">3 · Cosmic Microwave Background — Introductory</h3>
+</div>
+
+<div class="scenario-card" id="exp3">
+<h4>3 · Introductory — Cosmic Microwave Background</h4>
 <p>The 2.725 K frequency peak should be near 160 GHz. As an optional research extension, consider why the background's nearly ideal black-body spectrum supports a hot early universe.</p>
 <pre>python main.py --T 2.725 --quantity frequency</pre>
-<h3 id="exp4">4 · Wavelength vs. Frequency Peaks — Intermediate</h3>
+</div>
+
+<div class="scenario-card" id="exp4">
+<h4>4 · Intermediate — Wavelength vs. Frequency Peaks</h4>
 <p>At the same temperature, record the \(B_\lambda\) peak wavelength, the \(B_\nu\) peak frequency, and \(c/\nu_{\max}\). The two wavelengths differ because the curves are densities with respect to different variables.</p>
 <pre>python main.py --T 5900 --quantity wavelength
 python main.py --T 5900 --quantity frequency</pre>
-<h3 id="exp5">5 · Frequency Radiance vs. Energy Density — Intermediate</h3>
+</div>
+
+<div class="scenario-card" id="exp5">
+<h4>5 · Intermediate — Frequency Radiance vs. Energy Density</h4>
 <p>Verify that <code>x_peak</code> and the peak frequency agree. Compare the plotted peak values and the printed physical integrals, and explain why their ratios equal \(4\pi/c\), with the corresponding change of units.</p>
 <pre>python main.py --T 5900 --quantity frequency
 python main.py --T 5900 --quantity energy_density</pre>
-<h3 id="exp6">6 · Stefan–Boltzmann T⁴ Scaling — Intermediate</h3>
+</div>
+
+<div class="scenario-card" id="exp6">
+<h4>6 · Intermediate — Stefan–Boltzmann T⁴ Scaling</h4>
 <p>Record the printed physical integrals, divide by <code>T**4</code>, and compare with \(\sigma/\pi\) for the radiance or \(4\sigma/c\) for the energy density. Doubling \(T\) should increase the integral by a factor of 16. Multiply the radiance integral by \(\pi\) to get the emitted flux \(\sigma T^4\) in W m<sup>&minus;2</sup>.</p>
 <pre>python main.py --T 3000 --quantity frequency
 python main.py --T 6000 --quantity frequency
 python main.py --T 12000 --quantity frequency
 # Repeat with --quantity energy_density to compare 4σ/c.</pre>
-<h3 id="exp7">7 · Resolution and Peak Sampling — Intermediate</h3>
-<p>Compare the printed <code>x_peak</code> and the dimensionless area with the exact values printed beside them. For the physical integral, remember that its exact reference spans \(0&lt;x&lt;\infty\) while the numerical result uses the finite range. The sampled peak need not converge at the same rate as the trapezoidal area.</p>
+</div>
+
+<div class="scenario-card" id="exp7">
+<h4>7 · Intermediate — Resolution and Peak Sampling</h4>
+<p>Compare the printed <code>x_peak</code> with the continuous wavelength peak \(x_5\simeq4.965114\), and compare the dimensionless area with its printed zero-to-infinity reference. For the physical integral, remember that its exact reference spans \(0&lt;x&lt;\infty\) while the numerical result uses the finite range. The sampled peak need not converge at the same rate as the trapezoidal area.</p>
 <pre>python main.py --n_steps 10
 python main.py --n_steps 100
 python main.py --n_steps 1000
 python main.py --n_steps 2000
 python main.py --n_steps 20000</pre>
-<h3 id="exp8">8 · Rayleigh–Jeans and Wien Limits — Intermediate</h3>
+</div>
+
+<div class="scenario-card" id="exp8">
+<h4>8 · Intermediate — Rayleigh–Jeans and Wien Limits</h4>
 <p>Compare the default peak and integrals with a run that applies the small- and large-\(x\) approximations well beyond their usual regimes. These thresholds change the approximation regions while preserving the physical range. Then try moving only one of the two thresholds.</p>
 <pre>python main.py
 python main.py --x_low 1 --x_high 3</pre>
-<h3 id="exp9">9 · Truncating the Range — Intermediate to Advanced</h3>
-<p>Predict from Eq. (21) how much each printed integral will lose when the range is cut at \(x_{\max}=10\), then run it and compare. Repeat with \(x_{\min}=1\) and with \(x_{\max}=4\), and say for each which of the three quantities is hurt most and why the peak line cannot warn you.</p>
+</div>
+
+<div class="scenario-card" id="exp9">
+<h4>9 · Intermediate to Advanced — Truncating the Range</h4>
+<p>Use the dimensionless shapes in Beat 4 to predict which tails each printed integral will lose when the range is cut at \(x_{\max}=10\), then run it and compare. Repeat with \(x_{\min}=1\) and with \(x_{\max}=4\), and compare the fractional loss of the dimensionless area with that of the physical integral. With the same x-grid and switches, all three physical integrals have the same fractional truncation loss after their unit conversions; the wavelength shape area has a different weighting. Explain why a peak inside the retained range does not warn you about missing tails.</p>
 <pre>python main.py --x_max 10 --x_high 9
 python main.py --x_max 4 --x_high 3
 python main.py --x_min 1 --x_low 1</pre>
-
+</div>
 </section>
 
 <section id="further"><h2>Advanced programming challenges</h2>
