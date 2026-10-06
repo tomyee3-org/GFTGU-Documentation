@@ -535,6 +535,10 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <p>Every run prints the radius and the mass of the star; the radial step it used; the radius and mass of the Lane–Emden solution of the same equations, which the program computes separately and far more accurately than its steps, with the relative difference of the numbers the program integrated; and the pressure, density, temperature and mass at five points inside the star. Then it plots one of pressure, density, temperature or enclosed mass against radius.</p>
 <p>The spine of the lesson is one sentence: <em>a star is gas in balance between its own weight and its own pressure; with one power law linking pressure to density, the balance fixes the whole star — its radius, its mass and every profile inside it — from the central conditions alone, and the program's step-by-step answer can be compared with the Lane–Emden solution of the same equations, computed far more accurately, which shows how large the error of the steps is.</em></p>
 
+<p>This program models a star using the simplest possible assumptions: the star is spherically symmetric and composed of a perfect fluid with a polytropic equation of state, which means that the pressure and density are related by a power law: \(p = K \rho^\gamma\), for a fixed proportionality constant \(K\) and a fixed exponent \(\gamma\). The program does not explicitly treat energy generation (nuclear reactions) and energy transport (convection or radiation), but it nevertheless can give a good representation of many stars, including the Sun, if the constants \(K\) and \(\gamma\) are chosen correctly.
+
+<p>The program shows many important aspects of stars: the great contrast in pressure, density, and temperature between the interior and surface layers; the way that size, composition and mass are related in a given family of stars; how high the central pressure and temperature must be in order to support a star of a given mass. This program illustrates how professional astronomers study stars in detail. By building models like these, but with more realistic physics, astronomers can infer the mass and interior structure of a star from observed properties, like its spectrum. These conclusions can then be tested on systems that provide more information, such as in binary stars where the mass can be inferred from the orbital dynamics. Other astronomers then use such models to study the long-term evolution of stars by allowing for changes in their central conditions and composition as a result of nuclear reactions. Without such interaction between observation and computer-based theory, our understanding of the Universe would be much poorer.</p>
+
 </section>
 <section id="wrapup"><h2>What to carry away</h2>
 <p>Pressure balances gravity and a chosen pressure–density law closes the model. 
@@ -556,6 +560,16 @@ not a check on whether a real star obeys them.</p>
 <div class="eq">\[\frac{dp}{dr}=-\frac{Gm(r)\rho(r)}{r^2},\qquad \frac{dm}{dr}=4\pi r^2\rho(r).\]</div>
 <p>Here <code>m(r)</code> is the mass inside radius <code>r</code>, and <code>ρ(r)</code> is density. The exterior shells exert zero net pull at that radius. The program advances these two relations outward in finite radial steps; its pressure reaching zero defines the surface.</p>
 
+<p>Star is a modification of the program <i>Atmosphere</i>, so you should first make sure you understand how that program works. There are two important differences for modelling stars:</p>
+<ol>
+<li>Gravity cannot be taken to be a constant inside a star. At its center the gravitational acceleration is zero, whereas at its surface the whole star is pulling down and creating a large acceleration. Therefore the program replaces the simple constant \(g\) used in Atmosphere with the expression \(G m(r)/r^2\), where \(m(r)\) is the mass interior to the position \(r\) where the acceleration is being calculated. Only the mass interior to \(r\) is needed, because as we learned from the program <i>SphereGravity</i>, any spherical distribution of mass outside \(r\) exerts no net gravitational force on material at \(r\).
+
+To implement this, the program has to keep track of the mass interior by adding it up as it marches outwards. Each step outwards of length \(dr\) adds a shell of volume \(4 
+\pi r^2 dr\) to the volume of the star, and this adds a mass of \(4 \pi \rho r^2 dr\) if the local density is \(\rho\).</li> 
+
+<li>The second major change is that we do not specify the temperature structure ahead of time, as we did in Atmosphere. For the Earth's atmosphere, we can measure the temperature directly. But we cannot do that for stars, so we have to infer it from the computer program. In the program <i>Atmosphere</i>, the temperature was needed so that we could compute the density from the pressure, using the ideal gas equation of state.  Here, we make a simple assumption that the pressure and density are related by a polytropic law (a power law). We use the composition and the central temperature (a parameter) to infer what the proportionality constant is in the polytropic law, and then we use this for the remainder of the structure calculation.</li>
+The remaining aspects of this program are similar to Atmosphere, or are straightforward modifications of it.
+</ol>
 
 <p><em>Experiments that go with this beat:</em> <a href="#exp1">Experiment 1</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
@@ -563,6 +577,7 @@ not a check on whether a real star obeys them.</p>
 <h2>Beat 1 · What the pressure needs: a density</h2>
 <p>Plot the density on a logarithmic axis, so that the thin outer layers can be seen.</p>
 <pre>python main.py --output_type density --log_y</pre>
+<p>Setting the parameters allows the user to determine what kind of star is being modelled. The default value of \(\gamma\), the polytropic index, is the one that gives the best model for the Sun. Stars are unstable if this number is smaller than 4/3. Giant stars have polytropic indices that closely approach 4/3, while most white dwarfs are better modelled with \(\gamma\) = 5/3. </p>
 <p>The vertical scale is logarithmic, so small positive densities near the surface become visible. Find the density near half the radius, about 2313 kg/m³, and near 0.9 of the radius, about 6.65 kg/m³. The exact zero at the surface cannot appear on a logarithmic axis. The summary's central density is about 49187 kg/m³.</p>
 <p>The program fixes the central density from the ideal gas relation, then uses the same polytropic relation everywhere: \(p=K\rho^\gamma\), with default exponent \(\gamma=1.36\). What happens to density as pressure falls? Try to predict the plot before reading the next run.</p>
 
@@ -592,6 +607,9 @@ not a check on whether a real star obeys them.</p>
 <p>For comparison, the default settings are <code>--T_c 22630000</code>.</p>
 <pre>python main.py --T_c 2.4893e7 --p_c 7.158e+15</pre>
 <p>This central temperature is 10% above the default, while central pressure is unchanged. Compare the new radius 7.6641e+08 m and mass 2.3988e+30 kg with Beat 0. The ratios are about 1.10 and 1.21. For this specific change with the other inputs fixed, the radius scales with central temperature and the mass with its square. The pressure profile keeps its shape when radius is measured as a fraction of the new surface radius.</p>
+
+<p>Since we know what the mass of the Sun really is, what change in the central pressure would compensate this change in the temperature and bring the mass of the model back to the true mass of the Sun? How has your 10% change affected the radius of the model even when you have managed to get the mass back to the right value? This will give you an idea of how tightly the observed properties of the Sun constrain its interior model. </p>
+
 <p>Check the <code>Restarts</code> line before comparing numerical errors across runs: a restart doubles the step.</p>
 
 
