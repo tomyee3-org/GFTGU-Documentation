@@ -216,9 +216,18 @@ python main.py</pre>
   <section id="beat0">
     <h2>Beat 0 · Pressure is the weight of the air above you</h2>
     <p>Climb, and there is less air overhead. That is the whole idea of atmospheric structure. Ask the program only to show it for the Earth.</p>
-<pre>python main.py --g_accel 9.81 --mu 28.97 --p0 101300 \
+<pre>python main.py --planet_name Earth --g_accel 9.81 --mu 28.97 --p0 101300 \
   --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 \
   --T_points 288.15,216.65,216.65,228.65,270.65,270.65,214.65,186.946,190,800,1080,1190,1225,1240,1240</pre>
+
+    <p>The parameters allows the user to model different planets. 
+    The first parameter is for the name of the body. 
+    The second is the surface gravitational acceleration, which is assumed constant over the height of the atmosphere. 
+    The third is the mean molecular weight of the gas in the atmosphere, which depends on its composition. 
+    The fourth parameter is the surface pressure followed by a list heights in the atmosphere, 
+    which is then followed by a list of temparatures at those heights,
+    where the heights are given in meters and the temperature in absolute Kelvins.</p>
+
     <p>Look at the first two rows of the checkpoint table — altitudes 0 and 11019&nbsp;m — and at the pressure curve. Ignore the other columns. Surface pressure over \(g\) is the mass sitting on each square metre of ground. The pressure at 11&nbsp;km is already a fraction of the surface value; most of the column is below that height. The curve is steepest near the ground. Write one sentence that says why, before you read the equation.</p>
     <div class="eq-block">
       <div class="eq-label">Hydrostatic equilibrium — the ODE</div>
@@ -362,7 +371,13 @@ python main.py \
   --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 \
   --T_points 288.15,216.65,216.65,228.65,270.65,270.65,214.65,186.946,190,800,1080,1190,1225,1240,1240
 python main.py --h_points 0,20000 --T_points 288.15,216.65 --output_type temperature</pre>
-    <p>In the default run the temperature holds at 1240&nbsp;K to 500&nbsp;km and then falls toward zero where the curve ends. Read the printed <code>Numerical top</code> line for the last stored altitude and temperature; it is a stopping rule, not a physical top. In the short profile the fall begins at 20&nbsp;km. That falling tail is the closure, not the mesosphere.</p>
+
+    <p>The program uses interpolation to provide numbers between measured values. Above the height of the highest measurement, there is no further point for interpolation, so the program finishes off the height of the atmosphere by assuming a simple power-law relationship, 
+    for no particularly good reason except to keep the program simple and 
+    the extent of the atmosphere finite.</p>
+
+    <p>In the default run the temperature holds at 1240&nbsp;K to 500&nbsp;km and then falls toward zero where the curve ends. Read the printed <code>Numerical top</code> line for the last stored altitude and temperature; it is a stopping rule, not a physical top.
+    In the short profile the fall begins at 20&nbsp;km. That falling tail is the closure, not the mesosphere.</p>
     <div class="eq-block">
       <div class="eq-label">Upper-atmosphere closure — not a physical model</div>
 \[
