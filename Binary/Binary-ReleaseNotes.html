@@ -1,10 +1,44 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Binary 1.3.0 Release Notes</title>
-</head>
-<body>
+<html><head><meta charset="utf-8"><title>Binary 1.3.1 Release Notes</title></head><body>
+<h1>Binary 1.3.1 Release Notes</h1>
+<p><b>Version:</b> 1.3.1<br><b>Build:</b> 69499344c088<br><b>Date:</b> 2026-10-07</p>
+<h2>Release Status</h2>
+<p>Minor maintenance update following the accepted 1.3.0 COM-frame round, which dates from 2 October 2026. The two most recent code-changing rounds are 1.3.0 (COM display selection) and 1.3.1 (explicit USER-frame plot titles). Grok and Claude both recommended ACCEPT for 1.3.0; those recommendations do not constitute an external review of 1.3.1. The earlier notes, including their 1 October preparation date and audit history, are preserved below.</p>
+<p>Documentation changes are compared with <code>GFTGU-Documentation(20261002-120516).zip</code>. Program changes are compared with the latest source supplied in <code>GFTGU-Binary Documentation and Program.zip</code>. The display checks pass; the full supplied suite still has pre-existing checks tied to retired Help layouts, listed under maintenance items.</p>
+<h2>Open Bugs</h2>
+<p>No unresolved reviewer-reported P1–P3 program defects are recorded. The requested missing USER-frame title is corrected. The remaining test-maintenance discrepancy is stated below; the full suite is not represented as passing.</p>
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li>Every plot title now identifies its selected <code>USER frame</code> or <code>COM frame</code>. This includes default runs, explicit <code>--frame user</code> runs, all seven CLI plot types and the existing singular orbit alias. The numerical solver, plotted data, frame transformations and diagnostic numbers are unchanged; the console version/build stamp advances to 1.3.1/69499344c088.</li>
+<li>B1 is covered in Suggested Experiment 6 of the merged <code>Binary.html</code>: compare the Sun's reflex orbit and its radius for Sun–Jupiter, Sun–Saturn and Sun–Earth pairs in the COM frame, then distinguish those isolated pairs from the multi-planet problem in Multiple.</li>
+<li>Since the 2 October short tutorial, the Help makes comparison defaults explicit, states that the two forces have equal magnitudes and opposite directions, defines the separation components, qualifies period agreement and full-turn overshoot, and presents Suggested Experiments as numbered cards. The supplied manual edits are retained.</li>
+<li>The nine sample figures are regenerated from this build with the commands shown, using commands equivalent to those in the merged Help. USER-frame labels are visible, the COM comparison remains, and the supplied guide's malformed contents links are repaired. Headline diagnostic values remain unchanged.</li>
+<li>Plot regression checks now require the USER label while retaining their exact data, axis-unit and legend checks. A new test covers explicit and default user views. The B1 investigation has a coverage check, and the Beat 2 frame-comparison check accepts explicit defaults while still requiring the same boosted initial state and all three frame/output combinations.</li>
+</ul>
+<h2>Test Suite Growth</h2>
+<p>265 tests before COM; 277 in the initial 1.3.0 package; 282 in the accepted COM package; 287 in the supplied merged-Help baseline; 289 in 1.3.1. Run from <code>GFTGU-Programs/Binary</code> with <code>MPLBACKEND=Agg python -W error::RuntimeWarning -m unittest discover -s tests</code>. The full 1.3.1 suite reports 193 passed, 18 pre-existing Help-check failures and 78 skips; all 39 focused display, frame, CLI, build and current-Help checks pass without skips. All 22 documented Binary runs retain identical diagnostic text apart from the version/build stamp. Historical passing results below apply to their original packages.</p>
+<h2>Known Limitations</h2>
+<ul>
+<li>Educational planar Newtonian point masses; no relativity, tides, finite sizes, collisions or third body. Isolated Sun–planet runs are not a Solar-System ephemeris.</li>
+<li>Frame selection affects plots only; the summary and energy table use input-frame values. The corrector's input-frame speed comparison can make a common boost change convergence decisions slightly.</li>
+<li>Highly eccentric orbits need convergence checks; head-on starts reach the timestep floor. One relative revolution is not proof of exact closure, and the stop can overshoot by an accepted step.</li>
+<li>Some extreme-scale near-radial inputs are rejected. Energy rows are interpolated, and fractional departures are poorly conditioned near zero initial total energy.</li>
+<li>No CLI figure-save option; Help MathJax uses a public CDN. The Sun's plotted reflex scale is to be compared with a physical radius even though the simulation treats the Sun as a point mass.</li>
+</ul>
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>M-6: The supplied suite has assertions for retired dense/extended Help layouts and wording. They fail or skip against the merged <code>Binary.html</code>; this update preserves those findings rather than changing the author's text to satisfy legacy pins. The current comparison report identifies each remaining failure.</li>
+<li>M-3/M-4: The 60-retry branch is covered using a mocked floor; the summary does not print the largest sampled energy departure or its time.</li>
+<li>M-5/M-7: Some CLI defaults print in long decimal form; the plotter retains its singular orbit alias; repository-wide CI and lockfiles remain outside this module.</li>
+<li>Cross-program CLI naming, frame labels on plot axes and a frame line in the printed summary remain deferred. The previously deferred user-view title label is now implemented.</li>
+</ul>
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.3.1<br>BUILD_ID: 69499344c088<br>Date: 2026-10-07</p>
+<p>The Build ID hashes <code>physics_binary.py</code>, <code>driver_binary.py</code>, <code>main.py</code> and <code>plot_binary.py</code>. Documentation, tests and images are outside the hash. The driver and CLI source are unchanged from the supplied program; the physics module changes only its version declaration.</p>
+<section id="historical-release-notes">
+<h2>Historical Release Notes</h2>
+<p>The following 1.3.0 notes and earlier entries retain their original dates, reviewer recommendations and test results. Their references to separately active tutorial styles describe historical packages.</p>
+
 <h1>Binary 1.3.0 Release Notes</h1>
 <p><b>Version:</b> 1.3.0<br><b>Build:</b> 82f6206a5be0<br><b>Date:</b> 2026-10-01</p>
 <h2>Release Status</h2>
@@ -44,7 +78,7 @@
 <h2>Version Identification</h2>
 <p>MODEL_VERSION: 1.3.0<br>BUILD_ID: 82f6206a5be0</p>
 <p>The hash covers <code>physics_binary.py</code>, <code>driver_binary.py</code>, <code>main.py</code> and <code>plot_binary.py</code>. Help, figures, tests, audit responses and release history remain outside it.</p>
-<section id="historical-release-notes">
+<section id="pre-20261007-release-notes">
 <h2>Historical Release Notes</h2>
 <p>The following entries are newest first. Their test counts and release-status statements describe their respective packages.</p>
 <h3>COM Audit Response Package (2026-10-01)</h3>
@@ -137,5 +171,6 @@
 <p>BUILD_ID identifies the executable program core formed by <code>physics_binary.py</code>, <code>driver_binary.py</code>, <code>main.py</code> and <code>plot_binary.py</code>. The Help, tests, reports and release notes are outside this core hash.</p>
 
 </section>
-</body>
-</html>
+
+</section>
+</body></html>

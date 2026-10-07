@@ -169,7 +169,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
   <a href="#license">License</a>
 </nav>
 <main>
-  <p id="version_build">Version 1.3.0&nbsp;&nbsp;&nbsp;&nbsp;Build 82f6206a5be0</p>
+  <p id="version_build">Version 1.3.1&nbsp;&nbsp;&nbsp;&nbsp;Build 69499344c088</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 
   <section id="description">
@@ -252,7 +252,7 @@ python main.py --vInitA 60000 --vInitB 60000 --frame com --output_type energy_vs
   --xInitB -46000000000 --yInitA 0 --yInitB 0</pre>
     <p>Look at the first two plots and at the summary lines from <code>Accepted steps</code> to the two <code>Body A/B about centre of mass</code> blocks. The first plot uses the input frame (<code>--frame user</code>): the centre of mass drifts about \(2.7\times10^{11}\) m to the right during the run, and the bodies trace drifting tracks. The second view follows the centre of mass (COM), the frame in which the total momentum is zero. The Beat 0 ellipses return, each with one focus at the origin. In this Newtonian model the centre-of-mass and centre-of-momentum frames are the same. The subscripts CM in the equations also mean centre of mass.</p>
     <p>All three printed summaries are identical. The orbital diagnostics match Beat 0 to the printed figures, but the energy table does not. Row 0.0 shows kinetic energy larger by \(\tfrac12(M_A+M_B)V_{\mathrm{CM}}^2=7.2\times10^{39}\) J and positive total energy, \(E=+4.6361\times10^{39}\) J. Look at the third plot: its total energy is negative, about \(-2.564\times10^{39}\) J, as in Beat 0. Which energy tells you that the pair is bound? Explain why changing the observer's velocity cannot unbind the pair.</p>
-    <p>This is Galilean relativity: observers moving at constant velocity describe different tracks but the same motion of the bodies relative to one another. The COM view subtracts the mass-weighted centre and velocity, \(\mathbf r'_i=\mathbf r_i-\mathbf R_{\mathrm{CM}}\) and \(\mathbf v'_i=\mathbf v_i-\mathbf V_{\mathrm{CM}}\). The option <code>--frame</code> applies to all seven plots, including energy. It leaves the integration and printed summary in the input frame, so the boosted run still prints positive total energy while its COM energy plot shows negative internal energy.</p>
+    <p>This is Galilean relativity: observers moving at constant velocity describe different tracks but the same motion of the bodies relative to one another. The COM view subtracts the mass-weighted centre and velocity, \(\mathbf r'_i=\mathbf r_i-\mathbf R_{\mathrm{CM}}\) and \(\mathbf v'_i=\mathbf v_i-\mathbf V_{\mathrm{CM}}\). The option <code>--frame</code> applies to all seven plots, including energy. Each plot title identifies the selected view as <code>USER frame</code> or <code>COM frame</code>. It leaves the integration and printed summary in the input frame, so the boosted run still prints positive total energy while its COM energy plot shows negative internal energy.</p>
     <p><strong>Shift the start instead.</strong> Both commands use the same shifted start; the second views it with <code>--frame com</code>. Compare their plots with Beat 0.</p>
 <pre>python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10 --vInitA 0 --vInitB 0 --frame user \
   --output_type orbits
@@ -411,7 +411,8 @@ python main.py --dt 1000 --eps2 1e-8</pre>
 </div>
 
 <div class="scenario-card" id="exp6">
-<h4>6 · Intermediate — A dominant star</h4>
+<h4>6 · Intermediate — Unequal masses</h4>
+<p>We will first leave <code>--frame</code> at its default <code>user</code> setting.</p>
 <p>Give body B a hundred times A’s mass and place it initially at the origin. Start A at \(4.6\times 10^{10}\,\mathrm{m}\). Give the pair opposite sideways speeds that keep the centre of mass at rest and a relative speed of 500000&nbsp;m&nbsp;s\(^{-1}\): \(u_A=495049.50495\), \(u_B=-4950.49505\). Circular speed about a <em>fixed</em> \(2\times 10^{32}\,\mathrm{kg}\) mass at that radius is about 539000&nbsp;m&nbsp;s\(^{-1}\); the two-body relative circular speed is about 541000&nbsp;m&nbsp;s\(^{-1}\). So this is a mild ellipse (\(e\approx 0.147\)), not a near-radial plunge. A traces an approximately elliptical laboratory path about the stationary centre of mass at \(x\approx 4.55\times 10^{8}\,\mathrm{m}\); it is a 0.990-scaled and translated version of the relative Kepler ellipse. The sampled run need not close exactly. Compare that laboratory track of A with the one-body problem that <code>Orbit</code> integrates at the same mass, radius and relative speed.</p>
     
     <pre>python main.py --MB 2e32 --xInitB 0 --yInitB 0 --vInitB 0 --uInitB -4950.49505 --xInitA 4.6e10 --yInitA 0 --vInitA 0 --uInitA 495049.50495</pre>
@@ -421,6 +422,12 @@ python main.py --dt 1000 --eps2 1e-8</pre>
     <pre data-program="Orbit">python main.py --xInit 4.6e10 --yInit 0 --vxInit 0 --vyInit 500000 --k 1.33486e22 --dt0 2000 --eps1 0.05 --eps2 0.0001 --maxOrbits 1</pre>
     
     <p>Expect about 218 accepted steps and 5.05 days here; the summary prints a Keplerian period of 5.03 days for the pair. A fixed \(2\times 10^{32}\,\mathrm{kg}\) star at the same radius and 500000&nbsp;m&nbsp;s\(^{-1}\) gives a period of about 5.11 days.</p>
+
+<p>For the following, we will use <code>--frame com</code>.</p>
+<p> Take initial conditions appropriate for the binary system consisting of the Sun and Jupiter, and verify that the Sun's small orbit has a radius slightly larger than the Sun's own size. Change to initial conditions for, say, the Sun and Saturn, and verify that the effect on the Sun is significantly smaller. Do this again for the Sun and the Earth. In reality, of course, the Sun moves because of all the planets together, but Jupiter is the main agent. When we get to the program <i>Multiple</i>, you can try to simulate the whole Solar System if you want!</p>
+
+
+
 </div>
 
 <div class="scenario-card" id="exp7">
