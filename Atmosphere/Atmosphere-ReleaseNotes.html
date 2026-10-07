@@ -1,23 +1,52 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Atmosphere 1.6.0 Release Notes</title>
-</head>
-<body>
-<h1>Atmosphere 1.6.0 Release Notes</h1>
+<html><head><meta charset="utf-8"><title>Atmosphere 1.7.0 Release Notes</title></head><body>
+<h1>Atmosphere 1.7.0 Release Notes</h1>
+<p><b>Version:</b> 1.7.0; <b>Build:</b> 4f14bc7a4d5d; <b>Date:</b> 2026-10-06</p>
+<h2>Release Status</h2>
+<p>Minor maintenance for coverage item A1: logarithmic plotting and Exercise 2. The preceding code-changing round is the 1.6.0 Audit47 work retained below. No new external audit was requested or performed. The numerical, CLI, plotting and new-feature checks pass; the complete legacy documentation suite is not green. Previous recommendations remain historical: Claude and Codex Audit48 held for two P3 test gaps; Grok recommended release with those gaps listed. Both gaps now have focused checks, without implying a new reviewer acceptance.</p>
+<h2>Open Bugs</h2>
+<p>No unresolved reviewer-reported P1–P3 defect remains from the two Audit48 findings recorded below. Claude A48-P3-01 (inline constants/default mu) and Codex-A48-P3-01 (Beat 6 Euler multiplier) now have value checks and wrong-exponent/sign mutation regressions against the merged Help. Existing documentation assertion failures are listed in Known Minor Maintenance Items and detailed in the packaged Validation report.</p>
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li><code>--log</code> selects a logarithmic vertical axis for pressure, density or temperature; altitude stays linear. <code>--no-log</code> and omission preserve the linear default. Axis labels and cursor coordinates retain physical units. A log figure identifies its scale in its title.</li>
+<li>Exercise 2 compares identical isothermal inputs on linear and logarithmic scales, confines the straight-line investigation to 0–32 km, and distinguishes natural-log slope from base-10 decades. Parameters and Output document the options.</li>
+<li>All four uploaded production modules matched the September 27 Programs snapshot byte for byte before this change. The integrator and checkpoint calculations remain unchanged. All 16 Help tutorial commands retain identical numerical console output (except version/build heading) and byte-identical default linear PNGs in this environment.</li>
+<li>The merged Help preserves the user's revised short/Grok baseline and Schutz-derived additions. Against September 27 Documentation, the comparison is to Atmosphere-grok.html, renamed through Atmosphere-short.html to Atmosphere.html. Changes made in this maintenance round are confined to version/build, the new option and Exercise 2.</li>
+<li>The SampleOutputs Guide has eight newly generated figures, including a logarithmic Beat 2 plot, corrected contents links, current metadata and verified headline values. No earlier images were reused.</li>
+</ul>
+<h2>Test Suite Growth</h2>
+<p>September 27 archive extraction: 225 tests, 1 failure, 1 skip (duplicate distributed Help content). Uploaded merged baseline: 230 tests, 11 failures, 28 skips. This release adds 8 tests: 238 total, the same 11 legacy assertion failures and 28 skips. Failures include subtests and represent 9 test methods; no tests were removed or disabled. Run from the Atmosphere program directory: <code>MPLBACKEND=Agg python -m unittest discover -s tests -v</code>.</p>
+<p>All 8 new feature/scientific Help checks pass: <code>MPLBACKEND=Agg python -m unittest discover -s tests -p test_log_scale.py -v</code>. All 161 tests in the separately selected numerical/CLI/plotting/new-feature/merged-Help suite pass; its invocation and count are in Validation/core-and-feature-suite.txt and Validation/run_core_checks.py. Compatibility checks reran every tutorial command against September 27 and verified the eight embedded guide images.</p>
+<h2>Known Limitations</h2>
+<ul>
+<li>Constant gravity, constant composition and supplied temperature remain educational model assumptions. First-order Euler errors, restart behavior, step budget and the upper-profile closure are unchanged from 1.6.0.</li>
+<li>Logarithmic plots require finite positive quantity values; nonpositive points are masked. The numerical top remains the last stored positive-pressure sample, not a physical boundary.</li>
+<li>A2, an altitude-dependent-gravity coding exercise, is deliberately declined. The existing qualitative gravity investigation remains unchanged.</li>
+<li>Reference-fixture provenance limitations and MathJax's public-CDN dependency remain as recorded in the retained notes.</li>
+</ul>
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>The complete legacy suite reports 11 documentation assertion failures also present in the uploaded baseline, involving archived Claude/Grok structure, exact equation wording, experiment layout and a negative-altitude Help example. See Validation/Validation_Summary.txt for names and reproduction.</li>
+<li>The legacy SampleOutputs test does not discover the canonical sibling documentation directory and skips there. The new guide was checked directly for embedded figures, commands, contents links and numerical headlines.</li>
+<li>Other applicable 1.6.0 maintenance observations remain in the historical notes below; archived two-Help layout and chapter-badge observations do not describe the current merged page.</li>
+</ul>
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.7.0; BUILD_ID: 4f14bc7a4d5d. The SHA-256-derived 12-character build covers physics_atmosphere.py, driver_atmosphere.py, plot_atmosphere.py and main.py, including file names and bytes. Documentation and tests are excluded. Comparisons use GFTGU-Documentation(20260927-011736).zip and GFTGU-Programs(20260927-011735).zip.</p>
+<h2>Retained 1.6.0 Release and Audit History</h2>
+<p>The following notes retain their original date and status for audit continuity; statements about active file names and open findings describe that earlier package.</p>
+<h3>Atmosphere 1.6.0 Release Notes</h3>
 <p><b>Version:</b> 1.6.0<br><b>Build:</b> cab9929fa0fb<br><b>Date:</b> 2026-09-26</p>
 
-<h2>Release Status</h2>
+<h4>Release Status</h4>
 <p>Version 1.6.0, build cab9929fa0fb. Claude Audit47 accepted the previous package; Codex Audit47 held it for one P2 and one P3, both now closed. Claude Audit48 and Codex Audit48 each hold this build for one test-only P3 (A48-P3-01 constants; Codex P3-01 Euler multiplier). The Help statements and model numbers are unchanged and correct. Grok recommends releasing 1.6.0 with those two P3 test gaps listed below.</p>
 
-<h2>Open Bugs</h2>
+<h4>Open Bugs</h4>
 <ul>
 <li><b>A48-P3-01</b> (P3, Claude Audit48). Inline statements of k_B, m_u and default mu in the Help files are not compared to the module constants. Reproduction: in both copies of Atmosphere-extended.html or Atmosphere-short.html change <code>10^{-23}</code> on the k_B line to <code>10^{-22}</code>; the suite still reports OK. Expected: a failure against phys.K_BOLTZMANN.</li>
 <li><b>Codex-A48-P3-01</b> (P3, Codex Audit48). The Beat 6 inline Euler multiplier <code>1-\Delta h/H</code> is not pinned in either Help. Reproduction: in Beat 6 of both Helps and both Documentation copies change <code>1-\Delta h/H</code> to <code>1+\Delta h/H</code>; the suite still reports OK. Expected: a failure. The program's first isothermal step is 0.995 p0, not 1.005 p0.</li>
 </ul>
 
-<h2>Major Improvements in This Release</h2>
+<h4>Major Improvements in This Release</h4>
 <p>Version 1.6.0 (Audit47 tests, carried into this package):</p>
 <ul>
 <li>Displayed-equation golden blocks keep spaces that split a TeX control word, so <code>\fr ac</code> is not accepted as <code>\frac</code>.</li>
@@ -29,10 +58,10 @@
 <li>A fully capped 50,000-point pass raises a budget error after one pass. The temperature-change cap bounds |Delta T| by 5% of the temperature at the start of the step.</li>
 </ul>
 
-<h2>Test Suite Growth</h2>
+<h4>Test Suite Growth</h4>
 <p>The suite is run from tests/. Program-folder discover counts are unchanged from the Audit47 package: both Helps, 225 tests, 1 skipped; Atmosphere-short.html only, 225 tests, 31 skipped; Atmosphere-extended.html only, 219 tests, 7 skipped. Full package with SampleOutputs beside the program: both Helps, 225 tests, 0 skipped. This documentation-only round adds no tests.</p>
 
-<h2>Known Limitations</h2>
+<h4>Known Limitations</h4>
 <ul>
 <li>Educational constant-gravity, constant-composition ideal-gas model. Temperature is supplied, not computed.</li>
 <li>First-order Euler: 2.93% low at 100 km for an isothermal 288.15 K atmosphere when the step is not enlarged. After a restart the step is coarser and that few-per-cent figure does not apply. A 0-3000 km isothermal run that restarts is about 83% low and prints no warning that the step was enlarged.</li>
@@ -44,7 +73,7 @@
 <li>Public get_temp() scans the whole profile on every call (O(n)).</li>
 </ul>
 
-<h2>Known Minor Maintenance Items</h2>
+<h4>Known Minor Maintenance Items</h4>
 <ul>
 <li>M_PROTON is absent; a direct importer gets AttributeError.</li>
 <li>Some test method names still say molecular weight.</li>
@@ -54,7 +83,7 @@
 <li>Inline formulas outside the pinned, counted physical-relation list are not covered by tests, including the two Open Bugs above.</li>
 </ul>
 
-<h2>Version Identification</h2>
+<h4>Version Identification</h4>
 <p>MODEL_VERSION: 1.6.0<br>BUILD_ID: cab9929fa0fb</p>
-</body>
-</html>
+
+</body></html>

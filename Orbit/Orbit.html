@@ -466,6 +466,9 @@ section ul { margin-left: 1.6em; }
     }
     #experiments .planet-data th[scope="col"] { vertical-align: bottom; text-align: right;}
     #experiments .planet-data-note { font-size: 0.88rem; color: var(--muted); }
+  
+    ol {line-height: 1.2;}
+    
 </style>
 <style id="gftgu-common-elements">
 /* Shared Version / Build, Plot tip, License and Footer. */
@@ -505,6 +508,9 @@ footer.gftgu-footer {
 footer.gftgu-footer a { color: #e0c090; text-decoration: none; }
 footer.gftgu-footer a:hover { text-decoration: underline; }
 @media (max-width: 740px) { main { padding-top: 8px; } }
+
+
+.centered-paragraph {text-align: center;}
 </style>
 </head><body>
 <div class="page-wrap">
@@ -611,10 +617,43 @@ python main.py --vyInit -58980 --output velocity --maxOrbits 1</pre><p>The veloc
 </section>
 <section id="beat5">
 <h2>Beat 5 · The corrector</h2>
-<p>Newton's laws of orbital motion have an exact solution for a single fixed centre: the conic sections of Beat 2, from which the printed elements come. 
-Orbit deliberately integrates them step by step instead, so that you can see a method that also works for forces that have no analytic solution, 
-and the elements then serve as an outside check. To take one step the method needs the acceleration at the end of the step, 
-but the end position depends on that acceleration. The way out has two stages. A predictor makes a first estimate of the end of the step, and a corrector uses the average of the acceleration at the start and at the end to improve it. The improved position gives a better end acceleration, so the corrector can be repeated. The option <code>eps2</code> decides when to stop repeating. Run the default orbit with a very strict <code>eps2</code> and then with one so loose that the corrector is never repeated.</p>
+<p>Newton's laws of orbital motion have an exact solution for a single fixed centre: the conic sections of Beat 2, from which the printed elements come.</p> 
+<p>Orbit deliberately integrates them step by step instead, so that you can see a method that also works for forces that have no analytic solution, and the elements then serve as an outside check. In <i>EarthOrbit</i>, the integration algorithm evaluates the acceleration only at the beginning of each step. It advances the velocity with a forward Euler update, then advances the position using the average of the beginning and end velocities. For the x-component, these updates are:</p>
+
+<p class="centered-paragraph">\[v_{x,n+1}=v_{x,n}+a_{x,n}\Delta t,\qquad x_{n+1}=x_n+\frac{v_{x,n}+v_{x,n+1}}{2}\Delta t.\]</p>
+
+<p>Averaging the velocities improves the position update, but the forward Euler velocity update still makes the coupled <i>EarthOrbit</i> calculation first order for a position-dependent acceleration.</p>
+
+<p>We could rely on smaller and smaller time-steps to get better accuracy, but there are other ways to improve the accuracy of a given time-step, and they are often more efficient, in that they give an accurate result in a shorter time. One such technique is the predictor-corrector method. It is a powerful concept, which can be used in a wide variety of situations. We introduce it here because the problem of planetary motion allows us to illustrate the method in a simple way.</p>
+
+<p> The predictor-corrector method improves on the method described above by using the acceleration at the end of a time-step so that we can accurately calculate the change in velocity and, from that, the change in position. However, the acceleration can't be known until we know what the change in the position is, since the acceleration depends on position. This is a kind of chicken-and-egg problem, and the predictor-corrector method is perfect for solving it. The idea is to find a series of successively more accurate approximations to the final position. The method performs an iteration, which is the mathematical word to describe doing the same thing over and over again.</p>
+
+<p>Start with the orbital equations written as a first-order system. Here \(\mathbf r=(x,y)\), \(\mathbf v=(v_x,v_y)\), and \(\mathbf a_n=\mathbf a(\mathbf r_n)\). Write the timestep as \(\Delta t\), so it is not confused with the specific angular momentum \(h\) used in the other beats:</p>
+<p class="centered-paragraph">\[\dot{\mathbf r}=\mathbf v,\qquad \dot{\mathbf v}=\mathbf a(\mathbf r).\]</p>
+<p>The constant-acceleration predictor initializes both position and velocity:</p>
+<p class="centered-paragraph">\[\mathbf r_{n+1}^{(0)}=\mathbf r_n+\mathbf v_n\Delta t+\frac{1}{2}\mathbf a_n(\Delta t)^2,\qquad \mathbf v_{n+1}^{(0)}=\mathbf v_n+\mathbf a_n\Delta t.\]</p>
+<p>Evaluate the acceleration at the predicted position. Each corrector iteration then computes:</p>
+<p class="centered-paragraph">\[\mathbf v_{n+1}^{(k+1)}=\mathbf v_n+\frac{\Delta t}{2}\left[\mathbf a_n+\mathbf a\!\left(\mathbf r_{n+1}^{(k)}\right)\right],\]</p>
+<p class="centered-paragraph">\[\mathbf r_{n+1}^{(k+1)}=\mathbf r_n+\frac{\Delta t}{2}\left[\mathbf v_n+\mathbf v_{n+1}^{(k+1)}\right].\]</p>
+
+<p>The superscripts are not powers, but iteration numbers. In numerical analysis, subscripts usually indicate the time step, while superscripts in parentheses indicate the correction iteration within that time step.</p>
+
+<p>The option <code>eps2</code> is a convergence criterion that decides when to stop repeating. Define the velocity increment by \(\Delta\mathbf v^{(k)}=\mathbf v_{n+1}^{(k)}-\mathbf v_n\). After each correction, the code compares the change in this increment with the magnitude of the initial predicted increment:</p>
+<p class="centered-paragraph">\[\frac{\left\|\Delta\mathbf v^{(k+1)}-\Delta\mathbf v^{(k)}\right\|}{\left\|\mathbf a_n\Delta t\right\|}\leq\mathrm{eps2}.\]</p>
+<p>If the test passes, the corrected position and velocity become the accepted endpoint, provided the remaining step safeguards also pass. Otherwise, the code evaluates the acceleration at the corrected position and repeats; failure to converge within the pass limit causes a shorter-step retry. Although the individual steps are much improved over the method used in <i>EarthOrbit</i>, this is still globally a second-order method when the corrector is sufficiently converged.</p>
+
+<p>Rather than using fixed timesteps, as the <i>EarthOrbit</i> integrator does, <i>Orbit</i> adapts its timesteps using a scheme designed for this calculation. The code rejects or shortens steps based on:</p>
+<ol>
+<li>the relative difference between the starting and predicted endpoint accelerations;</li>
+<li>failure of the corrector iteration to meet <code>eps2</code> within the pass limit;</li>
+<li>proximity to the central singularity;</li>
+<li>excessive estimated angular travel;</li>
+<li>non-finite trial states;</li>
+<li>final-event endpoint refinement.</li>
+</ol>
+
+
+<p>Run the default orbit with a very strict <code>eps2</code> and then with one so loose that only one corrector pass is needed.</p>
 <p>For comparison, the default settings are <code>--dt0 10000</code>, <code>--eps1 0.05</code>, <code>--eps2 0.0001</code>.</p>
 <pre>python main.py --eps2 1e-8 --eps1 0.05 --dt0 10000
 python main.py --eps2 10 --eps1 0.05 --dt0 10000
@@ -630,7 +669,7 @@ python main.py --dt0 1e6 --eps1 10 --eps2 1e-12</pre><p>Compare with Beat 0. Tig
 <pre>python main.py --dt0 1e5 --eps1 0.05
 python main.py --dt0 1e5 --eps1 10
 python main.py --dt0 1e6 --eps1 10</pre><p>The default 10,000 s maximum step is conservative for this initial orbit. Raising it to 100,000 s with the usual <code>eps1</code> gives 181 accepted steps; loosening <code>eps1</code> to 10 gives 77. The third run has only 14 accepted steps and appreciably worse energy drift. <code>dt0</code> is a ceiling, while <code>eps1</code> controls trial-step rejection when acceleration changes too much.</p>
-<div class="activity"><strong>12. Inspect.</strong> Compare the printed <code>shortest accepted step</code>, <code>longest accepted step</code> and <code>angular-step rejections</code>. Which run is controlled mainly by <code>dt0</code>, and which is repeatedly shortened?</div><p>An additional angular safeguard keeps a trial step from turning through more than half a revolution; a coarse trial intersection is a rejected step, not a physical singularity report.</p>
+<div class="activity"><strong>12. Inspect.</strong> Compare the printed <code>shortest accepted step</code>, <code>longest accepted step</code> and <code>angular-step rejections</code>. Which run is controlled mainly by <code>dt0</code>, and which is repeatedly shortened?</div><p>An additional angular safeguard rejects a trial step when its estimated angular travel exceeds a quarter revolution, or \(\pi/2\). A coarse trial segment that intersects the singularity guard is rejected and retried with a shorter step; it is not itself a physical singularity report.</p>
 
 <p><em>Experiments that go with this beat:</em> <a href="#exp9">Experiment 9</a> and <a href="#exp15">Experiment 15</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>

@@ -182,7 +182,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
   <a href="#license">License</a>
 </nav>
 <main>
-  <p id="version_build">Version 1.6.0&nbsp;&nbsp;&nbsp;&nbsp;Build cab9929fa0fb</p>
+  <p id="version_build">Version 1.7.0&nbsp;&nbsp;&nbsp;&nbsp;Build 4f14bc7a4d5d</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. 
 Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 
@@ -402,6 +402,7 @@ T=\beta\,p^{\alpha},\qquad \alpha=0.5.
         <tr><td class="pname">--h_points</td><td class="pdefault">0 … 500000</td><td>Strictly increasing altitudes in metres. May start below zero.</td></tr>
         <tr><td class="pname">--T_points</td><td class="pdefault">288.15 … 1240</td><td>Matching positive temperatures in kelvin. Same length as <code>--h_points</code>.</td></tr>
         <tr><td class="pname">--output_type</td><td class="pdefault">pressure</td><td>pressure, density, or temperature. The checkpoint table always prints altitude, pressure, density, p/T, and temperature.</td></tr>
+        <tr><td class="pname">--log / --no-log</td><td class="pdefault">off</td><td>Use a logarithmic vertical axis for pressure, density, or temperature. Altitude stays linear; the integration and printed checkpoint values are unchanged.</td></tr>
         <tr><td class="pname">--save_plot</td><td class="pdefault">(none)</td><td>Write the figure to this path (PNG, PDF, &hellip;).</td></tr>
         <tr><td class="pname">--no_show</td><td class="pdefault">off</td><td>Do not open a plot window. Use with <code>--save_plot</code> for batch runs.</td></tr>
         <tr><td class="pname">--version</td><td class="pdefault"></td><td>Print the version and build identifier and exit.</td></tr>
@@ -411,7 +412,7 @@ T=\beta\,p^{\alpha},\qquad \alpha=0.5.
 
   <section id="output">
     <h2>Output</h2>
-    <p>Every run prints a heading with version and build, then a checkpoint table of altitude, pressure, density, \(p/T\), and temperature at every supplied altitude that still lies in the positive-pressure domain. After the table it prints one <code>Numerical top</code> line: the last stored altitude and temperature, which is the stopping rule, not a physical top of the air. The density is \(p\,\mu m_u/(k_B T)\), so \(p/T\) is the density stripped of that constant, not the density in other units. Numbers use five significant figures. A plot window then opens unless you pass <code>--no_show</code>; <code>--save_plot PATH</code> writes the same figure to a file. The plotted quantity is the only thing <code>--output_type</code> changes.</p>
+    <p>Every run prints a heading with version and build, then a checkpoint table of altitude, pressure, density, \(p/T\), and temperature at every supplied altitude that still lies in the positive-pressure domain. After the table it prints one <code>Numerical top</code> line: the last stored altitude and temperature, which is the stopping rule, not a physical top of the air. The density is \(p\,\mu m_u/(k_B T)\), so \(p/T\) is the density stripped of that constant, not the density in other units. Numbers use five significant figures. A plot window then opens unless you pass <code>--no_show</code>; <code>--save_plot PATH</code> writes the same figure to a file. The plotted quantity is the only thing <code>--output_type</code> changes. Use <code>--log</code> to show that quantity on a logarithmic vertical axis, with altitude still on a linear horizontal axis. Tick labels and cursor positions remain in the physical units of the plotted quantity. <code>--no-log</code> restores the default linear scale; neither option changes the checkpoint table or the integration.</p>
   </section>
 
 <section id="experiments">
@@ -426,7 +427,13 @@ T=\beta\,p^{\alpha},\qquad \alpha=0.5.
 
 <div class="scenario-card" id="exp2">
 <h4>2 · Beginner — A straight line on log paper</h4>
-<p>Run Beat 2’s isothermal command. Plot \(\ln p\) against \(h\) from the table. What slope do you expect, and what length is minus one over that slope?</p>
+<p>Because pressure falls rapidly with altitude, a logarithmic vertical axis makes its decline easier to examine. Run the same isothermal atmosphere first with the default linear scale, then with <code>--log</code>. Only the display scale changes.</p>
+<pre>python main.py --h_points 0,8000,16000,24000,32000 --T_points 288.15,288.15,288.15,288.15,288.15 \
+  --g_accel 9.81 --mu 28.97 --p0 101300 --output_type pressure --no-log
+python main.py --h_points 0,8000,16000,24000,32000 --T_points 288.15,288.15,288.15,288.15,288.15 \
+  --g_accel 9.81 --mu 28.97 --p0 101300 --output_type pressure --log</pre>
+<p>Examine the part from 0 to 32000 m, where the supplied temperature is constant. Why is that part almost straight on the semilog graph? The curve above 32000 m follows the separate closure of Beat 7, so it need not stay straight.</p>
+<p>The tick labels and cursor still give pressure in pascals; they do not give \(\ln p\). From two printed rows or cursor readings, calculate \(\ln(p_2/p_1)/(h_2-h_1)\). What slope do you expect, and what length is minus one over that slope? Compare it with Beat 2’s scale height of about 8.43 km. Matplotlib’s logarithmic axis uses powers of ten, so a slope measured in vertical decades is \(-1/(H\ln 10)\), whereas a separate plot of \(\ln p\) against \(h\) has slope \(-1/H\). Use <code>--no-log</code>, or omit both scale options in a new run, to return to linear axes.</p>
 </div>
 
 <div class="scenario-card" id="exp3">

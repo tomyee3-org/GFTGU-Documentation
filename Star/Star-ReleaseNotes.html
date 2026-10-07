@@ -1,6 +1,40 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><title>Star 1.2.0 Release Notes</title></head>
-<body><h1>Star 1.2.0 Release Notes</h1>
+<html lang="en"><head><meta charset="utf-8"><title>Star 1.2.0 Release Notes</title></head><body>
+<h1>Star 1.2.0 Release Notes — Documentation Update</h1>
+<p><b>Version:</b> 1.2.0; <b>Build:</b> 3d55b592a1b7; <b>Documentation update:</b> 2026-10-06. The preceding release notes are dated 2026-09-29; the requested comparison baseline is Star-short.html in GFTGU-Documentation(20261002-120516).zip.</p>
+<h2>Release Status</h2>
+<p>Documentation maintenance: the user's merged Star.html incorporates material from the earlier short and extended tutorials and Schutz's Java documentation. This round updates release notes and clarifies coverage findings ST1–ST4. Version 1.2.0 and build 3d55b592a1b7 are unchanged. Claude Audit41's earlier APPROVE remains historical; no new external audit or release recommendation was requested. The earlier code-changing rounds and recommendations are retained below.</p>
+<h2>Open Bugs</h2>
+<p>No new program defect was established in this documentation review. The earlier Audit41 response records its three P3 findings as closed. The coverage questions below are editorial items, not new severity-rated audit findings.</p>
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li>The merged Help restores Schutz-derived discussion of what stellar models reveal, the variable interior gravity and shell-mass relation, and the difference between supplying atmospheric temperature and inferring a stellar profile from a polytropic closure.</li>
+<li>Beat 1 now includes the original 4/3 stability statement, giant-star context and the white-dwarf association with 5/3. ST1 and ST2 therefore recover the source topics. The scientific distinction between a static polytropic exponent and the adiabatic stability exponent is separate commentary. The earlier report's nonrelativistic electron-degeneracy requirement is withdrawn as a source-coverage claim: Schutz's uploaded page does not explicitly teach it.</li>
+<li>Beat 4 restores the questions about compensating a hotter centre with central pressure to recover solar mass, then examining the radius. This covers the global observational-constraint part of ST4; its remaining topic is comparison of radial density, enclosed-mass and temperature profiles with Chapter 8's standard solar model.</li>
+<li>Compared with October 2's Star-short.html, the merged Help includes the fuller Suggested Experiments, scaling relations, default-value comparisons, standardized title and badge, and common experiment-card styling. These are existing edits in the user's uploaded baseline, recorded here without further editing the Help.</li>
+<li>The accompanying coverage clarification gives exact original passages by HTML section heading. ST3 is identified as a comment and first-sphere initialization in the Java listing, rather than prose explicitly naming division by zero. Previous extracted-text line references are not HTML line numbers.</li>
+</ul>
+<h2>Test Suite Growth</h2>
+<p>This round adds, removes and modifies no tests. The uploaded suite and its earlier historical counts are retained unchanged; the full suite was not rerun for this release-note-only change. All four core modules match the October 2 Programs snapshot byte for byte, and python main.py --version confirms 1.2.0 / 3d55b592a1b7. The Help, tests and SampleOutputs Guide are preserved byte for byte. Exact quotations, release-note section order and the completed ZIP were checked directly.</p>
+<p>The inherited suite can be run from GFTGU-Programs/Star with <code>python -m unittest discover -s tests -q</code>. Historical paired-Help counts and results below describe their original layout, not a new result for the current merged page.</p>
+<h2>Known Limitations</h2>
+<ul>
+<li>One Newtonian equilibrium polytrope; no energy generation or transport, composition gradients, rotation, magnetic fields or relativistic structure. The Lane–Emden reference checks the same equations, not fidelity to a standard solar interior.</li>
+<li>The static exponent need not equal the adiabatic exponent relevant to dynamical stability. Choosing 5/3 alone does not supply a degenerate-electron equation-of-state normalization or a physical white-dwarf temperature.</li>
+<li>Euler integration, restarts, near-6/5 behavior and reference-uncertainty limits are unchanged. The existing SampleOutputs Guide remains at the same build; no figures or numerical values changed.</li>
+</ul>
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>ST3: the Help now identifies zero central gravity but does not explain the first positive-radius sphere used by the integrator; the supporting source is the Java code comment and listing.</li>
+<li>ST4: the explicit instruction to compare interior profiles with the book's standard solar model remains absent, although the mass-restoration and radius questions are present.</li>
+<li>Beat 1 retains Schutz's compact stability wording; the optional adiabatic-response qualification is provided in the clarification document. Gamma is the polytropic exponent; the separately printed index is n = 1/(gamma - 1).</li>
+<li>Earlier applicable maintenance observations remain in the preserved notes. References there to two active tutorial files or their paired-test results describe the historical layout.</li>
+</ul>
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.2.0. BUILD_ID: 3d55b592a1b7. The build hashes only physics_star.py, driver_star.py, main.py and plot_star.py, with normalized UTF-8 text and filename/length framing. Documentation and tests are excluded. This documentation update is dated 2026-10-06; the code release and its history are unchanged.</p>
+<h2>Retained Earlier Release and Audit History</h2>
+<p>The following original body is retained verbatim. Its date, file-layout descriptions and audit status apply to that earlier package.</p>
+<h1>Star 1.2.0 Release Notes</h1>
 <p><b>Version:</b> 1.2.0<br><b>Build:</b> 3d55b592a1b7<br><b>Date:</b> 2026-09-29</p>
 <h2>Release Status</h2>
 <p>Claude Audit41: APPROVE, with zero P1/P2 and three acceptable P3 findings corrected in this response. The build and Version are unchanged from Kickoff4. Both active tutorial styles now share one program, one regression suite and one Sample Outputs Guide. This round changes a core docstring and therefore the Build ID; it does not change the public API or numerical behavior, so the Version remains 1.2.0. The archived Reference Guide retains its historical stamp.</p>
@@ -174,4 +208,5 @@ current Help.</li>
 <li>Printed by <code>python main.py --version</code>, in the first line of every run, and in the version stamp of
 <code>Star-extended.html</code> and <code>Star-original.html</code>.</li>
 </ul>
+
 </body></html>
