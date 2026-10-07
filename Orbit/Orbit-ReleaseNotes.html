@@ -1,6 +1,37 @@
 <!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Orbit 1.7.1 Release Notes</title></head><body>
 <h1>Orbit 1.7.1 Release Notes</h1>
+<p><b>Version:</b> 1.7.1<br><b>Build:</b> 0b77d606baf2<br><b>Date:</b> 2026-10-07</p>
+<h2>Release Status</h2>
+<p>This is a documentation update to the merged <code>Orbit.html</code> Help File, following the completeness-of-coverage review dated 5 October 2026 and the author's in-progress response. The four core Python modules, tests and Sample Outputs Guide are unchanged. The program remains Version 1.7.1, Build 0b77d606baf2. No new external audit verdict is claimed.</p>
+<p>The author's policy gives priority to understanding algorithms and mathematical or scientific implications rather than exercises intended mainly to develop coding skills. O1 and O2 are now covered. O3 and O5 are deliberately declined; O4 remains a partial coverage item by choice, with an optional advanced programming exercise retained rather than adding the specific force-law recipes to the main text.</p>
+<h2>Open Bugs</h2>
+<ul><li><b>OB-2</b> (P3; Grok Audit 21 item P3). The historical editorial concern about quoting results before the student performs a run remains pending; this update does not close it.<br>Reproduction: read the merged <code>Orbit.html</code> Beat 0 and the quoted results in subsequent Beats. Observed: numerical results are supplied before or alongside the student's comparisons. Expected (reviewer): let the student first discover these values from the run. The former <code>Orbit-extended.html</code> reference is retained only in the historical notes below.</li></ul>
+<p>The misleading O2 description of half-orbit flags and sign-crossing closure has been corrected in the Help File; it was a documentation mismatch, not a solver defect. O3, O4 and O5 are recorded editorial decisions, not open program bugs. Previously closed OB-1 and the Audit41 source-formatting issue remain closed.</p>
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li>O1: Beat 5 now works through the constant-acceleration predictor, repeated endpoint-acceleration evaluation, trapezoidal velocity and position correction, the actual <code>eps2</code> comparison and accepted-state update or shorter-step retry. The equations use vectors and distinguish the timestep from the specific angular momentum. The preceding proofreading also corrected the accuracy description of EarthOrbit and the angular-step safeguard.</li>
+<li>O2: Beat 4 explains <code>atan2(y, x)</code>, argument order, quadrant handling and the discontinuity at plus or minus pi. Worked examples show wrapping in both directions. Successive accepted increments, cumulative revolution counting, final-event refinement and the absence of a half-orbit flag now match the shipped Python implementation. Initial-position and variable-name typographical errors, and a malformed paragraph ending in the replaced passage, have been corrected.</li>
+<li>O3: The optional exercise of redesigning the corrector loop to continue until convergence with a worsening safeguard is declined as a coding exercise. The explanation of the existing pass limit, convergence criterion and shorter-step retry is retained.</li>
+<li>O4: Suggested Experiment 14 retains an optional exploration of other central-force laws, including Hooke's law, small corrections and precession. Detailed inverse-cube and inverse-fourth recipes and coefficient calibration are intentionally not added to the main text.</li>
+<li>O5: The exercise of deriving orbital direction from the first actual displacement is declined as a coding exercise. Beat 4 explains direction using signed angular increments and specific angular momentum without requiring a separate direction-detection routine.</li>
+</ul>
+<h2>Test Suite Growth</h2>
+<ul><li>1.4.0: 75 tests, 1.5.0: 128, 1.6.0: 144, 1.7.0: 156, 1.7.1: 165 tests in the supplied merged-Help package. The earlier 160-test count is preserved in the historical notes. This documentation update adds no tests.</li>
+<li>Validation for this update uses the existing stopping, wrapping, direction, endpoint and Release Notes checks, plus HTML/reference and MathJax checks. The accompanying coverage review states the checks actually run; historical full-suite results below apply to their original packages.</li></ul>
+<h2>Known Limitations</h2>
+<ul><li>The physical model remains planar Newtonian motion about a fixed point mass. It does not include relativity, drag, tides, a finite central-body radius or a moving primary.</li>
+<li>Closure residuals apply only to positive whole-number revolution targets. Fractional targets are not expected to return to the initial state; radial and unbound trajectories need not complete a revolution.</li>
+<li>The angular-step safeguard is a conservative estimate, not a proof. MathJax typesetting in the Help File requires access to its public CDN; the Python program itself works offline.</li></ul>
+<h2>Known Minor Maintenance Items</h2>
+<ul><li>OB-2 remains an editorial choice about presenting numerical results. The merged <code>Orbit.html</code> is the current Help baseline; references to separately active short, extended or original guides below describe the historical packages.</li>
+<li>The prior source-maintenance items remain: some numerical literals could be named constants, there is no direct figure-save option, some physics error messages use <code>mu</code>, and a runtime assertion of the final target azimuth remains optional.</li>
+<li>The in-progress completeness response is preserved as supplied. Its detailed findings describe the earlier comparison; the author's response table and these current notes record the subsequent decisions and restored coverage.</li></ul>
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.7.1<br>BUILD_ID: 0b77d606baf2<br>Documentation update: 2026-10-07. The core Build ID covers <code>main.py</code>, <code>physics_orbit.py</code>, <code>driver_orbit.py</code> and <code>plot_orbit.py</code>. Documentation edits do not change it. The previous 29 September 2026 notes and the preceding 1.7.0 history follow verbatim.</p>
+<h2>Historical Release Notes</h2>
+
+<h1>Orbit 1.7.1 Release Notes</h1>
 <p><b>Version:</b> 1.7.1<br><b>Build:</b> 0b77d606baf2<br><b>Date:</b> 2026-09-29</p>
 <h2>Release Status</h2>
 <p>Response to Claude’s Audit41 style addendum, 29 September 2026: Added repository URLs, aligned the Grok badge with the Claude page, enabled sidebar section highlighting, and expanded International Astronomical Union (IAU). The core Python files and the program version/build are unchanged. Xedoc’s prepackaging review confirmed the core and archived guides unchanged, checked document structure and references, and found no remaining significant discrepancy.</p>
