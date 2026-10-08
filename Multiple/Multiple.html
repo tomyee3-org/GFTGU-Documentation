@@ -242,6 +242,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <a href="#beat6">6 · Follow the adaptive step</a>
 <a href="#beat7">7 · Animation</a>
 <a href="#beat8">8 · Test the limits</a>
+<a href="#beat9">9 · Jupiter clears its neighbourhood</a>
 <div class="nav-label">Code</div>
 <a href="#parameters">Parameters</a>
 <a href="#modules">Code files</a>
@@ -252,7 +253,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <div class="nav-label">Reference</div>
 <a href="#related">Related programs</a>
 <a href="#license">License</a></nav>
-<main id="content" tabindex="-1"><p id="version_build">Version 1.6.0&nbsp;&nbsp;&nbsp;&nbsp;Build 6a18d58408dc</p>
+<main id="content" tabindex="-1"><p id="version_build">Version 1.7.0&nbsp;&nbsp;&nbsp;&nbsp;Build bc239aab6963</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="overview">
 <h2>Description</h2>
@@ -280,13 +281,20 @@ makes the motion chaotic.</em></p>
 The maximum drift line scans the accepted history, not just the endpoints. Eleven time-fraction samples show <code>E</code>, 
 <code>E_internal</code>, <code>K</code>, <code>P</code>, <code>L</code>.
 The display-frame line describes plotting only.</p>
+<p>A run with test particles (Beat 9) also prints a table with one row per particle: its starting
+distance <code>r0</code>, semi-major axis <code>a0</code> and eccentricity <code>e0</code>, measured
+from <code>--test_center</code>; its fate (<code>survived</code>, <code>escaped</code>, or an
+<code>encounter</code> with a numbered body); and when it was removed, in years. The last line gives
+the fewest <code>dt</code> steps in any particle's starting orbit. The conservation totals describe
+the massive bodies only.</p>
 </section>
 
 <div class="warn-box"><strong>What this program is, and what it does not model.</strong> Multiple
 is a teaching model of two or more Newtonian point masses in three dimensions. It has no finite
 stellar radii, tides, collision physics, relativity, gas, or dissipative processes. Exact
 coincidence of two point masses is singular and the calculation ends with an error rather than a
-silently wrong answer (Beat 8). The motion is computed step by step with a predictor and a
+silently wrong answer (Beat 8). Optional test particles (Beat 9) are massless: they feel the
+massive bodies but pull on nothing. The motion is computed step by step with a predictor and a
 corrector, so it carries a numerical error that grows at close approach, and three or more bodies
 generally move chaotically, so two numerically different calculations of the "same" physical
 problem can separate onto different trajectories after enough close encounters. Use it to see how
@@ -413,6 +421,53 @@ python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0
   --no-show_energy_diagnostic</code></pre>
 <p>The longer command stops when the adaptive step can no longer advance floating-point time. That limit is a property of this unsoftened point-mass model and integrator, not evidence of a physical merger.</p>
 </section>
+
+<section id="beat9">
+<h2>Beat 9 · Jupiter clears its neighbourhood</h2>
+<p>A <em>test particle</em> feels every massive body but pulls on none, so it cannot change the
+massive bodies' motion. Each one costs one force term per massive body: 100 test particles around
+two stars need 200 terms per force evaluation, where 102 bodies that all pull on one another would
+need 5151 pairs.</p>
+<p>The International Astronomical Union's 2006 definition of a planet requires, among other things,
+that the body has cleared the neighbourhood around its orbit. Watch Jupiter do it. The Sun and
+Jupiter (\(9.548\times10^{-4}\) solar masses) start 5.2026 AU apart on a circular orbit with their
+centre of mass at rest. Forty-one test particles start on circular orbits from 3.00 to 5.00 AU, in
+steps of 0.05 AU (1 AU \(=1.495978707\times10^{11}\) m):</p>
+<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,9.548e-4 --positions_init "-7.4241e8,0,0;7.77555e11,0,0" \
+  --velocities_init "0,-12.462,0;0,13051.96,0" --dt 1.5e6 --eps1 0.05 --max_steps 30000 \
+  --output_type survival --test_ring "4.48794e11,7.47989e11,41" --removal_radii "6.96e8,5.31e10" \
+  --escape_radius 3e12</code></pre>
+<p><code>--test_ring</code> spreads the particles around the centre of mass, each one 137.5° (the
+golden angle) further round than the one before. <code>--removal_radii</code> removes a particle
+that comes within the Sun's radius, or within 0.355 AU of Jupiter: Jupiter's Hill radius
+\(r_H=a\,(m/3M)^{1/3}\), inside which Jupiter's pull outweighs the Sun's tidal pull.
+<code>--escape_radius</code> removes a particle that gets farther than 20 AU from the centre of mass.
+<code>--output_type survival</code> keeps no paths. It records when and why each particle is removed,
+then plots survival time against starting distance. The step ceiling <code>--dt 1.5e6</code> is
+1/250 of Jupiter's period and gives the innermost particle about 109 steps per orbit.
+<code>--eps1 0.05</code> lets that ceiling set the step; with the default
+0.005, the acceleration-change test alone would demand about 1250 steps per orbit.</p>
+<p>The 30000 steps cover 1426 years, about 120 Jupiter orbits; on a typical computer the run takes
+well under a minute. Jupiter removes 12 of the 41 particles: every particle from 4.35 AU to 4.90 AU.
+Eleven come within its Hill radius, most within the first few dozen orbits; the last, at 4.85 AU, is
+flung beyond 20 AU after 1209 years. Every particle from 3.00 AU to 4.30 AU survives, and so do the two at 4.95 and
+5.00 AU. Those two were not simply missed: their semi-major axes swing back and forth
+across Jupiter's own 5.20 AU, so they now share Jupiter's orbit, as the Trojan asteroids do.</p>
+<p>The edge near 4.3 AU matches a standard estimate. Close to a planet, its mean-motion resonances
+crowd together until they overlap, and the orbits there become chaotic. The overlap zone has width
+\(\Delta a\approx1.3\,\mu^{2/7}a\), where \(\mu\) is the planet-to-Sun mass ratio (Wisdom, 1980). For
+Jupiter that is 0.93 AU, so the chaotic zone begins near 4.27 AU. By this test Jupiter qualifies as a
+planet easily.</p>
+<p>Rerun with <code>--max_steps 2500</code>, about 119 years. Which of the 12 removed particles are
+still present at the end? What does that tell you about choosing the length of a survival run?</p>
+<p><b>Note:</b> the step is chosen for the massive bodies only, so it is your job to choose
+<code>--dt</code> small enough for the test particles. Keep the printed fewest steps per starting
+orbit above about 100. A particle that passes a body much closer than it travels in one step is
+poorly resolved. That is why a removal radius such as Jupiter's Hill radius treats a close
+approach as the end of that particle's story, rather than trying to follow it.</p>
+<p><em>Experiments that go with this beat:</em> <a href="#exp11">Experiment 11</a> and
+<a href="#exp12">Experiment 12</a> in <a href="#experiments">Suggested Experiments</a>.</p>
+</section>
 <section id="parameters"><h2>Parameters</h2><p>Supply only options you want to change. The default run is a three-body animation; the Beat commands request static trajectories when they need a complete path or an energy graph. Each initial-state list must have one entry per body.</p><div class="table-scroll" role="region" tabindex="0" aria-label="Command-line options">
 <table class="param-table">
 <thead><tr><th>Command-line flag</th><th>Default</th><th>Unit</th><th>Description</th></tr></thead>
@@ -425,7 +480,7 @@ python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0
 <tr><td><code>--max_steps</code></td><td>60000</td><td>—</td><td>Maximum accepted integration steps.</td></tr>
 <tr><td><code>--eps1</code></td><td>0.005</td><td>—</td><td>Per-body acceleration-change threshold (0 to 1).</td></tr>
 <tr><td><code>--eps2</code></td><td>1.0e-7</td><td>—</td><td>Corrector velocity-increment threshold (0 to eps1).</td></tr>
-<tr><td><code>--output_type</code></td><td>animation</td><td>—</td><td><code>'trajectories'</code> or <code>'animation'</code>.</td></tr>
+<tr><td><code>--output_type</code></td><td>animation</td><td>—</td><td><code>'trajectories'</code>, <code>'animation'</code>, or <code>'survival'</code> (test-particle survival times only; Beat 9).</td></tr>
 <tr><td><code>--animation_mode</code></td><td>trails</td><td>—</td><td><code>current_positions</code> or <code>trails</code>.</td></tr>
 <tr><td><code>--frame_time</code></td><td>2.0e5</td><td>s</td><td>Simulated seconds between animation frames.</td></tr>
 <tr><td><code>--frame_interval_ms</code></td><td>50</td><td>ms</td><td>Real milliseconds between animation frames.</td></tr>
@@ -434,10 +489,17 @@ python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0
 <tr><td><code>--axis_mode</code></td><td>fixed</td><td>—</td><td><code>'fixed'</code> full-frame limits, or <code>'auto'</code> zoom.</td></tr>
 <tr><td><code>--display_frame</code></td><td>com</td><td>—</td><td><code>'com'</code> (Beat 2 default) or <code>'user'</code>.</td></tr>
 <tr><td><code>--show_energy_diagnostic</code></td><td>off</td><td>—</td><td>Add an energy-drift graph with <code>--output_type trajectories</code>.</td></tr>
+<tr><td><code>--test_positions_init</code></td><td>none</td><td>m</td><td>Optional massless test-particle position triples.</td></tr>
+<tr><td><code>--test_velocities_init</code></td><td>none</td><td>m/s</td><td>One velocity triple per test particle.</td></tr>
+<tr><td><code>--test_ring</code></td><td>none</td><td>m, m, —</td><td><code>R_MIN,R_MAX,N</code>: N test particles on circular orbits in the x-y plane, radii evenly spaced from R_MIN to R_MAX. Use this or the two lists above.</td></tr>
+<tr><td><code>--test_center</code></td><td>com</td><td>—</td><td><code>com</code> or a body number: the centre of <code>--test_ring</code> and the reference for each particle's starting orbit.</td></tr>
+<tr><td><code>--removal_radii</code></td><td>none</td><td>m</td><td>One radius per massive body; a test particle this close is removed as an encounter.</td></tr>
+<tr><td><code>--escape_radius</code></td><td>none</td><td>m</td><td>A test particle this far from the massive bodies' centre of mass is removed as escaped.</td></tr>
+<tr><td><code>--test_csv</code></td><td>none</td><td>—</td><td>File to receive each test particle's starting state, starting orbit and fate.</td></tr>
 </tbody>
 </table>
-</div><p>The default initial coordinates and velocities are defined in <code>main.py</code> and are written explicitly in Beat 0. For matrix inputs, quote the whole semicolon-separated list. <code>--no-show_energy_diagnostic</code> reverses the boolean flag.</p></section>
-<section id="modules"><h2>Code files</h2><p><code>main.py</code> parses command-line options and prints the summary; <code>physics_multiple.py</code> evaluates Newtonian forces and conservation totals; <code>driver_multiple.py</code> integrates and samples the run; <code>plot_multiple.py</code> draws static paths, drift graphs and animation. <code>tests/test_physics_multiple.py</code> exercises code and both tutorial files together.</p></section>
+</div><p>The default initial coordinates and velocities are defined in <code>main.py</code> and are written explicitly in Beat 0. For matrix inputs, quote the whole semicolon-separated list. <code>--no-show_energy_diagnostic</code> reverses the boolean flag. Removal is checked after every accepted step.</p></section>
+<section id="modules"><h2>Code files</h2><p><code>main.py</code> parses command-line options and prints the summary; <code>physics_multiple.py</code> evaluates Newtonian forces on massive bodies and test particles, and conservation totals; <code>driver_multiple.py</code> integrates and samples the run; <code>plot_multiple.py</code> draws static paths, drift graphs, animation and test-particle survival. <code>tests/test_physics_multiple.py</code> exercises code and both tutorial files together.</p></section>
 
 <section id="experiments">
 <h2>Suggested Experiments</h2>
@@ -601,6 +663,38 @@ normally; <code>--max_steps 17800</code>, only 300 steps further into the same a
 <code>Multiple error: The adaptive timestep became too small to advance simulation time in
 floating-point arithmetic.</code>, the loss of numerical resolution on approach to the point-mass singularity discussed in Beat 8.</p>
 <div class="exp-beat">Extends Beat 8.</div>
+</div>
+
+<div class="experiment-card">
+<div class="exp-num" id="exp11">Experiment 11 — Advanced</div>
+<div class="exp-title">Planets Around a Binary Star</div>
+<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "7.48e10,0,0;-7.48e10,0,0" --velocities_init "0,21061,0;0,-21061,0" --dt 1.1e5 --eps1 0.05 --max_steps 60000 --output_type survival --test_ring "2.244e11,5.236e11,41" --removal_radii "7.5e9,7.5e9" --escape_radius 3e12</code></pre>
+<p>Two one-solar-mass stars 1 AU apart orbit each other every 0.707 years. Forty-one test particles
+start on circular orbits around both stars, from 1.50 to 3.50 AU from the centre of mass. A particle
+is removed if it comes within 0.05 AU of either star or gets farther than 20 AU away. How close to
+the pair can a planet orbit and stay?</p>
+<p><strong>Check:</strong> 60000 steps reach 209.14 years, about 296 binary orbits. Fourteen
+particles are removed (10 escaped, 4 encounters): every one from 1.50 to 2.05 AU, and those at 2.20
+and 2.25 AU. Every particle from 2.30 AU outward survives, and so do the two at 2.10 and 2.15 AU.
+Fitted stability limits from much longer runs put the edge near 2.4 AU for a circular, equal-mass
+binary. Double <code>--max_steps</code> to test whether the 2.10–2.15 AU pair lasts.</p>
+<div class="exp-beat">Extends Beat 9.</div>
+</div>
+
+<div class="experiment-card">
+<div class="exp-num" id="exp12">Experiment 12 — Advanced</div>
+<div class="exp-title">Planets Around One Star of a Binary</div>
+<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "7.48e10,0,0;-7.48e10,0,0" --velocities_init "0,21061,0;0,-21061,0" --dt 9e3 --eps1 0.05 --max_steps 45000 --output_type survival --test_ring "1.496e10,6.732e10,36" --test_center 1 --removal_radii "7.5e9,7.5e9" --escape_radius 3e12</code></pre>
+<p>Same binary, but now 36 test particles circle star 1 alone, from 0.10 to 0.45 AU.
+<code>--test_center 1</code> centres the ring on body 1 and gives each particle body 1's velocity
+plus its circular speed around body 1. The innermost orbits are fast, so <code>--dt</code> is 9000 s
+instead of Experiment 11's \(1.1\times10^5\) s.</p>
+<p><strong>Check:</strong> 45000 steps reach 12.834 years, about 18 binary orbits, and the console
+reports 110.9 steps in the fastest starting orbit. Every particle out to 0.28 AU survives. Of the
+17 from 0.29 to 0.45 AU, 16 are removed (14 encounters, 2 escapes); the one at 0.41 AU outlasts this
+short run. Fitted limits put the edge near 0.27 AU. Repeat with <code>--dt 1.1e5</code> and read
+the warning the program prints.</p>
+<div class="exp-beat">Extends Beat 9.</div>
 </div>
 </section>
 
