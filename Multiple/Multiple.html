@@ -253,7 +253,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <div class="nav-label">Reference</div>
 <a href="#related">Related programs</a>
 <a href="#license">License</a></nav>
-<main id="content" tabindex="-1"><p id="version_build">Version 1.11.0&nbsp;&nbsp;&nbsp;&nbsp;Build 56672581aff0</p>
+<main id="content" tabindex="-1"><p id="version_build">Version 1.12.0&nbsp;&nbsp;&nbsp;&nbsp;Build dedc50ff3f1c</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="overview">
 <h2>Description</h2>
@@ -309,8 +309,14 @@ way round. A swing of that angle alone does not show that a particle shares the 
 eccentric orbit speeds up and slows down, so its angle from the planet can swing back and forth
 while it steadily drifts ahead. The co-orbital names therefore rest on a different angle, printed
 as <code>dlambda</code>: the particle's mean longitude minus the planet's, both measured about the
-heavier body (a mean longitude advances at a steady rate round an orbit, unlike the actual
-position). For a true tadpole or horseshoe, <code>dlambda</code> itself swings back and forth. The
+heavier body. In an unperturbed Kepler orbit the mean longitude advances uniformly even while the
+actual motion speeds up and slows down; here it is recalculated from the particle's instantaneous
+orbit, so the planet's pull can change its rate. For a true tadpole or horseshoe,
+<code>dlambda</code> itself swings back and forth. It is worked out only for orbits within 5° of
+the x-y plane that go round the same way as the planet; for any other particle (for example one
+launched out of the plane with <code>--test_velocities_init</code>), or once a particle's orbit
+leaves that range, the column shows <code>-</code>, the particle is still integrated normally, and
+it gets no tadpole or horseshoe name. The
 names also need the two massive bodies to be on a nearly circular orbit in the x-y plane, the ring
 to be about their centre of mass, the reference body to be the lighter one with less than 3.85% of
 their total mass (the condition for its L4 and L5 points to be stable), and the particle to start
