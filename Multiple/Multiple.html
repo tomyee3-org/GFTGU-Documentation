@@ -253,7 +253,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <div class="nav-label">Reference</div>
 <a href="#related">Related programs</a>
 <a href="#license">License</a></nav>
-<main id="content" tabindex="-1"><p id="version_build">Version 1.10.0&nbsp;&nbsp;&nbsp;&nbsp;Build 90ee3b70fe84</p>
+<main id="content" tabindex="-1"><p id="version_build">Version 1.11.0&nbsp;&nbsp;&nbsp;&nbsp;Build 56672581aff0</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="overview">
 <h2>Description</h2>
@@ -305,17 +305,22 @@ particle accurately even with its smallest steps, so it stopped following it.</p
 <p>The angle path of a survivor describes what its angle from the reference body did during this
 run, followed through every small step the particle took. <code>circulating</code>: it went all the
 way round. <code>passed body</code>: it crossed the reference body's direction without going all the
-way round. The co-orbital names need more: the two massive bodies must be on a nearly circular
-orbit in the x-y plane, the ring must be about their centre of mass, the reference body must be the
-lighter one with less than 3.85% of their total mass (the condition for its L4 and L5 points to be
-stable), and the particle must start with a semi-major axis within two of the body's Hill radii of
-the body's own. The angle must also have turned back at both ends of the range it finally reached
-(by at least 1°), not merely started or stopped there. Then a path that stayed ahead of the body in
-its direction of travel is <code>tadpole L4</code>, one that stayed behind is <code>tadpole
-L5</code>, and one that passed the point opposite the body but never the body itself is
-<code>horseshoe</code>. Anything else is <code>unfinished</code>: this run cannot name it. These
-names are only as good as the run is long: a longer run can turn a tadpole into a horseshoe or
-remove a horseshoe.</p>
+way round. A swing of that angle alone does not show that a particle shares the planet's orbit: an
+eccentric orbit speeds up and slows down, so its angle from the planet can swing back and forth
+while it steadily drifts ahead. The co-orbital names therefore rest on a different angle, printed
+as <code>dlambda</code>: the particle's mean longitude minus the planet's, both measured about the
+heavier body (a mean longitude advances at a steady rate round an orbit, unlike the actual
+position). For a true tadpole or horseshoe, <code>dlambda</code> itself swings back and forth. The
+names also need the two massive bodies to be on a nearly circular orbit in the x-y plane, the ring
+to be about their centre of mass, the reference body to be the lighter one with less than 3.85% of
+their total mass (the condition for its L4 and L5 points to be stable), and the particle to start
+with a semi-major axis within two of the body's Hill radii of the body's own. If all that holds and
+<code>dlambda</code> has turned back at both ends of the range it finally reached (by at least
+1°), a range that stays ahead of the body in its direction of travel is <code>tadpole L4</code>,
+one that stays behind is <code>tadpole L5</code>, and one that passes the point opposite the body
+but never the body itself is <code>horseshoe</code>. Anything else is <code>unfinished</code>: this
+run cannot name it. These names describe this run only: a longer run can turn a tadpole into a
+horseshoe or remove a horseshoe.</p>
 <p>The conservation totals and their drift describe the massive bodies only. They say how well
 the massive bodies were integrated, not how accurately any test particle was followed.</p>
 </section>
@@ -535,10 +540,13 @@ a particle's step is halved, as often as needed, while its acceleration changes 
 <code>eps1</code>, its corrector does not settle to <code>eps2</code>, or the straight line between
 its start and end points relative to a body passes inside that body's removal radius; the massive
 bodies' positions within the step come from the same smooth interpolation the animation uses.
-Removal is checked at the end of every such small step. If a particle still fails any of these
-tests at the smallest step allowed (1/65536 of the massive bodies' step), it gets the fate
-<code>numerical</code> and its last good state is kept; the one exception is a straight-line pass
-through a removal radius at that smallest step, which is recorded as an encounter at the crossing
+Where the separate pulls on a particle nearly cancel, as at the centre of two equal stars, the
+change in acceleration is judged against a tenth of the sum of those pulls rather than against the
+tiny net pull. Removal is checked at the end of every such small step. At the smallest step allowed
+(1/65536 of the massive bodies' step), a state that is not finite, a corrector that has not
+settled, or an acceleration change beyond <code>eps1</code> gives the fate <code>numerical</code>,
+and the particle's last good state is kept. Only a step that passes all of those checks while its
+straight line crosses a removal radius is recorded instead as an encounter at the crossing
 point. A curved path that dips into a removal radius between two of those points while the
 straight line between them does not can still be missed. All this greatly reduces close-approach
 errors, but it does not bound the error a particle builds up over a long run, and each halving
