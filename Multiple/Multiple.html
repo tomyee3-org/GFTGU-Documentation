@@ -253,7 +253,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <div class="nav-label">Reference</div>
 <a href="#related">Related programs</a>
 <a href="#license">License</a></nav>
-<main id="content" tabindex="-1"><p id="version_build">Version 1.7.0&nbsp;&nbsp;&nbsp;&nbsp;Build bc239aab6963</p>
+<main id="content" tabindex="-1"><p id="version_build">Version 1.8.0&nbsp;&nbsp;&nbsp;&nbsp;Build 6c18838d30b8</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="overview">
 <h2>Description</h2>
@@ -283,9 +283,15 @@ The maximum drift line scans the accepted history, not just the endpoints. Eleve
 The display-frame line describes plotting only.</p>
 <p>A run with test particles (Beat 9) also prints a table with one row per particle: its starting
 distance <code>r0</code>, semi-major axis <code>a0</code> and eccentricity <code>e0</code>, measured
-from <code>--test_center</code>; its fate (<code>survived</code>, <code>escaped</code>, or an
+from <code>--test_center</code>; its starting angle <code>phi0</code> from a reference body (the massive
+body farthest from that centre); the lowest and highest values that angle reached, followed
+continuously round the circle; the path those values imply; its fate (<code>survived</code>, <code>escaped</code>, or an
 <code>encounter</code> with a numbered body); and when it was removed, in years. The last line gives
-the fewest <code>dt</code> steps in any particle's starting orbit. The conservation totals describe
+the fewest <code>dt</code> steps in any particle's starting orbit. The angle path of a survivor is
+<code>tadpole L4</code> if its angle stayed between 0° and 180° (always ahead of the reference
+body), <code>tadpole L5</code> if it stayed between −180° and 0° (always behind),
+<code>horseshoe</code> if it passed the point opposite the body but never the body itself, and
+<code>circulating</code> if it went all the way round. The conservation totals describe
 the massive bodies only.</p>
 </section>
 
@@ -438,12 +444,14 @@ steps of 0.05 AU (1 AU \(=1.495978707\times10^{11}\) m):</p>
   --output_type survival --test_ring "4.48794e11,7.47989e11,41" --removal_radii "6.96e8,5.31e10" \
   --escape_radius 3e12</code></pre>
 <p><code>--test_ring</code> spreads the particles around the centre of mass, each one 137.5° (the
-golden angle) further round than the one before. <code>--removal_radii</code> removes a particle
+golden angle) further round than the one before; <code>--test_phases random</code> scatters them at
+random angles instead. <code>--removal_radii</code> removes a particle
 that comes within the Sun's radius, or within 0.355 AU of Jupiter: Jupiter's Hill radius
 \(r_H=a\,(m/3M)^{1/3}\), inside which Jupiter's pull outweighs the Sun's tidal pull.
 <code>--escape_radius</code> removes a particle that gets farther than 20 AU from the centre of mass.
 <code>--output_type survival</code> keeps no paths. It records when and why each particle is removed,
-then plots survival time against starting distance. The step ceiling <code>--dt 1.5e6</code> is
+then plots survival time against starting distance. When you close that window, a second one shows
+where the secure survivors are at the end of the run. The step ceiling <code>--dt 1.5e6</code> is
 1/250 of Jupiter's period and gives the innermost particle about 109 steps per orbit.
 <code>--eps1 0.05</code> lets that ceiling set the step; with the default
 0.005, the acceleration-change test alone would demand about 1250 steps per orbit.</p>
@@ -460,11 +468,36 @@ Jupiter that is 0.93 AU, so the chaotic zone begins near 4.27 AU. By this test J
 planet easily.</p>
 <p>Rerun with <code>--max_steps 2500</code>, about 119 years. Which of the 12 removed particles are
 still present at the end? What does that tell you about choosing the length of a survival run?</p>
+<p>Now look along Jupiter's own orbit. Put 24 particles at random angles on each of nine circles
+from 5.00 to 5.40 AU:</p>
+<pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,9.548e-4 --positions_init "-7.4241e8,0,0;7.77555e11,0,0" \
+  --velocities_init "0,-12.462,0;0,13051.96,0" --dt 1.5e6 --eps1 0.05 --max_steps 20000 \
+  --output_type survival --test_ring "7.47989e11,8.07828e11,9" --test_ring_per_radius 24 \
+  --test_phases random --test_seed 1 --removal_radii "6.96e8,5.31e10" --escape_radius 3e12</code></pre>
+<p><code>--test_seed 1</code> makes the random angles the same every time; change it to draw a different
+set. Of the 216 particles, 4 start inside Jupiter's Hill radius and are removed at once. After 951
+years, 189 survive. Their angle paths are what matter: 72 are tadpoles at L4 and 72 at L5, 44 are
+horseshoes and 1 circulates. A tadpole's angle swings back and forth on one side of Jupiter, around
+the point 60° ahead (L4) or behind (L5), without ever reaching Jupiter or the point opposite it.
+These are Trojan orbits. Every tadpole started at least 26° from Jupiter. In the right-hand panel of
+the plot they fill most of each circle; the horseshoes cluster at the ends of the radius range and
+near the far side of the orbit.</p>
+<p>Close that window and the second one opens. It leaves out the removed particles and every
+horseshoe, and shows where the tadpoles (blue) and the circulating particle (green) are at the end
+of the run. Angles are still measured from Jupiter, so in the right-hand view from above, Jupiter
+stays fixed on the right. Every L4 tadpole ends between 27° and 162° ahead of Jupiter and every L5
+tadpole between 29° and 156° behind it, all between 4.96 and 5.46 AU from the centre of mass. Seen
+from above, they form two long arcs along Jupiter's orbit, one on each side of the planet, through
+L4 and L5.</p>
+<p>Triple <code>--max_steps</code> to 60000, about 2850 years. Which kind of survivor loses members,
+and which keeps every one?</p>
 <p><b>Note:</b> the step is chosen for the massive bodies only, so it is your job to choose
 <code>--dt</code> small enough for the test particles. Keep the printed fewest steps per starting
 orbit above about 100. A particle that passes a body much closer than it travels in one step is
 poorly resolved. That is why a removal radius such as Jupiter's Hill radius treats a close
-approach as the end of that particle's story, rather than trying to follow it.</p>
+approach as the end of that particle's story, rather than trying to follow it. A particle that
+starts inside a removal radius, or beyond the escape radius, is removed at once; the survival plot
+marks it with a cross on the bottom edge.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp11">Experiment 11</a> and
 <a href="#exp12">Experiment 12</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
@@ -492,10 +525,13 @@ approach as the end of that particle's story, rather than trying to follow it.</
 <tr><td><code>--test_positions_init</code></td><td>none</td><td>m</td><td>Optional massless test-particle position triples.</td></tr>
 <tr><td><code>--test_velocities_init</code></td><td>none</td><td>m/s</td><td>One velocity triple per test particle.</td></tr>
 <tr><td><code>--test_ring</code></td><td>none</td><td>m, m, —</td><td><code>R_MIN,R_MAX,N</code>: N test particles on circular orbits in the x-y plane, radii evenly spaced from R_MIN to R_MAX. Use this or the two lists above.</td></tr>
+<tr><td><code>--test_ring_per_radius</code></td><td>1</td><td>—</td><td>Number of test particles on each <code>--test_ring</code> circle.</td></tr>
+<tr><td><code>--test_phases</code></td><td>golden</td><td>—</td><td><code>golden</code> (each particle 137.5° round from the last) or <code>random</code> starting angles.</td></tr>
+<tr><td><code>--test_seed</code></td><td>0</td><td>—</td><td>Seed for <code>--test_phases random</code>; the same seed gives the same angles.</td></tr>
 <tr><td><code>--test_center</code></td><td>com</td><td>—</td><td><code>com</code> or a body number: the centre of <code>--test_ring</code> and the reference for each particle's starting orbit.</td></tr>
-<tr><td><code>--removal_radii</code></td><td>none</td><td>m</td><td>One radius per massive body; a test particle this close is removed as an encounter.</td></tr>
+<tr><td><code>--removal_radii</code></td><td>none</td><td>m</td><td>One radius per massive body; a test particle this close is removed as an encounter (at once, if it starts that close).</td></tr>
 <tr><td><code>--escape_radius</code></td><td>none</td><td>m</td><td>A test particle this far from the massive bodies' centre of mass is removed as escaped.</td></tr>
-<tr><td><code>--test_csv</code></td><td>none</td><td>—</td><td>File to receive each test particle's starting state, starting orbit and fate.</td></tr>
+<tr><td><code>--test_csv</code></td><td>none</td><td>—</td><td>File to receive each test particle's starting state, starting orbit, angle path and fate.</td></tr>
 </tbody>
 </table>
 </div><p>The default initial coordinates and velocities are defined in <code>main.py</code> and are written explicitly in Beat 0. For matrix inputs, quote the whole semicolon-separated list. <code>--no-show_energy_diagnostic</code> reverses the boolean flag. Removal is checked after every accepted step.</p></section>
