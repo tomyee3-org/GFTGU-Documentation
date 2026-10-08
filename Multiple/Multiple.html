@@ -253,7 +253,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <div class="nav-label">Reference</div>
 <a href="#related">Related programs</a>
 <a href="#license">License</a></nav>
-<main id="content" tabindex="-1"><p id="version_build">Version 1.9.0&nbsp;&nbsp;&nbsp;&nbsp;Build 3f1fdb38333e</p>
+<main id="content" tabindex="-1"><p id="version_build">Version 1.10.0&nbsp;&nbsp;&nbsp;&nbsp;Build 90ee3b70fe84</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="overview">
 <h2>Description</h2>
@@ -287,12 +287,13 @@ astronomical units and years from here on (the summary above it uses days). For 
 its starting distance <code>r0</code> from <code>--test_center</code>; <code>a0</code> and
 <code>e0</code>, the two-body semi-major axis and eccentricity it would have about a point mass
 equal to the centre's mass (a starting diagnostic, not proof of a circular orbit in a binary's
-field; <code>unbound</code> means it starts with escape speed, and <code>-</code> means undefined,
-for a particle exactly at the centre); its starting angle <code>phi0</code> from a reference body
+field; <code>unbound</code> means it starts at or above escape speed in that point-mass picture, and
+<code>-</code> means undefined, for a particle exactly at the centre); its starting angle <code>phi0</code> from a reference body
 (the massive body farthest from that centre); the lowest and highest values that angle reached,
 followed continuously round the circle; the angle path those values describe; its fate; and when
 it was removed. The last line gives the fewest <code>dt</code> steps in any particle's starting
-orbit, a quick screen for a timestep that is too coarse, not a guarantee of accuracy.</p>
+orbit. It counts the massive bodies' steps, not the smaller steps a particle may take inside them,
+and it is a quick screen for a timestep that is too coarse, not a guarantee of accuracy.</p>
 <p>The fates are working definitions, not physical verdicts. <code>survived</code> means still
 present when the run ends; on the survival plot an upward triangle marks the run length, a lower
 limit on how long that particle lasts, not a removal time. <code>escaped</code> means farther
@@ -302,16 +303,19 @@ on a wide excursion can also do. <code>encounter</code> means it came within a b
 or what would happen next. <code>numerical</code> means the program could not follow that
 particle accurately even with its smallest steps, so it stopped following it.</p>
 <p>The angle path of a survivor describes what its angle from the reference body did during this
-run. <code>circulating</code>: it went all the way round. <code>passed body</code>: it crossed the
-reference body's direction without going all the way round. <code>unfinished</code>: it stayed on
-one side but has not yet turned back from both ends of its range, so this run cannot yet tell a
-swing from a slow drift. For a ring about the centre of mass of two massive bodies, when the
-reference body has less than 3.85% of their total mass (the condition for its L4 and L5 points to
-be stable), a completed swing that stayed ahead of the body (0° to 180°) is <code>tadpole
-L4</code>, one that stayed behind (−180° to 0°) is <code>tadpole L5</code>, and one that passed
-the point opposite the body but never the body itself is <code>horseshoe</code>; in any other
-configuration a completed swing is just <code>librating</code>. These names are only as good as
-the run is long: a longer run can turn a tadpole into a horseshoe or remove a horseshoe.</p>
+run, followed through every small step the particle took. <code>circulating</code>: it went all the
+way round. <code>passed body</code>: it crossed the reference body's direction without going all the
+way round. The co-orbital names need more: the two massive bodies must be on a nearly circular
+orbit in the x-y plane, the ring must be about their centre of mass, the reference body must be the
+lighter one with less than 3.85% of their total mass (the condition for its L4 and L5 points to be
+stable), and the particle must start with a semi-major axis within two of the body's Hill radii of
+the body's own. The angle must also have turned back at both ends of the range it finally reached
+(by at least 1°), not merely started or stopped there. Then a path that stayed ahead of the body in
+its direction of travel is <code>tadpole L4</code>, one that stayed behind is <code>tadpole
+L5</code>, and one that passed the point opposite the body but never the body itself is
+<code>horseshoe</code>. Anything else is <code>unfinished</code>: this run cannot name it. These
+names are only as good as the run is long: a longer run can turn a tadpole into a horseshoe or
+remove a horseshoe.</p>
 <p>The conservation totals and their drift describe the massive bodies only. They say how well
 the massive bodies were integrated, not how accurately any test particle was followed.</p>
 </section>
@@ -531,13 +535,19 @@ a particle's step is halved, as often as needed, while its acceleration changes 
 <code>eps1</code>, its corrector does not settle to <code>eps2</code>, or the straight line between
 its start and end points relative to a body passes inside that body's removal radius; the massive
 bodies' positions within the step come from the same smooth interpolation the animation uses.
-Removal is checked at the end of every such small step. A particle that still cannot be followed
-gets the fate <code>numerical</code>. This makes close approaches trustworthy, but each halving
+Removal is checked at the end of every such small step. If a particle still fails any of these
+tests at the smallest step allowed (1/65536 of the massive bodies' step), it gets the fate
+<code>numerical</code> and its last good state is kept; the one exception is a straight-line pass
+through a removal radius at that smallest step, which is recorded as an encounter at the crossing
+point. A curved path that dips into a removal radius between two of those points while the
+straight line between them does not can still be missed. All this greatly reduces close-approach
+errors, but it does not bound the error a particle builds up over a long run, and each halving
 costs time, so keep the printed fewest steps per starting orbit above about 100 and expect runs
 with many close approaches to be slower. The conservation drift does not include the test
-particles, so it says nothing about their accuracy. To check a result, rerun with half the
-<code>--dt</code> and twice the <code>--max_steps</code>, which covers the same time, and compare
-which particles survive.</p>
+particles, so it says nothing about their accuracy. The practical check is to rerun with half the
+<code>--dt</code> and twice the <code>--max_steps</code>, confirm from the printed simulated time
+that both runs cover the same time (they do here, because the step stays at its ceiling), and
+compare which particles survive.</p>
 <p><em>Experiments that go with this beat:</em> <a href="#exp11">Experiment 11</a> and
 <a href="#exp12">Experiment 12</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
@@ -757,12 +767,16 @@ and 2.25 AU. Every particle from 2.30 AU outward survives, and so do the two at 
 Rerun with <code>--dt 5.5e4 --max_steps 120000</code>, which covers the same 209 years with
 half the step: exactly the same particles survive, though some removed ones go at different times
 or by a different route.</p>
-<p>A removal shows an instability; a survival in a 296-orbit run does not yet show stability.
-Holman and Wiegert (1999) followed particles at eight starting angles per distance for 10,000
-binary periods and put the edge, beyond which every angle survived, at about 2.4 AU for a circular
-equal-mass pair. Each distance here has a single starting angle, and in the chaotic zone a
-particle can live or die according to that angle, so a different ring will not reproduce these
-removals particle by particle. Try eight angles per distance near the edge:</p>
+<p>A resolved encounter or a pass beyond the escape radius fails this experiment's survival
+criterion; a survival in a 296-orbit run does not yet show stability. Holman and Wiegert (1999;
+full reference after Experiment 12) followed
+particles at eight evenly spaced starting angles per distance for 10,000 binary periods and found,
+for a circular equal-mass pair, an empirical inner boundary near 2.4 AU: the innermost distance at
+which all eight of their sampled angles survived. That is not a promise that every orbit farther
+out survives; they also found unstable islands beyond it, and their removal rules differ from these.
+Each distance here has a single starting angle, and in the chaotic zone a particle can live or die
+according to that angle, so a different ring will not reproduce these removals particle by
+particle. Try eight random angles per distance near the edge:</p>
 <pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "7.48e10,0,0;-7.48e10,0,0" --velocities_init "0,21061,0;0,-21061,0" --dt 1.1e5 --eps1 0.05 --max_steps 60000 --output_type survival --test_ring "2.8424e11,4.0392e11,9" --test_ring_per_radius 8 --test_phases random --test_seed 1 --removal_radii "7.5e9,7.5e9" --escape_radius 3e12</code></pre>
 <p>Record how many of the eight survive at each distance from 1.9 to 2.7 AU. With this seed: none
 at 1.9 AU, 4 at 2.0, 4 at 2.1, 5 at 2.2, and all 8 from 2.3 AU outward. Then double
@@ -787,7 +801,7 @@ reports 110.9 steps in the fastest starting orbit. Every particle out to 0.28 AU
 17 from 0.29 to 0.45 AU are removed (15 encounters, 2 escapes). Rerun with <code>--dt 4.5e3
 --max_steps 90000</code>, the same 12.834 years with half the step: exactly the same particles
 survive.</p>
-<p>Holman and Wiegert (1999) put the edge for this case at about 0.27 AU, from 10,000 binary
+<p>Holman and Wiegert's empirical boundary for this case is about 0.27 AU, from 10,000 binary
 periods; this run covers 18, so it is an illustration, not a measurement. The angle path column is
 again not the result: angles are measured from the companion star, which goes round star 1, so
 every survivor is called circulating. Repeat near the edge with eight random angles per distance:
@@ -796,6 +810,9 @@ in the command above, replace the <code>--test_ring</code> value with
 --test_seed 1</code>. Record the survivors at each distance. With this
 seed: all 8 from 0.24 to 0.26 AU, 6 at 0.27 and 0.28, 2 at 0.29, none at 0.30, 1 at 0.31, and none
 from 0.32 to 0.34 AU.</p>
+<p>Reference: M. J. Holman and P. A. Wiegert, "Long-Term Stability of Planets in Binary Systems",
+<em>Astronomical Journal</em> 117, 621–628 (1999),
+<a href="https://doi.org/10.1086/300695" target="_blank">doi:10.1086/300695</a>.</p>
 <div class="exp-beat">Extends Beat 9.</div>
 </div>
 </section>
