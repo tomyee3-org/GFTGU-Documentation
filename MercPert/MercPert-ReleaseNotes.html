@@ -1,5 +1,59 @@
-<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>MercPert 1.1.0 Release Notes — Kickoff4 continuation</title></head><body>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>MercPert 1.1.0 — Release Notes — 2026-10-08</title></head><body>
+<h1>MercPert 1.1.0 Release Notes — merged Help documentation update</h1>
+<p><b>Version:</b> 1.1.0<br><b>Build:</b> 9852baf113f7<br><b>Documentation date:</b> 2026-10-08<br><b>Comparison baseline:</b> GFTGU-Documentation(20260925-190712).zip, the author’s 25 September 1.1.0 baseline.</p>
+<h2>Release Status</h2>
+<p>This is a documentation maintenance update of the unchanged MercPert 1.1.0 program. It compares the merged <code>MercPert.html</code> with the MercPert documentation in the named 25 September archive and brings these notes and the instructor guide up to the current Help. It includes the author’s six replacement gallery figures and the coverage decisions in <code>GFTGU-Completeness_of_Coverage-20261005-Response(1).html</code>.</p>
+<p>MP4 and MP5 are declined for MercPert. The author plans to explore disturbed orbital regions and outer-binary survival boundaries using Multiple, where groups of initial conditions can be compared together. These are plans; no Multiple implementation or documentation change is included. MP1 remains declined for the reasons recorded in the author’s response. MP2’s six replacement figures are installed. MP3’s restored Java-derived application appears in Practice Task 9. MP6 has no recorded disposition in the supplied response and remains a coverage item awaiting a decision.</p>
+<p>Earlier Codex and Grok Audit22 recommendations and Claude’s Audit41 approval apply to the historical candidates described below. No new audit/response cycle or reviewer approval is claimed for this maintenance pass. All 22 current Help Beat commands were executed, all nine guide figures were regenerated, and the quoted console values were checked. The supplied full test suite still contains seven mismatches with the merged Help, documented below.</p>
+<h2>Open Bugs</h2>
+<p>No new executable-program defect was found in this documentation pass. This is not a full scientific or program audit. The following existing Help-test mismatches remain unresolved. Reproduce them from <code>GFTGU-Programs/MercPert</code> with <code>python -m unittest discover -s tests -v</code>. They prevent the full suite from passing; the five dedicated merged-Help checks pass.</p>
+<ul>
+<li><b>DOC-TEST-01 — continued commands.</b> <code>test_grok_beat_commands_use_the_shared_cli</code> splits Beat 0’s continued command into physical lines and raises <code>ValueError: No escaped character</code>. Expected: combine the backslash continuation and parse the complete command. The complete command executes successfully.</li>
+<li><b>DOC-TEST-02 — drift typography.</b> <code>test_beat4_quotes_the_signed_jacobi_drift_range_of_the_default_run</code> expects a particular HTML-entity representation of the negative limit. The merged Help gives the same value as <code>−1.23e-06</code>. Expected: check the numerical meaning independently of equivalent typography.</li>
+<li><b>DOC-TEST-03 — removed one-liner.</b> <code>test_energy_one_liner_runs_and_prints_a_fraction</code> requires a Python one-liner from the former extended tutorial. None occurs in the merged Help. Expected: a contract appropriate to the current tutorial.</li>
+<li><b>DOC-TEST-04 — old command-count floor.</b> <code>test_every_tutorial_command_is_accepted_by_the_parser</code> expects more than 25 commands and extracts only 18 from the current markup. The current Beats contain 22 logical commands, including four error demonstrations. Expected: correct extraction and checks for the actual current command set.</li>
+<li><b>DOC-TEST-05 — old numbered-equation layout.</b> <code>test_numbered_equations_appear_once_and_in_order</code> expects equations numbered 1–10. The merged Help uses unnumbered inline equations. Expected: checks that fit the merged format.</li>
+<li><b>DOC-TEST-06 — exact wording.</b> <code>test_positive_energy_is_not_presented_as_proof_of_escape</code> requires the literal phrase <code>finite-time</code>. Beat 6 instead says that a long outward track in a finite run does not certify permanent escape, including a warning about positive instantaneous energy. Expected: validate that scientific qualification without fixing one spelling.</li>
+<li><b>DOC-TEST-07 — Jupiter terminology.</b> <code>test_help_mentions_jupiter_only_as_a_mass_reference</code> permits Jupiter only in a mass reference. The author’s replacement retrograde caption also names Jupiter. Expected: review this older terminology contract against the current gallery convention.</li>
+</ul>
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li><b>Merged Help baseline.</b> The active student file is <code>MercPert.html</code>, replacing the separate tutorial formats in the comparison archive. It combines a concise ten-Beat sequence, current parameter defaults, the fuller physical description and six example-gallery cards. The former extended tutorial’s separate numbered-equation, algorithm and detailed module sections are no longer the active page structure. These notes document that editorial change without restoring declined exercises.</li>
+<li><b>Explicit comparison settings.</b> The current Help exposes defaults relevant to the modified runs, including the initial default command and comparison notes for masses, launch speeds, step caps and tolerances. The instructor guide now quotes exact commands from the merged Help.</li>
+<li><b>Replacement gallery.</b> The six author-provided figures show a perturbed bound orbit, large regular rosette, Sun collision, ejection, retrograde orbit and motion near the outer Lagrange point. Ejection precedes retrograde motion; the final card now identifies L₂ and warns that the equilibrium is unstable. The source PNGs and embedded Help images are retained unchanged from the preceding Help update.</li>
+<li><b>Restored application.</b> Practice Task 9 reintroduces Schutz’s 10:1-mass, approximately 0.3-AU binary investigation, with a link from Beat 6. The code still models ballistic test-particle motion; gas, tides, radiation and accretion physics are not added.</li>
+<li><b>Guide repair and regeneration.</b> All nine Beat figures were regenerated from build 9852baf113f7. The guide’s malformed contents links were rebuilt; references to absent numbered equations and the removed energy one-liner were removed. The collision caption now correctly describes a tenfold companion-mass increase. The close-approach comparison is approximately 2.2%, not half a percent, and does not establish convergence. The 919.20-day and 852.41-day tolerance runs remain explicitly qualified as unequal-duration comparisons. Beat 9 now lists the four commands and expected errors, with no plot.</li>
+<li><b>Program behavior.</b> The four executable modules and existing tests are byte-for-byte unchanged from the supplied program package. Numerical results, console formatting, plots, options, version and build are unchanged.</li>
+</ul>
+<h2>Test Suite Growth</h2>
+<ul>
+<li>Historical counts: original 1.1.0 notes record 68 tests; Kickoff2 records 82; Audit21/Audit22 records 84. The subsequent paired-tutorial round records 88. Those historical outcomes remain in the archived notes below.</li>
+<li>The current supplied package contains 93 discovered tests, including five dedicated merged-Help tests. This pass adds or modifies no tests.</li>
+<li>Current full discovery on CPython 3.12: 93 tests, with 83 passing, six failures, one error and three skips. The skips concern the archived <code>MercPert-original.html</code>, which is not an active Help file. All seven unsuccessful checks concern the Help contracts listed under Open Bugs; executable physics, driver, CLI and plotting checks pass.</li>
+<li>The five tests in <code>tests/test_merged_help.py</code> pass. Run them separately with <code>python -m unittest discover -s tests -p test_merged_help.py -v</code>.</li>
+<li>Documentation verification: all 22 current Beat commands executed; nine new guide images decoded and visually checked; guide navigation, headings, five headline values per figure and core metadata checked; the seven current-release sections appear in the required order.</li>
+</ul>
+<h2>Known Limitations</h2>
+<ul>
+<li>The model is planar, circular and restricted. The Sun and companion follow prescribed circles; the test particle has no effect on them. Gas, disks, pressure, tides, relativity and impact evolution are absent.</li>
+<li>Collision radii are numerical stopping boundaries. Zero disables a boundary; the default companion radius is zero. An interpolated collision endpoint contributes to the reported Jacobi drift.</li>
+<li>Strong encounters can produce substantial numerical drift. A small Jacobi drift does not prove trajectory accuracy, permanent stability or escape. Match physical durations when comparing runs.</li>
+<li>A start exactly at a point-mass centre is singular and prints an error. The program does not infer a physical companion radius from its mass.</li>
+<li>Practice Task 9 is a gravitational illustration; this point-particle model does not compute a finite star’s mass-transfer boundary or subsequent gas evolution.</li>
+<li>The six Help gallery figures were supplied by the author. The nine instructor-guide figures were independently regenerated from the unchanged program.</li>
+</ul>
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>Update the older tutorial-specific test contracts listed above in a separate authorized maintenance pass. Do not reinstate archived tutorial content solely to satisfy those tests.</li>
+<li>MP4 and MP5 explorations are planned for Multiple; they are not implemented by this release. MP6 awaits the author’s disposition.</li>
+<li>The Help’s Code modules paragraph still refers to “both tutorial files,” although the active baseline has one merged Help file. This documentation pass preserves the author’s Help text.</li>
+<li>Historical optional behavior choices remain unchanged: treatment of an exact-centre initial collision, drift measured only over accepted integration steps, and a mass-derived companion collision radius. Each would require a separate behavior decision.</li>
+</ul>
+<h2>Version Identification</h2>
+<p><b>MODEL_VERSION:</b> 1.1.0<br><b>BUILD_ID:</b> 9852baf113f7</p>
+<p><code>python main.py --version</code> prints <code>MercPert 1.1.0 (build 9852baf113f7)</code>. The build covers only <code>physics_mercpert.py</code>, <code>driver_mercpert.py</code>, <code>main.py</code> and <code>plot_mercpert.py</code>. This documentation update retains the author’s 25 September version baseline and does not create a new program release. The Help, these notes and the regenerated guide identify the same core.</p>
+<h2>Archived development notes — 29 September 2026 and earlier</h2>
+<p>The following notes preserve the previously supplied history and then-current reviewer recommendations. Their file inventory, test outcomes and approval statements are historical. The exact ReleaseNotes from the requested 25 September archive are also retained in <code>Reference/20260925/MercPert-ReleaseNotes.html</code> in the package.</p>
 <h1>MercPert 1.1.0 Release Notes — Kickoff4 continuation</h1>
 <p><b>Version:</b> 1.1.0<br><b>Build:</b> 9852baf113f7<br><b>Date:</b> 2026-09-29</p>
 <h2>Release Status</h2>
@@ -183,5 +237,6 @@ BUILD_ID is computed from <code>physics_mercpert.py</code>,
 prints <code>MercPert 1.1.0 (build 9852baf113f7)</code>, and both Help files
 show the same version and build.
 </p>
+
 
 </body></html>
