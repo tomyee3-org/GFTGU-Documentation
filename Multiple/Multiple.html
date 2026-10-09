@@ -755,6 +755,9 @@ whereas Multiple integrates all three masses mutually.</p>
 <p><strong>Check:</strong> the run reaches 4000 accepted steps at 92.593 days with a near-zero
 printed momentum, \(\mathbf P\approx(0,5.75\times10^{-4},0)\) m/s, and maximum reported drift energy
 \(2.4545\times10^{-8}\), momentum \(1.9253\times10^{-8}\), angular momentum \(1.2268\times10^{-8}\).</p>
+
+<p>Now increase the mass of the test particle to make it comparable to that of the perturber. What happens? In either case, give the test particle a small vertical component of velocity to see what happens in the genuinely 3-dimensional problem. How does the subsequent behavior of the test particle change if it passes just above the perturber rather than just in front or just behind?</p>
+
 <div class="exp-beat">Extends Beat 0; see also <a href="#related">Related Programs</a>.</div>
 </div>
 
@@ -767,9 +770,10 @@ printed momentum, \(\mathbf P\approx(0,5.75\times10^{-4},0)\) m/s, and maximum r
 the infall, so this exactly radial pair reaches closest approach sooner, near \(2.4\times10^8\) yr.
 Place a few companion particles about 10 kpc from each core; at that radius a
 \(10^{11}\,M_\odot\) point mass has a circular speed of about 207 km/s and an escape speed of about
-293 km/s. First give the companions negligible mass and follow the approach only while the calculation remains resolved; then raise them
-toward \(10^{10}\,M_\odot\). This is a handful of point masses, not a collisionless galaxy or a
-merger with gas, friction, or radiation.</p>
+293 km/s.</p>
+<p>First give the companions negligible mass and follow the approach only while the calculation remains resolved. The two galaxies will conserve energy and will not come to rest.  Then raise the masses of the companions 
+toward \(10^{10}\,M_\odot\). Of course, such large masses are unrealistic as single objects, but we are using them represent the free stars in the whole galaxy. Then the galaxies can exchange energy and this energy redistribution (without collisions or dynamical friction) might result in a "merger" of the two galaxies.</p>
+
 <p>Then push the same head-on pair, with no companions and no softening, past where the program can
 still integrate it:</p>
 <pre class="code-block"><code>python main.py --n_bodies 2 --masses_solar 1e11,1e11 --positions_init "-7.7e20,0,0;7.7e20,0,0" --velocities_init "50000,0,0;-50000,0,0" --dt 1e12 --max_steps 17800 --output_type trajectories</code></pre>
@@ -777,6 +781,10 @@ still integrate it:</p>
 normally; <code>--max_steps 17800</code>, only 300 steps further into the same approach, stops with
 <code>Multiple error: The adaptive timestep became too small to advance simulation time in
 floating-point arithmetic.</code>, the loss of numerical resolution on approach to the point-mass singularity discussed in Beat 8.</p>
+
+<p>Other variables to play with include changing how close the encounters are (<i>i.e.</i> the "impact parameter") and their relative velocities. A close encounter creates strong tidal distortions, transfers much more energy and angular momentum, and increases the probability of capture and merger. A distant flyby may produce only mild distortions before the galaxies separate. If the galaxies approach each other with a relatively low speed compared with their mutual escape velocity, gravity can capture them into a bound orbit and eventually merge them. If they pass each other very quickly: Gravity still distorts both galaxies. Tidal tails, bridges, and warped disks can form. But the galaxies may retain enough kinetic energy to escape and continue as separate systems.</p>
+
+<p>In a rich galaxy cluster, galaxy velocities may exceed 1000 km/s, encounters are often too fast for capture, and flybys ("galaxy harassment") become more common than mergers. This is why mergers are especially frequent in small groups such as the <b>Local Group.</b></p>
 <div class="exp-beat">Extends Beat 8.</div>
 </div>
 
