@@ -277,13 +277,20 @@ makes the motion chaotic.</em></p>
 <section id="reading"><h2>Reading the output</h2>
 <p>Every run prints a summary at the console and then opens a plot.</p>
 
+<p><b>Most of this tutorial (Beats 0 through 8) explores methods used to determine the precise dynamics of \(N\) interacting bodies.</b> These are the methods that (with necessary approximations) would be used in creating planetary ephemerides for guiding spacecraft over billions of kilometers, or for calculating the precise interactions of members of a multiple-star system. For these initial beats: </p> 
+
 <p>The first line of the summary gives version, build, accepted steps and simulated days. Initial and final <code>E</code>, 
 <code>E_internal</code>, <code>P</code>, <code>L</code> are expressed per solar mass in input coordinates. 
 The maximum drift line scans the accepted history, not just the endpoints. Eleven time-fraction samples show <code>E</code>, 
 <code>E_internal</code>, <code>K</code>, <code>P</code>, <code>L</code>.
 The display-frame line describes plotting only.</p>
-<p>A run with test particles (Beat 9) also prints a table with one row per particle, using
-astronomical units and years from here on (the summary above it uses days). For each particle:
+
+<p><b>\(N\) mutually interacting bodies implies \(N^2\) interactions, which scales up rapidly such that these methods are impractical for large systems.</b> However, there are many problems in astrophysics that do not require precise localization of every single body, but for which the questions asked, and the methods employed, are statistical in nature. For modeling a galaxy, a galaxy cluster, or the universe, professional computational physicists build a hierarchy of zones containing more and more particles, and when computing the acceleration of a body produced by particles that are far away from it, they use all the particles in a zone as a single particle. This hierarchy is called a "tree". "Tree codes" are explored in the <i>NbodyGalaxySimulator</i> module.</p>
+
+<p><b>Beat 9 introduces a different method useful in the statistical exploration of large systems, the use of massless test particles.</b> Massless test particles are a standard part of N-body simulation tools for astrophysics (<i>i.e.</i> REBOUND, Mercury, and SWIFT) and they turn a quadratic cost into a linear one. With a double star and 100 articles all treated as massive, you would have 10,302 one-way force interactions to keep track of, whereas with test particles, you would have the pair of interactions between the stars and 200 particle-star terms.</p>
+
+<p>For Beat 9, a run with test particles also prints a table with one row per particle, using
+astronomical units and years. For each particle:
 its starting distance <code>r0</code> from <code>--test_center</code>; <code>a0</code> and
 <code>e0</code>, the two-body semi-major axis and eccentricity it would have about a point mass
 equal to the centre's mass (a starting diagnostic, not proof of a circular orbit in a binary's
