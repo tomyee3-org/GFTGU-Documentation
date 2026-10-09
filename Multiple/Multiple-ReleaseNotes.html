@@ -2,9 +2,84 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Multiple 1.5.0 Release Notes — Kickoff4 continuation</title>
+<title>Multiple 1.13.0 Release Notes — Kickoff5 (test particles)</title>
 </head>
 <body>
+<h1>Multiple 1.13.0 Release Notes — Kickoff5 (test particles)</h1>
+<p><b>Version:</b> 1.13.0<br><b>Build:</b> da455c3a0668<br><b>Date:</b> 2026-10-08</p>
+
+<h2>Release Status</h2>
+<p>These notes cover the Kickoff5 series, which added massless test particles and Beat 9, "Jupiter clears its neighbourhood". Kickoff5 started from the supplied 1.6.0 package (build 6a18d58408dc, merged Help <code>Multiple.html</code>), whose changes from 1.5.0 are not recorded here. Kickoff5 (1.8.0) was followed by five code-changing review rounds: Response-to-Audit51 (1.9.0), Response-to-Audit52 (1.10.0), Response-to-Audit53 (1.11.0), and the two most recent, Response-to-Audit54 (1.12.0, build dedc50ff3f1c) and Response-to-Audit55 (1.13.0, build 35a9977e39c8). Audit56 was a review-only round for the program; it also reviewed the owner's Help additions for coverage items MU3 and MU4.</p>
+<ul>
+<li><b>Codex (Audit56):</b> accept the combined changes, with minor clarifications that do not need another review cycle.</li>
+<li><b>Grok (Audit56):</b> accept 1.13.0; no correctness finding holds the test-particle review.</li>
+<li>Release preparation (build da455c3a0668): one docstring sentence in <code>mean_longitudes</code> (Grok Audit56) and one tightened test (Codex Audit56 C56-01). The program's behaviour is the same as the audited build 35a9977e39c8; the version stays 1.13.0.</li>
+</ul>
+
+<h2>Open Bugs</h2>
+<p>No reviewer-reported P1–P3 program defect is open. Codex Audit56 U56-01 and U56-02 (P3) and Grok Audit56's MU3/MU4 notes proposed further Help wording on pair counting, individual timesteps and tree codes; the owner judged the Help complete without them, and Codex recorded MU3 and MU4 as covered.</p>
+<ul>
+<li><b>MU-B1</b>. <i>Severity:</i> P3. <i>Finding:</i> Claude, found while regenerating the Sample Outputs Guide (not reviewer-reported).<br>
+<i>Symptom:</i> Beat 4 asks students to change the second body's y velocity to −25759 m/s and says the scale-aware fallback also applies near cancellation, but that run does not use the fallback.<br>
+<i>Reproduction:</i> <code>python main.py --n_bodies 2 --masses_solar 1,1 --positions_init "5e10,0,0;-5e10,0,0" --velocities_init "0,25760,0;0,-25759,0" --max_steps 3000 --output_type trajectories</code>. Observed: <code>P=(0.0000e+00, 1.0000e+00, 0.0000e+00)</code> m/s, momentum drift 0.0000e+00 as in the exact-cancellation run, and the result's <code>momentum_drift_normalization</code> is <code>initial_norm</code> with scale 1.0 m/s. Expected (per the Beat 4 text): <code>characteristic_scale</code>, 51519 m/s.</li>
+</ul>
+
+<h2>Major Improvements in This Release</h2>
+<ul>
+<li><b>Massless test particles (Kickoff5).</b> Particles feel every massive body and pull on none, so each costs one force term per massive body. New options <code>--test_positions_init</code>, <code>--test_velocities_init</code>, <code>--test_ring</code>, <code>--test_ring_per_radius</code>, <code>--test_phases</code> (golden-angle or random), <code>--test_seed</code>, <code>--test_center</code>, <code>--removal_radii</code>, <code>--escape_radius</code> and <code>--test_csv</code>. Particles starting inside a removal radius are removed at once. Existing commands and the massive-body results are unchanged.</li>
+<li><b>Survival output (Kickoff5).</b> <code>--output_type survival</code> keeps no paths and records each particle's fate (survived, encounter, escaped, numerical) and removal time, with a per-particle console table. Two windows follow: survival time and fate by starting position (removed particles red, horseshoes yellow, other survivors blue and green), then the end positions of the tadpole and circulating survivors, flat and seen from above turning with the reference body.</li>
+<li><b>Help (Kickoff5 and later).</b> New Beat 9 on Jupiter clearing its neighbourhood and a Trojan search; Experiments 11 and 12 (planets around a binary and around one star of a binary). The owner added the N<sup>2</sup> cost, tree-code and test-particle paragraphs to "Reading the output" (coverage items MU3 and MU4).</li>
+<li><b>Per-particle step control (Response-to-Audit51 and 52).</b> Each particle's step is halved, down to 1/65536 of the massive-body step, until it is finite, converged, passes <code>eps1</code> and does not cross a removal radius; a particle that cannot is given the fate <code>numerical</code>. This changed printed survival times and fates relative to Kickoff5; the Help quotes the current values.</li>
+<li><b>Angle-path names (Response-to-Audit51 to 55).</b> Survivors are named tadpole L4/L5, horseshoe, circulating, passed body or unfinished. Tadpole and horseshoe names need a completed swing of <code>dlambda</code>, the particle's mean longitude minus the reference body's, printed as a range in the table. L4/L5 markers are correct for equal-mass binaries, and L4/L5 names for clockwise systems.</li>
+<li><b>Cancellation scale (Response-to-Audit53).</b> Where the pulls on a particle nearly cancel, <code>eps1</code> is judged against a tenth of the sum of the separate pulls.</li>
+<li><b>Mean-longitude domain (Response-to-Audit54 and 55).</b> <code>dlambda</code> is computed from the full three-dimensional orbit, only for orbits within 5° of the x-y plane going round the same way as the reference body; other particles are integrated but get no <code>dlambda</code> and no tadpole or horseshoe name. This changes printed values only for particles off the x-y plane; every Help command is planar and unchanged.</li>
+<li><b>Sample Outputs Guide.</b> All figures regenerated under build da455c3a0668, with two new Beat 9 figures (eleven in all) and working contents links.</li>
+</ul>
+
+<h2>Test Suite Growth</h2>
+<ul>
+<li>Methods per version: 1.6.0 baseline 140; Kickoff5 1.8.0 159; 1.9.0 168; 1.10.0 178; 1.11.0 184; 1.12.0 187; 1.13.0 190. Release preparation added no method; it made one Audit55 regression fail on any refused value inside the accepted domain, and updated the guide check to eleven images.</li>
+<li>Run <code>MPLBACKEND=Agg python3 -m unittest discover -s tests</code> from <code>GFTGU-Programs/Multiple</code>, with <code>GFTGU-Documentation/Multiple</code> as a sibling tree. Result on build da455c3a0668 from a clean extraction: 190 tests in 323 s; 179 passed, 5 failed (8 failing subtests), 6 skipped (Python 3.13.16, NumPy 2.5.3, Matplotlib 3.11.2). The five failing methods are archival content checks against wording the merged Help no longer contains; the six skips are checks for the archived <code>Multiple-original.html</code>, which is not in the package.</li>
+</ul>
+
+<h2>Known Limitations</h2>
+<ul>
+<li>Direct pairwise Newtonian point-mass gravity, with no collision or softening model, tides, gas, radiation or relativity. Exact overlap of massive bodies is singular.</li>
+<li>The adaptive predictor–corrector is not symplectic. Check conservation drift and compare runs at a matched simulated time.</li>
+<li>COM display translates the plot only; integration and printed totals use input coordinates. Animation memory includes a per-step conservation history not capped by the one-million-frame guard.</li>
+<li>Six default plotting colours, repeating with more bodies. MathJax needs an online CDN.</li>
+<li>Plots open interactively; there is no built-in figure-saving option (<code>--test_csv</code> covers survival data).</li>
+<li>BUILD_ID covers the four Python modules only.</li>
+<li>Test-particle step control reduces close-approach error but does not bound error accumulated over a run; runs with many close approaches are slower.</li>
+<li>Where pulls cancel to under a tenth of their sum, the step error there is the trapezoidal rule's ordinary second-order error.</li>
+<li>At the deepest substep a straight-line crossing of a removal radius is taken as the encounter; a curved path entering the radius between substep points can still be missed.</li>
+<li>Escape is a distance test from the massive-body centre of mass; a bound particle on a wide excursion counts as escaped. Encounter is a close-approach cut, not a collision model.</li>
+<li><code>a0</code> and <code>e0</code> treat the centre as a point mass and ignore the other bodies.</li>
+<li><code>--test_ring</code> makes x-y-plane, prograde orbits only; angles and ending distances are measured in the x-y plane from one reference body.</li>
+<li>Co-orbital names describe the run made; a longer run can change them. They are given only for a planar, nearly circular pair (e ≤ 0.1, tilt ≤ 5°), a ring about its centre of mass, a reference body below 3.85% of the mass, and particle orbits within 5° of the x-y plane going round the same way.</li>
+<li>Quasi-satellite motion is not named; it is reported as circulating, passed body or unfinished.</li>
+<li>With only the Sun and Jupiter, horseshoe orbits are long lived; survival alone does not separate them from Trojans.</li>
+<li>Animation keeps substep states for the current massive-body step only; heavily refined particles make frame generation slower.</li>
+<li>The console uses days for the massive-body summary and AU and years for the test particles.</li>
+</ul>
+
+<h2>Known Minor Maintenance Items</h2>
+<ul>
+<li>Five archival test methods fail against the merged Help: <code>test_beat4_momentum_and_angular_momentum_fallback_labels</code>, <code>test_galaxy_collision_singularity_command_actually_crashes</code>, <code>test_numbered_equations_appear_once_and_in_order</code>, <code>test_grok_commands_parse_and_activities_are_complete</code> and <code>test_help_describes_current_defaults_and_modes</code>. Retiring or rewriting them is the owner's decision.</li>
+<li>Codex Audit56 U56-03 (P4): the "Reading the output" sentence that these are the methods used for spacecraft ephemerides could be read as claiming professional accuracy; not changed by owner decision. Its typo and "e.g." points are fixed.</li>
+<li>Grok Audit56: the cost and tree paragraphs might sit better in the Description than in "Reading the output" (placement only).</li>
+<li>The choice of tutorial format stays with Schutz, Higgs and Taylor.</li>
+<li>The archived Reference Guide's cross-program Binary link has not been independently checked.</li>
+<li>Claude Audit41 P4: extend the development-jargon check to the Sample Outputs Guide.</li>
+<li>Optional enhancements: softening or a launch offset for the galaxy toy model, and a larger default colour cycle.</li>
+</ul>
+
+<h2>Version Identification</h2>
+<p>MODEL_VERSION: 1.13.0<br>BUILD_ID: da455c3a0668<br>BUILD_ID hashes <code>physics_multiple.py</code>, <code>driver_multiple.py</code>, <code>main.py</code> and <code>plot_multiple.py</code>. <code>python main.py --version</code> prints <code>Multiple 1.13.0 (build da455c3a0668)</code>. The Help and the Sample Outputs Guide carry the same identifiers. The audited build 35a9977e39c8 differs only by the docstring sentence noted under Release Status.</p>
+<hr>
+<h2>Archived release notes: Version 1.5.0 (2026-09-29)</h2>
+<p>The following section preserves the 1.5.0 notes, including their archived 1.4.0 section, as a historical record.</p>
+
 <h1>Multiple 1.5.0 Release Notes — Kickoff4 continuation</h1>
 <p><b>Version:</b> 1.5.0<br><b>Build:</b> 945d118ab595<br><b>Date:</b> 2026-09-29</p>
 <h2>Release Status</h2>

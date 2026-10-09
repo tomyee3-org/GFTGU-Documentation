@@ -253,7 +253,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <div class="nav-label">Reference</div>
 <a href="#related">Related programs</a>
 <a href="#license">License</a></nav>
-<main id="content" tabindex="-1"><p id="version_build">Version 1.13.0&nbsp;&nbsp;&nbsp;&nbsp;Build 35a9977e39c8</p>
+<main id="content" tabindex="-1"><p id="version_build">Version 1.13.0&nbsp;&nbsp;&nbsp;&nbsp;Build da455c3a0668</p>
 <p class="cursor-tip"><strong>Plot tip:</strong> Hover your cursor over a graph in the Matplotlib window. Its (x, y) position in the graph’s coordinates appears in the lower right corner of the window.</p>
 <section id="overview">
 <h2>Description</h2>
@@ -285,9 +285,14 @@ The maximum drift line scans the accepted history, not just the endpoints. Eleve
 <code>E_internal</code>, <code>K</code>, <code>P</code>, <code>L</code>.
 The display-frame line describes plotting only.</p>
 
-<p><b>\(N\) mutually interacting bodies implies \(N^2\) interactions, which scales up rapidly such that these methods are impractical for large systems.</b> However, there are many problems in astrophysics that do not require precise localization of every single body, but for which the questions asked, and the methods employed, are statistical in nature. For modeling a galaxy, a galaxy cluster, or the universe, professional computational physicists build a hierarchy of zones containing more and more particles, and when computing the acceleration of a body produced by particles that are far away from it, they use all the particles in a zone as a single particle. This hierarchy is called a "tree". "Tree codes" are explored in the <i>NbodyGalaxySimulator</i> module.</p>
+<p><b>The work of a direct force calculation between \(N\) mutually interacting bodies
+scales approximately as \(N^2\), which becomes impractical for large systems.</b> 
+However, there are many problems in astrophysics that 
+do not require precise localization of every single body, but for which the questions asked, and the methods employed, are statistical in nature. For modeling a galaxy, a galaxy cluster, or the universe, professional computational physicists build a hierarchy of zones containing more and more particles, and when computing the acceleration of a body produced by particles that are far away from it, they use all the particles in a zone as a single particle. This hierarchy is called a "tree". "Tree codes" are explored in the <i>NbodyGalaxySimulator</i> module.</p>
 
-<p><b>Beat 9 introduces a different method useful in the statistical exploration of large systems, the use of massless test particles.</b> Massless test particles are a standard part of N-body simulation tools for astrophysics (<i>i.e.</i> REBOUND, Mercury, and SWIFT) and they turn a quadratic cost into a linear one. With a double star and 100 articles all treated as massive, you would have 10,302 one-way force interactions to keep track of, whereas with test particles, you would have the pair of interactions between the stars and 200 particle-star terms.</p>
+<p><b>Beat 9 introduces a different method useful in the statistical exploration of large systems, the use of massless test particles.</b> Massless test particles are a standard part of N-body simulation tools for astrophysics (<i>e.g.</i> REBOUND, Mercury, and SWIFT) and they turn a quadratic cost into a linear one. 
+With a double star and 100 particles all treated as massive, you would have 10,302 one-way force interactions 
+to keep track of, whereas with test particles, you would have the pair of interactions between the stars and 200 particle-star terms.</p>
 
 <p>For Beat 9, a run with test particles also prints a table with one row per particle, using
 astronomical units and years. For each particle:
