@@ -1,57 +1,68 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Random2 1.4.0 Release Notes</title>
-</head>
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Random2 1.4.0 Release Notes</title></head>
 <body>
 <h1>Random2 1.4.0 Release Notes</h1>
-<p>
-<b>Version:</b> 1.4.0<br>
+<p><b>Version:</b> 1.4.0<br>
 <b>Build:</b> 06ebd8fea601<br>
-<b>Date:</b> 2026-09-29
-</p>
-<h2>Release Status</h2>
-<p>Response to Claude’s Audit41 style addendum, 29 September 2026: Enabled sidebar section highlighting and replaced dangling numbered equation references in the Grok parameter table with self-contained definitions. The core Python files and the program version/build are unchanged. Xedoc’s prepackaging review confirmed the core and archived guides unchanged, checked document structure and references, and found no remaining significant discrepancy.</p>
+<b>Date:</b> 2026-10-10</p>
+<p>The date above identifies this documentation update. Comparison baseline: <code>GFTGU-Documentation(20260925-190712).zip</code>. The executable version and build remain unchanged.</p>
 
-<p>Response to Claude Audit41, which APPROVED the Kickoff4 documentation and test update for Version 1.4.0, build 06ebd8fea601, with no P1/P2 findings. Its two P3 items and one P4 coverage suggestion are addressed below. The four core Python modules are unchanged. Both active tutorials and the common Sample Outputs Guide use the same program and build.</p>
-<p>The earlier 1.4.0 notes are preserved verbatim under Historical Release Notes below. Their references to the archived Reference Guide as a current help file and its OB-1 are historical. The archived Reference Guide is retained without further synchronization under the standing documentation policy.</p>
+<h2>Release Status</h2>
+<p>This update records accumulated documentation changes since the September 25 archive and refreshes the Sample Outputs Guide for the current merged <code>Random2.html</code>. No program source or test was changed.</p>
+<p>The two code-changing rounds remain Kickoff2 (1.3.0) and the Audit 21 response (1.4.0). The September 29 notes record Claude Audit41's approval of the subsequent documentation/test work and the resolution of its style addendum; that record is retained in <code>History/Random2-ReleaseNotes-through-20260929.html</code>. The original September 25 notes remain below and are also preserved verbatim as a separate historical file. This task does not claim a new code-development or audit cycle.</p>
+<p>Completeness-of-coverage R1: implementation walkthrough declined by the author. The opening of Beat 0 explains the independent walks, multiple lengths and trial averaging, and the Beat explains the per-walk mean-step normalization. The precise loop nesting and accumulator reset/update order are intentionally outside the required teaching scope. This is a documented scope decision, not a claim that the Java code walkthrough was restored.</p>
+
 <h2>Open Bugs</h2>
-<p>None identified in the active program, paired tutorials, tests, or Sample Outputs Guide. The old OB-1 concerns only <code>Random2-original.html</code>, the archived Reference Guide, and is recorded in the historical notes below.</p>
+<p>None identified in the active program or current Help by this documentation update. Historical OB-1 concerns the archived Reference Guide, <code>Random2-original.html</code>, rather than the current merged Help, which explicitly states the large-N qualification.</p>
+
 <h2>Major Improvements in This Release</h2>
+<p>Accumulated documentation changes since the specified baseline:</p>
 <ul>
-<li>Created <code>Random2-short.html</code> as a concise, nine-Beat Help File, using the same options, seeds, mathematical boundaries, and figure commands as the Extended-style lab manual. Added a short graphical cursor-coordinate note near the start of each active tutorial.</li>
-<li>Required both active tutorials together in the shared test suite; verified the Grok commands, paired version/build stamps, navigation, parameter defaults, and numerical claims. Removed tests that treated the archived Reference Guide as a current API or tutorial. Kept one archival identity check.</li>
-<li>Regenerated all nine embedded figures from the exact final-build commands and refreshed the shared Sample Outputs Guide and its image provenance. Corrected overstatements about short walks, the default radius, and finite-sample escape-time ratios.</li>
-<li>Audit41 response: corrected the Claude tutorial's overview to distinguish net displacement from total path length and to state the large-step square-root law under independent, zero-mean, finite-variance steps.</li>
-<li>Audit41 response: kept Grok command execution independent of optional Sample Outputs files, moved the shared figure-command check into the guarded documentation tests, and extended the reviewer-jargon check to the Sample Outputs Guide (excluding its image data and legitimate tutorial filenames).</li>
+<li>The merged <code>Random2.html</code> is the current Help, replacing the separate active tutorial filenames. Nine Beats and ten Suggested Experiments use the common title, badge, cursor tip, license and footer.</li>
+<li>The overview distinguishes endpoint displacement from total path length and states the independent, zero-mean, finite-variance conditions for large-N square-root scaling. The exact mean-square-displacement identity is distinguished from the asymptotic mean scaled distance.</li>
+<li>Beat 0 spells out the seeded baseline settings; Beat 3 spells out the default star configuration. Other comparisons identify the defaults being changed.</li>
+<li>The star display is explicitly a two-dimensional diffusion picture, not a solar structure model. Beat 4 and Experiment 9 distinguish an expected uncapped escape-count bound from a finite-sample average.</li>
+<li>Beat 5 separates approximate radius-squared scaling from finite-radius overshoot and Monte Carlo uncertainty. Beat 6 qualifies exact seeded count equality for the binary-exact scale factors used in its examples.</li>
+<li>Beat 7 explains why omitting cap-stopped paths biases the escaped-only mean low. Beat 8 compares seeds using combined standard errors and separates random variation from a rejected one-step input.</li>
+<li>The optional normalization experiment gives the large-N constants for unscaled endpoint distances. The solar diffusion estimate remains an order-of-magnitude exercise with its principal physical assumptions stated.</li>
+<li>The condensed Help retains the summaries, command-line parameter reference and experiment links. Earlier sidebar highlighting and self-contained parameter definitions are retained.</li>
+<li>The Sample Outputs Guide uses current Beat titles and exact commands. All nine figures and headline quantities were regenerated from the unchanged build, with expected-value bounds and derived comparisons clearly identified.</li>
 </ul>
+<p>No numerical algorithm, random-number generation, program console output, graphical output or default was changed by this update. The earlier code improvements and detailed audit history remain in the historical notes.</p>
+
 <h2>Test Suite Growth</h2>
-<ul>
-<li>1.2.0: 59 tests. 1.3.0: 123. 1.4.0: 147 tests (146 at the previous audit; the current total replaces archived-guide synchronization checks with paired-tutorial coverage).</li>
-<li>Run <code>python -m unittest discover -s tests -q</code> from the Random2 program folder. In the repository layout with the sibling documentation folder, 147 tests run successfully, with one expected skip for a link target in a separate module. A partial layout with both active tutorials but no Sample Outputs Guide now skips its guarded document checks instead of failing.</li>
-</ul>
+<p>Historical counts: 1.2.0: 59 tests; 1.3.0: 123; 1.4.0: 146 in the September 25 notes, then 147 in the September 29 documentation/test update. Current supplied suite for 1.4.0: 152 discovered tests. No tests were added or edited by this task.</p>
+<p>Run from the program folder with <code>python -m unittest discover -s tests</code>, with the current Help and companion documents in the sibling documentation tree. Validation results: 151 tests ran, 126 test methods passed, and 24 documentation test methods were affected by 43 failure events and 6 errors. All 75 program checks and five merged-Help checks passed. Two skip entries concern the optional archived Reference Guide and sibling-documentation links. Full results are supplied with this package. Some historical assertions still require retired tutorial structure, numbered equations or paired Help pages; the suite is not represented as wholly passing.</p>
+<p>All 35 distinct commands in the current Help's command blocks executed successfully, including the unseeded experiments. The separate <code>python main.py --max_steps 1</code> check exited with the expected parser rejection. The guide's nine seeded figure commands and all supporting comparisons were run with the displayed settings.</p>
+
 <h2>Known Limitations</h2>
 <ul>
-<li>The star is a two-dimensional diffusion picture; it has no solar opacity profile, changing mean free path, or convection. Its escape-time distribution is not a three-dimensional stellar prediction.</li>
-<li>Uniform-component steps in the scaling display fill a cube; they are not direction-isotropic. The mean scaled-distance square-root prefactor is a large-step-count approximation, whereas the second-moment law is exact for independent centered steps.</li>
-<li>Escape statistics omit walks stopped by <code>--step_cap</code>, so the conditional mean is biased low. Unseeded results vary. MathJax needs a network connection to typeset the equations in the active tutorials.</li>
+<li>Educational random walks with no solar opacity profile, spatially varying mean free path or convection.</li>
+<li>The schematic star is two-dimensional; its escape-time distribution is not a three-dimensional solar prediction.</li>
+<li>Uniform-component steps fill a cube and are not direction-isotropic. Mean scaled-distance prefactors are large-N approximations.</li>
+<li>Results vary without a seed; seeded reproduction depends on the random-number algorithms.</li>
+<li>Escape statistics omit cap-stopped walks and can understate the uncapped mean. Finite-sample means are not constrained to lie inside the bound on the theoretical expectation.</li>
+<li>Radius divided by mean free path must lie between 1e-150 and 1e150.</li>
+<li>Help equations use online MathJax; all guide images are embedded.</li>
 </ul>
+
 <h2>Known Minor Maintenance Items</h2>
 <ul>
-<li>Build identification reads <code>unknown</code> if a core file cannot be read.</li>
-<li>There is no built-in save-to-file option for figures or the escape step counts.</li>
-<li>Related Programs links require the other modules' documentation in the repository layout; the standalone Random2 archive does not supply them.</li>
-<li>The archived Reference Guide retains its older wording, including the historical OB-1; it is intentionally outside the active documentation synchronization contract.</li>
+<li>The test suite retains assertions for retired tutorial wording, equation numbering, reference sections and paired files; the affected checks are listed in the validation report.</li>
+<li>One guide test both requires and forbids the string <code>Random2.html</code>; another treats the calculated upper escape-count bound, 961, as a quantity that must be printed by the program.</li>
+<li>Build identification reports <code>unknown</code> if a core file cannot be read.</li>
+<li>Result dataclasses live in <code>random2_driver.py</code>; statistical test tolerances assume the current Python random-number algorithms.</li>
+<li>No built-in option saves plots or escape counts to a file.</li>
+<li>The archived Reference Guide retains historical wording, including OB-1, outside the active Help synchronization contract.</li>
 </ul>
+
 <h2>Version Identification</h2>
-<ul>
-<li><b>Version:</b> 1.4.0 (<code>MODEL_VERSION</code> in <code>random2_physics.py</code>).</li>
-<li><b>Build:</b> 06ebd8fea601, the first 12 hexadecimal digits of the SHA-256 of the four core modules <code>random2_physics.py</code>, <code>random2_driver.py</code>, <code>main.py</code>, and <code>random2_plot.py</code>.</li>
-<li><b>Date:</b> 2026-09-29. Python 3.10 or later. The version/build pair is reported by <code>python main.py --version</code>, in the first line of every run, and in both active tutorials and the Sample Outputs Guide.</li>
-</ul>
+<p>Version: 1.4.0 (<code>MODEL_VERSION</code> in <code>random2_physics.py</code>). Build: 06ebd8fea601, computed from <code>random2_physics.py</code>, <code>random2_driver.py</code>, <code>main.py</code> and <code>random2_plot.py</code>. Documentation update: 2026-10-10. The September 25 baseline notes dated the code release 2026-09-24; the September 29 record is a later documentation/test update. Python 3.10 or later.</p>
+<p>Version/build were verified against the supplied executable core; the four modules were copied without modification for validation. This task compares documentation against the named archive and does not claim a source comparison against a separate program archive.</p>
+
 <h2>Historical Release Notes</h2>
-<p>The following earlier notes preserve the pre-Kickoff4 record, including the former policy of synchronizing the archived Reference Guide. They are retained for development continuity.</p>
+<p>The following is the original September 25 archive's release-note body, retained for continuity. Its treatment of the archived Reference Guide as active is historical.</p>
 
 <h1>Random2 1.4.0 Release Notes</h1>
 
@@ -86,7 +97,7 @@ Reproduction: <code>python main.py --max_steps 2 --n_trials 200000 --seed 12</co
 1.3844 (standard error 0.0010), ratio to sqrt(N) 0.9789, against the large-N prediction 0.9591, while Eq. (6) of
 <code>Random2-original.html</code> and the sentence after it say the trend approaches the theoretical value as
 <code>nTrials</code> grows. Expected: Eq. (6) stated as a large-N approximation, as Eq. (5) of
-<code>Random2-extended.html</code> is.</li>
+<code>Random2-claude.html</code> is.</li>
 </ul>
 
 <h2>Major Improvements in This Release</h2>
@@ -114,7 +125,7 @@ for long rays.</li>
 <li><code>--max_steps</code> below 2 is rejected by the command-line parser.</li>
 <li>Result objects are immutable, and the driver adds <code>run_scaled_distance_statistics()</code> and
 <code>escape_statistics()</code>; <code>run_scaled_distance_experiment()</code> still returns two lists.</li>
-<li>New Beats tutorial Help, <code>Random2-extended.html</code>, with nine beats and 11 experiments; the Reference Guide Help
+<li>New Beats tutorial Help, <code>Random2-claude.html</code>, with nine beats and 11 experiments; the Reference Guide Help
 is retained, kept current, as <code>Random2-original.html</code>.</li>
 </ul>
 
@@ -124,7 +135,7 @@ is retained, kept current, as <code>Random2-original.html</code>.</li>
 <li>1.2.0: 59 tests. 1.3.0: 123. 1.4.0: 146 (133 in the Audit 21 response, 137 in the Audit 22 response, plus nine checks of these two documents).</li>
 <li>Run from the program folder with <code>python -m unittest discover -s tests</code>. In the full repository layout all
 146 tests run and pass with no skips, in about 40 seconds. In a flat folder that holds only the program, the tests and
-<code>Random2-extended.html</code>, the link check, the <code>Random2-original.html</code> tests and these document checks are
+<code>Random2-claude.html</code>, the link check, the <code>Random2-original.html</code> tests and these document checks are
 skipped (13 skips), and the rest pass.</li>
 <li>New coverage since 1.2.0 includes every command shown in the Help, every number the Help and the Sample Outputs Guide
 quote, the equation tags and index, the seed option, the printed summaries, the input limits, and end-to-end runs of both
@@ -149,7 +160,7 @@ displays.</li>
 <li>The build identifier reads <code>unknown</code>, rather than stopping with an error, if a core file cannot be read.</li>
 <li>The result dataclasses live in <code>random2_driver.py</code>, not in a separate neutral module.</li>
 <li>The statistical test tolerances assume Python's current random-number algorithms.</li>
-<li><code>Random2-original.html</code> and <code>Random2-extended.html</code> are both present, and neither is marked as the current Help.</li>
+<li><code>Random2-original.html</code> and <code>Random2-claude.html</code> are both present, and neither is marked as the current Help.</li>
 <li>The Related Programs links point to <code>Star.html</code> and to the current Neutron Help file names.</li>
 <li>There is no option to save a figure or the escape step counts to a file.</li>
 </ul>
@@ -162,7 +173,7 @@ displays.</li>
 <code>random2_physics.py</code>, <code>random2_driver.py</code>, <code>main.py</code> and <code>random2_plot.py</code>.</li>
 <li><b>Date:</b> 2026-09-24. Python 3.10 or later.</li>
 <li>Printed by <code>python main.py --version</code>, in the first line of every run, and in the version stamp of
-<code>Random2-extended.html</code> and <code>Random2-original.html</code>.</li>
+<code>Random2-claude.html</code> and <code>Random2-original.html</code>.</li>
 </ul>
 
 
