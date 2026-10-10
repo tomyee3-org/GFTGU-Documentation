@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Multiple 1.13.0 Release Notes — Kickoff5 (test particles)</h1>
-<p><b>Version:</b> 1.13.0<br><b>Build:</b> da455c3a0668<br><b>Date:</b> 2026-10-08</p>
+<p><b>Version:</b> 1.13.0<br><b>Build:</b> da455c3a0668<br><b>Date:</b> 2026-10-10</p>
 
 <h2>Release Status</h2>
 <p>These notes cover the Kickoff5 series, which added massless test particles and Beat 9, "Jupiter clears its neighbourhood". Kickoff5 started from the supplied 1.6.0 package (build 6a18d58408dc, merged Help <code>Multiple.html</code>), whose changes from 1.5.0 are not recorded here. Kickoff5 (1.8.0) was followed by five code-changing review rounds: Response-to-Audit51 (1.9.0), Response-to-Audit52 (1.10.0), Response-to-Audit53 (1.11.0), and the two most recent, Response-to-Audit54 (1.12.0, build dedc50ff3f1c) and Response-to-Audit55 (1.13.0, build 35a9977e39c8). Audit56 was a review-only round for the program; it also reviewed the owner's Help additions for coverage items MU3 and MU4.</p>
@@ -14,6 +14,7 @@
 <li><b>Codex (Audit56):</b> accept the combined changes, with minor clarifications that do not need another review cycle.</li>
 <li><b>Grok (Audit56):</b> accept 1.13.0; no correctness finding holds the test-particle review.</li>
 <li>Release preparation (build da455c3a0668): one docstring sentence in <code>mean_longitudes</code> (Grok Audit56) and one tightened test (Codex Audit56 C56-01). The program's behaviour is the same as the audited build 35a9977e39c8; the version stays 1.13.0.</li>
+<li>Minor maintenance, 10 October 2026 (tests and these notes only; version and build unchanged): the owner's Help and Sample Outputs Guide now continue multi-line commands with the Windows Command Prompt <code>^</code>, and the owner extended Experiments 9 and 10. The suite's command readers now accept either <code>^</code> or <code>\</code> at the end of a line.</li>
 </ul>
 
 <h2>Open Bugs</h2>
@@ -38,8 +39,8 @@
 
 <h2>Test Suite Growth</h2>
 <ul>
-<li>Methods per version: 1.6.0 baseline 140; Kickoff5 1.8.0 159; 1.9.0 168; 1.10.0 178; 1.11.0 184; 1.12.0 187; 1.13.0 190. Release preparation added no method; it made one Audit55 regression fail on any refused value inside the accepted domain, and updated the guide check to eleven images.</li>
-<li>Run <code>MPLBACKEND=Agg python3 -m unittest discover -s tests</code> from <code>GFTGU-Programs/Multiple</code>, with <code>GFTGU-Documentation/Multiple</code> as a sibling tree. Result on build da455c3a0668 from a clean extraction: 190 tests in 323 s; 179 passed, 5 failed (8 failing subtests), 6 skipped (Python 3.13.16, NumPy 2.5.3, Matplotlib 3.11.2). The five failing methods are archival content checks against wording the merged Help no longer contains; the six skips are checks for the archived <code>Multiple-original.html</code>, which is not in the package.</li>
+<li>Methods per version: 1.6.0 baseline 140; Kickoff5 1.8.0 159; 1.9.0 168; 1.10.0 178; 1.11.0 184; 1.12.0 187; 1.13.0 190, then 191 after the 10 October maintenance. Release preparation added no method; it made one Audit55 regression fail on any refused value inside the accepted domain, and updated the guide check to eleven images. The 10 October maintenance added one method, which checks that both continuation characters give the same command, and made the option-name check read every continued line instead of only the first.</li>
+<li>Run <code>MPLBACKEND=Agg python3 -m unittest discover -s tests</code> from <code>GFTGU-Programs/Multiple</code>, with <code>GFTGU-Documentation/Multiple</code> as a sibling tree. Result on build da455c3a0668 from a clean extraction after the 10 October maintenance: 191 tests in 313 s; 180 passed, 5 failed (8 failing subtests), 6 skipped (Python 3.13.16, NumPy 2.5.3, Matplotlib 3.11.2). The five failing methods are archival content checks against wording the merged Help no longer contains; the six skips are checks for the archived <code>Multiple-original.html</code>, which is not in the package.</li>
 </ul>
 
 <h2>Known Limitations</h2>
@@ -61,6 +62,7 @@
 <li>With only the Sun and Jupiter, horseshoe orbits are long lived; survival alone does not separate them from Trojans.</li>
 <li>Animation keeps substep states for the current massive-body step only; heavily refined particles make frame generation slower.</li>
 <li>The console uses days for the massive-body summary and AU and years for the test particles.</li>
+<li>Multi-line commands in the Help and the Sample Outputs Guide use the Windows Command Prompt <code>^</code> continuation. In macOS and Linux shells and in PowerShell they fail as shown; they must be joined onto one line (or, in macOS and Linux shells, <code>^</code> replaced by <code>\</code>).</li>
 </ul>
 
 <h2>Known Minor Maintenance Items</h2>
