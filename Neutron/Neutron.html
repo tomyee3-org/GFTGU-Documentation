@@ -561,8 +561,9 @@ students can construct equilibrium sequences and locate a maximum
 gravitational mass. The program does not evolve a star in time, so it does
 not simulate collapse; it computes static equilibrium configurations only.</p>
 
-<p>Unlike ordinary main sequence stars, temperature is not an important factor 
-governing the structure of neutron stars. That is because a neutron star is 
+<p>For cold, mature neutron stars, thermal pressure is usually a small 
+contribution to the pressure supporting the star, making temperature a
+relatively unimportant parameter. That is because a neutron star is 
 not supported primarily by thermal pressure. It is supported primarily by 
 quantum mechanical pressure arising from the Pauli exclusion principle, 
 together with strong-interaction effects at high density. Because of this, 
@@ -572,33 +573,33 @@ the star may have an interior temperature of millions of degrees.</p>
 <p>Therefore, the user is not asked to specify a central temperature for 
 the star; instead, the program needs directly the proportionality 
 constant \(K\) in the polytropic equation of state, \(p = K  \rho ^ \gamma\). 
-The value of \(K\) must be calculated from the basic physics of neutrons and protons.</p>
+The user supplies \(K\) to specify the pressure normalization of the chosen toy equation of state.</p>
 </p>
-<div class="warn-box"><strong>What this program is, and what it does not model.</strong> Neutron is a teaching model of a static, non-rotating, spherically symmetric star built from one pedagogical polytropic equation of state. It has no crust-plus-core or tabulated nuclear-matter equation of state, no rotation, no magnetic field, no finite temperature, no baryonic-mass or binding-energy bookkeeping, and no time evolution: it cannot simulate collapse, a merger, or oscillation modes. Use it to see how the TOV equation differs from Newtonian hydrostatics and how a relativistic stellar-structure solver locates a surface it is not allowed to overshoot. Beats 6 and 7 collect the limits.</div>
+<div class="warn-box"><strong>What this program is, and what it does not model.</strong> Neutron is a teaching model of a static, non-rotating, spherically symmetric star built from one pedagogical polytropic equation of state. It has no crust-plus-core or tabulated nuclear-matter equation of state, no rotation, no magnetic field, no finite temperature, no baryonic-mass or binding-energy bookkeeping, and no time evolution: it cannot simulate collapse, a merger, or oscillation modes. Use it to see how the TOV equation differs from Newtonian hydrostatics and how a relativistic stellar-structure solver locates a surface it is not allowed to overshoot. Beats 7 and 8 collect the limits.</div>
 <div class="note-box"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div>
 
 <p>Work from the <code>Neutron</code> program folder with Python 3.10 or later, NumPy and Matplotlib. Each successful run prints a global summary, five radial checkpoints, and a graph. Close the graph to return to your terminal. Run the numbered beats in order the first time; record the values and answer each Task before reading the next beat.</p>
 </section>
 <section id="beat0">
 <h2>Beat 0 · An historically important toy model</h2>
-<p>For the default parameters provided to this model (\(\gamma=5/3, \text{polytropic index}\; n=1.5\)), the EOS corresponds to a <b>nonrelativistic degenerate neutron gas</b>. This is the EOS you derive from Fermi statistics if you assume:
+<p>The default exponent \(\gamma=5/3\) is motivated by the pressure–density scaling of a cold, noninteracting, nonrelativistic neutron gas. Extending this simple relation throughout the star is a teaching approximation. The resultant EOS is what you derive from Fermi statistics if you assume:
 <ul>
 <li>neutrons are noninteracting,</li>
 <li>neutrons remain nonrelativistic,</li>
 <li>zero temperature,</li>
 <li>no nuclear-force contributions.</li>
 </ul>
-The classic 1939 TOV calculation used an ideal neutron gas and found a maximum mass of approximately 0.7M​<sub>☉</sub>, while the masses which we calculate in our exercises are in the 0.7 to 0.9&nbsp;M<sub>☉</sub> range.
+The classic 1939 Oppenheimer–Volkoff calculation used an ideal neutron-gas EOS that included relativistic neutron kinematics and found a maximum mass of approximately \(0.7\,M_\odot\). This module instead extends a simple  polytrope throughout the star. For the default EOS, this module gives a mass near \(0.963\,M_\odot\) at the sequence maximum.
 </p>
 <p>
-In contrast, most accurately measured neutron stars lie between about 1.2&nbsp;M<sub>⊙</sub>​ and 2.1&nbsp;M<sub>⊙</sub>.​ The existence of 2&nbsp; M<sub>⊙</sub>​ neutron stars therefore tells us that strong-interaction physics provides substantial additional pressure beyond pure neutron degeneracy pressure. In other words:
+In contrast, most accurately measured neutron stars lie between about \(1.2\,M_\odot\)  and \(2.1\,M_\odot\).​ The existence of \(2\,M_\odot\)  neutron stars therefore tells us that strong-interaction physics provides substantial additional pressure beyond pure neutron degeneracy pressure. In other words:
 <ul>
 <li>Degeneracy pressure is essential for preventing collapse.</li>
 <li>But degeneracy pressure alone is not enough to explain the most massive observed neutron stars.</li>
 <li>The EOS must be significantly stiffened by nucleon interactions and possibly other many-body effects at supranuclear density.</li>
 <li>A neutron star is not merely an enormous ideal Fermi gas of neutrons.</li>
 </ul>
-At densities approaching nuclear density, neutrons are no longer widely separated particles, and the pressure increases for any given density. This is termed a <b>stiffer EOS.</b> The effective polytropic index becomes much larger than 5/3 over much of the neutron-star interior, rising to as much as \( \gamma \approx 2.5 \).
+At densities approaching nuclear density, neutrons are no longer widely separated particles, and the pressure increases for any given density. This is termed a <b>stiffer EOS.</b> Nuclear interactions change the pressure–density relation. Realistic equations of state generally cannot be represented by one constant polytropic exponent throughout the star.
 </p>
 <p>
 Adding such complexities to our calculations is beyond the scope of this module.
@@ -839,7 +840,7 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 
 
 
-<section id="limits"><h2>Model limits</h2><p>This is a static, spherical, non-rotating single-polytrope teaching model. It has no crust transition, rotation, magnetic field, finite temperature or time evolution. Its printed results test the model's equations and numerical implementation; they do not measure the masses of real neutron stars. Read the <code>Neutron-SampleOutputs_Guide.html</code> for the four representative figures associated with Beats 0, 4, 6 and 7.</p><p>Equations on this page are typeset by MathJax over the internet. Offline, their raw mathematical markup may appear, but the Python program itself runs offline.</p></section>
+<section id="limits"><h2>Model limits</h2><p>This is a static, spherical, non-rotating single-polytrope teaching model. It has no crust transition, rotation, magnetic field, finite temperature or time evolution. Its printed results test the model's equations and numerical implementation; they do not measure the masses of real neutron stars. Read the <code>Neutron-SampleOutputs_Guide.html</code> for the four representative figures associated with Beats 1, 5, 7 and 8.</p><p>Equations on this page are typeset by MathJax over the internet. Offline, their raw mathematical markup may appear, but the Python program itself runs offline.</p></section>
 
 <section id="license" class="gftgu-license">
 <h2>License</h2>
