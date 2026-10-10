@@ -462,6 +462,8 @@
     .task { background: var(--note-bg); border-left: 4px solid var(--gold); padding: 12px 16px; margin: 15px 0; }
     .task strong { color: var(--accent); }
     .cue { font-family: var(--sans); font-size: .83rem; font-weight: bold; color: var(--accent2); text-transform: uppercase; letter-spacing: .06em; }
+    
+    ul {line-height: 1.2;}    
 </style>
 <style id="gftgu-common-elements">
 /* Shared Version / Build, Plot tip, License and Footer. */
@@ -513,14 +515,15 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <nav aria-label="Sections">
 <div class="nav-label">Start</div><a href="#overview">Description</a>
 <div class="nav-label">Beats</div>
-<a href="#beat0">0 · Held up by its own pressure</a>
-<a href="#beat1">1 · Pressure gravitates too</a>
-<a href="#beat2">2 · Equation of state</a>
-<a href="#beat3">3 · Starting from the center</a>
-<a href="#beat4">4 · Resolve the march outward</a>
-<a href="#beat5">5 · Stop at the surface</a>
-<a href="#beat6">6 · Read the physical checks</a>
-<a href="#beat7">7 · Follow the mass turnover</a>
+<a href="#beat0">0 · An historically important toy model</a>
+<a href="#beat1">1 · Held up by its own pressure</a>
+<a href="#beat2">2 · Pressure gravitates too</a>
+<a href="#beat3">3 · Equation of state</a>
+<a href="#beat4">4 · Starting from the center</a>
+<a href="#beat5">5 · Resolve the march outward</a>
+<a href="#beat6">6 · Stop at the surface</a>
+<a href="#beat7">7 · Read the physical checks</a>
+<a href="#beat8">8 · Follow the mass turnover</a>
 
 <div class="nav-label">Suggested Experiments</div>
 <a href="#experiments">Suggested Experiments</a>
@@ -577,7 +580,33 @@ The value of \(K\) must be calculated from the basic physics of neutrons and pro
 <p>Work from the <code>Neutron</code> program folder with Python 3.10 or later, NumPy and Matplotlib. Each successful run prints a global summary, five radial checkpoints, and a graph. Close the graph to return to your terminal. Run the numbered beats in order the first time; record the values and answer each Task before reading the next beat.</p>
 </section>
 <section id="beat0">
-<h2>Beat 0 · Held up by its own pressure</h2>
+<h2>Beat 0 · An historically important toy model</h2>
+<p>For the default parameters provided to this model (\(\gamma=5/3, \text{polytropic index}\; n=1.5\)), the EOS corresponds to a <b>nonrelativistic degenerate neutron gas</b>. This is the EOS you derive from Fermi statistics if you assume:
+<ul>
+<li>neutrons are noninteracting,</li>
+<li>neutrons remain nonrelativistic,</li>
+<li>zero temperature,</li>
+<li>no nuclear-force contributions.</li>
+</ul>
+The classic 1939 TOV calculation used an ideal neutron gas and found a maximum mass of approximately 0.7M​<sub>☉</sub>, while the masses which we calculate in our exercises are in the 0.7 to 0.9&nbsp;M<sub>☉</sub> range.
+</p>
+<p>
+In contrast, most accurately measured neutron stars lie between about 1.2&nbsp;M<sub>⊙</sub>​ and 2.1&nbsp;M<sub>⊙</sub>.​ The existence of 2&nbsp; M<sub>⊙</sub>​ neutron stars therefore tells us that strong-interaction physics provides substantial additional pressure beyond pure neutron degeneracy pressure. In other words:
+<ul>
+<li>Degeneracy pressure is essential for preventing collapse.</li>
+<li>But degeneracy pressure alone is not enough to explain the most massive observed neutron stars.</li>
+<li>The EOS must be significantly stiffened by nucleon interactions and possibly other many-body effects at supranuclear density.</li>
+<li>A neutron star is not merely an enormous ideal Fermi gas of neutrons.</li>
+</ul>
+At densities approaching nuclear density, neutrons are no longer widely separated particles, and the pressure increases for any given density. This is termed a <b>stiffer EOS.</b> The effective polytropic index becomes much larger than 5/3 over much of the neutron-star interior, rising to as much as \( \gamma \approx 2.5 \).
+</p>
+<p>
+Adding such complexities to our calculations is beyond the scope of this module.
+</p>
+</section>
+
+<section id="beat1">
+<h2>Beat 1 · Held up by its own pressure</h2>
 
 <p class="cue">Run</p>
 <pre class="code-block"><code>python main.py --gamma 1.666667 --K 5380.2 --pC 1.26e+35 --steps_per_scale 400 --max_steps 200000 \
@@ -589,15 +618,15 @@ The value of \(K\) must be calculated from the basic physics of neutrons and pro
 
 </section>
 
-<section id="beat1">
-<h2>Beat 1 · Pressure gravitates too</h2>
+<section id="beat2">
+<h2>Beat 2 · Pressure gravitates too</h2>
 
-<p>Newtonian hydrostatic balance uses \(dp/dr=-Gm\rho/r^2\). The TOV equation used here multiplies this by three positive corrections: \((1+p/(\rho c^2))(1+4\pi r^3p/(mc^2))/(1-2Gm/(rc^2))\). For this default star the centre limit of their product is about 1.979374; at the first finite point, \(r=16.375\,\mathrm{m}\), it is about 1.97937253. The ratio changes outward: it is a centre limit, not a universal multiplier.</p><p class="cue">Run</p><pre class="code-block"><code>python main.py --output_type density --pC 1.26e+35</code></pre><p>Compare pressure and density checkpoints with Beat 0. The local \(p/(\rho c^2)\) is about 0.10911 at \(r/R\simeq0.504\), about 0.0001331 near \(r/R\simeq0.99884\), and tends to zero at the surface. The relativistic correction also depends on enclosed mass and radius, so a small pressure term alone does not establish a Newtonian interior.</p>
+<p>Newtonian hydrostatic balance uses \(dp/dr=-Gm\rho/r^2\). The TOV equation used here multiplies this by three positive corrections: \((1+p/(\rho c^2))(1+4\pi r^3p/(mc^2))/(1-2Gm/(rc^2))\). For this default star the centre limit of their product is about 1.979374; at the first finite point, \(r=16.375\,\mathrm{m}\), it is about 1.97937253. The ratio changes outward: it is a centre limit, not a universal multiplier.</p><p class="cue">Run</p><pre class="code-block"><code>python main.py --output_type density --pC 1.26e+35</code></pre><p>Compare pressure and density checkpoints with Beat 1. The local \(p/(\rho c^2)\) is about 0.10911 at \(r/R\simeq0.504\), about 0.0001331 near \(r/R\simeq0.99884\), and tends to zero at the surface. The relativistic correction also depends on enclosed mass and radius, so a small pressure term alone does not establish a Newtonian interior.</p>
 <div class="task"><strong>Task:</strong> Identify which printed quantity you would combine with local pressure and density to assess the compactness term. Explain why the centre-limit factor should not be copied to every radial checkpoint.</div>
 <p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-<section id="beat2">
-<h2>Beat 2 · The equation of state</h2>
+<section id="beat3">
+<h2>Beat 3 · The equation of state</h2>
 <p class="cue">Run</p><p>For comparison, the default settings are <code>--gamma 1.666667</code>, <code>--K 5380.2</code>, <code>--pC 1.26e+35</code>.</p>
 <pre class="code-block"><code>python main.py --gamma 1.5 --K 7.374987e6 --pC 1.26e35 --output_type mass
 python main.py --gamma 1.666667 --K 5.3802e3 --pC 1.26e35 --output_type mass
@@ -607,16 +636,16 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
 
 <p><em>Experiments that go with this beat:</em> <a href="#exp6">Experiment 6</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-<section id="beat3">
-<h2>Beat 3 · Starting from the center</h2>
+<section id="beat4">
+<h2>Beat 4 · Starting from the center</h2>
 <p>At \(r=0\), the TOV formula contains terms with \(r\) in a denominator. The program starts at a small positive radius using the regular centre expansion: \(m\simeq4\pi\rho_C r^3/3\) and \(p\simeq p_C-Ar^2\), where \(A=2\pi G(\rho_C+p_C/c^2)(\rho_C/3+p_C/c^2)\). These set the initial pressure and mass; they are local approximations, not a second equation of state.</p><p class="cue">Run</p><pre class="code-block"><code>python main.py --output_type pressure --steps_per_scale 400</code></pre><p>The printed zero-radius row reports central quantities, while the numerical integration starts at \(r_0&gt;0\).</p>
 <div class="task"><strong>Task:</strong> Why must the enclosed mass start proportional to \(r^3\), while the leading pressure correction is proportional to \(r^2\)? Locate the starting radius in <code>driver_neutron.py</code> after predicting what increasing <code>--steps_per_scale</code> will do to it.</div>
 
 
 <p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-<section id="beat4">
-<h2>Beat 4 · Resolve the march outward</h2>
+<section id="beat5">
+<h2>Beat 5 · Resolve the march outward</h2>
 <p class="cue">Run</p><p>For comparison, the default settings are <code>--steps_per_scale 400</code>.</p>
 <pre class="code-block"><code>python main.py --steps_per_scale 200 --output_type mass
 python main.py --steps_per_scale 400 --output_type mass
@@ -628,16 +657,16 @@ python main.py --steps_per_scale 1600 --output_type mass</code></pre><p>The prog
 
 <p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-<section id="beat5">
-<h2>Beat 5 · Stop at the surface</h2><p>The surface is where \(p=0\). A full step can cross to negative pressure, making \(p^{(\gamma-1)/\gamma}\) invalid. The solver uses \(q=p^{(\gamma-1)/\gamma}\), which approaches zero with an approximately finite slope, to locate the surface from the last valid state. The tangent-line distance is \(-q/(dq/dr)\); its radius error is second order in the final step size in this calculation.</p><p class="cue">Run</p><pre class="code-block"><code>python main.py --steps_per_scale 800 --output_type pressure</code></pre><p>The printed radius is an estimated zero-pressure surface, beyond the last positive-pressure integration sample. The tests compare it against a separately implemented fine-grid integrator; that is an outside numerical check of this solver, not an exact physical measurement of a star.</p>
+<section id="beat6">
+<h2>Beat 6 · Stop at the surface</h2><p>The surface is where \(p=0\). A full step can cross to negative pressure, making \(p^{(\gamma-1)/\gamma}\) invalid. The solver uses \(q=p^{(\gamma-1)/\gamma}\), which approaches zero with an approximately finite slope, to locate the surface from the last valid state. The tangent-line distance is \(-q/(dq/dr)\); its radius error is second order in the final step size in this calculation.</p><p class="cue">Run</p><pre class="code-block"><code>python main.py --steps_per_scale 800 --output_type pressure</code></pre><p>The printed radius is an estimated zero-pressure surface, beyond the last positive-pressure integration sample. The tests compare it against a separately implemented fine-grid integrator; that is an outside numerical check of this solver, not an exact physical measurement of a star.</p>
 <div class="task"><strong>Task:</strong> Open <code>python</code> in the program folder and run:<pre class="code-block"><code>from driver_neutron import compute_neutron_star
 model = compute_neutron_star(1.666667, 1.26e35, 5.3802e3, steps_per_scale=800)
 model["pressure"][-2:], model["radius"][-2], model["surface_radius_m"]</code></pre> The penultimate pressure is the last positive one; compare its radius with the zero-pressure endpoint. Why would accepting a negative-pressure RK4 stage be a poor way to finish?</div>
 
 <p><em>Experiments that go with this beat:</em> <a href="#exp2">Experiment 2</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-<section id="beat6">
-<h2>Beat 6 · Read the physical checks</h2>
+<section id="beat7">
+<h2>Beat 7 · Read the physical checks</h2>
 <p>Every completed model is checked against two independent limits: a mathematical compactness bound for a static, spherical fluid with isotropic pressure and nonincreasing energy density, and a physical requirement that nothing travel faster than light inside the model equation of state. They do not have to fail together. Push the central pressure up and watch each one separately.</p>
 
 <p class="cue">Run</p><p>For comparison, the default settings are <code>--pC 1.26e+35</code>.</p>
@@ -647,7 +676,7 @@ python main.py --pC 1e36 --output_type mass
 python main.py --pC 1e37 --output_type mass</code></pre><p>Read both the compactness \(2GM/(Rc^2)\) and central sound speed divided by \(c\) in each summary. Compactness is approximately 0.203957, 0.349845, 0.462172, 0.466203. Central sound-speed ratios are approximately 0.357557, 0.566689, 0.898142, 1.423460. The last violates the model's causality check, even though its compactness remains below the Buchdahl bound \(8/9\). Passing one check does not imply passing the other.</p><div class="task"><strong>Task:</strong> Find the first pressure in this list at which the central sound speed exceeds \(c\). Does the displayed model also violate the compactness bound?</div>
 <p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> and <a href="#exp7">Experiment 7</a> in <a href="#experiments">Suggested Experiments</a>.</p>
 </section>
-<section id="beat7"><h2>Beat 7 · Follow the mass turnover</h2><p class="cue">Run</p><p>For comparison, the default settings are <code>--pC 1.26e+35</code>.</p>
+<section id="beat8"><h2>Beat 8 · Follow the mass turnover</h2><p class="cue">Run</p><p>For comparison, the default settings are <code>--pC 1.26e+35</code>.</p>
 <pre class="code-block"><code>python main.py --pC 1e34 --output_type mass
 python main.py --pC 1e35 --output_type mass
 python main.py --pC 1e36 --output_type mass
@@ -660,11 +689,11 @@ python main.py --pC 1e27 --output_type mass</code></pre><p>The masses at \(10^{3
 <div class="table-scroll" role="region" tabindex="0" aria-label="Command-line options"><table class="param-table">
 <thead><tr><th>Parameter</th><th>Default</th><th>Units</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>--gamma</code></td><td>1.666667</td><td>dimensionless</td><td>Polytropic exponent in \(p=K\rho^\gamma\). Must be greater than 1 (Beat 2).</td></tr>
+<tr><td><code>--gamma</code></td><td>1.666667</td><td>dimensionless</td><td>Polytropic exponent in \(p=K\rho^\gamma\). Must be greater than 1 (Beat 3).</td></tr>
 <tr><td><code>--pC</code></td><td>1.26e35</td><td>Pa</td><td>Central pressure. Positive and finite.</td></tr>
-<tr><td><code>--K</code></td><td>5.3802e3</td><td>depends on \(\gamma\)</td><td>Polytropic constant. Its dimensions depend on \(\gamma\); see the comparison note in Beat 2.</td></tr>
-<tr><td><code>--steps_per_scale</code></td><td>400</td><td>&mdash;</td><td>Nominal radial resolution: the characteristic scale is divided by \(N_{\rm scale}=\mathtt{steps\_per\_scale}\) (Beat 4). Integer from 50 through 10000000.</td></tr>
-<tr><td><code>--max_steps</code></td><td>200000</td><td>&mdash;</td><td>Safety limit on radial integration steps. Integer from 100 through 10000000. Reaching it before the surface raises an error (Beat 7).</td></tr>
+<tr><td><code>--K</code></td><td>5.3802e3</td><td>depends on \(\gamma\)</td><td>Polytropic constant. Its dimensions depend on \(\gamma\); see the comparison note in Beat 3.</td></tr>
+<tr><td><code>--steps_per_scale</code></td><td>400</td><td>&mdash;</td><td>Nominal radial resolution: the characteristic scale is divided by \(N_{\rm scale}=\mathtt{steps\_per\_scale}\) (Beat 5). Integer from 50 through 10000000.</td></tr>
+<tr><td><code>--max_steps</code></td><td>200000</td><td>&mdash;</td><td>Safety limit on radial integration steps. Integer from 100 through 10000000. Reaching it before the surface raises an error (Beat 8).</td></tr>
 <tr><td><code>--output_type</code></td><td>pressure</td><td>selector</td><td><code>pressure</code>: radial pressure; <code>density</code>: radial density; <code>mass</code>: enclosed gravitational mass. Capitalization and surrounding spaces are ignored.</td></tr>
 <tr><td><code>--log_y</code></td><td>off</td><td>flag</td><td>Logarithmic y-axis for pressure or density; <code>--no-log_y</code> selects linear scaling explicitly. Mass always plots on a linear axis and prints a warning if <code>--log_y</code> is requested with <code>--output_type mass</code>.</td></tr>
 
@@ -684,7 +713,7 @@ printed results of each command before comparing them.
 <div class="experiment-card" id="exp1">
 <div class="exp-num">Experiment 1 · Introductory</div>
 <div class="exp-title">Profile shapes: pressure, density, and mass</div>
-<p class="exp-beat">Goes with <a href="#beat0">Beat 0</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat1">Beat 1</a>.</p>
 <p>
           Run the default model with <code>--output_type</code> set in turn to
           <code>pressure</code>, <code>density</code>, and <code>mass</code>. Describe
@@ -692,12 +721,12 @@ printed results of each command before comparing them.
           enclosed mass must increase outward while pressure and density
           decrease.
         </p>
-<p><strong>Check:</strong> all three runs share the same surface radius, 7.804 km, and total mass, 0.962591 M<sub>sun</sub> (Beat 0); only the plotted curve changes.</p>
+<p><strong>Check:</strong> all three runs share the same surface radius, 7.804 km, and total mass, 0.962591 M<sub>sun</sub> (Beat 1); only the plotted curve changes.</p>
 </div>
 <div class="experiment-card" id="exp2">
 <div class="exp-num">Experiment 2 · Introductory&ndash;Intermediate</div>
 <div class="exp-title">Numerical convergence</div>
-<p class="exp-beat">Goes with <a href="#beat4">Beat 4</a> and <a href="#beat5">Beat 5</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat5">Beat 5</a> and <a href="#beat6">Beat 6</a>.</p>
 <p>
           Repeat the default model with <code>--steps_per_scale</code> = 200,
           400, 800, and 1600. Compare surface radius, total mass, and
@@ -705,12 +734,12 @@ printed results of each command before comparing them.
           refinement, and which has essentially already converged at the
           default resolution?
         </p>
-<p><strong>Check:</strong> surface radius is 7.803970, 7.803563, 7.803543 and 7.803139 km, and total mass is 0.96259066, 0.96259065, 0.96259064 and 0.96259064 M<sub>sun</sub>, at the four resolutions (Beat 4). Mass converges far faster than radius.</p>
+<p><strong>Check:</strong> surface radius is 7.803970, 7.803563, 7.803543 and 7.803139 km, and total mass is 0.96259066, 0.96259065, 0.96259064 and 0.96259064 M<sub>sun</sub>, at the four resolutions (Beat 5). Mass converges far faster than radius.</p>
 </div>
 <div class="experiment-card" id="exp3">
 <div class="exp-num">Experiment 3 · Intermediate</div>
 <div class="exp-title">Comparison with Newtonian hydrostatics</div>
-<p class="exp-beat">Goes with <a href="#beat1">Beat 1</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat2">Beat 2</a>.</p>
 <p>
           Run <strong>Star</strong> separately and match its central density and
           pressure into <strong>Neutron</strong>. <strong>Star</strong> obtains its
@@ -722,12 +751,12 @@ printed results of each command before comparing them.
           radius, and pressure and density profiles between the two programs.
           Relativistic differences should grow as compactness increases.
         </p>
-<p><strong>Check:</strong> the local correction factors in Beat 1 identify the weak-field limit in which a matched Newtonian model should agree closely; the default <strong>Neutron</strong> model, at compactness 0.3643, is far from that limit.</p>
+<p><strong>Check:</strong> the local correction factors in Beat 2 identify the weak-field limit in which a matched Newtonian model should agree closely; the default <strong>Neutron</strong> model, at compactness 0.3643, is far from that limit.</p>
 </div>
 <div class="experiment-card" id="exp4">
 <div class="exp-num">Experiment 4 · Intermediate</div>
 <div class="exp-title">Mass&ndash;central-pressure sequence and the maximum mass</div>
-<p class="exp-beat">Goes with <a href="#beat7">Beat 7</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat8">Beat 8</a>.</p>
 <p>
           Run a logarithmically spaced series of <code>--pC</code> values and
           record <code>data["total_mass_solar"]</code> and
@@ -739,28 +768,28 @@ printed results of each command before comparing them.
           Three? Explain why such a result is not, by itself, evidence for a
           realistic neutron-star equation of state.
         </p>
-<p><strong>Check:</strong> the default equation of state gives 0.818445, 0.963016 and 0.849747 M<sub>sun</sub> at \(p_C=10^{34}\), \(10^{35}\) and \(10^{36}\) Pa, a coarse indication of a turnover. The finer sweep in Beat 7 places the peak near \(1.1\times10^{35}\) Pa, rather than bracketing it between the last two samples.</p>
+<p><strong>Check:</strong> the default equation of state gives 0.818445, 0.963016 and 0.849747 M<sub>sun</sub> at \(p_C=10^{34}\), \(10^{35}\) and \(10^{36}\) Pa, a coarse indication of a turnover. The finer sweep in Beat 8 places the peak near \(1.1\times10^{35}\) Pa, rather than bracketing it between the last two samples.</p>
 </div>
 <div class="experiment-card" id="exp5">
 <div class="exp-num">Experiment 5 · Intermediate</div>
 <div class="exp-title">Buchdahl compactness along a sequence</div>
-<p class="exp-beat">Goes with <a href="#beat6">Beat 6</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat7">Beat 7</a>.</p>
 <p>
           Plot <code>data["compactness"]</code> for the same sequence of models
           used in Experiment 4. Every configuration must remain at or below
-          \(8/9\), the Buchdahl bound discussed in Beat 6. Investigate how close the chosen sequence comes to the
+          \(8/9\), the Buchdahl bound discussed in Beat 7. Investigate how close the chosen sequence comes to the
           bound, and separately track <code>data["causality_satisfied"]</code>
           across the same sequence: does the model become acausal before or
           after it approaches the Buchdahl bound?
         </p>
-<p><strong>Check:</strong> for the default equation of state, compactness reaches only 0.4662 by \(p_C=10^{37}\) Pa, well short of 8/9, while causality has already failed at that same central pressure (Beat 6). For this polytrope, causality is the binding limit, not Buchdahl's bound.</p>
+<p><strong>Check:</strong> for the default equation of state, compactness reaches only 0.4662 by \(p_C=10^{37}\) Pa, well short of 8/9, while causality has already failed at that same central pressure (Beat 7). For this polytrope, causality is the binding limit, not Buchdahl's bound.</p>
 </div>
 <div class="experiment-card" id="exp6">
 <div class="exp-num">Experiment 6 · Intermediate&ndash;Advanced</div>
 <div class="exp-title">Controlled equation-of-state stiffness comparison</div>
-<p class="exp-beat">Goes with <a href="#beat2">Beat 2</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat3">Beat 3</a>.</p>
 <p>
-          Because \(K\)'s dimensions depend on \(\gamma\) (Beat 2), comparing
+          Because \(K\)'s dimensions depend on \(\gamma\) (Beat 3), comparing
           exponents at a fixed numerical \(K\) is not a controlled comparison.
           Instead choose a common central pressure and a target central
           density, and for each \(\gamma&gt;1\) compute \(K=p_C/\rho_C^\gamma\)
@@ -776,12 +805,12 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
           and describe how a stiffer equation of state (larger \(\gamma\))
           changes the star at fixed central density.
         </p>
-<p><strong>Check:</strong> the middle command, \(\gamma=1.666667\), reproduces the default model of Beat 0 exactly: surface radius 7.804 km, total mass 0.962591 M<sub>sun</sub>.</p>
+<p><strong>Check:</strong> the middle command, \(\gamma=1.666667\), reproduces the default model of Beat 1 exactly: surface radius 7.804 km, total mass 0.962591 M<sub>sun</sub>.</p>
 </div>
 <div class="experiment-card" id="exp7">
 <div class="exp-num">Experiment 7 · Advanced</div>
 <div class="exp-title">Limits of a single polytrope at high density</div>
-<p class="exp-beat">Goes with <a href="#beat6">Beat 6</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat7">Beat 7</a>.</p>
 <p>
           Explore a wide central-pressure range with
           <code>python main.py --pC 1e35 --output_type density --log_y</code> and
@@ -792,17 +821,17 @@ python main.py --gamma 2 --K 2.863463e-3 --pC 1.26e35 --output_type mass</code><
           polytrope or tabulated nuclear equation of state, and explain why a
           realistic self-bound quark-matter model generally needs an offset
           energy density that cannot be represented merely by choosing
-          \(\gamma=1\) here (which this solver refuses outright; Beat 2).
+          \(\gamma=1\) here (which this solver refuses outright; Beat 3).
         </p>
-<p><strong>Check:</strong> central sound speed rises from \(v_s/c=0.566689\) at \(p_C=10^{35}\) Pa to \(v_s/c=1.423460\) at \(p_C=10^{37}\) Pa, crossing 1 somewhere between the two (Beat 6).</p>
+<p><strong>Check:</strong> central sound speed rises from \(v_s/c=0.566689\) at \(p_C=10^{35}\) Pa to \(v_s/c=1.423460\) at \(p_C=10^{37}\) Pa, crossing 1 somewhere between the two (Beat 7).</p>
 </div>
 <div class="experiment-card" id="exp8">
 <div class="exp-num">Experiment 8 · Advanced · Research question</div>
 <div class="exp-title">Why are the minimum-mass estimates so different?</div>
-<p class="exp-beat">Goes with <a href="#beat7">Beat 7</a>.</p>
+<p class="exp-beat">Goes with <a href="#beat8">Beat 8</a>.</p>
 <p>Why does the chapter's simple binding estimate suggest a minimum neutron-star mass of about \(0.02\,M_\odot\), whereas more detailed matter models have given \(0.067\)&ndash;\(0.093\,M_\odot\), and the often-quoted low-mass observational benchmark is about \(1.17\,M_\odot\)? Research the assumptions and evidence behind each number and develop your own explanation of the gaps.</p>
 <p>Are these numbers estimates of the same physical limit? What changes when a model includes low-density nuclear matter and a crust? How might temperature, stability, formation history, or observational selection affect the comparison? Check the current literature for lower-mass candidates and assess how their masses and their identification as neutron stars are established.</p>
-<p><strong>Numerical starting point:</strong> Beat 7 reports \(0.020979\,M_\odot\) for <code>--pC 1e28</code> and \(0.010529\,M_\odot\) for <code>--pC 1e27</code>. This solver can produce equilibria below the chapter's estimate; it does not establish a physical minimum mass or simulate how such an object would form. Use this contrast as evidence to investigate, rather than treating the smallest mass in a chosen run as a prediction of a minimum.</p>
+<p><strong>Numerical starting point:</strong> Beat 8 reports \(0.020979\,M_\odot\) for <code>--pC 1e28</code> and \(0.010529\,M_\odot\) for <code>--pC 1e27</code>. This solver can produce equilibria below the chapter's estimate; it does not establish a physical minimum mass or simulate how such an object would form. Use this contrast as evidence to investigate, rather than treating the smallest mass in a chosen run as a prediction of a minimum.</p>
 <p><strong>Reading starting points:</strong> <a href="https://ntrs.nasa.gov/citations/19730031176">Leung and Wang (1972)</a> obtained the model-dependent \(0.067\) and \(0.093\,M_\odot\) values. <a href="https://arxiv.org/abs/1509.08805">Martinez et al. (2015)</a> measured \(1.174\pm0.004\,M_\odot\) for the companion of PSR J0453+1559, interpreted as a neutron star. Compare these with the formation calculations of <a href="https://arxiv.org/abs/1808.02328">Suwa et al. (2018)</a> and the lower, model-dependent mass inference for HESS J1731&minus;347 in <a href="https://www.nature.com/articles/s41550-022-01800-1">Doroshenko et al. (2022)</a>. Thus \(1.17\,M_\odot\) is a precise binary-system benchmark, not an absolute observational lower limit.</p>
 </div>
 </section>
