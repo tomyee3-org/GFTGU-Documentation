@@ -545,7 +545,7 @@ runs offline; MathJax typesets this page's equations when online.</p>
 </section>
 <section id="beat0"><h2>Beat 0 · The rosette</h2>
 <p>Begin with the default Schwarzschild orbit: A particle starts 15000 m from a black hole of one solar mass, moving sideways. Watch what it does.</p>
-<pre>python main.py --model schwarzschild --x_init 15000 --u_init 120000000 --dt 2e-06 --eps1 0.05 --eps2 0.0001 \
+<pre>python main.py --model schwarzschild --x_init 15000 --u_init 120000000 --dt 2e-06 --eps1 0.05 --eps2 0.0001 ^
   --max_steps 6000 --max_orbits 10</pre>
 <p>The run stops at 6000 accepted steps after 9.285146 turns. It finds six periapsides at about 15000 m and measures 2.44005 rad of advance per radial period. The independent calculation from the constants of motion predicts 2.44037 rad and an apoapsis of 23954.4 m. The horizon is about 2953.3 m and the innermost stable circular orbit (ISCO) about 8859.8 m, both inside this orbit.</p>
 <p>Point to two successive closest approaches in the plot. Why can their distances agree while their directions differ? The extra Schwarzschild inward term in the orbit equation is \(3h^2/(c^2r^2)\) times the Newtonian attraction, where \(h=x_0u_0\) is conserved angular momentum per unit mass. The orbital diagram is not a flat-space map of the geometry.</p>
@@ -624,11 +624,11 @@ python main.py --dt 2e-7 --eps1 0.01 --eps2 1e-6 --max_steps 60000</pre>
 <section id="beat8">
 <h2>Beat 8 · Escape, Mercury and rejected inputs</h2>
 <p>Four runs the program handles least well: a particle fast enough to escape, the orbit of Mercury with and without relativity, and a start inside the hole, which is rejected.</p>
-<pre>python main.py --u_init 1.8e8 --max_steps 12000 --x_init 15000 --dt 2e-06 --max_orbits 10 \
+<pre>python main.py --u_init 1.8e8 --max_steps 12000 --x_init 15000 --dt 2e-06 --max_orbits 10 ^
   --model schwarzschild
 python main.py --x_init 4.6e10 --u_init 58980 --dt 1e4 --max_steps 4000 --max_orbits 5 --model schwarzschild
 python main.py --model newtonian --x_init 4.6e10 --u_init 58980 --dt 1e4 --max_steps 4000 --max_orbits 5
-python main.py --x_init 2000 --u_init 120000000 --max_steps 6000 --dt 2e-06 --max_orbits 10 \
+python main.py --x_init 2000 --u_init 120000000 --max_steps 6000 --dt 2e-06 --max_orbits 10 ^
   --model schwarzschild</pre>
 <p>The first prediction is <code>escape</code>, although the run ends at the 12000-step limit because the program has no escape detector. The Mercury input predicts 5.01831e-07 rad of relativistic advance, while the Schwarzschild and Newtonian integrations report 0.000121605 and 0.000119678 rad. The final command is expected to fail: 2000 m lies inside the horizon.</p>
 <p>Why is neither measured Mercury angle evidence of 43 arcseconds per century? The control that should have zero advance produces nearly the same spurious angle. Use the predicted angle for this small effect; the coarse integration and accepted-step periapsis sampling cannot resolve it. The invalid input stops before a plot opens.</p>

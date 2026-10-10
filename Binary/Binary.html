@@ -204,7 +204,7 @@ python main.py</pre>
   <section id="beat0">
     <h2>Beat 0 · Two bodies, one force</h2>
     <p>Two solar-mass bodies start \(9.2\times 10^{10}\,\mathrm{m}\) apart. Each is given 13&nbsp;km&nbsp;s\(^{-1}\) sideways, in opposite directions.</p>
-<pre>python main.py --MA 2e+30 --MB 2e+30 --xInitA 46000000000 --xInitB -46000000000 --yInitA 0 --yInitB 0 \
+<pre>python main.py --MA 2e+30 --MB 2e+30 --xInitA 46000000000 --xInitB -46000000000 --yInitA 0 --yInitB 0 ^
   --vInitA 0 --vInitB 0 --uInitA 13000 --uInitB -13000 --dt 2000 --eps1 0.05 --eps2 0.0001</pre>
     <p>Look at the orbits plot and at the six summary lines from <code>Accepted steps</code> to <code>Maximum separation (sampled)</code>. The maximum separation is the starting separation, so they begin as far apart as they ever get. The minimum is a fraction of that, so the paths are not circles. The two curves are mirror images through the origin. <code>Termination: one relative revolution</code> is the geometric stop. Write one sentence about how the pull should change if you doubled the separation.</p>
     <div class="eq-block">
@@ -222,7 +222,7 @@ r=\sqrt{(x_A-x_B)^2+(y_A-y_B)^2}.
     <h2>Beat 1 · Who moves, and how much</h2>
     <p>The forces on A and B have equal magnitudes and opposite directions. The accelerations do not. Make A twice B and start them circling a common point.</p>
 <p>For comparison, the default settings are <code>--MA 2e+30</code>, <code>--MB 2e+30</code>.</p>
-<pre>python main.py --MA 2e30 --MB 1e30 --xInitA 3.0666666667e10 --xInitB -6.1333333333e10 \
+<pre>python main.py --MA 2e30 --MB 1e30 --xInitA 3.0666666667e10 --xInitB -6.1333333333e10 ^
   --uInitA 15550.5265 --uInitB -31101.053</pre>
     <p>Read the two <code>Body A/B about centre of mass</code> blocks. The semi-major axes should sit in the inverse mass ratio. The periods should match. The plot is two circles about the origin: the centre of mass.</p>
     <div class="eq-block">
@@ -244,19 +244,19 @@ r=\sqrt{(x_A-x_B)^2+(y_A-y_B)^2}.
     <h2>Beat 2 · Only the separation matters</h2>
     <p>The force depends on the two positions only through \(r\). Give both bodies the same extra velocity, 60 km/s along \(x\), and look at the same run three ways.</p>
 <p>For comparison, the default settings are <code>--vInitA 0</code>, <code>--vInitB 0</code>, <code>--xInitA 46000000000</code>, <code>--xInitB -46000000000</code>, <code>--yInitA 0</code>, <code>--yInitB 0</code>.</p>
-<pre>python main.py --vInitA 60000 --vInitB 60000 --frame user --output_type orbits --xInitA 46000000000 \
+<pre>python main.py --vInitA 60000 --vInitB 60000 --frame user --output_type orbits --xInitA 46000000000 ^
   --xInitB -46000000000 --yInitA 0 --yInitB 0
-python main.py --vInitA 60000 --vInitB 60000 --frame com --output_type orbits --xInitA 46000000000 \
+python main.py --vInitA 60000 --vInitB 60000 --frame com --output_type orbits --xInitA 46000000000 ^
   --xInitB -46000000000 --yInitA 0 --yInitB 0
-python main.py --vInitA 60000 --vInitB 60000 --frame com --output_type energy_vs_time --xInitA 46000000000 \
+python main.py --vInitA 60000 --vInitB 60000 --frame com --output_type energy_vs_time --xInitA 46000000000 ^
   --xInitB -46000000000 --yInitA 0 --yInitB 0</pre>
     <p>Look at the first two plots and at the summary lines from <code>Accepted steps</code> to the two <code>Body A/B about centre of mass</code> blocks. The first plot uses the input frame (<code>--frame user</code>): the centre of mass drifts about \(2.7\times10^{11}\) m to the right during the run, and the bodies trace drifting tracks. The second view follows the centre of mass (COM), the frame in which the total momentum is zero. The Beat 0 ellipses return, each with one focus at the origin. In this Newtonian model the centre-of-mass and centre-of-momentum frames are the same. The subscripts CM in the equations also mean centre of mass.</p>
     <p>All three printed summaries are identical. The orbital diagnostics match Beat 0 to the printed figures, but the energy table does not. Row 0.0 shows kinetic energy larger by \(\tfrac12(M_A+M_B)V_{\mathrm{CM}}^2=7.2\times10^{39}\) J and positive total energy, \(E=+4.6361\times10^{39}\) J. Look at the third plot: its total energy is negative, about \(-2.564\times10^{39}\) J, as in Beat 0. Which energy tells you that the pair is bound? Explain why changing the observer's velocity cannot unbind the pair.</p>
     <p>This is Galilean relativity: observers moving at constant velocity describe different tracks but the same motion of the bodies relative to one another. The COM view subtracts the mass-weighted centre and velocity, \(\mathbf r'_i=\mathbf r_i-\mathbf R_{\mathrm{CM}}\) and \(\mathbf v'_i=\mathbf v_i-\mathbf V_{\mathrm{CM}}\). The option <code>--frame</code> applies to all seven plots, including energy. Each plot title identifies the selected view as <code>USER frame</code> or <code>COM frame</code>. It leaves the integration and printed summary in the input frame, so the boosted run still prints positive total energy while its COM energy plot shows negative internal energy.</p>
     <p><strong>Shift the start instead.</strong> Both commands use the same shifted start; the second views it with <code>--frame com</code>. Compare their plots with Beat 0.</p>
-<pre>python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10 --vInitA 0 --vInitB 0 --frame user \
+<pre>python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10 --vInitA 0 --vInitB 0 --frame user ^
   --output_type orbits
-python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10 --frame com --vInitA 0 --vInitB 0 \
+python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10 --frame com --vInitA 0 --vInitB 0 ^
   --output_type orbits</pre>
     <p>In the input frame the pair's centre of mass is at \((4\times10^9,1\times10^{10})\) m, and the ellipses move with it. In the COM view that shift disappears. What has changed in the picture, and what has stayed the same in the orbital diagnostics?</p>
     <div class="note"><strong>A numerical caveat, not a new law.</strong> A large boost changes the speeds the corrector compares to, so the two relative paths agree only to the accuracy of the integrator, not to rounding error. A modest boost agrees far more closely.</div>
@@ -266,7 +266,7 @@ python main.py --xInitA 5e10 --xInitB -4.2e10 --yInitA 1e10 --yInitB 1e10 --fram
   <section id="beat3">
     <h2>Beat 3 · Energy separates bound from unbound</h2>
     <p>Three starting speeds, same masses and same separation. Plot energy against time. Unbound runs never complete a turn, so the one-revolution stop has to come off.</p>
-<pre>python main.py --output_type energy_vs_time --uInitA 13000 --uInitB -13000 --stop_after_one_orbit \
+<pre>python main.py --output_type energy_vs_time --uInitA 13000 --uInitB -13000 --stop_after_one_orbit ^
   --max_steps 10000
 python main.py --uInitA 38091.14 --uInitB -38091.14 --no-stop_after_one_orbit --max_steps 1000 --output_type energy_vs_time
 python main.py --uInitA 60000 --uInitB -60000 --no-stop_after_one_orbit --max_steps 1000 --output_type energy_vs_time</pre>

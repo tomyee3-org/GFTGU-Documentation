@@ -536,7 +536,7 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <section id="beat0">
 <h2>Beat 0 · Random steps add up as √N</h2>
 <p>A walker takes steps in three dimensions, each one in a random direction and of random length, with no memory of the steps before. The program sends out 100 such walkers for each of twelve walk lengths, from 2 steps to 4096, and averages how far they end up from where they started.</p>
-<pre>python main.py --seed 12 --display scaled_distance --max_steps 4096 --n_trials 100 \
+<pre>python main.py --seed 12 --display scaled_distance --max_steps 4096 --n_trials 100 ^
   --step_distribution uniform</pre>
 <p>In the last row, 4096 steps produce a mean scaled distance of 63.0073, with a fitted log-log slope of 0.4964. Compare the rows at 256, 1024 and 4096 steps: four times the steps roughly doubles the endpoint distance. The scale divides each walk's net displacement by that walk's own mean step length.</p>
 <p>Point to two rows in the table that support \(d\propto\sqrt N\). Does a single trajectory need to follow that relation exactly? The exact independent-step identity is \(\langle r_N^2\rangle=N\langle |s|^2\rangle\). The printed mean of scaled distance follows \(C\sqrt N\) only as a large-\(N\) approximation. In particular, a two-step row need not equal its large-\(N\) prediction.</p>
@@ -568,7 +568,7 @@ python main.py --seed 12 --n_trials 1000</pre>
 <section id="beat3">
 <h2>Beat 3 · A photon in a schematic star</h2>
 <p>Now picture the walk. A photon starts at the centre of a circle, the schematic star, and takes steps of one fixed length in directions chosen with no preference, until it crosses the edge. The program draws four such walks.</p>
-<pre>python main.py --display walk2d --seed 12 --n_walks 4 --mean_free_path 1 --reference_steps 2000 \
+<pre>python main.py --display walk2d --seed 12 --n_walks 4 --mean_free_path 1 --reference_steps 2000 ^
   --radius_factor 2 --step_cap 200000</pre>
 <p>The default radius is 89.4427 step-length units, so \((R/\lambda)^2=8000.0\). The four paths escape after 11564, 7519, 8246 and 2479 steps; their mean is 7452.0 with standard error 1876.9. A path ends at the circle's exit point, and its outward ray is only a display convention.</p>
 <p>Why do four independent paths give such a noisy mean? In this display each step has fixed length \(\lambda\) and a uniform random angle. The default radius follows \(R=f\lambda\sqrt{N_{\rm ref}}\) with \(f=2\) and \(N_{\rm ref}=2000\); <code>--reference_steps</code> sizes the circle and does not cap a walk.</p>
@@ -596,9 +596,9 @@ python main.py --display walk2d --radius 30 --n_walks 200 --seed 12 --mean_free_
 <h2>Beat 6 · Only R/λ matters</h2>
 <p>Change the step length and leave the radius to the default rule of Beat 3, which scales it with the step length.</p>
 <p>For comparison, the default settings are <code>--mean_free_path 1</code>.</p>
-<pre>python main.py --display walk2d --mean_free_path 0.5 --seed 12 --reference_steps 2000 --radius_factor 2 \
+<pre>python main.py --display walk2d --mean_free_path 0.5 --seed 12 --reference_steps 2000 --radius_factor 2 ^
   --n_walks 4
-python main.py --display walk2d --mean_free_path 2 --seed 12 --reference_steps 2000 --radius_factor 2 \
+python main.py --display walk2d --mean_free_path 2 --seed 12 --reference_steps 2000 --radius_factor 2 ^
   --n_walks 4</pre>
 <p>The radii are 44.7214 and 178.8854; Beat 3 gave 89.4427 at step length 1. In all three runs \(R/\lambda=2\sqrt{2000}\), \((R/\lambda)^2=8000.0\), and the same seed gives counts 11564, 7519, 8246 and 2479. The axes change physical scale.</p>
 <p>Why do the counts match despite the different radii? The same angular draws give the same paths in step-length units. The exact count identity here uses binary-exact scale factors 0.5 and 2; other factors can differ at a boundary because of floating-point rounding.</p>

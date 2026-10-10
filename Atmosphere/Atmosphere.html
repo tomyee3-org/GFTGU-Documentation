@@ -216,8 +216,8 @@ python main.py</pre>
   <section id="beat0">
     <h2>Beat 0 · Pressure is the weight of the air above you</h2>
     <p>Climb, and there is less air overhead. That is the whole idea of atmospheric structure. Ask the program only to show it for the Earth.</p>
-<pre>python main.py --planet_name Earth --g_accel 9.81 --mu 28.97 --p0 101300 \
-  --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 \
+<pre>python main.py --planet_name Earth --g_accel 9.81 --mu 28.97 --p0 101300 ^
+  --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 ^
   --T_points 288.15,216.65,216.65,228.65,270.65,270.65,214.65,186.946,190,800,1080,1190,1225,1240,1240</pre>
 
     <p>The parameters allows the user to model different planets. 
@@ -265,7 +265,7 @@ python main.py</pre>
   <section id="beat2">
     <h2>Beat 2 · One number sets the size of an atmosphere</h2>
     <p>If the temperature is the same at every height, equal steps upward multiply the pressure by the same factor.</p>
-<pre>python main.py --h_points 0,8000,16000,24000,32000 --T_points 288.15,288.15,288.15,288.15,288.15 \
+<pre>python main.py --h_points 0,8000,16000,24000,32000 --T_points 288.15,288.15,288.15,288.15,288.15 ^
   --g_accel 9.81 --mu 28.97 --p0 101300</pre>
     <p>Read only the table; above the last supplied altitude the program switches to the closure of Beat 7.
 	Divide each pressure by the one below it. Find the height over which the pressure falls by a 
@@ -311,8 +311,8 @@ H \propto \frac{T}{\mu\,g}.
   <section id="beat4">
     <h2>Beat 4 · Real air is not isothermal</h2>
     <p>The program does not compute the layered temperature of a real atmosphere. You give temperatures at chosen altitudes; it joins them with straight lines. The scale height then changes with height.</p>
-<pre>python main.py --output_type temperature \
-  --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 \
+<pre>python main.py --output_type temperature ^
+  --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 ^
   --T_points 288.15,216.65,216.65,228.65,270.65,270.65,214.65,186.946,190,800,1080,1190,1225,1240,1240
 python main.py --h_points 0,50000,100000 --T_points 288,200,350 --output_type pressure</pre>
     <p>On the default temperature plot find the four layers: troposphere cooling, stratosphere warming, mesosphere cooling, thermosphere rising. Local \(H\) tracks \(T\). In the second run, check the fall factors from 50 to 100&nbsp;km: the density fall factor is the pressure fall factor multiplied by \(T(100\,\mathrm{km})/T(50\,\mathrm{km})=350/200=1.75\).</p>
@@ -331,14 +331,14 @@ T(h) = T_{i-1} + \frac{T_i-T_{i-1}}{h_i-h_{i-1}}\,(h-h_{i-1}),
   <section id="beat5">
     <h2>Beat 5 · Other worlds, same equations</h2>
     <p>Nothing so far is specific to the Earth. Change \(g\), \(\mu\), \(p_0\) and the temperature list. “Thick” can mean column mass \(p_0/g\), or it can mean scale height. Those two rankings need not agree.</p>
-<pre>python main.py --planet_name Mars --g_accel 3.72 --mu 44 --p0 610 \
+<pre>python main.py --planet_name Mars --g_accel 3.72 --mu 44 --p0 610 ^
   --h_points 0,10000,25000,45000 --T_points 210,170,145,130
 
-python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 \
-  --h_points 0,10000,20000,30000,40000,50000,60000 \
+python main.py --planet_name Venus --g_accel 8.87 --mu 44 --p0 9.2e6 ^
+  --h_points 0,10000,20000,30000,40000,50000,60000 ^
   --T_points 735,658,579,495,416,348,263
 
-python main.py --planet_name Jupiter --g_accel 24.8 --mu 2.2 --p0 1e5 \
+python main.py --planet_name Jupiter --g_accel 24.8 --mu 2.2 --p0 1e5 ^
   --h_points 0,20000,50000,100000 --T_points 165,130,110,150</pre>
     <p>Compute \(H=p_0/(g\rho_0)\) and the column mass \(p_0/g\) from the surface row of each table. Jupiter’s scale height is the largest of the four because \(\mu\) is so small. Venus’s column is about a hundred Earth columns; Mars has little air and a taller scale height than Earth. Jupiter has no solid surface: the run takes the 1-bar level as the reference and the supplied profile ends at 100&nbsp;km; the plotted curve continues a little above that under the Beat 7 closure.</p>
     <p><em>Experiments that go with this beat:</em> <a href="#exp5">Experiment 5</a> in <a href="#experiments">Suggested Experiments</a>.</p>
@@ -348,8 +348,8 @@ python main.py --planet_name Jupiter --g_accel 24.8 --mu 2.2 --p0 1e5 \
     <h2>Beat 6 · How far to trust the numbers</h2>
     <p>The isothermal atmosphere of Beat 2 has an exact answer. Use it, then compare the default Earth run with the standard atmosphere it is meant to mimic.</p>
 <pre>python main.py --h_points 0,100000 --T_points 288.15,288.15
-python main.py \
-  --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 \
+python main.py ^
+  --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 ^
   --T_points 288.15,216.65,216.65,228.65,270.65,270.65,214.65,186.946,190,800,1080,1190,1225,1240,1240</pre>
     <p>At 100&nbsp;km the exact isothermal pressure is \(p_0 e^{-h/H}\). The printed value will be a few per cent low. That is the Euler step: each increment multiplies \(p\) by \(1-\Delta h/H\) instead of by \(e^{-\Delta h/H}\). With \(N=H/\Delta h=200\),</p>
     <div class="eq-block">
@@ -367,8 +367,8 @@ python main.py \
   <section id="beat7">
     <h2>Beat 7 · The top of the model is a stopping rule</h2>
     <p>A real atmosphere fades into space. The program needs a temperature above the last altitude you supplied, and a place to stop. Neither is a discovery about the air.</p>
-<pre>python main.py --output_type temperature \
-  --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 \
+<pre>python main.py --output_type temperature ^
+  --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 ^
   --T_points 288.15,216.65,216.65,228.65,270.65,270.65,214.65,186.946,190,800,1080,1190,1225,1240,1240
 python main.py --h_points 0,20000 --T_points 288.15,216.65 --output_type temperature</pre>
 
@@ -428,9 +428,9 @@ T=\beta\,p^{\alpha},\qquad \alpha=0.5.
 <div class="scenario-card" id="exp2">
 <h4>2 · Beginner — A straight line on log paper</h4>
 <p>Because pressure falls rapidly with altitude, a logarithmic vertical axis makes its decline easier to examine. Run the same isothermal atmosphere first with the default linear scale, then with <code>--log</code>. Only the display scale changes.</p>
-<pre>python main.py --h_points 0,8000,16000,24000,32000 --T_points 288.15,288.15,288.15,288.15,288.15 \
+<pre>python main.py --h_points 0,8000,16000,24000,32000 --T_points 288.15,288.15,288.15,288.15,288.15 ^
   --g_accel 9.81 --mu 28.97 --p0 101300 --output_type pressure --no-log
-python main.py --h_points 0,8000,16000,24000,32000 --T_points 288.15,288.15,288.15,288.15,288.15 \
+python main.py --h_points 0,8000,16000,24000,32000 --T_points 288.15,288.15,288.15,288.15,288.15 ^
   --g_accel 9.81 --mu 28.97 --p0 101300 --output_type pressure --log</pre>
 <p>Examine the part from 0 to 32000 m, where the supplied temperature is constant. Why is that part almost straight on the semilog graph? The curve above 32000 m follows the separate closure of Beat 7, so it need not stay straight.</p>
 <p>The tick labels and cursor still give pressure in pascals; they do not give \(\ln p\). From two printed rows or cursor readings, calculate \(\ln(p_2/p_1)/(h_2-h_1)\). What slope do you expect, and what length is minus one over that slope? Compare it with Beat 2’s scale height of about 8.43 km. Matplotlib’s logarithmic axis uses powers of ten, so a slope measured in vertical decades is \(-1/(H\ln 10)\), whereas a separate plot of \(\ln p\) against \(h\) has slope \(-1/H\). Use <code>--no-log</code>, or omit both scale options in a new run, to return to linear axes.</p>

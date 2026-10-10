@@ -773,7 +773,7 @@ python main.py --xInit 1.471e11 --vyInit 30290</code></pre>
 <p>
       Start with the default Mercury orbit (Beat 0). Then use the perihelion distances and maximum orbital speeds from <a href="#table4-3">Table 4.3 above</a> to model other planets: place the planet on the positive x-axis at the listed perihelion distance and give it only the listed maximum y-direction speed, converting both to SI units as explained above. From the plotted perihelion and aphelion distances, estimate the eccentricity and compare it with the eccentricity column, using the radial-distance formula below the table. This directly tests whether Newton's inverse-square law reproduces the observed shapes of planetary orbits. As a check on your method, the second command uses commonly quoted values for the Earth, a perihelion of about 1.471&times;10<sup>11</sup> m and a speed of about 30.29 km s<sup>&minus;1</sup>; it prints an eccentricity of 0.016950 and a period of 3.1570e+07 s, which is 365.4 days. To use the book's values, replace the numbers in this template with those of the planet you choose:
     </p>
-<pre><code>python main.py --xInit PERIHELION_M --yInit 0 \
+<pre><code>python main.py --xInit PERIHELION_M --yInit 0 ^
     --vxInit 0 --vyInit MAX_SPEED_M_PER_S</code></pre>
 </div>
 
@@ -829,8 +829,8 @@ python main.py --vxInit 41705.15 --vyInit 41705.15</code></pre>
 
 <div class="scenario-card" id="exp7">
 <h4>7 · Intermediate — Approximate Moon Around a Fixed Earth</h4>
-<pre><code>python main.py --xInit 3.626e8 --yInit 0 \
-    --vxInit 0 --vyInit 1082 --k 3.986e14 \
+<pre><code>python main.py --xInit 3.626e8 --yInit 0 ^
+    --vxInit 0 --vyInit 1082 --k 3.986e14 ^
     --dt0 1000 --maxOrbits 1</code></pre>
 <p>
       Replace the solar gravitational parameter by \(GM_\oplus\approx3.9860\times10^{14}\ \mathrm{m^3\,s^{-2}}\), and try <code>xInit</code> = 3.626e8 m with <code>vyInit</code> = 1082 m s<sup>&minus;1</sup>. This fixed-Earth test-particle model has a Kepler period of about <strong>27.8 days</strong> (the printed 2.4034e+06 s), and an eccentricity of 0.064989. Compare the result with the model's prediction, remembering that the real Earth&ndash;Moon system differs because the Moon's mass is not negligible. Beat 3 uses this run to test Kepler's third law.

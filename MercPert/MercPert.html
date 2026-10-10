@@ -347,7 +347,7 @@ run.</div>
 <p>Mercury's input position and velocity are relative to the Sun, while the plotted positions use the system's centre of mass. The dashed red and green circles show the <em>prescribed</em> stellar paths; the solid blue curve is Mercury's calculated path. A crossing of coloured paths on the screen does not mean the bodies met at the same time.</p>
 </section>
 <section id="beat0"><h2>Beat 0 · A test particle in a binary</h2><p>Begin with the default: a 1-solar-mass Sun, a 0.1-solar-mass companion 0.7 astronomical units (AU) away, and Mercury 0.3 AU from the Sun with a 59,220 m/s sideways launch.</p>
-<pre class="code-block"><code>python main.py --m_sun_solar 1 --m_planet_solar 0.1 --binary_separation_au 0.7 --x_init_au 0.3 \
+<pre class="code-block"><code>python main.py --m_sun_solar 1 --m_planet_solar 0.1 --binary_separation_au 0.7 --x_init_au 0.3 ^
   --vy_init 59220 --dt 2000 --max_steps 10000 --eps1 0.05 --eps2 0.0001</code></pre>
 <div class="beat-action"><strong>Read these lines</strong><p>The stellar period is 203.96 days. The run covers 231.48 days and 10,000 accepted steps; Mercury ranges from 0.30000 to 0.40762 AU from the Sun. Find the compact red circle, wider green circle, and blue loops. The stars move on set circles; Mercury responds to both of them.</p></div>
 <p>The program solves Newton's equation for a massless third body: \(\ddot{\mathbf r}=-GM_\odot(\mathbf r-\mathbf r_\odot)/|\mathbf r-\mathbf r_\odot|^3-GM_c(\mathbf r-\mathbf r_c)/|\mathbf r-\mathbf r_c|^3\). Do not call the blue loops closed or stable from this finite run alone.</p>
