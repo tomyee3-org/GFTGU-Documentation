@@ -1,56 +1,51 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>RelativisticOrbit 1.5.0 Release Notes</title>
-</head>
-<body>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>RelativisticOrbit 1.5.0 Release Notes</title></head><body>
 <h1>RelativisticOrbit 1.5.0 Release Notes</h1>
-<p>
-<b>Version:</b> 1.5.0<br>
-<b>Build:</b> daaef3a0231c<br>
-<b>Date:</b> 2026-09-29
-</p>
+<p><b>Version:</b> 1.5.0<br><b>Build:</b> daaef3a0231c<br><b>Date:</b> 2026-10-02</p>
+<p>Documentation updated 2026-10-10. Comparison baseline: <code>GFTGU-Documentation(20261002-120516).zip</code>. The release date above is the author's date for version 1.5.0.</p>
 <h2>Release Status</h2>
-<p>Response to Claude’s Audit41 style addendum, 29 September 2026: Expanded innermost stable circular orbit (ISCO) at first use and removed dangling numbered equation and experiment citations from the Grok page. The core Python files and the program version/build are unchanged. Xedoc’s prepackaging review confirmed the core and archived guides unchanged, checked document structure and references, and found no remaining significant discrepancy.</p>
-
-<p>Version 1.5.0, build daaef3a0231c, is approved for release following Claude's initial Audit41 review on 2026-09-29 (APPROVE); its revised issue identified two documentation P3 items, now corrected. The public circular-speed boundary behavior changed, so the minor version advanced from 1.4.0. The two active tutorials, the tests and the shared Sample Outputs Guide use this same code.</p>
-<p>The earlier 1.4.0 development notes are preserved verbatim under Historical Release Notes below. Their statements that the archived Reference Guide was current applied to the earlier policy only; <code>RelativisticOrbit-original.html</code> is retained without active synchronization.</p>
+<p>This documentation update records the merged <code>RelativisticOrbit.html</code>, the RO1 coverage clarification and a regenerated Sample Outputs Guide. No program source, test, numerical default or version/build identifier was changed.</p>
+<p>The two latest code-changing rounds remain the Audit 22 response (1.4.0) and the Audit41 circular-speed boundary correction (1.5.0). The October 2 archive's notes record Claude's initial Audit41 APPROVE recommendation and subsequent correction of two documentation P3 items. Its September 29 style-addendum record reports no remaining significant discrepancy in the prepackaging review. Those records are preserved verbatim in <code>History/RelativisticOrbit-ReleaseNotes-through-20261002.html</code>; this maintenance update makes no new audit-release claim.</p>
+<p>RO1 is covered: the Help explains that Schwarzschild exterior geodesics also apply outside an idealized spherical, non-rotating star, distinguishes impact on a material surface from horizon crossing, and states that the module has no stellar-radius or surface-impact option.</p>
 <h2>Open Bugs</h2>
-<p>None identified in the active RelativisticOrbit program and documents. OB-1 is closed: the circular-speed function now evaluates its exact floating-point-input domain consistently with <code>predict_orbit()</code>, including the named <code>PHOTON_ORBIT_RADIUS</code>. The former OB-2 is also closed in the supplied September 27 documentation snapshot: neither the named MercPert archive nor the current SphereGravity files link to the retired <code>RelativisticOrbit.html</code> filename. The earlier reports remain below as historical records.</p>
+<p>None newly identified in the executable by this documentation update. OB-1 is closed by the 1.5.0 circular-speed boundary correction. Historical OB-2 is also closed according to the baseline's cross-module link review; that finding is retained as history, rather than reasserted as a new cross-module verification. Documentation-test maintenance items are listed below.</p>
 <h2>Major Improvements in This Release</h2>
 <ul>
-<li>Fixed the circular-speed check at the rounded photon-orbit constant: the exact rational difference from 3GM/c<sup>2</sup> is positive even though a preliminary float subtraction rounded to zero. The same exact difference now determines both the domain and the denominator. A regression checks the named radius and the adjacent representable radius below it.</li>
-<li>Created <code>RelativisticOrbit-short.html</code> as a nine-Beat Help File using the same four core modules, commands and Sample Outputs figures as the Extended-style lab manual. The two maintained guides have a short note about the Matplotlib cursor-coordinate display.</li>
-<li>The shared test suite requires both active guides in one folder, verifies their stamps, navigation, parameters, commands, numerical claims and shared figure commands, and no longer expects the archived Reference Guide to follow current code.</li>
-<li>Regenerated all nine self-contained Sample Outputs PNGs from the new build with the guide's exact commands; refreshed their provenance and the guide's purpose to cover both active tutorials.</li>
+<li>The merged Help replaces the separate active short and extended tutorials. It uses the common Help File title, Gravity from the Ground Up badge, plot tip, license and footer, with nine Beats and twelve Suggested Experiments.</li>
+<li>The description now explicitly covers the Schwarzschild exterior of a spherical star and the absence of material-surface stopping in this program (RO1).</li>
+<li>Beat 0 displays the baseline settings; later comparisons spell out the defaults being changed or make the comparison run's settings explicit. These command edits retain the original numerical inputs.</li>
+<li>A compact Reading the output section distinguishes integration termination from predicted orbit type, sampled periapsides from ideal turning points, and exact advance from its weak-field approximation.</li>
+<li>The Beats retain their measured and predicted comparisons, full-precision circular input, ISCO qualification for eccentric paths, true and numerically false plunges, convergence checks, Mercury-resolution warning and rejected inside-horizon input. Beat-to-experiment links and the parameter reference remain.</li>
+<li>The detailed extended tutorial's equation derivations, algorithm and program-file sections were condensed into the merged Help's explanations; they are no longer separate active Help pages.</li>
+<li>The Sample Outputs Guide now accompanies <code>RelativisticOrbit.html</code>, uses current Beat commands and headings, and embeds nine fresh plots from the unchanged released build. Its circular-orbit comparison explicitly identifies the predicted advance as the small-radial-disturbance limit.</li>
 </ul>
+<p>The existing 1.5.0 code improvement remains the exact floating-point-input domain check in <code>circular_proper_time_speed()</code>, including the rounded photon-orbit constant and its adjacent representable radius. No console or graphical program output changed in this documentation update.</p>
 <h2>Test Suite Growth</h2>
-<ul>
-<li>1.1.1: 67 tests. 1.2.0: 131. 1.3.0: 139. 1.4.0: 144. 1.5.0: 148 tests. The net change retires three archive-synchronization checks and adds paired-guide and companion-document coverage.</li>
-<li>Run <code>python -m unittest discover -s tests -q</code> from the program folder with both tutorials present. The complete sibling-repository layout runs 148 tests; the optional cross-module link check may skip if its target documents are absent from the package. The archived Reference Guide is optional. The companion-document tests skip in a partial checkout without Release Notes or Sample Outputs.</li>
-</ul>
+<p>Historical counts: 1.1.1: 67; 1.2.0: 131; 1.3.0: 139; 1.4.0: 144; 1.5.0: 148 in the baseline notes. The current supplied suite discovers 153 tests: 152 methods ran, 127 passed and 25 methods were affected by 38 assertion-failure events and 18 error events. The archived Reference Guide class was skipped because that file is absent. All 81 program checks and all five merged-Help checks passed. Detailed results are recorded in this package's validation report. No tests were added or edited in this update.</p>
+<p>Run <code>python -m unittest discover -s tests</code> from the program folder with the merged Help and companion documents in the sibling documentation tree. Assertions inherited from the retired tutorial structure are not represented as passing.</p>
+<p>All 38 distinct commands in the current Help's command blocks were exercised: 37 completed successfully, including <code>--version</code> and <code>--help</code>; the inside-horizon command was rejected as intended. All nine figure commands and the named supporting comparisons were freshly run.</p>
 <h2>Known Limitations</h2>
 <ul>
-<li>One test particle in the equatorial plane of a fixed, non-rotating one-solar-mass source. The model omits spin, radiation reaction and back-reaction. The x-y plot is a diagram using areal radius and angle as flat polar coordinates, not a flat-space physical map. <code>--u_init</code> is a proper-time coordinate rate.</li>
-<li>Periapsides are detected only at accepted steps. A Mercury-scale advance can be predicted from the constants but cannot be measured at the documented coarse integration settings; a Newtonian control shows comparable spurious advance.</li>
-<li>The default step is too coarse near the plunge boundary and can turn a predicted bound path into an integrated plunge. Drift maxima omit the linearly interpolated horizon end point. A turn-count stop can overshoot the requested count by part of a step.</li>
-<li>There is no escape detector; an escaping trajectory runs until a step or turn limit. MathJax needs internet access to typeset the tutorial equations; the Python program itself works offline.</li>
+<li>One equatorial test particle and a fixed, non-rotating, one-solar-mass source; no spin, radiation reaction or back-reaction.</li>
+<li>No stellar-radius or material-surface impact option. Applying the vacuum exterior model to a star requires remaining outside its surface.</li>
+<li>The plot uses areal radius and azimuth as flat polar diagram coordinates. <code>--u_init</code> is a proper-time coordinate rate, not a locally measured speed.</li>
+<li>Periapsides are sampled at accepted steps. Mercury-scale advance is predicted but cannot be resolved at the documented integration settings.</li>
+<li>Default steps can produce a false plunge near the bound/plunge boundary. Drift maxima omit the interpolated horizon endpoint, and a turn-count stop can overshoot by part of a step.</li>
+<li>No escape detector; an escaping trajectory stops at a step or turn limit. Help equations require online MathJax; the Python program runs offline.</li>
 </ul>
 <h2>Known Minor Maintenance Items</h2>
 <ul>
-<li>The earlier inbound-link item OB-2 was resolved in other modules before this package; future edits to Related Programs links should use the active tutorial filenames.</li>
-<li>When a core source file is unavailable, the build identifier reads <code>unpackaged</code> rather than stopping; it does not masquerade as a verified build.</li>
-<li>The archived Reference Guide retains its historical 1.4.0 version/build stamp and wording and is not a maintained student tutorial.</li>
-<li>The program has no built-in save-figure option; the self-contained Guide's figures were generated on a non-interactive Matplotlib backend.</li>
+<li>The supplied tests retain assertions for retired tutorial wording, sections and numbered equations; their command extractor also does not join backslash continuations in Beats 0 and 8. The validation report identifies the affected checks. No tests were changed by this documentation-only task.</li>
+<li>The current Help sidebar labels Beat 2 “Read the prediction first”, while its heading says “The advance, predicted exactly”. The supplied Help is unchanged in this package.</li>
+<li>The build identifier reads <code>unpackaged</code> when a core source file is unavailable.</li>
+<li>No built-in save-figure option; this guide captures the unchanged plotter through a non-interactive backend.</li>
+<li>Older Reference Guide and extended Help material is archived outside the active merged Help synchronization contract.</li>
 </ul>
 <h2>Version Identification</h2>
-<ul>
-<li><b>Version:</b> 1.5.0 (<code>MODEL_VERSION</code> in <code>physics_relativistic_orbit.py</code>).</li>
-<li><b>Build:</b> daaef3a0231c, the first 12 hexadecimal digits of the SHA-256 over the four core UTF-8 modules with universal newline normalization, filename and byte-length framing.</li>
-<li><b>Date:</b> 2026-09-29. Python 3.10 or later. <code>python main.py --version</code>, the first summary line, both active tutorials and the Sample Outputs Guide report the version/build pair.</li>
-</ul>
+<p>Version 1.5.0, <code>MODEL_VERSION</code> in <code>physics_relativistic_orbit.py</code>. Build daaef3a0231c: the first 12 hexadecimal digits of SHA-256 over the four core UTF-8 modules with universal-newline normalization, filename and byte-length framing. Release date: 2026-10-02. Documentation update: 2026-10-10. Python 3.10 or later.</p>
+<p>The version/build pair was checked against the supplied current executable. Program files and the author's current Help were copied without modification. The requested comparison is against the October 2 documentation archive; no separate program-archive comparison is claimed.</p>
 <h2>Historical Release Notes</h2>
+
 <p>The following earlier notes are retained for development continuity under the former policy, including the previous state of the Reference Guide and OB-1.</p>
 
 <h1>RelativisticOrbit 1.4.0 Release Notes</h1>
@@ -169,6 +164,7 @@ circle within 4 units in the last digit of 6GM/c<sup>2</sup> as the ISCO.</li>
 
 <ul>
 <li>MathJax is not bundled for offline use.</li>
+<li>The current Help sidebar labels Beat 2 “Read the prediction first”, while its heading says “The advance, predicted exactly”. The supplied Help is unchanged in this package.</li>
 <li>The build identifier reads <code>unpackaged</code> when the physics module is loaded without the other core files.</li>
 <li><code>RelativisticOrbit-original.html</code> and <code>RelativisticOrbit-extended.html</code> are both present, and neither is
 marked as the current Help.</li>
@@ -189,5 +185,5 @@ marked as the current Help.</li>
 </ul>
 
 
-</body>
-</html>
+
+</body></html>
