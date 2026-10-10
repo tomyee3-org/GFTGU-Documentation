@@ -541,7 +541,7 @@ equilibria in general relativity. It integrates the
 Tolman&ndash;Oppenheimer&ndash;Volkoff (TOV) pressure equation and the
 enclosed-mass equation outward from the center until the pressure reaches
 zero, using one simple polytropic equation of state,
-\(p=K\rho^\gamma\). In this model \(\rho c^2\) is the total energy density entering the TOV equation; the code does not separately calculate baryon rest-mass density. It accompanies the relativistic stellar-structure discussion in Chapter 20 of Schutz's text.
+\(p=K\rho^\gamma\). In this model \(\rho c^2\) is the total energy density entering the TOV equation; the code does not separately calculate baryon rest-mass density. It accompanies the relativistic stellar-structure discussion in the textbook.
 </p>
 <p>
 The spine of the lesson is one sentence: <em>a star is a battle between
@@ -556,7 +556,20 @@ the printed numbers follow from.
 By varying the central pressure \(p_C\) and the equation-of-state parameters,
 students can construct equilibrium sequences and locate a maximum
 gravitational mass. The program does not evolve a star in time, so it does
-not simulate collapse; it computes static equilibrium configurations only.
+not simulate collapse; it computes static equilibrium configurations only.</p>
+
+<p>Unlike ordinary main sequence stars, temperature is not an important factor 
+governing the structure of neutron stars. That is because a neutron star is 
+not supported primarily by thermal pressure. It is supported primarily by 
+quantum mechanical pressure arising from the Pauli exclusion principle, 
+together with strong-interaction effects at high density. Because of this, 
+neutron-star models often use a "cold" equation of state (EOS), even though 
+the star may have an interior temperature of millions of degrees.</p>
+
+<p>Therefore, the user is not asked to specify a central temperature for 
+the star; instead, the program needs directly the proportionality 
+constant \(K\) in the polytropic equation of state, \(p = K  \rho ^ \gamma\). 
+The value of \(K\) must be calculated from the basic physics of neutrons and protons.</p>
 </p>
 <div class="warn-box"><strong>What this program is, and what it does not model.</strong> Neutron is a teaching model of a static, non-rotating, spherically symmetric star built from one pedagogical polytropic equation of state. It has no crust-plus-core or tabulated nuclear-matter equation of state, no rotation, no magnetic field, no finite temperature, no baryonic-mass or binding-energy bookkeeping, and no time evolution: it cannot simulate collapse, a merger, or oscillation modes. Use it to see how the TOV equation differs from Newtonian hydrostatics and how a relativistic stellar-structure solver locates a surface it is not allowed to overshoot. Beats 6 and 7 collect the limits.</div>
 <div class="note-box"><strong>Reading this page.</strong> The equations on this page are rendered by MathJax, loaded from a public CDN, so an internet connection is needed to see them typeset; with no connection, the raw \(\LaTeX\) source (e.g. <code>\(a(t)\)</code>) will show as plain text instead of a formula. This has no effect on the program itself, which needs no internet access to run.</div>
