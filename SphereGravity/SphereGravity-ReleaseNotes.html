@@ -1,65 +1,54 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>SphereGravity 1.4.0 Release Notes</title>
-</head>
-<body>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>SphereGravity 1.4.0 Release Notes</title></head><body>
 <h1>SphereGravity 1.4.0 Release Notes</h1>
-<p><b>Version:</b> 1.4.0<br>
-<b>Build:</b> 217c2c26a44a<br>
-<b>Date:</b> 2026-09-29</p>
-
+<p><b>Version:</b> 1.4.0<br><b>Build:</b> 217c2c26a44a<br><b>Date:</b> 2026-09-25</p>
+<p>Documentation updated 2026-10-10. Comparison baseline: <code>GFTGU-Documentation(20260925-190712).zip</code>. The release date and executable version/build are unchanged.</p>
 <h2>Release Status</h2>
-<p>Response to Claude’s Audit41 style addendum, 29 September 2026: Rebuilt the Grok page with the Claude guide’s stylesheet, header, sidebar and footer; explained the extreme zoom needed for the Beat 6 cursor comparison; corrected the starred-row claim and all seven minor findings, with stronger regression checks. The core Python files and the program version/build are unchanged. Xedoc’s prepackaging review confirmed the core and archived guides unchanged, checked document structure and references, and found no remaining significant discrepancy.</p>
-
-<p>Kickoff4 documentation and test review candidate for Version 1.4.0, build 217c2c26a44a. The core program is byte-for-byte unchanged from the September 25 build, so its version and build identifier remain the same. The last two code-changing rounds were Kickoff2 and the Audit 21 response, described in the September 25 notes preserved below. Grok's Audit 22 recommended freezing both Help files without a science defect; Codex's Audit 22 reported two P3 documentation defects. The active-guide defect is corrected in this round. The other concerns only the archived Reference Guide, which is intentionally frozen and is no longer a contract for the active program. Claude’s Audit41 verdict was HOLD for a style mismatch and an unstated extreme-zoom requirement. The Response-to-StyleAddendum repairs both, as well as the remaining P3 and convenient P4 findings; external re-review of this response is pending.</p>
-
+<p>This maintenance update records accumulated Help changes since September 25, resolves completeness-of-coverage item SG1, and refreshes the Sample Outputs Guide for the current merged <code>SphereGravity.html</code>. Program source and tests were not changed.</p>
+<p>The two latest code-changing rounds remain Kickoff2 (1.4.0, build a43a939a4607, not separately released) and the Audit 21 response (1.4.0, build 217c2c26a44a). The baseline records Grok Audit 22's recommendation to freeze the Help and Codex Audit 22's two P3 documentation findings, with no hold stated by either reviewer. The September 29 record documents Claude Audit41's HOLD for tutorial styling and the unstated extreme zoom needed for a cursor comparison, followed by the style-addendum response; it says external re-review was pending. That complete record is retained in <code>History/SphereGravity-ReleaseNotes-through-20260929.html</code>. This update does not invent a subsequent audit verdict.</p>
+<p>SG1 is covered in Beat 3: a spherical body is treated as concentric thin shells; exterior shells cancel, interior shells act as central point masses, and their contributions depend on the enclosed mass and distance. The Help correctly qualifies the inward variation of gravity and its approach to zero for finite central density.</p>
 <h2>Open Bugs</h2>
-<p>None identified in the active SphereGravity code, paired tutorials, tests, and shared Sample Outputs Guide. OB-1 from the earlier notes is closed: the Claude guide now limits the magnitude-jump statement to the spherical shell and states the general signed-normal-component rule. OB-2 concerns wording in the archived Reference Guide; it is retained without active synchronization, and the earlier report remains below for historical context.</p>
-
+<p>No new executable defect was identified in this documentation update. OB-1 (Codex Audit 22 item 1) is closed in the current Help: Beat 5 limits the magnitude-jump statement to spherical symmetry and gives the signed-normal-component rule for a general surface layer. Historical OB-2 (Codex Audit 22 item 2) concerns the frozen Reference Guide's wording about the tiled pull immediately outside the surface; its report remains in the preserved September 25 notes and is outside the current merged Help's synchronization scope. The current Help does not repeat that wording.</p>
 <h2>Major Improvements in This Release</h2>
 <ul>
-<li>Created <code>SphereGravity-short.html</code>, a shorter nine-Beat Help File with questions before explanation, matching the commands and physics of the existing Claude tutorial. Both active guides carry Version 1.4.0 and Build 217c2c26a44a.</li>
-<li>Corrected the Claude guide's surface-jump sentence. Both guides now mention Matplotlib's lower-right cursor coordinates near the beginning.</li>
-<li>The Sample Outputs Guide explicitly supports both active tutorials. Its seven embedded 800 by 600 pixel images were independently re-rendered from the displayed commands and compared pixel-for-pixel after the stated 256-colour quantization; all match the current build.</li>
-<li>The test suite requires the two active guides together, checks Grok commands and shared stamps, and treats the old Reference Guide as an optional historical archive rather than requiring it to match current behavior.</li>
+<li>The merged <code>SphereGravity.html</code> replaces the separate active tutorials. It uses the common Help File title, Gravity from the Ground Up badge, version/build stamp, plot tip, license and footer.</li>
+<li>A compact limitations section identifies the fixed profile grid, unevaluated shell-surface placeholder, table-radius rejection, different table/plot normalizations, and the limits of the error-estimate marker.</li>
+<li>Beat 0 displays the baseline settings. Comparison Beats identify defaults being modified or show explicit comparison settings, without changing the numerical inputs.</li>
+<li>Beat 3 adds the shell-superposition explanation for general spherical bodies (SG1), without requiring a coding exercise.</li>
+<li>Beat 5 distinguishes the spherical magnitude jump from the general signed-normal-component jump. Beat 6 explains the extreme zoom required to inspect the small exterior plotted residual and retains separate exterior and interior normalization rules.</li>
+<li>All nine Beats and eleven Suggested Experiments remain. The detailed extended tutorial's numbered derivations and code/reference sections are condensed into the merged Help's prose and local equations.</li>
+<li>The ellipsoidal-shell extension explicitly requires a homoeoid and correct tile masses. The vectorization experiment names both implementations and their bounded-array tradeoff.</li>
+<li>The Sample Outputs Guide accompanies the current merged Help and uses its exact Beat commands and headings. All seven figures were freshly regenerated; Beats 2 and 3 retain table-only coverage using Beat 6's identical plotted profile. The guide removes its retired Eq. (17) reference in favour of Beat 6.</li>
 </ul>
-
+<p>The September 25 code changes remain the configurable table radii, leading midpoint-error estimate and marking rule, numerical input bounds, exact round-tripping radius labels, and the plotting function's returned figure/axes. No program console output, plotted output, algorithm or default was changed by this documentation update.</p>
 <h2>Test Suite Growth</h2>
-<ul>
-<li>1.3.0: 74 tests; 1.4.0 at Kickoff2: 135; 1.4.0 after Audit 21: 142; Kickoff4: 137 tests after removing current-API checks against the frozen Reference Guide and adding paired-tutorial and shared-guide tests.</li>
-<li>Run from <code>GFTGU-Programs/SphereGravity</code> with <code>MPLBACKEND=Agg python3 -m unittest discover -s tests -q</code>. The Kickoff4 sibling package ran 137 tests, OK, with one expected skip for inbound-link checks that require unrelated documentation folders. The archived-guide tests are optional and skip when that file is absent.</li>
-<li>The new paired tests check both files in the same folder, shared release stamps, navigation, student text, documented Grok commands, input rejections and key mass-error claims. Shared-guide tests check commands and indexed PNG metadata. Existing numerical and Claude-guide checks remain.</li>
-</ul>
-
+<p>Historical counts: 1.3.0: 74; 1.4.0 at Kickoff2: 135; after Audit 21: 142. The September 29 documentation/test record reports 137 after retiring active-API requirements for the frozen Reference Guide and adding paired-tutorial/shared-guide coverage. The current supplied suite discovers 142 tests: 139 methods ran, 118 passed, one method was skipped and 20 methods were affected by 32 assertion-failure events and 14 error events. The archived-Help class was also skipped. All 68 program checks, five merged-Help checks and three shared-guide checks passed. No tests were added or edited by this task.</p>
+<p>Run <code>MPLBACKEND=Agg python -m unittest discover -s tests</code> from the program folder, with the merged Help and companion documents in the sibling documentation tree. Detailed results and affected methods are supplied in <code>Validation/Validation-Report.txt</code>. Historical assertions requiring retired tutorial sections, tagged equations or verbatim wording are not represented as passing.</p>
+<p>All 35 distinct CLI commands in current Help command blocks or inline code were exercised: 33 completed successfully, and the two deliberate invalid inputs (radius 1 and nDiv 100001) were rejected with exit status 2. Both non-CLI example blocks were also checked: the plotted-profile inspection script and the two implementation-selection assignments. The seven figure commands and supporting comparisons were run against the unchanged build.</p>
 <h2>Known Limitations</h2>
 <ul>
-<li>The ideal shell has radius 1 and no thickness, with G = 1. The field is computed only on its symmetry axis; epsilon scales mass rather than geometry.</li>
-<li>The field jumps at r = 1, which is excluded from the table and omitted from the drawn curve. The plotted grid is fixed at 0 to 4.995, even when the table uses other radii.</li>
-<li>Beside the shell a coarse midpoint tiling is inaccurate. A marked h<sup>2</sup> estimate does not apply; an unmarked estimate near the marking threshold can still differ by several per cent.</li>
-<li>The plot uses the tile mass for normalization, whereas the table uses the continuum mass. An interior relative difference from a zero expected field is undefined; the table prints g/M instead.</li>
-<li>Input limits are 1 through 100000 divisions, epsilon from 1e-100 to 1e100, and table radii up to 1e100. The explicit plotted-profile loops can take tens of seconds for 10000 divisions.</li>
-<li>Mathematical typesetting in both active tutorials uses online MathJax; the Python program itself works offline. The archived Reference Guide remains frozen and may not match later versions.</li>
+<li>Ideal zero-thickness shell of radius 1, in dimensionless Newtonian units with G = 1. Epsilon scales mass; the field is computed only on a symmetry axis.</li>
+<li>At r = 1 the field is discontinuous; the table rejects that radius and the plotted profile omits its finite placeholder. The fixed graph grid runs from 0 to 4.995.</li>
+<li>Coarse tiling is inaccurate beside the shell. A starred error estimate is outside its intended regime; an unmarked row near the marking threshold is not a rigorous accuracy guarantee.</li>
+<li>The table uses continuum mass, the plot uses tiled mass. Relative error from an interior exact field of zero is undefined; the displayed interior quantity is a mass-normalized residual.</li>
+<li>Inputs are limited to 1 through 100000 divisions, epsilon from 1e-100 to 1e100, and table radii up to 1e100. The explicit profile loops may take tens of seconds for large division counts.</li>
+<li>The module demonstrates one thin shell, rather than integrating an arbitrary spherical density profile. SG1 explains the physical extension.</li>
+<li>Help equations require online MathJax; the program and embedded guide images work offline.</li>
 </ul>
-
 <h2>Known Minor Maintenance Items</h2>
 <ul>
-<li>A NumPy float32 epsilon value emits a RuntimeWarning during validation, though they are accepted or rejected correctly (Grok Audit 22).</li>
-<li>The build identifier reads <code>unknown</code> when a core file is missing. Runtime type annotations are conservative.</li>
-<li>The faster NumPy profile implementation is selected by editing two lines in <code>physics_spheregravity.py</code>. The command line has no option to save the figure or table.</li>
-<li>MathJax is not bundled for offline use.</li>
+<li>The supplied suite retains documentation assertions for retired sections, numbered equations and tutorial wording; affected checks are recorded in validation.</li>
+<li>A NumPy float32 epsilon can emit a RuntimeWarning during validation while still being accepted or rejected correctly (Grok Audit 22); this historical item was not changed by this documentation task.</li>
+<li>Build identification reports <code>unknown</code> when a core source file cannot be read. Runtime type annotations remain conservative.</li>
+<li>The faster NumPy profile implementation is selected by editing two assignments; no CLI selector or save-figure/table option is provided.</li>
+<li>The frozen Reference Guide retains historical OB-2 wording outside the active Help synchronization scope.</li>
 </ul>
-
 <h2>Version Identification</h2>
-<ul>
-<li><b>Version:</b> 1.4.0 (<code>MODEL_VERSION</code> in <code>physics_spheregravity.py</code>).</li>
-<li><b>Build:</b> 217c2c26a44a, the first 12 hexadecimal digits of the SHA-256 over the four core Python modules after newline normalization. No core source changed in this round.</li>
-<li><b>Date:</b> 2026-09-29; Python 3.10 or later.</li>
-<li>The current stamp appears in <code>python main.py --version</code>, both active Help files and the Sample Outputs Guide. The archive's stamp is its own historical record.</li>
-</ul>
-
+<p>Version 1.4.0 (<code>MODEL_VERSION</code> in <code>physics_spheregravity.py</code>). Build 217c2c26a44a: the first 12 hexadecimal digits of SHA-256 over <code>physics_spheregravity.py</code>, <code>driver_spheregravity.py</code>, <code>main.py</code> and <code>plot_spheregravity.py</code>, with universal-newline normalization, filename and byte-length framing. Release date: 2026-09-25. Documentation update: 2026-10-10. Python 3.10 or later.</p>
+<p>The executable stamp and independently calculated core hash were checked. Program source, tests and the author's current Help were copied without modification. This comparison is against the requested documentation archive; no separate program-archive comparison is claimed.</p>
 <h2>Historical Release Notes (2026-09-25)</h2>
+<p>The following baseline release-note body is retained for continuity. Its treatment of the Reference Guide as active is historical. The original file is also preserved verbatim in History.</p>
+
 <h1>SphereGravity 1.4.0 Release Notes</h1>
 
 <p>
@@ -85,7 +74,7 @@ the tests that check them were changed; the program and its build are unchanged.
 <h2>Open Bugs</h2>
 
 <ul>
-<li><b>OB-1</b> (P3; Codex Audit 22 item 1). Beat 5 of <code>SphereGravity-extended.html</code> says that the jump across
+<li><b>OB-1</b> (P3; Codex Audit 22 item 1). Beat 5 of <code>SphereGravity-claude.html</code> says that the jump across
 a surface layer is 4&pi;G&epsilon; &ldquo;whatever the shape of a surface layer&rdquo;, which is true of the signed normal
 component of the field but not of its magnitude.<br>
 Reproduction: read the sentence after Eq. (15) in Beat 5. Observed: the magnitude jump of Eq. (15) is stated for a
@@ -113,7 +102,7 @@ Help files and without chapter numbers. The program and its build did not change
 
 <p>Version 1.4.0, build a43a939a4607 (Kickoff2, not released separately):</p>
 <ul>
-<li>New Beats tutorial Help, <code>SphereGravity-extended.html</code>, with nine beats, 19 equations and 11 experiments.
+<li>New Beats tutorial Help, <code>SphereGravity-claude.html</code>, with nine beats, 19 equations and 11 experiments.
 The Reference Guide Help is retained, kept current, as <code>SphereGravity-original.html</code>.</li>
 <li>New option <code>--radii R [R ...]</code> chooses the comparison radii; the default is the seven radii of 1.3.0.</li>
 <li>The table prints a new line, <code>latitude step h = pi/nDiv</code>, and a new column, <code>h^2 estimate</code>, from
@@ -164,7 +153,7 @@ although it is accepted or rejected correctly (Grok, Audit 22).</li>
 <li>Runtime type annotations are conservative.</li>
 <li>The faster NumPy implementation is selected only by editing two lines of <code>physics_spheregravity.py</code>.</li>
 <li>There is no command-line option to save the figure or the table to a file.</li>
-<li><code>SphereGravity-extended.html</code> and <code>SphereGravity-original.html</code> are both present, and neither is
+<li><code>SphereGravity-claude.html</code> and <code>SphereGravity-original.html</code> are both present, and neither is
 marked as the current Help.</li>
 <li>MathJax is not bundled for offline use.</li>
 </ul>
@@ -178,9 +167,8 @@ marked as the current Help.</li>
 <code>plot_spheregravity.py</code>.</li>
 <li><b>Date:</b> 2026-09-25. Python 3.10 or later.</li>
 <li>Printed by <code>python main.py --version</code>, in the first line of every run, and in the version stamp of
-<code>SphereGravity-extended.html</code> and <code>SphereGravity-original.html</code>.</li>
+<code>SphereGravity-claude.html</code> and <code>SphereGravity-original.html</code>.</li>
 </ul>
 
 
-</body>
-</html>
+</body></html>
