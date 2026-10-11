@@ -468,7 +468,7 @@ section ul { margin-left: 1.6em; }
     #experiments .planet-data-note { font-size: 0.88rem; color: var(--muted); }
   
     ol {line-height: 1.2;}
-    
+    .narrow-break { display: block; margin-bottom: 0px; }
 </style>
 <style id="gftgu-common-elements">
 /* Shared Version / Build, Plot tip, License and Footer. */
@@ -773,8 +773,9 @@ python main.py --xInit 1.471e11 --vyInit 30290</code></pre>
 <p>
       Start with the default Mercury orbit (Beat 0). Then use the perihelion distances and maximum orbital speeds from <a href="#table4-3">Table 4.3 above</a> to model other planets: place the planet on the positive x-axis at the listed perihelion distance and give it only the listed maximum y-direction speed, converting both to SI units as explained above. From the plotted perihelion and aphelion distances, estimate the eccentricity and compare it with the eccentricity column, using the radial-distance formula below the table. This directly tests whether Newton's inverse-square law reproduces the observed shapes of planetary orbits. As a check on your method, the second command uses commonly quoted values for the Earth, a perihelion of about 1.471&times;10<sup>11</sup> m and a speed of about 30.29 km s<sup>&minus;1</sup>; it prints an eccentricity of 0.016950 and a period of 3.1570e+07 s, which is 365.4 days. To use the book's values, replace the numbers in this template with those of the planet you choose:
     </p>
-<pre><code>python main.py --xInit PERIHELION_M --yInit 0 ^
+<pre class="narrow-break" ><code>python main.py --xInit PERIHELION_M --yInit 0 ^
     --vxInit 0 --vyInit MAX_SPEED_M_PER_S</code></pre>
+    <small><small>(MacOS and Linux users: Replace ^ with the \ line continuation symbol)</small></small> 
 </div>
 
 <div class="scenario-card" id="exp2">

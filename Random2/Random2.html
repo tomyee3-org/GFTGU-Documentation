@@ -446,6 +446,7 @@
   font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.88rem;
   color: #5a4a3a; margin-bottom: 6px;
 }
+.narrow-break { display: block; margin-bottom: 0px; }
 </style>
 
 <style id="gftgu-common-elements">
@@ -536,8 +537,9 @@ footer.gftgu-footer a:hover { text-decoration: underline; }
 <section id="beat0">
 <h2>Beat 0 · Random steps add up as √N</h2>
 <p>A walker takes steps in three dimensions, each one in a random direction and of random length, with no memory of the steps before. The program sends out 100 such walkers for each of twelve walk lengths, from 2 steps to 4096, and averages how far they end up from where they started.</p>
-<pre>python main.py --seed 12 --display scaled_distance --max_steps 4096 --n_trials 100 ^
+<pre class="narrow-break" >python main.py --seed 12 --display scaled_distance --max_steps 4096 --n_trials 100 ^
   --step_distribution uniform</pre>
+<small><small>(MacOS and Linux users: Replace ^ with the \ line continuation symbol)</small></small> 
 <p>In the last row, 4096 steps produce a mean scaled distance of 63.0073, with a fitted log-log slope of 0.4964. Compare the rows at 256, 1024 and 4096 steps: four times the steps roughly doubles the endpoint distance. The scale divides each walk's net displacement by that walk's own mean step length.</p>
 <p>Point to two rows in the table that support \(d\propto\sqrt N\). Does a single trajectory need to follow that relation exactly? The exact independent-step identity is \(\langle r_N^2\rangle=N\langle |s|^2\rangle\). The printed mean of scaled distance follows \(C\sqrt N\) only as a large-\(N\) approximation. In particular, a two-step row need not equal its large-\(N\) prediction.</p>
 
