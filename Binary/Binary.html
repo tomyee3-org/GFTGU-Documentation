@@ -91,6 +91,7 @@
   font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.88rem;
   color: #5a4a3a; margin-bottom: 6px;
 }
+.narrow-break { display: block; margin-bottom: 0px; }
 </style>
 
 <style id="gftgu-common-elements">
@@ -204,8 +205,9 @@ python main.py</pre>
   <section id="beat0">
     <h2>Beat 0 · Two bodies, one force</h2>
     <p>Two solar-mass bodies start \(9.2\times 10^{10}\,\mathrm{m}\) apart. Each is given 13&nbsp;km&nbsp;s\(^{-1}\) sideways, in opposite directions.</p>
-<pre>python main.py --MA 2e+30 --MB 2e+30 --xInitA 46000000000 --xInitB -46000000000 --yInitA 0 --yInitB 0 ^
+<pre class="narrow-break" >python main.py --MA 2e+30 --MB 2e+30 --xInitA 46000000000 --xInitB -46000000000 --yInitA 0 --yInitB 0 ^
   --vInitA 0 --vInitB 0 --uInitA 13000 --uInitB -13000 --dt 2000 --eps1 0.05 --eps2 0.0001</pre>
+  <small><small>(MacOS and Linux users: Replace ^ with the \ line continuation symbol)</small></small> 
     <p>Look at the orbits plot and at the six summary lines from <code>Accepted steps</code> to <code>Maximum separation (sampled)</code>. The maximum separation is the starting separation, so they begin as far apart as they ever get. The minimum is a fraction of that, so the paths are not circles. The two curves are mirror images through the origin. <code>Termination: one relative revolution</code> is the geometric stop. Write one sentence about how the pull should change if you doubled the separation.</p>
     <div class="eq-block">
       <div class="eq-label">Newton’s law of gravitation</div>
