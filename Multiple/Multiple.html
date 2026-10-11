@@ -176,6 +176,7 @@
       nav { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
       main { padding: 24px 20px 40px; }
     }
+    .narrow-break { display: block; margin-bottom: 0px; }
   </style>
 <style id="gftgu-common-elements">
 /* Shared Version / Build, Plot tip, License and Footer. */
@@ -369,9 +370,10 @@ run.</div>
 &mdash; \((4.6\times10^{10},0,0)\), \((-4.6\times10^{10},0,0)\) and \((0,4.6\times10^{10},0)\) m
 &mdash; with two of them already moving at 30 km/s and the third at rest. Ask the program what
 happens.</p>
-<pre class="code-block"><code>python main.py --max_steps 8000 --output_type trajectories --n_bodies 3 --masses_solar 1,1,1 ^
+<pre class="code-block narrow-break"><code>python main.py --max_steps 8000 --output_type trajectories --n_bodies 3 --masses_solar 1,1,1 ^
   --positions_init "46000000000,0,0;-46000000000,0,0;0,46000000000,0" ^
   --velocities_init "0,0,0;0,-30000,0;-30000,0,0" --dt 2000 --eps1 0.005 --eps2 1e-07 --display_frame com</code></pre>
+  <small><small>(MacOS and Linux users: Replace ^ with the \ line continuation symbol)</small></small> 
 <p>8000 accepted steps span 18.094 days. Follow the red, green and blue curves into the close encounter. The initial momentum is (−30000, −30000, 0) m/s, while the energy and angular-momentum totals remain approximately conserved.</p>
 <p>Rerun at <code>--max_steps 2000</code>. Describe the geometry before the close encounter. Compare the two simulated durations: accepted-step count is not elapsed time when the timestep adapts.</p>
 <p><b>Note:</b> each body feels every other body. The pairwise gravitational acceleration is proportional to the other body's mass and inversely proportional to separation squared; there is no fixed central mass.</p>
