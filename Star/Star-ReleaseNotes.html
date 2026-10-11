@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><title>Star 1.2.0 Release Notes</title></head><body>
 <h1>Star 1.2.0 Release Notes — Documentation Update</h1>
-<p><b>Version:</b> 1.2.0; <b>Build:</b> 3d55b592a1b7; <b>Documentation update:</b> 2026-10-06. The preceding release notes are dated 2026-09-29; the requested comparison baseline is Star-short.html in GFTGU-Documentation(20261002-120516).zip.</p>
+<p><b>Version:</b> 1.2.0; <b>Build:</b> 3d55b592a1b7; <b>Test/Release Notes maintenance:</b> 2026-10-11. The preceding coverage documentation update is dated 2026-10-06. The preceding release notes are dated 2026-09-29; the requested comparison baseline is Star-short.html in GFTGU-Documentation(20261002-120516).zip.</p>
 <h2>Release Status</h2>
-<p>Documentation maintenance: the user's merged Star.html incorporates material from the earlier short and extended tutorials and Schutz's Java documentation. This round updates release notes and clarifies coverage findings ST1–ST4. Version 1.2.0 and build 3d55b592a1b7 are unchanged. Claude Audit41's earlier APPROVE remains historical; no new external audit or release recommendation was requested. The earlier code-changing rounds and recommendations are retained below.</p>
+<p>This maintenance adapts the documentation tests to the author's Windows <code>^</code> continuations in <code>Star.html</code>. The supplied Help, including its continuation note, spacing and font choices, the Sample Outputs Guide and all four program modules are preserved byte-for-byte. The preceding 6 October documentation update records the merged Help and coverage clarification ST1–ST4. Version 1.2.0 and build 3d55b592a1b7 are unchanged. Claude Audit41's earlier APPROVE remains historical; no new external audit or release recommendation was requested. The earlier code-changing rounds and recommendations are retained below.</p>
 <h2>Open Bugs</h2>
 <p>No new program defect was established in this documentation review. The earlier Audit41 response records its three P3 findings as closed. The coverage questions below are editorial items, not new severity-rated audit findings.</p>
 <h2>Major Improvements in This Release</h2>
+<p>Continuation maintenance, 11 October 2026:</p>
+<ul><li>Command extraction and direct argument parsing join either Windows <code>^</code> or POSIX <code>\</code> continuations at line endings, including LF/CRLF and horizontal whitespace. Separate commands remain separate, and options on later lines are checked.</li>
+<li>Five new regression tests cover both conventions, actual Help commands, intended rejections, literal symbols within arguments, unknown continued-line options, <code>python3</code> and foreign-program filtering.</li></ul>
+<p>Coverage documentation changes recorded on 6 October:</p>
 <ul>
 <li>The merged Help restores Schutz-derived discussion of what stellar models reveal, the variable interior gravity and shell-mass relation, and the difference between supplying atmospheric temperature and inferring a stellar profile from a polytropic closure.</li>
 <li>Beat 1 now includes the original 4/3 stability statement, giant-star context and the white-dwarf association with 5/3. ST1 and ST2 therefore recover the source topics. The scientific distinction between a static polytropic exponent and the adiabatic stability exponent is separate commentary. The earlier report's nonrelativistic electron-degeneracy requirement is withdrawn as a source-coverage claim: Schutz's uploaded page does not explicitly teach it.</li>
@@ -15,7 +19,7 @@
 <li>The accompanying coverage clarification gives exact original passages by HTML section heading. ST3 is identified as a comment and first-sphere initialization in the Java listing, rather than prose explicitly naming division by zero. Previous extracted-text line references are not HTML line numbers.</li>
 </ul>
 <h2>Test Suite Growth</h2>
-<p>This round adds, removes and modifies no tests. The uploaded suite and its earlier historical counts are retained unchanged; the full suite was not rerun for this release-note-only change. All four core modules match the October 2 Programs snapshot byte for byte, and python main.py --version confirms 1.2.0 / 3d55b592a1b7. The Help, tests and SampleOutputs Guide are preserved byte for byte. Exact quotations, release-note section order and the completed ZIP were checked directly.</p>
+<p>The 11 October continuation maintenance adds five regression tests, bringing the supplied suite from 156 to 161 tests. Full before/after validation: the supplied baseline ran 156 tests, with 128 passes, two skips, 42 assertion-failure events and 12 error events across 26 failing test methods. The revised suite runs 161 tests, with 134 passes, two skips, 40 assertion-failure events and 12 error events across 25 pre-existing failing methods. All five new continuation tests and all five merged-Help checks pass. The documented-command execution check now passes; no newly failing method remains. Full before/after logs and a change patch are included. The 6 October review added or modified no tests and checked the four core modules against the October 2 Programs snapshot; those earlier checks are not presented as a new archive comparison in this maintenance.</p>
 <p>The inherited suite can be run from GFTGU-Programs/Star with <code>python -m unittest discover -s tests -q</code>. Historical paired-Help counts and results below describe their original layout, not a new result for the current merged page.</p>
 <h2>Known Limitations</h2>
 <ul>
@@ -24,6 +28,7 @@
 <li>Euler integration, restarts, near-6/5 behavior and reference-uncertainty limits are unchanged. The existing SampleOutputs Guide remains at the same build; no figures or numerical values changed.</li>
 </ul>
 <h2>Known Minor Maintenance Items</h2>
+<p>The inherited tests retain pins to retired tutorial sections, wording, numbered equations, exact commands and companion-document structure. Those assertions remain for separate review and have not been relaxed. The continuation extraction defect is resolved; the validation report lists the remaining failing methods.</p>
 <ul>
 <li>ST3: the Help now identifies zero central gravity but does not explain the first positive-radius sphere used by the integrator; the supporting source is the Java code comment and listing.</li>
 <li>ST4: the explicit instruction to compare interior profiles with the book's standard solar model remains absent, although the mass-restoration and radius questions are present.</li>
@@ -31,7 +36,7 @@
 <li>Earlier applicable maintenance observations remain in the preserved notes. References there to two active tutorial files or their paired-test results describe the historical layout.</li>
 </ul>
 <h2>Version Identification</h2>
-<p>MODEL_VERSION: 1.2.0. BUILD_ID: 3d55b592a1b7. The build hashes only physics_star.py, driver_star.py, main.py and plot_star.py, with normalized UTF-8 text and filename/length framing. Documentation and tests are excluded. This documentation update is dated 2026-10-06; the code release and its history are unchanged.</p>
+<p>MODEL_VERSION: 1.2.0. BUILD_ID: 3d55b592a1b7. The build hashes only physics_star.py, driver_star.py, main.py and plot_star.py, with normalized UTF-8 text and filename/length framing. Documentation and tests are excluded. This test/Release Notes maintenance is dated 2026-10-11; the preceding coverage documentation update is dated 2026-10-06; the code release and its history are unchanged.</p>
 <h2>Retained Earlier Release and Audit History</h2>
 <p>The following original body is retained verbatim. Its date, file-layout descriptions and audit status apply to that earlier package.</p>
 <h1>Star 1.2.0 Release Notes</h1>
