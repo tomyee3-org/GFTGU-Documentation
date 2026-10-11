@@ -5,11 +5,11 @@
 <h1>Random2 1.4.0 Release Notes</h1>
 <p><b>Version:</b> 1.4.0<br>
 <b>Build:</b> 06ebd8fea601<br>
-<b>Date:</b> 2026-10-10</p>
-<p>The date above identifies this documentation update. Comparison baseline: <code>GFTGU-Documentation(20260925-190712).zip</code>. The executable version and build remain unchanged.</p>
+<b>Date:</b> 2026-10-11</p>
+<p>The date above identifies this test/Release Notes maintenance update. The preceding documentation and Sample Outputs Guide update was dated 10 October 2026. Comparison baseline: <code>GFTGU-Documentation(20260925-190712).zip</code>. The executable version and build remain unchanged.</p>
 
 <h2>Release Status</h2>
-<p>This update records accumulated documentation changes since the September 25 archive and refreshes the Sample Outputs Guide for the current merged <code>Random2.html</code>. No program source or test was changed.</p>
+<p>This update adapts the documentation tests to the author's Windows <code>^</code> continuations in the current merged <code>Random2.html</code>. The Help File, including its continuation note, spacing and font choices, the Sample Outputs Guide, and all four program modules are preserved byte-for-byte. The accumulated September 25 archive comparisons and the guide refresh recorded on 10 October remain documented below. No program behavior, version or build was changed.</p>
 <p>The two code-changing rounds remain Kickoff2 (1.3.0) and the Audit 21 response (1.4.0). The September 29 notes record Claude Audit41's approval of the subsequent documentation/test work and the resolution of its style addendum; that record is retained in <code>History/Random2-ReleaseNotes-through-20260929.html</code>. The original September 25 notes remain below and are also preserved verbatim as a separate historical file. This task does not claim a new code-development or audit cycle.</p>
 <p>Completeness-of-coverage R1: implementation walkthrough declined by the author. The opening of Beat 0 explains the independent walks, multiple lengths and trial averaging, and the Beat explains the per-walk mean-step normalization. The precise loop nesting and accumulator reset/update order are intentionally outside the required teaching scope. This is a documented scope decision, not a claim that the Java code walkthrough was restored.</p>
 
@@ -17,7 +17,10 @@
 <p>None identified in the active program or current Help by this documentation update. Historical OB-1 concerns the archived Reference Guide, <code>Random2-original.html</code>, rather than the current merged Help, which explicitly states the large-N qualification.</p>
 
 <h2>Major Improvements in This Release</h2>
-<p>Accumulated documentation changes since the specified baseline:</p>
+<p>Continuation maintenance, 11 October 2026:</p>
+<ul><li>Command extraction and direct argument parsing accept either Windows <code>^</code> or POSIX <code>\</code> at a continued line ending, with LF or CRLF and horizontal whitespace. Separate commands remain separate, and options on continued lines are checked.</li>
+<li>Five new regression tests cover both conventions, actual Help commands, deliberately rejected examples, literal symbols within arguments, unknown continued-line options, <code>python3</code> and foreign-program filtering.</li></ul>
+<p>Accumulated documentation changes recorded on 10 October since the specified baseline:</p>
 <ul>
 <li>The merged <code>Random2.html</code> is the current Help, replacing the separate active tutorial filenames. Nine Beats and ten Suggested Experiments use the common title, badge, cursor tip, license and footer.</li>
 <li>The overview distinguishes endpoint displacement from total path length and states the independent, zero-mean, finite-variance conditions for large-N square-root scaling. The exact mean-square-displacement identity is distinguished from the asymptotic mean scaled distance.</li>
@@ -32,9 +35,10 @@
 <p>No numerical algorithm, random-number generation, program console output, graphical output or default was changed by this update. The earlier code improvements and detailed audit history remain in the historical notes.</p>
 
 <h2>Test Suite Growth</h2>
-<p>Historical counts: 1.2.0: 59 tests; 1.3.0: 123; 1.4.0: 146 in the September 25 notes, then 147 in the September 29 documentation/test update. Current supplied suite for 1.4.0: 152 discovered tests. No tests were added or edited by this task.</p>
-<p>Run from the program folder with <code>python -m unittest discover -s tests</code>, with the current Help and companion documents in the sibling documentation tree. Validation results: 151 tests ran, 126 test methods passed, and 24 documentation test methods were affected by 43 failure events and 6 errors. All 75 program checks and five merged-Help checks passed. Two skip entries concern the optional archived Reference Guide and sibling-documentation links. Full results are supplied with this package. Some historical assertions still require retired tutorial structure, numbered equations or paired Help pages; the suite is not represented as wholly passing.</p>
-<p>All 35 distinct commands in the current Help's command blocks executed successfully, including the unseeded experiments. The separate <code>python main.py --max_steps 1</code> check exited with the expected parser rejection. The guide's nine seeded figure commands and all supporting comparisons were run with the displayed settings.</p>
+<p>Historical counts: 1.2.0: 59 tests; 1.3.0: 123; 1.4.0: 146 in the September 25 notes, then 147 in the September 29 documentation/test update. Current suite for 1.4.0: 157 discovered tests (152 in the supplied package). This continuation maintenance edits the command readers and adds five regression tests.</p>
+<p>Continuation-maintenance validation: 157 tests discovered, 156 ran, 131 methods passed, and 24 pre-existing documentation test methods remain affected by 43 assertion-failure events and six error events. Two skip entries cover the optional archived Reference Guide class and a sibling-link check. All five new continuation tests and all five merged-Help checks pass. The supplied baseline had 152 discovered tests, 151 ran, 121 passed, 58 assertion-failure events and six error events across 29 failing methods, with the same two skip entries. Five previously failing methods now pass; no newly failing method remains. Full before/after logs and a change patch are included.</p>
+<p>Run from the program folder with <code>python -m unittest discover -s tests</code>, with the current Help and companion documents in the sibling documentation tree. The preceding 10 October update reported the following results for its original package: 151 tests ran, 126 test methods passed, and 24 documentation test methods were affected by 43 failure events and 6 errors. All 75 program checks and five merged-Help checks passed. Two skip entries concern the optional archived Reference Guide and sibling-documentation links. Full results are supplied with this package. Some historical assertions still require retired tutorial structure, numbered equations or paired Help pages; the suite is not represented as wholly passing.</p>
+<p>The preceding 10 October update recorded that all 35 distinct commands in its Help command blocks executed successfully, including the unseeded experiments. The separate <code>python main.py --max_steps 1</code> check exited with the expected parser rejection. The guide's nine seeded figure commands and all supporting comparisons were run with the displayed settings.</p>
 
 <h2>Known Limitations</h2>
 <ul>
@@ -48,6 +52,7 @@
 </ul>
 
 <h2>Known Minor Maintenance Items</h2>
+<p>Remaining legacy content assertions are retained for separate review; this maintenance does not relax them. Current before/after results are provided in the accompanying validation report.</p>
 <ul>
 <li>The test suite retains assertions for retired tutorial wording, equation numbering, reference sections and paired files; the affected checks are listed in the validation report.</li>
 <li>One guide test both requires and forbids the string <code>Random2.html</code>; another treats the calculated upper escape-count bound, 961, as a quantity that must be printed by the program.</li>
@@ -58,8 +63,8 @@
 </ul>
 
 <h2>Version Identification</h2>
-<p>Version: 1.4.0 (<code>MODEL_VERSION</code> in <code>random2_physics.py</code>). Build: 06ebd8fea601, computed from <code>random2_physics.py</code>, <code>random2_driver.py</code>, <code>main.py</code> and <code>random2_plot.py</code>. Documentation update: 2026-10-10. The September 25 baseline notes dated the code release 2026-09-24; the September 29 record is a later documentation/test update. Python 3.10 or later.</p>
-<p>Version/build were verified against the supplied executable core; the four modules were copied without modification for validation. This task compares documentation against the named archive and does not claim a source comparison against a separate program archive.</p>
+<p>Version: 1.4.0 (<code>MODEL_VERSION</code> in <code>random2_physics.py</code>). Build: 06ebd8fea601, computed from <code>random2_physics.py</code>, <code>random2_driver.py</code>, <code>main.py</code> and <code>random2_plot.py</code>. Test/Release Notes maintenance: 2026-10-11. Previous documentation/guide update: 2026-10-10. The September 25 baseline notes dated the code release 2026-09-24; the September 29 record is a later documentation/test update. Python 3.10 or later.</p>
+<p>Version/build were verified against the supplied executable core; the four modules were copied without modification for validation. The preceding documentation task compared against the named archive; this maintenance compares the supplied Random2 package before and after the test edits.</p>
 
 <h2>Historical Release Notes</h2>
 <p>The following is the original September 25 archive's release-note body, retained for continuity. Its treatment of the archived Reference Guide as active is historical.</p>
