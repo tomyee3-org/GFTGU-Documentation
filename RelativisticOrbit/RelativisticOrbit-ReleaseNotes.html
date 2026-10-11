@@ -2,14 +2,18 @@
 <html lang="en"><head><meta charset="utf-8"><title>RelativisticOrbit 1.5.0 Release Notes</title></head><body>
 <h1>RelativisticOrbit 1.5.0 Release Notes</h1>
 <p><b>Version:</b> 1.5.0<br><b>Build:</b> daaef3a0231c<br><b>Date:</b> 2026-10-02</p>
-<p>Documentation updated 2026-10-10. Comparison baseline: <code>GFTGU-Documentation(20261002-120516).zip</code>. The release date above is the author's date for version 1.5.0.</p>
+<p>Tests and Release Notes updated 2026-10-11; preceding documentation/guide update: 2026-10-10. Comparison baseline: <code>GFTGU-Documentation(20261002-120516).zip</code>. The release date above is the author's date for version 1.5.0.</p>
 <h2>Release Status</h2>
-<p>This documentation update records the merged <code>RelativisticOrbit.html</code>, the RO1 coverage clarification and a regenerated Sample Outputs Guide. No program source, test, numerical default or version/build identifier was changed.</p>
+<p>This maintenance update adapts documentation tests to the author's Windows <code>^</code> continuations in <code>RelativisticOrbit.html</code>. The Help File, including its continuation note, spacing and font choices, the Sample Outputs Guide and all four program modules remain byte-for-byte unchanged. Version 1.5.0, Build daaef3a0231c and the 2 October release date are retained. The merged Help, RO1 coverage clarification and regenerated guide recorded on 10 October remain documented below.</p>
 <p>The two latest code-changing rounds remain the Audit 22 response (1.4.0) and the Audit41 circular-speed boundary correction (1.5.0). The October 2 archive's notes record Claude's initial Audit41 APPROVE recommendation and subsequent correction of two documentation P3 items. Its September 29 style-addendum record reports no remaining significant discrepancy in the prepackaging review. Those records are preserved verbatim in <code>History/RelativisticOrbit-ReleaseNotes-through-20261002.html</code>; this maintenance update makes no new audit-release claim.</p>
 <p>RO1 is covered: the Help explains that Schwarzschild exterior geodesics also apply outside an idealized spherical, non-rotating star, distinguishes impact on a material surface from horizon crossing, and states that the module has no stellar-radius or surface-impact option.</p>
 <h2>Open Bugs</h2>
 <p>None newly identified in the executable by this documentation update. OB-1 is closed by the 1.5.0 circular-speed boundary correction. Historical OB-2 is also closed according to the baseline's cross-module link review; that finding is retained as history, rather than reasserted as a new cross-module verification. Documentation-test maintenance items are listed below.</p>
 <h2>Major Improvements in This Release</h2>
+<p>Continuation maintenance, 11 October 2026:</p>
+<ul><li>Command extraction and direct argument parsing now join either Windows <code>^</code> or POSIX <code>\</code> line continuations, including LF/CRLF and horizontal whitespace. Separate commands stay separate, and flags on later lines are checked.</li>
+<li>Five new regression tests cover both conventions, actual Help commands and the intended inside-horizon rejection, literal symbols within arguments, unknown continued-line options, <code>python3</code> and foreign-program filtering.</li></ul>
+<p>Documentation improvements recorded on 10 October:</p>
 <ul>
 <li>The merged Help replaces the separate active short and extended tutorials. It uses the common Help File title, Gravity from the Ground Up badge, plot tip, license and footer, with nine Beats and twelve Suggested Experiments.</li>
 <li>The description now explicitly covers the Schwarzschild exterior of a spherical star and the absence of material-surface stopping in this program (RO1).</li>
@@ -21,9 +25,10 @@
 </ul>
 <p>The existing 1.5.0 code improvement remains the exact floating-point-input domain check in <code>circular_proper_time_speed()</code>, including the rounded photon-orbit constant and its adjacent representable radius. No console or graphical program output changed in this documentation update.</p>
 <h2>Test Suite Growth</h2>
-<p>Historical counts: 1.1.1: 67; 1.2.0: 131; 1.3.0: 139; 1.4.0: 144; 1.5.0: 148 in the baseline notes. The current supplied suite discovers 153 tests: 152 methods ran, 127 passed and 25 methods were affected by 38 assertion-failure events and 18 error events. The archived Reference Guide class was skipped because that file is absent. All 81 program checks and all five merged-Help checks passed. Detailed results are recorded in this package's validation report. No tests were added or edited in this update.</p>
+<p>Historical counts: 1.1.1: 67; 1.2.0: 131; 1.3.0: 139; 1.4.0: 144; 1.5.0: 148 in the baseline notes. The preceding 10 October update reported 153 discovered tests: 152 methods ran, 127 passed and 25 methods were affected by 38 assertion-failure events and 18 error events. The archived Reference Guide class was skipped because that file is absent. All 81 program checks and all five merged-Help checks passed. Detailed results are recorded in this package's validation report. That preceding documentation update added or edited no tests. The 11 October continuation maintenance edits the command readers and adds five regression tests, bringing the current suite to 158 discovered tests.</p>
+<p>Current validation: 158 discovered tests, 157 methods ran, 133 passed, and 24 pre-existing test methods remain affected by 58 assertion-failure events and ten error events. The optional archived Reference Guide class is skipped. All five new regression tests and all five merged-Help checks pass. The supplied baseline had 153 discovered tests, 152 methods ran, 127 passed, 64 assertion-failure events and ten error events across 25 failing methods, with the same class skip. The shared-figure command/image check now passes; no newly failing method remains. Full before/after logs and a change patch are included.</p>
 <p>Run <code>python -m unittest discover -s tests</code> from the program folder with the merged Help and companion documents in the sibling documentation tree. Assertions inherited from the retired tutorial structure are not represented as passing.</p>
-<p>All 38 distinct commands in the current Help's command blocks were exercised: 37 completed successfully, including <code>--version</code> and <code>--help</code>; the inside-horizon command was rejected as intended. All nine figure commands and the named supporting comparisons were freshly run.</p>
+<p>The preceding 10 October guide refresh exercised all 38 distinct commands in its Help command blocks: 37 completed successfully, including <code>--version</code> and <code>--help</code>; the inside-horizon command was rejected as intended. All nine figure commands and the named supporting comparisons were freshly run.</p>
 <h2>Known Limitations</h2>
 <ul>
 <li>One equatorial test particle and a fixed, non-rotating, one-solar-mass source; no spin, radiation reaction or back-reaction.</li>
@@ -35,15 +40,15 @@
 </ul>
 <h2>Known Minor Maintenance Items</h2>
 <ul>
-<li>The supplied tests retain assertions for retired tutorial wording, sections and numbered equations; their command extractor also does not join backslash continuations in Beats 0 and 8. The validation report identifies the affected checks. No tests were changed by this documentation-only task.</li>
+<li>The supplied tests retain assertions for retired tutorial wording, sections, numbered equations and exact command strings, including the older abbreviated inside-horizon rejection example. These remain for separate review. The continuation extraction defect is resolved in this maintenance; the remaining content assertions have not been relaxed. The validation report identifies the affected checks.</li>
 <li>The current Help sidebar labels Beat 2 “Read the prediction first”, while its heading says “The advance, predicted exactly”. The supplied Help is unchanged in this package.</li>
 <li>The build identifier reads <code>unpackaged</code> when a core source file is unavailable.</li>
 <li>No built-in save-figure option; this guide captures the unchanged plotter through a non-interactive backend.</li>
 <li>Older Reference Guide and extended Help material is archived outside the active merged Help synchronization contract.</li>
 </ul>
 <h2>Version Identification</h2>
-<p>Version 1.5.0, <code>MODEL_VERSION</code> in <code>physics_relativistic_orbit.py</code>. Build daaef3a0231c: the first 12 hexadecimal digits of SHA-256 over the four core UTF-8 modules with universal-newline normalization, filename and byte-length framing. Release date: 2026-10-02. Documentation update: 2026-10-10. Python 3.10 or later.</p>
-<p>The version/build pair was checked against the supplied current executable. Program files and the author's current Help were copied without modification. The requested comparison is against the October 2 documentation archive; no separate program-archive comparison is claimed.</p>
+<p>Version 1.5.0, <code>MODEL_VERSION</code> in <code>physics_relativistic_orbit.py</code>. Build daaef3a0231c: the first 12 hexadecimal digits of SHA-256 over the four core UTF-8 modules with universal-newline normalization, filename and byte-length framing. Release date: 2026-10-02. Test/Release Notes maintenance: 2026-10-11. Previous documentation/guide update: 2026-10-10. Python 3.10 or later.</p>
+<p>The version/build pair was checked against the supplied current executable. Program files and the author's current Help were copied without modification. The preceding documentation comparison was against the October 2 archive; this maintenance compares the supplied RelativisticOrbit package before and after the test edits.</p>
 <h2>Historical Release Notes</h2>
 
 <p>The following earlier notes are retained for development continuity under the former policy, including the previous state of the Reference Guide and OB-1.</p>
