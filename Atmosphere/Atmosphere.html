@@ -146,6 +146,8 @@ footer.gftgu-footer {
 footer.gftgu-footer a { color: #e0c090; text-decoration: none; }
 footer.gftgu-footer a:hover { text-decoration: underline; }
 @media (max-width: 740px) { main { padding-top: 8px; } }
+.narrow-break { display: block; margin-bottom: 0px; }
+
 </style>
 </head>
 <body>
@@ -216,10 +218,11 @@ python main.py</pre>
   <section id="beat0">
     <h2>Beat 0 · Pressure is the weight of the air above you</h2>
     <p>Climb, and there is less air overhead. That is the whole idea of atmospheric structure. Ask the program only to show it for the Earth.</p>
-<pre>python main.py --planet_name Earth --g_accel 9.81 --mu 28.97 --p0 101300 ^
-  --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 ^
-  --T_points 288.15,216.65,216.65,228.65,270.65,270.65,214.65,186.946,190,800,1080,1190,1225,1240,1240</pre>
-
+    <pre class="narrow-break" >python main.py --planet_name Earth --g_accel 9.81 --mu 28.97 --p0 101300 ^
+      --h_points 0,11019,20063,32162,47350,51412,71802,86000,100000,150000,200000,250000,300000,400000,500000 ^
+      --T_points 288.15,216.65,216.65,228.65,270.65,270.65,214.65,186.946,190,800,1080,1190,1225,1240,1240</pre>
+    <small><small>(MacOS and Linux users: Replace ^ with the \ line continuation symbol)</small></small> 
+    
     <p>The parameters allows the user to model different planets. 
     The first parameter is for the name of the body. 
     The second is the surface gravitational acceleration, which is assumed constant over the height of the atmosphere. 
